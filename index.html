@@ -1,7 +1,127 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Taylor Family Values 2024 Music Challenge</title>
+<style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+    }
+    .container {
+        text-align: center;
+        margin-top: 20px;
+    }
+    h1 {
+        font-size: 24px;
+        color: #333;
+    }
+    .round-box {
+        background-color: lightblue;
+        border-radius: 15px;
+        padding: 20px;
+        margin: 20px;
+        position: relative;
+    }
+    .round-label {
+        position: absolute;
+        top: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: burgundy;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 10px;
+        font-size: 16px;
+    }
+    .list-container {
+        display: flex;
+        justify-content: space-around;
+        margin: 20px;
+    }
+    .list {
+        width: 45%;
+        background: #f4f4f4;
+        border-radius: 15px;
+        padding: 0;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+        font-size: 20px;
+        color: #555;
+        margin: 10px 0;
+        padding: 10px;
+        background-color: #e0e0e0;
+    }
+    ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    li {
+        display: flex;
+        align-items: center;
+        padding: 5px 10px;
+        border-bottom: 1px solid #ddd;
+        counter-increment: item;
+    }
+    li:before {
+        content: counter(item) ".";
+        margin-right: 10px;
+        font-weight: bold;
+    }
+    li:last-child {
+        border-bottom: none;
+    }
+    textarea {
+        flex: 1;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        resize: vertical;
+    }
+</style>
+</head>
 <body>
-<h1>Hello World</h1>
-<p>I'm hosted with GitHub Pages.</p>
+    <div class="container">
+        <h1>Taylor Family Values 2024 Music Challenge</h1>
+        <div class="round-box">
+            <div class="round-label">Round 1</div>
+            <div class="list-container">
+                <div class="list">
+                    <h2>Current (Artist - Song Title) 1 pt</h2>
+                    <ul>
+                        <li><textarea rows="2"></textarea></li>
+                        <li><textarea rows="2"></textarea></li>
+                        <li><textarea rows="2"></textarea></li>
+                        <li><textarea rows="2"></textarea></li>
+                        <li><textarea rows="2"></textarea></li>
+                        <li><textarea rows="2"></textarea></li>
+                        <li><textarea rows="2"></textarea></li>
+                        <li><textarea rows="2"></textarea></li>
+                        <li><textarea rows="2"></textarea></li>
+                        <li><textarea rows="2"></textarea></li>
+                    </ul>
+                </div>
+                <div class="list">
+                    <h2>Original (Artist - Song Title) 2 pts</h2>
+                    <ul>
+                        <li><textarea rows="2"></textarea></li>
+                        <li><textarea rows="2"></textarea></li>
+                        <li><textarea rows="2"></textarea></li>
+                        <li><textarea rows="2"></textarea></li>
+                        <li><textarea rows="2"></textarea></li>
+                        <li><textarea rows="2"></textarea></li>
+                        <li><textarea rows="2"></textarea></li>
+                        <li><textarea rows="2"></textarea></li>
+                        <li><textarea rows="2"></textarea></li>
+                        <li><textarea rows="2"></textarea></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

@@ -12,7 +12,7 @@
     }
     .container {
         text-align: center;
-        margin-top: 80px;
+        margin-top: 20px;
         position: relative;
     }
     h1 {
@@ -120,98 +120,115 @@
 <body>
     <div class="container">
         <h1>Taylor Family Values 2024 Music Challenge</h1>
-        
-        <div class="round-box">
-            <div class="round-label">Round 1</div>
-            <div class="round-score" id="score-1">00</div>
-            <div class="list-container">
-                <div class="list">
-                    <h2>Current (Artist - Song Title) 1 pt</h2>
-                    <ul>
-                        <li><button class="check-button red" data-points="1"></button><textarea id="current-1" rows="2"></textarea></li>
-                        <li><button class="check-button red" data-points="1"></button><textarea id="current-2" rows="2"></textarea></li>
-                        <li><button class="check-button red" data-points="1"></button><textarea id="current-3" rows="2"></textarea></li>
-                        <li><button class="check-button red" data-points="1"></button><textarea id="current-4" rows="2"></textarea></li>
-                        <li><button class="check-button red" data-points="1"></button><textarea id="current-5" rows="2"></textarea></li>
-                        <li><button class="check-button red" data-points="1"></button><textarea id="current-6" rows="2"></textarea></li>
-                        <li><button class="check-button red" data-points="1"></button><textarea id="current-7" rows="2"></textarea></li>
-                        <li><button class="check-button red" data-points="1"></button><textarea id="current-8" rows="2"></textarea></li>
-                        <li><button class="check-button red" data-points="1"></button><textarea id="current-9" rows="2"></textarea></li>
-                        <li><button class="check-button red" data-points="1"></button><textarea id="current-10" rows="2"></textarea></li>
-                    </ul>
-                </div>
-                <div class="list">
-                    <h2>Original (Artist - Song Title) 2 pts</h2>
-                    <ul>
-                        <li><button class="check-button red" data-points="2"></button><textarea id="original-1" rows="2"></textarea></li>
-                        <li><button class="check-button red" data-points="2"></button><textarea id="original-2" rows="2"></textarea></li>
-                        <li><button class="check-button red" data-points="2"></button><textarea id="original-3" rows="2"></textarea></li>
-                        <li><button class="check-button red" data-points="2"></button><textarea id="original-4" rows="2"></textarea></li>
-                        <li><button class="check-button red" data-points="2"></button><textarea id="original-5" rows="2"></textarea></li>
-                        <li><button class="check-button red" data-points="2"></button><textarea id="original-6" rows="2"></textarea></li>
-                        <li><button class="check-button red" data-points="2"></button><textarea id="original-7" rows="2"></textarea></li>
-                        <li><button class="check-button red" data-points="2"></button><textarea id="original-8" rows="2"></textarea></li>
-                        <li><button class="check-button red" data-points="2"></button><textarea id="original-9" rows="2"></textarea></li>
-                        <li><button class="check-button red" data-points="2"></button><textarea id="original-10" rows="2"></textarea></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <!-- Repeat for other rounds -->
-
+        <div id="rounds-container"></div>
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            let roundScores = {
-                1: 0,
-                // Initialize other rounds as needed
-            };
+            const roundsContainer = document.getElementById('rounds-container');
+            
+            for (let round = 1; round <= 10; round++) {
+                const roundBox = document.createElement('div');
+                roundBox.className = 'round-box';
+                roundBox.setAttribute('data-round', round);
 
-            function updateScore(round) {
-                document.getElementById(`score-${round}`).innerText = roundScores[round].toString().padStart(2, '0');
-            }
+                const roundLabel = document.createElement('div');
+                roundLabel.className = 'round-label';
+                roundLabel.innerText = `Round ${round}`;
+                roundBox.appendChild(roundLabel);
 
-            function toggleCheck(button, round) {
-                let points = parseInt(button.getAttribute('data-points'));
-                if (button.classList.contains('red')) {
-                    button.classList.remove('red');
-                    button.classList.add('green');
-                    roundScores[round] += points;
-                } else {
-                    button.classList.remove('green');
-                    button.classList.add('red');
-                    roundScores[round] -= points;
-                }
+                const roundScore = document.createElement('div');
+                roundScore.className = 'round-score';
+                roundScore.id = `score-${round}`;
+                roundScore.innerText = '00';
+                roundBox.appendChild(roundScore);
+
+                const listContainer = document.createElement('div');
+                listContainer.className = 'list-container';
+
+                const currentList = createList('Current', 1, round);
+                const originalList = createList('Original', 2, round);
+
+                listContainer.appendChild(currentList);
+                listContainer.appendChild(originalList);
+
+                roundBox.appendChild(listContainer);
+                roundsContainer.appendChild(roundBox);
+
                 updateScore(round);
             }
 
-            document.querySelectorAll('.check-button').forEach((button, index) => {
-                let round = Math.floor(index / 20) + 1; // Adjust based on the number of text areas per round
-                button.addEventListener('click', function() {
-                    toggleCheck(this, round);
-                });
-            });
+            function createList(title, points, round) {
+                const list = document.createElement('div');
+                list.className = 'list';
 
-            // Load saved data from localStorage
-            for (let i = 1; i <= 10; i++) {
-                let current = localStorage.getItem(`current-${i}`);
-                if (current) {
-                    document.getElementById(`current-${i}`).value = current;
+                const heading = document.createElement('h2');
+                heading.innerText = `${title} (Artist - Song Title) ${points} pt${points > 1 ? 's' : ''}`;
+                list.appendChild(heading);
+
+                const ul = document.createElement('ul');
+
+                for (let i = 1; i <= 10; i++) {
+                    const li = document.createElement('li');
+
+                    const button = document.createElement('button');
+                    button.className = 'check-button red';
+                    button.setAttribute('data-points', points);
+                    button.addEventListener('click', function() {
+                        toggleCheck(button, round);
+                    });
+                    li.appendChild(button);
+
+                    const textarea = document.createElement('textarea');
+                    textarea.id = `${title.toLowerCase()}-${round}-${i}`;
+                    textarea.rows = 2;
+                    textarea.addEventListener('input', function() {
+                        localStorage.setItem(textarea.id, textarea.value);
+                    });
+                    li.appendChild(textarea);
+
+                    ul.appendChild(li);
+
+                    // Load saved state
+                    const savedText = localStorage.getItem(textarea.id);
+                    if (savedText) {
+                        textarea.value = savedText;
+                    }
+                    const savedButtonState = localStorage.getItem(`button-${round}-${title.toLowerCase()}-${i}`);
+                    if (savedButtonState === 'green') {
+                        button.classList.remove('red');
+                        button.classList.add('green');
+                    }
                 }
-                let original = localStorage.getItem(`original-${i}`);
-                if (original) {
-                    document.getElementById(`original-${i}`).value = original;
-                }
+                list.appendChild(ul);
+                return list;
             }
 
-            // Add event listeners to save data on input
-            for (let i = 1; i <= 10; i++) {
-                document.getElementById(`current-${i}`).addEventListener('input', function() {
-                    localStorage.setItem(`current-${i}`, this.value);
+            function updateScore(round) {
+                let roundScore = 0;
+                document.querySelectorAll(`.round-box[data-round="${round}"] .check-button`).forEach(button => {
+                    if (button.classList.contains('green')) {
+                        roundScore += parseInt(button.getAttribute('data-points'));
+                    }
                 });
-                document.getElementById(`original-${i}`).addEventListener('input', function() {
-                    localStorage.setItem(`original-${i}`, this.value);
-                });
+                document.getElementById(`score-${round}`).innerText = roundScore.toString().padStart(2, '0');
+            }
+
+            function toggleCheck(button, round) {
+                if (button.classList.contains('red')) {
+                    button.classList.remove('red');
+                    button.classList.add('green');
+                } else {
+                    button.classList.remove('green');
+                    button.classList.add('red');
+                }
+                saveButtonState(button, round);
+                updateScore(round);
+            }
+
+            function saveButtonState(button, round) {
+                const listType = button.nextElementSibling.id.split('-')[0];
+                const index = button.nextElementSibling.id.split('-')[2];
+                localStorage.setItem(`button-${round}-${listType}-${index}`, button.classList.contains('green') ? 'green' : 'red');
             }
         });
     </script>

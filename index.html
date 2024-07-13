@@ -12,17 +12,26 @@
     }
     .container {
         text-align: center;
-        margin-top: 20px;
+        margin-top: 80px;
+        position: relative;
     }
     h1 {
         font-size: 24px;
         color: #333;
+        text-align: left;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        left: 0;
+        background: white;
+        padding: 10px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
     .round-box {
         background-color: lightblue;
         border-radius: 0px;
         padding: 5px;
-        margin: 5px;
+        margin: 50px 5px 5px; /* Adjust margin to leave space for fixed header */
         position: relative;
     }
     .round-label {
@@ -35,6 +44,14 @@
         padding: 5px 10px;
         border-radius: 10px;
         font-size: 24px;
+    }
+    .round-score {
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        font-size: 40px;
+        font-weight: bold;
+        color: #311B92;
     }
     .list-container {
         display: flex;
@@ -82,381 +99,121 @@
         border-radius: 5px;
         resize: vertical;
     }
+    .check-button {
+        margin-right: 5px;
+        padding: 8px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+    .check-button.red {
+        background-color: red;
+        color: white;
+    }
+    .check-button.green {
+        background-color: green;
+        color: white;
+    }
 </style>
 </head>
 <body>
     <div class="container">
         <h1>Taylor Family Values 2024 Music Challenge</h1>
         
-<div class="round-box">
-    <div class="round-label">Round 1</div>
-    <div class="list-container">
-        <div class="list">
-            <h2>Current (Artist - Song Title) 1 pt</h2>
-            <ul>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-            </ul>
+        <div class="round-box">
+            <div class="round-label">Round 1</div>
+            <div class="round-score" id="score-1">00</div>
+            <div class="list-container">
+                <div class="list">
+                    <h2>Current (Artist - Song Title) 1 pt</h2>
+                    <ul>
+                        <li><button class="check-button red" data-points="1"></button><textarea id="current-1" rows="2"></textarea></li>
+                        <li><button class="check-button red" data-points="1"></button><textarea id="current-2" rows="2"></textarea></li>
+                        <li><button class="check-button red" data-points="1"></button><textarea id="current-3" rows="2"></textarea></li>
+                        <li><button class="check-button red" data-points="1"></button><textarea id="current-4" rows="2"></textarea></li>
+                        <li><button class="check-button red" data-points="1"></button><textarea id="current-5" rows="2"></textarea></li>
+                        <li><button class="check-button red" data-points="1"></button><textarea id="current-6" rows="2"></textarea></li>
+                        <li><button class="check-button red" data-points="1"></button><textarea id="current-7" rows="2"></textarea></li>
+                        <li><button class="check-button red" data-points="1"></button><textarea id="current-8" rows="2"></textarea></li>
+                        <li><button class="check-button red" data-points="1"></button><textarea id="current-9" rows="2"></textarea></li>
+                        <li><button class="check-button red" data-points="1"></button><textarea id="current-10" rows="2"></textarea></li>
+                    </ul>
+                </div>
+                <div class="list">
+                    <h2>Original (Artist - Song Title) 2 pts</h2>
+                    <ul>
+                        <li><button class="check-button red" data-points="2"></button><textarea id="original-1" rows="2"></textarea></li>
+                        <li><button class="check-button red" data-points="2"></button><textarea id="original-2" rows="2"></textarea></li>
+                        <li><button class="check-button red" data-points="2"></button><textarea id="original-3" rows="2"></textarea></li>
+                        <li><button class="check-button red" data-points="2"></button><textarea id="original-4" rows="2"></textarea></li>
+                        <li><button class="check-button red" data-points="2"></button><textarea id="original-5" rows="2"></textarea></li>
+                        <li><button class="check-button red" data-points="2"></button><textarea id="original-6" rows="2"></textarea></li>
+                        <li><button class="check-button red" data-points="2"></button><textarea id="original-7" rows="2"></textarea></li>
+                        <li><button class="check-button red" data-points="2"></button><textarea id="original-8" rows="2"></textarea></li>
+                        <li><button class="check-button red" data-points="2"></button><textarea id="original-9" rows="2"></textarea></li>
+                        <li><button class="check-button red" data-points="2"></button><textarea id="original-10" rows="2"></textarea></li>
+                    </ul>
+                </div>
+            </div>
         </div>
-        <div class="list">
-            <h2>Original (Artist - Song Title) 2 pts</h2>
-            <ul>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-            </ul>
-        </div>
-    </div>
-</div>
-<div style="height: 100px;"></div>
-
-<div class="round-box">
-    <div class="round-label">Round 2</div>
-    <div class="list-container">
-        <div class="list">
-            <h2>Current (Artist - Song Title) 1 pt</h2>
-            <ul>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-            </ul>
-        </div>
-        <div class="list">
-            <h2>Original (Artist - Song Title) 2 pts</h2>
-            <ul>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-            </ul>
-        </div>
-    </div>
-</div>
-<div style="height: 100px;"></div>
-
-<div class="round-box">
-    <div class="round-label">Round 3</div>
-    <div class="list-container">
-        <div class="list">
-            <h2>Current (Artist - Song Title) 1 pt</h2>
-            <ul>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-            </ul>
-        </div>
-        <div class="list">
-            <h2>Original (Artist - Song Title) 2 pts</h2>
-            <ul>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-            </ul>
-        </div>
-    </div>
-</div>
-<div style="height: 100px;"></div>
-
-<div class="round-box">
-    <div class="round-label">Round 4</div>
-    <div class="list-container">
-        <div class="list">
-            <h2>Current (Artist - Song Title) 1 pt</h2>
-            <ul>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-            </ul>
-        </div>
-        <div class="list">
-            <h2>Original (Artist - Song Title) 2 pts</h2>
-            <ul>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-            </ul>
-        </div>
-    </div>
-</div>
-<div style="height: 100px;"></div>
-
-<div class="round-box">
-    <div class="round-label">Round 5</div>
-    <div class="list-container">
-        <div class="list">
-            <h2>Current (Artist - Song Title) 1 pt</h2>
-            <ul>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-            </ul>
-        </div>
-        <div class="list">
-            <h2>Original (Artist - Song Title) 2 pts</h2>
-            <ul>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-            </ul>
-        </div>
-    </div>
-</div>
-<div style="height: 100px;"></div>
-
-<div class="round-box">
-    <div class="round-label">Round 6</div>
-    <div class="list-container">
-        <div class="list">
-            <h2>Current (Artist - Song Title) 1 pt</h2>
-            <ul>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-            </ul>
-        </div>
-        <div class="list">
-            <h2>Original (Artist - Song Title) 2 pts</h2>
-            <ul>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-            </ul>
-        </div>
-    </div>
-</div>
-<div style="height: 100px;"></div>
-
-<div class="round-box">
-    <div class="round-label">Round 7</div>
-    <div class="list-container">
-        <div class="list">
-            <h2>Current (Artist - Song Title) 1 pt</h2>
-            <ul>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-            </ul>
-        </div>
-        <div class="list">
-            <h2>Original (Artist - Song Title) 2 pts</h2>
-            <ul>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-            </ul>
-        </div>
-    </div>
-</div>
-<div style="height: 100px;"></div>
-
-<div class="round-box">
-    <div class="round-label">Round 8</div>
-    <div class="list-container">
-        <div class="list">
-            <h2>Current (Artist - Song Title) 1 pt</h2>
-            <ul>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-            </ul>
-        </div>
-        <div class="list">
-            <h2>Original (Artist - Song Title) 2 pts</h2>
-            <ul>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-            </ul>
-        </div>
-    </div>
-</div>
-<div style="height: 100px;"></div>
-
-<div class="round-box">
-    <div class="round-label">Round 9</div>
-    <div class="list-container">
-        <div class="list">
-            <h2>Current (Artist - Song Title) 1 pt</h2>
-            <ul>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-            </ul>
-        </div>
-        <div class="list">
-            <h2>Original (Artist - Song Title) 2 pts</h2>
-            <ul>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-            </ul>
-        </div>
-    </div>
-</div>
-<div style="height: 100px;"></div>
-
-<div class="round-box">
-    <div class="round-label">Round 10</div>
-    <div class="list-container">
-        <div class="list">
-            <h2>Current (Artist - Song Title) 1 pt</h2>
-            <ul>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-            </ul>
-        </div>
-        <div class="list">
-            <h2>Original (Artist - Song Title) 2 pts</h2>
-            <ul>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-                <li><textarea rows="2"></textarea></li>
-            </ul>
-        </div>
-    </div>
-</div>
+        <!-- Repeat for other rounds -->
 
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let roundScores = {
+                1: 0,
+                // Initialize other rounds as needed
+            };
+
+            function updateScore(round) {
+                document.getElementById(`score-${round}`).innerText = roundScores[round].toString().padStart(2, '0');
+            }
+
+            function toggleCheck(button, round) {
+                let points = parseInt(button.getAttribute('data-points'));
+                if (button.classList.contains('red')) {
+                    button.classList.remove('red');
+                    button.classList.add('green');
+                    roundScores[round] += points;
+                } else {
+                    button.classList.remove('green');
+                    button.classList.add('red');
+                    roundScores[round] -= points;
+                }
+                updateScore(round);
+            }
+
+            document.querySelectorAll('.check-button').forEach((button, index) => {
+                let round = Math.floor(index / 20) + 1; // Adjust based on the number of text areas per round
+                button.addEventListener('click', function() {
+                    toggleCheck(this, round);
+                });
+            });
+
+            // Load saved data from localStorage
+            for (let i = 1; i <= 10; i++) {
+                let current = localStorage.getItem(`current-${i}`);
+                if (current) {
+                    document.getElementById(`current-${i}`).value = current;
+                }
+                let original = localStorage.getItem(`original-${i}`);
+                if (original) {
+                    document.getElementById(`original-${i}`).value = original;
+                }
+            }
+
+            // Add event listeners to save data on input
+            for (let i = 1; i <= 10; i++) {
+                document.getElementById(`current-${i}`).addEventListener('input', function() {
+                    localStorage.setItem(`current-${i}`, this.value);
+                });
+                document.getElementById(`original-${i}`).addEventListener('input', function() {
+                    localStorage.setItem(`original-${i}`, this.value);
+                });
+            }
+        });
+    </script>
 </body>
 </html>

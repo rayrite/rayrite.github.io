@@ -251,11 +251,32 @@
     }
     @media (max-width: 768px) {
         .main-container {
-            flex-direction: column;
+            flex-direction: row;
             margin-top: 100px;
         }
         .left-container, .right-container {
+            width: calc(50% - 10px);
+        }
+        .login-section, .signup-section, .image-box {
+            padding: 1rem;
+        }
+        .login-section h2 {
+            font-size: 1.2rem;
+        }
+        .btn {
+            font-size: 0.9rem;
+        }
+        .btn .iconify, .btn svg {
+            font-size: 18px;
+            width: 18px;
+            height: 18px;
+        }
+        .image-box {
+            height: 200px;
+        }
+        .quote-box, .social-icons, footer {
             width: 100%;
+            margin-top: 20px;
         }
         .header {
             flex-wrap: wrap;

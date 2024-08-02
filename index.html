@@ -3,19 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Responsive Layout</title>
+    <title>Responsive Layout with JS</title>
     <style>
         /* Basic Styles */
-        body {
+        body, html {
             margin: 0;
-            font-family: sans-serif;
+            padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif;
+        }
+        .container {
             display: flex;
             flex-direction: column;
-            min-height: 100vh; 
+            min-height: 100vh;
         }
-        section {
+        .content {
+            flex: 1 0 auto;
+            display: flex;
+            flex-direction: column;
+        }
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .col {
+            flex: 1;
             padding: 20px;
-            text-align: center;
+            box-sizing: border-box;
+        }
+        #footer-group {
+            flex-shrink: 0;
         }
         /* Styling for clarity */
         #login { background-color: #e0f2f7; }
@@ -24,62 +41,97 @@
         #quote-box { background-color: #c5cae9; }
         #social-icons { background-color: #f8bbd0; }
         #footer { background-color: #cfd8dc; }
-        /* Flexbox Layout */
-        .container {
-            display: flex;
-            flex-direction: column; 
-            flex-grow: 1; 
-        }
-        .row {
-            display: flex;
-            flex-direction: row; 
-            flex-wrap: nowrap; 
-        }
-        .col {
-            flex: 1; 
-            min-width: 0; 
-        }
-        #image-box {
-            flex: 1; 
-            align-self: stretch; 
-        }
-        /* Footer and Social Icons Grouping */
-        #footer-group {
-            margin-top: auto; /* Push the group to bottom */
-        }
-        #social-icons, #footer {
-            flex: 0 0 auto; /* Prevent these sections from growing or shrinking */
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .row {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="row">
-            <div class="col"> 
-                <section id="login">
-                    <h2>Login Section</h2>
-                </section>
-                <section id="signup">
-                    <h2>Sign Up</h2>
-                </section>
+        <div class="content">
+            <div class="row">
+                <div class="col">
+                    <section id="login">
+                        <h2>Login Section</h2>
+                        <p>Content here...</p>
+                    </section>
+                    <section id="signup">
+                        <h2>Sign Up</h2>
+                        <p>Content here...</p>
+                    </section>
+                </div>
+                <div class="col" id="image-box">
+                    <h2>Image Box</h2>
+                    <p>Content here...</p>
+                </div>
             </div>
-            <section id="image-box" class="col">
-                <h2>Image Box</h2>
-            </section>
-        </div>
-        <div class="row">
-            <section id="quote-box" class="col">
-                <h2>Quote Box</h2>
-            </section>
+            <div class="row">
+                <div class="col" id="quote-box">
+                    <h2>Quote Box</h2>
+                    <p>Content here...</p>
+                </div>
+            </div>
         </div>
         <div id="footer-group">
-            <section id="social-icons">
+            <div id="social-icons">
                 <h2>Social Icons</h2>
-            </section>
-            <section id="footer">
+                <p>Social media links here...</p>
+            </div>
+            <div id="footer">
                 <h2>Footer</h2>
-            </section>
+                <p>Footer content here...</p>
+            </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const footerGroup = document.getElementById('footer-group');
+            const content = document.querySelector('.content');
+            
+            function adjustLayout() {
+                const windowHeight = window.innerHeight;
+                const contentHeight = content.offsetHeight;
+                const footerHeight = footerGroup.offsetHeight;
+                
+                if (contentHeight + footerHeight < windowHeight) {
+                    footerGroup.style.position = 'fixed';
+                    footerGroup.style.bottom = '0';
+                    footerGroup.style.width = '100%';
+                    content.style.marginBottom = footerHeight + 'px';
+                } else {
+                    footerGroup.style.position = 'static';
+                    footerGroup.style.width = 'auto';
+                    content.style.marginBottom = '0';
+                }
+            }
+
+            // Initial adjustment
+            adjustLayout();
+
+            // Adjust on window resize
+            window.addEventListener('resize', adjustLayout);
+
+            // Use IntersectionObserver to detect when footer is in view
+            const observer = new IntersectionObserver(
+                ([entry]) => {
+                    if (entry.isIntersecting) {
+                        footerGroup.style.position = 'static';
+                        footerGroup.style.width = 'auto';
+                        content.style.marginBottom = '0';
+                    } else {
+                        adjustLayout();
+                    }
+                },
+                { threshold: [0] }
+            );
+
+            observer.observe(footerGroup);
+        });
+    </script>
 </body>
 </html>

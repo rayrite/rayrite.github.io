@@ -99,6 +99,9 @@
         .invite-btn:hover {
             background-color: #b71c1c;
         }
+        .highlight {
+            background-color: yellow;
+        }
 
         /* Media query for larger screens */
         @media (min-width: 415px) {
@@ -130,7 +133,7 @@
         </div>
         <div class="content">
             <div class="search-bar">
-                <input type="text" class="search-input" placeholder="Search contacts...">
+                <input type="text" class="search-input" placeholder="Search contacts..." id="searchInput">
             </div>
             <div class="friend-list" id="friendList">
                 <!-- Friend list will be populated by JavaScript -->
@@ -152,7 +155,7 @@
             { name: "Sophia Thomas", onApp: false }
         ];
 
-        function createFriendElement(friend) {
+        function createFriendElement(friend, searchTerm = '') {
             const friendItem = document.createElement('div');
             friendItem.className = 'friend-item';
 
@@ -164,7 +167,7 @@
 
             const name = document.createElement('div');
             name.className = 'friend-name';
-            name.textContent = friend.name;
+            name.innerHTML = highlightText(friend.name, searchTerm);
 
             const status = document.createElement('div');
             status.className = 'friend-status';
@@ -187,14 +190,40 @@
             return friendItem;
         }
 
-        function populateFriendList() {
+        function highlightText(text, searchTerm) {
+            if (!searchTerm) return text;
+            const regex = new RegExp(`(${escapeRegExp(searchTerm)})`, 'gi');
+            return text.replace(regex, '<span class="highlight">$1</span>');
+        }
+
+        function escapeRegExp(string) {
+            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+
+        function fuzzySearch(searchTerm, str) {
+            const escapedSearchTerm = escapeRegExp(searchTerm);
+            const regex = new RegExp(`.*${escapedSearchTerm.split('').join('.*')}.*`, 'i');
+            return regex.test(str);
+        }
+
+        function populateFriendList(searchTerm = '') {
             const friendList = document.getElementById('friendList');
+            friendList.innerHTML = '';
             friends.forEach(friend => {
-                friendList.appendChild(createFriendElement(friend));
+                if (fuzzySearch(searchTerm, friend.name)) {
+                    friendList.appendChild(createFriendElement(friend, searchTerm));
+                }
             });
         }
 
-        document.addEventListener('DOMContentLoaded', populateFriendList);
+        document.addEventListener('DOMContentLoaded', () => {
+            populateFriendList();
+
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('input', (e) => {
+                populateFriendList(e.target.value);
+            });
+        });
     </script>
 </body>
 </html>

@@ -6,12 +6,13 @@
     <title>Responsive Layout</title>
     <style>
         /* Basic Styles */
-        body {
+        body,
+        html {
             margin: 0;
             font-family: sans-serif;
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
+            height: 100%; /* Make sure body and html fill the entire viewport height */
         }
 
         section {
@@ -31,18 +32,18 @@
         .container {
             display: flex;
             flex-direction: column;
-            flex-grow: 1;
+            flex-grow: 1; /* Allow container to grow and take up available space */
         }
 
         .row {
             display: flex;
             flex-direction: row;
-            flex-wrap: nowrap; 
+            flex-wrap: nowrap;
         }
 
         .col {
             flex: 1;
-            min-width: 0; 
+            min-width: 0;
         }
 
         #image-box {
@@ -50,9 +51,9 @@
             align-self: stretch;
         }
 
-        /* Footer and Social Icons Grouping */
+        /* Footer and Social Icons Grouping - Push to bottom */
         #footer-section {
-            transition: margin-top 0.2s ease;
+            margin-top: auto; 
         }
     </style>
 </head>
@@ -61,7 +62,7 @@
     <div class="container">
 
         <div class="row">
-            <div class="col"> 
+            <div class="col">
                 <section id="login">
                     <h2>Login Section</h2>
                 </section>
@@ -71,7 +72,7 @@
             </div>
             <section id="image-box" class="col">
                 <h2>Image Box</h2>
-            </section> 
+            </section>
         </div>
 
         <div class="row">
@@ -94,20 +95,6 @@
         </div>
 
     </div>
-
-    <script>
-        function adjustFooter() {
-            const footerSection = document.getElementById('footer-section');
-            const viewportHeight = window.innerHeight;
-            const contentHeight = document.querySelector('.container').offsetHeight;
-
-            let marginTop = Math.max(viewportHeight - contentHeight, 0);
-            footerSection.style.marginTop = marginTop + 'px';
-        }
-
-        window.addEventListener('load', adjustFooter);
-        window.addEventListener('resize', adjustFooter);
-    </script>
 
 </body>
 </html>

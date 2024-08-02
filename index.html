@@ -89,20 +89,20 @@
         button {
             padding: 10px;
             font-size: 16px;
-            background-color: #4CAF50;
             color: white;
             border: none;
             cursor: pointer;
             margin-bottom: 10px;
         }
         button:hover {
-            background-color: #45a049;
+            opacity: 0.8;
         }
         #sidesInput {
             width: calc(70% - 10px);
         }
         #updateSidesButton {
             width: 30%;
+            background-color: #4CAF50;
         }
         .sides-control {
             display: flex;
@@ -111,6 +111,12 @@
         }
         #updateValuesButton {
             width: 100%;
+            background-color: #4CAF50;
+        }
+        #colorCycleButton {
+            width: 100%;
+            margin-top: 10px;
+            transition: background-color 0.3s ease;
         }
     </style>
 </head>
@@ -126,11 +132,13 @@
         </div>
         <div class="inputs" id="inputs"></div>
         <button id="updateValuesButton">Update Values</button>
+        <button id="colorCycleButton">Cycle Colors</button>
     </div>
 
     <script>
         let sides = 3;
-        const colors = ['blue', 'grey', 'red'];
+        const colors = ['blue', 'grey', 'red', 'green', 'orange', 'purple', 'pink', 'brown'];
+        let currentColorIndex = 0;
         const particles = [];
         let sideValues = [];
         let sparkleInterval;
@@ -251,7 +259,7 @@
                     createParticles(
                         rect.left + rect.width / 2, 
                         rect.top + rect.height / 2, 
-                        label.style.borderColor
+                        colors[currentColorIndex]  // Use the current color for particles
                     );
                 }
             });
@@ -298,11 +306,43 @@
             }
         }
 
+        function cycleColors() {
+            currentColorIndex = (currentColorIndex + 1) % colors.length;
+            updateColorCycleButton();
+            updateMeter(); // This will trigger the sparkle effect with the new color
+        }
+
+        function updateColorCycleButton() {
+            const button = document.getElementById('colorCycleButton');
+            button.style.backgroundColor = colors[currentColorIndex];
+            button.style.color = getContrastColor(colors[currentColorIndex]);
+        }
+
+        function getContrastColor(hexcolor) {
+            // If a leading # is provided, remove it
+            if (hexcolor.slice(0, 1) === '#') {
+                hexcolor = hexcolor.slice(1);
+            }
+
+            // Convert to RGB value
+            var r = parseInt(hexcolor.substr(0,2),16);
+            var g = parseInt(hexcolor.substr(2,2),16);
+            var b = parseInt(hexcolor.substr(4,2),16);
+
+            // Get YIQ ratio
+            var yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+
+            // Check contrast
+            return (yiq >= 128) ? 'black' : 'white';
+        }
+
         // Initialize the meter
         document.getElementById('updateSidesButton').addEventListener('click', updateSides);
         document.getElementById('updateValuesButton').addEventListener('click', updateMeter);
+        document.getElementById('colorCycleButton').addEventListener('click', cycleColors);
         updateMeterStructure();
         updateMeter();
+        updateColorCycleButton(); // Initialize button color
 
         // Setup particle animation
         const canvas = document.createElement('canvas');

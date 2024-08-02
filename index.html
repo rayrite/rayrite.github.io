@@ -125,16 +125,15 @@
             <div class="labels-container" id="labelsContainer"></div>
         </div>
         <div class="inputs" id="inputs"></div>
-        <button id="updateValuesButton" onclick="updateMeter()">Update Values</button>
+        <button id="updateValuesButton">Update Values</button>
     </div>
 
     <script>
         let sides = 3;
         const colors = ['blue', 'grey', 'red'];
         const particles = [];
-        let sparkleInterval;
         let sideValues = [];
-        let sideColors = [];
+        let sparkleInterval;
 
         function getRandomColor() {
             const letters = '0123456789ABCDEF';
@@ -169,22 +168,19 @@
             meter.innerHTML = '';
             labelsContainer.innerHTML = '';
             inputs.innerHTML = '';
-            sideColors = [];
 
             for (let i = 0; i < sides; i++) {
                 const side = document.createElement('div');
                 side.id = `side${i}`;
                 side.className = 'side';
-                const color = i < colors.length ? colors[i] : getRandomColor();
-                side.style.backgroundColor = color;
-                sideColors.push(color);
+                side.style.backgroundColor = i < colors.length ? colors[i] : getRandomColor();
                 meter.appendChild(side);
 
                 const label = document.createElement('span');
                 label.className = 'label';
                 label.id = `label${i}`;
-                label.style.borderColor = color;
-                label.style.color = color;
+                label.style.borderColor = side.style.backgroundColor;
+                label.style.color = side.style.backgroundColor;
                 label.textContent = sideValues[i] || '0';
                 labelsContainer.appendChild(label);
 
@@ -226,7 +222,7 @@
             }
         }
 
-        function createParticles(x, y, color, count = 5) {
+        function createParticles(x, y, color, count = 2) {
             for (let i = 0; i < count; i++) {
                 particles.push(new Particle(x, y, color));
             }
@@ -246,22 +242,24 @@
             requestAnimationFrame(animateParticles);
         }
 
-        function startContinuousSparkle(values) {
+        function createSparkleForHighestValues() {
+            const maxValue = Math.max(...sideValues);
+            sideValues.forEach((value, index) => {
+                if (value === maxValue && value > 0) {
+                    const label = document.getElementById(`label${index}`);
+                    const rect = label.getBoundingClientRect();
+                    createParticles(
+                        rect.left + rect.width / 2, 
+                        rect.top + rect.height / 2, 
+                        label.style.borderColor
+                    );
+                }
+            });
+        }
+
+        function startContinuousSparkle() {
             clearInterval(sparkleInterval);
-            sparkleInterval = setInterval(() => {
-                const maxValue = Math.max(...values);
-                values.forEach((value, index) => {
-                    if (value === maxValue && value > 0) {
-                        const label = document.getElementById(`label${index}`);
-                        const rect = label.getBoundingClientRect();
-                        createParticles(
-                            rect.left + rect.width / 2, 
-                            rect.top + rect.height / 2, 
-                            sideColors[index]
-                        );
-                    }
-                });
-            }, 75);
+            sparkleInterval = setInterval(createSparkleForHighestValues, 100);
         }
 
         function updateMeter() {
@@ -287,7 +285,7 @@
                 updateLabelWithAnimation(`label${i}`, sideValues[i]);
             }
 
-            startContinuousSparkle(sideValues);
+            startContinuousSparkle();
         }
 
         function updateLabelWithAnimation(labelId, value) {
@@ -302,6 +300,7 @@
 
         // Initialize the meter
         document.getElementById('updateSidesButton').addEventListener('click', updateSides);
+        document.getElementById('updateValuesButton').addEventListener('click', updateMeter);
         updateMeterStructure();
         updateMeter();
 

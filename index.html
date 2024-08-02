@@ -32,7 +32,7 @@
 
         .row {
             display: flex;
-            flex-direction: column; /* Stack sections vertically on smaller screens */
+            flex-direction: row; /* Arrange sections horizontally */
             flex-wrap: wrap;
         }
 
@@ -41,17 +41,16 @@
             min-width: 250px; /* Minimum width for columns */
         }
 
-        /* Media Query for Larger Screens */
-        @media (min-width: 768px) {
-            .row {
-                flex-direction: row; /* Arrange sections horizontally */
-            }
+        /* Make image-box span full height */
+        #image-box {
+            flex: 1; /* Allow image-box to grow and shrink */
+            align-self: stretch; /* Stretch to match the height of the row */
+        }
 
-            /* Make image-box span full height */
-            #image-box {
-                flex: 1; /* Allow image-box to grow and shrink */
-                align-self: stretch; /* Stretch to match the height of the row */
-            }
+        /* Media Query for Smaller Screens - Optional: Adjust for mobile layout */
+        @media (max-width: 767px) { 
+            /* You can add styles here to modify the layout specifically for smaller screens 
+               if needed, but the current setup should already work well on mobile. */
         }
     </style>
 </head>

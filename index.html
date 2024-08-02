@@ -58,6 +58,7 @@
             position: relative;
             border: 2px solid;
             z-index: 10;
+            transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out; /* Add transition for color */
         }
         .pop {
             animation: pop 0.3s ease-out;
@@ -65,6 +66,14 @@
         @keyframes pop {
             0% { transform: scale(1); }
             50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        .pulsate {
+            animation: pulsate 1s ease-in-out infinite;
+        }
+        @keyframes pulsate {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
             100% { transform: scale(1); }
         }
         canvas {
@@ -134,6 +143,7 @@
         const particles = [];
         let sideValues = [];
         let sparkleInterval;
+        let tallyStyle = 1; // 0: Default, 1: Filled
 
         function getRandomColor() {
             const letters = '0123456789ABCDEF';
@@ -180,7 +190,7 @@
                 label.className = 'label';
                 label.id = `label${i}`;
                 label.style.borderColor = side.style.backgroundColor;
-                label.style.color = side.style.backgroundColor;
+                updateLabelStyle(label, side.style.backgroundColor, sideValues[i]); // Update label style initially
                 label.textContent = sideValues[i] || '0';
                 labelsContainer.appendChild(label);
 
@@ -217,7 +227,7 @@
                 if (this.radius <= 0) return;
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                ctx.fillStyle = this.color; // Use the assigned color directly
+                ctx.fillStyle = this.color;
                 ctx.fill();
             }
         }
@@ -252,7 +262,7 @@
                     createParticles(
                         rect.left + rect.width / 2, 
                         rect.top + rect.height / 2, 
-                        side.style.backgroundColor  // Use the side's color for particles
+                        side.style.backgroundColor
                     );
                 }
             });
@@ -282,8 +292,12 @@
                 }
             }
 
+            const maxValue = Math.max(...sideValues);
             for (let i = 0; i < sides; i++) {
+                const label = document.getElementById(`label${i}`);
+                const side = document.getElementById(`side${i}`);
                 updateLabelWithAnimation(`label${i}`, sideValues[i]);
+                updateLabelStyle(label, side.style.backgroundColor, sideValues[i], sideValues[i] === maxValue);
             }
 
             startContinuousSparkle();
@@ -297,6 +311,34 @@
                 void label.offsetWidth; // Trigger reflow
                 label.classList.add('pop');
             }
+        }
+
+        function updateLabelStyle(label, bgColor, value, isHighest = false) {
+            if (tallyStyle === 1) {
+                label.style.backgroundColor = bgColor;
+                label.style.color = getContrastingColor(bgColor);
+                label.classList.toggle('pulsate', isHighest && value > 0);
+            } else {
+                label.style.backgroundColor = 'white';
+                label.style.color = bgColor;
+                label.classList.remove('pulsate');
+            }
+        }
+
+        function getContrastingColor(color) {
+            // Remove the '#' character if it exists
+            color = color.replace('#', '');
+
+            // Convert the hex color to RGB
+            const r = parseInt(color.substring(0, 2), 16);
+            const g = parseInt(color.substring(2, 4), 16);
+            const b = parseInt(color.substring(4, 6), 16);
+
+            // Calculate the brightness
+            const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+
+            // Return black or white depending on the brightness
+            return brightness >= 128 ? 'black' : 'white';
         }
 
         // Initialize the meter

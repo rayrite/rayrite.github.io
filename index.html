@@ -5,24 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Friends Group Management</title>
     <style>
-        body {
+        body, html {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            height: 100%;
+            overflow: hidden;
         }
         .mobile-screen {
-            width: 360px;
-            height: 640px;
+            width: 100%;
+            height: 100%;
             background-color: white;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
-            position: relative;
+            display: flex;
+            flex-direction: column;
         }
         .header {
             background-color: #3b5998;
@@ -33,9 +28,9 @@
             font-weight: bold;
         }
         .content {
-            padding: 20px;
+            flex-grow: 1;
             overflow-y: auto;
-            height: calc(100% - 120px);
+            padding: 20px;
         }
         .group {
             background-color: #f0f0f0;
@@ -49,13 +44,18 @@
             align-items: center;
             margin-bottom: 10px;
         }
+        .group-name-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
         .group-name {
             font-weight: bold;
-            flex-grow: 1;
         }
         .group-actions {
             display: flex;
             align-items: center;
+            gap: 10px;
         }
         .icon-button {
             background: none;
@@ -65,10 +65,6 @@
             display: flex;
             align-items: center;
             color: #3b5998;
-            font-size: 14px;
-        }
-        .icon-button svg {
-            margin-right: 5px;
         }
         .friend {
             display: flex;
@@ -100,11 +96,13 @@
             background-color: #3b5998;
             color: white;
             border: none;
-            padding: 10px;
-            border-radius: 5px;
+            padding: 6px 12px;
+            border-radius: 20px;
             cursor: pointer;
-            margin-top: 10px;
-            width: 100%;
+            font-size: 12px;
+        }
+        .add-friend-btn svg {
+            margin-right: 4px;
         }
         .add-group-btn {
             background-color: #3b5998;
@@ -113,9 +111,6 @@
             padding: 15px;
             width: 100%;
             cursor: pointer;
-            position: absolute;
-            bottom: 0;
-            left: 0;
             font-size: 16px;
         }
     </style>
@@ -150,10 +145,20 @@
                 groupElement.className = 'group';
                 groupElement.innerHTML = `
                     <div class="group-header">
-                        <div class="group-name">${group.name}</div>
+                        <div class="group-name-section">
+                            <div class="group-name">${group.name}</div>
+                            <button class="add-friend-btn" onclick="addFriend(${groupIndex})">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="8" x2="12" y2="16"></line>
+                                    <line x1="8" y1="12" x2="16" y2="12"></line>
+                                </svg>
+                                Add Friend
+                            </button>
+                        </div>
                         <div class="group-actions">
                             <button class="icon-button" onclick="deleteGroup(${groupIndex})">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#e74c3c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#e74c3c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <polyline points="3 6 5 6 21 6"></polyline>
                                     <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
                                 </svg>
@@ -167,14 +172,6 @@
                             <button class="remove-btn" onclick="removeFriend(${groupIndex}, ${friendIndex})">Remove</button>
                         </div>
                     `).join('')}
-                    <button class="add-friend-btn" onclick="addFriend(${groupIndex})">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <line x1="12" y1="8" x2="12" y2="16"></line>
-                            <line x1="8" y1="12" x2="16" y2="12"></line>
-                        </svg>
-                        Add Friend
-                    </button>
                 `;
                 container.appendChild(groupElement);
             });

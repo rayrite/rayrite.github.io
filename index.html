@@ -33,7 +33,7 @@
         .row {
             display: flex;
             flex-direction: row; /* Arrange sections horizontally */
-            flex-wrap: wrap;
+            flex-wrap: nowrap; /* Prevent wrapping of items */
         }
 
         .col {
@@ -47,11 +47,6 @@
             align-self: stretch; /* Stretch to match the height of the row */
         }
 
-        /* Media Query for Smaller Screens - Optional: Adjust for mobile layout */
-        @media (max-width: 767px) { 
-            /* You can add styles here to modify the layout specifically for smaller screens 
-               if needed, but the current setup should already work well on mobile. */
-        }
     </style>
 </head>
 <body>

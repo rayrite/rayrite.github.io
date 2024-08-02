@@ -118,6 +118,12 @@
     .nav-links a:hover {
         color: var(--accent-light-blue);
     }
+    .hamburger-menu {
+        display: none;
+        cursor: pointer;
+        font-size: 24px;
+        color: var(--main-red);
+    }
     .login-section h2 {
         text-align: center;
         margin-bottom: 1.5rem;
@@ -233,22 +239,17 @@
         .main-container {
             flex-direction: column;
             align-items: center;
+            margin-top: 80px; /* Adjusted for smaller header */
         }
         .left-container, .right-container, .image-box, .quote-box {
             width: 100%;
             max-width: 400px;
         }
-        .nav-links {
-            flex-direction: column;
-            align-items: center;
-        }
-        .nav-links a {
-            margin: 0.5rem 0;
-        }
         .header {
-            flex-direction: column;
-            align-items: center;
+            flex-direction: row;
+            justify-content: space-between;
             padding: 0.5rem;
+            height: 60px;
         }
         .header-left .company-name {
             font-size: 24px;
@@ -258,13 +259,33 @@
             height: 30px;
         }
         .social-icons {
-            margin-top: 10px;
+            display: none;
         }
         .nav-bar {
-            top: 100px; /* Adjusted to account for the taller header on mobile */
+            display: none;
+            position: fixed;
+            top: 60px;
+            left: 0;
+            width: 100%;
+            background-color: var(--text-light);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 0;
         }
-        .main-container {
-            margin-top: 160px; /* Adjusted to account for the taller header and nav bar on mobile */
+        .nav-bar.active {
+            display: block;
+        }
+        .nav-links {
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem 0;
+        }
+        .nav-links a {
+            color: var(--main-red);
+            margin: 0.5rem 0;
+            font-weight: bold;
+        }
+        .hamburger-menu {
+            display: block;
         }
     }
     </style>
@@ -284,6 +305,9 @@
             <a href="#x"><span class="iconify" data-icon="ri:twitter-x-fill"></span></a>
             <a href="#instagram"><span class="iconify" data-icon="logos:instagram-icon"></span></a>
             <a href="#tiktok"><span class="iconify" data-icon="logos:tiktok-icon"></span></a>
+        </div>
+        <div class="hamburger-menu">
+            <span class="iconify" data-icon="ci:hamburger"></span>
         </div>
     </div>
 
@@ -350,7 +374,7 @@
             'https://media.istockphoto.com/id/1591572504/photo/cheerful-businesswomen-shaking-hands-in-meeting-room.jpg?s=1024x1024&w=is&k=20&c=GYtKvPPbShP3JOyGRZdlakcQE2_h0skl6g6bU0r83qk=',
             'https://media.istockphoto.com/id/1664545047/photo/two-happy-colleagues-talking-while-working-together-in-the-office.jpg?s=1024x1024&w=is&k=20&c=tXHNhbxiAdw9hOhXSA7hZ5aS-t59aOe-B_tfcd9Ac28=',
             'https://cdn.pixabay.com/photo/2017/06/27/21/13/team-spirit-2448837_1280.jpg',
-            'https://cdn.pixabay.com/photo/2018/03/10/12/00/teamwork-3213924_1280.jpg'
+'https://cdn.pixabay.com/photo/2018/03/10/12/00/teamwork-3213924_1280.jpg'
         ];
 
         const quotes = [
@@ -361,7 +385,7 @@
             { text: "Alone we can do so little; together we can do so much.", author: "Helen Keller" }
         ];
 
-function setRandomImageAndQuote() {
+        function setRandomImageAndQuote() {
             const randomIndex = Math.floor(Math.random() * images.length);
             const imageElement = document.getElementById('random-image');
             const quoteElement = document.getElementById('quote-text');
@@ -373,6 +397,14 @@ function setRandomImageAndQuote() {
         }
 
         setRandomImageAndQuote();
+
+        // Hamburger menu functionality
+        const hamburgerMenu = document.querySelector('.hamburger-menu');
+        const navBar = document.querySelector('.nav-bar');
+
+        hamburgerMenu.addEventListener('click', () => {
+            navBar.classList.toggle('active');
+        });
     </script>
 </body>
 </html>

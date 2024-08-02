@@ -3,227 +3,315 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Friends Management</title>
+    <title>Dynamic Opposing Sides Meter</title>
     <style>
-        * {
-            box-sizing: border-box;
+        body, html {
             margin: 0;
             padding: 0;
-        }
-        body, html {
+            height: 100%;
             font-family: Arial, sans-serif;
-            height: 100%;
-            overflow: hidden;
         }
-        .mobile-mockup {
-            width: 100%;
+        .container {
+            display: flex;
+            flex-direction: column;
             height: 100%;
-            background-color: white;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .meter-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .meter {
+            width: 100%;
+            display: flex;
+            height: 30px;
             position: relative;
             overflow: hidden;
+            border-radius: 15px;
         }
-        .status-bar {
-            height: 44px;
-            background-color: #3b5998;
+        .side {
+            height: 100%;
+            transition: width 0.5s ease-in-out;
+        }
+        .labels-container {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
-            color: white;
-            font-size: 14px;
-        }
-        .header {
-            background-color: #3b5998;
-            color: white;
-            padding: 15px;
-            text-align: center;
-        }
-        .header h1 {
-            font-size: 20px;
-        }
-        .content {
-            height: calc(100% - 104px); /* 100% - (status-bar + header) */
-            overflow-y: auto;
-        }
-        .search-bar {
-            padding: 10px;
-            background-color: #f5f5f5;
-            position: sticky;
-            top: 0;
-            z-index: 1;
-        }
-        .search-input {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 20px;
-            font-size: 16px;
+            margin-top: 10px;
         }
-        .friend-list {
-            padding: 10px;
-        }
-        .friend-item {
+        .label {
+            background-color: white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
-            margin-bottom: 15px;
-            border-bottom: 1px solid #e0e0e0;
-            padding-bottom: 15px;
-        }
-        .friend-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            margin-right: 15px;
-            background-color: #e0e0e0;
-        }
-        .friend-info {
-            flex-grow: 1;
-        }
-        .friend-name {
+            justify-content: center;
+            font-size: 18px;
             font-weight: bold;
-            margin-bottom: 5px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.3);
+            position: relative;
+            border: 2px solid;
+            z-index: 10;
         }
-        .friend-status {
-            font-size: 0.9em;
-            color: #666;
+        .pop {
+            animation: pop 0.3s ease-out;
         }
-        .invite-btn {
-            background-color: #d32f2f;
+        @keyframes pop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            opacity: 0.7;
+        }
+        .inputs {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        input {
+            width: 30%;
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px;
+            font-size: 16px;
+            background-color: #4CAF50;
             color: white;
             border: none;
-            padding: 8px 15px;
-            border-radius: 20px;
             cursor: pointer;
-            font-size: 14px;
+            margin-bottom: 10px;
         }
-        .invite-btn:hover {
-            background-color: #b71c1c;
+        button:hover {
+            background-color: #45a049;
         }
-        .highlight {
-            background-color: yellow;
+        #sidesInput {
+            width: calc(70% - 10px);
         }
-
-        /* Media query for larger screens */
-        @media (min-width: 415px) {
-            body {
-                background-color: #f0f0f0;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-            .mobile-mockup {
-                width: 100%;
-                max-width: 414px;
-                height: 100%;
-                max-height: 896px;
-                border-radius: 40px;
-                box-shadow: 0 0 20px rgba(0,0,0,0.1);
-            }
+        #updateSidesButton {
+            width: 30%;
+        }
+        .sides-control {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        #updateValuesButton {
+            width: 100%;
         }
     </style>
 </head>
 <body>
-    <div class="mobile-mockup">
-        <div class="status-bar">
-            <span>9:41</span>
-            <span>📶 📶 🔋</span>
+    <div class="container">
+        <div class="sides-control">
+            <input type="number" id="sidesInput" placeholder="Number of sides (3-8)" min="3" max="8" value="3">
+            <button id="updateSidesButton">Update Sides</button>
         </div>
-        <div class="header">
-            <h1>Find Friends</h1>
+        <div class="meter-container">
+            <div class="meter" id="meter"></div>
+            <div class="labels-container" id="labelsContainer"></div>
         </div>
-        <div class="content">
-            <div class="search-bar">
-                <input type="text" class="search-input" placeholder="Search contacts..." id="searchInput">
-            </div>
-            <div class="friend-list" id="friendList">
-                <!-- Friend list will be populated by JavaScript -->
-            </div>
-        </div>
+        <div class="inputs" id="inputs"></div>
+        <button id="updateValuesButton" onclick="updateMeter()">Update Values</button>
     </div>
 
     <script>
-        const friends = [
-            { name: "John Doe", onApp: true },
-            { name: "Jane Smith", onApp: false },
-            { name: "Mike Johnson", onApp: true },
-            { name: "Emily Brown", onApp: false },
-            { name: "Chris Lee", onApp: true },
-            { name: "Sarah Wilson", onApp: false },
-            { name: "David Taylor", onApp: true },
-            { name: "Olivia Martin", onApp: false },
-            { name: "Daniel Anderson", onApp: true },
-            { name: "Sophia Thomas", onApp: false }
-        ];
+        let sides = 3;
+        const colors = ['blue', 'grey', 'red'];
+        const particles = [];
+        let sparkleInterval;
+        let sideValues = [];
+        let sideColors = [];
 
-        function createFriendElement(friend, searchTerm = '') {
-            const friendItem = document.createElement('div');
-            friendItem.className = 'friend-item';
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
 
-            const avatar = document.createElement('div');
-            avatar.className = 'friend-avatar';
+        function updateSides() {
+            const newSides = parseInt(document.getElementById('sidesInput').value);
+            if (newSides >= 3 && newSides <= 8) {
+                while (sideValues.length < newSides) {
+                    sideValues.push(0);
+                }
+                sideValues = sideValues.slice(0, newSides);
+                
+                sides = newSides;
+                updateMeterStructure();
+                updateMeter();
+            } else {
+                alert('Please enter a number between 3 and 8');
+            }
+        }
 
-            const info = document.createElement('div');
-            info.className = 'friend-info';
+        function updateMeterStructure() {
+            const meter = document.getElementById('meter');
+            const labelsContainer = document.getElementById('labelsContainer');
+            const inputs = document.getElementById('inputs');
+            
+            meter.innerHTML = '';
+            labelsContainer.innerHTML = '';
+            inputs.innerHTML = '';
+            sideColors = [];
 
-            const name = document.createElement('div');
-            name.className = 'friend-name';
-            name.innerHTML = highlightText(friend.name, searchTerm);
+            for (let i = 0; i < sides; i++) {
+                const side = document.createElement('div');
+                side.id = `side${i}`;
+                side.className = 'side';
+                const color = i < colors.length ? colors[i] : getRandomColor();
+                side.style.backgroundColor = color;
+                sideColors.push(color);
+                meter.appendChild(side);
 
-            const status = document.createElement('div');
-            status.className = 'friend-status';
-            status.textContent = friend.onApp ? 'On the app' : 'Not on the app';
+                const label = document.createElement('span');
+                label.className = 'label';
+                label.id = `label${i}`;
+                label.style.borderColor = color;
+                label.style.color = color;
+                label.textContent = sideValues[i] || '0';
+                labelsContainer.appendChild(label);
 
-            info.appendChild(name);
-            info.appendChild(status);
+                const input = document.createElement('input');
+                input.type = 'number';
+                input.id = `input${i}`;
+                input.placeholder = `Side ${i + 1} value`;
+                input.min = '0';
+                input.value = sideValues[i] || '';
+                inputs.appendChild(input);
+            }
+        }
 
-            friendItem.appendChild(avatar);
-            friendItem.appendChild(info);
-
-            if (!friend.onApp) {
-                const inviteBtn = document.createElement('button');
-                inviteBtn.className = 'invite-btn';
-                inviteBtn.textContent = 'Invite';
-                inviteBtn.onclick = () => alert(`Invited ${friend.name}`);
-                friendItem.appendChild(inviteBtn);
+        class Particle {
+            constructor(x, y, color) {
+                this.x = x;
+                this.y = y;
+                this.color = color;
+                this.radius = Math.random() * 2 + 1;
+                this.speedX = Math.random() * 1.5 - 0.75;
+                this.speedY = Math.random() * 1.5 - 0.75;
+                this.life = 150;
+                this.maxLife = 150;
             }
 
-            return friendItem;
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.life -= 1;
+                this.radius = Math.max(0, this.radius - 0.01);
+            }
+
+            draw(ctx) {
+                if (this.radius <= 0) return;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = this.color + Math.floor((this.life / this.maxLife) * 255).toString(16).padStart(2, '0');
+                ctx.fill();
+            }
         }
 
-        function highlightText(text, searchTerm) {
-            if (!searchTerm) return text;
-            const regex = new RegExp(`(${escapeRegExp(searchTerm)})`, 'gi');
-            return text.replace(regex, '<span class="highlight">$1</span>');
+        function createParticles(x, y, color, count = 5) {
+            for (let i = 0; i < count; i++) {
+                particles.push(new Particle(x, y, color));
+            }
         }
 
-        function escapeRegExp(string) {
-            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        }
-
-        function fuzzySearch(searchTerm, str) {
-            const escapedSearchTerm = escapeRegExp(searchTerm);
-            const regex = new RegExp(`.*${escapedSearchTerm.split('').join('.*')}.*`, 'i');
-            return regex.test(str);
-        }
-
-        function populateFriendList(searchTerm = '') {
-            const friendList = document.getElementById('friendList');
-            friendList.innerHTML = '';
-            friends.forEach(friend => {
-                if (fuzzySearch(searchTerm, friend.name)) {
-                    friendList.appendChild(createFriendElement(friend, searchTerm));
+        function animateParticles() {
+            const canvas = document.getElementById('particleCanvas');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = particles.length - 1; i >= 0; i--) {
+                particles[i].update();
+                particles[i].draw(ctx);
+                if (particles[i].life <= 0 || particles[i].radius <= 0) {
+                    particles.splice(i, 1);
                 }
-            });
+            }
+            requestAnimationFrame(animateParticles);
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            populateFriendList();
+        function startContinuousSparkle(values) {
+            clearInterval(sparkleInterval);
+            sparkleInterval = setInterval(() => {
+                const maxValue = Math.max(...values);
+                values.forEach((value, index) => {
+                    if (value === maxValue && value > 0) {
+                        const label = document.getElementById(`label${index}`);
+                        const rect = label.getBoundingClientRect();
+                        createParticles(
+                            rect.left + rect.width / 2, 
+                            rect.top + rect.height / 2, 
+                            sideColors[index]
+                        );
+                    }
+                });
+            }, 75);
+        }
 
-            const searchInput = document.getElementById('searchInput');
-            searchInput.addEventListener('input', (e) => {
-                populateFriendList(e.target.value);
-            });
-        });
+        function updateMeter() {
+            sideValues = [];
+            for (let i = 0; i < sides; i++) {
+                sideValues.push(parseInt(document.getElementById(`input${i}`).value) || 0);
+            }
+            const total = sideValues.reduce((sum, value) => sum + value, 0);
+
+            if (total === 0) {
+                const equalWidth = 100 / sides;
+                for (let i = 0; i < sides; i++) {
+                    document.getElementById(`side${i}`).style.width = `${equalWidth}%`;
+                }
+            } else {
+                for (let i = 0; i < sides; i++) {
+                    const width = (sideValues[i] / total) * 100;
+                    document.getElementById(`side${i}`).style.width = `${width}%`;
+                }
+            }
+
+            for (let i = 0; i < sides; i++) {
+                updateLabelWithAnimation(`label${i}`, sideValues[i]);
+            }
+
+            startContinuousSparkle(sideValues);
+        }
+
+        function updateLabelWithAnimation(labelId, value) {
+            const label = document.getElementById(labelId);
+            if (label.textContent !== value.toString()) {
+                label.textContent = value;
+                label.classList.remove('pop');
+                void label.offsetWidth; // Trigger reflow
+                label.classList.add('pop');
+            }
+        }
+
+        // Initialize the meter
+        document.getElementById('updateSidesButton').addEventListener('click', updateSides);
+        updateMeterStructure();
+        updateMeter();
+
+        // Setup particle animation
+        const canvas = document.createElement('canvas');
+        canvas.id = 'particleCanvas';
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        document.body.appendChild(canvas);
+        animateParticles();
     </script>
 </body>
 </html>

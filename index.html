@@ -7,7 +7,7 @@
     <script src="https://code.iconify.design/1/1.0.7/iconify.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Varela+Round&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
     <style>
-     :root {
+    :root {
         --main-red: #D32F2F;
         --main-blue: #1565C0;
         --accent-pink: #FF80AB;
@@ -85,10 +85,15 @@
     }
     .social-icons {
         display: flex;
+        justify-content: center;
         gap: 20px;
+        margin-top: 20px;
     }
     .social-icons a {
         color: var(--text-dark);
+    }
+    .social-icons .iconify {
+        font-size: 24px;
     }
     .nav-bar {
         width: 100%;
@@ -217,14 +222,14 @@
         font-family: 'Varela Round', sans-serif;
     }
     footer {
-        margin-top: 40px;
+        margin-top: 20px;
         text-align: center;
         font-size: 0.9rem;
         color: var(--text-dark);
         display: flex;
+        flex-direction: column;
         justify-content: center;
         align-items: center;
-        flex-wrap: wrap;
         gap: 10px;
     }
     footer a {
@@ -251,6 +256,10 @@
             padding: 0.5rem;
             height: 60px;
         }
+        .header-left {
+            flex: 1;
+            justify-content: flex-start;
+        }
         .header-left .company-name {
             font-size: 24px;
         }
@@ -258,8 +267,10 @@
             width: 30px;
             height: 30px;
         }
-        .social-icons {
-            display: none;
+        .hamburger-menu {
+            flex: 1;
+            display: flex;
+            justify-content: flex-end;
         }
         .nav-bar {
             display: none;
@@ -299,12 +310,6 @@
                     <span class="red">DU</span><span class="blue">KR</span>
                 </h1>
             </a>
-        </div>
-        <div class="social-icons">
-            <a href="#facebook"><span class="iconify" data-icon="bx:bxl-facebook"></span></a>
-            <a href="#x"><span class="iconify" data-icon="ri:twitter-x-fill"></span></a>
-            <a href="#instagram"><span class="iconify" data-icon="logos:instagram-icon"></span></a>
-            <a href="#tiktok"><span class="iconify" data-icon="logos:tiktok-icon"></span></a>
         </div>
         <div class="hamburger-menu">
             <span class="iconify" data-icon="ci:hamburger"></span>
@@ -362,13 +367,20 @@
         </div>
     </div>
 
+    <div class="social-icons">
+        <a href="#facebook"><span class="iconify" data-icon="bx:bxl-facebook"></span></a>
+        <a href="#x"><span class="iconify" data-icon="ri:twitter-x-fill"></span></a>
+        <a href="#instagram"><span class="iconify" data-icon="logos:instagram-icon"></span></a>
+        <a href="#tiktok"><span class="iconify" data-icon="logos:tiktok-icon"></span></a>
+    </div>
+
     <footer>
         <span>&copy; 2024 Your Company Name. All rights reserved.</span>
         <a href="#cookies-policy">Cookies Policy</a>
     </footer>
 
     <script>
-        // Image rotation functionality
+         // Image rotation functionality
         const images = [
             'https://cdn.pixabay.com/photo/2015/01/09/11/08/startup-594090_1280.jpg',
             'https://media.istockphoto.com/id/1591572504/photo/cheerful-businesswomen-shaking-hands-in-meeting-room.jpg?s=1024x1024&w=is&k=20&c=GYtKvPPbShP3JOyGRZdlakcQE2_h0skl6g6bU0r83qk=',

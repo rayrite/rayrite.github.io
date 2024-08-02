@@ -13,12 +13,10 @@
             flex-direction: column;
             min-height: 100vh; 
         }
-
         section {
             padding: 20px;
             text-align: center;
         }
-
         /* Styling for clarity */
         #login { background-color: #e0f2f7; }
         #signup { background-color: #f0f4c3; }
@@ -26,40 +24,36 @@
         #quote-box { background-color: #c5cae9; }
         #social-icons { background-color: #f8bbd0; }
         #footer { background-color: #cfd8dc; }
-
         /* Flexbox Layout */
         .container {
             display: flex;
             flex-direction: column; 
             flex-grow: 1; 
         }
-
         .row {
             display: flex;
             flex-direction: row; 
             flex-wrap: nowrap; 
         }
-
         .col {
             flex: 1; 
             min-width: 0; 
         }
-
         #image-box {
             flex: 1; 
             align-self: stretch; 
         }
-
         /* Footer and Social Icons Grouping */
-        #footer-section {
+        #footer-group {
             margin-top: auto; /* Push the group to bottom */
+        }
+        #social-icons, #footer {
+            flex: 0 0 auto; /* Prevent these sections from growing or shrinking */
         }
     </style>
 </head>
 <body>
-
     <div class="container">
-
         <div class="row">
             <div class="col"> 
                 <section id="login">
@@ -73,27 +67,19 @@
                 <h2>Image Box</h2>
             </section>
         </div>
-
         <div class="row">
             <section id="quote-box" class="col">
                 <h2>Quote Box</h2>
             </section>
         </div>
-
-        <div id="footer-section"> 
-            <div class="row">
-                <section id="social-icons" class="col">
-                    <h2>Social Icons</h2>
-                </section>
-            </div>
-            <div class="row">
-                <section id="footer" class="col">
-                    <h2>Footer</h2>
-                </section>
-            </div>
+        <div id="footer-group">
+            <section id="social-icons">
+                <h2>Social Icons</h2>
+            </section>
+            <section id="footer">
+                <h2>Footer</h2>
+            </section>
         </div>
-
     </div>
-
 </body>
 </html>

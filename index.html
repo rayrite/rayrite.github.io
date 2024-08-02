@@ -3,73 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fixed Layout</title>
+    <title>Responsive Web Page</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
             margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            font-family: Arial, sans-serif;
         }
         .container {
             display: flex;
-            flex-wrap: wrap;
-            max-width: 1200px;
-            margin: 0 auto;
+            flex-direction: column;
+            height: 100vh;
         }
-        .section {
-            padding: 10px;
-            border: 1px solid #ccc;
-            margin: 5px;
-            box-sizing: border-box;
-        }
-        .left-column {
+        .left-column, .right-column {
             flex: 1;
             display: flex;
             flex-direction: column;
-            min-width: 150px;
         }
-        .login, .signup {
-            flex: 1;
+        .section {
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .login-section, .signup-section, .quote-box, .social-icons, .footer {
+            border: 1px solid #ccc;
+            margin: 10px;
+            text-align: center;
         }
         .image-box {
-            flex: 1;
-            min-width: 150px;
-            min-height: 300px;
+            border: 1px solid #ccc;
+            margin: 10px;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        .quote-box, .social-icons, .footer {
-            flex: 1 1 100%;
+        .image-box img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        @media (min-width: 600px) {
+            .container {
+                flex-direction: row;
+            }
+            .left-column {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+            }
+            .right-column {
+                flex: 1;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="left-column">
-            <div class="section login">
+            <div class="section login-section">
                 <h2>Login Section</h2>
-                <p>Login form here.</p>
+                <p>Login form goes here.</p>
             </div>
-            <div class="section signup">
-                <h2>Sign Up Section</h2>
-                <p>Sign up form here.</p>
+            <div class="section signup-section">
+                <h2>Sign Up</h2>
+                <p>Sign up form goes here.</p>
             </div>
         </div>
-        <div class="section image-box">
-            <h2>Image Box</h2>
-            <p>Image or content here.</p>
+        <div class="right-column">
+            <div class="section image-box">
+                <img src="https://via.placeholder.com/300" alt="Placeholder Image">
+            </div>
         </div>
-        <div class="section quote-box">
-            <h2>Quote Box</h2>
-            <p>Quote or additional content here.</p>
-        </div>
-        <div class="section social-icons">
-            <h2>Social Icons</h2>
-            <p>Social media icons here.</p>
-        </div>
-        <div class="section footer">
-            <h2>Footer</h2>
-            <p>Footer content here.</p>
-        </div>
+    </div>
+    <div class="section quote-box">
+        <h2>Quote Box</h2>
+        <p>Inspirational quote goes here.</p>
+    </div>
+    <div class="section social-icons">
+        <h2>Social Icons</h2>
+        <p>Social media icons go here.</p>
+    </div>
+    <div class="section footer">
+        <h2>Footer</h2>
+        <p>Footer content goes here.</p>
     </div>
 </body>
 </html>

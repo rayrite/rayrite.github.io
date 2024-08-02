@@ -40,9 +40,14 @@
         }
         .labels-container {
             display: flex;
-            justify-content: space-between;
+            overflow-x: auto; 
             width: 100%;
             margin-top: 10px;
+            justify-content: space-around; /* Evenly space the labels */
+        }
+        .labels-pane {
+            display: flex;
+            justify-content: space-around; /* Evenly space the labels */
         }
         .label {
             background-color: white;
@@ -58,7 +63,7 @@
             position: relative;
             border: 2px solid;
             z-index: 10;
-            transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out; /* Add transition for color */
+            transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;
         }
         .pop {
             animation: pop 0.3s ease-out;
@@ -90,7 +95,7 @@
             margin-bottom: 20px;
         }
         input {
-            width: 30%;
+            width: 15%; 
             padding: 10px;
             font-size: 16px;
             margin-bottom: 10px;
@@ -126,12 +131,14 @@
 <body>
     <div class="container">
         <div class="sides-control">
-            <input type="number" id="sidesInput" placeholder="Number of sides (3-8)" min="3" max="8" value="3">
+            <input type="number" id="sidesInput" placeholder="Number of sides (3-12)" min="3" max="12" value="3">
             <button id="updateSidesButton">Update Sides</button>
         </div>
         <div class="meter-container">
             <div class="meter" id="meter"></div>
-            <div class="labels-container" id="labelsContainer"></div>
+            <div class="labels-container" id="labelsContainer">
+                <div class="labels-pane"></div> 
+            </div>
         </div>
         <div class="inputs" id="inputs"></div>
         <button id="updateValuesButton">Update Values</button>
@@ -139,11 +146,11 @@
 
     <script>
         let sides = 3;
-        const colors = ['blue', 'grey', 'red'];
+        const colors = ['blue', 'grey', 'red', 'green', 'purple', 'orange', 'brown', 'pink', 'cyan', 'magenta', 'lime', 'teal']; 
         const particles = [];
         let sideValues = [];
         let sparkleInterval;
-        let tallyStyle = 1; // 0: Default, 1: Filled
+        let tallyStyle = 0; // 0: Default, 1: Filled
 
         function getRandomColor() {
             const letters = '0123456789ABCDEF';
@@ -156,7 +163,7 @@
 
         function updateSides() {
             const newSides = parseInt(document.getElementById('sidesInput').value);
-            if (newSides >= 3 && newSides <= 8) {
+            if (newSides >= 3 && newSides <= 12) { 
                 while (sideValues.length < newSides) {
                     sideValues.push(0);
                 }
@@ -166,17 +173,17 @@
                 updateMeterStructure();
                 updateMeter();
             } else {
-                alert('Please enter a number between 3 and 8');
+                alert('Please enter a number between 3 and 12');
             }
         }
 
         function updateMeterStructure() {
             const meter = document.getElementById('meter');
-            const labelsContainer = document.getElementById('labelsContainer');
+            const labelsContainer = document.getElementById('labelsContainer'); // Get the container
             const inputs = document.getElementById('inputs');
             
             meter.innerHTML = '';
-            labelsContainer.innerHTML = '';
+            labelsContainer.innerHTML = ''; // Clear the container
             inputs.innerHTML = '';
 
             for (let i = 0; i < sides; i++) {
@@ -186,13 +193,14 @@
                 side.style.backgroundColor = i < colors.length ? colors[i] : getRandomColor();
                 meter.appendChild(side);
 
+                // Create label and append to labelsContainer
                 const label = document.createElement('span');
                 label.className = 'label';
                 label.id = `label${i}`;
                 label.style.borderColor = side.style.backgroundColor;
-                updateLabelStyle(label, side.style.backgroundColor, sideValues[i]); // Update label style initially
+                updateLabelStyle(label, side.style.backgroundColor, sideValues[i]);
                 label.textContent = sideValues[i] || '0';
-                labelsContainer.appendChild(label);
+                labelsContainer.appendChild(label); // Append to the container
 
                 const input = document.createElement('input');
                 input.type = 'number';
@@ -326,18 +334,11 @@
         }
 
         function getContrastingColor(color) {
-            // Remove the '#' character if it exists
             color = color.replace('#', '');
-
-            // Convert the hex color to RGB
             const r = parseInt(color.substring(0, 2), 16);
             const g = parseInt(color.substring(2, 4), 16);
             const b = parseInt(color.substring(4, 6), 16);
-
-            // Calculate the brightness
             const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-
-            // Return black or white depending on the brightness
             return brightness >= 128 ? 'black' : 'white';
         }
 

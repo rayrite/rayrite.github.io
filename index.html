@@ -162,6 +162,8 @@
         transition: background-color 0.3s;
         text-decoration: none;
         font-family: 'Varela Round', sans-serif;
+        margin-left: auto;
+        margin-right: auto;
     }
     .btn .iconify {
         margin-right: 0.5rem;
@@ -249,13 +251,57 @@
     footer a:hover {
         color: var(--main-red);
     }
+    .login-section, .signup-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
     @media (max-width: 768px) {
         .main-container {
-            flex-direction: column;
+            flex-direction: row;
             margin-top: 100px;
+            padding: 0 10px;
+            box-sizing: border-box;
         }
         .left-container, .right-container {
+            width: calc(50% - 5px);
+        }
+        .login-section, .signup-section, .image-box {
+            padding: 0.5rem;
+        }
+        .login-section h2 {
+            font-size: 1.1rem;
+        }
+        .btn {
+            font-size: 0.8rem;
+            padding: 0.4rem;
+        }
+        .btn .iconify, .btn svg {
+            font-size: 16px;
+            width: 16px;
+            height: 16px;
+        }
+        .image-box {
+            height: 180px;
+            width: 95%;
+            margin: 0 auto;
+        }
+        .quote-box, .social-icons, footer {
             width: 100%;
+            margin-top: 20px;
+        }
+        .quote-box {
+            font-size: 1rem;
+            padding: 1rem;
+        }
+        .quote-author {
+            font-size: 0.9rem;
+        }
+        .social-icons .iconify {
+            font-size: 20px;
+        }
+        footer {
+            font-size: 0.8rem;
         }
         .header {
             flex-wrap: wrap;

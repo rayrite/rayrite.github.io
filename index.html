@@ -3,88 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Responsive Web Page</title>
+    <title>Responsive Layout</title>
     <style>
+        /* Basic Styles */
         body {
             margin: 0;
-            font-family: Arial, sans-serif;
-        }
-        .container {
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-        }
-        .left-column, .right-column {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-        .section {
-            padding: 20px;
-            box-sizing: border-box;
-        }
-        .login-section, .signup-section, .quote-box, .social-icons, .footer {
-            border: 1px solid #ccc;
-            margin: 10px;
-            text-align: center;
-        }
-        .image-box {
-            border: 1px solid #ccc;
-            margin: 10px;
-            background-color: #f0f0f0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .image-box img {
-            max-width: 100%;
-            height: auto;
+            font-family: sans-serif;
         }
 
-        @media (min-width: 600px) {
-            .container {
-                flex-direction: row;
+        section {
+            padding: 20px;
+            text-align: center;
+        }
+
+        /* Styling for clarity */
+        #login { background-color: #e0f2f7; }
+        #signup { background-color: #f0f4c3; }
+        #image-box { background-color: #b2dfdb; }
+        #quote-box { background-color: #c5cae9; }
+        #social-icons { background-color: #f8bbd0; }
+        #footer { background-color: #cfd8dc; }
+
+        /* Flexbox Layout */
+        .container {
+            display: flex;
+            flex-direction: column; /* Stack vertically by default */
+        }
+
+        .row {
+            display: flex;
+            flex-direction: column; /* Stack sections vertically on smaller screens */
+            flex-wrap: wrap;
+        }
+
+        .col {
+            flex: 1; /* Each column takes equal width */
+            min-width: 250px; /* Minimum width for columns */
+        }
+
+        /* Media Query for Larger Screens */
+        @media (min-width: 768px) {
+            .row {
+                flex-direction: row; /* Arrange sections horizontally */
             }
-            .left-column {
-                flex: 1;
-                display: flex;
-                flex-direction: column;
-            }
-            .right-column {
-                flex: 1;
+
+            /* Make image-box span full height */
+            #image-box {
+                flex: 1; /* Allow image-box to grow and shrink */
+                align-self: stretch; /* Stretch to match the height of the row */
             }
         }
     </style>
 </head>
 <body>
+
     <div class="container">
-        <div class="left-column">
-            <div class="section login-section">
-                <h2>Login Section</h2>
-                <p>Login form goes here.</p>
+
+        <div class="row">
+            <div class="col"> 
+                <section id="login">
+                    <h2>Login Section</h2>
+                </section>
+                <section id="signup">
+                    <h2>Sign Up</h2>
+                </section>
             </div>
-            <div class="section signup-section">
-                <h2>Sign Up</h2>
-                <p>Sign up form goes here.</p>
-            </div>
+            <section id="image-box" class="col">
+                <h2>Image Box</h2>
+            </section>
         </div>
-        <div class="right-column">
-            <div class="section image-box">
-                <img src="https://via.placeholder.com/300" alt="Placeholder Image">
-            </div>
+
+        <div class="row">
+            <section id="quote-box" class="col">
+                <h2>Quote Box</h2>
+            </section>
         </div>
+
+        <div class="row">
+            <section id="social-icons" class="col">
+                <h2>Social Icons</h2>
+            </section>
+        </div>
+
+        <div class="row">
+            <section id="footer" class="col">
+                <h2>Footer</h2>
+            </section>
+        </div>
+
     </div>
-    <div class="section quote-box">
-        <h2>Quote Box</h2>
-        <p>Inspirational quote goes here.</p>
-    </div>
-    <div class="section social-icons">
-        <h2>Social Icons</h2>
-        <p>Social media icons go here.</p>
-    </div>
-    <div class="section footer">
-        <h2>Footer</h2>
-        <p>Footer content goes here.</p>
-    </div>
+
 </body>
 </html>

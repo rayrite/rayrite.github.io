@@ -151,7 +151,7 @@
     .btn-microsoft:hover { background-color: #B71C1C; }
     .btn-google { background-color: var(--main-blue); color: var(--text-light); }
     .btn-google:hover { background-color: #B71C1C; }
-    .btn-openid { background-color: var(--main-blue); color: var(--text-light); }
+    .btn-openid { background-color: var(--main-blue); color: var (--text-light); }
     .btn-openid:hover { background-color: #B71C1C; }
     .btn-email { background-color: var(--main-blue); color: var(--text-light); }
     .btn-email:hover { background-color: #B71C1C; }
@@ -225,12 +225,34 @@
         color: var(--main-red);
     }
     @media (max-width: 768px) {
+        .main-container {
+            flex-direction: column;
+            align-items: center;
+        }
+        .left-container, .right-container, .image-box, .quote-box {
+            width: 100%;
+            max-width: 400px;
+        }
         .nav-links {
             flex-direction: column;
             align-items: center;
         }
         .nav-links a {
             margin: 0.5rem 0;
+        }
+        .header {
+            flex-direction: column;
+            align-items: center;
+        }
+        .header-left .company-name {
+            font-size: 24px;
+        }
+        .logo {
+            width: 30px;
+            height: 30px;
+        }
+        .social-icons {
+            margin-top: 10px;
         }
     }
     </style>

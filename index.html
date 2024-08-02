@@ -38,7 +38,8 @@
     .left-container {
         display: flex;
         flex-direction: column;
-        width: 400px;
+        width: 100%;
+        max-width: 400px;
         gap: 20px;
     }
     .header, .login-section, .signup-section, .image-box, .quote-box {
@@ -66,13 +67,13 @@
         align-items: center;
     }
     .logo {
-        width:  50px;
+        width: 50px;
         height: 50px;
         margin-right: 1rem;
     }
     .header-left .company-name {
         margin: 0;
-        font-size:  50px;
+        font-size: 50px;
         font-weight: 800;
         line-height: 1;
     }
@@ -87,7 +88,7 @@
         gap: 20px;
     }
     .social-icons a {
-        color: var (--text-dark);
+        color: var(--text-dark);
     }
     .nav-bar {
         width: 100%;
@@ -170,9 +171,12 @@
         flex-direction: column;
         align-items: center;
         gap: 20px;
+        width: 100%;
+        max-width: 400px;
     }
     .image-box {
-        width: 400px;
+        width: 100%;
+        max-width: 400px;
         height: 400px;
         border: 2px solid var(--accent-light-blue);
         display: flex;
@@ -188,7 +192,8 @@
         border-radius: 18px;
     }
     .quote-box {
-        width: 400px;
+        width: 100%;
+        max-width: 400px;
         font-family: 'Playfair Display', serif;
         font-style: italic;
         font-size: 1.2rem;
@@ -224,30 +229,6 @@
     footer a:hover {
         color: var(--main-red);
     }
-    .nav-toggle {
-        display: none;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
-        padding: 10px;
-    }
-    .nav-toggle span {
-        width: 25px;
-        height: 3px;
-        background-color: var(--text-light);
-        margin: 4px;
-        transition: all 0.3s;
-    }
-    .nav-toggle.open span:nth-child(1) {
-        transform: rotate(45deg) translate(5px, 5px);
-    }
-    .nav-toggle.open span:nth-child(2) {
-        opacity: 0;
-    }
-    .nav-toggle.open span:nth-child(3) {
-        transform: rotate(-45deg) translate(5px, -5px);
-    }
     @media (max-width: 768px) {
         .main-container {
             flex-direction: column;
@@ -258,20 +239,16 @@
             max-width: 400px;
         }
         .nav-links {
-            display: none;
             flex-direction: column;
             align-items: center;
-            width: 100%;
         }
-        .nav-links.active {
-            display: flex;
-        }
-        .nav-toggle {
-            display: flex;
+        .nav-links a {
+            margin: 0.5rem 0;
         }
         .header {
             flex-direction: column;
             align-items: center;
+            padding: 0.5rem;
         }
         .header-left .company-name {
             font-size: 24px;
@@ -282,6 +259,12 @@
         }
         .social-icons {
             margin-top: 10px;
+        }
+        .nav-bar {
+            top: 100px; /* Adjusted to account for the taller header on mobile */
+        }
+        .main-container {
+            margin-top: 160px; /* Adjusted to account for the taller header and nav bar on mobile */
         }
     }
     </style>
@@ -302,15 +285,10 @@
             <a href="#instagram"><span class="iconify" data-icon="logos:instagram-icon"></span></a>
             <a href="#tiktok"><span class="iconify" data-icon="logos:tiktok-icon"></span></a>
         </div>
-        <div class="nav-toggle" onclick="toggleNav()">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
     </div>
 
     <nav class="nav-bar">
-        <div class="nav-links" id="navLinks">
+        <div class="nav-links">
             <a href="#pricing">Pricing</a>
             <a href="#privacy-policy">Privacy Policy</a>
             <a href="#terms-and-conditions">Terms & Conditions</a>
@@ -383,7 +361,7 @@
             { text: "Alone we can do so little; together we can do so much.", author: "Helen Keller" }
         ];
 
-        function setRandomImageAndQuote() {
+function setRandomImageAndQuote() {
             const randomIndex = Math.floor(Math.random() * images.length);
             const imageElement = document.getElementById('random-image');
             const quoteElement = document.getElementById('quote-text');
@@ -395,12 +373,6 @@
         }
 
         setRandomImageAndQuote();
-
-        // Toggle navigation menu
-        function toggleNav() {
-            const navLinks = document.getElementById('navLinks');
-            navLinks.classList.toggle('active');
-        }
     </script>
 </body>
 </html>

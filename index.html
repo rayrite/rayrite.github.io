@@ -256,57 +256,75 @@
     }
     @media (max-width: 768px) {
         .main-container {
-            grid-template-columns: 1fr;
-            gap: 10px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto auto auto;
+            gap: 20px;
             margin-top: 100px;
         }
-        .left-container, .right-container {
-            width: 100%;
-        }
         .left-container {
+            grid-column: 1;
+            grid-row: 1 / span 2;
             display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            gap: 10px;
+            flex-direction: column;
+            gap: 20px;
         }
         .login-section, .signup-section {
-            width: 48%; /* Adjust as needed */
-            padding: 0.5rem;
+            width: 100%;
+            padding: 1rem;
         }
-        .login-section h2 {
-            font-size: 1rem;
+        .login-section {
+            order: 1;
         }
-        .btn {
-            font-size: 0.7rem;
-            padding: 0.3rem;
-        }
-        .btn .iconify, .btn svg {
-            font-size: 14px;
-            width: 14px;
-            height: 14px;
-            margin-right: 0.3rem;
+        .signup-section {
+            order: 2;
         }
         .image-box {
-            height: 180px;
+            grid-column: 2;
+            grid-row: 1 / span 2;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .right-container {
+            grid-column: 1 / span 2;
+            grid-row: 3;
+        }
+        .login-section h2 {
+            font-size: 1.2rem;
+        }
+        .btn {
+            font-size: 0.8rem;
+            padding: 0.4rem;
+        }
+        .btn .iconify, .btn svg {
+            font-size: 16px;
+            width: 16px;
+            height: 16px;
+            margin-right: 0.4rem;
+        }
+        .image-box img {
+            max-height: 100%;
             width: 100%;
-            margin: 0 auto;
+            object-fit: cover;
         }
         .quote-box, .social-icons, footer {
             width: 100%;
             margin-top: 20px;
         }
         .quote-box {
-            font-size: 0.9rem;
-            padding: 0.8rem;
+            font-size: 1rem;
+            padding: 1rem;
         }
         .quote-author {
-            font-size: 0.8rem;
+            font-size: 0.9rem;
         }
         .social-icons .iconify {
-            font-size: 18px;
+            font-size: 20px;
         }
         footer {
-            font-size: 0.7rem;
+            font-size: 0.8rem;
         }
         .header {
             flex-wrap: wrap;
@@ -317,19 +335,19 @@
             flex: 1;
         }
         .header-left .company-name {
-            font-size: 20px;
+            font-size: 24px;
         }
         .logo {
-            width: 25px;
-            height: 25px;
+            width: 30px;
+            height: 30px;
         }
         .header-right {
             flex: 1;
             justify-content: flex-end;
         }
         .btn-header {
-            padding: 4px 8px;
-            font-size: 10px;
+            padding: 6px 12px;
+            font-size: 12px;
         }
         .hamburger-menu {
             display: block;

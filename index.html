@@ -131,7 +131,7 @@
 <body>
     <div class="container">
         <div class="sides-control">
-            <input type="number" id="sidesInput" placeholder="Number of sides (3-12)" min="3" max="12" value="3">
+            <input type="number" id="sidesInput" placeholder="Number of sides (3-15)" min="3" max="15" value="3">
             <button id="updateSidesButton">Update Sides</button>
         </div>
         <div class="meter-container">
@@ -150,7 +150,7 @@
         const particles = [];
         let sideValues = [];
         let sparkleInterval;
-        let tallyStyle = 0; // 0: Default, 1: Filled
+        let tallyStyle = 1; // 0: Default, 1: Filled
 
         function getRandomColor() {
             const letters = '0123456789ABCDEF';

@@ -148,11 +148,17 @@
         font-size: 1.5rem;
         color: var(--main-blue);
     }
+    .login-section, .signup-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
     .btn {
         display: flex;
         align-items: center;
         justify-content: center;
         width: 100%;
+        max-width: 300px;
         padding: 0.5rem;
         margin-bottom: 1rem;
         border: none;
@@ -250,25 +256,19 @@
         color: var(--main-red);
     }
     @media (max-width: 768px) {
+        body {
+            padding: 10px 0;
+        }
         .main-container {
-            flex-direction: row;
-            margin-top: 100px;
+            flex-direction: column;
+            margin-top: 80px;
+            gap: 10px;
         }
-        .left-container {
-            width: 50%;
-            order: 2;
-        }
-        .right-container {
-            width: 50%;
-            order: 1;
+        .left-container, .right-container {
+            width: 100%;
         }
         .header {
-            flex-wrap: wrap;
             padding: 0.5rem;
-            height: auto;
-        }
-        .header-left {
-            flex: 1;
         }
         .header-left .company-name {
             font-size: 24px;
@@ -276,10 +276,6 @@
         .logo {
             width: 30px;
             height: 30px;
-        }
-        .header-right {
-            flex: 1;
-            justify-content: flex-end;
         }
         .btn-header {
             padding: 6px 12px;
@@ -290,17 +286,7 @@
             margin-left: 10px;
         }
         .nav-bar {
-            display: none;
-            width: 100%;
-            position: absolute;
             top: 60px;
-            left: 0;
-            background-color: var(--text-light);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            border-radius: 0;
-        }
-        .nav-bar.active {
-            display: block;
         }
         .nav-links {
             flex-direction: column;
@@ -308,17 +294,14 @@
             padding: 1rem 0;
         }
         .nav-links a {
-            color: var(--main-red);
             margin: 0.5rem 0;
-            font-weight: bold;
         }
-        .login-section, .signup-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        .login-section, .signup-section, .image-box, .quote-box {
+            padding: 1rem;
+            border-radius: 10px;
         }
         .btn {
-            max-width: 250px;
+            max-width: 100%;
         }
     }
     </style>

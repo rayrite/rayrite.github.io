@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Updated Responsive Layout</title>
+    <title>Fixed Layout</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -18,7 +18,7 @@
             margin: 0 auto;
         }
         .section {
-            padding: 20px;
+            padding: 10px;
             border: 1px solid #ccc;
             margin: 5px;
             box-sizing: border-box;
@@ -27,23 +27,18 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            min-width: 300px;
+            min-width: 150px;
         }
         .login, .signup {
             flex: 1;
         }
         .image-box {
             flex: 1;
-            min-width: 300px;
-            min-height: 400px;
+            min-width: 150px;
+            min-height: 300px;
         }
         .quote-box, .social-icons, .footer {
             flex: 1 1 100%;
-        }
-        @media (max-width: 768px) {
-            .left-column, .image-box {
-                flex: 1 1 100%;
-            }
         }
     </style>
 </head>
@@ -52,28 +47,28 @@
         <div class="left-column">
             <div class="section login">
                 <h2>Login Section</h2>
-                <p>This is where the login form would go.</p>
+                <p>Login form here.</p>
             </div>
             <div class="section signup">
                 <h2>Sign Up Section</h2>
-                <p>This is where the sign up form would go.</p>
+                <p>Sign up form here.</p>
             </div>
         </div>
         <div class="section image-box">
             <h2>Image Box</h2>
-            <p>This is where an image or content would be displayed.</p>
+            <p>Image or content here.</p>
         </div>
         <div class="section quote-box">
             <h2>Quote Box</h2>
-            <p>This is where a quote or additional content would be displayed.</p>
+            <p>Quote or additional content here.</p>
         </div>
         <div class="section social-icons">
             <h2>Social Icons</h2>
-            <p>This is where social media icons would be placed.</p>
+            <p>Social media icons here.</p>
         </div>
         <div class="section footer">
             <h2>Footer</h2>
-            <p>This is the footer section of the page.</p>
+            <p>Footer content here.</p>
         </div>
     </div>
 </body>

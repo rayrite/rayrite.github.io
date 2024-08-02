@@ -3,98 +3,216 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Responsive Layout</title>
+    <title>Friends Group Management</title>
     <style>
-        /* Basic Styles */
-        body,
-        html {
+        body {
+            font-family: Arial, sans-serif;
             margin: 0;
-            font-family: sans-serif;
+            padding: 0;
+            background-color: #f0f0f0;
             display: flex;
-            flex-direction: column;
-            height: 100%; /* Make sure body and html fill the entire viewport height */
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
-
-        section {
-            padding: 20px;
+        .mobile-screen {
+            width: 360px;
+            height: 640px;
+            background-color: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        .header {
+            background-color: #3b5998;
+            color: white;
+            padding: 15px;
             text-align: center;
+            font-size: 18px;
+            font-weight: bold;
         }
-
-        /* Styling for clarity */
-        #login { background-color: #e0f2f7; }
-        #signup { background-color: #f0f4c3; }
-        #image-box { background-color: #b2dfdb; }
-        #quote-box { background-color: #c5cae9; }
-        #social-icons { background-color: #f8bbd0; }
-        #footer { background-color: #cfd8dc; }
-
-        /* Flexbox Layout */
-        .container {
+        .content {
+            padding: 20px;
+            overflow-y: auto;
+            height: calc(100% - 120px);
+        }
+        .group {
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .group-header {
             display: flex;
-            flex-direction: column;
-            flex-grow: 1; /* Allow container to grow and take up available space */
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
         }
-
-        .row {
+        .group-name {
+            font-weight: bold;
+            flex-grow: 1;
+        }
+        .group-actions {
             display: flex;
-            flex-direction: row;
-            flex-wrap: nowrap;
+            align-items: center;
         }
-
-        .col {
-            flex: 1;
-            min-width: 0;
+        .icon-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            color: #3b5998;
+            font-size: 14px;
         }
-
-        #image-box {
-            flex: 1;
-            align-self: stretch;
+        .icon-button svg {
+            margin-right: 5px;
         }
-
-        /* Footer and Social Icons Grouping - Push to bottom */
-        #footer-section {
-            margin-top: auto; 
+        .friend {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .friend-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #ddd;
+            margin-right: 10px;
+        }
+        .friend-name {
+            flex-grow: 1;
+        }
+        .remove-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .add-friend-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #3b5998;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+        }
+        .add-group-btn {
+            background-color: #3b5998;
+            color: white;
+            border: none;
+            padding: 15px;
+            width: 100%;
+            cursor: pointer;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            font-size: 16px;
         }
     </style>
 </head>
 <body>
-
-    <div class="container">
-
-        <div class="row">
-            <div class="col">
-                <section id="login">
-                    <h2>Login Section</h2>
-                </section>
-                <section id="signup">
-                    <h2>Sign Up</h2>
-                </section>
-            </div>
-            <section id="image-box" class="col">
-                <h2>Image Box</h2>
-            </section>
+    <div class="mobile-screen">
+        <div class="header">Friends Groups</div>
+        <div class="content" id="groupsContainer">
+            <!-- Groups will be dynamically added here -->
         </div>
-
-        <div class="row">
-            <section id="quote-box" class="col">
-                <h2>Quote Box</h2>
-            </section>
-        </div>
-
-        <div id="footer-section">
-            <div class="row">
-                <section id="social-icons" class="col">
-                    <h2>Social Icons</h2>
-                </section>
-            </div>
-            <div class="row">
-                <section id="footer" class="col">
-                    <h2>Footer</h2>
-                </section>
-            </div>
-        </div>
-
+        <button class="add-group-btn" onclick="addGroup()">Add New Group</button>
     </div>
 
+    <script>
+        const groups = [
+            {
+                name: "Close Friends",
+                friends: ["Alice", "Bob", "Charlie"]
+            },
+            {
+                name: "Work Colleagues",
+                friends: ["David", "Eve", "Frank"]
+            }
+        ];
+
+        function renderGroups() {
+            const container = document.getElementById('groupsContainer');
+            container.innerHTML = '';
+
+            groups.forEach((group, groupIndex) => {
+                const groupElement = document.createElement('div');
+                groupElement.className = 'group';
+                groupElement.innerHTML = `
+                    <div class="group-header">
+                        <div class="group-name">${group.name}</div>
+                        <div class="group-actions">
+                            <button class="icon-button" onclick="deleteGroup(${groupIndex})">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#e74c3c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="3 6 5 6 21 6"></polyline>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    ${group.friends.map((friend, friendIndex) => `
+                        <div class="friend">
+                            <div class="friend-avatar"></div>
+                            <div class="friend-name">${friend}</div>
+                            <button class="remove-btn" onclick="removeFriend(${groupIndex}, ${friendIndex})">Remove</button>
+                        </div>
+                    `).join('')}
+                    <button class="add-friend-btn" onclick="addFriend(${groupIndex})">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="16"></line>
+                            <line x1="8" y1="12" x2="16" y2="12"></line>
+                        </svg>
+                        Add Friend
+                    </button>
+                `;
+                container.appendChild(groupElement);
+            });
+        }
+
+        function removeFriend(groupIndex, friendIndex) {
+            groups[groupIndex].friends.splice(friendIndex, 1);
+            renderGroups();
+        }
+
+        function addGroup() {
+            const groupName = prompt("Enter new group name:");
+            if (groupName) {
+                groups.push({
+                    name: groupName,
+                    friends: []
+                });
+                renderGroups();
+            }
+        }
+
+        function deleteGroup(groupIndex) {
+            if (confirm(`Are you sure you want to delete the group "${groups[groupIndex].name}"?`)) {
+                groups.splice(groupIndex, 1);
+                renderGroups();
+            }
+        }
+
+        function addFriend(groupIndex) {
+            const friendName = prompt("Enter friend's name:");
+            if (friendName) {
+                groups[groupIndex].friends.push(friendName);
+                renderGroups();
+            }
+        }
+
+        // Initial render
+        renderGroups();
+    </script>
 </body>
 </html>

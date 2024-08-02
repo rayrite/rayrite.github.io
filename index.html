@@ -3,37 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Responsive Layout with JS</title>
+    <title>Responsive Layout</title>
     <style>
         /* Basic Styles */
-        body, html {
+        body {
             margin: 0;
-            padding: 0;
-            height: 100%;
-            font-family: Arial, sans-serif;
-        }
-        .container {
+            font-family: sans-serif;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
         }
-        .content {
-            flex: 1 0 auto;
-            display: flex;
-            flex-direction: column;
-        }
-        .row {
-            display: flex;
-            flex-wrap: wrap;
-        }
-        .col {
-            flex: 1;
+
+        section {
             padding: 20px;
-            box-sizing: border-box;
+            text-align: center;
         }
-        #footer-group {
-            flex-shrink: 0;
-        }
+
         /* Styling for clarity */
         #login { background-color: #e0f2f7; }
         #signup { background-color: #f0f4c3; }
@@ -41,97 +26,88 @@
         #quote-box { background-color: #c5cae9; }
         #social-icons { background-color: #f8bbd0; }
         #footer { background-color: #cfd8dc; }
-        
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .row {
-                flex-direction: column;
-            }
+
+        /* Flexbox Layout */
+        .container {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .row {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap; 
+        }
+
+        .col {
+            flex: 1;
+            min-width: 0; 
+        }
+
+        #image-box {
+            flex: 1;
+            align-self: stretch;
+        }
+
+        /* Footer and Social Icons Grouping */
+        #footer-section {
+            transition: margin-top 0.2s ease;
         }
     </style>
 </head>
 <body>
+
     <div class="container">
-        <div class="content">
+
+        <div class="row">
+            <div class="col"> 
+                <section id="login">
+                    <h2>Login Section</h2>
+                </section>
+                <section id="signup">
+                    <h2>Sign Up</h2>
+                </section>
+            </div>
+            <section id="image-box" class="col">
+                <h2>Image Box</h2>
+            </section> 
+        </div>
+
+        <div class="row">
+            <section id="quote-box" class="col">
+                <h2>Quote Box</h2>
+            </section>
+        </div>
+
+        <div id="footer-section">
             <div class="row">
-                <div class="col">
-                    <section id="login">
-                        <h2>Login Section</h2>
-                        <p>Content here...</p>
-                    </section>
-                    <section id="signup">
-                        <h2>Sign Up</h2>
-                        <p>Content here...</p>
-                    </section>
-                </div>
-                <div class="col" id="image-box">
-                    <h2>Image Box</h2>
-                    <p>Content here...</p>
-                </div>
+                <section id="social-icons" class="col">
+                    <h2>Social Icons</h2>
+                </section>
             </div>
             <div class="row">
-                <div class="col" id="quote-box">
-                    <h2>Quote Box</h2>
-                    <p>Content here...</p>
-                </div>
+                <section id="footer" class="col">
+                    <h2>Footer</h2>
+                </section>
             </div>
         </div>
-        <div id="footer-group">
-            <div id="social-icons">
-                <h2>Social Icons</h2>
-                <p>Social media links here...</p>
-            </div>
-            <div id="footer">
-                <h2>Footer</h2>
-                <p>Footer content here...</p>
-            </div>
-        </div>
+
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const footerGroup = document.getElementById('footer-group');
-            const content = document.querySelector('.content');
-            
-            function adjustLayout() {
-                const windowHeight = window.innerHeight;
-                const contentHeight = content.offsetHeight;
-                const footerHeight = footerGroup.offsetHeight;
-                
-                if (contentHeight + footerHeight < windowHeight) {
-                    footerGroup.style.position = 'fixed';
-                    footerGroup.style.bottom = '0';
-                    footerGroup.style.width = '100%';
-                    content.style.marginBottom = footerHeight + 'px';
-                } else {
-                    footerGroup.style.position = 'static';
-                    footerGroup.style.width = 'auto';
-                    content.style.marginBottom = '0';
-                }
-            }
+        function adjustFooter() {
+            const footerSection = document.getElementById('footer-section');
+            const viewportHeight = window.innerHeight;
+            const contentHeight = document.querySelector('.container').offsetHeight;
 
-            // Initial adjustment
-            adjustLayout();
+            let marginTop = Math.max(viewportHeight - contentHeight, 0);
+            footerSection.style.marginTop = marginTop + 'px';
+        }
 
-            // Adjust on window resize
-            window.addEventListener('resize', adjustLayout);
-
-            // Use IntersectionObserver to detect when footer is in view
-            const observer = new IntersectionObserver(
-                ([entry]) => {
-                    if (entry.isIntersecting) {
-                        footerGroup.style.position = 'static';
-                        footerGroup.style.width = 'auto';
-                        content.style.marginBottom = '0';
-                    } else {
-                        adjustLayout();
-                    }
-                },
-                { threshold: [0] }
-            );
-
-            observer.observe(footerGroup);
-        });
+        window.addEventListener('load', adjustFooter);
+        window.addEventListener('resize', adjustFooter);
     </script>
+
 </body>
 </html>

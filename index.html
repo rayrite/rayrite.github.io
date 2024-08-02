@@ -6,7 +6,7 @@
     <title>Login/Signup Page</title>
     <script src="https://code.iconify.design/1/1.0.7/iconify.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Varela+Round&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
-    <style>
+<style>
     :root {
         --main-red: #D32F2F;
         --main-blue: #1565C0;
@@ -66,6 +66,10 @@
         display: flex;
         align-items: center;
     }
+    .header-right {
+        display: flex;
+        align-items: center;
+    }
     .logo {
         width: 50px;
         height: 50px;
@@ -82,6 +86,33 @@
     }
     .company-name .blue {
         color: var(--main-blue);
+    }
+    .btn-header {
+        border-radius: 20px;
+        padding: 8px 16px;
+        font-size: 14px;
+        text-decoration: none;
+        font-weight: bold;
+        text-align: center;
+        transition: background-color 0.3s, color 0.3s;
+        margin-left: 10px;
+    }
+    .btn-header-signup {
+        background-color: var(--main-red);
+        color: var(--text-light);
+    }
+    .btn-header-login {
+        background-color: var(--main-blue);
+        color: var(--text-light);
+    }
+    .btn-header:hover {
+        opacity: 0.9;
+    }
+    .hamburger-menu {
+        display: none;
+        cursor: pointer;
+        font-size: 24px;
+        color: var(--main-red);
     }
     .nav-bar {
         width: 100%;
@@ -110,12 +141,6 @@
     }
     .nav-links a:hover {
         color: var(--accent-light-blue);
-    }
-    .hamburger-menu {
-        display: none;
-        cursor: pointer;
-        font-size: 24px;
-        color: var(--main-red);
     }
     .login-section h2 {
         text-align: center;
@@ -233,10 +258,12 @@
             width: 100%;
         }
         .header {
-            flex-direction: row;
-            justify-content: space-between;
+            flex-wrap: wrap;
             padding: 0.5rem;
-            height: 60px;
+            height: auto;
+        }
+        .header-left {
+            flex: 1;
         }
         .header-left .company-name {
             font-size: 24px;
@@ -245,17 +272,25 @@
             width: 30px;
             height: 30px;
         }
+        .header-right {
+            flex: 1;
+            justify-content: flex-end;
+        }
+        .btn-header {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
         .hamburger-menu {
             display: block;
+            margin-left: 10px;
         }
         .nav-bar {
             display: none;
-            position: fixed;
-            top: 60px;
-            left: 0;
             width: 100%;
+            order: 3;
+            position: static;
             background-color: var(--text-light);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: none;
             border-radius: 0;
         }
         .nav-bar.active {
@@ -272,32 +307,36 @@
             font-weight: bold;
         }
     }
-    </style>
+</style>
 </head>
 <body>
-    <div class="header">
-        <div class="header-left">
-            <a href="index.html" style="display: flex; align-items: center; text-decoration: none; color: inherit;">
-                <img src="https://en.pimg.jp/102/791/216/1/102791216.jpg" alt="Company Logo" class="logo">
-                <h1 class="company-name">
-                    <span class="red">DU</span><span class="blue">KR</span>
-                </h1>
-            </a>
-        </div>
+<div class="header">
+    <div class="header-left">
+        <a href="index.html" style="display: flex; align-items: center; text-decoration: none; color: inherit;">
+            <img src="https://en.pimg.jp/102/791/216/1/102791216.jpg" alt="Company Logo" class="logo">
+            <h1 class="company-name">
+                <span class="red">DU</span><span class="blue">KR</span>
+            </h1>
+        </a>
+    </div>
+    <div class="header-right">
+        <a href="#signup" class="btn-header btn-header-signup">Sign Up</a>
+        <a href="#login" class="btn-header btn-header-login">Login</a>
         <div class="hamburger-menu">
             <span class="iconify" data-icon="ci:hamburger"></span>
         </div>
     </div>
+</div>
 
-    <nav class="nav-bar">
-        <div class="nav-links">
-            <a href="#pricing">Pricing</a>
-            <a href="#privacy-policy">Privacy Policy</a>
-            <a href="#terms-and-conditions">Terms & Conditions</a>
-            <a href="#faq">FAQ</a>
-            <a href="#contact">Contact Us</a>
-        </div>
-    </nav>
+<nav class="nav-bar">
+    <div class="nav-links">
+        <a href="#pricing">Pricing</a>
+        <a href="#privacy-policy">Privacy Policy</a>
+        <a href="#terms-and-conditions">Terms & Conditions</a>
+        <a href="#faq">FAQ</a>
+        <a href="#contact">Contact Us</a>
+    </div>
+</nav>
 
     <div class="main-container">
         <div class="left-container">
@@ -389,4 +428,5 @@
         navBar.classList.toggle('active');
     });
 </script>
-</body> </html> 
+</body>
+</html>

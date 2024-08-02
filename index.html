@@ -27,26 +27,25 @@
         /* Flexbox Layout */
         .container {
             display: flex;
-            flex-direction: column; /* Stack vertically by default */
+            flex-direction: column; 
         }
 
         .row {
             display: flex;
-            flex-direction: row; /* Arrange sections horizontally */
-            flex-wrap: nowrap; /* Prevent wrapping of items */
+            flex-direction: row; 
+            flex-wrap: nowrap; 
         }
 
         .col {
-            flex: 1; /* Each column takes equal width */
-            min-width: 250px; /* Minimum width for columns */
+            flex: 1; 
+            min-width: 0; /* Allow columns to shrink below their minimum width */
         }
 
         /* Make image-box span full height */
         #image-box {
-            flex: 1; /* Allow image-box to grow and shrink */
-            align-self: stretch; /* Stretch to match the height of the row */
+            flex: 1; 
+            align-self: stretch; 
         }
-
     </style>
 </head>
 <body>

@@ -254,18 +254,39 @@
                 flex-direction: column;
                 margin-top: 100px;
             }
-            .left-container, .right-container {
+            .left-container {
                 width: 100%;
-                flex-direction: column-reverse;
+                display: flex;
+                flex-direction: column;
             }
             .right-container {
+                width: 100%;
                 display: flex;
                 flex-direction: row;
                 gap: 20px;
             }
-            .image-box, .quote-box {
+            .image-box {
                 width: 50%;
                 height: 200px;
+            }
+            .login-section, .signup-section {
+                width: 50%;
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+            }
+            .quote-box {
+                width: 100%;
+                margin-top: 20px;
+            }
+            .social-icons {
+                margin-top: 20px;
+            }
+            .footer {
+                margin-top: 20px;
             }
             .header {
                 flex-wrap: wrap;
@@ -400,6 +421,7 @@
         <span>&copy; 2024 Your Company Name. All rights reserved.</span>
         <a href="#cookies-policy">Cookies Policy</a>
     </footer>
+
     <script>
         // Image rotation functionality
         const images = [

@@ -163,7 +163,7 @@
 
         function updateSides() {
             const newSides = parseInt(document.getElementById('sidesInput').value);
-            if (newSides >= 3 && newSides <= 12) { 
+            if (newSides >= 3 && newSides <= 15) { 
                 while (sideValues.length < newSides) {
                     sideValues.push(0);
                 }
@@ -173,7 +173,7 @@
                 updateMeterStructure();
                 updateMeter();
             } else {
-                alert('Please enter a number between 3 and 12');
+                alert('Please enter a number between 3 and 15');
             }
         }
 

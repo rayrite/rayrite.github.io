@@ -9,6 +9,9 @@
         body {
             margin: 0;
             font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; 
         }
 
         section {
@@ -28,6 +31,7 @@
         .container {
             display: flex;
             flex-direction: column; 
+            flex-grow: 1; 
         }
 
         .row {
@@ -38,13 +42,17 @@
 
         .col {
             flex: 1; 
-            min-width: 0; /* Allow columns to shrink below their minimum width */
+            min-width: 0; 
         }
 
-        /* Make image-box span full height */
         #image-box {
             flex: 1; 
             align-self: stretch; 
+        }
+
+        /* Footer and Social Icons Grouping */
+        #footer-section {
+            margin-top: auto; /* Push the group to bottom */
         }
     </style>
 </head>
@@ -72,16 +80,17 @@
             </section>
         </div>
 
-        <div class="row">
-            <section id="social-icons" class="col">
-                <h2>Social Icons</h2>
-            </section>
-        </div>
-
-        <div class="row">
-            <section id="footer" class="col">
-                <h2>Footer</h2>
-            </section>
+        <div id="footer-section"> 
+            <div class="row">
+                <section id="social-icons" class="col">
+                    <h2>Social Icons</h2>
+                </section>
+            </div>
+            <div class="row">
+                <section id="footer" class="col">
+                    <h2>Footer</h2>
+                </section>
+            </div>
         </div>
 
     </div>

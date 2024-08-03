@@ -7,6 +7,42 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .image-pane {
+            overflow-x: scroll;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+        }
+        .image-pane::-webkit-scrollbar {
+            display: none;
+        }
+        .image-pane {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .image-item {
+            scroll-snap-align: start;
+        }
+        .replies {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        .replies.expanded {
+            max-height: 1000px;
+            transition: max-height 0.5s ease-in;
+        }
+        .reaction-button {
+            transition: background-color 0.2s;
+        }
+        .reaction-button:hover {
+            background-color: #F0F2F5;
+        }
+        .reaction-button.active {
+            color: #1877F2;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body class="bg-gray-100 font-sans">
     <div x-data="{}" class="flex flex-col h-screen">
@@ -17,38 +53,41 @@
 
         <!-- Main Content -->
         <main class="flex-1 overflow-y-auto">
+            <!-- Yes/No Debate Label -->
+            <div class="bg-yellow-100 text-center py-2">
+                <span class="font-semibold text-yellow-800">Yes/No Debate</span>
+            </div>
+
             <!-- Debate Caption and Detail -->
             <div class="bg-white p-4 mb-2">
                 <h2 class="text-lg font-semibold mb-2">Should pineapple be on pizza?</h2>
                 <p class="text-gray-600 mb-4">Join the heated debate about this controversial pizza topping!</p>
             </div>
 
-            <!-- Image Placeholder -->
-            <div class="bg-gray-300 aspect-square mb-2 flex items-center justify-center">
-                <span class="text-gray-500">Image Placeholder</span>
-            </div>
-
-            <!-- Engagement Buttons -->
-            <div class="flex justify-between items-center px-4 py-2 bg-white">
-                <div class="flex space-x-4">
-                    <i class="fas fa-heart w-6 h-6"></i>
-                    <i class="fas fa-comment w-6 h-6"></i>
-                    <i class="fas fa-share w-6 h-6"></i>
+            <!-- Image Pane -->
+            <div class="relative mb-2">
+                <div class="image-pane flex w-full">
+                    <div class="image-item flex-shrink-0 w-full">
+                        <div class="bg-gray-300 w-full h-64 flex items-center justify-center text-gray-600">Image 1</div>
+                    </div>
+                    <div class="image-item flex-shrink-0 w-full">
+                        <div class="bg-gray-300 w-full h-64 flex items-center justify-center text-gray-600">Image 2</div>
+                    </div>
+                    <div class="image-item flex-shrink-0 w-full">
+                        <div class="bg-gray-300 w-full h-64 flex items-center justify-center text-gray-600">Image 3</div>
+                    </div>
                 </div>
-                <i class="fas fa-bookmark w-6 h-6"></i>
-            </div>
-
-            <!-- Debate Settings and Timer -->
-            <div class="bg-white p-4 mt-2 flex justify-between items-center">
-                <span class="text-sm font-medium">Public Debate • 24h Duration</span>
-                <div class="flex items-center">
-                    <i class="fas fa-clock w-4 h-4 mr-1"></i>
-                    <span class="text-sm font-medium">23:45:30</span>
+                <div class="absolute bottom-2 left-0 right-0 flex justify-center">
+                    <div class="space-x-1">
+                        <span class="dot w-2 h-2 rounded-full bg-white inline-block"></span>
+                        <span class="dot w-2 h-2 rounded-full bg-white inline-block opacity-50"></span>
+                        <span class="dot w-2 h-2 rounded-full bg-white inline-block opacity-50"></span>
+                    </div>
                 </div>
             </div>
 
             <!-- Tug-of-War Meter -->
-            <div class="bg-white p-4 mt-2">
+            <div class="bg-white p-4">
                 <div class="relative h-4 bg-gray-200 rounded-full overflow-hidden">
                     <div class="absolute top-0 left-0 h-full bg-red-500 w-3/5"></div>
                     <div class="absolute top-0 right-0 h-full bg-blue-500 w-2/5"></div>
@@ -59,41 +98,78 @@
                 </div>
             </div>
 
+            <!-- Engagement Buttons -->
+            <div class="flex justify-between items-center px-4 py-3 bg-white border-b border-gray-300">
+                <div class="flex space-x-4">
+                    <button class="reaction-button flex items-center space-x-2 px-4 py-1 rounded-md">
+                        <i class="fas fa-thumbs-up"></i>
+                        <span>Like</span>
+                    </button>
+                    <button class="reaction-button flex items-center space-x-2 px-4 py-1 rounded-md">
+                        <i class="fas fa-comment"></i>
+                        <span>Comment</span>
+                    </button>
+                    <button class="reaction-button flex items-center space-x-2 px-4 py-1 rounded-md">
+                        <i class="fas fa-share"></i>
+                        <span>Share</span>
+                    </button>
+                </div>
+                <button class="reaction-button p-2 rounded-full">
+                    <i class="fas fa-bookmark"></i>
+                </button>
+            </div>
+
             <!-- Discussion Area -->
-            <div class="bg-white mt-2 p-4">
-                <h3 class="font-semibold mb-2">Discussion</h3>
+            <div class="bg-white p-4">
                 <div class="space-y-4">
                     <div class="flex space-x-2">
-                        <div class="w-8 h-8 bg-gray-300 rounded-full"></div>
-                        <div class="flex-1">
-                            <p class="font-medium">User1</p>
-                            <p class="text-sm text-gray-600">Pineapple on pizza is delicious!</p>
-                            <div class="flex items-center space-x-2 mt-1">
-                                <button class="text-gray-500 text-sm flex items-center">
-                                    <i class="fas fa-thumbs-up w-4 h-4 mr-1"></i>
-                                    <span>24</span>
-                                </button>
-                                <button class="text-gray-500 text-sm flex items-center">
-                                    <i class="fas fa-comment w-4 h-4 mr-1"></i>
-                                    <span>5 replies</span>
-                                </button>
+                        <div class="w-10 h-10 bg-gray-300 rounded-full flex-shrink-0"></div>
+                        <div class="flex-grow">
+                            <div class="bg-gray-100 rounded-2xl px-4 py-2">
+                                <p class="font-semibold">User1</p>
+                                <p class="text-sm">Pineapple on pizza is delicious!</p>
                             </div>
+                            <div class="flex items-center space-x-3 mt-1 text-xs text-gray-500">
+                                <button class="font-semibold hover:underline">Like</button>
+                                <button class="font-semibold hover:underline">Reply</button>
+                                <span>2h</span>
+                            </div>
+                            <div class="flex items-center space-x-1 mt-1">
+                                <span class="bg-blue-500 text-white text-xs rounded-full px-2 py-1">👍 24</span>
+                            </div>
+                            <div class="mt-2 pl-4 space-y-2">
+                                <div class="flex space-x-2">
+                                    <div class="w-8 h-8 bg-gray-300 rounded-full flex-shrink-0"></div>
+                                    <div class="flex-grow">
+                                        <div class="bg-gray-100 rounded-2xl px-3 py-2">
+                                            <p class="font-semibold text-sm">User3</p>
+                                            <p class="text-sm">I couldn't agree more!</p>
+                                        </div>
+                                        <div class="flex items-center space-x-3 mt-1 text-xs text-gray-500">
+                                            <button class="font-semibold hover:underline">Like</button>
+                                            <button class="font-semibold hover:underline">Reply</button>
+                                            <span>1h</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="text-blue-500 text-sm font-semibold mt-2 hover:underline">View more replies</button>
                         </div>
                     </div>
-                    <div class="flex space-x-2 pl-8">
-                        <div class="w-8 h-8 bg-gray-300 rounded-full"></div>
-                        <div class="flex-1">
-                            <p class="font-medium">User2</p>
-                            <p class="text-sm text-gray-600">I respectfully disagree.</p>
-                            <div class="flex items-center space-x-2 mt-1">
-                                <button class="text-gray-500 text-sm flex items-center">
-                                    <i class="fas fa-thumbs-up w-4 h-4 mr-1"></i>
-                                    <span>12</span>
-                                </button>
-                                <button class="text-gray-500 text-sm flex items-center">
-                                    <i class="fas fa-comment w-4 h-4 mr-1"></i>
-                                    <span>2 replies</span>
-                                </button>
+                    <div class="flex space-x-2">
+                        <div class="w-10 h-10 bg-gray-300 rounded-full flex-shrink-0"></div>
+                        <div class="flex-grow">
+                            <div class="bg-gray-100 rounded-2xl px-4 py-2">
+                                <p class="font-semibold">User2</p>
+                                <p class="text-sm">I respectfully disagree.</p>
+                            </div>
+                            <div class="flex items-center space-x-3 mt-1 text-xs text-gray-500">
+                                <button class="font-semibold hover:underline">Like</button>
+                                <button class="font-semibold hover:underline">Reply</button>
+                                <span>1d</span>
+                            </div>
+                            <div class="flex items-center space-x-1 mt-1">
+                                <span class="bg-blue-500 text-white text-xs rounded-full px-2 py-1">👍 12</span>
                             </div>
                         </div>
                     </div>
@@ -104,28 +180,57 @@
         <!-- Footer -->
         <footer class="bg-white border-t border-gray-300 p-4">
             <div class="flex items-center mb-2">
-                <input type="text" placeholder="Add a comment..." class="flex-1 bg-gray-100 rounded-full px-4 py-2 mr-2">
-                <button class="text-blue-500 font-semibold">Post</button>
+                <div class="w-10 h-10 bg-gray-300 rounded-full flex-shrink-0 mr-2"></div>
+                <input type="text" placeholder="Write a comment..." class="flex-1 bg-gray-100 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
             </div>
-            <div class="flex justify-between">
-                <button class="text-gray-600 flex items-center">
+            <div class="flex justify-between mt-2">
+                <button class="text-gray-600 flex items-center text-sm">
                     <i class="fas fa-smile w-5 h-5 mr-1"></i>
                     <span>Emoji</span>
                 </button>
-                <button class="text-gray-600 flex items-center">
+                <button class="text-gray-600 flex items-center text-sm">
                     <i class="fas fa-image w-5 h-5 mr-1"></i>
                     <span>GIF</span>
                 </button>
-                <button class="text-gray-600 flex items-center">
+                <button class="text-gray-600 flex items-center text-sm">
                     <i class="fas fa-camera w-5 h-5 mr-1"></i>
-                    <span>Picture</span>
+                    <span>Photo</span>
                 </button>
-                <button class="text-gray-600 flex items-center">
+                <button class="text-gray-600 flex items-center text-sm">
                     <i class="fas fa-magic w-5 h-5 mr-1"></i>
-                    <span>AI Suggest</span>
+                    <span>AI</span>
                 </button>
             </div>
         </footer>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const imagePane = document.querySelector('.image-pane');
+            const dots = document.querySelectorAll('.dot');
+
+            imagePane.addEventListener('scroll', () => {
+                const scrollPosition = imagePane.scrollLeft;
+                const imageWidth = imagePane.clientWidth;
+                const currentImageIndex = Math.round(scrollPosition / imageWidth);
+
+                dots.forEach((dot, index) => {
+                    if (index === currentImageIndex) {
+                        dot.classList.remove('opacity-50');
+                    } else {
+                        dot.classList.add('opacity-50');
+                    }
+                });
+            });
+
+            // Add click event listeners to reaction buttons
+            const reactionButtons = document.querySelectorAll('.reaction-button');
+            reactionButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    button.classList.toggle('active');
+                });
+            });
+        });
+    </script>
 </body>
 </html>

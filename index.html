@@ -3,16 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Card Carousel</title>
+    <title>Image Card Carousel with Pulsating Effect and Particles</title>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes pulsate {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .pulsate {
+            animation: pulsate 1.5s infinite;
+        }
+        .particle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            pointer-events: none;
+            /* Add background color to make particles visible */
+            background-color: rgb(255, 255, 255); 
+        }
+        @keyframes particle-animation {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) scale(1); opacity: 0; }
+        }
+    </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center" x-data="imageCarousel()">
+<body class="bg-gray-100 min-h-screen flex flex-col items-center justify-center" x-data="imageCarousel()">
     <div class="w-full max-w-4xl overflow-x-auto">
         <div class="flex space-x-4 p-4 items-end">
             <template x-for="(card, index) in cards" :key="index">
-                <div :class="`flex-shrink-0 ${index === 0 ? 'w-44 h-52' : 'w-40 h-48'} rounded-lg ${index === 0 ? 'p-0.5 bg-yellow-400' : ''}`">
-                    <div class="h-full bg-blue-600 rounded-lg overflow-hidden flex flex-col">
+                <div :class="`flex-shrink-0 relative ${index === 0 ? 'w-44 h-52' : 'w-40 h-48'} rounded-lg ${index === 0 ? 'p-0.5 bg-yellow-400' : ''}`">
+                    <div class="h-full bg-blue-600 rounded-lg overflow-hidden flex flex-col relative">
                         <template x-if="index === 0">
                             <div class="bg-yellow-400 text-black text-xs font-bold py-0.5 px-2 text-center">
                                 Rank #1
@@ -26,23 +49,40 @@
                         <div class="flex-grow relative">
                             <div :class="`absolute inset-0 ${index === 0 ? 'border-2 border-blue-700 rounded' : ''}`">
                             </div>
-
-                            <div :class="`${tallyLabelPlacement === 0 ? 'absolute bottom-1 right-1' : 'absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2'} ${tallyColors[index]} rounded-full w-6 h-6 flex items-center justify-center`">
-                                <span class="text-white text-xs font-bold" x-text="card.tally"></span>
+                            <div x-show="tallyLabelPlacement === 0" 
+                                 :class="`absolute bottom-1 right-1 ${index === 0 ? 'pulsate' : ''}`"
+                                 @mouseenter="if(index === 0) createParticles($event, tallyColors[index])"
+                                 @mouseleave="if(index === 0) removeParticles()"
+                                 :id="`tally-label-${index}`">
+                                <span :class="`${tallyColors[index]} inline-block rounded-full px-2 py-1 text-white text-xs font-bold relative z-10`">
+                                    <span x-text="card.tally"></span>
+                                </span>
                             </div>
                         </div>
+
+                        <div x-show="tallyLabelPlacement === 1" 
+                             :class="`w-full bg-blue-700 text-center ${index === 0 ? 'pulsate' : ''}`"
+                             @mouseenter="if(index === 0) createParticles($event, tallyColors[index])"
+                             @mouseleave="if(index === 0) removeParticles()"
+                             :id="`tally-label-${index}`">
+                            <span :class="`${tallyColors[index]} inline-block rounded-full px-2 py-1 text-white text-xs font-bold relative z-10`">
+                                <span x-text="card.tally"></span>
+                            </span>
+                        </div>
+
+                        <div id="particle-container" class="absolute inset-0 pointer-events-none overflow-hidden"></div>
                     </div>
                 </div>
             </template>
         </div>
-    </div>
 
-    <div class="mt-4 text-center">
-        <button @click="toggleTallyPlacement" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-            Toggle Tally Placement
-        </button>
-    </div>
 
+    </div>
+        <div class="text-center mb-4"> 
+            <button @click="toggleTallyPlacement" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Toggle Tally Placement
+            </button>
+        </div>
     <script>
         function imageCarousel() {
             return {
@@ -63,6 +103,43 @@
                 tallyLabelPlacement: 0,
                 toggleTallyPlacement() {
                     this.tallyLabelPlacement = 1 - this.tallyLabelPlacement;
+                },
+                createParticles(event, color) {
+                    const label = document.getElementById('tally-label-0');
+                    const container = document.getElementById('particle-container');
+                    const rect = label.getBoundingClientRect();
+                    const containerRect = container.getBoundingClientRect();
+
+                    const centerX = rect.left - containerRect.left + rect.width / 2;
+                    const centerY = rect.top - containerRect.top + rect.height / 2;
+
+                    for (let i = 0; i < 30; i++) {
+                        const particle = document.createElement('div');
+                        particle.className = 'particle';
+                        particle.style.backgroundColor = this.getRGBColor(color);
+                        particle.style.left = `${centerX}px`;
+                        particle.style.top = `${centerY}px`;
+                        const angle = Math.random() * 2 * Math.PI;
+                        const distance = 30 + Math.random() * 30;
+                        particle.style.setProperty('--tx', `${Math.cos(angle) * distance}px`);
+                        particle.style.setProperty('--ty', `${Math.sin(angle) * distance}px`);
+                        particle.style.animation = `particle-animation ${0.5 + Math.random() * 0.5}s linear forwards`; // Add 'forwards' to keep the final state
+                        container.appendChild(particle);
+                    }
+                },
+                removeParticles() {
+                    const container = document.getElementById('particle-container');
+                    container.innerHTML = '';
+                },
+                getRGBColor(className) {
+                    const colorMap = {
+                        'bg-green-500': 'rgb(34, 197, 94)',
+                        'bg-blue-500': 'rgb(59, 130, 246)',
+                        'bg-red-500': 'rgb(239, 68, 68)',
+                        'bg-purple-500': 'rgb(168, 85, 247)',
+                        'bg-yellow-500': 'rgb(234, 179, 8)'
+                    };
+                    return colorMap[className] || 'rgb(59, 130, 246)';
                 }
             }
         }

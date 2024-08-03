@@ -3,363 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Opposing Sides Meter</title>
+    <title>SocialConnect - Login</title>
     <style>
         body, html {
-            margin: 0;
-            padding: 0;
             height: 100%;
+            margin: 0;
             font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f2f5;
         }
         .container {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            padding: 20px;
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
             box-sizing: border-box;
         }
-        .meter-container {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 20px;
-            position: relative;
+        .logo {
+            text-align: center;
+            margin-bottom: 1rem;
         }
-        .meter {
+        .logo img {
+            width: 100px;
+            height: 100px;
+        }
+        h1 {
+            color: #1877f2;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        input {
             width: 100%;
-            display: flex;
-            height: 30px;
-            position: relative;
-            overflow: hidden;
-            border-radius: 15px;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
         }
-        .side {
-            height: 100%;
-            transition: width 0.5s ease-in-out;
-        }
-        .labels-container {
-            display: flex;
-            overflow-x: auto; /* Enable horizontal scrolling if needed */
+        button {
             width: 100%;
-            margin-top: 10px;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
         }
-        .labels-pane {
-            display: flex;
-            justify-content: flex-start; /* Align labels to the start */
-            /* Remove fixed width to allow dynamic sizing */ 
+        .login-btn {
+            background-color: #1877f2;
         }
-        .label {
-            background-color: white;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
+        .signup-btn {
+            background-color: #42b72a;
+        }
+        .social-btn {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            color: #333;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
-            font-weight: bold;
-            box-shadow: 0 0 5px rgba(0,0,0,0.3);
-            position: relative;
-            border: 2px solid;
-            z-index: 10;
-            transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;
-            margin-right: 10px; /* Add spacing between labels */
         }
-        .pop {
-            animation: pop 0.3s ease-out;
+        .social-btn img {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
         }
-        @keyframes pop {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); }
-        }
-        .pulsate {
-            animation: pulsate 1s ease-in-out infinite;
-        }
-        @keyframes pulsate {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-        canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            pointer-events: none;
-            opacity: 0.7;
-        }
-        .inputs {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-        input {
-            width: 15%; 
-            padding: 10px;
-            font-size: 16px;
-            margin-bottom: 10px;
-        }
-        button {
-            padding: 10px;
-            font-size: 16px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-            margin-bottom: 10px;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        #sidesInput {
-            width: calc(70% - 10px);
-        }
-        #updateSidesButton {
-            width: 30%;
-        }
-        .sides-control {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-        }
-        #updateValuesButton {
-            width: 100%;
+        .divider {
+            text-align: center;
+            margin: 1rem 0;
+            color: #777;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="sides-control">
-            <input type="number" id="sidesInput" placeholder="Number of sides (3-20)" min="3" max="20" value="3">
-            <button id="updateSidesButton">Update Sides</button>
+        <div class="logo">
+            <img src="/api/placeholder/100/100" alt="SocialConnect Logo">
         </div>
-        <div class="meter-container">
-            <div class="meter" id="meter"></div>
-            <div class="labels-container" id="labelsContainer">
-                <div class="labels-pane"></div> 
-            </div>
-        </div>
-        <div class="inputs" id="inputs"></div>
-        <button id="updateValuesButton">Update Values</button>
+        <h1>SocialConnect</h1>
+        <input type="email" placeholder="Email or Phone Number" required>
+        <input type="password" placeholder="Password" required>
+        <button class="login-btn">Log In</button>
+        <div class="divider">or</div>
+        <button class="social-btn">
+            <img src="/api/placeholder/20/20" alt="Google Icon"> Continue with Google
+        </button>
+        <button class="social-btn">
+            <img src="/api/placeholder/20/20" alt="Microsoft Icon"> Continue with Microsoft
+        </button>
+        <button class="social-btn">
+            <img src="/api/placeholder/20/20" alt="OpenID Icon"> Continue with OpenID
+        </button>
+        <div class="divider">Don't have an account?</div>
+        <button class="signup-btn">Create New Account</button>
     </div>
-
-    <script>
-        let sides = 3;
-        let tallyHScroll = 0; // 0: No scroll, 1: Horizontal scroll
-        const colors = ['blue', 'grey', 'red', 'green', 'purple', 'orange', 'brown', 'pink', 'cyan', 'magenta', 'lime', 'teal']; 
-        const particles = [];
-        let sideValues = [];
-        let sparkleInterval;
-        let tallyStyle = 1; // 0: Default, 1: Filled
-
-        function getRandomColor() {
-            const letters = '0123456789ABCDEF';
-            let color = '#';
-            for (let i = 0; i < 6; i++) {
-                color += letters[Math.floor(Math.random() * 16)];
-            }
-            return color;
-        }
-
-        function updateSides() {
-            const newSides = parseInt(document.getElementById('sidesInput').value);
-            if (newSides >= 3 && newSides <= 20) { 
-                while (sideValues.length < newSides) {
-                    sideValues.push(0);
-                }
-                sideValues = sideValues.slice(0, newSides);
-                
-                sides = newSides;
-                updateMeterStructure();
-                updateMeter();
-            } else {
-                alert('Please enter a number between 3 and 20');
-            }
-        }
-
-        function updateMeterStructure() {
-            const meter = document.getElementById('meter');
-            const labelsContainer = document.getElementById('labelsContainer');
-            const labelsPane = labelsContainer.querySelector('.labels-pane'); // Select the pane
-            const inputs = document.getElementById('inputs');
-            
-            meter.innerHTML = '';
-            labelsPane.innerHTML = ''; // Clear the pane
-            inputs.innerHTML = '';
-
-            // Set labelsContainer overflow based on tallyHScroll
-            labelsContainer.style.overflowX = tallyHScroll === 1 ? 'auto' : 'hidden';
-
-            for (let i = 0; i < sides; i++) {
-                const side = document.createElement('div');
-                side.id = `side${i}`;
-                side.className = 'side';
-                side.style.backgroundColor = i < colors.length ? colors[i] : getRandomColor();
-                meter.appendChild(side);
-
-                const label = document.createElement('span');
-                label.className = 'label';
-                label.id = `label${i}`;
-                label.style.borderColor = side.style.backgroundColor;
-                updateLabelStyle(label, side.style.backgroundColor, sideValues[i]);
-                label.textContent = sideValues[i] || '0';
-                labelsPane.appendChild(label); // Append to the pane
-
-                const input = document.createElement('input');
-                input.type = 'number';
-                input.id = `input${i}`;
-                input.placeholder = `Side ${i + 1} value`;
-                input.min = '0';
-                input.value = sideValues[i] || '';
-                inputs.appendChild(input);
-            }
-        }
-
-        class Particle {
-            constructor(x, y, color) {
-                this.x = x;
-                this.y = y;
-                this.color = color;
-                this.radius = Math.random() * 2 + 1;
-                this.speedX = Math.random() * 1.5 - 0.75;
-                this.speedY = Math.random() * 1.5 - 0.75;
-                this.life = 150;
-                this.maxLife = 150;
-            }
-
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-                this.life -= 1;
-                this.radius = Math.max(0, this.radius - 0.01);
-            }
-
-            draw(ctx) {
-                if (this.radius <= 0) return;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                ctx.fillStyle = this.color;
-                ctx.fill();
-            }
-        }
-
-        function createParticles(x, y, color, count = 2) {
-            for (let i = 0; i < count; i++) {
-                particles.push(new Particle(x, y, color));
-            }
-        }
-
-        function animateParticles() {
-            const canvas = document.getElementById('particleCanvas');
-            const ctx = canvas.getContext('2d');
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            for (let i = particles.length - 1; i >= 0; i--) {
-                particles[i].update();
-                particles[i].draw(ctx);
-                if (particles[i].life <= 0 || particles[i].radius <= 0) {
-                    particles.splice(i, 1);
-                }
-            }
-            requestAnimationFrame(animateParticles);
-        }
-
-        function createSparkleForHighestValues() {
-            const maxValue = Math.max(...sideValues);
-            sideValues.forEach((value, index) => {
-                if (value === maxValue && value > 0) {
-                    const label = document.getElementById(`label${index}`);
-                    const side = document.getElementById(`side${index}`);
-                    const rect = label.getBoundingClientRect();
-                    createParticles(
-                        rect.left + rect.width / 2, 
-                        rect.top + rect.height / 2, 
-                        side.style.backgroundColor
-                    );
-                }
-            });
-        }
-
-        function startContinuousSparkle() {
-            clearInterval(sparkleInterval);
-            sparkleInterval = setInterval(createSparkleForHighestValues, 100);
-        }
-
-        function updateMeter() {
-            sideValues = [];
-            for (let i = 0; i < sides; i++) {
-                sideValues.push(parseInt(document.getElementById(`input${i}`).value) || 0);
-            }
-            const total = sideValues.reduce((sum, value) => sum + value, 0);
-
-            if (total === 0) {
-                const equalWidth = 100 / sides;
-                for (let i = 0; i < sides; i++) {
-                    document.getElementById(`side${i}`).style.width = `${equalWidth}%`;
-                }
-            } else {
-                for (let i = 0; i < sides; i++) {
-                    const width = (sideValues[i] / total) * 100;
-                    document.getElementById(`side${i}`).style.width = `${width}%`;
-                }
-            }
-
-            const maxValue = Math.max(...sideValues);
-            for (let i = 0; i < sides; i++) {
-                const label = document.getElementById(`label${i}`);
-                const side = document.getElementById(`side${i}`);
-                updateLabelWithAnimation(`label${i}`, sideValues[i]);
-                updateLabelStyle(label, side.style.backgroundColor, sideValues[i], sideValues[i] === maxValue);
-            }
-
-            startContinuousSparkle();
-        }
-
-        function updateLabelWithAnimation(labelId, value) {
-            const label = document.getElementById(labelId);
-            if (label.textContent !== value.toString()) {
-                label.textContent = value;
-                label.classList.remove('pop');
-                void label.offsetWidth; // Trigger reflow
-                label.classList.add('pop');
-            }
-        }
-
-        function updateLabelStyle(label, bgColor, value, isHighest = false) {
-            if (tallyStyle === 1) {
-                label.style.backgroundColor = bgColor;
-                label.style.color = getContrastingColor(bgColor);
-                label.classList.toggle('pulsate', isHighest && value > 0);
-            } else {
-                label.style.backgroundColor = 'white';
-                label.style.color = bgColor;
-                label.classList.remove('pulsate');
-            }
-        }
-
-        function getContrastingColor(color) {
-            color = color.replace('#', '');
-            const r = parseInt(color.substring(0, 2), 16);
-            const g = parseInt(color.substring(2, 4), 16);
-            const b = parseInt(color.substring(4, 6), 16);
-            const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-            return brightness >= 128 ? 'black' : 'white';
-        }
-
-        // Initialize the meter
-        document.getElementById('updateSidesButton').addEventListener('click', updateSides);
-        document.getElementById('updateValuesButton').addEventListener('click', updateMeter);
-        updateMeterStructure();
-        updateMeter();
-
-        // Setup particle animation
-        const canvas = document.createElement('canvas');
-        canvas.id = 'particleCanvas';
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        document.body.appendChild(canvas);
-        animateParticles();
-    </script>
 </body>
 </html>

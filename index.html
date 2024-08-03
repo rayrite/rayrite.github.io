@@ -13,7 +13,6 @@
             font-family: 'Varela Round', sans-serif;
         }
         .hamburger {
-            display: none;
             cursor: pointer;
         }
         .bar {
@@ -22,40 +21,27 @@
             height: 3px;
             margin: 5px auto;
             background-color: #333;
+            transition: all 0.3s ease-in-out;
         }
         @media (max-width: 768px) {
-            .hamburger {
-                display: block;
-            }
-            nav ul {
+            #nav-menu {
                 display: none;
                 flex-direction: column;
                 position: absolute;
-                top: 70px;
+                top: 60px;
                 left: 0;
                 width: 100%;
                 background-color: #f8f8f8;
                 text-align: center;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             }
-            nav ul.active {
+            #nav-menu.active {
                 display: flex;
             }
-            nav ul li {
-                margin: 10px 0;
+            #nav-menu a {
+                padding: 10px;
+                border-top: 1px solid #e0e0e0;
             }
-        }
-        nav ul {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-        }
-        nav ul li {
-            margin-left: 20px;
-        }
-        nav ul li a {
-            text-decoration: none;
-            color: #333;
         }
     </style>
 </head>
@@ -67,12 +53,10 @@
                 <div class="flex items-center space-x-4">
                     <img src="/api/placeholder/40/40" alt="Logo" class="w-10 h-10">
                     <span class="font-bold text-5xl">
-                    <span class="font-bold text-5xl">
                         <span class="text-blue-600">DU</span><span class="text-red-600">KR</span>
                     </span>
-                    </span>
                 </div>
-                <div class="space-x-4 flex items-center">
+                <div id="nav-menu" class="space-x-4 items-center hidden md:flex">
                     <a href="#pricing" class="hover:text-blue-600">Pricing</a>
                     <a href="#privacy" class="hover:text-blue-600">Privacy Policy</a>
                     <a href="#terms" class="hover:text-blue-600">Terms & Conditions</a>
@@ -81,13 +65,14 @@
                     <button class="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition duration-300">Sign In</button>
                     <button class="bg-red-500 text-white px-4 py-2 rounded-full hover:bg-red-600 transition duration-300">Get Started!</button>
                 </div>
+                <div class="hamburger md:hidden">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
             </div>
         </nav>
-            <div class="hamburger">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </div>
+
         <!-- Main Content -->
         <main class="flex-grow mt-24 p-8">
             <div class="container mx-auto">
@@ -190,18 +175,22 @@
                 }, 8000);
             }
         });
-    </script>
-    <script>
-        const hamburger = document.querySelector('.hamburger');
-        const navMenu = document.querySelector('nav ul');
-    
-        hamburger.addEventListener('click', () => {
-            navMenu.classList.toggle('active');
-        });
-    
-        document.querySelectorAll('nav ul li a').forEach(link => {
-            link.addEventListener('click', () => {
-                navMenu.classList.remove('active');
+
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const hamburger = document.querySelector('.hamburger');
+            const navMenu = document.querySelector('#nav-menu');
+
+            hamburger.addEventListener('click', () => {
+                navMenu.classList.toggle('active');
+                hamburger.classList.toggle('active');
+            });
+
+            // Close menu when a link is clicked
+            document.querySelectorAll('#nav-menu a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navMenu.classList.remove('active');
+                    hamburger.classList.remove('active');
+                });
             });
         });
     </script>

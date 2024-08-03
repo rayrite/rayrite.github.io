@@ -3,288 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pricing Plans</title>
+    <title>Debate App Settings</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lucide@latest"></script>
     <style>
-        body {
-            font-family: sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        h1, h2 {
-            text-align: center;
-            color: #333;
-        }
-
-        .pricing-table {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-        }
-
-        .pricing-card {
-            background-color: white;
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-
-        .plan-name {
-            background-color: #00b050;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            font-weight: bold;
-            position: relative; /* To position the "Most Popular" label */
-        }
-
-        .plan-description {
-            color: #666;
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
-
-        .price {
-            font-size: 36px;
-            font-weight: bold;
-            color: #00b050;
-            margin-bottom: 10px;
-        }
-
-        .price-duration {
-            font-size: 14px;
-            color: #666;
-        }
-
-        .features {
-            list-style: none;
-            padding: 0;
-            margin-top: 20px;
-            text-align: left;
-        }
-
-        .features li {
-            margin-bottom: 10px;
-            color: #666;
-        }
-
-        .features li::before {
-            content: '\2713';
-            color: #00b050;
-            margin-right: 10px;
-        }
-
-        .button {
-            display: inline-block;
-            background-color: #ffc000;
-            color: white;
-            padding: 12px 25px;
-            border-radius: 5px;
-            text-decoration: none;
-            margin-top: 20px;
-        }
-
-        .button:hover {
-            background-color: #e6a800;
-        }
-
-        .popular {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: #00b050;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 12px;
-        }
-
-        .toggle-billing {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 30px;
-        }
-
-        .toggle-billing span {
-            margin: 0 10px;
-            color: #666;
-        }
-
-        .toggle-billing input[type="checkbox"] {
-            display: none;
-        }
-
-        .toggle-billing label {
-            position: relative;
-            display: inline-block;
-            width: 60px;
-            height: 30px;
-            background-color: #ccc;
-            border-radius: 30px;
-            cursor: pointer;
-        }
-
-        .toggle-billing label::before {
-            content: '';
-            position: absolute;
-            top: 5px;
-            left: 5px;
-            width: 20px;
-            height: 20px;
-            background-color: white;
-            border-radius: 50%;
-            transition: transform 0.3s ease;
-        }
-
-        .toggle-billing input[type="checkbox"]:checked + label {
-            background-color: #00b050;
-        }
-
-        .toggle-billing input[type="checkbox"]:checked + label::before {
-            transform: translateX(30px);
-        }
-
-        @media screen and (max-width: 768px) {
-            .pricing-table {
-                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            }
-
-            .pricing-card {
-                padding: 20px;
-            }
-
-            .price {
-                font-size: 28px;
-            }
-        }
+        [x-cloak] { display: none !important; }
     </style>
 </head>
-<body>
-    <div class="container">
-        <h1>Build for free.</h1>
-        <h1>Pay to publish.</h1>
-
-        <div class="toggle-billing">
-            <span>Billed Monthly</span>
-            <input type="checkbox" id="billingToggle">
-            <label for="billingToggle"></label>
-            <span>Billed Annually</span>
-            <span style="margin-left: 20px; color: #00b050;">Save 20%!</span>
+<body class="bg-gray-100">
+    <div x-data="{
+        visibility: 'public',
+        timeLimit: 5,
+        sides: 2,
+        structuredFormat: true,
+        multilingual: false,
+        mediaIntegration: ['Text', 'Audio', 'Video'],
+        debateStyle: 'Oxford',
+        votingSystem: 'Audience Voting'
+    }" class="max-w-md mx-auto bg-white min-h-screen">
+        <div class="border-b border-gray-200 py-4 px-4 flex justify-between items-center">
+            <h1 class="text-xl font-semibold">Debate Settings</h1>
+            <i data-lucide="settings" class="text-gray-600"></i>
         </div>
-
-        <div class="pricing-table">
-            <div class="pricing-card">
-                <div class="plan-name">Free</div>
-                <div class="plan-description">A simple start for everyone</div>
-                <div class="price">$0</div>
-                <div class="price-duration">per month/billed annually</div>
-                <ul class="features">
-                    <li>200 Records Per App</li>
-                    <li>1,000 Monthly App Actions</li>
-                    <li>1 App Editor</li>
-                </ul>
-                <ul class="features">
-                    <li>Database + Collections</li>
-                    <li>Unlimited Screens</li>
-                    <li>Unlimited Test Apps</li>
-                </ul>
-                <a href="#" class="button">GET STARTED</a>
-                <div><a href="#" style="font-size: 12px; color: #666;">See Full Plan Details</a></div>
-            </div>
-
-            <div class="pricing-card">
-                <div class="plan-name">Starter</div>
-                <div class="plan-description">Founders & entrepreneurs</div>
-                <div class="price">$36</div>
-                <div class="price-duration">per month/billed annually</div>
-                <ul class="features">
-                    <li>1 Published App</li>
-                    <li>10,000 Monthly App Actions</li>
-                    <li>1 App Editor</li>
-                </ul>
-                <ul class="features">
-                    <li>All Free Features+</li>
-                    <li>Custom Fonts</li>
-                    <li>Custom Domain</li>
-                    <li>Publish to Web</li>
-                    <li>Publish to App Stores</li>
-                </ul>
-                <a href="#" class="button">GET STARTED</a>
-                <div><a href="#" style="font-size: 12px; color: #666;">See Full Plan Details</a></div>
-            </div>
-
-            <div class="pricing-card">
-                <div class="plan-name">
-                    Professional
-                    <span class="popular">MOST POPULAR!</span> 
+        
+        <div class="px-4">
+            <button @click="alert('Visibility options')" class="w-full text-left py-3 px-4 border-b border-gray-200 flex justify-between items-center focus:outline-none">
+                <div class="flex items-center">
+                    <i data-lucide="eye" class="mr-3 text-gray-600"></i>
+                    <div>
+                        <div class="font-semibold">Visibility</div>
+                        <div class="text-sm text-gray-500" x-text="visibility"></div>
+                    </div>
                 </div>
-                <div class="plan-description">Small & medium businesses</div>
-                <div class="price">$52</div>
-                <div class="price-duration">per month/billed annually</div>
-                <ul class="features">
-                    <li>2 Published Apps</li>
-                    <li>30,000 Monthly App Actions</li>
-                    <li>5 App Editors</li>
-                </ul>
-                <ul class="features">
-                    <li>All Starter Features+</li>
-                    <li>Custom Integrations</li>
-                    <li>Design Versions</li>
-                    <li>Geolocation</li>
-                </ul>
-                <a href="#" class="button">GET STARTED</a>
-                <div><a href="#" style="font-size: 12px; color: #666;">See Full Plan Details</a></div>
+                <i data-lucide="chevron-down" class="text-gray-400"></i>
+            </button>
+
+            <button @click="alert('Time limit options')" class="w-full text-left py-3 px-4 border-b border-gray-200 flex justify-between items-center focus:outline-none">
+                <div class="flex items-center">
+                    <i data-lucide="clock" class="mr-3 text-gray-600"></i>
+                    <div>
+                        <div class="font-semibold">Time Limit</div>
+                        <div class="text-sm text-gray-500" x-text="`${timeLimit} minutes`"></div>
+                    </div>
+                </div>
+                <i data-lucide="chevron-down" class="text-gray-400"></i>
+            </button>
+
+            <button @click="alert('Number of sides options')" class="w-full text-left py-3 px-4 border-b border-gray-200 flex justify-between items-center focus:outline-none">
+                <div class="flex items-center">
+                    <i data-lucide="users" class="mr-3 text-gray-600"></i>
+                    <div>
+                        <div class="font-semibold">Number of Sides</div>
+                        <div class="text-sm text-gray-500" x-text="sides === 0 ? 'Free-for-all' : `${sides}-sided`"></div>
+                    </div>
+                </div>
+                <i data-lucide="chevron-down" class="text-gray-400"></i>
+            </button>
+
+            <div class="py-3 px-4 border-b border-gray-200 flex justify-between items-center">
+                <div class="flex items-center">
+                    <i data-lucide="layout" class="mr-3 text-gray-600"></i>
+                    <div>
+                        <div class="font-semibold">Structured Format</div>
+                        <div class="text-sm text-gray-500" x-text="structuredFormat ? 'On' : 'Off'"></div>
+                    </div>
+                </div>
+                <div 
+                    @click="structuredFormat = !structuredFormat"
+                    class="w-10 h-6 flex items-center rounded-full p-1 cursor-pointer"
+                    :class="{ 'bg-blue-500': structuredFormat, 'bg-gray-300': !structuredFormat }"
+                >
+                    <div
+                        class="bg-white w-4 h-4 rounded-full shadow-md transform transition-transform duration-300 ease-in-out"
+                        :class="{ 'translate-x-4': structuredFormat }"
+                    ></div>
+                </div>
             </div>
 
-            <div class="pricing-card">
-                <div class="plan-name">Team</div>
-                <div class="plan-description">Freelancers & agencies</div>
-                <div class="price">$160</div>
-                <div class="price-duration">per month/billed annually</div>
-                <ul class="features">
-                    <li>5 Published Apps</li>
-                    <li>100,000 Monthly App Actions</li>
-                    <li>10 App Editors</li>
-                </ul>
-                <ul class="features">
-                    <li>All Pro Features+</li>
-                    <li>Priority Support</li>
-                    <li>Xano Integration</li>
-                    <li>Collections API</li>
-                </ul>
-                <a href="#" class="button">GET STARTED</a>
-                <div><a href="#" style="font-size: 12px; color: #666;">See Full Plan Details</a></div>
+            <button @click="alert('Media integration options')" class="w-full text-left py-3 px-4 border-b border-gray-200 flex justify-between items-center focus:outline-none">
+                <div class="flex items-center">
+                    <i data-lucide="message-circle" class="mr-3 text-gray-600"></i>
+                    <div>
+                        <div class="font-semibold">Media Integration</div>
+                        <div class="text-sm text-gray-500" x-text="mediaIntegration.join(', ')"></div>
+                    </div>
+                </div>
+                <i data-lucide="chevron-down" class="text-gray-400"></i>
+            </button>
+
+            <button @click="alert('Debate style options')" class="w-full text-left py-3 px-4 border-b border-gray-200 flex justify-between items-center focus:outline-none">
+                <div class="flex items-center">
+                    <i data-lucide="zap" class="mr-3 text-gray-600"></i>
+                    <div>
+                        <div class="font-semibold">Debate Style</div>
+                        <div class="text-sm text-gray-500" x-text="debateStyle"></div>
+                    </div>
+                </div>
+                <i data-lucide="chevron-down" class="text-gray-400"></i>
+            </button>
+
+            <div class="py-3 px-4 border-b border-gray-200 flex justify-between items-center">
+                <div class="flex items-center">
+                    <i data-lucide="globe" class="mr-3 text-gray-600"></i>
+                    <div>
+                        <div class="font-semibold">Multilingual</div>
+                        <div class="text-sm text-gray-500" x-text="multilingual ? 'On' : 'Off'"></div>
+                    </div>
+                </div>
+                <div 
+                    @click="multilingual = !multilingual"
+                    class="w-10 h-6 flex items-center rounded-full p-1 cursor-pointer"
+                    :class="{ 'bg-blue-500': multilingual, 'bg-gray-300': !multilingual }"
+                >
+                    <div
+                        class="bg-white w-4 h-4 rounded-full shadow-md transform transition-transform duration-300 ease-in-out"
+                        :class="{ 'translate-x-4': multilingual }"
+                    ></div>
+                </div>
             </div>
 
-            <div class="pricing-card">
-                <div class="plan-name">Business</div>
-                <div class="plan-description">Enterprise & organizations</div>
-                <div class="price">$200</div>
-                <div class="price-duration">per month/billed annually</div>
-                <ul class="features">
-                    <li>10 Published Apps</li>
-                    <li>500,000 Monthly App Actions</li>
-                    <li>Unlimited App Editors</li>
-                </ul>
-                <ul class="features">
-                    <li>All Team Features+</li>
-                    <li>Special Add-On Pricing</li>
-                </ul>
-                <a href="#" class="button">GET STARTED</a>
-                <div><a href="#" style="font-size: 12px; color: #666;">See Full Plan Details</a></div>
-            </div>
+            <button @click="alert('Voting system options')" class="w-full text-left py-3 px-4 border-b border-gray-200 flex justify-between items-center focus:outline-none">
+                <div class="flex items-center">
+                    <i data-lucide="award" class="mr-3 text-gray-600"></i>
+                    <div>
+                        <div class="font-semibold">Voting System</div>
+                        <div class="text-sm text-gray-500" x-text="votingSystem"></div>
+                    </div>
+                </div>
+                <i data-lucide="chevron-down" class="text-gray-400"></i>
+            </button>
         </div>
     </div>
+    <script>
+        document.addEventListener('alpine:init', () => {
+            lucide.createIcons();
+        });
+    </script>
 </body>
 </html>

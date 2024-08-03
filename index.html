@@ -3,142 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Debate App Settings</title>
+    <title>Debate Detail Screen</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/lucide@latest"></script>
-    <style>
-        [x-cloak] { display: none !important; }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-gray-100">
-    <div x-data="{
-        visibility: 'public',
-        timeLimit: 5,
-        sides: 2,
-        structuredFormat: true,
-        multilingual: false,
-        mediaIntegration: ['Text', 'Audio', 'Video'],
-        debateStyle: 'Oxford',
-        votingSystem: 'Audience Voting'
-    }" class="max-w-md mx-auto bg-white min-h-screen">
-        <div class="border-b border-gray-200 py-4 px-4 flex justify-between items-center">
-            <h1 class="text-xl font-semibold">Debate Settings</h1>
-            <i data-lucide="settings" class="text-gray-600"></i>
-        </div>
-        
-        <div class="px-4">
-            <button @click="alert('Visibility options')" class="w-full text-left py-3 px-4 border-b border-gray-200 flex justify-between items-center focus:outline-none">
-                <div class="flex items-center">
-                    <i data-lucide="eye" class="mr-3 text-gray-600"></i>
-                    <div>
-                        <div class="font-semibold">Visibility</div>
-                        <div class="text-sm text-gray-500" x-text="visibility"></div>
-                    </div>
-                </div>
-                <i data-lucide="chevron-down" class="text-gray-400"></i>
-            </button>
+<body class="bg-gray-100 font-sans">
+    <div x-data="{}" class="flex flex-col h-screen">
+        <!-- Header -->
+        <header class="bg-white p-4 border-b border-gray-300">
+            <h1 class="text-xl font-semibold">Debate Detail</h1>
+        </header>
 
-            <button @click="alert('Time limit options')" class="w-full text-left py-3 px-4 border-b border-gray-200 flex justify-between items-center focus:outline-none">
-                <div class="flex items-center">
-                    <i data-lucide="clock" class="mr-3 text-gray-600"></i>
-                    <div>
-                        <div class="font-semibold">Time Limit</div>
-                        <div class="text-sm text-gray-500" x-text="`${timeLimit} minutes`"></div>
-                    </div>
-                </div>
-                <i data-lucide="chevron-down" class="text-gray-400"></i>
-            </button>
+        <!-- Main Content -->
+        <main class="flex-1 overflow-y-auto">
+            <!-- Debate Caption and Detail -->
+            <div class="bg-white p-4 mb-2">
+                <h2 class="text-lg font-semibold mb-2">Should pineapple be on pizza?</h2>
+                <p class="text-gray-600 mb-4">Join the heated debate about this controversial pizza topping!</p>
+            </div>
 
-            <button @click="alert('Number of sides options')" class="w-full text-left py-3 px-4 border-b border-gray-200 flex justify-between items-center focus:outline-none">
-                <div class="flex items-center">
-                    <i data-lucide="users" class="mr-3 text-gray-600"></i>
-                    <div>
-                        <div class="font-semibold">Number of Sides</div>
-                        <div class="text-sm text-gray-500" x-text="sides === 0 ? 'Free-for-all' : `${sides}-sided`"></div>
-                    </div>
-                </div>
-                <i data-lucide="chevron-down" class="text-gray-400"></i>
-            </button>
+            <!-- Image Placeholder -->
+            <div class="bg-gray-300 aspect-square mb-2 flex items-center justify-center">
+                <span class="text-gray-500">Image Placeholder</span>
+            </div>
 
-            <div class="py-3 px-4 border-b border-gray-200 flex justify-between items-center">
-                <div class="flex items-center">
-                    <i data-lucide="layout" class="mr-3 text-gray-600"></i>
-                    <div>
-                        <div class="font-semibold">Structured Format</div>
-                        <div class="text-sm text-gray-500" x-text="structuredFormat ? 'On' : 'Off'"></div>
-                    </div>
+            <!-- Engagement Buttons -->
+            <div class="flex justify-between items-center px-4 py-2 bg-white">
+                <div class="flex space-x-4">
+                    <i class="fas fa-heart w-6 h-6"></i>
+                    <i class="fas fa-comment w-6 h-6"></i>
+                    <i class="fas fa-share w-6 h-6"></i>
                 </div>
-                <div 
-                    @click="structuredFormat = !structuredFormat"
-                    class="w-10 h-6 flex items-center rounded-full p-1 cursor-pointer"
-                    :class="{ 'bg-blue-500': structuredFormat, 'bg-gray-300': !structuredFormat }"
-                >
-                    <div
-                        class="bg-white w-4 h-4 rounded-full shadow-md transform transition-transform duration-300 ease-in-out"
-                        :class="{ 'translate-x-4': structuredFormat }"
-                    ></div>
+                <i class="fas fa-bookmark w-6 h-6"></i>
+            </div>
+
+            <!-- Debate Settings and Timer -->
+            <div class="bg-white p-4 mt-2 flex justify-between items-center">
+                <span class="text-sm font-medium">Public Debate • 24h Duration</span>
+                <div class="flex items-center">
+                    <i class="fas fa-clock w-4 h-4 mr-1"></i>
+                    <span class="text-sm font-medium">23:45:30</span>
                 </div>
             </div>
 
-            <button @click="alert('Media integration options')" class="w-full text-left py-3 px-4 border-b border-gray-200 flex justify-between items-center focus:outline-none">
-                <div class="flex items-center">
-                    <i data-lucide="message-circle" class="mr-3 text-gray-600"></i>
-                    <div>
-                        <div class="font-semibold">Media Integration</div>
-                        <div class="text-sm text-gray-500" x-text="mediaIntegration.join(', ')"></div>
-                    </div>
+            <!-- Tug-of-War Meter -->
+            <div class="bg-white p-4 mt-2">
+                <div class="relative h-4 bg-gray-200 rounded-full overflow-hidden">
+                    <div class="absolute top-0 left-0 h-full bg-red-500 w-3/5"></div>
+                    <div class="absolute top-0 right-0 h-full bg-blue-500 w-2/5"></div>
                 </div>
-                <i data-lucide="chevron-down" class="text-gray-400"></i>
-            </button>
-
-            <button @click="alert('Debate style options')" class="w-full text-left py-3 px-4 border-b border-gray-200 flex justify-between items-center focus:outline-none">
-                <div class="flex items-center">
-                    <i data-lucide="zap" class="mr-3 text-gray-600"></i>
-                    <div>
-                        <div class="font-semibold">Debate Style</div>
-                        <div class="text-sm text-gray-500" x-text="debateStyle"></div>
-                    </div>
-                </div>
-                <i data-lucide="chevron-down" class="text-gray-400"></i>
-            </button>
-
-            <div class="py-3 px-4 border-b border-gray-200 flex justify-between items-center">
-                <div class="flex items-center">
-                    <i data-lucide="globe" class="mr-3 text-gray-600"></i>
-                    <div>
-                        <div class="font-semibold">Multilingual</div>
-                        <div class="text-sm text-gray-500" x-text="multilingual ? 'On' : 'Off'"></div>
-                    </div>
-                </div>
-                <div 
-                    @click="multilingual = !multilingual"
-                    class="w-10 h-6 flex items-center rounded-full p-1 cursor-pointer"
-                    :class="{ 'bg-blue-500': multilingual, 'bg-gray-300': !multilingual }"
-                >
-                    <div
-                        class="bg-white w-4 h-4 rounded-full shadow-md transform transition-transform duration-300 ease-in-out"
-                        :class="{ 'translate-x-4': multilingual }"
-                    ></div>
+                <div class="flex justify-between mt-1">
+                    <span class="text-sm font-medium text-red-500">1,234</span>
+                    <span class="text-sm font-medium text-blue-500">789</span>
                 </div>
             </div>
 
-            <button @click="alert('Voting system options')" class="w-full text-left py-3 px-4 border-b border-gray-200 flex justify-between items-center focus:outline-none">
-                <div class="flex items-center">
-                    <i data-lucide="award" class="mr-3 text-gray-600"></i>
-                    <div>
-                        <div class="font-semibold">Voting System</div>
-                        <div class="text-sm text-gray-500" x-text="votingSystem"></div>
+            <!-- Discussion Area -->
+            <div class="bg-white mt-2 p-4">
+                <h3 class="font-semibold mb-2">Discussion</h3>
+                <div class="space-y-4">
+                    <div class="flex space-x-2">
+                        <div class="w-8 h-8 bg-gray-300 rounded-full"></div>
+                        <div class="flex-1">
+                            <p class="font-medium">User1</p>
+                            <p class="text-sm text-gray-600">Pineapple on pizza is delicious!</p>
+                            <div class="flex items-center space-x-2 mt-1">
+                                <button class="text-gray-500 text-sm flex items-center">
+                                    <i class="fas fa-thumbs-up w-4 h-4 mr-1"></i>
+                                    <span>24</span>
+                                </button>
+                                <button class="text-gray-500 text-sm flex items-center">
+                                    <i class="fas fa-comment w-4 h-4 mr-1"></i>
+                                    <span>5 replies</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex space-x-2 pl-8">
+                        <div class="w-8 h-8 bg-gray-300 rounded-full"></div>
+                        <div class="flex-1">
+                            <p class="font-medium">User2</p>
+                            <p class="text-sm text-gray-600">I respectfully disagree.</p>
+                            <div class="flex items-center space-x-2 mt-1">
+                                <button class="text-gray-500 text-sm flex items-center">
+                                    <i class="fas fa-thumbs-up w-4 h-4 mr-1"></i>
+                                    <span>12</span>
+                                </button>
+                                <button class="text-gray-500 text-sm flex items-center">
+                                    <i class="fas fa-comment w-4 h-4 mr-1"></i>
+                                    <span>2 replies</span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <i data-lucide="chevron-down" class="text-gray-400"></i>
-            </button>
-        </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-white border-t border-gray-300 p-4">
+            <div class="flex items-center mb-2">
+                <input type="text" placeholder="Add a comment..." class="flex-1 bg-gray-100 rounded-full px-4 py-2 mr-2">
+                <button class="text-blue-500 font-semibold">Post</button>
+            </div>
+            <div class="flex justify-between">
+                <button class="text-gray-600 flex items-center">
+                    <i class="fas fa-smile w-5 h-5 mr-1"></i>
+                    <span>Emoji</span>
+                </button>
+                <button class="text-gray-600 flex items-center">
+                    <i class="fas fa-image w-5 h-5 mr-1"></i>
+                    <span>GIF</span>
+                </button>
+                <button class="text-gray-600 flex items-center">
+                    <i class="fas fa-camera w-5 h-5 mr-1"></i>
+                    <span>Picture</span>
+                </button>
+                <button class="text-gray-600 flex items-center">
+                    <i class="fas fa-magic w-5 h-5 mr-1"></i>
+                    <span>AI Suggest</span>
+                </button>
+            </div>
+        </footer>
     </div>
-    <script>
-        document.addEventListener('alpine:init', () => {
-            lucide.createIcons();
-        });
-    </script>
 </body>
 </html>

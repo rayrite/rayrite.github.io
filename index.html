@@ -3,185 +3,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Card Carousel with Pulsating Effect, Particles, and Adjusted Tug of War Meter</title>
-    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <title>DUKR Landing Page</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script src="https://code.iconify.design/1/1.0.7/iconify.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @keyframes pulsate {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-        .pulsate {
-            animation: pulsate 1.5s infinite;
-        }
-        .particle {
-            position: absolute;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            pointer-events: none;
-            background-color: rgb(255, 255, 255); 
-        }
-        @keyframes particle-animation {
-            0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
-            100% { transform: translate(var(--tx), var(--ty)) scale(1); opacity: 0; }
+        body {
+            font-family: 'Varela Round', sans-serif;
         }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex flex-col items-center justify-center" x-data="imageCarousel()">
-    <div class="w-full max-w-4xl overflow-x-auto">
-        <div class="flex space-x-4 p-4 items-end">
-            <template x-for="(card, index) in cards" :key="index">
-                <div :class="`flex-shrink-0 relative ${index === 0 ? 'w-44 h-52' : 'w-40 h-48'} rounded-lg ${index === 0 ? 'p-0.5 bg-yellow-400' : ''}`">
-                    <div class="h-full bg-blue-600 rounded-lg overflow-hidden flex flex-col relative">
-                        <template x-if="index === 0">
-                            <div class="bg-yellow-400 text-black text-xs font-bold py-0.5 px-2 text-center">
-                                Rank #1
-                            </div>
-                        </template>
-                        
-                        <div class="p-2 text-center bg-blue-700" :id="index === 0 ? 'card-1-header' : ''">
-                            <h3 class="text-white text-sm font-semibold" x-text="card.title"></h3>
-                        </div>
-
-                        <div class="flex-grow relative">
-                            <div :class="`absolute inset-0 ${index === 0 ? 'border-2 border-blue-700 rounded' : ''}`">
-                            </div>
-                            <div x-show="tallyLabelPlacement === 0" 
-                                 :class="`absolute bottom-1 right-1 ${index === 0 ? 'pulsate' : ''}`"
-                                 :id="`tally-label-${index}`">
-                                <span :class="`${tallyColors[index]} inline-block rounded-full px-2 py-1 text-white text-xs font-bold relative z-10`">
-                                    <span x-text="card.tally"></span>
-                                </span>
-                            </div>
-                        </div>
-
-                        <div x-show="tallyLabelPlacement === 1" 
-                             :class="`w-full bg-blue-700 text-center ${index === 0 ? 'pulsate' : ''}`"
-                             :id="`tally-label-bottom-${index}`">
-                            <span :class="`${tallyColors[index]} inline-block rounded-full px-2 py-1 text-white text-xs font-bold relative z-10`">
-                                <span x-text="card.tally"></span>
-                            </span>
-                        </div>
-
-                        <div id="particle-container" class="absolute inset-0 pointer-events-none overflow-hidden"></div>
-                    </div>
-                </div>
-            </template>
-        </div>
-    </div>
-    
-    <!-- Spacer -->
-    <div class="h-4"></div>
-    
-    <!-- Adjusted Full-width Tug of War Meter with Non-Zero Labels -->
-    <div class="w-full max-w-3xl px-4 mb-4">
-        <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
-            <div class="flex h-full">
-                <template x-for="(card, index) in cards" :key="index">
-                    <div :class="`${tallyColors[index]}`" :style="`width: ${(card.tally / totalTallies) * 100}%`"></div>
-                </template>
-            </div>
-        </div>
-        <div class="flex justify-between mt-1">
-            <template x-for="(card, index) in cards" :key="index">
-                <div :style="`width: ${(card.tally / totalTallies) * 100}%`" class="flex justify-center">
-                    <span x-show="card.tally > 0" :class="`${tallyColors[index]} inline-block rounded-full px-2 py-1 text-white text-xs font-bold`">
-                        <span x-text="card.tally"></span>
+<body>
+    <div id="app" class="flex flex-col min-h-screen bg-white text-gray-800">
+        <!-- Navigation Bar -->
+        <nav class="fixed top-0 left-0 right-0 bg-blue-100 text-gray-800 p-1 z-50">
+            <div class="container mx-auto flex justify-between items-center">
+                <div class="flex items-center space-x-4">
+                    <img src="/api/placeholder/40/40" alt="Logo" class="w-10 h-10">
+                    <span class="font-bold text-5xl">
+                    <span class="font-bold text-5xl">
+                        <span class="text-blue-600">DU</span><span class="text-red-600">KR</span>
+                    </span>
                     </span>
                 </div>
-            </template>
-        </div>
-    </div>
-    
-    <div class="text-center mb-4"> 
-        <button @click="toggleTallyPlacement" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-            Toggle Tally Placement
-        </button>
+                <div class="space-x-4 flex items-center">
+                    <a href="#pricing" class="hover:text-blue-600">Pricing</a>
+                    <a href="#privacy" class="hover:text-blue-600">Privacy Policy</a>
+                    <a href="#terms" class="hover:text-blue-600">Terms & Conditions</a>
+                    <a href="#faq" class="hover:text-blue-600">FAQ</a>
+                    <a href="#contact" class="hover:text-blue-600">Contact Us</a>
+                    <button class="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition duration-300">Sign In</button>
+                    <button class="bg-red-500 text-white px-4 py-2 rounded-full hover:bg-red-600 transition duration-300">Get Started!</button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="flex-grow mt-24 p-8">
+            <div class="container mx-auto">
+                <!-- Tagline Section -->
+                <div class="text-center mb-12">
+                    <h1 class="text-4xl font-bold text-blue-600 mb-4">Your Tagline Goes Here</h1>
+                    <p class="text-xl text-gray-600">A brief description of your product or service</p>
+                </div>
+
+                <div class="flex flex-col md:flex-row items-center justify-between space-x-8 mb-12">
+                    <!-- Sign-in Section -->
+                    <div class="w-full md:w-1/2 space-y-4">
+                        <h2 class="text-3xl font-bold mb-6">Welcome Back!</h2>
+                        <button class="w-full bg-blue-500 text-white p-3 rounded-full flex items-center justify-center hover:bg-blue-600 transition duration-300">
+                            <span class="iconify mr-2" data-icon="logos:microsoft-icon"></span> Continue with Microsoft
+                        </button>
+                        <button class="w-full bg-blue-500 text-white p-3 rounded-full flex items-center justify-center hover:bg-blue-600 transition duration-300">
+                            <span class="iconify mr-2" data-icon="flat-color-icons:google"></span> Continue with Google
+                        </button>
+                        <button class="w-full bg-blue-500 text-white p-3 rounded-full flex items-center justify-center hover:bg-blue-600 transition duration-300">
+                            <span class="iconify mr-2" data-icon="mdi:openid"></span> Continue with OpenID
+                        </button>
+                        <button class="w-full bg-blue-500 text-white p-3 rounded-full flex items-center justify-center hover:bg-blue-600 transition duration-300">
+                            <span class="iconify mr-2" data-icon="ic:baseline-email"></span> Continue with Email
+                        </button>
+                        <div class="mt-4">
+                            <p>Don't have an account?</p>
+                            <button class="mt-2 w-full bg-red-600 text-white p-3 rounded-full flex items-center justify-center hover:bg-red-700 transition duration-300">
+                                Sign Up <span class="iconify ml-2" data-icon="material-symbols:arrow-right-alt-rounded"></span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Image Carousel -->
+                    <div class="w-full md:w-1/2 mt-8 md:mt-0">
+                        <img :src="images[currentImageIndex]" :alt="'Slide ' + (currentImageIndex + 1)" class="w-full h-auto rounded shadow-lg">
+                    </div>
+                </div>
+
+                <!-- Features Section -->
+                <div class="bg-gray-100 p-8 rounded-lg shadow-md">
+                    <h2 class="text-3xl font-bold mb-6 text-center">Key Features</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="flex items-start" v-for="(feature, index) in features" :key="index">
+                            <span class="iconify text-blue-500 mr-4 text-2xl" data-icon="carbon:checkmark-outline"></span>
+                            <div>
+                                <h3 class="text-xl font-semibold mb-2">{{ feature.title }}</h3>
+                                <p>{{ feature.description }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-blue-600 text-white p-8 mt-12">
+            <div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <p>&copy; 2024 DUKR. All rights reserved.</p>
+                    <a href="#cookies" class="hover:text-red-300">Cookies Policy</a>
+                </div>
+                <div class="flex space-x-6">
+                    <a v-for="(link, index) in socialLinks" :key="index" :href="link.url" target="_blank" rel="noopener noreferrer" class="hover:text-red-300 transition duration-300">
+                        <span class="iconify" :data-icon="link.icon" data-width="24" data-height="24"></span>
+                    </a>
+                </div>
+            </div>
+        </footer>
     </div>
 
     <script>
-        function imageCarousel() {
-            return {
-                cards: [
-                    { title: "Card 1", tally: 5 },
-                    { title: "Card 2", tally: 3 },
-                    { title: "Card 3", tally: 7 },
-                    { title: "Card 4", tally: 0 },
-                    { title: "Card 5", tally: 6 }
+        new Vue({
+            el: '#app',
+            data: {
+                currentImageIndex: 0,
+                images: [
+                    'https://cdn.pixabay.com/photo/2015/01/09/11/08/startup-594090_1280.jpg',
+                    'https://media.istockphoto.com/id/1591572504/photo/cheerful-businesswomen-shaking-hands-in-meeting-room.jpg?s=1024x1024&w=is&k=20&c=GYtKvPPbShP3JOyGRZdlakcQE2_h0skl6g6bU0r83qk=',
+                    'https://media.istockphoto.com/id/1664545047/photo/two-happy-colleagues-talking-while-working-together-in-the-office.jpg?s=1024x1024&w=is&k=20&c=tXHNhbxiAdw9hOhXSA7hZ5aS-t59aOe-B_tfcd9Ac28=',
+                    'https://cdn.pixabay.com/photo/2017/06/27/21/13/team-spirit-2448837_1280.jpg',
+                    'https://cdn.pixabay.com/photo/2018/03/10/12/00/teamwork-3213924_1280.jpg'
                 ],
-                tallyColors: [
-                    'bg-green-500',
-                    'bg-blue-500',
-                    'bg-red-500',
-                    'bg-purple-500',
-                    'bg-yellow-500'
+                features: [
+                    { title: 'Feature 1', description: 'Description of feature 1 and its benefits to the user.' },
+                    { title: 'Feature 2', description: 'Description of feature 2 and its benefits to the user.' },
+                    { title: 'Feature 3', description: 'Description of feature 3 and its benefits to the user.' },
+                    { title: 'Feature 4', description: 'Description of feature 4 and its benefits to the user.' }
                 ],
-                tallyLabelPlacement: 0,
-                get totalTallies() {
-                    return this.cards.reduce((sum, card) => sum + card.tally, 0);
-                },
-                toggleTallyPlacement() {
-                    this.tallyLabelPlacement = 1 - this.tallyLabelPlacement;
-                    this.removeParticles();
-                },
-                createParticles(color) {
-                    const container = document.getElementById('particle-container');
-                    const containerRect = container.getBoundingClientRect();
-
-                    let targetElement;
-                    if (this.tallyLabelPlacement === 0) {
-                        targetElement = document.getElementById('tally-label-0');
-                    } else {
-                        targetElement = document.getElementById('card-1-header');
-                    }
-
-                    const rect = targetElement.getBoundingClientRect();
-
-                    const centerX = rect.left - containerRect.left + rect.width / 2;
-                    const centerY = rect.top - containerRect.top + rect.height / 2;
-
-                    for (let i = 0; i < 30; i++) {
-                        const particle = document.createElement('div');
-                        particle.className = 'particle';
-                        particle.style.backgroundColor = this.getRGBColor(color);
-                        particle.style.left = `${centerX}px`;
-                        particle.style.top = `${centerY}px`;
-                        const angle = Math.random() * 2 * Math.PI;
-                        const distance = 30 + Math.random() * 30;
-                        particle.style.setProperty('--tx', `${Math.cos(angle) * distance}px`);
-                        particle.style.setProperty('--ty', `${Math.sin(angle) * distance}px`);
-                        particle.style.animation = `particle-animation ${0.5 + Math.random() * 0.5}s linear forwards`; 
-                        container.appendChild(particle);
-                    }
-                },
-                removeParticles() {
-                    const container = document.getElementById('particle-container');
-                    container.innerHTML = '';
-                },
-                getRGBColor(className) {
-                    const colorMap = {
-                        'bg-green-500': 'rgb(34, 197, 94)',
-                        'bg-blue-500': 'rgb(59, 130, 246)',
-                        'bg-red-500': 'rgb(239, 68, 68)',
-                        'bg-purple-500': 'rgb(168, 85, 247)',
-                        'bg-yellow-500': 'rgb(234, 179, 8)'
-                    };
-                    return colorMap[className] || 'rgb(59, 130, 246)';
-                },
-                generateParticlesContinuously() {
-                    setInterval(() => {
-                        this.createParticles(this.tallyColors[0]);
-                    }, 500); 
-                }
+                socialLinks: [
+                    { url: 'https://facebook.com', icon: 'ri:facebook-fill' },
+                    { url: 'https://x.com', icon: 'simple-icons:x' },
+                    { url: 'https://instagram.com', icon: 'mdi:instagram' },
+                    { url: 'https://tiktok.com', icon: 'ic:baseline-tiktok' }
+                ]
+            },
+            mounted() {
+                setInterval(() => {
+                    this.currentImageIndex = (this.currentImageIndex + 1) % this.images.length;
+                }, 8000);
             }
-        }
-    </script>
-    <script>
-        document.addEventListener('alpine:init', () => {
-            Alpine.store('imageCarousel', imageCarousel());
-            Alpine.store('imageCarousel').generateParticlesContinuously(); 
         });
     </script>
 </body>

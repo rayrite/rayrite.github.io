@@ -19,9 +19,11 @@
         .header h1 {
             color: #ffa500;
             margin-bottom: 0;
+            font-size: 2em;
         }
         .header h2 {
             margin-top: 5px;
+            font-size: 1.5em;
         }
         .billing-toggle {
             text-align: center;
@@ -77,19 +79,22 @@
         }
         .pricing-table {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             flex-wrap: wrap;
+            gap: 20px;
         }
         .pricing-card {
             background-color: #3c3c3c;
             border-radius: 10px;
             padding: 20px;
-            width: 18%;
+            width: 100%;
+            max-width: 300px;
             margin-bottom: 20px;
             box-sizing: border-box;
         }
         .pricing-card h3 {
             margin-top: 0;
+            font-size: 1.5em;
         }
         .price {
             font-size: 24px;
@@ -108,7 +113,7 @@
             margin-bottom: 10px;
         }
         .feature-list li::before {
-            content: "✓";
+            content: "?";
             color: #2eddb3;
             margin-right: 5px;
         }
@@ -141,6 +146,18 @@
             top: -10px;
             left: 50%;
             transform: translateX(-50%);
+        }
+        
+        @media (min-width: 768px) {
+            .pricing-card {
+                width: calc(50% - 20px);
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .pricing-card {
+                width: calc(20% - 20px);
+            }
         }
     </style>
 </head>

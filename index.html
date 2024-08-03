@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Card Carousel with Pulsating Effect, Particles, and Full-Width Tug of War Meter</title>
+    <title>Image Card Carousel with Pulsating Effect, Particles, and Adjusted Tug of War Meter</title>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -75,11 +75,22 @@
     <!-- Spacer -->
     <div class="h-4"></div>
     
-    <!-- Full-width Tug of War Meter -->
-    <div class="w-full max-w-4xl h-2 bg-gray-200 rounded-full overflow-hidden mb-4">
-        <div class="flex h-full">
+    <!-- Adjusted Full-width Tug of War Meter with Non-Zero Labels -->
+    <div class="w-full max-w-3xl px-4 mb-4">
+        <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+            <div class="flex h-full">
+                <template x-for="(card, index) in cards" :key="index">
+                    <div :class="`${tallyColors[index]}`" :style="`width: ${(card.tally / totalTallies) * 100}%`"></div>
+                </template>
+            </div>
+        </div>
+        <div class="flex justify-between mt-1">
             <template x-for="(card, index) in cards" :key="index">
-                <div :class="`${tallyColors[index]}`" :style="`width: ${(card.tally / totalTallies) * 100}%`"></div>
+                <div :style="`width: ${(card.tally / totalTallies) * 100}%`" class="flex justify-center">
+                    <span x-show="card.tally > 0" :class="`${tallyColors[index]} inline-block rounded-full px-2 py-1 text-white text-xs font-bold`">
+                        <span x-text="card.tally"></span>
+                    </span>
+                </div>
             </template>
         </div>
     </div>
@@ -97,7 +108,7 @@
                     { title: "Card 1", tally: 5 },
                     { title: "Card 2", tally: 3 },
                     { title: "Card 3", tally: 7 },
-                    { title: "Card 4", tally: 2 },
+                    { title: "Card 4", tally: 0 },
                     { title: "Card 5", tally: 6 }
                 ],
                 tallyColors: [

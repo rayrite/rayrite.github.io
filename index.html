@@ -51,8 +51,6 @@
                             </div>
                             <div x-show="tallyLabelPlacement === 0" 
                                  :class="`absolute bottom-1 right-1 ${index === 0 ? 'pulsate' : ''}`"
-                                 @mouseenter="if(index === 0) createParticles($event, tallyColors[index])"
-                                 @mouseleave="if(index === 0) removeParticles()"
                                  :id="`tally-label-${index}`">
                                 <span :class="`${tallyColors[index]} inline-block rounded-full px-2 py-1 text-white text-xs font-bold relative z-10`">
                                     <span x-text="card.tally"></span>
@@ -62,8 +60,6 @@
 
                         <div x-show="tallyLabelPlacement === 1" 
                              :class="`w-full bg-blue-700 text-center ${index === 0 ? 'pulsate' : ''}`"
-                             @mouseenter="if(index === 0) createParticles($event, tallyColors[index])"
-                             @mouseleave="if(index === 0) removeParticles()"
                              :id="`tally-label-${index}`">
                             <span :class="`${tallyColors[index]} inline-block rounded-full px-2 py-1 text-white text-xs font-bold relative z-10`">
                                 <span x-text="card.tally"></span>
@@ -76,13 +72,13 @@
             </template>
         </div>
 
-
     </div>
         <div class="text-center mb-4"> 
             <button @click="toggleTallyPlacement" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                 Toggle Tally Placement
             </button>
         </div>
+
     <script>
         function imageCarousel() {
             return {
@@ -123,7 +119,7 @@
                         const distance = 30 + Math.random() * 30;
                         particle.style.setProperty('--tx', `${Math.cos(angle) * distance}px`);
                         particle.style.setProperty('--ty', `${Math.sin(angle) * distance}px`);
-                        particle.style.animation = `particle-animation ${0.5 + Math.random() * 0.5}s linear forwards`; // Add 'forwards' to keep the final state
+                        particle.style.animation = `particle-animation ${0.5 + Math.random() * 0.5}s linear forwards`; 
                         container.appendChild(particle);
                     }
                 },
@@ -140,9 +136,20 @@
                         'bg-yellow-500': 'rgb(234, 179, 8)'
                     };
                     return colorMap[className] || 'rgb(59, 130, 246)';
+                },
+                generateParticlesContinuously() {
+                    setInterval(() => {
+                        this.createParticles({target: document.getElementById('tally-label-0')}, this.tallyColors[0]);
+                    }, 500); 
                 }
             }
         }
+    </script>
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.store('imageCarousel', imageCarousel());
+            Alpine.store('imageCarousel').generateParticlesContinuously(); 
+        });
     </script>
 </body>
 </html>

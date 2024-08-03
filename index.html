@@ -3,279 +3,288 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pricing Table</title>
+    <title>Pricing Plans</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #2c2c2c;
-            color: white;
+            font-family: sans-serif;
             margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
             padding: 20px;
         }
-        .header {
+
+        h1, h2 {
             text-align: center;
-            margin-bottom: 20px;
+            color: #333;
         }
-        .header h1 {
-            color: #ffa500;
-            margin-bottom: 0;
-            font-size: 2em;
-        }
-        .header h2 {
-            margin-top: 5px;
-            font-size: 1.5em;
-        }
-        .billing-toggle {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 60px;
-            height: 34px;
-            margin: 0 10px;
-        }
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 34px;
-        }
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 26px;
-            width: 26px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-        input:checked + .slider {
-            background-color: #2196F3;
-        }
-        input:checked + .slider:before {
-            transform: translateX(26px);
-        }
-        .save-text {
-            display: inline-block;
-            background-color: #ffa500;
-            color: black;
-            padding: 2px 5px;
-            border-radius: 3px;
-            font-size: 14px;
-        }
+
         .pricing-table {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
         }
+
         .pricing-card {
-            background-color: #3c3c3c;
+            background-color: white;
             border-radius: 10px;
-            padding: 20px;
-            width: 100%;
-            max-width: 300px;
-            margin-bottom: 20px;
-            box-sizing: border-box;
+            padding: 30px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
         }
-        .pricing-card h3 {
-            margin-top: 0;
-            font-size: 1.5em;
-        }
-        .price {
-            font-size: 24px;
-            font-weight: bold;
-            color: #2eddb3;
-        }
-        .period {
-            font-size: 14px;
-            color: #999;
-        }
-        .feature-list {
-            list-style-type: none;
-            padding: 0;
-        }
-        .feature-list li {
-            margin-bottom: 10px;
-        }
-        .feature-list li::before {
-            content: "?";
-            color: #2eddb3;
-            margin-right: 5px;
-        }
-        .cta-button {
-            background-color: #ffa500;
-            color: black;
-            border: none;
+
+        .plan-name {
+            background-color: #00b050;
+            color: white;
             padding: 10px 20px;
             border-radius: 5px;
-            cursor: pointer;
+            margin-bottom: 20px;
+            text-transform: uppercase;
             font-weight: bold;
-            width: 100%;
+            position: relative; /* To position the "Most Popular" label */
+        }
+
+        .plan-description {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .price {
+            font-size: 36px;
+            font-weight: bold;
+            color: #00b050;
+            margin-bottom: 10px;
+        }
+
+        .price-duration {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .features {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .features li {
+            margin-bottom: 10px;
+            color: #666;
+        }
+
+        .features li::before {
+            content: '\2713';
+            color: #00b050;
+            margin-right: 10px;
+        }
+
+        .button {
+            display: inline-block;
+            background-color: #ffc000;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 5px;
+            text-decoration: none;
             margin-top: 20px;
         }
-        .plan-details {
-            text-align: center;
-            font-size: 14px;
-            color: #2eddb3;
-            text-decoration: none;
-            display: block;
-            margin-top: 10px;
+
+        .button:hover {
+            background-color: #e6a800;
         }
-        .most-popular {
-            background-color: #2eddb3;
-            color: black;
+
+        .popular {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #00b050;
+            color: white;
             padding: 5px 10px;
             border-radius: 5px;
             font-size: 12px;
+        }
+
+        .toggle-billing {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .toggle-billing span {
+            margin: 0 10px;
+            color: #666;
+        }
+
+        .toggle-billing input[type="checkbox"] {
+            display: none;
+        }
+
+        .toggle-billing label {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+            background-color: #ccc;
+            border-radius: 30px;
+            cursor: pointer;
+        }
+
+        .toggle-billing label::before {
+            content: '';
             position: absolute;
-            top: -10px;
-            left: 50%;
-            transform: translateX(-50%);
+            top: 5px;
+            left: 5px;
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
         }
-        
-        @media (min-width: 768px) {
-            .pricing-card {
-                width: calc(50% - 20px);
+
+        .toggle-billing input[type="checkbox"]:checked + label {
+            background-color: #00b050;
+        }
+
+        .toggle-billing input[type="checkbox"]:checked + label::before {
+            transform: translateX(30px);
+        }
+
+        @media screen and (max-width: 768px) {
+            .pricing-table {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             }
-        }
-        
-        @media (min-width: 1024px) {
+
             .pricing-card {
-                width: calc(20% - 20px);
+                padding: 20px;
+            }
+
+            .price {
+                font-size: 28px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="header">
+    <div class="container">
         <h1>Build for free.</h1>
-        <h2>Pay to publish.</h2>
+        <h1>Pay to publish.</h1>
+
+        <div class="toggle-billing">
+            <span>Billed Monthly</span>
+            <input type="checkbox" id="billingToggle">
+            <label for="billingToggle"></label>
+            <span>Billed Annually</span>
+            <span style="margin-left: 20px; color: #00b050;">Save 20%!</span>
+        </div>
+
+        <div class="pricing-table">
+            <div class="pricing-card">
+                <div class="plan-name">Free</div>
+                <div class="plan-description">A simple start for everyone</div>
+                <div class="price">$0</div>
+                <div class="price-duration">per month/billed annually</div>
+                <ul class="features">
+                    <li>200 Records Per App</li>
+                    <li>1,000 Monthly App Actions</li>
+                    <li>1 App Editor</li>
+                </ul>
+                <ul class="features">
+                    <li>Database + Collections</li>
+                    <li>Unlimited Screens</li>
+                    <li>Unlimited Test Apps</li>
+                </ul>
+                <a href="#" class="button">GET STARTED</a>
+                <div><a href="#" style="font-size: 12px; color: #666;">See Full Plan Details</a></div>
+            </div>
+
+            <div class="pricing-card">
+                <div class="plan-name">Starter</div>
+                <div class="plan-description">Founders & entrepreneurs</div>
+                <div class="price">$36</div>
+                <div class="price-duration">per month/billed annually</div>
+                <ul class="features">
+                    <li>1 Published App</li>
+                    <li>10,000 Monthly App Actions</li>
+                    <li>1 App Editor</li>
+                </ul>
+                <ul class="features">
+                    <li>All Free Features+</li>
+                    <li>Custom Fonts</li>
+                    <li>Custom Domain</li>
+                    <li>Publish to Web</li>
+                    <li>Publish to App Stores</li>
+                </ul>
+                <a href="#" class="button">GET STARTED</a>
+                <div><a href="#" style="font-size: 12px; color: #666;">See Full Plan Details</a></div>
+            </div>
+
+            <div class="pricing-card">
+                <div class="plan-name">
+                    Professional
+                    <span class="popular">MOST POPULAR!</span> 
+                </div>
+                <div class="plan-description">Small & medium businesses</div>
+                <div class="price">$52</div>
+                <div class="price-duration">per month/billed annually</div>
+                <ul class="features">
+                    <li>2 Published Apps</li>
+                    <li>30,000 Monthly App Actions</li>
+                    <li>5 App Editors</li>
+                </ul>
+                <ul class="features">
+                    <li>All Starter Features+</li>
+                    <li>Custom Integrations</li>
+                    <li>Design Versions</li>
+                    <li>Geolocation</li>
+                </ul>
+                <a href="#" class="button">GET STARTED</a>
+                <div><a href="#" style="font-size: 12px; color: #666;">See Full Plan Details</a></div>
+            </div>
+
+            <div class="pricing-card">
+                <div class="plan-name">Team</div>
+                <div class="plan-description">Freelancers & agencies</div>
+                <div class="price">$160</div>
+                <div class="price-duration">per month/billed annually</div>
+                <ul class="features">
+                    <li>5 Published Apps</li>
+                    <li>100,000 Monthly App Actions</li>
+                    <li>10 App Editors</li>
+                </ul>
+                <ul class="features">
+                    <li>All Pro Features+</li>
+                    <li>Priority Support</li>
+                    <li>Xano Integration</li>
+                    <li>Collections API</li>
+                </ul>
+                <a href="#" class="button">GET STARTED</a>
+                <div><a href="#" style="font-size: 12px; color: #666;">See Full Plan Details</a></div>
+            </div>
+
+            <div class="pricing-card">
+                <div class="plan-name">Business</div>
+                <div class="plan-description">Enterprise & organizations</div>
+                <div class="price">$200</div>
+                <div class="price-duration">per month/billed annually</div>
+                <ul class="features">
+                    <li>10 Published Apps</li>
+                    <li>500,000 Monthly App Actions</li>
+                    <li>Unlimited App Editors</li>
+                </ul>
+                <ul class="features">
+                    <li>All Team Features+</li>
+                    <li>Special Add-On Pricing</li>
+                </ul>
+                <a href="#" class="button">GET STARTED</a>
+                <div><a href="#" style="font-size: 12px; color: #666;">See Full Plan Details</a></div>
+            </div>
+        </div>
     </div>
-    <div class="billing-toggle">
-        <span>Billed Monthly</span>
-        <label class="toggle-switch">
-            <input type="checkbox" id="billingToggle" checked>
-            <span class="slider"></span>
-        </label>
-        <span>Billed Annually</span>
-        <span class="save-text">Save 20%!</span>
-    </div>
-    <div class="pricing-table">
-        <div class="pricing-card">
-            <h3>Free</h3>
-            <p>A simple start for everyone</p>
-            <div class="price">$<span id="freePrice">0</span></div>
-            <div class="period">per month/<span id="freePeriod">billed annually</span></div>
-            <ul class="feature-list">
-                <li>Database + Collections</li>
-                <li>Unlimited Screens</li>
-                <li>Unlimited Test Apps</li>
-            </ul>
-            <button class="cta-button">GET STARTED</button>
-            <a href="#" class="plan-details">See Full Plan Details</a>
-        </div>
-        <div class="pricing-card">
-            <h3>Starter</h3>
-            <p>Founders & entrepreneurs</p>
-            <div class="price">$<span id="starterPrice">36</span></div>
-            <div class="period">per month/<span id="starterPeriod">billed annually</span></div>
-            <ul class="feature-list">
-                <li>All Free Features+</li>
-                <li>Custom Fonts</li>
-                <li>Custom Domain</li>
-                <li>Publish to Web</li>
-                <li>Publish to App Stores</li>
-            </ul>
-            <button class="cta-button">GET STARTED</button>
-            <a href="#" class="plan-details">See Full Plan Details</a>
-        </div>
-        <div class="pricing-card" style="position: relative;">
-            <span class="most-popular">MOST POPULAR!</span>
-            <h3>Professional</h3>
-            <p>Small & medium businesses</p>
-            <div class="price">$<span id="professionalPrice">52</span></div>
-            <div class="period">per month/<span id="professionalPeriod">billed annually</span></div>
-            <ul class="feature-list">
-                <li>All Starter Features+</li>
-                <li>Custom Integrations</li>
-                <li>Design Versions</li>
-                <li>Geolocation</li>
-            </ul>
-            <button class="cta-button">GET STARTED</button>
-            <a href="#" class="plan-details">See Full Plan Details</a>
-        </div>
-        <div class="pricing-card">
-            <h3>Team</h3>
-            <p>Freelancers & agencies</p>
-            <div class="price">$<span id="teamPrice">160</span></div>
-            <div class="period">per month/<span id="teamPeriod">billed annually</span></div>
-            <ul class="feature-list">
-                <li>All Pro Features+</li>
-                <li>Priority Support</li>
-                <li>Xano Integration</li>
-                <li>Collections API</li>
-            </ul>
-            <button class="cta-button">GET STARTED</button>
-            <a href="#" class="plan-details">See Full Plan Details</a>
-        </div>
-        <div class="pricing-card">
-            <h3>Business</h3>
-            <p>Enterprise & organizations</p>
-            <div class="price">$<span id="businessPrice">200</span></div>
-            <div class="period">per month/<span id="businessPeriod">billed annually</span></div>
-            <ul class="feature-list">
-                <li>All Team Features+</li>
-                <li>Special Add-On Pricing</li>
-            </ul>
-            <button class="cta-button">GET STARTED</button>
-            <a href="#" class="plan-details">See Full Plan Details</a>
-        </div>
-    </div>
-
-    <script>
-        const billingToggle = document.getElementById('billingToggle');
-        const prices = {
-            free: { monthly: 0, annual: 0 },
-            starter: { monthly: 45, annual: 36 },
-            professional: { monthly: 65, annual: 52 },
-            team: { monthly: 200, annual: 160 },
-            business: { monthly: 250, annual: 200 }
-        };
-
-        function updatePrices(isAnnual) {
-            document.getElementById('freePrice').textContent = prices.free[isAnnual ? 'annual' : 'monthly'];
-            document.getElementById('starterPrice').textContent = prices.starter[isAnnual ? 'annual' : 'monthly'];
-            document.getElementById('professionalPrice').textContent = prices.professional[isAnnual ? 'annual' : 'monthly'];
-            document.getElementById('teamPrice').textContent = prices.team[isAnnual ? 'annual' : 'monthly'];
-            document.getElementById('businessPrice').textContent = prices.business[isAnnual ? 'annual' : 'monthly'];
-
-            const periodTexts = document.querySelectorAll('.period span');
-            periodTexts.forEach(span => {
-                span.textContent = isAnnual ? 'billed annually' : 'billed monthly';
-            });
-        }
-
-        billingToggle.addEventListener('change', function() {
-            updatePrices(this.checked);
-        });
-
-        // Initialize with annual prices
-        updatePrices(true);
-    </script>
 </body>
 </html>

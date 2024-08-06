@@ -3,196 +3,201 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DUKR Landing Page</title>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
-    <script src="https://code.iconify.design/1/1.0.7/iconify.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Social Media Mockup</title>
     <style>
         body {
             font-family: 'Varela Round', sans-serif;
+            background-color: #f1f1f1;
+            margin: 0;
+            padding: 20px;
         }
-        .hamburger {
-            cursor: pointer;
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
         }
-        .bar {
-            display: block;
-            width: 25px;
-            height: 3px;
-            margin: 5px auto;
-            background-color: #333;
-            transition: all 0.3s ease-in-out;
+        .debate-info {
+            display: flex;
+            margin-bottom: 10px;
         }
-        @media (max-width: 768px) {
-            #nav-menu {
-                display: none;
-                flex-direction: column;
-                position: absolute;
-                top: 60px;
-                left: 0;
-                width: 100%;
-                background-color: #f8f8f8;
-                text-align: center;
-                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            }
-            #nav-menu.active {
-                display: flex;
-            }
-            #nav-menu a {
-                padding: 10px;
-                border-top: 1px solid #e0e0e0;
-            }
+        .debate-type, .debate-countdown, .debate-title {
+            padding: 10px;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+        .debate-type {
+            background-color: yellow;
+            width: 25%;
+            font-weight: bold;
+        }
+        .debate-countdown {
+            background-color: #ff0000;
+            width: 25%;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        .debate-title {
+            background-color: #0000ff;
+            width: 50%;
+            color: white;
+            font-weight: bold;
+        }
+        .debate-description {
+            background-color: #0000ff;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .content-cards {
+            display: flex;
+            overflow-x: auto;
+            margin-bottom: 20px;
+        }
+        .card {
+            background-color: #0000ff;
+            border-radius: 5px;
+            width: 300px;
+            height: 400px;
+            margin-right: 10px;
+            position: relative;
+            flex-shrink: 0;
+        }
+        .card-caption {
+            color: white;
+            font-weight: bold;
+            padding: 10px;
+            height: 70px;
+            overflow: hidden;
+        }
+        .card-image {
+            width: 280px;
+            height: 280px;
+            background-color: #cccccc;
+            margin: 10px;
+        }
+        .card-tally {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background-color: #ff69b4;
+            color: white;
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 15px;
+        }
+        .tug-of-war {
+            height: 20px;
+            background-color: #cccccc;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        .tug-of-war-segment {
+            height: 100%;
+            float: left;
+        }
+        .tug-of-war-labels {
+            display: flex;
+            justify-content: space-between;
+        }
+        .tug-of-war-label {
+            background-color: #ff69b4;
+            color: white;
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 15px;
+            text-align: center;
         }
     </style>
 </head>
 <body>
-    <div id="app" class="flex flex-col min-h-screen bg-white text-gray-800">
-        <!-- Navigation Bar -->
-        <nav class="fixed top-0 left-0 right-0 bg-blue-100 text-gray-800 p-1 z-50">
-            <div class="container mx-auto flex justify-between items-center">
-                <div class="flex items-center space-x-4">
-                    <img src="/api/placeholder/40/40" alt="Logo" class="w-10 h-10">
-                    <span class="font-bold text-5xl">
-                        <span class="text-blue-600">DU</span><span class="text-red-600">KR</span>
-                    </span>
-                </div>
-                <div id="nav-menu" class="space-x-4 items-center hidden md:flex">
-                    <a href="#pricing" class="hover:text-blue-600">Pricing</a>
-                    <a href="#privacy" class="hover:text-blue-600">Privacy Policy</a>
-                    <a href="#terms" class="hover:text-blue-600">Terms & Conditions</a>
-                    <a href="#faq" class="hover:text-blue-600">FAQ</a>
-                    <a href="#contact" class="hover:text-blue-600">Contact Us</a>
-                    <button class="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition duration-300">Sign In</button>
-                    <button class="bg-red-500 text-white px-4 py-2 rounded-full hover:bg-red-600 transition duration-300">Get Started!</button>
-                </div>
-                <div class="hamburger md:hidden">
-                    <span class="bar"></span>
-                    <span class="bar"></span>
-                    <span class="bar"></span>
-                </div>
-            </div>
-        </nav>
-
-        <!-- Main Content -->
-        <main class="flex-grow mt-24 p-8">
-            <div class="container mx-auto">
-                <!-- Tagline Section -->
-                <div class="text-center mb-12">
-                    <h1 class="text-4xl font-bold text-blue-600 mb-4">Your Tagline Goes Here</h1>
-                    <p class="text-xl text-gray-600">A brief description of your product or service</p>
-                </div>
-
-                <div class="flex flex-col md:flex-row items-center justify-between space-x-8 mb-12">
-                    <!-- Sign-in Section -->
-                    <div class="w-full md:w-1/2 space-y-4">
-                        <h2 class="text-3xl font-bold mb-6">Welcome Back!</h2>
-                        <button class="w-full bg-blue-500 text-white p-3 rounded-full flex items-center justify-center hover:bg-blue-600 transition duration-300">
-                            <span class="iconify mr-2" data-icon="logos:microsoft-icon"></span> Continue with Microsoft
-                        </button>
-                        <button class="w-full bg-blue-500 text-white p-3 rounded-full flex items-center justify-center hover:bg-blue-600 transition duration-300">
-                            <span class="iconify mr-2" data-icon="flat-color-icons:google"></span> Continue with Google
-                        </button>
-                        <button class="w-full bg-blue-500 text-white p-3 rounded-full flex items-center justify-center hover:bg-blue-600 transition duration-300">
-                            <span class="iconify mr-2" data-icon="mdi:openid"></span> Continue with OpenID
-                        </button>
-                        <button class="w-full bg-blue-500 text-white p-3 rounded-full flex items-center justify-center hover:bg-blue-600 transition duration-300">
-                            <span class="iconify mr-2" data-icon="ic:baseline-email"></span> Continue with Email
-                        </button>
-                        <div class="mt-4">
-                            <p>Don't have an account?</p>
-                            <button class="mt-2 w-full bg-red-600 text-white p-3 rounded-full flex items-center justify-center hover:bg-red-700 transition duration-300">
-                                Sign Up <span class="iconify ml-2" data-icon="material-symbols:arrow-right-alt-rounded"></span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Image Carousel -->
-                    <div class="w-full md:w-1/2 mt-8 md:mt-0">
-                        <img :src="images[currentImageIndex]" :alt="'Slide ' + (currentImageIndex + 1)" class="w-full h-auto rounded shadow-lg">
-                    </div>
-                </div>
-
-                <!-- Features Section -->
-                <div class="bg-gray-100 p-8 rounded-lg shadow-md">
-                    <h2 class="text-3xl font-bold mb-6 text-center">Key Features</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="flex items-start" v-for="(feature, index) in features" :key="index">
-                            <span class="iconify text-blue-500 mr-4 text-2xl" data-icon="carbon:checkmark-outline"></span>
-                            <div>
-                                <h3 class="text-xl font-semibold mb-2">{{ feature.title }}</h3>
-                                <p>{{ feature.description }}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
-
-        <!-- Footer -->
-        <footer class="bg-blue-600 text-white p-8 mt-12">
-            <div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
-                <div class="mb-4 md:mb-0">
-                    <p>&copy; 2024 DUKR. All rights reserved.</p>
-                    <a href="#cookies" class="hover:text-red-300">Cookies Policy</a>
-                </div>
-                <div class="flex space-x-6">
-                    <a v-for="(link, index) in socialLinks" :key="index" :href="link.url" target="_blank" rel="noopener noreferrer" class="hover:text-red-300 transition duration-300">
-                        <span class="iconify" :data-icon="link.icon" data-width="24" data-height="24"></span>
-                    </a>
-                </div>
-            </div>
-        </footer>
+    <div class="container">
+        <div class="debate-info">
+            <div class="debate-type">Politics</div>
+            <div class="debate-countdown" id="countdown">Loading...</div>
+            <div class="debate-title">Should universal basic income be implemented?</div>
+        </div>
+        <div class="debate-description">
+            Discuss the pros and cons of implementing a universal basic income system and its potential impact on society and the economy.
+        </div>
+        <div class="content-cards" id="contentCards"></div>
+        <div class="tug-of-war" id="tugOfWar"></div>
+        <div class="tug-of-war-labels" id="tugOfWarLabels"></div>
     </div>
 
     <script>
-        new Vue({
-            el: '#app',
-            data: {
-                currentImageIndex: 0,
-                images: [
-                    'https://cdn.pixabay.com/photo/2015/01/09/11/08/startup-594090_1280.jpg',
-                    'https://media.istockphoto.com/id/1591572504/photo/cheerful-businesswomen-shaking-hands-in-meeting-room.jpg?s=1024x1024&w=is&k=20&c=GYtKvPPbShP3JOyGRZdlakcQE2_h0skl6g6bU0r83qk=',
-                    'https://media.istockphoto.com/id/1664545047/photo/two-happy-colleagues-talking-while-working-together-in-the-office.jpg?s=1024x1024&w=is&k=20&c=tXHNhbxiAdw9hOhXSA7hZ5aS-t59aOe-B_tfcd9Ac28=',
-                    'https://cdn.pixabay.com/photo/2017/06/27/21/13/team-spirit-2448837_1280.jpg',
-                    'https://cdn.pixabay.com/photo/2018/03/10/12/00/teamwork-3213924_1280.jpg'
-                ],
-                features: [
-                    { title: 'Feature 1', description: 'Description of feature 1 and its benefits to the user.' },
-                    { title: 'Feature 2', description: 'Description of feature 2 and its benefits to the user.' },
-                    { title: 'Feature 3', description: 'Description of feature 3 and its benefits to the user.' },
-                    { title: 'Feature 4', description: 'Description of feature 4 and its benefits to the user.' }
-                ],
-                socialLinks: [
-                    { url: 'https://facebook.com', icon: 'ri:facebook-fill' },
-                    { url: 'https://x.com', icon: 'simple-icons:x' },
-                    { url: 'https://instagram.com', icon: 'mdi:instagram' },
-                    { url: 'https://tiktok.com', icon: 'ic:baseline-tiktok' }
-                ]
-            },
-            mounted() {
-                setInterval(() => {
-                    this.currentImageIndex = (this.currentImageIndex + 1) % this.images.length;
-                }, 8000);
+        const sampleConfig = {
+            contentCards: [
+                { caption: 'Card 1 with a very long caption that should be truncated and shown in a popup', yellowCaption: 'Rank #1', tally: 5 },
+                { caption: 'Card 2', tally: 3 },
+                { caption: 'Card 3 with another long caption to test the popup functionality', tally: 7 },
+                { caption: 'Card 4', tally: 9584 },
+                { caption: 'Card 5', tally: 8473 },
+            ],
+            debateType: 'Politics',
+            debateTitle: 'Should universal basic income be implemented?',
+            debateDescription: 'Discuss the pros and cons of implementing a universal basic income system and its potential impact on society and the economy.',
+            debateEndTime: '2024-08-10T23:59:59',
+        };
+
+        function updateCountdown() {
+            const endTime = new Date(sampleConfig.debateEndTime).getTime();
+            const now = new Date().getTime();
+            const distance = endTime - now;
+
+            if (distance < 0) {
+                document.getElementById('countdown').textContent = 'Debate Closed';
+            } else {
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                document.getElementById('countdown').textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
             }
-        });
+        }
 
-        document.addEventListener('DOMContentLoaded', (event) => {
-            const hamburger = document.querySelector('.hamburger');
-            const navMenu = document.querySelector('#nav-menu');
-
-            hamburger.addEventListener('click', () => {
-                navMenu.classList.toggle('active');
-                hamburger.classList.toggle('active');
+        function createContentCards() {
+            const contentCardsContainer = document.getElementById('contentCards');
+            sampleConfig.contentCards.forEach((card, index) => {
+                const cardElement = document.createElement('div');
+                cardElement.className = 'card';
+                cardElement.innerHTML = `
+                    <div class="card-caption">${card.caption}</div>
+                    <div class="card-image"></div>
+                    <div class="card-tally">${card.tally}</div>
+                `;
+                cardElement.style.backgroundColor = `hsl(${(index * 360) / sampleConfig.contentCards.length}, 70%, 50%)`;
+                contentCardsContainer.appendChild(cardElement);
             });
+        }
 
-            // Close menu when a link is clicked
-            document.querySelectorAll('#nav-menu a').forEach(link => {
-                link.addEventListener('click', () => {
-                    navMenu.classList.remove('active');
-                    hamburger.classList.remove('active');
-                });
+        function createTugOfWar() {
+            const tugOfWar = document.getElementById('tugOfWar');
+            const tugOfWarLabels = document.getElementById('tugOfWarLabels');
+            const tallies = sampleConfig.contentCards.map(card => card.tally);
+            const totalTally = tallies.reduce((sum, tally) => sum + tally, 0);
+
+            tallies.forEach((tally, index) => {
+                const segment = document.createElement('div');
+                segment.className = 'tug-of-war-segment';
+                segment.style.width = `${(tally / totalTally) * 100}%`;
+                segment.style.backgroundColor = `hsl(${(index * 360) / tallies.length}, 70%, 50%)`;
+                tugOfWar.appendChild(segment);
+
+                const label = document.createElement('div');
+                label.className = 'tug-of-war-label';
+                label.textContent = tally;
+                label.style.backgroundColor = `hsl(${(index * 360) / tallies.length}, 70%, 50%)`;
+                tugOfWarLabels.appendChild(label);
             });
-        });
+        }
+
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+        createContentCards();
+        createTugOfWar();
     </script>
 </body>
 </html>

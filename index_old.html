@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Media Mockup</title>
+    <style>
+        body {
+            font-family: 'Varela Round', sans-serif;
+            background-color: #f1f1f1;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .debate-info {
+            display: flex;
+            margin-bottom: 10px;
+        }
+        .debate-type, .debate-countdown, .debate-title {
+            padding: 10px;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+        .debate-type {
+            background-color: yellow;
+            width: 25%;
+            font-weight: bold;
+        }
+        .debate-countdown {
+            background-color: #ff0000;
+            width: 25%;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        .debate-title {
+            background-color: #0000ff;
+            width: 50%;
+            color: white;
+            font-weight: bold;
+        }
+        .debate-description {
+            background-color: #0000ff;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .content-cards {
+            display: flex;
+            overflow-x: auto;
+            margin-bottom: 20px;
+        }
+        .card {
+            background-color: #0000ff;
+            border-radius: 5px;
+            width: 300px;
+            height: 400px;
+            margin-right: 10px;
+            position: relative;
+            flex-shrink: 0;
+        }
+        .card-caption {
+            color: white;
+            font-weight: bold;
+            padding: 10px;
+            height: 70px;
+            overflow: hidden;
+        }
+        .card-image {
+            width: 280px;
+            height: 280px;
+            background-color: #cccccc;
+            margin: 10px;
+        }
+        .card-tally {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background-color: #ff69b4;
+            color: white;
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 15px;
+        }
+        .tug-of-war {
+            height: 20px;
+            background-color: #cccccc;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        .tug-of-war-segment {
+            height: 100%;
+            float: left;
+        }
+        .tug-of-war-labels {
+            display: flex;
+            justify-content: space-between;
+        }
+        .tug-of-war-label {
+            background-color: #ff69b4;
+            color: white;
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 15px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="debate-info">
+            <div class="debate-type">Politics</div>
+            <div class="debate-countdown" id="countdown">Loading...</div>
+            <div class="debate-title">Should universal basic income be implemented?</div>
+        </div>
+        <div class="debate-description">
+            Discuss the pros and cons of implementing a universal basic income system and its potential impact on society and the economy.
+        </div>
+        <div class="content-cards" id="contentCards"></div>
+        <div class="tug-of-war" id="tugOfWar"></div>
+        <div class="tug-of-war-labels" id="tugOfWarLabels"></div>
+    </div>
+
+    <script>
+        const sampleConfig = {
+            contentCards: [
+                { caption: 'Card 1 with a very long caption that should be truncated and shown in a popup', yellowCaption: 'Rank #1', tally: 5 },
+                { caption: 'Card 2', tally: 3 },
+                { caption: 'Card 3 with another long caption to test the popup functionality', tally: 7 },
+                { caption: 'Card 4', tally: 9584 },
+                { caption: 'Card 5', tally: 8473 },
+            ],
+            debateType: 'Politics',
+            debateTitle: 'Should universal basic income be implemented?',
+            debateDescription: 'Discuss the pros and cons of implementing a universal basic income system and its potential impact on society and the economy.',
+            debateEndTime: '2024-08-10T23:59:59',
+        };
+
+        function updateCountdown() {
+            const endTime = new Date(sampleConfig.debateEndTime).getTime();
+            const now = new Date().getTime();
+            const distance = endTime - now;
+
+            if (distance < 0) {
+                document.getElementById('countdown').textContent = 'Debate Closed';
+            } else {
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                document.getElementById('countdown').textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+            }
+        }
+
+        function createContentCards() {
+            const contentCardsContainer = document.getElementById('contentCards');
+            sampleConfig.contentCards.forEach((card, index) => {
+                const cardElement = document.createElement('div');
+                cardElement.className = 'card';
+                cardElement.innerHTML = `
+                    <div class="card-caption">${card.caption}</div>
+                    <div class="card-image"></div>
+                    <div class="card-tally">${card.tally}</div>
+                `;
+                cardElement.style.backgroundColor = `hsl(${(index * 360) / sampleConfig.contentCards.length}, 70%, 50%)`;
+                contentCardsContainer.appendChild(cardElement);
+            });
+        }
+
+        function createTugOfWar() {
+            const tugOfWar = document.getElementById('tugOfWar');
+            const tugOfWarLabels = document.getElementById('tugOfWarLabels');
+            const tallies = sampleConfig.contentCards.map(card => card.tally);
+            const totalTally = tallies.reduce((sum, tally) => sum + tally, 0);
+
+            tallies.forEach((tally, index) => {
+                const segment = document.createElement('div');
+                segment.className = 'tug-of-war-segment';
+                segment.style.width = `${(tally / totalTally) * 100}%`;
+                segment.style.backgroundColor = `hsl(${(index * 360) / tallies.length}, 70%, 50%)`;
+                tugOfWar.appendChild(segment);
+
+                const label = document.createElement('div');
+                label.className = 'tug-of-war-label';
+                label.textContent = tally;
+                label.style.backgroundColor = `hsl(${(index * 360) / tallies.length}, 70%, 50%)`;
+                tugOfWarLabels.appendChild(label);
+            });
+        }
+
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+        createContentCards();
+        createTugOfWar();
+    </script>
+</body>
+</html>

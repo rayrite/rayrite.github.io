@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing Page</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Varela Round', sans-serif;
+        }
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="app" v-cloak class="min-h-screen bg-gradient-to-br from-blue-100 to-red-100 py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-4xl font-extrabold text-blue-600 text-center mb-8">
+                Choose Your Plan
+            </h2>
+
+            <!-- Countdown Timer -->
+            <div class="bg-white p-6 rounded-lg shadow-lg mb-12 text-center">
+                <h3 class="text-2xl font-bold text-gray-900 mb-4">Limited Time Offer Ends In:</h3>
+                <div class="flex justify-center space-x-4">
+                    <div v-for="(value, unit) in timeLeft" :key="unit" class="text-center">
+                        <div class="text-4xl font-bold text-blue-600" :ref="'count-' + unit">
+                            {{ value }}
+                        </div>
+                        <div class="text-gray-500">{{ unit }}</div>
+                    </div>
+                </div>
+                <button class="mt-6 bg-red-500 text-white px-6 py-3 rounded-full font-semibold text-lg hover:bg-red-600 transition duration-300">
+                    Get Limited Offer Now!
+                </button>
+            </div>
+
+            <!-- Pricing Options -->
+            <div class="mt-12 space-y-12 lg:space-y-0 lg:grid lg:grid-cols-2 lg:gap-x-8">
+                <!-- Pay-as-you-go Option -->
+                <div class="bg-white rounded-2xl shadow-xl flex flex-col h-full" ref="payAsYouGo">
+                    <div class="p-8 flex-grow">
+                        <h3 class="text-2xl font-semibold text-gray-900">Pay-as-you-go</h3>
+                        <p class="mt-4 text-gray-500">Perfect for occasional users</p>
+                        <p class="mt-6 text-5xl font-extrabold text-blue-600">$0.50 <span class="text-base font-medium text-gray-500">/topic</span></p>
+                        <p class="mt-2 text-lg font-semibold text-blue-600">$5.00 <span class="text-base font-medium text-gray-500">minimum commitment</span></p>
+                        <ul class="mt-6 space-y-4">
+                            <li v-for="feature in payAsYouGoFeatures" :key="feature" class="flex">
+                                <svg class="flex-shrink-0 w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <span class="ml-3 text-gray-500">{{ feature }}</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="p-8 pt-0">
+                        <button class="w-full bg-blue-500 text-white px-6 py-3 rounded-full font-semibold text-lg hover:bg-blue-600 transition duration-300">
+                            Start Posting Now
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Subscription Option -->
+                <div class="bg-white rounded-2xl shadow-xl relative flex flex-col h-full border-4 border-red-500" ref="subscription">
+                    <div class="absolute top-0 right-0 bg-red-500 text-white px-4 py-2 rounded-tr-xl rounded-bl-xl font-semibold" ref="popularBadge">
+                        Popular!
+                    </div>
+                    <div class="p-8 flex-grow">
+                        <h3 class="text-2xl font-semibold text-gray-900">Monthly Subscription</h3>
+                        <p class="mt-4 text-gray-500">Best value for power users</p>
+                        <p class="mt-6 text-5xl font-extrabold text-blue-600">$3.98 <span class="text-base font-medium text-gray-500">/month</span></p>
+                        <ul class="mt-6 space-y-4">
+                            <li v-for="feature in subscriptionFeatures" :key="feature" class="flex">
+                                <svg class="flex-shrink-0 w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <span class="ml-3 text-gray-500">{{ feature }}</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="p-8 pt-0">
+                        <button class="w-full bg-red-500 text-white px-6 py-3 rounded-full font-semibold text-lg hover:bg-red-600 transition duration-300">
+                            Subscribe Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                timeLeft: {
+                    days: 0,
+                    hours: 0,
+                    minutes: 0,
+                    seconds: 0
+                },
+                payAsYouGoFeatures: [
+                    "Only pay for the topics you participate in",
+                    "No monthly commitment",
+                    "Standard support"
+                ],
+                subscriptionFeatures: [
+                    "Unlimited access to all topics",
+                    "Advanced analytics dashboard",
+                    "Priority 24/7 customer support",
+                    "Ad-free experience",
+                    "Custom profile themes",
+                    "Exclusive member events"
+                ],
+                endDate: new Date("August 28, 2024 23:11:11").getTime()
+            },
+            mounted() {
+                this.startCountdown();
+                this.animateElements();
+            },
+            methods: {
+                startCountdown() {
+                    setInterval(() => {
+                        const now = new Date().getTime();
+                        const distance = this.endDate - now;
+
+                        this.timeLeft = {
+                            days: Math.floor(distance / (1000 * 60 * 60 * 24)),
+                            hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+                            minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+                            seconds: Math.floor((distance % (1000 * 60)) / 1000)
+                        };
+
+                        if (distance < 0) {
+                            clearInterval(this.timer);
+                            this.timeLeft = { days: 0, hours: 0, minutes: 0, seconds: 0 };
+                        }
+                    }, 1000);
+                },
+                animateElements() {
+                    gsap.from(this.$refs.payAsYouGo, { y: 50, opacity: 0, duration: 0.5, delay: 0.2 });
+                    gsap.from(this.$refs.subscription, { y: 50, opacity: 0, duration: 0.5, delay: 0.4 });
+
+                    gsap.to(this.$refs.popularBadge, {
+                        scale: 1.1,
+                        rotation: 5,
+                        duration: 1,
+                        yoyo: true,
+                        repeat: -1,
+                        ease: "power1.inOut"
+                    });
+
+                    Object.keys(this.timeLeft).forEach(unit => {
+                        gsap.to(this.$refs[`count-${unit}`], {
+                            scale: 1.1,
+                            duration: 0.5,
+                            yoyo: true,
+                            repeat: -1,
+                            ease: "power1.inOut"
+                        });
+                    });
+                }
+            }
+        });
+    </script>
+</body>
+</html>

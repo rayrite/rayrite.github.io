@@ -3,34 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Gallery</title>
+    <title>Responsive Image Gallery</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         body {
             background-color: lightblue;
-            font-family: Arial, sans-serif;
+            font-family: 'Poppins', sans-serif;
             margin: 0;
             padding: 20px;
+            box-sizing: border-box;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
         }
-        .header img {
-            max-width: 100%;
-            height: auto;
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
         }
-        .links {
-            margin: 20px 0;
+        .logo {
+            width: 50px;
+            height: 50px;
+            background-color: #3498db;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+        .company-name {
+            font-size: 24px;
+            font-weight: 600;
+            color: #2c3e50;
         }
         .gallery {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        .gallery a {
+            display: block;
+            text-decoration: none;
         }
         .gallery img {
-            width: 150px;
-            height: 150px;
+            width: 100%;
+            height: auto;
             object-fit: cover;
-            cursor: pointer;
+            aspect-ratio: 1 / 1;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out;
         }
-        #lightbox {
+        .gallery img:hover {
+            transform: scale(1.05);
+        }
+        .links {
+            margin-bottom: 20px;
+        }
+        .links a {
+            color: #4a4a4a;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 18px;
+            transition: color 0.3s ease;
+        }
+        .links a:hover {
+            color: #2c3e50;
+        }
+        .back-btn {
+            display: none;
+            margin-bottom: 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .back-btn:hover {
+            background-color: #2980b9;
+        }
+		#lightbox {
             display: none;
             position: fixed;
             z-index: 1000;
@@ -42,24 +94,22 @@
             justify-content: center;
             align-items: center;
         }
-        #lightboxImage {
+        #lightbox img {
             max-width: 90%;
             max-height: 90%;
             object-fit: contain;
-        }
+		}
     </style>
 </head>
 <body>
     <div class="header">
         <img src="dukr.png" alt="dukr">
-    </div>
 
+    </div>
     <div class="links">
         <a href="pricing.html">Pricing</a>
     </div>
-
-    <button onclick="history.back()">Back</button>
-
+    <button class="back-btn" onclick="goBack()">Back</button>
     <div class="gallery">
         <img src="image1.jpg" alt="Image 1" onclick="openLightbox('image1.jpg')">
         <img src="image2.jpg" alt="Image 2" onclick="openLightbox('image2.jpg')">
@@ -77,44 +127,26 @@
     <div id="lightbox" onclick="closeLightbox()">
         <img id="lightboxImage" src="" alt="Lightbox Image">
     </div>
-
     <script>
-        function openLightbox(imageSrc) {
+        function goBack() {
+            window.history.back();
+        }
+
+        // Show back button if there's a previous page
+        if (window.history.length > 1) {
+            document.querySelector('.back-btn').style.display = 'block';
+        }
+		function openLightbox(imageSrc) {
             const lightbox = document.getElementById('lightbox');
             const lightboxImage = document.getElementById('lightboxImage');
             lightboxImage.src = imageSrc;
             lightbox.style.display = 'flex';
-            resizeLightboxImage();
         }
 
         function closeLightbox() {
             const lightbox = document.getElementById('lightbox');
             lightbox.style.display = 'none';
         }
-
-        function resizeLightboxImage() {
-            const lightboxImage = document.getElementById('lightboxImage');
-            const viewportWidth = window.innerWidth;
-            const viewportHeight = window.innerHeight;
-            
-            // Reset any previous transformations
-            lightboxImage.style.transform = 'none';
-            
-            // Get the natural dimensions of the image
-            const naturalWidth = lightboxImage.naturalWidth;
-            const naturalHeight = lightboxImage.naturalHeight;
-            
-            // Calculate the scaling factor
-            const scaleX = (viewportWidth * 0.9) / naturalWidth;
-            const scaleY = (viewportHeight * 0.9) / naturalHeight;
-            const scale = Math.min(scaleX, scaleY, 1); // Don't scale up images larger than their natural size
-            
-            // Apply the scaling
-            lightboxImage.style.transform = `scale(${scale})`;
-        }
-
-        // Resize the image when the window is resized
-        window.addEventListener('resize', resizeLightboxImage);
     </script>
 </body>
 </html>

@@ -105,8 +105,8 @@
             const naturalHeight = lightboxImage.naturalHeight;
             
             // Calculate the scaling factor
-            const scaleX = (viewportWidth * 0.9) / naturalWidth;
-            const scaleY = (viewportHeight * 0.9) / naturalHeight;
+            const scaleX = (viewportWidth) / naturalWidth;
+            const scaleY = (viewportHeight) / naturalHeight;
             const scale = Math.min(scaleX, scaleY, 1); // Don't scale up images larger than their natural size
             
             // Apply the scaling

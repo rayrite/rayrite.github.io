@@ -79,26 +79,6 @@
         .back-btn:hover {
             background-color: #2980b9;
         }
-        /* Modal styling */
-        #imageModal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(173, 216, 230, 0.95); /* Light blue background */
-            justify-content: center;
-            align-items: center;
-        }
-        #imageModal img {
-            max-width: 90%;
-            max-height: 90%;
-            object-fit: contain;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-        }
     </style>
 </head>
 <body>
@@ -110,22 +90,17 @@
     </div>
     <button class="back-btn" onclick="goBack()">Back</button>
     <div class="gallery">
-        <img src="image1.jpg" alt="Image 1" onclick="openModal('image1.jpg')">
-        <img src="image2.jpg" alt="Image 2" onclick="openModal('image2.jpg')">
-        <img src="image3.jpg" alt="Image 3" onclick="openModal('image3.jpg')">
-        <img src="image4.jpg" alt="Image 4" onclick="openModal('image4.jpg')">
-        <img src="image5.jpg" alt="Image 5" onclick="openModal('image5.jpg')">
-        <img src="image6.jpg" alt="Image 6" onclick="openModal('image6.jpg')">
-        <img src="image7.jpg" alt="Image 7" onclick="openModal('image7.jpg')">
-        <img src="image8.jpg" alt="Image 8" onclick="openModal('image8.jpg')">
-        <img src="image9.jpg" alt="Image 9" onclick="openModal('image9.jpg')">
-        <img src="image10.jpg" alt="Image 10" onclick="openModal('image10.jpg')">
-        <img src="image11.jpg" alt="Image 11" onclick="openModal('image11.jpg')">
-    </div>
-
-    <!-- Modal Structure -->
-    <div id="imageModal" onclick="closeModal()">
-        <img id="modalImage" src="" alt="">
+        <img src="image1.jpg" alt="Image 1">
+        <img src="image2.jpg" alt="Image 2">
+        <img src="image3.jpg" alt="Image 3">
+        <img src="image4.jpg" alt="Image 4">
+        <img src="image5.jpg" alt="Image 5">
+        <img src="image6.jpg" alt="Image 6">
+        <img src="image7.jpg" alt="Image 7">
+        <img src="image8.jpg" alt="Image 8">
+        <img src="image9.jpg" alt="Image 9">
+        <img src="image10.jpg" alt="Image 10">
+        <img src="image11.jpg" alt="Image 11">
     </div>
 
     <script>
@@ -137,30 +112,6 @@
         if (window.history.length > 1) {
             document.querySelector('.back-btn').style.display = 'block';
         }
-
-        // Open the modal with the clicked image
-        function openModal(imageSrc) {
-            const modal = document.getElementById('imageModal');
-            const modalImage = document.getElementById('modalImage');
-            modalImage.src = imageSrc;
-            modalImage.alt = "Full-size Image";
-            modal.style.display = 'flex';
-        }
-
-        // Close the modal
-        function closeModal() {
-            const modal = document.getElementById('imageModal');
-            modal.style.display = 'none';
-            // Clear the image source when closing the modal
-            const modalImage = document.getElementById('modalImage');
-            modalImage.src = "";
-        }
-
-        // Ensure the modal is hidden on page load
-        window.onload = function() {
-            const modal = document.getElementById('imageModal');
-            modal.style.display = 'none';
-        };
     </script>
 </body>
 </html>

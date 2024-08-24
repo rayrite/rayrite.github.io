@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Combined Responsive Page</title>
+    <title>Combined Page</title>
     <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
     <style>
@@ -17,41 +17,39 @@
             background-color: white;
             font-family: 'Varela Round', sans-serif;
             color: #0066cc;
-            font-size: 2.5vw; /* Adjust font size based on viewport width */
+            font-size: 18px;
         }
         .content {
             width: 100%;
-            max-width: 90%;
+            max-width: 80%;
             padding-top: 5vh;
             text-align: center;
         }
         .main-text {
             font-family: 'Varela Round', sans-serif;
-            font-size: 4vw; /* Responsive font size */
+            font-size: 16px;
             font-weight: bold;
             color: blue;
-            margin-bottom: 2vh;
+            margin-bottom: 20px;
         }
         .tagline {
             font-family: 'Anton', sans-serif;
-            font-size: 6vw; /* Responsive font size */
+            font-size: 25px;
             color: red;
             text-transform: uppercase;
-            letter-spacing: 0.5vw; /* Responsive letter spacing */
+            letter-spacing: 2px;
             text-shadow: 2px 2px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000;
         }
         .container {
-            max-width: 90%;
-            margin: 2vh auto;
+            max-width: 800px;
+            margin: 0 auto;
         }
         .scroll-item {
             display: flex;
-            flex-direction: column; /* Stack content vertically on small screens */
             align-items: center;
             opacity: 0;
             transform: translateX(-100%);
             transition: opacity 1s ease, transform 1s ease;
-            margin-bottom: 4vh;
         }
         .scroll-item.right {
             transform: translateX(100%);
@@ -61,38 +59,20 @@
             transform: translateX(0);
         }
         .scroll-item img {
-            width: 80vw; /* Make images responsive */
-            max-width: 400px;
-            height: auto; /* Maintain aspect ratio */
-            margin-bottom: 2vh;
+            width: 300px;
+            height: 200px;
+            margin-right: 20px;
             border-radius: 20px;
             object-fit: cover;
         }
         .scroll-item.right img {
             order: 2;
             margin-right: 0;
-            margin-left: 0;
+            margin-left: 20px;
         }
         .scroll-item p {
             margin: 0;
             padding: 0;
-            font-size: 3vw; /* Responsive font size */
-            text-align: center; /* Center text */
-        }
-        /* Media Query for larger screens */
-        @media (min-width: 768px) {
-            .scroll-item {
-                flex-direction: row; /* Horizontal layout on larger screens */
-                margin-bottom: 3vh;
-            }
-            .scroll-item.right img {
-                order: 2;
-                margin-left: 2vw;
-            }
-            .scroll-item img {
-                width: 50vw; /* Adjust image width for larger screens */
-                max-width: 300px;
-            }
         }
     </style>
 </head>

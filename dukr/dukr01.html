@@ -21,7 +21,7 @@
         }
         .content {
             width: 100%;
-            max-width: 80%;
+            max-width: 90%;
             padding-top: 5vh;
             text-align: center;
         }
@@ -41,8 +41,10 @@
             text-shadow: 2px 2px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000;
         }
         .container {
-            max-width: 800px;
+            max-width: 100%;
             margin: 0 auto;
+            padding: 0 10px;
+            overflow-x: hidden;
         }
         .scroll-item {
             display: flex;
@@ -59,22 +61,38 @@
             transform: translateX(0);
         }
         .scroll-item img {
-            width: 160px;
-            height: 160px;
-            margin-right: 20px;
+            width: 120px; /* Reduced size */
+            height: 120px; /* Reduced size */
+            margin-right: 10px;
             border-radius: 20px;
             object-fit: cover;
         }
         .scroll-item.right img {
             order: 2;
-            width: 160px;
-            height: 160px;
+            width: 120px; /* Reduced size */
+            height: 120px; /* Reduced size */
             margin-right: 0;
-            margin-left: 20px;
+            margin-left: 10px;
         }
         .scroll-item p {
             margin: 0;
             padding: 0;
+            flex: 1; /* Allow text to take up more space */
+            text-align: left; /* Ensure text is well aligned */
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .scroll-item img {
+                width: 100px; /* Further reduce size on smaller screens */
+                height: 100px;
+            }
+            .tagline {
+                font-size: 20px; /* Adjust tagline size for smaller screens */
+            }
+            .main-text {
+                font-size: 14px; /* Adjust main text size for smaller screens */
+            }
         }
     </style>
 </head>

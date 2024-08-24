@@ -7,12 +7,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Varela&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.7.14/lottie.min.js"></script>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
         body {
             font-family: 'Varela', sans-serif;
             background-color: white;
@@ -22,7 +16,9 @@
             align-items: center;
             justify-content: flex-start;
             min-height: 100vh;
-            padding: 5vmin;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
             text-align: center;
             overflow-x: hidden;
         }
@@ -33,18 +29,14 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 50vh;
-            max-height: 400px;
         }
 
         #lottie-container {
             position: absolute;
-            width: 150%;
-            height: 150%;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 0; /* Ensure animation is behind content */
+  top: -150px;
+ left: 50%;
+ transform: translateX(-50%);
+            z-index: 0;
         }
 
         h1 {
@@ -53,8 +45,7 @@
             animation: wave 2s ease-in-out infinite;
             position: relative;
             z-index: 1;
-            font-size: clamp(2rem, 8vw, 4rem);
-            margin-bottom: 0; /* Removed spacing below the header */
+            margin-bottom: 0.5em;
         }
 
         @keyframes wave {
@@ -63,45 +54,36 @@
         }
 
         p {
-            margin: 2vmin 0;
+            margin: 0.5em 0;
             font-weight: bold;
-            font-size: clamp(1rem, 4vw, 1.5rem);
         }
 
         #countdown {
             display: flex;
             justify-content: center;
-            gap: 2vmin;
-            margin: 3vmin 0;
-            width: 100%;
-            max-width: 600px;
+            gap: 10px;
+            margin: 1em 0;
         }
 
         .time-component {
             background-color: #f0f0f0;
             border-radius: 10px;
-            padding: 1vmin;
+            padding: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            flex: 1;
-            min-width: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
         }
 
         #countdown .number {
             color: red;
             font-weight: bold;
-            font-size: clamp(1.5rem, 6vw, 3rem);
+            font-size: 2em;
             display: block;
             animation: numberChange 0.5s ease-out;
         }
 
         #countdown .label {
             color: black;
-            font-size: clamp(1rem, 5vw, 2rem); /* Increased size */
+            font-size: 0.8em;
             display: block;
-            font-weight: bold; /* Added for better visibility */
         }
 
         @keyframes numberChange {
@@ -111,7 +93,7 @@
         }
 
         .promotional-text {
-            margin-top: 3vmin;
+            margin-top: 1em;
         }
     </style>
 </head>

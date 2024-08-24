@@ -3,50 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Top-Centered Text with Tagline</title>
+    <title>Scroll Animation</title>
     <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
     <style>
         body {
+            font-family: 'Varela Round', sans-serif;
+            color: #0066cc;
+            font-size: 18px;
             margin: 0;
             padding: 0;
-            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .scroll-item {
             display: flex;
-            flex-direction: column;
             align-items: center;
-            background-color: white;
+            opacity: 0;
+            transform: translateX(-100%);
+            transition: opacity 1s ease, transform 1s ease;
         }
-        .content {
-            width: 100%;
-            max-width: 80%;
-            padding-top: 5vh;
-            text-align: center;
+        .scroll-item.right {
+            transform: translateX(100%);
         }
-        .main-text {
-            font-family: 'Varela Round', sans-serif;
-            font-size: 24px;
-            font-weight: bold;
-            color: blue;
-            margin-bottom: 20px;
+        .scroll-item.visible {
+            opacity: 1;
+            transform: translateX(0);
         }
-        .tagline {
-            font-family: 'Anton', sans-serif;
-            font-size: 36px;
-            color: red;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            text-shadow: 2px 2px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000;
+        .scroll-item img {
+            width: 300px;
+            height: 200px;
+            margin-right: 20px;
+            border-radius: 20px;
+            object-fit: cover;
+        }
+        .scroll-item.right img {
+            order: 2;
+            margin-right: 0;
+            margin-left: 20px;
+        }
+        .scroll-item p {
+            margin: 0;
+            padding: 0;
         }
     </style>
 </head>
 <body>
-    <div class="content">
-        <div class="main-text">
-            A dynamic social expression platform dedicated to debates and intelligent discussions.
+    <div class="container">
+        <div class="scroll-item">
+            <img src="image01.jpg" alt="Diverse group collaborating">
+            <p>Forge meaningful connections rooted in shared values and beliefs.</p>
         </div>
-        <div class="tagline">
-            EVERY ANGLE CONSIDERED.
+        <div class="scroll-item right">
+            <img src="image02.jpg" alt="People resolving disputes">
+            <p>Resolve disputes and gain peace of mind by settling issues decisively.</p>
+        </div>
+        <div class="scroll-item">
+            <img src="image03.jpg" alt="Team exploring innovative ideas">
+            <p>Unlock innovative solutions through the exploration of diverse perspectives.</p>
         </div>
     </div>
+
+    <script>
+        function checkScroll() {
+            const items = document.querySelectorAll('.scroll-item');
+            items.forEach(item => {
+                const itemTop = item.getBoundingClientRect().top;
+                const itemBottom = item.getBoundingClientRect().bottom;
+                if (itemTop < window.innerHeight && itemBottom > 0) {
+                    item.classList.add('visible');
+                } else {
+                    item.classList.remove('visible');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', checkScroll);
+        window.addEventListener('resize', checkScroll);
+        checkScroll(); // Initial check
+    </script>
 </body>
 </html>

@@ -34,14 +34,17 @@
             justify-content: center;
             align-items: center;
             margin-bottom: 5vmin;
+            height: 50vh; /* Increased height for larger animation */
+            max-height: 400px;
         }
 
         #lottie-container {
             position: absolute;
-            width: 100%;
-            height: 100%;
-            max-width: 300px;
-            max-height: 300px;
+            width: 150%; /* Increased size */
+            height: 150%; /* Increased size */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             z-index: 0;
         }
 
@@ -80,7 +83,7 @@
             padding: 1vmin;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             flex: 1;
-            min-width: 0; /* Allows flex items to shrink below content size */
+            min-width: 0;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -89,15 +92,16 @@
         #countdown .number {
             color: red;
             font-weight: bold;
-            font-size: clamp(1rem, 5vw, 2.5rem);
+            font-size: clamp(1.5rem, 6vw, 3rem);
             display: block;
             animation: numberChange 0.5s ease-out;
         }
 
         #countdown .label {
             color: black;
-            font-size: clamp(0.6rem, 2vw, 1rem);
+            font-size: clamp(0.8rem, 3vw, 1.2rem); /* Increased size */
             display: block;
+            font-weight: bold; /* Added for better visibility */
         }
 
         @keyframes numberChange {

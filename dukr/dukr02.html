@@ -33,19 +33,18 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-bottom: 5vmin;
-            height: 50vh; /* Increased height for larger animation */
+            height: 50vh;
             max-height: 400px;
         }
 
         #lottie-container {
             position: absolute;
-            width: 150%; /* Increased size */
-            height: 150%; /* Increased size */
+            width: 150%;
+            height: 150%;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            z-index: 0;
+            z-index: 0; /* Ensure animation is behind content */
         }
 
         h1 {
@@ -55,6 +54,7 @@
             position: relative;
             z-index: 1;
             font-size: clamp(2rem, 8vw, 4rem);
+            margin-bottom: 0; /* Removed spacing below the header */
         }
 
         @keyframes wave {
@@ -99,7 +99,7 @@
 
         #countdown .label {
             color: black;
-            font-size: clamp(0.8rem, 3vw, 1.2rem); /* Increased size */
+            font-size: clamp(1rem, 5vw, 2rem); /* Increased size */
             display: block;
             font-weight: bold; /* Added for better visibility */
         }

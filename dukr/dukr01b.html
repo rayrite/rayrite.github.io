@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Combined Page</title>
+    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: white;
+            font-family: 'Varela Round', sans-serif;
+            color: #0066cc;
+            font-size: 18px;
+        }
+
+        /* Loading overlay styles */
+        #loadingOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .spinner {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .content {
+            width: 100%;
+            max-width: 90%;
+            padding-top: 5vh;
+            text-align: center;
+        }
+
+        .main-text {
+            font-family: 'Varela Round', sans-serif;
+            font-size: 24px;
+            font-weight: bold;
+            color: blue;
+            margin-bottom: 20px;
+        }
+
+        .tagline {
+            font-family: 'Anton', sans-serif;
+            font-size: 25px;
+            color: red;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 0 10px;
+            overflow-x: hidden;
+        }
+
+        .scroll-item {
+            display: flex;
+            align-items: center;
+            opacity: 0;
+            transform: translateX(-100%);
+            transition: opacity 1s ease, transform 1s ease;
+        }
+
+        .scroll-item.right {
+            transform: translateX(100%);
+        }
+
+        .scroll-item.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .scroll-item img {
+            width: 120px; /* Reduced size */
+            height: 120px; /* Reduced size */
+            margin-right: 10px;
+            border-radius: 20px;
+            object-fit: cover;
+        }
+
+        .scroll-item.right img {
+            order: 2;
+            width: 120px; /* Reduced size */
+            height: 120px; /* Reduced size */
+            margin-right: 0;
+            margin-left: 10px;
+        }
+
+        .scroll-item p {
+            margin: 0;
+            padding: 0;
+            flex: 1; /* Allow text to take up more space */
+            text-align: left; /* Ensure text is well aligned */
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .scroll-item img {
+                width: 100px; /* Further reduce size on smaller screens */
+                height: 100px;
+            }
+            .tagline {
+                font-size: 20px; /* Adjust tagline size for smaller screens */
+            }
+            .main-text {
+                font-size: 14px; /* Adjust main text size for smaller screens */
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Content from top.html -->
+    <div class="content">
+        <div class="main-text">
+            A dynamic social expression platform dedicated to debates and intelligent discussions.
+        </div>
+        <div class="tagline">
+            EVERY ANGLE CONSIDERED.
+        </div>
+    </div>
+
+    <!-- Content from dukr01.html -->
+    <div class="container">
+        <div class="scroll-item">
+            <img src="image01.jpg" alt="Diverse group collaborating">
+            <p>Forge meaningful connections rooted in shared values and beliefs.</p>
+        </div>
+        <div class="scroll-item right">
+            <img src="image02.jpg" alt="People resolving disputes">
+            <p>Resolve disputes and gain peace of mind by settling issues decisively.</p>
+        </div>
+        <div class="scroll-item">
+            <img src="image03.jpg" alt="Team exploring innovative ideas">
+            <p>Unlock innovative solutions through the exploration of diverse perspectives.</p>
+        </div>
+    </div>
+
+    <script>
+        // Hide the loading overlay once the page has loaded
+        window.addEventListener('load', function() {
+            document.getElementById('loadingOverlay').style.display = 'none';
+        });
+
+        function checkScroll() {
+            const items = document.querySelectorAll('.scroll-item');
+            items.forEach(item => {
+                const itemTop = item.getBoundingClientRect().top;
+                const itemBottom = item.getBoundingClientRect().bottom;
+                if (itemTop < window.innerHeight && itemBottom > 0) {
+                    item.classList.add('visible');
+                } else {
+                    item.classList.remove('visible');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', checkScroll);
+        window.addEventListener('resize', checkScroll);
+        checkScroll(); // Initial check
+    </script>
+</body>
+</html>

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
+    <title>LOCK IN! MVP Promotional Pricing</title>
+    <link href="https://fonts.googleapis.com/css2?family=Varela&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.7.14/lottie.min.js"></script>
+    <style>
+        body {
+            font-family: 'Varela', sans-serif;
+            background-color: white;
+            color: blue;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            text-align: center;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start; /* Align content to the top */
+            align-items: center;
+            height: 100vh;
+            position: relative;
+            padding-top: 20px; /* Add padding for spacing from the top */
+        }
+
+        #loadingOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .spinner {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .header-container {
+            position: relative;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #lottie-container {
+            position: absolute;
+            z-index: 0;
+            width: 600px;
+            height: 600px;
+            pointer-events: none;
+        }
+
+        #lottie-container > div {
+            width: 100%;
+            height: 100%;
+        }
+
+        h1 {
+            font-weight: bold;
+            color: orange;
+            animation: wave 2s ease-in-out infinite;
+            position: relative;
+            z-index: 1;
+            margin-bottom: 0.5em;
+        }
+
+        @keyframes wave {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        p {
+            margin: 0.5em 0;
+            font-weight: bold;
+        }
+
+        #countdown {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: auto;
+            flex-wrap: nowrap;
+        }
+
+        .time-component {
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            flex: 1;
+            max-width: 25%;
+        }
+
+        #countdown .number {
+            color: red;
+            font-weight: bold;
+            font-size: 10vw;
+            display: block;
+            animation: numberChange 0.5s ease-out;
+        }
+
+        #countdown .label {
+            color: black;
+            font-size: 4vw;
+            display: block;
+        }
+
+        @keyframes numberChange {
+            0% { transform: scale(1.2) translateY(-5px); opacity: 0.7; }
+            50% { transform: scale(1.1) translateY(-2px); }
+            100% { transform: scale(1) translateY(0); opacity: 1; }
+        }
+
+        .promotional-text {
+            margin-top: 1em;
+            font-size: 2vw;
+        }
+    </style>
+</head>
+<body>
+    <div id="loadingOverlay">
+        <div class="spinner"></div>
+    </div>
+
+    <div class="header-container">
+        <div id="lottie-container"></div>
+        <h1>LOCK IN!</h1>
+    </div>
+    <p>MVP Promotional Pricing in Effect Until the Timer Runs Out!</p>
+    <div id="countdown">
+        <div class="time-component">
+            <span id="days"><span class="number">00</span><span class="label">Days</span></span>
+        </div>
+        <div class="time-component">
+            <span id="hours"><span class="number">00</span><span class="label">Hours</span></span>
+        </div>
+        <div class="time-component">
+            <span id="minutes"><span class="number">00</span><span class="label">Minutes</span></span>
+        </div>
+        <div class="time-component">
+            <span id="seconds"><span class="number">00</span><span class="label">Seconds</span></span>
+        </div>
+    </div>
+    <p class="promotional-text">DUKR Monthly Subscription is only $3.98/mo!</p>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.33/moment-timezone-with-data.min.js"></script>
+    <script>
+        // Lottie animation
+        var animation = lottie.loadAnimation({
+            container: document.getElementById('lottie-container'),
+            renderer: 'svg',
+            loop: true,
+            autoplay: true,
+            path: 'https://assets3.lottiefiles.com/packages/lf20_obhph3sh.json'
+        });
+
+        // Randomly position the Lottie animation
+        function randomizeLottiePosition() {
+            const lottieContainer = document.getElementById('lottie-container');
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+
+            const maxX = viewportWidth - lottieContainer.offsetWidth;
+            const maxY = viewportHeight - lottieContainer.offsetHeight;
+
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
+
+            lottieContainer.style.left = `${randomX}px`;
+            lottieContainer.style.top = `${randomY}px`;
+
+            lottieContainer.style.transform = 'translateZ(0)';
+        }
+
+        // Hide the loading overlay once the page has loaded and set the Lottie position
+        window.addEventListener('load', function() {
+            document.getElementById('loadingOverlay').style.display = 'none';
+            randomizeLottiePosition();
+            
+            // Change position every 3 seconds
+            setInterval(randomizeLottiePosition, 1500);
+        });
+
+        function updateCountdown() {
+            const now = moment();
+            const endDate = moment.tz("2024-08-28 23:11:11", "America/New_York");
+            const diff = endDate.diff(now);
+
+            if (diff > 0) {
+                const duration = moment.duration(diff);
+                updateTimeComponent('days', Math.floor(duration.asDays()));
+                updateTimeComponent('hours', duration.hours());
+                updateTimeComponent('minutes', duration.minutes());
+                updateTimeComponent('seconds', duration.seconds());
+            } else {
+                clearInterval(countdownInterval);
+                document.getElementById('countdown').innerHTML = "Promotion has ended!";
+            }
+        }
+
+        function updateTimeComponent(id, value) {
+            const element = document.getElementById(id).querySelector('.number');
+            const newValue = value.toString().padStart(2, '0');
+            if (element.textContent !== newValue) {
+                element.textContent = newValue;
+                element.style.animation = 'none';
+                element.offsetHeight; // Trigger reflow
+                element.style.animation = null;
+            }
+        }
+
+        const countdownInterval = setInterval(updateCountdown, 1000);
+        updateCountdown();
+    </script>
+</body>
+</html>

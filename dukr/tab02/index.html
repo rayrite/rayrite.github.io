@@ -3,19 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Responsive Image Carousel</title>
+    <title>Full-screen Text Carousel with Bullet Points</title>
+    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
     <style>
         body, html {
             margin: 0;
             padding: 0;
             height: 100%;
+            font-family: 'Varela Round', sans-serif;
             overflow: hidden;
         }
+        .logo-container {
+            position: fixed;
+            top: 20px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            z-index: 10;
+        }
+        .logo-placeholder {
+            width: 100px;
+            height: 100px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            color: #333;
+        }
         .carousel-container {
-            width: 100vw;
-            height: 100vh;
-            position: relative;
-            overflow: hidden;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         .carousel-slide {
             position: absolute;
@@ -23,73 +49,151 @@
             left: 0;
             width: 100%;
             height: 100%;
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            padding: 20px;
+            box-sizing: border-box;
         }
         .carousel-slide.active {
             opacity: 1;
         }
-        .carousel-slide img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
+        .slide-title {
+            font-size: 6vw;
+            font-weight: bold;
+            color: #800020; /* Burgundy color */
+            margin-bottom: 20px;
+        }
+        .slide-content {
+            font-size: 3vw;
+            font-weight: bold;
+            color: #00008B; /* Dark blue text */
+            text-align: left;
+            list-style-type: none;
+            padding: 0;
+        }
+        .slide-content li {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .slide-content li::before {
+            content: "•";
+            color: #00008B;
+            font-size: 1.5em;
+            margin-right: 10px;
+        }
+        
+        /* Media query for tablets */
+        @media (min-width: 768px) and (max-width: 1024px) {
+            .logo-placeholder {
+                width: 80px;
+                height: 80px;
+            }
+            .slide-title {
+                font-size: 7vw;
+            }
+            .slide-content {
+                font-size: 4vw;
+            }
+        }
+        
+        /* Media query for mobile phones */
+        @media (max-width: 767px) {
+            .logo-placeholder {
+                width: 60px;
+                height: 60px;
+            }
+            .slide-title {
+                font-size: 9vw;
+            }
+            .slide-content {
+                font-size: 5vw;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="carousel-container" id="carousel">
-        <!-- Slides will be dynamically added here -->
+    <div class="logo-container">
+        <div class="logo-placeholder">
+            <img src="/api/placeholder/100/100" alt="Logo" />
+        </div>
+    </div>
+    <div id="carousel" class="carousel-container">
+        <!-- Slides will be dynamically inserted here -->
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script>
-        const carouselData = {
-            images: [
-                { url: "https://via.placeholder.com/1200x800/FF5733/FFFFFF?text=Image+1", alt: "Image 1" },
-                { url: "https://via.placeholder.com/1200x800/33FF57/FFFFFF?text=Image+2", alt: "Image 2" },
-                { url: "https://via.placeholder.com/1200x800/5733FF/FFFFFF?text=Image+3", alt: "Image 3" },
-                // Add more images as needed
-            ],
-            maxSize: {
-                width: 1200,  // Max width in pixels
-                height: 800   // Max height in pixels
-            },
-            rotationInterval: 5000  // Milliseconds between rotations
-        };
+        $(document).ready(function() {
+            const carouselData = [
+                {
+                    title: "Make Deeper Connections",
+                    points: [
+                        "Connect with people on a deeper level based on things you are passionate about!",
+                        "Sound off on anything, even if you feel your opinions are popular..You're safe here!",
+                        "All pages are dynamic and up-to-date, no stale information!"
+                    ]
+                },
+                {
+                    title: "Use it for any occasion!",
+                    points: [
+                        "Discuss topics at your book club or watch party!",
+                        "Debate the best solutions for issues at work!",
+                        "Are you an activist that wants change? DUKR is platform for engaged users who are passionate a ready to act!"
+                    ]
+                },
+                {
+                    title: "Fresh, Innovative, and Responsive!",
+                    points: [
+                        "Our app is built on the latest technology for a wonderful user experience!",
+                        "Free-for-All debates allow everyone to have their voice heard!",
+                        "Don't like any of the choices? Add your own! See what others think!"
+                    ]
+                }
+            ];
 
-        let currentSlide = 0;
-        const carousel = document.getElementById('carousel');
-
-        function createCarousel() {
-            carouselData.images.forEach((image, index) => {
-                const slide = document.createElement('div');
-                slide.className = `carousel-slide ${index === 0 ? 'active' : ''}`;
-                const img = document.createElement('img');
-                img.src = image.url;
-                img.alt = image.alt;
-                img.style.maxWidth = `${carouselData.maxSize.width}px`;
-                img.style.maxHeight = `${carouselData.maxSize.height}px`;
-                slide.appendChild(img);
-                carousel.appendChild(slide);
+            const carouselContainer = $('#carousel');
+            
+            // Create slides
+            carouselData.forEach((slide, index) => {
+                const slideHtml = `
+                    <div class="carousel-slide ${index === 0 ? 'active' : ''}">
+                        <div class="slide-title">${slide.title}</div>
+                        <ul class="slide-content">
+                            ${slide.points.map(point => `<li>${point}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+                carouselContainer.append(slideHtml);
             });
-        }
 
-        function showSlide(n) {
-            const slides = document.querySelectorAll('.carousel-slide');
-            slides[currentSlide].classList.remove('active');
-            currentSlide = (n + slides.length) % slides.length;
-            slides[currentSlide].classList.add('active');
-        }
+            const slides = $('.carousel-slide');
+            let currentSlide = 0;
+            const colors = [
+                '#FFB3BA', '#BAFFC9', '#BAE1FF', 
+                '#FFD1DC', '#E0FFD1', '#D1E8FF',
+                '#FFCCCB', '#CCFFCC', '#CCE5FF'
+            ];
 
-        function nextSlide() {
-            showSlide(currentSlide + 1);
-        }
+            function showSlide(index) {
+                slides.removeClass('active');
+                slides.eq(index).addClass('active');
+                $('body').css('background-color', colors[Math.floor(Math.random() * colors.length)]);
+            }
 
-        createCarousel();
+            function nextSlide() {
+                currentSlide = (currentSlide + 1) % slides.length;
+                showSlide(currentSlide);
+            }
 
-        setInterval(nextSlide, carouselData.rotationInterval);
+            showSlide(currentSlide);
+            setInterval(nextSlide, 5000); // Change slide every 5 seconds
+        });
     </script>
 </body>
 </html>

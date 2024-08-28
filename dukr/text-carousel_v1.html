@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full-screen Text Carousel with Bullet Points</title>
+    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Varela Round', sans-serif;
+            overflow: hidden;
+        }
+        .logo-container {
+            position: fixed;
+            top: 20px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            z-index: 10;
+        }
+        .logo-placeholder {
+            width: 100px;
+            height: 100px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            color: #333;
+        }
+        .carousel-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .carousel-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .carousel-slide.active {
+            opacity: 1;
+        }
+        .slide-title {
+            font-size: 6vw;
+            font-weight: bold;
+            color: #800020; /* Burgundy color */
+            margin-bottom: 20px;
+        }
+        .slide-content {
+            font-size: 3vw;
+            font-weight: bold;
+            color: #00008B; /* Dark blue text */
+            text-align: left;
+            list-style-type: none;
+            padding: 0;
+        }
+        .slide-content li {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .slide-content li::before {
+            content: "•";
+            color: #00008B;
+            font-size: 1.5em;
+            margin-right: 10px;
+        }
+        
+        /* Media query for tablets */
+        @media (min-width: 768px) and (max-width: 1024px) {
+            .logo-placeholder {
+                width: 80px;
+                height: 80px;
+            }
+            .slide-title {
+                font-size: 7vw;
+            }
+            .slide-content {
+                font-size: 4vw;
+            }
+        }
+        
+        /* Media query for mobile phones */
+        @media (max-width: 767px) {
+            .logo-placeholder {
+                width: 60px;
+                height: 60px;
+            }
+            .slide-title {
+                font-size: 9vw;
+            }
+            .slide-content {
+                font-size: 5vw;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="logo-container">
+        <div class="logo-placeholder">
+            <img src="/api/placeholder/100/100" alt="Logo" />
+        </div>
+    </div>
+    <div id="carousel" class="carousel-container">
+        <!-- Slides will be dynamically inserted here -->
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            const carouselData = [
+                {
+                    title: "Title 1",
+                    points: [
+                        "First bullet point for slide 1",
+                        "Second bullet point for slide 1",
+                        "Third bullet point for slide 1"
+                    ]
+                },
+                {
+                    title: "Title 2",
+                    points: [
+                        "First bullet point for slide 2",
+                        "Second bullet point for slide 2"
+                    ]
+                },
+                {
+                    title: "Title 3",
+                    points: [
+                        "First bullet point for slide 3",
+                        "Second bullet point for slide 3",
+                        "Third bullet point for slide 3",
+                        "Fourth bullet point for slide 3"
+                    ]
+                }
+            ];
+
+            const carouselContainer = $('#carousel');
+            
+            // Create slides
+            carouselData.forEach((slide, index) => {
+                const slideHtml = `
+                    <div class="carousel-slide ${index === 0 ? 'active' : ''}">
+                        <div class="slide-title">${slide.title}</div>
+                        <ul class="slide-content">
+                            ${slide.points.map(point => `<li>${point}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+                carouselContainer.append(slideHtml);
+            });
+
+            const slides = $('.carousel-slide');
+            let currentSlide = 0;
+            const colors = [
+                '#FFB3BA', '#BAFFC9', '#BAE1FF', 
+                '#FFD1DC', '#E0FFD1', '#D1E8FF',
+                '#FFCCCB', '#CCFFCC', '#CCE5FF'
+            ];
+
+            function showSlide(index) {
+                slides.removeClass('active');
+                slides.eq(index).addClass('active');
+                $('body').css('background-color', colors[Math.floor(Math.random() * colors.length)]);
+            }
+
+            function nextSlide() {
+                currentSlide = (currentSlide + 1) % slides.length;
+                showSlide(currentSlide);
+            }
+
+            showSlide(currentSlide);
+            setInterval(nextSlide, 5000); // Change slide every 5 seconds
+        });
+    </script>
+</body>
+</html>

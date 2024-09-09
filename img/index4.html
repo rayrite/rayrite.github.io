@@ -8,9 +8,12 @@
         body { margin: 0; overflow: hidden; background-color: #ffffff; }
         canvas { display: block; }
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
 </head>
 <body>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://threejs.org/examples/js/loaders/FontLoader.js"></script>
+    <script src="https://threejs.org/examples/js/geometries/TextGeometry.js"></script>
     <script>
         // Setup scene, camera, and renderer
         const scene = new THREE.Scene();
@@ -100,203 +103,96 @@
             clouds.push(spawnCloud());
         }
 
-        // Create 3D letters for "COOLYVISION"
-        const letters = "COOLYVISION";
-        const letterGroup = new THREE.Group();
-        const letterMaterial = new THREE.MeshPhongMaterial({ color: 0x808080 }); // Grey color
-
-        function createLetter(char) {
-            const shape = new THREE.Shape();
-            switch(char) {
-                case 'C':
-                    shape.moveTo(0, 0);
-                    shape.lineTo(0, 2);
-                    shape.lineTo(1.5, 2);
-                    shape.lineTo(1.5, 1.5);
-                    shape.lineTo(0.5, 1.5);
-                    shape.lineTo(0.5, 0.5);
-                    shape.lineTo(1.5, 0.5);
-                    shape.lineTo(1.5, 0);
-                    shape.lineTo(0, 0);
-                    break;
-                case 'O':
-                    shape.moveTo(0, 0);
-                    shape.lineTo(0, 2);
-                    shape.lineTo(1.5, 2);
-                    shape.lineTo(1.5, 0);
-                    shape.lineTo(0, 0);
-                    const holePath = new THREE.Path();
-                    holePath.moveTo(0.5, 0.5);
-                    holePath.lineTo(1, 0.5);
-                    holePath.lineTo(1, 1.5);
-                    holePath.lineTo(0.5, 1.5);
-                    shape.holes.push(holePath);
-                    break;
-                case 'L':
-                    shape.moveTo(0, 0);
-                    shape.lineTo(0, 2);
-                    shape.lineTo(0.5, 2);
-                    shape.lineTo(0.5, 0.5);
-                    shape.lineTo(1.5, 0.5);
-                    shape.lineTo(1.5, 0);
-                    shape.lineTo(0, 0);
-                    break;
-                case 'Y':
-                    shape.moveTo(0, 2);
-                    shape.lineTo(0.5, 2);
-                    shape.lineTo(0.75, 1);
-                    shape.lineTo(1, 2);
-                    shape.lineTo(1.5, 2);
-                    shape.lineTo(1, 0.5);
-                    shape.lineTo(1, 0);
-                    shape.lineTo(0.5, 0);
-                    shape.lineTo(0.5, 0.5);
-                    shape.lineTo(0, 2);
-                    break;
-                case 'V':
-                    shape.moveTo(0, 2);
-                    shape.lineTo(0.5, 2);
-                    shape.lineTo(0.75, 0);
-                    shape.lineTo(1, 2);
-                    shape.lineTo(1.5, 2);
-                    shape.lineTo(1, 0);
-                    shape.lineTo(0.5, 0);
-                    shape.lineTo(0, 2);
-                    break;
-                case 'I':
-                    shape.moveTo(0.25, 0);
-                    shape.lineTo(1.25, 0);
-                    shape.lineTo(1.25, 0.25);
-                    shape.lineTo(0.875, 0.25);
-                    shape.lineTo(0.875, 1.75);
-                    shape.lineTo(1.25, 1.75);
-                    shape.lineTo(1.25, 2);
-                    shape.lineTo(0.25, 2);
-                    shape.lineTo(0.25, 1.75);
-                    shape.lineTo(0.625, 1.75);
-                    shape.lineTo(0.625, 0.25);
-                    shape.lineTo(0.25, 0.25);
-                    shape.lineTo(0.25, 0);
-                    break;
-                case 'N':
-                    shape.moveTo(0, 0);
-                    shape.lineTo(0, 2);
-                    shape.lineTo(0.5, 2);
-                    shape.lineTo(1, 0.5);
-                    shape.lineTo(1, 2);
-                    shape.lineTo(1.5, 2);
-                    shape.lineTo(1.5, 0);
-                    shape.lineTo(1, 0);
-                    shape.lineTo(0.5, 1.5);
-                    shape.lineTo(0.5, 0);
-                    shape.lineTo(0, 0);
-                    break;
-                    case 'S':
-                    shape.moveTo(0, 0);
-shape.lineTo(1.5, 0);
-shape.lineTo(1.5, 0.5);
-shape.lineTo(0.5, 0.5);
-//shape.lineTo(0.5, 1);
-//shape.lineTo(1.5, 1);
-shape.lineTo(1.5, 2);
-shape.lineTo(0, 2);
-shape.lineTo(0, 1.5);
-shape.lineTo(1, 1.5);
-//shape.lineTo(1, 1);
-//shape.lineTo(0, 1);
-shape.lineTo(0, 0);
-break;
-break;
-                default:
-                    // For any other letter, use a simple rectangle
-                    shape.moveTo(0, 0);
-                    shape.lineTo(0, 2);
-                    shape.lineTo(1.5, 2);
-                    shape.lineTo(1.5, 0);
-                    shape.lineTo(0, 0);
-            }
-            const geometry = new THREE.ExtrudeGeometry(shape, {
-                depth: 0.5,
+        // Load the font and create 3D text
+        const loader = new THREE.FontLoader();
+        loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function (font) {
+            const textGeometry = new THREE.TextGeometry('COOLYVISION', {
+                font: font,
+                size: 1,
+                height: 0.2,
+                curveSegments: 12,
                 bevelEnabled: true,
-                bevelThickness: 0.1,
-                bevelSize: 0.1,
+                bevelThickness: 0.05,
+                bevelSize: 0.05,
                 bevelSegments: 5
             });
-            return new THREE.Mesh(geometry, letterMaterial);
-        }
 
-        for (let i = 0; i < letters.length; i++) {
-            const letter = createLetter(letters[i]);
-            letter.position.x = i * 2 - (letters.length * 2) / 2; // Center the text
-            letter.position.y = Math.sin(i * 0.5) * 0.5; // Add a slight wave to the letters
-            letterGroup.add(letter);
-        }
+            const textMaterial = new THREE.MeshStandardMaterial({
+                color: 0x808080,
+                metalness: 0.8,
+                roughness: 0.2
+            });
 
-        letterGroup.position.z = -5; // Position the letters very close to the camera
-        letterGroup.position.y = 3; // Move the letters near the top of the screen
-        letterGroup.scale.set(0.3, 0.3, 0.3); // Scale down the letters further
-        scene.add(letterGroup);
+            const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+            
+            // Center the text geometry
+            textGeometry.computeBoundingBox();
+            const textWidth = textGeometry.boundingBox.max.x - textGeometry.boundingBox.min.x;
+            textMesh.position.set(-textWidth / 2, 1.5, -3); // Centered horizontally, slightly above center vertically, and closer to camera
+            textMesh.scale.set(0.5, 0.5, 0.5); // Adjust scale as needed
+            scene.add(textMesh);
 
-        // Variables for camera movement
-        let cameraSpeed = 0.02; // Reduced speed
-        let twistAngle = 0;
-        let twistDirection = 1;
-        let lastTwistChangeTime = Date.now();
+            // Variables for camera movement
+            let cameraSpeed = 0.02; // Reduced speed
+            let twistAngle = 0;
+            let twistDirection = 1;
+            let lastTwistChangeTime = Date.now();
 
-        // Animation loop
-        function animate() {
-            requestAnimationFrame(animate);
+            // Animation loop
+            function animate() {
+                requestAnimationFrame(animate);
 
-            // Move camera forward
-            camera.position.z -= cameraSpeed;
+                // Move camera forward
+                camera.position.z -= cameraSpeed;
 
-            // Apply twisting effect
-            const currentTime = Date.now();
-            if (currentTime - lastTwistChangeTime > (10000 + Math.random() * 10000)) { // 10-20 seconds
-                twistDirection *= -1;
-                lastTwistChangeTime = currentTime;
-            }
-            twistAngle += 0.0005 * twistDirection;
-            camera.position.x = Math.sin(twistAngle) * 5;
-            camera.position.y = Math.cos(twistAngle) * 5;
-            camera.lookAt(new THREE.Vector3(0, 0, camera.position.z - 10));
-
-            // Update and manage clouds
-            for (let i = clouds.length - 1; i >= 0; i--) {
-                const cloud = clouds[i];
-                cloud.position.z += cloud.userData.speed;
-                cloud.rotation.z += cloud.userData.rotationSpeed;
-
-                cloud.children.forEach(sphere => {
-                    if (cloud.userData.fadeIn) {
-                        cloud.userData.opacity += 0.002; // Slower fade-in
-                        if (cloud.userData.opacity >= 0.7) {
-                            cloud.userData.opacity = 0.7;
-                            cloud.userData.fadeIn = false;
-                        }
-                        sphere.material.opacity = cloud.userData.opacity;
-                    }
-                });
-
-                // Remove clouds that are too far behind the camera
-                if (cloud.position.z > camera.position.z + 20) {
-                    scene.remove(cloud);
-                    clouds.splice(i, 1);
+                // Apply twisting effect
+                const currentTime = Date.now();
+                if (currentTime - lastTwistChangeTime > (10000 + Math.random() * 10000)) { // 10-20 seconds
+                    twistDirection *= -1;
+                    lastTwistChangeTime = currentTime;
                 }
+                twistAngle += 0.0005 * twistDirection;
+                camera.position.x = Math.sin(twistAngle) * 5;
+                camera.position.y = Math.cos(twistAngle) * 5;
+                camera.lookAt(new THREE.Vector3(0, 0, camera.position.z - 10));
+
+                // Update and manage clouds
+                for (let i = clouds.length - 1; i >= 0; i--) {
+                    const cloud = clouds[i];
+                    cloud.position.z += cloud.userData.speed;
+                    cloud.rotation.z += cloud.userData.rotationSpeed;
+
+                    cloud.children.forEach(sphere => {
+                        if (cloud.userData.fadeIn) {
+                            cloud.userData.opacity += 0.002; // Slower fade-in
+                            if (cloud.userData.opacity >= 0.7) {
+                                cloud.userData.opacity = 0.7;
+                                cloud.userData.fadeIn = false;
+                            }
+                            sphere.material.opacity = cloud.userData.opacity;
+                        }
+                    });
+
+                    // Remove clouds that are too far behind the camera
+                    if (cloud.position.z > camera.position.z + 20) {
+                        scene.remove(cloud);
+                        clouds.splice(i, 1);
+                    }
+                }
+
+                // Spawn new clouds to maintain the desired number
+                while (clouds.length < 200) {
+                    clouds.push(spawnCloud());
+                }
+
+                // Update text position
+                textMesh.position.z = camera.position.z - 3; // Keep text closer to the camera
+
+                renderer.render(scene, camera);
             }
 
-            // Spawn new clouds to maintain the desired number
-            while (clouds.length < 200) {
-                clouds.push(spawnCloud());
-            }
-
-            // Update letter positions
-            letterGroup.position.z = camera.position.z - 5; // Keep letters very close to the camera
-
-            renderer.render(scene, camera);
-        }
-
-        animate();
+            animate();
+        });
 
         // Handle window resize
         window.addEventListener('resize', () => {

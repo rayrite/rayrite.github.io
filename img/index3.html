@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Endless Walk Through White Fog with Subtle Twisting</title>
+    <title>Endless Walk Through White Fog with Continuous Cloud Spawning</title>
     <style>
         body { margin: 0; overflow: hidden; background-color: #ffffff; }
         canvas { display: block; }
@@ -85,7 +85,7 @@
             cloud.position.set(
                 Math.cos(angle) * radius,
                 Math.sin(angle) * radius,
-                Math.random() * -50 - 10 // Increased spawn distance
+                camera.position.z - 60 - Math.random() * 20 // Spawn behind the camera
             );
 
             scene.add(cloud);
@@ -96,7 +96,7 @@
         const clouds = [];
 
         // Spawn initial clouds
-        for (let i = 0; i < 200; i++) { // Increased number of clouds
+        for (let i = 0; i < 200; i++) {
             clouds.push(spawnCloud());
         }
 
@@ -124,7 +124,9 @@
             camera.position.y = Math.cos(twistAngle) * 5;
             camera.lookAt(new THREE.Vector3(0, 0, camera.position.z - 10));
 
-            clouds.forEach((cloud, index) => {
+            // Update and manage clouds
+            for (let i = clouds.length - 1; i >= 0; i--) {
+                const cloud = clouds[i];
                 cloud.position.z += cloud.userData.speed;
                 cloud.rotation.z += cloud.userData.rotationSpeed;
 
@@ -139,11 +141,17 @@
                     }
                 });
 
-                if (cloud.position.z > camera.position.z + 10) {
+                // Remove clouds that are too far behind the camera
+                if (cloud.position.z > camera.position.z + 20) {
                     scene.remove(cloud);
-                    clouds[index] = spawnCloud();
+                    clouds.splice(i, 1);
                 }
-            });
+            }
+
+            // Spawn new clouds to maintain the desired number
+            while (clouds.length < 200) {
+                clouds.push(spawnCloud());
+            }
 
             renderer.render(scene, camera);
         }

@@ -3,64 +3,208 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Three.js Scene with Fog</title>
+    <title>Three.js Clouds Animation</title>
     <style>
-        body { margin: 0; }
+        body { margin: 0; overflow: hidden; }
         canvas { display: block; }
     </style>
 </head>
 <body>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        // Set up the scene, camera, and renderer
+        // Setup scene, camera, and renderer
         const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000); // Increased FOV to 75
+        camera.position.z = 20; // Move camera further back to overlook a larger area
+
         const renderer = new THREE.WebGLRenderer();
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
         // Add fog to the scene
-        scene.fog = new THREE.Fog(0xcccccc, 0, 20);
+        scene.fog = new THREE.Fog(0x87CEEB, 10, 50); // Color, near, far
 
-        // Create a cube
-        const geometry = new THREE.BoxGeometry();
-        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-        const cube = new THREE.Mesh(geometry, material);
-        scene.add(cube);
+        // Load background image
+        const loader = new THREE.TextureLoader();
+        let backgroundTexture;
+        loader.load('https://rayrite.github.io/img/sunrise.jpg', function(texture) {
+            backgroundTexture = texture;
+            scene.background = texture;
+        });
 
-        // Create a sphere
-        const sphereGeometry = new THREE.SphereGeometry(0.5, 32, 32);
-        const sphereMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-        const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-        sphere.position.set(2, 0, 0);
-        scene.add(sphere);
+        // Add lighting to the scene
+        const ambientLight = new THREE.AmbientLight(0x888888); // Soft white light
+        scene.add(ambientLight);
 
-        // Create a cone
-        const coneGeometry = new THREE.ConeGeometry(0.5, 1, 32);
-        const coneMaterial = new THREE.MeshBasicMaterial({ color: 0x0000ff });
-        const cone = new THREE.Mesh(coneGeometry, coneMaterial);
-        cone.position.set(-2, 0, 0);
-        scene.add(cone);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+        directionalLight.position.set(5, 10, 7.5).normalize();
+        scene.add(directionalLight);
 
-        // Position the camera
-        camera.position.z = 5;
+        const hemisphereLight = new THREE.HemisphereLight(0x87CEEB, 0xB0E0E6, 0.6); // Sky color, ground color, intensity
+        scene.add(hemisphereLight);
+
+        // Function to generate a random color between light blue and light gray
+        function getRandomCloudColor() {
+            const colors = ['#ADD8E6', '#B0C4DE', '#D3D3D3', '#E0FFFF', '#F0F8FF'];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        // Function to create a cloud with random shapes
+        function createCloud() {
+            const cloud = new THREE.Group();
+            const mainSize = Math.random() * 1 + 1; // Increased size between 1 and 2
+            const mainGeometry = new THREE.SphereGeometry(mainSize, 32, 32);
+            const mainMaterial = new THREE.MeshPhongMaterial({ color: getRandomCloudColor(), transparent: true, opacity: 0 });
+            const mainSphere = new THREE.Mesh(mainGeometry, mainMaterial);
+            cloud.add(mainSphere);
+
+            const numSpheres = Math.floor(Math.random() * 7) + 5; // Increased number of additional spheres between 5 and 11
+            for (let i = 0; i < numSpheres; i++) {
+                const size = Math.random() * mainSize * 0.6; // Random size relative to the main sphere
+                const geometry = new THREE.SphereGeometry(size, 32, 32);
+                const material = new THREE.MeshPhongMaterial({ color: getRandomCloudColor(), transparent: true, opacity: 0 });
+                const sphere = new THREE.Mesh(geometry, material);
+
+                // Position the additional spheres randomly around the main sphere
+                sphere.position.set(
+                    (Math.random() - 0.5) * mainSize * 2,
+                    (Math.random() - 0.5) * mainSize * 2,
+                    (Math.random() - 0.5) * mainSize * 2
+                );
+
+                cloud.add(sphere);
+            }
+
+            cloud.userData = {
+                speed: Math.random() * 0.01 + 0.002, // Slower speed between 0.002 and 0.012
+                rotationSpeed: (Math.random() - 0.5) * 0.005, // Random rotation speed between -0.0025 and 0.0025
+                fadeIn: true,
+                opacity: 0
+            };
+
+            return cloud;
+        }
+
+        // Function to spawn a cloud at a random position
+        function spawnCloud() {
+            const cloud = createCloud();
+            cloud.position.set(
+                (Math.random() - 0.5) * 20,
+                (Math.random() - 0.5) * 20,
+                -20
+            );
+
+            scene.add(cloud);
+            return cloud;
+        }
+
+        // Array to hold clouds
+        const clouds = [];
+
+        // Spawn initial clouds
+        for (let i = 0; i < 100; i++) { // Increase the number of clouds to ensure no gaps
+            clouds.push(spawnCloud());
+        }
+
+        // Variables for camera rotation
+        let rotationDirection = 1;
+        let rotationSpeed = 0.0002; // Slower and more subtle rotation speed
+
+        // Raycaster for detecting mouse interactions
+        const raycaster = new THREE.Raycaster();
+        const mouse = new THREE.Vector2();
+
+        // Function to handle mouse move event
+        function onMouseMove(event) {
+            // Calculate mouse position in normalized device coordinates (-1 to +1) for both components
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+        }
+
+        // Function to handle mouse click event
+        function onMouseClick() {
+            // Update the raycaster with the camera and mouse position
+            raycaster.setFromCamera(mouse, camera);
+
+            // Calculate objects intersecting the ray
+            const intersects = raycaster.intersectObjects(clouds, true);
+
+            // If there is an intersection, change the color of the first intersected cloud
+            if (intersects.length > 0) {
+                const intersectedCloud = intersects[0].object;
+                intersectedCloud.material.color.set(getRandomCloudColor());
+            }
+        }
+
+        // Add event listeners for mouse move and click
+        window.addEventListener('mousemove', onMouseMove, false);
+        window.addEventListener('click', onMouseClick, false);
+
+        // Variables for background movement
+        let backgroundOffsetX = 0;
+        let backgroundOffsetY = 0;
+        let backgroundDirectionX = (Math.random() - 0.5) * 0.0001; // Slower and more subtle movement
+        let backgroundDirectionY = (Math.random() - 0.5) * 0.0001; // Slower and more subtle movement
+        let nextDirectionChange = Date.now() + (Math.random() * 10000 + 10000); // Random interval between 10 and 20 seconds
 
         // Animation loop
         function animate() {
             requestAnimationFrame(animate);
 
-            // Rotate the objects
-            cube.rotation.x += 0.01;
-            cube.rotation.y += 0.01;
-            sphere.rotation.y += 0.02;
-            cone.rotation.x += 0.02;
+            // Move clouds towards the camera
+            clouds.forEach((cloud, index) => {
+                cloud.position.z += cloud.userData.speed;
+                cloud.rotation.z += cloud.userData.rotationSpeed;
+
+                // Fade in effect
+                cloud.children.forEach(sphere => {
+                    if (cloud.userData.fadeIn) {
+                        cloud.userData.opacity += 0.01;
+                        if (cloud.userData.opacity >= 1) {
+                            cloud.userData.opacity = 1;
+                            cloud.userData.fadeIn = false;
+                        }
+                        sphere.material.opacity = cloud.userData.opacity;
+                    }
+                });
+
+                if (cloud.position.z > camera.position.z) {
+                    scene.remove(cloud);
+                    clouds[index] = spawnCloud();
+                }
+            });
+
+            // Rotate the camera
+            camera.rotation.z += rotationSpeed * rotationDirection;
+
+            // Randomly change rotation direction and speed
+            if (Date.now() > nextDirectionChange) {
+                rotationDirection *= -1;
+                rotationSpeed = Math.random() * 0.0005 + 0.0002; // Random speed between 0.0002 and 0.0007
+                nextDirectionChange = Date.now() + (Math.random() * 10000 + 10000); // Random interval between 10 and 20 seconds
+            }
+
+            // Update background position
+            if (backgroundTexture) {
+                backgroundOffsetX += backgroundDirectionX;
+                backgroundOffsetY += backgroundDirectionY;
+                backgroundTexture.offset.set(backgroundOffsetX, backgroundOffsetY);
+
+                // Change direction at random intervals
+                if (Date.now() > nextDirectionChange) {
+                    // Adjust these values to change the speed of the background movement
+                    backgroundDirectionX = (Math.random() - 0.5) * 0.0001; // Slower and more subtle movement
+                    backgroundDirectionY = (Math.random() - 0.5) * 0.0001; // Slower and more subtle movement
+                    nextDirectionChange = Date.now() + 10000; // At least 10 seconds
+                }
+            }
 
             renderer.render(scene, camera);
         }
 
         animate();
 
-        // Handle window resizing
+        // Handle window resize
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();

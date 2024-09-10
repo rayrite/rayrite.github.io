@@ -113,7 +113,7 @@
                 const textWidth = textGeometry.boundingBox.max.x - textGeometry.boundingBox.min.x;
                 const isMobile = isMobileDevice();
                 const textX = isMobile ? -textWidth / 5.1 : -textWidth / 4.7; // Different X position for mobile
-                const textY = isMobile ? 5.1 : 5.1; // Different Y position for mobile
+                const textY = isMobile ? 5.25 : 5.1; // Different Y position for mobile
                 textMesh.position.set(textX, textY, camera.position.z - 0.5); // Centered horizontally, near top
                 textMesh.scale.set(0.4, 0.4, 0.4); // Adjust scale as needed
             }
@@ -142,7 +142,7 @@
 
             // Load texture
             const textureLoader = new THREE.TextureLoader();
-            const texture = textureLoader.load('https://rayrite.github.io/img/ice01.jpg'); // Replace with your texture path
+            const texture = textureLoader.load('https://rayrite.github.io/img/ice01b.jpg'); // Replace with your texture path
 
             // Create material with texture
             const textMaterial = new THREE.MeshPhongMaterial({

@@ -118,7 +118,7 @@
 
         // Load the font and create 3D text
         const loader = new THREE.FontLoader();
-        loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function (font) {
+        loader.load('https://rayrite.github.io/fonts/vr.json', function (font) {
             textGeometry = new THREE.TextGeometry('COOLYVISION', {
                 font: font,
                 size: 0.9, // MODIFY: Adjust the 'size' value to change the size of the text
@@ -160,7 +160,7 @@
                     twistDirection *= -1;
                     lastTwistChangeTime = currentTime;
                 }
-                twistAngle += 0.0005 * twistDirection;
+                twistAngle += 0.0001 * twistDirection;
                 camera.position.x = Math.sin(twistAngle) * 5;
                 camera.position.y = Math.cos(twistAngle) * 5;
                 camera.lookAt(new THREE.Vector3(0, 0, camera.position.z - 10));

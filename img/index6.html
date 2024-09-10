@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Endless Walk Through White Fog with 3D Letters</title>
+    <style>
+        body { margin: 0; overflow: hidden; background-color: #ffffff; }
+        canvas { display: block; }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
+</head>
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://threejs.org/examples/js/loaders/FontLoader.js"></script>
+    <script src="https://threejs.org/examples/js/geometries/TextGeometry.js"></script>
+    <script>
+        // Setup scene, camera, and renderer
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 10;
+
+        const renderer = new THREE.WebGLRenderer({ alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // Set scene background color to white
+        const fogColor = 0xffffff; // White color
+        scene.background = new THREE.Color(fogColor);
+
+        // Add less dense fog to the scene
+        scene.fog = new THREE.FogExp2(fogColor, 0.035); // Reduced density
+
+        // Add subtle lighting to the scene
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+        scene.add(ambientLight);
+
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.2);
+        directionalLight.position.set(0, 1, 0).normalize();
+        scene.add(directionalLight);
+
+        // Function to generate a random shade of white to very light gray
+        function getRandomCloudColor() {
+            const shade = Math.floor(Math.random() * 10) + 245; // 245-255
+            return `rgb(${shade},${shade},${shade})`;
+        }
+
+        // Function to create a cloud with random shapes
+        function createCloud() {
+            const cloud = new THREE.Group();
+            const mainSize = Math.random() * 2 + 1;
+            const mainGeometry = new THREE.SphereGeometry(mainSize, 32, 32);
+            const mainMaterial = new THREE.MeshPhongMaterial({ color: getRandomCloudColor(), transparent: true, opacity: 0 });
+            const mainSphere = new THREE.Mesh(mainGeometry, mainMaterial);
+            cloud.add(mainSphere);
+
+            const numSpheres = Math.floor(Math.random() * 10) + 5;
+            for (let i = 0; i < numSpheres; i++) {
+                const size = Math.random() * mainSize * 0.8;
+                const geometry = new THREE.SphereGeometry(size, 32, 32);
+                const material = new THREE.MeshPhongMaterial({ color: getRandomCloudColor(), transparent: true, opacity: 0 });
+                const sphere = new THREE.Mesh(geometry, material);
+
+                sphere.position.set(
+                    (Math.random() - 0.5) * mainSize * 2.5,
+                    (Math.random() - 0.5) * mainSize * 2.5,
+                    (Math.random() - 0.5) * mainSize * 2.5
+                );
+
+                cloud.add(sphere);
+            }
+
+            cloud.userData = {
+                speed: Math.random() * 0.005 + 0.002, // Reduced speed
+                rotationSpeed: (Math.random() - 0.5) * 0.001,
+                fadeIn: true,
+                opacity: 0
+            };
+
+            return cloud;
+        }
+
+        // Function to spawn a cloud at a random position
+        function spawnCloud() {
+            const cloud = createCloud();
+            const angle = Math.random() * Math.PI * 2;
+            const radius = Math.random() * 15 + 5;
+            cloud.position.set(
+                Math.cos(angle) * radius,
+                Math.sin(angle) * radius,
+                camera.position.z - 60 - Math.random() * 20 // Spawn behind the camera
+            );
+
+            scene.add(cloud);
+            return cloud;
+        }
+
+        // Array to hold clouds
+        const clouds = [];
+
+        // Spawn initial clouds
+        for (let i = 0; i < 200; i++) {
+            clouds.push(spawnCloud());
+        }
+
+        let textMesh;
+        let textGeometry;
+
+        // Function to update text position
+        function updateTextPosition() {
+            if (textGeometry) {
+                textGeometry.computeBoundingBox();
+                const textWidth = textGeometry.boundingBox.max.x - textGeometry.boundingBox.min.x;
+                const isMobile = isMobileDevice();
+                const textX = isMobile ? -textWidth / 5.1 : -textWidth / 4.7; // Different X position for mobile
+                const textY = isMobile ? 5.1 : 5.1; // Different Y position for mobile
+                textMesh.position.set(textX, textY, camera.position.z - 0.5); // Centered horizontally, near top
+                textMesh.scale.set(0.4, 0.4, 0.4); // Adjust scale as needed
+            }
+        }
+
+        // Function to determine if the device is mobile
+        function isMobileDevice() {
+            return window.innerWidth <= 800;
+        }
+
+        // Load the font and create 3D text
+        const loader = new THREE.FontLoader();
+        loader.load('https://rayrite.github.io/fonts/vr.json', function (font) {
+            const textSize = isMobileDevice() ? 0.45 : 1.0; // Smaller size for mobile devices
+
+            textGeometry = new THREE.TextGeometry('COOLYVISION', {
+                font: font,
+                size: textSize,
+                height: 0.2,
+                curveSegments: 12,
+                bevelEnabled: true,
+                bevelThickness: 0.05,
+                bevelSize: 0.05,
+                bevelSegments: 5
+            });
+
+            // Load texture
+            const textureLoader = new THREE.TextureLoader();
+            const texture = textureLoader.load('https://rayrite.github.io/img/ice01.jpg'); // Replace with your texture path
+
+            // Create material with texture
+            const textMaterial = new THREE.MeshPhongMaterial({
+                map: texture,
+                metalness: 0.5,
+                roughness: 0.1,
+                reflectivity: 0.8,
+                clearcoat: 1.0,
+                clearcoatRoughness: 0.1
+            });
+
+            textMesh = new THREE.Mesh(textGeometry, textMaterial);
+            scene.add(textMesh);
+
+            updateTextPosition();
+
+            // Variables for camera movement
+            let cameraSpeed = 0.02; // Reduced speed
+            let twistAngle = 0;
+            let twistDirection = 1;
+            let lastTwistChangeTime = Date.now();
+
+            // Animation loop
+            function animate() {
+                requestAnimationFrame(animate);
+
+                // Move camera forward
+                camera.position.z -= cameraSpeed;
+
+                // Apply twisting effect
+                const currentTime = Date.now();
+                if (currentTime - lastTwistChangeTime > (10000 + Math.random() * 10000)) { // 10-20 seconds
+                    twistDirection *= -1;
+                    lastTwistChangeTime = currentTime;
+                }
+                twistAngle += 0.0001 * twistDirection;
+                camera.position.x = Math.sin(twistAngle) * 5;
+                camera.position.y = Math.cos(twistAngle) * 5;
+                camera.lookAt(new THREE.Vector3(0, 0, camera.position.z - 10));
+
+                // Update and manage clouds
+                for (let i = clouds.length - 1; i >= 0; i--) {
+                    const cloud = clouds[i];
+                    cloud.position.z += cloud.userData.speed;
+                    cloud.rotation.z += cloud.userData.rotationSpeed;
+
+                    cloud.children.forEach(sphere => {
+                        if (cloud.userData.fadeIn) {
+                            cloud.userData.opacity += 0.002; // Slower fade-in
+                            if (cloud.userData.opacity >= 0.7) {
+                                cloud.userData.opacity = 0.7;
+                                cloud.userData.fadeIn = false;
+                            }
+                            sphere.material.opacity = cloud.userData.opacity;
+                        }
+                    });
+
+                    // Remove clouds that are too far behind the camera
+                    if (cloud.position.z > camera.position.z + 20) {
+                        scene.remove(cloud);
+                        clouds.splice(i, 1);
+                    }
+                }
+
+                // Spawn new clouds to maintain the desired number
+                while (clouds.length < 200) {
+                    clouds.push(spawnCloud());
+                }
+
+                // Update text position
+                textMesh.position.z = camera.position.z - 3; // Keep text closer to the camera
+
+                renderer.render(scene, camera);
+            }
+
+            animate();
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            updateTextPosition();
+        });
+    </script>
+</body>
+</html>

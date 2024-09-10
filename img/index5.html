@@ -111,7 +111,7 @@
             if (textGeometry) {
                 textGeometry.computeBoundingBox();
                 const textWidth = textGeometry.boundingBox.max.x - textGeometry.boundingBox.min.x;
-                textMesh.position.set(-textWidth / 4.25, 4.95, camera.position.z - 0.5); // Centered horizontally, near top (MODIFY: Adjust the '2' value to move the text up or down)
+                textMesh.position.set(-textWidth / 4.7, 4.95, camera.position.z - 0.5); // Centered horizontally, near top (MODIFY: Adjust the '2' value to move the text up or down)
                 textMesh.scale.set(0.4, 0.4, 0.4); // Adjust scale as needed (MODIFY: Adjust the scale values to change the size of the text)
             }
         }

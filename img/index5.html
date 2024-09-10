@@ -111,8 +111,11 @@
             if (textGeometry) {
                 textGeometry.computeBoundingBox();
                 const textWidth = textGeometry.boundingBox.max.x - textGeometry.boundingBox.min.x;
-                textMesh.position.set(-textWidth / 4.7, 4.95, camera.position.z - 0.5); // Centered horizontally, near top (MODIFY: Adjust the '2' value to move the text up or down)
-                textMesh.scale.set(0.4, 0.4, 0.4); // Adjust scale as needed (MODIFY: Adjust the scale values to change the size of the text)
+                const isMobile = isMobileDevice();
+                const textX = isMobile ? -textWidth / 4.9 : -textWidth / 4.7; // Different X position for mobile
+                const textY = isMobile ? 5 : 4.95; // Different Y position for mobile
+                textMesh.position.set(textX, textY, camera.position.z - 0.5); // Centered horizontally, near top
+                textMesh.scale.set(0.4, 0.4, 0.4); // Adjust scale as needed
             }
         }
 
@@ -124,7 +127,7 @@
         // Load the font and create 3D text
         const loader = new THREE.FontLoader();
         loader.load('https://rayrite.github.io/fonts/vr.json', function (font) {
-            const textSize = isMobileDevice() ? 0.5 : 0.9; // Smaller size for mobile devices
+            const textSize = isMobileDevice() ? 0.45 : 0.9; // Smaller size for mobile devices
 
             textGeometry = new THREE.TextGeometry('COOLYVISION', {
                 font: font,
@@ -138,7 +141,7 @@
             });
 
             const textMaterial = new THREE.MeshStandardMaterial({
-                color: 0xEDEDED, // MODIFY: Change this value to adjust the color of the text
+                color: 0xEDEDED, // Change this value to adjust the color of the text
                 metalness: 0.8,
                 roughness: 0.2
             });
@@ -202,7 +205,7 @@
                 }
 
                 // Update text position
-                textMesh.position.z = camera.position.z - 3; // Keep text closer to the camera (MODIFY: Adjust the '-3' value to change the distance from the camera)
+                textMesh.position.z = camera.position.z - 3; // Keep text closer to the camera
 
                 renderer.render(scene, camera);
             }

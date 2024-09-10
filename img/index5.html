@@ -113,7 +113,7 @@
                 const textWidth = textGeometry.boundingBox.max.x - textGeometry.boundingBox.min.x;
                 const isMobile = isMobileDevice();
                 const textX = isMobile ? -textWidth / 5.1 : -textWidth / 4.7; // Different X position for mobile
-                const textY = isMobile ? 5.25 : 4.95; // Different Y position for mobile
+                const textY = isMobile ? 5.1 : 4.95; // Different Y position for mobile
                 textMesh.position.set(textX, textY, camera.position.z - 0.5); // Centered horizontally, near top
                 textMesh.scale.set(0.4, 0.4, 0.4); // Adjust scale as needed
             }
@@ -131,7 +131,7 @@
 
             textGeometry = new THREE.TextGeometry('COOLYVISION', {
                 font: font,
-                size: textSize, // Use the determined size
+                size: textSize,
                 height: 0.2,
                 curveSegments: 12,
                 bevelEnabled: true,
@@ -140,10 +140,14 @@
                 bevelSegments: 5
             });
 
-            const textMaterial = new THREE.MeshStandardMaterial({
-                color: 0xEDEDED, // Change this value to adjust the color of the text
-                metalness: 0.8,
-                roughness: 0.2
+            // Create a more metallic material
+            const textMaterial = new THREE.MeshPhysicalMaterial({
+                color: 0x7AA2FA, // Change this to any color you want (e.g., 0xff0000 for red)
+                metalness: 0.5,
+                roughness: 0.1,
+                reflectivity: 0.8,
+                clearcoat: 1.0,
+                clearcoatRoughness: 0.1
             });
 
             textMesh = new THREE.Mesh(textGeometry, textMaterial);

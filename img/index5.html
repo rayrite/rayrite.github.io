@@ -112,8 +112,8 @@
                 textGeometry.computeBoundingBox();
                 const textWidth = textGeometry.boundingBox.max.x - textGeometry.boundingBox.min.x;
                 const isMobile = isMobileDevice();
-                const textX = isMobile ? -textWidth / 4.9 : -textWidth / 4.7; // Different X position for mobile
-                const textY = isMobile ? 5 : 4.95; // Different Y position for mobile
+                const textX = isMobile ? -textWidth / 5.0 : -textWidth / 4.7; // Different X position for mobile
+                const textY = isMobile ? 5.5 : 4.95; // Different Y position for mobile
                 textMesh.position.set(textX, textY, camera.position.z - 0.5); // Centered horizontally, near top
                 textMesh.scale.set(0.4, 0.4, 0.4); // Adjust scale as needed
             }

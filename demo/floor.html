@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Three.js Scene with Physics and Emitters</title>
+    <style>
+        body { margin: 0; overflow: hidden; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <script type="module">
+        // Import Three.js and OrbitControls correctly
+        import * as THREE from 'https://unpkg.com/three@0.152.0/build/three.module.js';
+        import { OrbitControls } from 'https://unpkg.com/three@0.152.0/examples/jsm/controls/OrbitControls.js';
+        import * as CANNON from 'https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/dist/cannon-es.js';
+
+        // Set up the scene
+        const scene = new THREE.Scene();
+
+        // Set up the physics world
+        const world = new CANNON.World({
+            gravity: new CANNON.Vec3(0, -9.81, 0),
+        });
+
+        // Set up the renderer
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // Set up the camera
+        const camera = new THREE.PerspectiveCamera(
+            75,
+            window.innerWidth / window.innerHeight,
+            0.1,
+            1000
+        );
+        camera.position.set(0, 10, 20);
+        camera.lookAt(0, 0, 0); // Ensure the camera is looking at the scene center
+
+        // Add orbit controls (make sure to import correctly)
+        const controls = new OrbitControls(camera, renderer.domElement);
+
+        // Add ambient light
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        scene.add(ambientLight);
+
+        // Add directional light
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        directionalLight.position.set(10, 15, 10);
+        scene.add(directionalLight);
+
+        // Create the floor
+        const floorSize = 10;
+        const floorGeometry = new THREE.BoxGeometry(floorSize, 0.5, floorSize);
+
+        // Use a solid color for the floor
+        const floorMaterial = new THREE.MeshStandardMaterial({ color: 0x808080 });
+        const floorMesh = new THREE.Mesh(floorGeometry, floorMaterial);
+        floorMesh.position.y = -0.25;
+        scene.add(floorMesh);
+
+        // Add physics to the floor
+        const floorBody = new CANNON.Body({
+            mass: 0, // Static body
+            shape: new CANNON.Box(new CANNON.Vec3(floorSize / 2, 0.25, floorSize / 2)),
+            material: new CANNON.Material({ restitution: 0.5 }),
+        });
+        floorBody.position.copy(floorMesh.position);
+        world.addBody(floorBody);
+
+        // Create the open-top box with wall thickness
+        const outerBoxSize = 3;
+        const wallThickness = 0.2;
+        const boxHeight = 3;
+
+        // Create box walls manually
+        const wallMaterial = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
+        const wallBodies = [];
+        const wallMeshes = [];
+
+        const wallGeometries = [
+            // Front Wall
+            new THREE.BoxGeometry(outerBoxSize, boxHeight, wallThickness),
+            // Back Wall
+            new THREE.BoxGeometry(outerBoxSize, boxHeight, wallThickness),
+            // Left Wall
+            new THREE.BoxGeometry(wallThickness, boxHeight, outerBoxSize),
+            // Right Wall
+            new THREE.BoxGeometry(wallThickness, boxHeight, outerBoxSize),
+        ];
+
+        const wallPositions = [
+            // Front Wall
+            { x: 0, y: boxHeight / 2, z: outerBoxSize / 2 - wallThickness / 2 },
+            // Back Wall
+            { x: 0, y: boxHeight / 2, z: -outerBoxSize / 2 + wallThickness / 2 },
+            // Left Wall
+            { x: -outerBoxSize / 2 + wallThickness / 2, y: boxHeight / 2, z: 0 },
+            // Right Wall
+            { x: outerBoxSize / 2 - wallThickness / 2, y: boxHeight / 2, z: 0 },
+        ];
+
+        for (let i = 0; i < 4; i++) {
+            const mesh = new THREE.Mesh(wallGeometries[i], wallMaterial);
+            mesh.position.set(
+                wallPositions[i].x,
+                wallPositions[i].y,
+                wallPositions[i].z
+            );
+            scene.add(mesh);
+            wallMeshes.push(mesh);
+
+            // Add physics
+            const shape = new CANNON.Box(
+                new CANNON.Vec3(
+                    wallGeometries[i].parameters.width / 2,
+                    wallGeometries[i].parameters.height / 2,
+                    wallGeometries[i].parameters.depth / 2
+                )
+            );
+            const body = new CANNON.Body({
+                mass: 0,
+                shape: shape,
+                material: new CANNON.Material({ restitution: 0.5 }),
+            });
+            body.position.copy(mesh.position);
+            world.addBody(body);
+            wallBodies.push(body);
+        }
+
+        // Emitter positions
+        const emitterPositions = [
+            new THREE.Vector3(-5, 0, -5),
+            new THREE.Vector3(5, 0, -5),
+            new THREE.Vector3(-5, 0, 5),
+            new THREE.Vector3(5, 0, 5),
+        ];
+
+        // Function to create balls
+        function createBall(emitterPosition) {
+            const sphereGeometry = new THREE.SphereGeometry(0.25, 32, 32);
+            const isRed = Math.random() > 0.5;
+            const sphereMaterial = new THREE.MeshStandardMaterial({
+                color: isRed ? 0xff0000 : 0x0000ff,
+            });
+            const sphereMesh = new THREE.Mesh(sphereGeometry, sphereMaterial);
+            sphereMesh.position.copy(emitterPosition);
+            sphereMesh.position.y += 0.5;
+            scene.add(sphereMesh);
+
+            // Add physics
+            const sphereShape = new CANNON.Sphere(0.25);
+            const sphereBody = new CANNON.Body({
+                mass: 1,
+                shape: sphereShape,
+                material: new CANNON.Material({ restitution: 0.9 }),
+            });
+            sphereBody.position.copy(sphereMesh.position);
+            world.addBody(sphereBody);
+
+            // Calculate direction towards the box center
+            const boxCenter = new THREE.Vector3(0, boxHeight / 2, 0);
+            const direction = new THREE.Vector3()
+                .subVectors(boxCenter, sphereMesh.position)
+                .normalize()
+                .add(new THREE.Vector3(0, 1, 0).normalize())
+                .normalize();
+
+            // Apply initial force
+            const forceMagnitude = 10 + Math.random() * 5;
+            const force = new CANNON.Vec3(
+                direction.x * forceMagnitude,
+                direction.y * forceMagnitude,
+                direction.z * forceMagnitude
+            );
+            sphereBody.applyImpulse(force, sphereBody.position);
+
+            // Sync the mesh with the physics body
+            sphereMesh.userData.physicsBody = sphereBody;
+            sphereMesh.userData.birthTime = performance.now();
+
+            // Cleanup after 10 seconds
+            setTimeout(() => {
+                world.removeBody(sphereBody);
+                scene.remove(sphereMesh);
+            }, 10000);
+        }
+
+        // Create balls at intervals from each emitter
+        emitterPositions.forEach((emitterPosition) => {
+            setInterval(() => {
+                createBall(emitterPosition);
+            }, 1000);
+        });
+
+        // Animation loop
+        const timeStep = 1 / 60; // seconds
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Update controls if necessary
+            controls.update();
+
+            // Step the physics world
+            world.step(timeStep);
+
+            // Update meshes to match physics bodies
+            wallMeshes.forEach((mesh, idx) => {
+                mesh.position.copy(wallBodies[idx].position);
+                mesh.quaternion.copy(wallBodies[idx].quaternion);
+            });
+
+            scene.traverse((object) => {
+                if (object.userData.physicsBody) {
+                    object.position.copy(object.userData.physicsBody.position);
+                    object.quaternion.copy(object.userData.physicsBody.quaternion);
+                }
+            });
+
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>

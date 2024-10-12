@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Falling Glyphs</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: black;
+        }
+        #canvas {
+            width: 100vw;
+            height: 100vh;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
+    <script src="https://cdn.babylonjs.com/earcut.min.js"></script>
+    <script>
+        // Get canvas element and set up Babylon.js scene
+        const canvas = document.getElementById('canvas');
+        const engine = new BABYLON.Engine(canvas, true);
+        const scene = new BABYLON.Scene(engine);
+        scene.clearColor = new BABYLON.Color4(0, 0, 0, 1);
+
+        // Create camera and light
+        const camera = new BABYLON.ArcRotateCamera("Camera", -Math.PI / 2, Math.PI / 2.5, 50, new BABYLON.Vector3(0, 0, 0), scene);
+        camera.attachControl(canvas, true);
+        const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
+        light.intensity = 0.8;
+
+        // Set of letters and symbols
+        const characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$%^&*()_+=<>?/';
+
+        // Load 3D glyphs using Babylon.js text meshes
+        const glyphMeshes = [];
+
+        const create3DGlyph = (x, y, z) => {
+            const dynamicTexture = new BABYLON.DynamicTexture("dynamicTexture", {width:256, height:256}, scene);
+
+            // Function to create a random glyph (two characters)
+            const randomGlyph = () => {
+                const char1 = characters[Math.floor(Math.random() * characters.length)];
+                const char2 = characters[Math.floor(Math.random() * characters.length)];
+                return char1 + char2; // Return a combination of two random characters
+            };
+
+            dynamicTexture.drawText(randomGlyph(), 100, 150, "bold 200px monospace", "#0F0", "transparent", true);
+
+            const glyphPlane = BABYLON.MeshBuilder.CreateBox("glyphBox", {height: 1, width: 2, depth: 0.5}, scene);
+            glyphPlane.material = new BABYLON.StandardMaterial("glyphMaterial", scene);
+            glyphPlane.material.diffuseTexture = dynamicTexture;
+            glyphPlane.material.specularColor = new BABYLON.Color3(0, 1, 0);
+            glyphPlane.material.emissiveColor = new BABYLON.Color3(0, 1, 0);
+            glyphPlane.position = new BABYLON.Vector3(x, y, z);
+            glyphPlane.breathPhase = Math.random() * Math.PI * 2; // Randomize phase for unique breathing patterns
+            glyphPlane.glyphChangeInterval = 1 / (1 + Math.random() * 9); // Random update frequency between 1 to 10 times per second
+            glyphPlane.glyphChangeTime = 0; // Track the time for glyph changes
+
+            return glyphPlane;
+        };
+
+        const numColumns = 50;
+        const numRows = 50;
+        for (let i = 0; i < numColumns; i++) {
+            for (let j = 0; j < numRows; j++) {
+                const x = (i - numColumns / 2) * 1.5;
+                const y = Math.random() * 50;
+                const z = (j - numRows / 2) * 1.5;
+                const glyphMesh = create3DGlyph(x, y, z);
+                glyphMesh.fallSpeed = 0.05 + Math.random() * 0.25; // Assign a random fall speed between 0.05 and 0.3
+                glyphMeshes.push(glyphMesh);
+            }
+        }
+
+        // Animate falling glyphs and breathing effect with random speeds
+        scene.onBeforeRenderObservable.add(() => {
+            const time = performance.now() * 0.001; // Get time for smooth oscillations
+            glyphMeshes.forEach(mesh => {
+                // Falling effect
+                mesh.position.y -= mesh.fallSpeed;
+                if (mesh.position.y < -25) {
+                    mesh.position.y = 25;
+                }
+
+                // Breathing (oscillation of size and color)
+                const scaleOscillation = 1 + 0.1 * Math.sin(time + mesh.breathPhase); // Slight scale change over time
+                mesh.scaling.set(scaleOscillation, scaleOscillation, scaleOscillation);
+
+                // Color oscillation between black and green
+                const colorOscillation = 0.5 + 0.5 * Math.sin(time + mesh.breathPhase);
+                mesh.material.diffuseColor = new BABYLON.Color3(0, colorOscillation, 0); // Oscillate green component
+                mesh.material.emissiveColor = new BABYLON.Color3(0, colorOscillation, 0);
+
+                // Glyph change over time
+                mesh.glyphChangeTime += engine.getDeltaTime() * 0.001; // Track time in seconds
+                if (mesh.glyphChangeTime > mesh.glyphChangeInterval) {
+                    // Reset the timer and assign a new random glyph
+                    mesh.glyphChangeTime = 0;
+                    const newGlyph = characters[Math.floor(Math.random() * characters.length)] + characters[Math.floor(Math.random() * characters.length)];
+                    mesh.material.diffuseTexture.clear();
+                    mesh.material.diffuseTexture.drawText(newGlyph, 100, 150, "bold 200px monospace", "#0F0", "transparent", true);
+                }
+            });
+        });
+
+        // Run render loop
+        engine.runRenderLoop(() => {
+            scene.render();
+        });
+
+        // Resize event
+        window.addEventListener("resize", () => {
+            engine.resize();
+        });
+    </script>
+</body>
+</html>

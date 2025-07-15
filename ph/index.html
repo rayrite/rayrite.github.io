@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product Hunt - Best of 2025</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Product Hunt - Compact Mobile Viewer</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -23,13 +23,11 @@
             --border-color: #e5e7eb;
             --border-light: #f3f4f6;
             --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            --radius-sm: 0.375rem;
-            --radius-md: 0.5rem;
-            --radius-lg: 0.75rem;
-            --radius-xl: 1rem;
+            --shadow-md: 0 2px 4px -1px rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.05);
+            --radius-sm: 0.25rem;
+            --radius-md: 0.375rem;
+            --radius-lg: 0.5rem;
         }
 
         * {
@@ -42,30 +40,31 @@
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
             color: var(--text-primary);
-            line-height: 1.6;
+            line-height: 1.4;
             min-height: 100vh;
+            font-size: 14px;
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 100%;
             margin: 0 auto;
-            padding: 1rem;
+            padding: 0.5rem;
+            overflow-x: hidden;
+        }
+
+        /* Top Row Layout */
+        .top-row {
+            display: grid;
+            grid-template-columns: 2fr 3fr 2fr 2fr;
+            gap: 0.5rem;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            min-height: 40px;
         }
 
         /* Header */
-        .top-row {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
-            min-height: 3rem;
-        }
-
         .header {
-            flex: 1;
             text-align: left;
-            margin: 0;
-            padding: 0;
         }
 
         .title {
@@ -73,14 +72,14 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            font-size: 1.25rem;
-            font-weight: 600;
-            letter-spacing: -0.01em;
-            margin: 0;
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.125rem;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            line-height: 1.2;
+            gap: 0.25rem;
+            line-height: 1.1;
         }
 
         .title i {
@@ -88,125 +87,176 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            font-size: 0.9em;
+            font-size: 0.8em;
         }
 
         .subtitle {
             color: var(--text-secondary);
-            font-size: 0.75rem;
+            font-size: 0.6rem;
             font-weight: 400;
-            margin: 0;
-            line-height: 1.2;
+            line-height: 1.1;
         }
 
-        /* Drag and Drop Area */
-        .drop-zone {
-            border: 1px dashed var(--border-color);
-            border-radius: var(--radius-md);
-            padding: 0.5rem 1rem;
+        /* File Selection */
+        .file-selection {
             background: var(--bg-primary);
-            transition: all 0.2s ease;
-            cursor: pointer;
-            flex: 1;
-            min-height: 3rem;
+            border-radius: var(--radius-sm);
+            padding: 0.25rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-light);
+        }
+
+        .file-controls {
             display: flex;
+            gap: 0.125rem;
             align-items: center;
-            gap: 0.5rem;
+            margin-bottom: 0.25rem;
         }
 
-        .drop-zone:hover,
-        .drop-zone.drag-over {
-            border-color: var(--accent-color);
-            background: rgba(99, 102, 241, 0.05);
-        }
-
-        .drop-zone-content {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+        .file-select {
             flex: 1;
-        }
-
-        .drop-zone i {
-            font-size: 1rem;
-            color: var(--accent-color);
-        }
-
-        .drop-zone-text {
-            display: flex;
-            flex-direction: column;
-            gap: 0.1rem;
-        }
-
-        .drop-zone h3 {
-            color: var(--text-primary);
-            margin: 0;
-            font-weight: 500;
-            font-size: 0.8rem;
-            line-height: 1.2;
-        }
-
-        .drop-zone p {
-            color: var(--text-secondary);
+            padding: 0.25rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
             font-size: 0.7rem;
-            margin: 0;
-            line-height: 1.2;
+            background: var(--bg-secondary);
+            min-height: 28px;
         }
 
-        /* Controls */
+        .refresh-btn, .add-file-btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.25rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.7rem;
+            cursor: pointer;
+            min-width: 28px;
+            min-height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .refresh-btn:hover, .add-file-btn:hover {
+            background: #4f46e5;
+        }
+
+        .file-count {
+            font-size: 0.6rem;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        /* Error Container in Top Row */
+        .error-container-top {
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Stats in Top Row */
+        .stats-top {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.25rem;
+        }
+
+        .stat-item-top {
+            background: var(--bg-primary);
+            padding: 0.25rem;
+            border-radius: var(--radius-sm);
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-light);
+        }
+
+        .stat-number-top {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 700;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.0625rem;
+            line-height: 1.1;
+        }
+
+        .stat-label-top {
+            color: var(--text-secondary);
+            font-size: 0.5rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            line-height: 1.1;
+        }
+
+        /* Controls - Compact Single Row */
         .controls {
             background: var(--bg-primary);
-            border-radius: var(--radius-lg);
-            padding: 1rem;
-            margin-bottom: 1rem;
-            box-shadow: var(--shadow-md);
+            border-radius: var(--radius-sm);
+            padding: 0.375rem;
+            margin-bottom: 0.5rem;
+            box-shadow: var(--shadow-sm);
             border: 1px solid var(--border-light);
+        }
+
+        .controls-row {
+            display: grid;
+            grid-template-columns: 2fr 1.5fr 1.5fr auto;
+            gap: 0.375rem;
+            align-items: center;
+            margin-bottom: 0.5rem;
         }
 
         .search-container {
             position: relative;
-            margin-bottom: 1.5rem;
         }
 
         .search-input {
             width: 100%;
-            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            padding: 0.375rem 0.375rem 0.375rem 1.5rem;
             border: 1px solid var(--border-color);
-            border-radius: var(--radius-lg);
-            font-size: 0.875rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.7rem;
             background: var(--bg-secondary);
             transition: all 0.2s ease;
+            min-height: 28px;
         }
 
         .search-input:focus {
             outline: none;
             border-color: var(--accent-color);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
             background: var(--bg-primary);
         }
 
         .search-icon {
             position: absolute;
-            left: 0.75rem;
+            left: 0.375rem;
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-muted);
-            font-size: 0.875rem;
+            font-size: 0.7rem;
         }
 
         .clear-btn {
             position: absolute;
-            right: 0.5rem;
+            right: 0.125rem;
             top: 50%;
             transform: translateY(-50%);
             background: none;
             border: none;
             color: var(--text-muted);
             cursor: pointer;
-            padding: 0.25rem;
+            padding: 0.125rem;
             border-radius: var(--radius-sm);
-            transition: all 0.2s ease;
+            min-width: 20px;
+            min-height: 20px;
             display: none;
+            font-size: 0.7rem;
         }
 
         .clear-btn:hover {
@@ -214,138 +264,152 @@
             background: rgba(239, 68, 68, 0.1);
         }
 
-        .multi-tag-container {
-            margin-bottom: 1.5rem;
-        }
-
-        .filter-label {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.875rem;
-            font-weight: 500;
-            color: var(--text-primary);
-            margin-bottom: 0.5rem;
-        }
-
-        .multi-tag-input-container {
-            position: relative;
-        }
-
-        .multi-tag-input {
+        .tag-select, .multi-tag-input {
             width: 100%;
-            padding: 0.75rem;
+            padding: 0.375rem;
             border: 1px solid var(--border-color);
-            border-radius: var(--radius-lg);
-            font-size: 0.875rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.7rem;
             background: var(--bg-secondary);
-            transition: all 0.2s ease;
+            min-height: 28px;
         }
 
-        .multi-tag-input:focus {
+        .tag-select:focus, .multi-tag-input:focus {
             outline: none;
             border-color: var(--accent-color);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
             background: var(--bg-primary);
         }
 
-        .tag-suggestions {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: var(--bg-primary);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-lg);
-            z-index: 10;
-            max-height: 200px;
-            overflow-y: auto;
-            display: none;
-        }
-
-        .tag-suggestion {
-            padding: 0.75rem;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-            font-size: 0.875rem;
-        }
-
-        .tag-suggestion:hover {
-            background: var(--bg-secondary);
-        }
-
-        .filter-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .tag-select,
-        .sort-select {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-lg);
-            font-size: 0.875rem;
-            background: var(--bg-secondary);
-            transition: all 0.2s ease;
-            cursor: pointer;
-        }
-
-        .tag-select:focus,
-        .sort-select:focus {
-            outline: none;
-            border-color: var(--accent-color);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-            background: var(--bg-primary);
-        }
-
-        .action-buttons {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            align-items: center;
-        }
-
-        .clear-all-btn {
+        .clear-all-btn-inline {
             background: var(--error-color);
             color: white;
             border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: var(--radius-lg);
-            font-size: 0.875rem;
+            padding: 0.375rem 0.5rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.65rem;
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.2s ease;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            justify-content: center;
+            gap: 0.25rem;
+            min-height: 28px;
+            white-space: nowrap;
         }
 
-        .clear-all-btn:hover {
+        .clear-all-btn-inline:hover {
             background: #dc2626;
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-md);
         }
 
+        /* Multi-level Sorting - More Compact */
+        .sort-section {
+            margin-bottom: 0.5rem;
+        }
+
+        .sort-label {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.375rem;
+        }
+
+        .sort-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 0.125rem;
+        }
+
+        .sort-level {
+            display: flex;
+            align-items: center;
+            gap: 0.125rem;
+            padding: 0.125rem;
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-light);
+        }
+
+        .sort-level-label {
+            font-weight: 500;
+            color: var(--text-secondary);
+            min-width: 35px;
+            font-size: 0.65rem;
+        }
+
+        .sort-field-select, .sort-direction-select {
+            flex: 1;
+            padding: 0.125rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            font-size: 0.65rem;
+            background: var(--bg-primary);
+            min-height: 24px;
+        }
+
+        .sort-remove-btn {
+            background: var(--error-color);
+            color: white;
+            border: none;
+            padding: 0.125rem;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            min-width: 24px;
+            min-height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sort-remove-btn:hover {
+            background: #dc2626;
+        }
+
+        .sort-add-btn {
+            background: var(--success-color);
+            color: white;
+            border: none;
+            padding: 0.375rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.65rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.125rem;
+            min-height: 28px;
+        }
+
+        .sort-add-btn:hover {
+            background: #059669;
+        }
+
+        .sort-add-btn:disabled {
+            background: var(--text-muted);
+            cursor: not-allowed;
+        }
+
+        /* Active Filters - Compact */
         .active-filters {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.5rem;
+            gap: 0.125rem;
+            margin-top: 0.375rem;
         }
 
         .active-filter {
             background: rgba(99, 102, 241, 0.1);
             color: var(--accent-color);
-            padding: 0.375rem 0.75rem;
-            border-radius: var(--radius-md);
-            font-size: 0.75rem;
+            padding: 0.125rem 0.25rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.65rem;
             font-weight: 500;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.125rem;
         }
 
         .remove-filter {
@@ -353,80 +417,47 @@
             border: none;
             color: var(--accent-color);
             cursor: pointer;
-            padding: 0.125rem;
+            padding: 0.0625rem;
             border-radius: var(--radius-sm);
-            transition: all 0.2s ease;
+            min-width: 14px;
+            min-height: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
         }
 
         .remove-filter:hover {
             background: rgba(99, 102, 241, 0.2);
         }
 
-        /* Stats */
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 0.75rem;
-            margin-bottom: 1rem;
-        }
-
-        .stat-item {
-            background: var(--bg-primary);
-            padding: 1rem;
-            border-radius: var(--radius-lg);
-            text-align: center;
-            box-shadow: var(--shadow-md);
-            border: 1px solid var(--border-light);
-            transition: all 0.2s ease;
-        }
-
-        .stat-item:hover {
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .stat-number {
-            display: block;
-            font-size: 1.5rem;
-            font-weight: 700;
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .stat-label {
-            color: var(--text-secondary);
-            font-size: 0.75rem;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        /* Table */
+        /* Compact Table */
         .table-container {
             background: var(--bg-primary);
-            border-radius: var(--radius-lg);
+            border-radius: var(--radius-md);
             overflow: hidden;
-            box-shadow: var(--shadow-md);
+            box-shadow: var(--shadow-sm);
             border: 1px solid var(--border-light);
+            margin-bottom: 0.5rem;
         }
 
         .table-wrapper {
             overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         .products-table {
             width: 100%;
             border-collapse: collapse;
+            font-size: 0.75rem;
         }
 
         .products-table th {
             background: var(--bg-tertiary);
-            padding: 1rem;
+            padding: 0.375rem 0.25rem;
             text-align: left;
             font-weight: 600;
-            font-size: 0.875rem;
+            font-size: 0.7rem;
             color: var(--text-primary);
             border-bottom: 1px solid var(--border-color);
             white-space: nowrap;
@@ -446,27 +477,54 @@
         }
 
         .sort-icon {
-            margin-left: 0.5rem;
+            margin-left: 0.25rem;
             color: var(--text-muted);
-            font-size: 0.75rem;
+            font-size: 0.6rem;
         }
 
         .products-table td {
-            padding: 1rem;
+            padding: 0.375rem 0.25rem;
             border-bottom: 1px solid var(--border-light);
             vertical-align: top;
+            font-size: 0.75rem;
         }
 
         .products-table tr:hover {
             background: var(--bg-secondary);
         }
 
+        /* Table Columns */
+        .col-name {
+            min-width: 120px;
+            max-width: 150px;
+        }
+
+        .col-description {
+            min-width: 150px;
+            max-width: 200px;
+        }
+
+        .col-upvotes, .col-comments {
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .col-tags {
+            min-width: 100px;
+            max-width: 120px;
+        }
+
+        .col-actions {
+            min-width: 50px;
+            text-align: center;
+        }
+
         .product-name {
             color: var(--accent-color);
             text-decoration: none;
             font-weight: 500;
-            transition: all 0.2s ease;
             display: block;
+            line-height: 1.3;
         }
 
         .product-name:hover {
@@ -476,19 +534,19 @@
 
         .product-description {
             color: var(--text-secondary);
-            font-size: 0.875rem;
-            line-height: 1.5;
-            max-width: 300px;
+            line-height: 1.3;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
+            word-break: break-word;
         }
 
         .metric-value {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            justify-content: center;
+            gap: 0.25rem;
             font-weight: 500;
         }
 
@@ -500,65 +558,70 @@
             color: var(--accent-color);
         }
 
+        .metric-value i {
+            font-size: 0.7rem;
+        }
+
         .tags-container {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.25rem;
-            max-width: 200px;
+            gap: 0.125rem;
         }
 
         .tag {
             background: rgba(99, 102, 241, 0.1);
             color: var(--accent-color);
-            padding: 0.25rem 0.5rem;
+            padding: 0.125rem 0.25rem;
             border-radius: var(--radius-sm);
-            font-size: 0.75rem;
+            font-size: 0.65rem;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s ease;
-            white-space: nowrap;
+            border: none;
+            line-height: 1.2;
         }
 
         .tag:hover {
             background: rgba(99, 102, 241, 0.2);
-            transform: translateY(-1px);
         }
 
         .visit-btn {
             background: var(--accent-color);
             color: white;
             text-decoration: none;
-            padding: 0.5rem 1rem;
-            border-radius: var(--radius-md);
-            font-size: 0.875rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.65rem;
             font-weight: 500;
             transition: all 0.2s ease;
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.25rem;
             white-space: nowrap;
         }
 
         .visit-btn:hover {
             background: #4f46e5;
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-md);
+        }
+
+        .visit-btn i {
+            font-size: 0.6rem;
         }
 
         /* Loading and No Results */
         .loading {
             text-align: center;
-            padding: 4rem 2rem;
+            padding: 2rem 0.5rem;
         }
 
         .loading-spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid var(--border-color);
-            border-top: 4px solid var(--accent-color);
+            width: 30px;
+            height: 30px;
+            border: 3px solid var(--border-color);
+            border-top: 3px solid var(--accent-color);
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin: 0 auto 1rem;
+            margin: 0 auto 0.5rem;
         }
 
         @keyframes spin {
@@ -568,316 +631,703 @@
 
         .no-results {
             text-align: center;
-            padding: 4rem 2rem;
+            padding: 2rem 0.5rem;
             color: var(--text-secondary);
         }
 
         .no-results i {
-            font-size: 3rem;
+            font-size: 2rem;
             color: var(--text-muted);
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
         }
 
         .no-results h3 {
+            margin-bottom: 0.25rem;
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+
+        /* Error styling for top row */
+        .error-message-top {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--error-color);
+            padding: 0.25rem;
+            border-radius: var(--radius-sm);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            text-align: center;
+            font-size: 0.65rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.25rem;
+            min-height: 40px;
+        }
+
+        .success-message-top {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success-color);
+            padding: 0.25rem;
+            border-radius: var(--radius-sm);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            text-align: center;
+            font-size: 0.65rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.25rem;
+            min-height: 40px;
+        }
+
+        /* Modals */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 0.5rem;
+        }
+
+        .modal {
+            background: var(--bg-primary);
+            border-radius: var(--radius-md);
+            padding: 1rem;
+            max-width: 90%;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .modal h3 {
             margin-bottom: 0.5rem;
             color: var(--text-primary);
+            font-size: 1rem;
         }
 
-        /* Footer */
-        .footer {
-            text-align: center;
-            padding: 2rem 0;
-            color: var(--text-muted);
-            font-size: 0.875rem;
+        .modal input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            font-size: 0.8rem;
+            margin-bottom: 0.25rem;
+            min-height: 32px;
         }
 
-        /* Responsive Design */
+        .modal-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 0.5rem;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            min-height: 32px;
+            transition: all 0.2s ease;
+        }
+
+        .modal-btn.primary {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .modal-btn.primary:hover {
+            background: #4f46e5;
+        }
+
+        .modal-btn.secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .modal-btn.secondary:hover {
+            background: var(--bg-tertiary);
+        }
+
+        /* Accessibility */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* Responsive adjustments */
         @media (max-width: 768px) {
-            .container {
-                padding: 0.5rem;
-            }
-
             .top-row {
-                flex-direction: column;
-                gap: 0.5rem;
-                align-items: stretch;
+                grid-template-columns: 1fr;
+                grid-template-rows: auto auto auto auto;
+                gap: 0.25rem;
+                text-align: center;
             }
 
             .header {
                 text-align: center;
+                order: 1;
             }
 
             .file-selection {
-                order: 3; /* Move file selection after drop zone on mobile */
-            }
-
-            .drop-zone {
                 order: 2;
             }
 
-            .error-container {
+            .error-container-top {
+                order: 3;
+            }
+
+            .stats-top {
                 order: 4;
+                grid-template-columns: 1fr 1fr;
+                justify-self: center;
+                max-width: 200px;
             }
 
-            .filter-container {
+            .controls-row {
                 grid-template-columns: 1fr;
+                gap: 0.25rem;
             }
 
-            .action-buttons {
-                flex-direction: column;
-                align-items: stretch;
+            .clear-all-btn-inline span {
+                display: none;
+            }
+
+            .clear-all-btn-inline {
+                padding: 0.375rem;
+                min-width: 60px;
+            }
+        }
+
+        @media (min-width: 480px) and (max-width: 768px) {
+            .top-row {
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: auto auto;
+            }
+
+            .header {
+                order: 1;
+                text-align: left;
+            }
+
+            .file-selection {
+                order: 2;
+            }
+
+            .error-container-top {
+                order: 3;
+                grid-column: 1 / -1;
+            }
+
+            .stats-top {
+                order: 4;
+                grid-column: 1 / -1;
+                justify-self: center;
+                max-width: 300px;
+            }
+
+            .controls-row {
+                grid-template-columns: 2fr 1fr 1fr auto;
+            }
+
+            .clear-all-btn-inline span {
+                display: inline;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .container {
+                max-width: 1200px;
+                padding: 0.75rem;
+            }
+
+            .title {
+                font-size: 1.25rem;
+            }
+
+            .subtitle {
+                font-size: 0.75rem;
+            }
+
+            .top-row {
+                grid-template-columns: 2fr 3fr 2fr 2fr;
+            }
+
+            .controls-row {
+                grid-template-columns: 3fr 2fr 2fr auto;
+            }
+
+            .sort-controls {
+                gap: 0.25rem;
+            }
+
+            .sort-level {
+                flex-direction: row;
+                align-items: center;
+                padding: 0.25rem;
+            }
+
+            .sort-level-label {
+                min-width: 50px;
+                font-size: 0.7rem;
+            }
+
+            .sort-field-select, .sort-direction-select {
+                min-height: 28px;
+                font-size: 0.7rem;
+                padding: 0.25rem;
+            }
+
+            .sort-remove-btn {
+                min-width: 28px;
+                min-height: 28px;
+            }
+
+            .sort-add-btn {
+                padding: 0.5rem;
+                font-size: 0.7rem;
+                min-height: 32px;
+            }
+
+            .products-table {
+                font-size: 0.875rem;
+            }
+
+            .products-table th {
+                padding: 0.75rem 0.5rem;
+                font-size: 0.8rem;
+            }
+
+            .products-table td {
+                padding: 0.75rem 0.5rem;
+                font-size: 0.875rem;
+            }
+
+            .col-name {
+                min-width: 150px;
+                max-width: 200px;
+            }
+
+            .col-description {
+                min-width: 200px;
+                max-width: 300px;
+            }
+
+            .col-tags {
+                min-width: 120px;
+                max-width: 150px;
+            }
+        }
+
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-primary: #f9fafb;
+                --text-secondary: #d1d5db;
+                --text-muted: #9ca3af;
+                --bg-primary: #1f2937;
+                --bg-secondary: #374151;
+                --bg-tertiary: #4b5563;
+                --border-color: #4b5563;
+                --border-light: #374151;
+            }
+
+            body {
+                background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+            }
+        }
+
+        /* Reduce motion for accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+
+            .loading-spinner {
+                animation: none;
+                border-top-color: var(--accent-color);
+            }
+        }
+
+        /* Scroll indicators for mobile table */
+        .table-container {
+            position: relative;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(99, 102, 241, 0.9);
+            color: white;
+            padding: 0.25rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.7rem;
+            z-index: 2;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .scroll-indicator.left {
+            left: 0;
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+        }
+
+        .scroll-indicator.right {
+            right: 0;
+            border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+        }
+
+        .table-container.scrolled .scroll-indicator.left {
+            opacity: 0.7;
+        }
+
+        .table-container.has-more .scroll-indicator.right {
+            opacity: 0.7;
+        }
+
+        /* Very compact mode for small screens */
+        @media (max-width: 480px) {
+            .container {
+                padding: 0.125rem;
+            }
+
+            .top-row {
+                gap: 0.125rem;
+                margin-bottom: 0.25rem;
+            }
+
+            .title {
+                font-size: 0.9rem;
+            }
+
+            .subtitle {
+                font-size: 0.55rem;
+            }
+
+            .file-select {
+                font-size: 0.65rem;
+                padding: 0.125rem;
+                min-height: 24px;
+            }
+
+            .refresh-btn, .add-file-btn {
+                min-width: 24px;
+                min-height: 24px;
+                padding: 0.125rem;
+            }
+
+            .file-count {
+                font-size: 0.55rem;
+            }
+
+            .stat-number-top {
+                font-size: 0.8rem;
+            }
+
+            .stat-label-top {
+                font-size: 0.45rem;
+            }
+
+            .controls {
+                padding: 0.25rem;
+                margin-bottom: 0.25rem;
+            }
+
+            .controls-row {
+                gap: 0.125rem;
+            }
+
+            .search-input, .tag-select, .multi-tag-input {
+                font-size: 0.65rem;
+                padding: 0.25rem;
+                min-height: 24px;
+            }
+
+            .search-input {
+                padding-left: 1.25rem;
+            }
+
+            .search-icon {
+                font-size: 0.65rem;
+                left: 0.25rem;
+            }
+
+            .clear-btn {
+                font-size: 0.65rem;
+                min-width: 18px;
+                min-height: 18px;
+            }
+
+            .clear-all-btn-inline {
+                font-size: 0.6rem;
+                padding: 0.25rem;
+                min-height: 24px;
+                min-width: 50px;
+            }
+
+            .sort-label {
+                font-size: 0.65rem;
+                margin-bottom: 0.25rem;
+            }
+
+            .sort-level {
+                padding: 0.0625rem;
+                gap: 0.0625rem;
+            }
+
+            .sort-level-label {
+                font-size: 0.6rem;
+                min-width: 30px;
+            }
+
+            .sort-field-select, .sort-direction-select {
+                font-size: 0.6rem;
+                padding: 0.0625rem;
+                min-height: 20px;
+            }
+
+            .sort-remove-btn {
+                min-width: 20px;
+                min-height: 20px;
+                padding: 0.0625rem;
+            }
+
+            .sort-add-btn {
+                font-size: 0.6rem;
+                padding: 0.25rem;
+                min-height: 24px;
             }
 
             .products-table th,
             .products-table td {
-                padding: 0.75rem 0.5rem;
+                padding: 0.125rem 0.0625rem;
+                font-size: 0.65rem;
             }
 
-            .tags-container {
-                max-width: 150px;
+            .tag {
+                font-size: 0.55rem;
+                padding: 0.0625rem 0.125rem;
             }
 
-            .product-description {
-                max-width: 200px;
-                -webkit-line-clamp: 1;
+            .visit-btn {
+                font-size: 0.55rem;
+                padding: 0.125rem 0.25rem;
             }
-        }
 
-        /* Animations */
-        .table-row-fade-in {
-            animation: fadeInUp 0.6s ease forwards;
-            opacity: 0;
-            transform: translateY(20px);
-        }
-
-        @keyframes fadeInUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
+            .metric-value i {
+                font-size: 0.55rem;
             }
-        }
 
-        /* File Upload Styling */
-        .file-upload-input {
-            position: absolute;
-            opacity: 0;
-            width: 100%;
-            height: 100%;
-            cursor: pointer;
-        }
+            .sort-icon {
+                font-size: 0.45rem;
+            }
 
-        .current-file {
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--success-color);
-            padding: 0.5rem 1rem;
-            border-radius: var(--radius-md);
-            font-size: 0.875rem;
-            font-weight: 500;
-            margin-top: 1rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
+            .active-filter {
+                font-size: 0.6rem;
+                padding: 0.0625rem 0.125rem;
+            }
 
-        /* Error styling */
-        .error-message {
-            background: rgba(239, 68, 68, 0.1);
-            color: var(--error-color);
-            padding: 1rem;
-            border-radius: var(--radius-lg);
-            margin: 1rem 0;
-            border: 1px solid rgba(239, 68, 68, 0.2);
+            .remove-filter {
+                font-size: 0.55rem;
+                min-width: 12px;
+                min-height: 12px;
+            }
+
+            .error-message-top, .success-message-top {
+                font-size: 0.6rem;
+                padding: 0.125rem;
+                min-height: 30px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Top Row: Header, File Selection, Drop Zone, and Error Area -->
+        <!-- Top Row: Header, File Selection, Error Container, Stats -->
         <div class="top-row">
             <!-- Header -->
             <header class="header">
                 <h1 class="title">
                     <i class="fas fa-rocket"></i>
-                    Product Hunt 2025
+                    <span>Product Hunt</span>
                 </h1>
-                <p class="subtitle">Data viewer</p>
+                <p class="subtitle">Compact viewer</p>
             </header>
 
-            <!-- File Selection Menu -->
+            <!-- File Selection -->
             <div class="file-selection">
-                <select id="fileSelect" class="file-select" title="Select a JSON file to load">
-                    <option value="">Scanning for files...</option>
-                    <option value="products.json">products.json (default)</option>
-                </select>
                 <div class="file-controls">
-                    <button id="refreshFiles" class="refresh-btn" title="Refresh file list">
-                        <i class="fas fa-sync-alt"></i>
+                    <select id="fileSelect" class="file-select" title="Select a JSON file to load">
+                        <option value="">Scanning for files...</option>
+                        <option value="products.json">products.json (default)</option>
+                    </select>
+                    <button id="refreshFiles" class="refresh-btn" title="Refresh file list" aria-label="Refresh file list">
+                        <i class="fas fa-sync-alt" aria-hidden="true"></i>
                     </button>
-                    <button id="addCustomFile" class="add-file-btn" title="Add custom filename">
-                        <i class="fas fa-plus"></i>
+                    <button id="addCustomFile" class="add-file-btn" title="Add custom filename" aria-label="Add custom filename">
+                        <i class="fas fa-plus" aria-hidden="true"></i>
                     </button>
-                    <button id="helpBtn" class="refresh-btn" style="background: var(--text-muted);" title="Show help">
-                        <i class="fas fa-question"></i>
+                    <button id="helpBtn" class="refresh-btn" style="background: var(--text-muted);" title="Show help" aria-label="Show help">
+                        <i class="fas fa-question" aria-hidden="true"></i>
                     </button>
                 </div>
                 <div class="file-count" id="fileCount"></div>
             </div>
 
-            <!-- Drag and Drop Zone -->
-            <div class="drop-zone" id="dropZone">
-                <input type="file" accept=".json" class="file-upload-input" id="fileInput">
-                <div class="drop-zone-content">
-                    <i class="fas fa-cloud-upload-alt"></i>
-                    <div class="drop-zone-text">
-                        <h3>Drop JSON or click</h3>
-                        <p>Load custom data</p>
-                    </div>
+            <!-- Error Container -->
+            <div class="error-container-top" id="errorContainer" role="alert" aria-live="polite"></div>
+
+            <!-- Stats -->
+            <div class="stats-top" role="region" aria-label="Statistics">
+                <div class="stat-item-top">
+                    <span class="stat-number-top" id="totalProducts" aria-label="Total products">0</span>
+                    <span class="stat-label-top">Total</span>
                 </div>
-                <div class="current-file" id="currentFile" style="display: none;">
-                    <i class="fas fa-file-alt"></i>
-                    <span id="fileName">products.json</span>
+                <div class="stat-item-top">
+                    <span class="stat-number-top" id="filteredProducts" aria-label="Filtered products">0</span>
+                    <span class="stat-label-top">Showing</span>
                 </div>
             </div>
-
-            <!-- Error Area -->
-            <div class="error-container" id="errorContainer"></div>
         </div>
 
         <!-- Controls -->
         <div class="controls">
-            <div class="search-container">
-                <i class="fas fa-search search-icon"></i>
-                <input 
-                    type="text" 
-                    id="searchInput" 
-                    placeholder="Search products by name or description..."
-                    class="search-input"
-                >
-                <button id="clearSearch" class="clear-btn" title="Clear search">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            
-            <div class="multi-tag-container">
-                <label for="multiTagSearch" class="filter-label">
-                    <i class="fas fa-tags"></i>
-                    Search Multiple Tags (comma-separated):
-                </label>
-                <div class="multi-tag-input-container">
+            <!-- Single Row: Search, Tag Filter, Multi-tag Search, Clear All Button -->
+            <div class="controls-row">
+                <!-- Search -->
+                <div class="search-container">
+                    <i class="fas fa-search search-icon" aria-hidden="true"></i>
                     <input 
                         type="text" 
-                        id="multiTagSearch" 
-                        placeholder="e.g. AI, Productivity, SaaS"
-                        class="multi-tag-input"
+                        id="searchInput" 
+                        placeholder="Search products..."
+                        class="search-input"
+                        aria-label="Search products"
                     >
-                    <div class="tag-suggestions" id="tagSuggestions"></div>
+                    <button id="clearSearch" class="clear-btn" title="Clear search" aria-label="Clear search" style="display: none;">
+                        <i class="fas fa-times" aria-hidden="true"></i>
+                    </button>
                 </div>
-            </div>
-            
-            <div class="filter-container">
-                <div class="filter-group">
-                    <label for="tagFilter" class="filter-label">
-                        <i class="fas fa-tag"></i>
-                        Filter by Single Tag:
-                    </label>
-                    <select id="tagFilter" class="tag-select">
-                        <option value="">All Tags</option>
-                    </select>
-                </div>
-                
-                <div class="filter-group">
-                    <label for="sortBy" class="filter-label">
-                        <i class="fas fa-sort"></i>
-                        Sort by:
-                    </label>
-                    <select id="sortBy" class="sort-select">
-                        <option value="upvotes-desc">Most Upvotes</option>
-                        <option value="upvotes-asc">Least Upvotes</option>
-                        <option value="comments-desc">Most Comments</option>
-                        <option value="comments-asc">Least Comments</option>
-                        <option value="name-asc">Name A-Z</option>
-                        <option value="name-desc">Name Z-A</option>
-                    </select>
-                </div>
-            </div>
-            
-            <div class="action-buttons">
-                <button id="clearAllFilters" class="clear-all-btn">
-                    <i class="fas fa-broom"></i>
-                    Clear All Filters
-                </button>
-                <div class="active-filters" id="activeFilters"></div>
-            </div>
-        </div>
 
-        <!-- Stats -->
-        <div class="stats">
-            <div class="stat-item">
-                <span class="stat-number" id="totalProducts">0</span>
-                <span class="stat-label">Total Products</span>
+                <!-- Tag Filter -->
+                <select id="tagFilter" class="tag-select" aria-label="Filter by tag">
+                    <option value="">All Tags</option>
+                </select>
+                
+                <!-- Multi-tag Search -->
+                <input 
+                    type="text" 
+                    id="multiTagSearch" 
+                    placeholder="AI, SaaS..."
+                    class="multi-tag-input"
+                    aria-label="Search multiple tags"
+                >
+
+                <!-- Clear All Button -->
+                <button id="clearAllFilters" class="clear-all-btn-inline" aria-label="Clear all filters">
+                    <i class="fas fa-broom" aria-hidden="true"></i>
+                    <span>Clear</span>
+                </button>
             </div>
-            <div class="stat-item">
-                <span class="stat-number" id="filteredProducts">0</span>
-                <span class="stat-label">Showing</span>
+
+            <!-- Multi-level Sorting -->
+            <div class="sort-section">
+                <div class="sort-label">
+                    <i class="fas fa-sort" aria-hidden="true"></i>
+                    Multi-Level Sort:
+                </div>
+                <div class="sort-controls" id="sortControls">
+                    <!-- Sort levels will be added here -->
+                </div>
+                <button id="addSortLevel" class="sort-add-btn" onclick="addSortLevel()">
+                    <i class="fas fa-plus" aria-hidden="true"></i>
+                    Add Sort Level
+                </button>
             </div>
+            
+            <!-- Active Filters -->
+            <div class="active-filters" id="activeFilters" role="region" aria-label="Active filters"></div>
         </div>
 
         <!-- Table Container -->
-        <div class="table-container">
-            <div class="table-wrapper">
-                <table class="products-table" id="productsTable">
-                    <thead>
-                        <tr>
-                            <th class="sortable" data-sort="name">
-                                Product Name
-                                <i class="fas fa-sort sort-icon"></i>
-                            </th>
-                            <th class="description-col">Description</th>
-                            <th class="sortable" data-sort="upvotes">
-                                <i class="fas fa-arrow-up"></i>
-                                Upvotes
-                                <i class="fas fa-sort sort-icon"></i>
-                            </th>
-                            <th class="sortable" data-sort="comments">
-                                <i class="fas fa-comment"></i>
-                                Comments
-                                <i class="fas fa-sort sort-icon"></i>
-                            </th>
-                            <th class="tags-col">Tags</th>
-                            <th class="actions-col">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="productsTableBody">
-                        <!-- Products will be loaded here -->
-                    </tbody>
-                </table>
+        <main id="main-content">
+            <!-- Loading State -->
+            <div class="loading" id="loading" role="status" aria-live="polite">
+                <div class="loading-spinner" aria-hidden="true"></div>
+                <p>Loading products...</p>
             </div>
-        </div>
 
-        <!-- Loading State -->
-        <div class="loading" id="loading">
-            <div class="loading-spinner"></div>
-            <p>Loading products...</p>
-        </div>
+            <!-- No Results State -->
+            <div class="no-results" id="noResults" style="display: none;" role="status" aria-live="polite">
+                <i class="fas fa-search" aria-hidden="true"></i>
+                <h3>No products found</h3>
+                <p>Try adjusting your search or filter criteria</p>
+            </div>
 
-        <!-- No Results State -->
-        <div class="no-results" id="noResults" style="display: none;">
-            <i class="fas fa-search"></i>
-            <h3>No products found</h3>
-            <p>Try adjusting your search or filter criteria</p>
-        </div>
+            <!-- Products Table -->
+            <div class="table-container" id="tableContainer" style="display: none;">
+                <div class="scroll-indicator left">
+                    <i class="fas fa-chevron-left"></i>
+                </div>
+                <div class="scroll-indicator right">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div class="table-wrapper" id="tableWrapper">
+                    <table class="products-table" id="productsTable" role="table" aria-label="Products data">
+                        <thead>
+                            <tr role="row">
+                                <th class="sortable col-name" data-sort="name" role="columnheader" aria-sort="none" tabindex="0" aria-label="Product Name, sortable">
+                                    Name
+                                    <i class="fas fa-sort sort-icon" aria-hidden="true"></i>
+                                </th>
+                                <th class="col-description" role="columnheader">Description</th>
+                                <th class="sortable col-upvotes" data-sort="upvotes" role="columnheader" aria-sort="none" tabindex="0" aria-label="Upvotes, sortable">
+                                    <i class="fas fa-arrow-up" aria-hidden="true"></i>
+                                    <i class="fas fa-sort sort-icon" aria-hidden="true"></i>
+                                </th>
+                                <th class="sortable col-comments" data-sort="comments" role="columnheader" aria-sort="none" tabindex="0" aria-label="Comments, sortable">
+                                    <i class="fas fa-comment" aria-hidden="true"></i>
+                                    <i class="fas fa-sort sort-icon" aria-hidden="true"></i>
+                                </th>
+                                <th class="col-tags" role="columnheader">Tags</th>
+                                <th class="col-actions" role="columnheader">Visit</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productsTableBody" role="rowgroup">
+                            <!-- Products will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
 
-        <!-- Footer -->
-        <footer class="footer">
-            <p>&copy; 2025 Product Hunt Data Viewer. Data sourced from Product Hunt.</p>
-        </footer>
+        <!-- Error Container -->
+        <div id="errorContainer" role="alert" aria-live="polite"></div>
 
         <!-- Add Custom File Modal -->
         <div class="modal-overlay" id="addFileModal" style="display: none;">
             <div class="modal">
                 <h3>Add Custom JSON File</h3>
                 <input type="text" id="customFileName" placeholder="Enter filename (e.g., mydata.json)" />
-                <p style="font-size: 0.75rem; color: var(--text-secondary); margin: 0 0 1rem 0;">
+                <p style="font-size: 0.7rem; color: var(--text-secondary); margin: 0.25rem 0;">
                     Enter just the filename. It will be loaded from the json/ folder.
                 </p>
                 <div class="modal-buttons">
@@ -889,80 +1339,25 @@
 
         <!-- Help Modal -->
         <div class="modal-overlay" id="helpModal" style="display: none;">
-            <div class="modal" style="max-width: 600px;">
+            <div class="modal" style="max-width: 500px;">
                 <h3>How File Detection Works</h3>
-                <div style="font-size: 0.875rem; line-height: 1.5; color: var(--text-primary);">
-                    <p><strong>📁 Local Testing (Python webserver):</strong></p>
-                    <ol style="margin: 0.5rem 0 1rem 1.5rem;">
+                <div style="font-size: 0.75rem; line-height: 1.4; color: var(--text-primary);">
+                    <p><strong>📁 Local Testing:</strong></p>
+                    <ol style="margin: 0.25rem 0 0.5rem 1rem;">
                         <li>Create a <code>json/</code> folder next to this HTML file</li>
-                        <li>Put your .json files in that folder (any filename works!)</li>
+                        <li>Put your .json files in that folder</li>
                         <li>Run <code>python -m http.server 8000</code></li>
-                        <li>The app will automatically read the folder contents</li>
+                        <li>The app will automatically detect files</li>
                     </ol>
                     
-                    <p><strong>🔍 Detection Methods:</strong></p>
-                    <ul style="margin: 0.5rem 0 1rem 1.5rem;">
-                        <li>🗂️ <strong>Directory Listing:</strong> Reads actual folder (local servers)</li>
-                        <li>📋 <strong>Index File:</strong> Uses json/index.json</li>
-                        <li>📁 <strong>Pattern Scan:</strong> Tests common filenames</li>
-                        <li>✏️ <strong>Manual Add:</strong> Click + to add specific names</li>
-                    </ul>
-                    
-                    <p><strong>💡 Tips:</strong></p>
-                    <ul style="margin: 0.5rem 0 1rem 1.5rem;">
-                        <li>Name files descriptively: data.json, products-2024.json</li>
-                        <li>Click refresh (🔄) after adding new files</li>
-                        <li>Check browser console for detailed scanning logs</li>
-                        <li>Use + button if auto-detection misses files</li>
+                    <p><strong>🚀 GitHub Pages:</strong></p>
+                    <ul style="margin: 0.25rem 0 0.5rem 1rem;">
+                        <li>Create <code>json/index.json</code> to list your files</li>
+                        <li>Files will appear in the dropdown</li>
                     </ul>
                 </div>
                 <div class="modal-buttons">
                     <button class="modal-btn primary" onclick="closeHelpModal()">Got it!</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- GitHub Setup Modal -->
-        <div class="modal-overlay" id="githubSetupModal" style="display: none;">
-            <div class="modal" style="max-width: 700px;">
-                <h3>🚀 GitHub Pages Setup</h3>
-                <div style="font-size: 0.875rem; line-height: 1.5; color: var(--text-primary);">
-                    <p><strong>GitHub Pages can't read directories automatically.</strong> Create an index file to list your JSON files:</p>
-                    
-                    <p style="margin: 1rem 0 0.5rem 0;"><strong>1. Create <code>json/index.json</code> in your repository:</strong></p>
-                    <pre style="background: var(--bg-secondary); padding: 1rem; border-radius: var(--radius-md); margin: 0.5rem 0; overflow-x: auto; font-size: 0.8rem;"><code>{
-  "files": [
-    {
-      "filename": "products-2024.json",
-      "name": "Products 2024", 
-      "description": "Product Hunt data from 2024"
-    },
-    {
-      "filename": "my-data.json",
-      "name": "My Custom Data",
-      "description": "My custom product dataset"
-    }
-  ]
-}</code></pre>
-                    
-                    <p><strong>2. Put your .json files in the <code>json/</code> folder:</strong></p>
-                    <pre style="background: var(--bg-secondary); padding: 1rem; border-radius: var(--radius-md); margin: 0.5rem 0; font-size: 0.8rem;"><code>your-repo/
-├── index.html
-├── products.json (optional default)
-└── json/
-    ├── index.json (lists the files below)
-    ├── products-2024.json
-    ├── my-data.json
-    └── any-other-file.json</code></pre>
-                    
-                    <p><strong>3. Commit and push to GitHub</strong> - files will appear in the dropdown!</p>
-                    
-                    <div style="background: rgba(16, 185, 129, 0.1); color: var(--success-color); padding: 0.75rem; border-radius: var(--radius-md); margin: 1rem 0; border: 1px solid rgba(16, 185, 129, 0.2);">
-                        <strong>💡 Pro Tip:</strong> You can still use drag & drop for temporary files, and the + button to manually add files not in the index.
-                    </div>
-                </div>
-                <div class="modal-buttons">
-                    <button class="modal-btn primary" onclick="closeGitHubSetupModal()">Got it!</button>
                 </div>
             </div>
         </div>
@@ -972,478 +1367,370 @@
         // Global variables
         let allProducts = [];
         let filteredProducts = [];
-        let currentSort = { field: 'upvotes', direction: 'desc' };
         let allTags = [];
+        let sortLevels = []; // Multi-level sorting
+        let availableFiles = [];
         let activeFilters = {
             search: '',
             singleTag: '',
-            multiTags: [],
-            sort: 'upvotes-desc'
+            multiTags: []
         };
         let currentFileName = 'products.json (default)';
+
+        // Sort field options
+        const sortFields = [
+            { value: 'name', label: 'Product Name' },
+            { value: 'upvotes', label: 'Upvotes' },
+            { value: 'comments', label: 'Comments' },
+            { value: 'description', label: 'Description' }
+        ];
 
         // DOM elements
         const searchInput = document.getElementById('searchInput');
         const clearSearchBtn = document.getElementById('clearSearch');
         const tagFilter = document.getElementById('tagFilter');
-        const sortBy = document.getElementById('sortBy');
         const multiTagSearch = document.getElementById('multiTagSearch');
         const clearAllFiltersBtn = document.getElementById('clearAllFilters');
         const activeFiltersContainer = document.getElementById('activeFilters');
-        const tagSuggestions = document.getElementById('tagSuggestions');
         const productsTableBody = document.getElementById('productsTableBody');
         const totalProductsSpan = document.getElementById('totalProducts');
         const filteredProductsSpan = document.getElementById('filteredProducts');
         const loading = document.getElementById('loading');
         const noResults = document.getElementById('noResults');
-        const dropZone = document.getElementById('dropZone');
-        const fileInput = document.getElementById('fileInput');
-        const currentFileDiv = document.getElementById('currentFile');
-        const fileNameSpan = document.getElementById('fileName');
+        const tableContainer = document.getElementById('tableContainer');
+        const tableWrapper = document.getElementById('tableWrapper');
+        const fileSelect = document.getElementById('fileSelect');
+        const refreshFilesBtn = document.getElementById('refreshFiles');
+        const addCustomFileBtn = document.getElementById('addCustomFile');
+        const helpBtn = document.getElementById('helpBtn');
+        const fileCountDiv = document.getElementById('fileCount');
+        const sortControls = document.getElementById('sortControls');
+        const addSortLevelBtn = document.getElementById('addSortLevel');
+        const addFileModal = document.getElementById('addFileModal');
+        const helpModal = document.getElementById('helpModal');
+        const customFileNameInput = document.getElementById('customFileName');
 
         // Initialize the application
         document.addEventListener('DOMContentLoaded', function() {
             loadAvailableFiles();
             loadProducts();
             setupEventListeners();
-            setupDragAndDrop();
+            initializeSorting();
+            setupTableScrollIndicators();
         });
 
-        // Load available files from json/ folder
+        // Initialize sorting with default level
+        function initializeSorting() {
+            addSortLevel('upvotes', 'desc');
+        }
+
+        // Setup table scroll indicators
+        function setupTableScrollIndicators() {
+            tableWrapper.addEventListener('scroll', updateScrollIndicators);
+            window.addEventListener('resize', updateScrollIndicators);
+        }
+
+        // Update scroll indicators
+        function updateScrollIndicators() {
+            const scrollLeft = tableWrapper.scrollLeft;
+            const maxScroll = tableWrapper.scrollWidth - tableWrapper.clientWidth;
+            
+            if (scrollLeft > 10) {
+                tableContainer.classList.add('scrolled');
+            } else {
+                tableContainer.classList.remove('scrolled');
+            }
+            
+            if (scrollLeft < maxScroll - 10) {
+                tableContainer.classList.add('has-more');
+            } else {
+                tableContainer.classList.remove('has-more');
+            }
+        }
+
+        // Add a new sort level
+        function addSortLevel(defaultField = '', defaultDirection = 'desc') {
+            const levelIndex = sortLevels.length;
+            const levelNumber = levelIndex + 1;
+            
+            const sortLevel = {
+                field: defaultField,
+                direction: defaultDirection
+            };
+            
+            sortLevels.push(sortLevel);
+            
+            const sortLevelDiv = document.createElement('div');
+            sortLevelDiv.className = 'sort-level';
+            sortLevelDiv.dataset.levelIndex = levelIndex;
+            
+            sortLevelDiv.innerHTML = `
+                <span class="sort-level-label">${getOrdinalNumber(levelNumber)}:</span>
+                <select class="sort-field-select" onchange="updateSortLevel(${levelIndex}, 'field', this.value)">
+                    <option value="">Choose field...</option>
+                    ${sortFields.map(field => 
+                        `<option value="${field.value}" ${field.value === defaultField ? 'selected' : ''}>${field.label}</option>`
+                    ).join('')}
+                </select>
+                <select class="sort-direction-select" onchange="updateSortLevel(${levelIndex}, 'direction', this.value)">
+                    <option value="desc" ${defaultDirection === 'desc' ? 'selected' : ''}>Desc</option>
+                    <option value="asc" ${defaultDirection === 'asc' ? 'selected' : ''}>Asc</option>
+                </select>
+                <button class="sort-remove-btn" onclick="removeSortLevel(${levelIndex})" ${levelIndex === 0 ? 'style="display: none;"' : ''}>
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            sortControls.appendChild(sortLevelDiv);
+            updateAddSortButtonState();
+            
+            if (allProducts.length > 0) {
+                applyFilters();
+            }
+        }
+
+        function getOrdinalNumber(n) {
+            const ordinals = ['1st', '2nd', '3rd', '4th', '5th'];
+            return ordinals[n - 1] || `${n}th`;
+        }
+
+        function updateSortLevel(levelIndex, property, value) {
+            if (sortLevels[levelIndex]) {
+                sortLevels[levelIndex][property] = value;
+                applyFilters();
+            }
+        }
+
+        function removeSortLevel(levelIndex) {
+            if (levelIndex === 0) return;
+            
+            sortLevels.splice(levelIndex, 1);
+            
+            const levelElement = document.querySelector(`[data-level-index="${levelIndex}"]`);
+            if (levelElement) {
+                levelElement.remove();
+            }
+            
+            const remainingLevels = sortControls.querySelectorAll('.sort-level');
+            remainingLevels.forEach((level, index) => {
+                level.dataset.levelIndex = index;
+                
+                const label = level.querySelector('.sort-level-label');
+                if (label) {
+                    label.textContent = getOrdinalNumber(index + 1) + ':';
+                }
+                
+                const fieldSelect = level.querySelector('.sort-field-select');
+                const directionSelect = level.querySelector('.sort-direction-select');
+                const removeBtn = level.querySelector('.sort-remove-btn');
+                
+                if (fieldSelect) {
+                    fieldSelect.setAttribute('onchange', `updateSortLevel(${index}, 'field', this.value)`);
+                }
+                if (directionSelect) {
+                    directionSelect.setAttribute('onchange', `updateSortLevel(${index}, 'direction', this.value)`);
+                }
+                if (removeBtn) {
+                    removeBtn.setAttribute('onclick', `removeSortLevel(${index})`);
+                    removeBtn.style.display = index === 0 ? 'none' : 'flex';
+                }
+            });
+            
+            updateAddSortButtonState();
+            applyFilters();
+        }
+
+        function updateAddSortButtonState() {
+            const maxLevels = 5;
+            addSortLevelBtn.disabled = sortLevels.length >= maxLevels;
+            
+            if (sortLevels.length >= maxLevels) {
+                addSortLevelBtn.innerHTML = '<i class="fas fa-plus"></i> Max 5 levels';
+            } else {
+                addSortLevelBtn.innerHTML = '<i class="fas fa-plus"></i> Add Sort Level';
+            }
+        }
+
+        function applyMultiLevelSort() {
+            filteredProducts.sort((a, b) => {
+                for (let level of sortLevels) {
+                    if (!level.field) continue;
+                    
+                    let aValue = a[level.field];
+                    let bValue = b[level.field];
+                    
+                    if (typeof aValue === 'string') {
+                        aValue = aValue.toLowerCase();
+                        bValue = bValue.toLowerCase();
+                    }
+                    
+                    let comparison = 0;
+                    
+                    if (typeof aValue === 'number') {
+                        comparison = level.direction === 'asc' ? aValue - bValue : bValue - aValue;
+                    } else {
+                        if (level.direction === 'asc') {
+                            comparison = aValue < bValue ? -1 : aValue > bValue ? 1 : 0;
+                        } else {
+                            comparison = aValue > bValue ? -1 : aValue < bValue ? 1 : 0;
+                        }
+                    }
+                    
+                    if (comparison !== 0) {
+                        return comparison;
+                    }
+                }
+                
+                return 0;
+            });
+        }
+
+        // Load available files (simplified for mobile)
         async function loadAvailableFiles() {
             availableFiles = [];
             
-            // Detect if we're on GitHub Pages or similar static host
-            const isStaticHost = window.location.hostname.includes('github.io') || 
-                                window.location.hostname.includes('netlify') ||
-                                window.location.hostname.includes('vercel') ||
-                                !window.location.hostname.includes('localhost');
-            
-            if (isStaticHost) {
-                console.log('Static hosting detected - using index.json + pattern scanning approach');
-                fileCountDiv.textContent = 'Loading files...';
-            }
-            
-            // First, try to get directory listing (works with local servers)
             const foundViaListing = await tryDirectoryListing();
             
             if (!foundViaListing) {
-                if (isStaticHost) {
-                    console.log('GitHub Pages/static hosting - directory listing unavailable');
-                    fileCountDiv.textContent = 'Checking index.json...';
-                } else {
-                    console.log('Directory listing not available, trying index.json...');
-                }
-                
-                // Try to load index.json if it exists
-                let foundViaIndex = false;
-                try {
-                    const indexResponse = await fetch('json/index.json');
-                    if (indexResponse.ok) {
-                        const fileIndex = await indexResponse.json();
-                        const indexedFiles = fileIndex.files || [];
-                        
-                        console.log(`Found index.json with ${indexedFiles.length} files listed`);
-                        
-                        // Verify each file in the index actually exists
-                        for (const file of indexedFiles) {
-                            try {
-                                const testResponse = await fetch(`json/${file.filename}`, { method: 'HEAD' });
-                                if (testResponse.ok) {
-                                    availableFiles.push({
-                                        filename: file.filename,
-                                        name: file.name || file.filename,
-                                        description: file.description || '',
-                                        source: 'index'
-                                    });
-                                    foundViaIndex = true;
-                                }
-                            } catch (e) {
-                                console.log(`File ${file.filename} listed in index but not accessible`);
-                            }
-                        }
-                        
-                        console.log(`Verified ${availableFiles.length} files from index.json`);
-                    }
-                } catch (error) {
-                    console.log('No index.json found');
-                }
-                
-                // If we're on static hosting and found files via index, prioritize those
-                if (isStaticHost && foundViaIndex) {
-                    console.log('Using index.json files for static hosting');
-                    populateFileSelect();
-                    showGitHubPagesInfo();
-                    return;
-                }
-                
-                // Fallback to pattern scanning
-                if (isStaticHost) {
-                    fileCountDiv.textContent = 'Scanning common patterns...';
-                    console.log('Running enhanced pattern scanning for static hosting');
-                    await scanForJsonFiles();
-                    
-                    if (availableFiles.length === 0) {
-                        showGitHubPagesInfo();
-                    }
-                } else {
-                    await scanForJsonFiles();
-                }
+                await tryIndexJson();
+                await scanForJsonFiles();
             }
             
-            // Populate the dropdown with found files
             populateFileSelect();
         }
 
-        // Show GitHub Pages specific information
-        function showGitHubPagesInfo() {
-            const errorContainer = document.getElementById('errorContainer');
-            errorContainer.innerHTML = `
-                <div style="background: rgba(59, 130, 246, 0.1); color: #2563eb; padding: 0.5rem; border-radius: var(--radius-md); border: 1px solid rgba(59, 130, 246, 0.2); font-size: 0.7rem; text-align: center;">
-                    <i class="fas fa-info-circle" style="margin-right: 0.25rem;"></i>
-                    <strong>GitHub Pages:</strong> Create json/index.json to list your files
-                    <button onclick="showGitHubSetup()" style="margin-left: 0.5rem; background: none; border: 1px solid currentColor; color: inherit; padding: 0.1rem 0.3rem; border-radius: 3px; font-size: 0.65rem; cursor: pointer;">Setup</button>
-                </div>
-            `;
-        }
-
-        // Try to get directory listing from the server
         async function tryDirectoryListing() {
             try {
-                console.log('Attempting to read directory listing...');
-                const response = await fetch('json/', {
-                    headers: {
-                        'Accept': 'text/html,application/xhtml+xml'
-                    }
-                });
-                
+                const response = await fetch('json/');
                 if (response.ok) {
                     const html = await response.text();
                     const jsonFiles = parseDirectoryListing(html);
                     
                     if (jsonFiles.length > 0) {
-                        console.log(`Found ${jsonFiles.length} JSON files via directory listing:`, jsonFiles);
-                        
-                        for (const filename of jsonFiles) {
+                        jsonFiles.forEach(filename => {
                             availableFiles.push({
                                 filename: filename,
-                                name: filename.replace('.json', '').replace(/[-_]/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-                                description: 'Found via directory listing',
+                                name: filename.replace('.json', '').replace(/[-_]/g, ' '),
                                 source: 'listing'
                             });
-                        }
-                        
+                        });
                         return true;
                     }
                 }
             } catch (error) {
-                console.log('Directory listing not available:', error.message);
+                console.log('Directory listing not available');
             }
-            
             return false;
         }
 
-        // Parse directory listing HTML to extract .json files
-        function parseDirectoryListing(html) {
-            const jsonFiles = [];
-            
-            // Try different directory listing formats
-            
-            // Python http.server format
-            const pythonMatches = html.match(/<a href="([^"]+\.json)"/gi);
-            if (pythonMatches) {
-                pythonMatches.forEach(match => {
-                    const filename = match.match(/href="([^"]+)"/i)[1];
-                    if (filename.endsWith('.json') && !filename.includes('/')) {
-                        jsonFiles.push(filename);
-                    }
-                });
-            }
-            
-            // Apache/Nginx directory listing format
-            const apacheMatches = html.match(/href="([^"]*\.json)"/gi);
-            if (apacheMatches && jsonFiles.length === 0) {
-                apacheMatches.forEach(match => {
-                    const filename = match.match(/href="([^"]+)"/i)[1];
-                    if (filename.endsWith('.json') && !filename.includes('/')) {
-                        jsonFiles.push(filename);
-                    }
-                });
-            }
-            
-            // Look for any .json references in the HTML
-            if (jsonFiles.length === 0) {
-                const allMatches = html.match(/[\w\-\.]+\.json/gi);
-                if (allMatches) {
-                    allMatches.forEach(filename => {
-                        if (!jsonFiles.includes(filename)) {
-                            jsonFiles.push(filename);
+        async function tryIndexJson() {
+            try {
+                const response = await fetch('json/index.json');
+                if (response.ok) {
+                    const fileIndex = await response.json();
+                    const indexedFiles = fileIndex.files || [];
+                    
+                    for (const file of indexedFiles) {
+                        const testResponse = await fetch(`json/${file.filename}`, { method: 'HEAD' });
+                        if (testResponse.ok) {
+                            availableFiles.push({
+                                filename: file.filename,
+                                name: file.name || file.filename,
+                                source: 'index'
+                            });
                         }
-                    });
+                    }
                 }
+            } catch (error) {
+                console.log('No index.json found');
             }
-            
-            // Remove duplicates and filter
-            return [...new Set(jsonFiles)].filter(f => 
-                f.endsWith('.json') && 
-                !f.includes('..') && 
-                f.length > 5 && 
-                f.length < 100
-            );
         }
 
-        // Scan for JSON files using comprehensive patterns
         async function scanForJsonFiles() {
-            // More aggressive scanning for GitHub Pages
-            const isStaticHost = window.location.hostname.includes('github.io') || 
-                                window.location.hostname.includes('netlify') ||
-                                window.location.hostname.includes('vercel') ||
-                                !window.location.hostname.includes('localhost');
-            
             const commonPatterns = [
-                // Very common names
-                'data', 'products', 'items', 'list', 'export', 'dataset', 'file', 'content',
-                'sample', 'demo', 'test', 'backup', 'archive', 'temp', 'tmp',
-                
-                // Year patterns
-                '2024', '2025', '2023', '2022', '2021', 'latest', 'current', 'new', 'old',
-                'data-2024', 'data-2025', 'products-2024', 'products-2025',
-                
-                // Type patterns
-                'apps', 'tools', 'software', 'services', 'startups', 'companies',
-                'saas', 'mobile', 'web', 'ai', 'tech', 'api', 'database', 'db',
-                
-                // Category patterns
-                'featured', 'popular', 'trending', 'top', 'best', 'new', 'hot',
-                'winners', 'makers', 'hunters', 'launch', 'launches',
-                
-                // Monthly patterns
-                'january', 'february', 'march', 'april', 'may', 'june',
-                'july', 'august', 'september', 'october', 'november', 'december',
-                'jan', 'feb', 'mar', 'apr', 'may', 'jun',
-                'jul', 'aug', 'sep', 'oct', 'nov', 'dec',
-                
-                // Quarterly patterns
-                'q1', 'q2', 'q3', 'q4', 'quarter1', 'quarter2', 'quarter3', 'quarter4',
-                
-                // Common user patterns
-                'my-data', 'mydata', 'user-data', 'userdata', 'personal', 'custom',
-                'import', 'imported', 'download', 'downloaded', 'export', 'exported',
-                
-                // Generic patterns
-                'output', 'result', 'results', 'report', 'reports', 'summary',
-                'collection', 'catalog', 'inventory', 'feed', 'dump'
+                'data', 'products', 'items', 'list', 'export',
+                '2024', '2025', 'latest', 'current'
             ];
             
-            const separators = ['', '-', '_'];
-            const yearSuffixes = ['', '-2024', '-2025', '-2023', '_2024', '_2025', '_2023'];
-            const numberSuffixes = isStaticHost ? 
-                ['', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'] : // More thorough for GitHub Pages
-                ['', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
-            
-            const filesToTry = new Set();
-            
-            // Generate combinations of patterns
-            commonPatterns.forEach(pattern => {
-                separators.forEach(sep => {
-                    yearSuffixes.forEach(year => {
-                        numberSuffixes.forEach(num => {
-                            if (sep === '' && year === '' && num === '') {
-                                filesToTry.add(`${pattern}.json`);
-                            } else {
-                                filesToTry.add(`${pattern}${sep}${year}${num}.json`);
-                            }
-                        });
+            for (const pattern of commonPatterns) {
+                const filename = `${pattern}.json`;
+                if (await testFileExists(filename)) {
+                    availableFiles.push({
+                        filename: filename,
+                        name: pattern.charAt(0).toUpperCase() + pattern.slice(1),
+                        source: 'scan'
                     });
-                });
-            });
-            
-            // Add simple patterns - more for static hosting
-            const maxNum = isStaticHost ? 100 : 50;
-            for (let i = 1; i <= maxNum; i++) {
-                filesToTry.add(`${i}.json`);
-                filesToTry.add(`file${i}.json`);
-                filesToTry.add(`data${i}.json`);
-                filesToTry.add(`dataset${i}.json`);
-                filesToTry.add(`products${i}.json`);
-                filesToTry.add(`list${i}.json`);
-                
-                // Additional patterns for GitHub Pages
-                if (isStaticHost) {
-                    filesToTry.add(`item${i}.json`);
-                    filesToTry.add(`export${i}.json`);
-                    filesToTry.add(`backup${i}.json`);
-                    filesToTry.add(`test${i}.json`);
                 }
             }
-            
-            // Add alphabetical patterns
-            for (let i = 97; i <= 122; i++) { // a-z
-                const letter = String.fromCharCode(i);
-                filesToTry.add(`${letter}.json`);
-                filesToTry.add(`data-${letter}.json`);
-                filesToTry.add(`file-${letter}.json`);
-                if (isStaticHost) {
-                    filesToTry.add(`${letter}${letter}.json`); // aa.json, bb.json, etc.
-                    filesToTry.add(`test-${letter}.json`);
-                    filesToTry.add(`dataset-${letter}.json`);
-                }
-            }
-            
-            // Add date patterns
-            const currentYear = new Date().getFullYear();
-            for (let year = currentYear - 5; year <= currentYear + 1; year++) {
-                for (let month = 1; month <= 12; month++) {
-                    const monthStr = month.toString().padStart(2, '0');
-                    filesToTry.add(`${year}-${monthStr}.json`);
-                    filesToTry.add(`data-${year}-${monthStr}.json`);
-                    filesToTry.add(`products-${year}-${monthStr}.json`);
-                    if (isStaticHost) {
-                        filesToTry.add(`${year}${monthStr}.json`);
-                        filesToTry.add(`export-${year}-${monthStr}.json`);
-                    }
-                }
-            }
-            
-            if (isStaticHost) {
-                console.log(`GitHub Pages mode: Scanning ${filesToTry.size} potential filenames...`);
-            } else {
-                console.log(`Local mode: Scanning ${filesToTry.size} potential filenames...`);
-            }
-            
-            // Test files in batches with progress updates
-            const batchSize = isStaticHost ? 15 : 20; // Slightly smaller batches for GitHub Pages
-            const fileArray = Array.from(filesToTry);
-            let foundCount = 0;
-            
-            for (let i = 0; i < fileArray.length; i += batchSize) {
-                const batch = fileArray.slice(i, i + batchSize);
-                const progress = Math.round((i / fileArray.length) * 100);
-                
-                // Update UI with progress
-                fileCountDiv.textContent = `Scanning... ${progress}% (${foundCount} found)`;
-                
-                const batchPromises = batch.map(filename => testFileExists(filename));
-                const results = await Promise.allSettled(batchPromises);
-                
-                results.forEach((result, index) => {
-                    if (result.status === 'fulfilled' && result.value) {
-                        const filename = batch[index];
-                        // Check if we already have this file
-                        const alreadyExists = availableFiles.some(f => f.filename === filename);
-                        if (!alreadyExists) {
-                            availableFiles.push({
-                                filename: filename,
-                                name: filename.replace('.json', '').replace(/[-_]/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-                                description: 'Auto-detected file',
-                                source: 'scan'
-                            });
-                            foundCount++;
-                        }
-                    }
-                });
-                
-                // Small delay between batches and update UI
-                const delay = isStaticHost ? 100 : 50; // Longer delay for GitHub Pages to be respectful
-                if (i + batchSize < fileArray.length) {
-                    await new Promise(resolve => setTimeout(resolve, delay));
-                    // Update dropdown periodically so user sees progress
-                    if (foundCount > 0 && i % (batchSize * 8) === 0) {
-                        populateFileSelect();
-                    }
-                }
-            }
-            
-            console.log(`Found ${foundCount} files via pattern scanning`);
         }
 
-        // Test if a specific file exists
+        function parseDirectoryListing(html) {
+            const jsonFiles = [];
+            const matches = html.match(/<a href="([^"]+\.json)"/gi);
+            if (matches) {
+                matches.forEach(match => {
+                    const filename = match.match(/href="([^"]+)"/i)[1];
+                    if (filename.endsWith('.json') && !filename.includes('/')) {
+                        jsonFiles.push(filename);
+                    }
+                });
+            }
+            return jsonFiles;
+        }
+
         async function testFileExists(filename) {
             try {
-                const response = await fetch(`json/${filename}`, { 
-                    method: 'HEAD',
-                    cache: 'no-cache'
-                });
-                if (response.ok) {
-                    console.log(`✓ Found: json/${filename}`);
-                    return true;
-                }
-                return false;
+                const response = await fetch(`json/${filename}`, { method: 'HEAD' });
+                return response.ok;
             } catch (error) {
                 return false;
             }
         }
 
-        // Populate the file selection dropdown
         function populateFileSelect() {
-            // Clear existing options except default
             fileSelect.innerHTML = `
                 <option value="">Select JSON file...</option>
                 <option value="products.json">products.json (default)</option>
             `;
             
-            // Sort files by name
-            const sortedFiles = [...availableFiles].sort((a, b) => a.name.localeCompare(b.name));
-            
-            // Add files from json/ folder
-            sortedFiles.forEach(file => {
+            availableFiles.forEach(file => {
                 const option = document.createElement('option');
                 option.value = `json/${file.filename}`;
-                
-                // Create display name with source indicator
-                let displayName = file.name;
-                if (file.source === 'scan') {
-                    displayName += ' 📁';
-                } else if (file.source === 'index') {
-                    displayName += ' 📋';
-                } else if (file.source === 'custom') {
-                    displayName += ' ✏️';
-                } else if (file.source === 'listing') {
-                    displayName += ' 🗂️';
-                }
-                
-                option.textContent = displayName;
-                
-                if (file.description) {
-                    option.title = file.description;
-                }
+                option.textContent = file.name;
                 fileSelect.appendChild(option);
             });
             
-            // Update file count
             updateFileCount();
-            
-            // Enable controls
-            refreshFilesBtn.disabled = false;
-            addCustomFileBtn.disabled = false;
         }
 
-        // Update file count display
         function updateFileCount() {
             const total = availableFiles.length;
-            if (total > 0) {
-                const listing = availableFiles.filter(f => f.source === 'listing').length;
-                const scanned = availableFiles.filter(f => f.source === 'scan').length;
-                const indexed = availableFiles.filter(f => f.source === 'index').length;
-                const custom = availableFiles.filter(f => f.source === 'custom').length;
-                
-                let countText = `${total} file${total !== 1 ? 's' : ''}`;
-                if (listing > 0 || scanned > 0 || indexed > 0 || custom > 0) {
-                    const sources = [];
-                    if (listing > 0) sources.push(`${listing} listed`);
-                    if (indexed > 0) sources.push(`${indexed} indexed`);
-                    if (scanned > 0) sources.push(`${scanned} found`);
-                    if (custom > 0) sources.push(`${custom} custom`);
-                    countText += ` (${sources.join(', ')})`;
+            fileCountDiv.textContent = total > 0 ? `${total} file${total !== 1 ? 's' : ''} found` : 'No files found';
+        }
+
+        async function loadProducts() {
+            try {
+                showLoading();
+                const response = await fetch('products.json');
+                if (!response.ok) {
+                    throw new Error('Failed to load products data');
                 }
                 
-                fileCountDiv.textContent = countText;
-            } else {
-                fileCountDiv.textContent = 'No files found';
+                allProducts = await response.json();
+                filteredProducts = [...allProducts];
+                
+                populateTagFilter();
+                updateStats();
+                renderTable();
+                hideLoading();
+                
+            } catch (error) {
+                console.error('Error loading products:', error);
+                showError('Failed to load default products data.');
+                hideLoading();
             }
         }
 
-        // Handle file selection from dropdown
         async function handleFileSelection() {
             const selectedFile = fileSelect.value;
             if (!selectedFile) return;
@@ -1462,39 +1749,362 @@
                 if (validateProductData(jsonData)) {
                     allProducts = jsonData;
                     filteredProducts = [...allProducts];
-                    
-                    // Update filename display
                     currentFileName = selectedFile.split('/').pop();
                     
-                    // Update UI
                     populateTagFilter();
                     updateStats();
                     renderTable();
                     hideLoading();
-                    showCurrentFile();
                     
                 } else {
-                    throw new Error('Invalid JSON format. Expected array of products with required properties.');
+                    throw new Error('Invalid JSON format');
                 }
                 
             } catch (error) {
                 console.error('Error loading selected file:', error);
                 showError(`Failed to load ${selectedFile}: ${error.message}`);
                 hideLoading();
-                // Reset selection to show error
                 fileSelect.value = '';
             }
         }
 
-        // Refresh the file list
+        function validateProductData(data) {
+            if (!Array.isArray(data) || data.length === 0) return true;
+            
+            const sampleSize = Math.min(5, data.length);
+            for (let i = 0; i < sampleSize; i++) {
+                const item = data[i];
+                const requiredProps = ['name', 'description', 'upvotes', 'comments', 'tags', 'url'];
+                
+                for (let prop of requiredProps) {
+                    if (!(prop in item)) return false;
+                }
+                
+                if (typeof item.name !== 'string' ||
+                    typeof item.description !== 'string' ||
+                    typeof item.upvotes !== 'number' ||
+                    typeof item.comments !== 'number' ||
+                    !Array.isArray(item.tags) ||
+                    typeof item.url !== 'string') {
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+
+        function setupEventListeners() {
+            searchInput.addEventListener('input', debounce(handleSearch, 300));
+            clearSearchBtn.addEventListener('click', clearSearch);
+            multiTagSearch.addEventListener('input', debounce(handleMultiTagSearch, 300));
+            tagFilter.addEventListener('change', handleTagFilter);
+            fileSelect.addEventListener('change', handleFileSelection);
+            refreshFilesBtn.addEventListener('click', refreshFileList);
+            addCustomFileBtn.addEventListener('click', openAddFileModal);
+            helpBtn.addEventListener('click', openHelpModal);
+            clearAllFiltersBtn.addEventListener('click', clearAllFilters);
+            
+            // Table header sorting
+            document.querySelectorAll('.sortable').forEach(header => {
+                header.addEventListener('click', () => {
+                    const sortField = header.dataset.sort;
+                    handleTableSort(sortField);
+                });
+                
+                header.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        const sortField = header.dataset.sort;
+                        handleTableSort(sortField);
+                    }
+                });
+            });
+            
+            document.addEventListener('keydown', handleKeyboardShortcuts);
+        }
+
+        function handleTableSort(field) {
+            // Add or update sort level
+            const existingLevel = sortLevels.findIndex(level => level.field === field);
+            
+            if (existingLevel !== -1) {
+                // Toggle direction of existing level
+                sortLevels[existingLevel].direction = sortLevels[existingLevel].direction === 'asc' ? 'desc' : 'asc';
+            } else {
+                // Add new sort level or update first level
+                if (sortLevels.length === 0) {
+                    addSortLevel(field, 'desc');
+                    return;
+                } else {
+                    // Update first level
+                    sortLevels[0] = { field: field, direction: 'desc' };
+                }
+            }
+            
+            // Update UI
+            updateSortLevelUI();
+            applyFilters();
+            updateSortIcons(field, sortLevels.find(level => level.field === field).direction);
+        }
+
+        function updateSortLevelUI() {
+            const firstLevel = sortControls.querySelector('.sort-level');
+            if (firstLevel && sortLevels[0]) {
+                const fieldSelect = firstLevel.querySelector('.sort-field-select');
+                const directionSelect = firstLevel.querySelector('.sort-direction-select');
+                
+                if (fieldSelect) fieldSelect.value = sortLevels[0].field;
+                if (directionSelect) directionSelect.value = sortLevels[0].direction;
+            }
+        }
+
+        function updateSortIcons(activeField, direction) {
+            document.querySelectorAll('.sortable .sort-icon').forEach(icon => {
+                icon.className = 'fas fa-sort sort-icon';
+            });
+            
+            document.querySelectorAll('.sortable').forEach(header => {
+                header.setAttribute('aria-sort', 'none');
+            });
+            
+            const activeHeader = document.querySelector(`[data-sort="${activeField}"]`);
+            if (activeHeader) {
+                const icon = activeHeader.querySelector('.sort-icon');
+                if (icon) {
+                    icon.className = `fas fa-sort-${direction === 'asc' ? 'up' : 'down'} sort-icon`;
+                }
+                activeHeader.setAttribute('aria-sort', direction === 'asc' ? 'ascending' : 'descending');
+            }
+        }
+
+        function handleSearch() {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            clearSearchBtn.style.display = searchTerm === '' ? 'none' : 'block';
+            applyFilters();
+        }
+
+        function clearSearch() {
+            searchInput.value = '';
+            clearSearchBtn.style.display = 'none';
+            applyFilters();
+        }
+
+        function handleMultiTagSearch() {
+            applyFilters();
+        }
+
+        function handleTagFilter() {
+            applyFilters();
+        }
+
+        function applyFilters() {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            const selectedTag = tagFilter.value;
+            const multiTagsInput = multiTagSearch.value.toLowerCase().trim();
+            
+            const multiTags = multiTagsInput ? 
+                multiTagsInput.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0) : [];
+            
+            activeFilters.search = searchTerm;
+            activeFilters.singleTag = selectedTag;
+            activeFilters.multiTags = multiTags;
+            
+            filteredProducts = allProducts.filter(product => {
+                const matchesSearch = searchTerm === '' || 
+                    product.name.toLowerCase().includes(searchTerm) ||
+                    product.description.toLowerCase().includes(searchTerm);
+                
+                const matchesSingleTag = selectedTag === '' || 
+                    product.tags.some(tag => tag.toLowerCase() === selectedTag.toLowerCase());
+                
+                const matchesMultiTags = multiTags.length === 0 || 
+                    multiTags.every(searchTag => 
+                        product.tags.some(productTag => 
+                            productTag.toLowerCase().includes(searchTag)
+                        )
+                    );
+                
+                return matchesSearch && matchesSingleTag && matchesMultiTags;
+            });
+            
+            applyMultiLevelSort();
+            updateStats();
+            renderTable();
+            updateActiveFiltersDisplay();
+        }
+
+        function clearAllFilters() {
+            searchInput.value = '';
+            multiTagSearch.value = '';
+            tagFilter.value = '';
+            clearSearchBtn.style.display = 'none';
+            
+            // Reset sort levels to just one default level
+            sortLevels = [];
+            sortControls.innerHTML = '';
+            addSortLevel('upvotes', 'desc');
+            
+            activeFilters = {
+                search: '',
+                singleTag: '',
+                multiTags: []
+            };
+            
+            applyFilters();
+        }
+
+        function updateStats() {
+            totalProductsSpan.textContent = allProducts.length.toLocaleString();
+            filteredProductsSpan.textContent = filteredProducts.length.toLocaleString();
+        }
+
+        function renderTable() {
+            if (filteredProducts.length === 0) {
+                showNoResults();
+                return;
+            }
+            
+            hideNoResults();
+            showTable();
+            
+            productsTableBody.innerHTML = '';
+            
+            filteredProducts.forEach((product, index) => {
+                const row = createProductRow(product, index);
+                productsTableBody.appendChild(row);
+            });
+            
+            // Update scroll indicators after rendering
+            setTimeout(updateScrollIndicators, 100);
+        }
+
+        function createProductRow(product, index) {
+            const row = document.createElement('tr');
+            row.setAttribute('role', 'row');
+            
+            row.innerHTML = `
+                <td role="cell" class="col-name">
+                    <a href="${product.url}" target="_blank" rel="noopener noreferrer" class="product-name" title="${escapeHtml(product.name)}">
+                        ${escapeHtml(product.name)}
+                    </a>
+                </td>
+                <td role="cell" class="col-description">
+                    <div class="product-description" title="${escapeHtml(product.description)}">
+                        ${escapeHtml(product.description) || 'No description'}
+                    </div>
+                </td>
+                <td role="cell" class="col-upvotes">
+                    <div class="metric-value upvotes">
+                        <i class="fas fa-arrow-up" aria-hidden="true"></i>
+                        <span>${product.upvotes.toLocaleString()}</span>
+                    </div>
+                </td>
+                <td role="cell" class="col-comments">
+                    <div class="metric-value comments">
+                        <i class="fas fa-comment" aria-hidden="true"></i>
+                        <span>${product.comments.toLocaleString()}</span>
+                    </div>
+                </td>
+                <td role="cell" class="col-tags">
+                    <div class="tags-container">
+                        ${product.tags.slice(0, 3).map(tag => 
+                            `<button type="button" class="tag" onclick="filterByTag('${escapeHtml(tag)}')" title="Filter by ${escapeHtml(tag)}">${escapeHtml(tag)}</button>`
+                        ).join('')}
+                        ${product.tags.length > 3 ? `<span class="tag" style="background: var(--bg-tertiary); color: var(--text-muted); cursor: default;">+${product.tags.length - 3}</span>` : ''}
+                    </div>
+                </td>
+                <td role="cell" class="col-actions">
+                    <a href="${product.url}" target="_blank" rel="noopener noreferrer" class="visit-btn" title="Visit ${escapeHtml(product.name)}">
+                        <i class="fas fa-external-link-alt" aria-hidden="true"></i>
+                    </a>
+                </td>
+            `;
+            
+            return row;
+        }
+
+        function filterByTag(tag) {
+            tagFilter.value = tag;
+            applyFilters();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function populateTagFilter() {
+            const allTagsSet = new Set();
+            
+            allProducts.forEach(product => {
+                product.tags.forEach(tag => {
+                    if (tag.trim()) {
+                        allTagsSet.add(tag.trim());
+                    }
+                });
+            });
+            
+            allTags = Array.from(allTagsSet).sort();
+            
+            tagFilter.innerHTML = '<option value="">All Tags</option>';
+            
+            allTags.forEach(tag => {
+                const option = document.createElement('option');
+                option.value = tag;
+                option.textContent = tag;
+                tagFilter.appendChild(option);
+            });
+        }
+
+        function updateActiveFiltersDisplay() {
+            activeFiltersContainer.innerHTML = '';
+            
+            if (activeFilters.search) {
+                activeFiltersContainer.appendChild(createActiveFilterTag('Search', activeFilters.search, 'search'));
+            }
+            
+            if (activeFilters.singleTag) {
+                activeFiltersContainer.appendChild(createActiveFilterTag('Tag', activeFilters.singleTag, 'singleTag'));
+            }
+            
+            activeFilters.multiTags.forEach((tag, index) => {
+                activeFiltersContainer.appendChild(createActiveFilterTag('Multi-Tag', tag, 'multiTag', index));
+            });
+        }
+
+        function createActiveFilterTag(type, value, filterType, index = null) {
+            const tag = document.createElement('div');
+            tag.className = 'active-filter';
+            tag.innerHTML = `
+                <span>${type}: ${escapeHtml(value)}</span>
+                <button class="remove-filter" onclick="removeActiveFilter('${filterType}', ${index})" title="Remove filter">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            return tag;
+        }
+
+        function removeActiveFilter(filterType, index = null) {
+            switch (filterType) {
+                case 'search':
+                    clearSearch();
+                    break;
+                case 'singleTag':
+                    tagFilter.value = '';
+                    handleTagFilter();
+                    break;
+                case 'multiTag':
+                    const currentTags = multiTagSearch.value.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0);
+                    currentTags.splice(index, 1);
+                    multiTagSearch.value = currentTags.join(', ');
+                    if (currentTags.length > 0) {
+                        multiTagSearch.value += ', ';
+                    }
+                    handleMultiTagSearch();
+                    break;
+            }
+        }
+
+        // File management functions
         async function refreshFileList() {
             refreshFilesBtn.disabled = true;
-            addCustomFileBtn.disabled = true;
             refreshFilesBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-            
-            // Update select to show scanning status
-            fileSelect.innerHTML = '<option value="">Scanning for files...</option>';
-            fileCountDiv.textContent = 'Scanning...';
             
             try {
                 await loadAvailableFiles();
@@ -1503,12 +2113,10 @@
                 showError('Failed to refresh file list');
             } finally {
                 refreshFilesBtn.disabled = false;
-                addCustomFileBtn.disabled = false;
                 refreshFilesBtn.innerHTML = '<i class="fas fa-sync-alt"></i>';
             }
         }
 
-        // Modal functions
         function openAddFileModal() {
             addFileModal.style.display = 'flex';
             customFileNameInput.value = '';
@@ -1527,735 +2135,111 @@
             helpModal.style.display = 'none';
         }
 
-        function showGitHubSetup() {
-            githubSetupModal.style.display = 'flex';
-        }
-
-        function closeGitHubSetupModal() {
-            githubSetupModal.style.display = 'none';
-        }
-
         async function addCustomFile() {
             const filename = customFileNameInput.value.trim();
             if (!filename) return;
             
-            // Ensure .json extension
             const jsonFilename = filename.endsWith('.json') ? filename : filename + '.json';
             
-            // Check if file already exists in list
             const exists = availableFiles.some(f => f.filename === jsonFilename);
             if (exists) {
                 showError('File already in list');
                 return;
             }
             
-            // Test if file exists
             const fileExists = await testFileExists(jsonFilename);
             if (!fileExists) {
                 showError(`File json/${jsonFilename} not found`);
                 return;
             }
             
-            // Add to available files
             availableFiles.push({
                 filename: jsonFilename,
-                name: jsonFilename.replace('.json', '').replace(/[-_]/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-                description: 'Custom added file',
+                name: jsonFilename.replace('.json', ''),
                 source: 'custom'
             });
             
-            // Update UI
             populateFileSelect();
             closeAddFileModal();
             showSuccessMessage(`Added ${jsonFilename}`);
             
-            // Auto-select the new file
             fileSelect.value = `json/${jsonFilename}`;
             handleFileSelection();
         }
 
-        // Handle Enter key in modals
-        document.addEventListener('keydown', function(e) {
-            if (addFileModal.style.display === 'flex') {
-                if (e.key === 'Enter') {
-                    addCustomFile();
-                } else if (e.key === 'Escape') {
-                    closeAddFileModal();
+        function handleKeyboardShortcuts(event) {
+            if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA' || event.target.tagName === 'SELECT') {
+                if (event.key === 'Escape' && event.target === searchInput) {
+                    clearSearch();
+                    searchInput.blur();
                 }
-            } else if (helpModal.style.display === 'flex') {
-                if (e.key === 'Escape') {
-                    closeHelpModal();
-                }
-            } else if (githubSetupModal.style.display === 'flex') {
-                if (e.key === 'Escape') {
-                    closeGitHubSetupModal();
-                }
-            }
-        });
-
-        // Show success message briefly
-        function showSuccessMessage(message) {
-            const errorContainer = document.getElementById('errorContainer');
-            errorContainer.innerHTML = `
-                <div style="background: rgba(16, 185, 129, 0.1); color: var(--success-color); padding: 0.5rem; border-radius: var(--radius-md); border: 1px solid rgba(16, 185, 129, 0.2); font-size: 0.75rem; width: 100%; text-align: center;">
-                    <i class="fas fa-check" style="margin-right: 0.25rem;"></i>
-                    ${message}
-                </div>
-            `;
-            
-            // Clear success message after 3 seconds
-            setTimeout(() => {
-                hideError();
-            }, 3000);
-        }
-        function setupDragAndDrop() {
-            // File input change
-            fileInput.addEventListener('change', handleFileSelect);
-
-            // Drag and drop events
-            dropZone.addEventListener('dragover', handleDragOver);
-            dropZone.addEventListener('dragleave', handleDragLeave);
-            dropZone.addEventListener('drop', handleDrop);
-
-            // Click to browse
-            dropZone.addEventListener('click', (e) => {
-                if (e.target === fileInput) return;
-                fileInput.click();
-            });
-        }
-
-        function handleDragOver(e) {
-            e.preventDefault();
-            dropZone.classList.add('drag-over');
-        }
-
-        function handleDragLeave(e) {
-            e.preventDefault();
-            if (!dropZone.contains(e.relatedTarget)) {
-                dropZone.classList.remove('drag-over');
-            }
-        }
-
-        function handleDrop(e) {
-            e.preventDefault();
-            dropZone.classList.remove('drag-over');
-
-            const files = e.dataTransfer.files;
-            if (files.length > 0) {
-                const file = files[0];
-                if (file.type === 'application/json' || file.name.endsWith('.json')) {
-                    loadCustomFile(file);
-                } else {
-                    showError('Please drop a valid JSON file.');
-                }
-            }
-        }
-
-        function handleFileSelect(e) {
-            const file = e.target.files[0];
-            if (file) {
-                loadCustomFile(file);
-            }
-        }
-
-        function loadCustomFile(file) {
-            const reader = new FileReader();
-            
-            showLoading();
-            currentFileName = file.name;
-            
-            reader.onload = function(e) {
-                try {
-                    const jsonData = JSON.parse(e.target.result);
-                    
-                    // Validate JSON structure
-                    if (validateProductData(jsonData)) {
-                        allProducts = jsonData;
-                        filteredProducts = [...allProducts];
-                        
-                        // Update UI
-                        populateTagFilter();
-                        updateStats();
-                        renderTable();
-                        hideLoading();
-                        showCurrentFile();
-                        
-                        // Clear any previous errors
-                        hideError();
-                        
-                    } else {
-                        throw new Error('Invalid JSON format. Expected array of products with name, description, upvotes, comments, tags, and url properties.');
-                    }
-                    
-                } catch (error) {
-                    console.error('Error parsing JSON:', error);
-                    showError(`Error loading file: ${error.message}`);
-                    hideLoading();
-                }
-            };
-            
-            reader.onerror = function() {
-                showError('Error reading file. Please try again.');
-                hideLoading();
-            };
-            
-            reader.readAsText(file);
-        }
-
-        function validateProductData(data) {
-            if (!Array.isArray(data)) {
-                return false;
-            }
-            
-            if (data.length === 0) {
-                return true; // Empty array is valid
-            }
-            
-            // Check first few items for required properties
-            const sampleSize = Math.min(5, data.length);
-            for (let i = 0; i < sampleSize; i++) {
-                const item = data[i];
-                if (!item || typeof item !== 'object') {
-                    return false;
-                }
-                
-                // Check required properties
-                const requiredProps = ['name', 'description', 'upvotes', 'comments', 'tags', 'url'];
-                for (let prop of requiredProps) {
-                    if (!(prop in item)) {
-                        return false;
-                    }
-                }
-                
-                // Validate property types
-                if (typeof item.name !== 'string' ||
-                    typeof item.description !== 'string' ||
-                    typeof item.upvotes !== 'number' ||
-                    typeof item.comments !== 'number' ||
-                    !Array.isArray(item.tags) ||
-                    typeof item.url !== 'string') {
-                    return false;
-                }
-            }
-            
-            return true;
-        }
-
-        function showCurrentFile() {
-            fileNameSpan.textContent = currentFileName;
-            currentFileDiv.style.display = 'inline-flex';
-        }
-
-        function showLoading() {
-            loading.style.display = 'block';
-            document.querySelector('.table-container').style.display = 'none';
-            noResults.style.display = 'none';
-        }
-
-        // Load products from JSON file (default behavior)
-        async function loadProducts() {
-            try {
-                showLoading();
-                const response = await fetch('products.json');
-                if (!response.ok) {
-                    throw new Error('Failed to load products data');
-                }
-                
-                allProducts = await response.json();
-                filteredProducts = [...allProducts];
-                
-                // Initialize UI
-                populateTagFilter();
-                updateStats();
-                renderTable();
-                hideLoading();
-                showCurrentFile();
-                
-            } catch (error) {
-                console.error('Error loading products:', error);
-                showError('Failed to load default products data. You can drag and drop a JSON file to load custom data.');
-                hideLoading();
-            }
-        }
-
-        // Setup event listeners
-        function setupEventListeners() {
-            // Search functionality
-            searchInput.addEventListener('input', debounce(handleSearch, 300));
-            clearSearchBtn.addEventListener('click', clearSearch);
-            
-            // Multi-tag search functionality
-            multiTagSearch.addEventListener('input', debounce(handleMultiTagSearch, 300));
-            multiTagSearch.addEventListener('focus', showTagSuggestions);
-            multiTagSearch.addEventListener('blur', hideTagSuggestions);
-            
-            // Filter functionality
-            tagFilter.addEventListener('change', handleTagFilter);
-            sortBy.addEventListener('change', handleSort);
-            
-            // File selection functionality
-            fileSelect.addEventListener('change', handleFileSelection);
-            refreshFilesBtn.addEventListener('click', refreshFileList);
-            addCustomFileBtn.addEventListener('click', openAddFileModal);
-            helpBtn.addEventListener('click', openHelpModal);
-            
-            // Clear all filters
-            clearAllFiltersBtn.addEventListener('click', clearAllFilters);
-            
-            // Table header sorting
-            document.querySelectorAll('.sortable').forEach(header => {
-                header.addEventListener('click', () => {
-                    const sortField = header.dataset.sort;
-                    handleTableSort(sortField);
-                });
-            });
-            
-            // Keyboard shortcuts
-            document.addEventListener('keydown', handleKeyboardShortcuts);
-            
-            // Click outside to hide suggestions
-            document.addEventListener('click', (e) => {
-                if (!multiTagSearch.contains(e.target) && !tagSuggestions.contains(e.target)) {
-                    hideTagSuggestions();
-                }
-            });
-        }
-
-        // Handle search functionality
-        function handleSearch() {
-            const searchTerm = searchInput.value.toLowerCase().trim();
-            
-            if (searchTerm === '') {
-                clearSearchBtn.style.display = 'none';
-            } else {
-                clearSearchBtn.style.display = 'block';
-            }
-            
-            applyFilters();
-        }
-
-        // Clear search
-        function clearSearch() {
-            searchInput.value = '';
-            clearSearchBtn.style.display = 'none';
-            applyFilters();
-        }
-
-        // Handle tag filtering
-        function handleTagFilter() {
-            applyFilters();
-        }
-
-        // Handle sorting
-        function handleSort() {
-            const sortValue = sortBy.value;
-            const [field, direction] = sortValue.split('-');
-            
-            currentSort = { field, direction };
-            sortProducts();
-            renderTable();
-        }
-
-        // Handle table header sorting
-        function handleTableSort(field) {
-            if (currentSort.field === field) {
-                currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
-            } else {
-                currentSort.field = field;
-                currentSort.direction = 'desc';
-            }
-            
-            // Update sort dropdown to match
-            const sortValue = `${currentSort.field}-${currentSort.direction}`;
-            sortBy.value = sortValue;
-            
-            sortProducts();
-            renderTable();
-            updateSortIcons();
-        }
-
-        // Apply all filters
-        function applyFilters() {
-            const searchTerm = searchInput.value.toLowerCase().trim();
-            const selectedTag = tagFilter.value;
-            const multiTagsInput = multiTagSearch.value.toLowerCase().trim();
-            
-            // Parse multi-tags (comma-separated)
-            const multiTags = multiTagsInput ? 
-                multiTagsInput.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0) : [];
-            
-            // Update active filters
-            activeFilters.search = searchTerm;
-            activeFilters.singleTag = selectedTag;
-            activeFilters.multiTags = multiTags;
-            
-            filteredProducts = allProducts.filter(product => {
-                // Search filter
-                const matchesSearch = searchTerm === '' || 
-                    product.name.toLowerCase().includes(searchTerm) ||
-                    product.description.toLowerCase().includes(searchTerm);
-                
-                // Single tag filter
-                const matchesSingleTag = selectedTag === '' || 
-                    product.tags.some(tag => tag.toLowerCase() === selectedTag.toLowerCase());
-                
-                // Multi-tag filter (all specified tags must be present)
-                const matchesMultiTags = multiTags.length === 0 || 
-                    multiTags.every(searchTag => 
-                        product.tags.some(productTag => 
-                            productTag.toLowerCase().includes(searchTag)
-                        )
-                    );
-                
-                return matchesSearch && matchesSingleTag && matchesMultiTags;
-            });
-            
-            sortProducts();
-            updateStats();
-            renderTable();
-            updateActiveFiltersDisplay();
-        }
-
-        // Sort products based on current sort settings
-        function sortProducts() {
-            filteredProducts.sort((a, b) => {
-                let aValue = a[currentSort.field];
-                let bValue = b[currentSort.field];
-                
-                // Handle string sorting
-                if (typeof aValue === 'string') {
-                    aValue = aValue.toLowerCase();
-                    bValue = bValue.toLowerCase();
-                }
-                
-                // Handle numeric sorting
-                if (typeof aValue === 'number') {
-                    return currentSort.direction === 'asc' ? aValue - bValue : bValue - aValue;
-                }
-                
-                // Handle string sorting
-                if (currentSort.direction === 'asc') {
-                    return aValue < bValue ? -1 : aValue > bValue ? 1 : 0;
-                } else {
-                    return aValue > bValue ? -1 : aValue < bValue ? 1 : 0;
-                }
-            });
-        }
-
-        // Update statistics
-        function updateStats() {
-            totalProductsSpan.textContent = allProducts.length.toLocaleString();
-            filteredProductsSpan.textContent = filteredProducts.length.toLocaleString();
-            
-            // Animate numbers
-            animateNumber(totalProductsSpan, allProducts.length);
-            animateNumber(filteredProductsSpan, filteredProducts.length);
-        }
-
-        // Animate number counting
-        function animateNumber(element, targetNumber) {
-            const startNumber = 0;
-            const duration = 1000;
-            const startTime = performance.now();
-            
-            function updateNumber(currentTime) {
-                const elapsed = currentTime - startTime;
-                const progress = Math.min(elapsed / duration, 1);
-                
-                const currentNumber = Math.floor(startNumber + (targetNumber - startNumber) * progress);
-                element.textContent = currentNumber.toLocaleString();
-                
-                if (progress < 1) {
-                    requestAnimationFrame(updateNumber);
-                }
-            }
-            
-            requestAnimationFrame(updateNumber);
-        }
-
-        // Render the products table
-        function renderTable() {
-            if (filteredProducts.length === 0) {
-                showNoResults();
                 return;
             }
             
-            hideNoResults();
-            
-            const tbody = productsTableBody;
-            tbody.innerHTML = '';
-            
-            filteredProducts.forEach((product, index) => {
-                const row = createProductRow(product, index);
-                tbody.appendChild(row);
-            });
-            
-            // Add fade-in animation
-            tbody.style.opacity = '0';
-            setTimeout(() => {
-                tbody.style.transition = 'opacity 0.3s ease';
-                tbody.style.opacity = '1';
-            }, 50);
-        }
-
-        // Create a product row
-        function createProductRow(product, index) {
-            const row = document.createElement('tr');
-            row.style.animationDelay = `${index * 0.05}s`;
-            row.className = 'table-row-fade-in';
-            
-            row.innerHTML = `
-                <td>
-                    <a href="${product.url}" target="_blank" class="product-name" title="${escapeHtml(product.name)}">
-                        ${escapeHtml(product.name)}
-                    </a>
-                </td>
-                <td>
-                    <div class="product-description" title="${escapeHtml(product.description)}">
-                        ${escapeHtml(product.description) || 'No description available'}
-                    </div>
-                </td>
-                <td>
-                    <div class="metric-value upvotes">
-                        <i class="fas fa-arrow-up"></i>
-                        ${product.upvotes.toLocaleString()}
-                    </div>
-                </td>
-                <td>
-                    <div class="metric-value comments">
-                        <i class="fas fa-comment"></i>
-                        ${product.comments.toLocaleString()}
-                    </div>
-                </td>
-                <td>
-                    <div class="tags-container">
-                        ${product.tags.map(tag => 
-                            `<span class="tag" onclick="filterByTag('${escapeHtml(tag)}')" title="Filter by ${escapeHtml(tag)}">${escapeHtml(tag)}</span>`
-                        ).join('')}
-                    </div>
-                </td>
-                <td>
-                    <a href="${product.url}" target="_blank" class="visit-btn" title="Visit ${escapeHtml(product.name)}">
-                        <i class="fas fa-external-link-alt"></i>
-                        Visit
-                    </a>
-                </td>
-            `;
-            
-            return row;
-        }
-
-        // Filter by tag when tag is clicked
-        function filterByTag(tag) {
-            tagFilter.value = tag;
-            applyFilters();
-            
-            // Scroll to top of table
-            document.querySelector('.table-container').scrollIntoView({ 
-                behavior: 'smooth',
-                block: 'start'
-            });
-        }
-
-        // Update sort icons in table headers
-        function updateSortIcons() {
-            document.querySelectorAll('.sortable .sort-icon').forEach(icon => {
-                icon.className = 'fas fa-sort sort-icon';
-            });
-            
-            const activeHeader = document.querySelector(`[data-sort="${currentSort.field}"] .sort-icon`);
-            if (activeHeader) {
-                activeHeader.className = `fas fa-sort-${currentSort.direction === 'asc' ? 'up' : 'down'} sort-icon`;
-            }
-        }
-
-        // Handle keyboard shortcuts
-        function handleKeyboardShortcuts(event) {
-            // Ctrl/Cmd + K to focus search
             if ((event.ctrlKey || event.metaKey) && event.key === 'k') {
                 event.preventDefault();
                 searchInput.focus();
+                searchInput.select();
             }
             
-            // Escape to clear search
-            if (event.key === 'Escape' && document.activeElement === searchInput) {
-                clearSearch();
-                searchInput.blur();
-            }
-        }
-
-        // Handle multi-tag search
-        function handleMultiTagSearch() {
-            applyFilters();
-        }
-
-        // Clear all filters
-        function clearAllFilters() {
-            // Reset all inputs
-            searchInput.value = '';
-            multiTagSearch.value = '';
-            tagFilter.value = '';
-            sortBy.value = 'upvotes-desc';
-            
-            // Reset active filters
-            activeFilters = {
-                search: '',
-                singleTag: '',
-                multiTags: [],
-                sort: 'upvotes-desc'
-            };
-            
-            // Reset sort
-            currentSort = { field: 'upvotes', direction: 'desc' };
-            
-            // Hide clear search button
-            clearSearchBtn.style.display = 'none';
-            
-            // Apply filters (which will show all products)
-            applyFilters();
-            
-            // Add visual feedback
-            clearAllFiltersBtn.style.transform = 'scale(0.95)';
-            setTimeout(() => {
-                clearAllFiltersBtn.style.transform = 'scale(1)';
-            }, 150);
-        }
-
-        // Show tag suggestions
-        function showTagSuggestions() {
-            const input = multiTagSearch.value.toLowerCase();
-            const currentTags = input.split(',').map(tag => tag.trim());
-            const lastTag = currentTags[currentTags.length - 1];
-            
-            if (lastTag.length > 0) {
-                const suggestions = allTags.filter(tag => 
-                    tag.toLowerCase().includes(lastTag) && 
-                    !currentTags.slice(0, -1).some(existingTag => 
-                        existingTag.toLowerCase() === tag.toLowerCase()
-                    )
-                ).slice(0, 10);
-                
-                if (suggestions.length > 0) {
-                    tagSuggestions.innerHTML = suggestions.map(tag => 
-                        `<div class="tag-suggestion" onclick="selectTagSuggestion('${escapeHtml(tag)}')">${escapeHtml(tag)}</div>`
-                    ).join('');
-                    tagSuggestions.style.display = 'block';
-                } else {
-                    hideTagSuggestions();
-                }
-            } else {
-                hideTagSuggestions();
+            if (event.key === '/' && !event.ctrlKey && !event.metaKey && !event.altKey) {
+                event.preventDefault();
+                searchInput.focus();
+                searchInput.select();
             }
         }
 
-        // Hide tag suggestions
-        function hideTagSuggestions() {
-            setTimeout(() => {
-                tagSuggestions.style.display = 'none';
-            }, 200);
+        // UI state management
+        function showLoading() {
+            loading.style.display = 'block';
+            tableContainer.style.display = 'none';
+            noResults.style.display = 'none';
         }
 
-        // Select tag suggestion
-        function selectTagSuggestion(tag) {
-            const currentValue = multiTagSearch.value;
-            const tags = currentValue.split(',').map(t => t.trim());
-            tags[tags.length - 1] = tag;
-            multiTagSearch.value = tags.join(', ') + ', ';
-            hideTagSuggestions();
-            multiTagSearch.focus();
-            applyFilters();
+        function hideLoading() {
+            loading.style.display = 'none';
         }
 
-        // Update active filters display
-        function updateActiveFiltersDisplay() {
-            const container = activeFiltersContainer;
-            container.innerHTML = '';
-            
-            // Search filter
-            if (activeFilters.search) {
-                container.appendChild(createActiveFilterTag('Search', activeFilters.search, 'search'));
-            }
-            
-            // Single tag filter
-            if (activeFilters.singleTag) {
-                container.appendChild(createActiveFilterTag('Tag', activeFilters.singleTag, 'singleTag'));
-            }
-            
-            // Multi-tag filters
-            activeFilters.multiTags.forEach((tag, index) => {
-                container.appendChild(createActiveFilterTag('Multi-Tag', tag, 'multiTag', index));
-            });
-            
-            // Sort filter (only show if not default)
-            if (activeFilters.sort !== 'upvotes-desc') {
-                const sortLabel = sortBy.options[sortBy.selectedIndex].text;
-                container.appendChild(createActiveFilterTag('Sort', sortLabel, 'sort'));
-            }
+        function showNoResults() {
+            noResults.style.display = 'block';
+            tableContainer.style.display = 'none';
         }
 
-        // Create active filter tag element
-        function createActiveFilterTag(type, value, filterType, index = null) {
-            const tag = document.createElement('div');
-            tag.className = 'active-filter';
-            tag.innerHTML = `
-                <span>${type}: ${escapeHtml(value)}</span>
-                <button class="remove-filter" onclick="removeActiveFilter('${filterType}', ${index})" title="Remove filter">
-                    <i class="fas fa-times"></i>
-                </button>
+        function hideNoResults() {
+            noResults.style.display = 'none';
+        }
+
+        function showTable() {
+            tableContainer.style.display = 'block';
+        }
+
+        function showError(message) {
+            hideLoading();
+            const errorContainer = document.getElementById('errorContainer');
+            errorContainer.innerHTML = `
+                <div class="error-message-top">
+                    <i class="fas fa-exclamation-triangle" aria-hidden="true"></i>
+                    <span>${message}</span>
+                </div>
             `;
-            return tag;
         }
 
-        // Remove active filter
-        function removeActiveFilter(filterType, index = null) {
-            switch (filterType) {
-                case 'search':
-                    searchInput.value = '';
-                    clearSearch();
-                    break;
-                case 'singleTag':
-                    tagFilter.value = '';
-                    handleTagFilter();
-                    break;
-                case 'multiTag':
-                    const currentTags = multiTagSearch.value.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0);
-                    currentTags.splice(index, 1);
-                    multiTagSearch.value = currentTags.join(', ');
-                    if (currentTags.length > 0) {
-                        multiTagSearch.value += ', ';
-                    }
-                    handleMultiTagSearch();
-                    break;
-                case 'sort':
-                    sortBy.value = 'upvotes-desc';
-                    handleSort();
-                    break;
-            }
+        function hideError() {
+            document.getElementById('errorContainer').innerHTML = '';
         }
 
-        // Populate tag filter dropdown and store all tags
-        function populateTagFilter() {
-            const allTagsSet = new Set();
+        function showSuccessMessage(message) {
+            const errorContainer = document.getElementById('errorContainer');
+            errorContainer.innerHTML = `
+                <div class="success-message-top">
+                    <i class="fas fa-check" aria-hidden="true"></i>
+                    <span>${message}</span>
+                </div>
+            `;
             
-            allProducts.forEach(product => {
-                product.tags.forEach(tag => {
-                    if (tag.trim()) {
-                        allTagsSet.add(tag.trim());
-                    }
-                });
-            });
-            
-            allTags = Array.from(allTagsSet).sort();
-            
-            // Clear existing options except "All Tags"
-            tagFilter.innerHTML = '<option value="">All Tags</option>';
-            
-            allTags.forEach(tag => {
-                const option = document.createElement('option');
-                option.value = tag;
-                option.textContent = tag;
-                tagFilter.appendChild(option);
-            });
+            setTimeout(() => {
+                hideError();
+            }, 3000);
         }
 
         // Utility functions
@@ -2282,100 +2266,28 @@
             return text.replace(/[&<>"']/g, function(m) { return map[m]; });
         }
 
-        function hideLoading() {
-            loading.style.display = 'none';
-        }
+        // Modal event handlers
+        document.addEventListener('keydown', function(e) {
+            if (addFileModal.style.display === 'flex') {
+                if (e.key === 'Enter') {
+                    addCustomFile();
+                } else if (e.key === 'Escape') {
+                    closeAddFileModal();
+                }
+            } else if (helpModal.style.display === 'flex') {
+                if (e.key === 'Escape') {
+                    closeHelpModal();
+                }
+            }
+        });
 
-        function showNoResults() {
-            noResults.style.display = 'block';
-            document.querySelector('.table-container').style.display = 'none';
-        }
-
-        function hideNoResults() {
-            noResults.style.display = 'none';
-            document.querySelector('.table-container').style.display = 'block';
-        }
-
-        function showError(message) {
-            hideLoading();
-            
-            const errorContainer = document.getElementById('errorContainer');
-            errorContainer.innerHTML = `
-                <div class="error-message">
-                    <i class="fas fa-exclamation-triangle" style="margin-right: 0.25rem;"></i>
-                    ${message}
-                </div>
-            `;
-        }
-
-        function hideError() {
-            const errorContainer = document.getElementById('errorContainer');
-            errorContainer.innerHTML = '';
-        }
+        document.addEventListener('click', function(e) {
+            if (e.target === addFileModal) {
+                closeAddFileModal();
+            } else if (e.target === helpModal) {
+                closeHelpModal();
+            }
+        });
     </script>
-
-    <!-- 
-    GitHub Pages & Local Testing Setup Instructions:
-    
-    === LOCAL TESTING (Full Auto-Detection) ===
-    1. File Structure:
-       your-folder/
-       ├── index.html (this file)
-       ├── products.json (optional default)
-       └── json/
-           ├── any-filename.json ← Auto-detected!
-           ├── my-data.json ← Auto-detected!  
-           ├── test.json ← Auto-detected!
-           └── ...any .json files
-    
-    2. Run Python webserver:
-       python -m http.server 8000
-       
-    3. Open: http://localhost:8000
-       Files will be automatically detected via directory listing!
-    
-    === GITHUB PAGES (Requires index.json) ===
-    1. File Structure:
-       your-repo/
-       ├── index.html (this file)
-       ├── products.json (optional default)
-       └── json/
-           ├── index.json ← REQUIRED for GitHub Pages
-           ├── products-2024.json
-           ├── my-data.json
-           └── ...other .json files
-    
-    2. Create json/index.json:
-       {
-         "files": [
-           {
-             "filename": "products-2024.json",
-             "name": "Products 2024",
-             "description": "Product Hunt data from 2024"
-           },
-           {
-             "filename": "my-data.json",
-             "name": "My Custom Data", 
-             "description": "My custom dataset"
-           }
-         ]
-       }
-    
-    3. Deploy to GitHub Pages - files will appear in dropdown!
-    
-    === WHY THE DIFFERENCE? ===
-    - Local servers: Can read directory contents automatically
-    - GitHub Pages: Static hosting, can't list directories
-    - Solution: index.json tells the app which files exist
-    
-    === FEATURES ===
-    - 🗂️ Auto-detection (local servers)
-    - 📋 Index.json support (GitHub Pages)
-    - 📁 Pattern scanning (fallback)
-    - ✏️ Manual file addition
-    - 📱 Drag & drop for temporary files
-    - 🔄 Refresh to re-scan
-    -->
-
 </body>
 </html>

@@ -921,6 +921,51 @@
                 </div>
             </div>
         </div>
+
+        <!-- GitHub Setup Modal -->
+        <div class="modal-overlay" id="githubSetupModal" style="display: none;">
+            <div class="modal" style="max-width: 700px;">
+                <h3>🚀 GitHub Pages Setup</h3>
+                <div style="font-size: 0.875rem; line-height: 1.5; color: var(--text-primary);">
+                    <p><strong>GitHub Pages can't read directories automatically.</strong> Create an index file to list your JSON files:</p>
+                    
+                    <p style="margin: 1rem 0 0.5rem 0;"><strong>1. Create <code>json/index.json</code> in your repository:</strong></p>
+                    <pre style="background: var(--bg-secondary); padding: 1rem; border-radius: var(--radius-md); margin: 0.5rem 0; overflow-x: auto; font-size: 0.8rem;"><code>{
+  "files": [
+    {
+      "filename": "products-2024.json",
+      "name": "Products 2024", 
+      "description": "Product Hunt data from 2024"
+    },
+    {
+      "filename": "my-data.json",
+      "name": "My Custom Data",
+      "description": "My custom product dataset"
+    }
+  ]
+}</code></pre>
+                    
+                    <p><strong>2. Put your .json files in the <code>json/</code> folder:</strong></p>
+                    <pre style="background: var(--bg-secondary); padding: 1rem; border-radius: var(--radius-md); margin: 0.5rem 0; font-size: 0.8rem;"><code>your-repo/
+├── index.html
+├── products.json (optional default)
+└── json/
+    ├── index.json (lists the files below)
+    ├── products-2024.json
+    ├── my-data.json
+    └── any-other-file.json</code></pre>
+                    
+                    <p><strong>3. Commit and push to GitHub</strong> - files will appear in the dropdown!</p>
+                    
+                    <div style="background: rgba(16, 185, 129, 0.1); color: var(--success-color); padding: 0.75rem; border-radius: var(--radius-md); margin: 1rem 0; border: 1px solid rgba(16, 185, 129, 0.2);">
+                        <strong>💡 Pro Tip:</strong> You can still use drag & drop for temporary files, and the + button to manually add files not in the index.
+                    </div>
+                </div>
+                <div class="modal-buttons">
+                    <button class="modal-btn primary" onclick="closeGitHubSetupModal()">Got it!</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -968,18 +1013,37 @@
         async function loadAvailableFiles() {
             availableFiles = [];
             
-            // First, try to get directory listing (works with local servers like Python's http.server)
+            // Detect if we're on GitHub Pages or similar static host
+            const isStaticHost = window.location.hostname.includes('github.io') || 
+                                window.location.hostname.includes('netlify') ||
+                                window.location.hostname.includes('vercel') ||
+                                !window.location.hostname.includes('localhost');
+            
+            if (isStaticHost) {
+                console.log('Static hosting detected - using index.json + pattern scanning approach');
+                fileCountDiv.textContent = 'Loading files...';
+            }
+            
+            // First, try to get directory listing (works with local servers)
             const foundViaListing = await tryDirectoryListing();
             
             if (!foundViaListing) {
-                console.log('Directory listing not available, trying index.json...');
+                if (isStaticHost) {
+                    console.log('GitHub Pages/static hosting - directory listing unavailable');
+                    fileCountDiv.textContent = 'Checking index.json...';
+                } else {
+                    console.log('Directory listing not available, trying index.json...');
+                }
                 
                 // Try to load index.json if it exists
+                let foundViaIndex = false;
                 try {
                     const indexResponse = await fetch('json/index.json');
                     if (indexResponse.ok) {
                         const fileIndex = await indexResponse.json();
                         const indexedFiles = fileIndex.files || [];
+                        
+                        console.log(`Found index.json with ${indexedFiles.length} files listed`);
                         
                         // Verify each file in the index actually exists
                         for (const file of indexedFiles) {
@@ -992,26 +1056,55 @@
                                         description: file.description || '',
                                         source: 'index'
                                     });
+                                    foundViaIndex = true;
                                 }
                             } catch (e) {
                                 console.log(`File ${file.filename} listed in index but not accessible`);
                             }
                         }
                         
-                        console.log(`Found ${availableFiles.length} files from index.json`);
+                        console.log(`Verified ${availableFiles.length} files from index.json`);
                     }
                 } catch (error) {
-                    console.log('No index.json found, scanning for files...');
+                    console.log('No index.json found');
                 }
                 
-                // If we still don't have many files, try pattern scanning
-                if (availableFiles.length < 5) {
+                // If we're on static hosting and found files via index, prioritize those
+                if (isStaticHost && foundViaIndex) {
+                    console.log('Using index.json files for static hosting');
+                    populateFileSelect();
+                    showGitHubPagesInfo();
+                    return;
+                }
+                
+                // Fallback to pattern scanning
+                if (isStaticHost) {
+                    fileCountDiv.textContent = 'Scanning common patterns...';
+                    console.log('Running enhanced pattern scanning for static hosting');
+                    await scanForJsonFiles();
+                    
+                    if (availableFiles.length === 0) {
+                        showGitHubPagesInfo();
+                    }
+                } else {
                     await scanForJsonFiles();
                 }
             }
             
             // Populate the dropdown with found files
             populateFileSelect();
+        }
+
+        // Show GitHub Pages specific information
+        function showGitHubPagesInfo() {
+            const errorContainer = document.getElementById('errorContainer');
+            errorContainer.innerHTML = `
+                <div style="background: rgba(59, 130, 246, 0.1); color: #2563eb; padding: 0.5rem; border-radius: var(--radius-md); border: 1px solid rgba(59, 130, 246, 0.2); font-size: 0.7rem; text-align: center;">
+                    <i class="fas fa-info-circle" style="margin-right: 0.25rem;"></i>
+                    <strong>GitHub Pages:</strong> Create json/index.json to list your files
+                    <button onclick="showGitHubSetup()" style="margin-left: 0.5rem; background: none; border: 1px solid currentColor; color: inherit; padding: 0.1rem 0.3rem; border-radius: 3px; font-size: 0.65rem; cursor: pointer;">Setup</button>
+                </div>
+            `;
         }
 
         // Try to get directory listing from the server
@@ -1101,6 +1194,12 @@
 
         // Scan for JSON files using comprehensive patterns
         async function scanForJsonFiles() {
+            // More aggressive scanning for GitHub Pages
+            const isStaticHost = window.location.hostname.includes('github.io') || 
+                                window.location.hostname.includes('netlify') ||
+                                window.location.hostname.includes('vercel') ||
+                                !window.location.hostname.includes('localhost');
+            
             const commonPatterns = [
                 // Very common names
                 'data', 'products', 'items', 'list', 'export', 'dataset', 'file', 'content',
@@ -1138,7 +1237,9 @@
             
             const separators = ['', '-', '_'];
             const yearSuffixes = ['', '-2024', '-2025', '-2023', '_2024', '_2025', '_2023'];
-            const numberSuffixes = ['', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
+            const numberSuffixes = isStaticHost ? 
+                ['', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'] : // More thorough for GitHub Pages
+                ['', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
             
             const filesToTry = new Set();
             
@@ -1157,14 +1258,23 @@
                 });
             });
             
-            // Add simple patterns
-            for (let i = 1; i <= 50; i++) {
+            // Add simple patterns - more for static hosting
+            const maxNum = isStaticHost ? 100 : 50;
+            for (let i = 1; i <= maxNum; i++) {
                 filesToTry.add(`${i}.json`);
                 filesToTry.add(`file${i}.json`);
                 filesToTry.add(`data${i}.json`);
                 filesToTry.add(`dataset${i}.json`);
                 filesToTry.add(`products${i}.json`);
                 filesToTry.add(`list${i}.json`);
+                
+                // Additional patterns for GitHub Pages
+                if (isStaticHost) {
+                    filesToTry.add(`item${i}.json`);
+                    filesToTry.add(`export${i}.json`);
+                    filesToTry.add(`backup${i}.json`);
+                    filesToTry.add(`test${i}.json`);
+                }
             }
             
             // Add alphabetical patterns
@@ -1173,6 +1283,11 @@
                 filesToTry.add(`${letter}.json`);
                 filesToTry.add(`data-${letter}.json`);
                 filesToTry.add(`file-${letter}.json`);
+                if (isStaticHost) {
+                    filesToTry.add(`${letter}${letter}.json`); // aa.json, bb.json, etc.
+                    filesToTry.add(`test-${letter}.json`);
+                    filesToTry.add(`dataset-${letter}.json`);
+                }
             }
             
             // Add date patterns
@@ -1183,13 +1298,21 @@
                     filesToTry.add(`${year}-${monthStr}.json`);
                     filesToTry.add(`data-${year}-${monthStr}.json`);
                     filesToTry.add(`products-${year}-${monthStr}.json`);
+                    if (isStaticHost) {
+                        filesToTry.add(`${year}${monthStr}.json`);
+                        filesToTry.add(`export-${year}-${monthStr}.json`);
+                    }
                 }
             }
             
-            console.log(`Scanning ${filesToTry.size} potential filenames...`);
+            if (isStaticHost) {
+                console.log(`GitHub Pages mode: Scanning ${filesToTry.size} potential filenames...`);
+            } else {
+                console.log(`Local mode: Scanning ${filesToTry.size} potential filenames...`);
+            }
             
-            // Test files in smaller batches with progress updates
-            const batchSize = 20;
+            // Test files in batches with progress updates
+            const batchSize = isStaticHost ? 15 : 20; // Slightly smaller batches for GitHub Pages
             const fileArray = Array.from(filesToTry);
             let foundCount = 0;
             
@@ -1221,10 +1344,11 @@
                 });
                 
                 // Small delay between batches and update UI
+                const delay = isStaticHost ? 100 : 50; // Longer delay for GitHub Pages to be respectful
                 if (i + batchSize < fileArray.length) {
-                    await new Promise(resolve => setTimeout(resolve, 50));
+                    await new Promise(resolve => setTimeout(resolve, delay));
                     // Update dropdown periodically so user sees progress
-                    if (foundCount > 0 && i % (batchSize * 10) === 0) {
+                    if (foundCount > 0 && i % (batchSize * 8) === 0) {
                         populateFileSelect();
                     }
                 }
@@ -1403,6 +1527,14 @@
             helpModal.style.display = 'none';
         }
 
+        function showGitHubSetup() {
+            githubSetupModal.style.display = 'flex';
+        }
+
+        function closeGitHubSetupModal() {
+            githubSetupModal.style.display = 'none';
+        }
+
         async function addCustomFile() {
             const filename = customFileNameInput.value.trim();
             if (!filename) return;
@@ -1453,6 +1585,10 @@
             } else if (helpModal.style.display === 'flex') {
                 if (e.key === 'Escape') {
                     closeHelpModal();
+                }
+            } else if (githubSetupModal.style.display === 'flex') {
+                if (e.key === 'Escape') {
+                    closeGitHubSetupModal();
                 }
             }
         });
@@ -2181,62 +2317,64 @@
     <!-- 
     GitHub Pages & Local Testing Setup Instructions:
     
+    === LOCAL TESTING (Full Auto-Detection) ===
+    1. File Structure:
+       your-folder/
+       ├── index.html (this file)
+       ├── products.json (optional default)
+       └── json/
+           ├── any-filename.json ← Auto-detected!
+           ├── my-data.json ← Auto-detected!  
+           ├── test.json ← Auto-detected!
+           └── ...any .json files
+    
+    2. Run Python webserver:
+       python -m http.server 8000
+       
+    3. Open: http://localhost:8000
+       Files will be automatically detected via directory listing!
+    
+    === GITHUB PAGES (Requires index.json) ===
     1. File Structure:
        your-repo/
        ├── index.html (this file)
-       ├── products.json (default data file)
+       ├── products.json (optional default)
        └── json/
-           ├── any-filename.json (auto-detected)
-           ├── my-data.json (auto-detected)
-           ├── test.json (auto-detected)
-           ├── index.json (optional, for file metadata)
-           └── ...any other .json files
+           ├── index.json ← REQUIRED for GitHub Pages
+           ├── products-2024.json
+           ├── my-data.json
+           └── ...other .json files
     
-    2. Local Testing with Python:
-       - Put your .json files in the json/ folder
-       - Run: python -m http.server 8000 (or python3 -m http.server 8000)
-       - Open: http://localhost:8000
-       - The app will auto-detect files via directory listing!
-    
-    3. Auto-Detection Methods (in order of preference):
-       🗂️ Directory Listing: Reads actual folder contents (works with local servers)
-       📋 Index File: Uses json/index.json for organized metadata
-       📁 Pattern Scanning: Tests thousands of common filename patterns
-       ✏️ Manual Addition: Users can add specific filenames
-    
-    4. Create json/index.json for organized file metadata (optional):
+    2. Create json/index.json:
        {
          "files": [
            {
-             "filename": "my-products.json",
-             "name": "My Products",
-             "description": "Custom product dataset"
+             "filename": "products-2024.json",
+             "name": "Products 2024",
+             "description": "Product Hunt data from 2024"
+           },
+           {
+             "filename": "my-data.json",
+             "name": "My Custom Data", 
+             "description": "My custom dataset"
            }
          ]
        }
     
-    5. JSON file format (all files should follow this structure):
-       [
-         {
-           "name": "Product Name",
-           "description": "Product description", 
-           "upvotes": 123,
-           "comments": 45,
-           "tags": ["tag1", "tag2", "tag3"],
-           "url": "https://example.com"
-         }
-       ]
+    3. Deploy to GitHub Pages - files will appear in dropdown!
     
-    6. Testing Tips:
-       - Name your files descriptively: data.json, products-2024.json, etc.
-       - Click the refresh button (🔄) to re-scan for new files
-       - Use the + button to manually add specific filenames
-       - Check browser console for scanning progress details
+    === WHY THE DIFFERENCE? ===
+    - Local servers: Can read directory contents automatically
+    - GitHub Pages: Static hosting, can't list directories
+    - Solution: index.json tells the app which files exist
     
-    7. GitHub Pages Deployment:
-       - Works automatically once deployed
-       - No server configuration needed
-       - Uses pattern scanning + index.json approach
+    === FEATURES ===
+    - 🗂️ Auto-detection (local servers)
+    - 📋 Index.json support (GitHub Pages)
+    - 📁 Pattern scanning (fallback)
+    - ✏️ Manual file addition
+    - 📱 Drag & drop for temporary files
+    - 🔄 Refresh to re-scan
     -->
 
 </body>

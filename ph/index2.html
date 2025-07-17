@@ -302,32 +302,12 @@
             background: #dc2626;
         }
 
-        /* Simple Sort Section - Compact */
+        /* Multi-level Sorting - More Compact */
         .sort-section {
             margin-bottom: 0.5rem;
         }
 
-        .sort-info {
-            font-size: 0.7rem;
-            color: var(--text-secondary);
-            text-align: center;
-            padding: 0.25rem;
-            background: var(--bg-tertiary);
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border-light);
-        }
-
-        /* Preset Section */
-        .preset-section {
-            background: var(--bg-primary);
-            border-radius: var(--radius-sm);
-            padding: 0.375rem;
-            margin-bottom: 0.5rem;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border-light);
-        }
-
-        .preset-label {
+        .sort-label {
             display: flex;
             align-items: center;
             gap: 0.25rem;
@@ -337,99 +317,79 @@
             margin-bottom: 0.375rem;
         }
 
-        .preset-row {
+        .sort-controls {
             display: flex;
-            gap: 0.5rem;
+            flex-direction: column;
+            gap: 0.125rem;
+        }
+
+        .sort-level {
+            display: flex;
             align-items: center;
+            gap: 0.125rem;
+            padding: 0.125rem;
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-light);
         }
 
-        .preset-dropdown-container {
-            flex: 0 0 25%;
-            min-width: 120px;
+        .sort-level-label {
+            font-weight: 500;
+            color: var(--text-secondary);
+            min-width: 35px;
+            font-size: 0.65rem;
         }
 
-        .preset-dropdown {
-            width: 100%;
-            padding: 0.375rem;
+        .sort-field-select, .sort-direction-select {
+            flex: 1;
+            padding: 0.125rem;
             border: 1px solid var(--border-color);
             border-radius: var(--radius-sm);
-            font-size: 0.7rem;
-            background: var(--bg-secondary);
-            min-height: 28px;
-        }
-
-        .preset-dropdown:focus {
-            outline: none;
-            border-color: var(--accent-color);
-            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
+            font-size: 0.65rem;
             background: var(--bg-primary);
+            min-height: 24px;
         }
 
-        .preset-cards-container {
-            flex: 1;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .preset-cards {
-            display: flex;
-            gap: 0.25rem;
-            padding: 0.125rem 0;
-            min-width: min-content;
-        }
-
-        .preset-card {
-            background: var(--primary-gradient);
+        .sort-remove-btn {
+            background: var(--error-color);
             color: white;
             border: none;
-            padding: 0.375rem 0.5rem;
+            padding: 0.125rem;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            min-width: 24px;
+            min-height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sort-remove-btn:hover {
+            background: #dc2626;
+        }
+
+        .sort-add-btn {
+            background: var(--success-color);
+            color: white;
+            border: none;
+            padding: 0.375rem;
             border-radius: var(--radius-sm);
             font-size: 0.65rem;
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.2s ease;
-            white-space: nowrap;
-            flex-shrink: 0;
-            min-height: 28px;
             display: flex;
             align-items: center;
+            gap: 0.125rem;
+            min-height: 28px;
         }
 
-        .preset-card:hover {
-            opacity: 0.8;
-            transform: translateY(-1px);
+        .sort-add-btn:hover {
+            background: #059669;
         }
 
-        .preset-card.active {
-            background: var(--success-color) !important;
-            box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.3);
-        }
-
-        .preset-card:nth-child(even) {
-            background: var(--secondary-gradient);
-        }
-
-        .preset-card:nth-child(even).active {
-            background: var(--success-color) !important;
-        }
-
-        /* Preset cards scrollbar styling */
-        .preset-cards-container::-webkit-scrollbar {
-            height: 4px;
-        }
-
-        .preset-cards-container::-webkit-scrollbar-track {
-            background: var(--bg-tertiary);
-            border-radius: var(--radius-sm);
-        }
-
-        .preset-cards-container::-webkit-scrollbar-thumb {
-            background: var(--accent-color);
-            border-radius: var(--radius-sm);
-        }
-
-        .preset-cards-container::-webkit-scrollbar-thumb:hover {
-            background: #4f46e5;
+        .sort-add-btn:disabled {
+            background: var(--text-muted);
+            cursor: not-allowed;
         }
 
         /* Active Filters - Compact */
@@ -851,20 +811,6 @@
                 padding: 0.375rem;
                 min-width: 60px;
             }
-
-            .preset-row {
-                flex-direction: column;
-                gap: 0.25rem;
-            }
-
-            .preset-dropdown-container {
-                flex: none;
-                width: 100%;
-            }
-
-            .preset-cards-container {
-                width: 100%;
-            }
         }
 
         @media (min-width: 480px) and (max-width: 768px) {
@@ -901,16 +847,6 @@
             .clear-all-btn-inline span {
                 display: inline;
             }
-
-            .preset-row {
-                flex-direction: row;
-                gap: 0.375rem;
-            }
-
-            .preset-dropdown-container {
-                flex: 0 0 30%;
-                min-width: 120px;
-            }
         }
 
         @media (min-width: 769px) {
@@ -935,39 +871,35 @@
                 grid-template-columns: 3fr 2fr 2fr auto;
             }
 
-            .sort-info {
-                font-size: 0.75rem;
-                padding: 0.5rem;
+            .sort-controls {
+                gap: 0.25rem;
             }
 
-            .preset-section {
-                padding: 0.5rem;
-            }
-
-            .preset-label {
-                font-size: 0.8rem;
-                margin-bottom: 0.5rem;
-            }
-
-            .preset-row {
+            .sort-level {
                 flex-direction: row;
-                gap: 0.75rem;
+                align-items: center;
+                padding: 0.25rem;
             }
 
-            .preset-dropdown-container {
-                flex: 0 0 20%;
-                min-width: 150px;
+            .sort-level-label {
+                min-width: 50px;
+                font-size: 0.7rem;
             }
 
-            .preset-dropdown {
-                font-size: 0.8rem;
+            .sort-field-select, .sort-direction-select {
+                min-height: 28px;
+                font-size: 0.7rem;
+                padding: 0.25rem;
+            }
+
+            .sort-remove-btn {
+                min-width: 28px;
+                min-height: 28px;
+            }
+
+            .sort-add-btn {
                 padding: 0.5rem;
-                min-height: 32px;
-            }
-
-            .preset-card {
-                font-size: 0.75rem;
-                padding: 0.5rem 0.75rem;
+                font-size: 0.7rem;
                 min-height: 32px;
             }
 
@@ -1151,44 +1083,36 @@
                 min-width: 50px;
             }
 
-            .sort-info {
-                font-size: 0.6rem;
-                padding: 0.125rem;
-            }
-
-            .preset-section {
-                padding: 0.25rem;
-                margin-bottom: 0.25rem;
-            }
-
-            .preset-label {
+            .sort-label {
                 font-size: 0.65rem;
                 margin-bottom: 0.25rem;
             }
 
-            .preset-row {
-                flex-direction: column;
-                gap: 0.25rem;
+            .sort-level {
+                padding: 0.0625rem;
+                gap: 0.0625rem;
             }
 
-            .preset-dropdown-container {
-                flex: none;
-                width: 100%;
-            }
-
-            .preset-dropdown {
-                font-size: 0.65rem;
-                padding: 0.25rem;
-                min-height: 24px;
-            }
-
-            .preset-cards-container {
-                width: 100%;
-            }
-
-            .preset-card {
+            .sort-level-label {
                 font-size: 0.6rem;
-                padding: 0.25rem 0.375rem;
+                min-width: 30px;
+            }
+
+            .sort-field-select, .sort-direction-select {
+                font-size: 0.6rem;
+                padding: 0.0625rem;
+                min-height: 20px;
+            }
+
+            .sort-remove-btn {
+                min-width: 20px;
+                min-height: 20px;
+                padding: 0.0625rem;
+            }
+
+            .sort-add-btn {
+                font-size: 0.6rem;
+                padding: 0.25rem;
                 min-height: 24px;
             }
 
@@ -1324,20 +1248,19 @@
                 </button>
             </div>
 
-            <!-- Preset Section -->
-            <div class="preset-section">
-                <div class="preset-row">
-                    <div class="preset-dropdown-container">
-                        <select id="presetDropdown" class="preset-dropdown" aria-label="Select preset">
-                            <option value="">NONE</option>
-                        </select>
-                    </div>
-                    <div class="preset-cards-container">
-                        <div class="preset-cards" id="presetCards">
-                            <!-- Preset cards will be generated here -->
-                        </div>
-                    </div>
+            <!-- Multi-level Sorting -->
+            <div class="sort-section">
+                <div class="sort-label">
+                    <i class="fas fa-sort" aria-hidden="true"></i>
+                    Multi-Level Sort:
                 </div>
+                <div class="sort-controls" id="sortControls">
+                    <!-- Sort levels will be added here -->
+                </div>
+                <button id="addSortLevel" class="sort-add-btn" onclick="addSortLevel()">
+                    <i class="fas fa-plus" aria-hidden="true"></i>
+                    Add Sort Level
+                </button>
             </div>
             
             <!-- Active Filters -->
@@ -1396,6 +1319,9 @@
             </div>
         </main>
 
+        <!-- Error Container -->
+        <div id="errorContainer" role="alert" aria-live="polite"></div>
+
         <!-- Add Custom File Modal -->
         <div class="modal-overlay" id="addFileModal" style="display: none;">
             <div class="modal">
@@ -1442,6 +1368,7 @@
         let allProducts = [];
         let filteredProducts = [];
         let allTags = [];
+        let sortLevels = []; // Multi-level sorting
         let availableFiles = [];
         let activeFilters = {
             search: '',
@@ -1449,39 +1376,13 @@
             multiTags: []
         };
         let currentFileName = 'products.json (default)';
-        let currentSort = { field: 'upvotes', direction: 'desc' };
 
-        // PRESET MANAGEMENT
-        // To add a new preset: Add an object to the presets array below
-        // To remove a preset: Remove the object from the presets array
-        // To update a preset: Modify the existing object in the presets array
-        // Each preset should have: { id, name, searchTerm }
-        // Note: Cards appear in the order defined below, dropdown is sorted alphabetically
-        const presets = [
-            { id: 'ai', name: 'AI', searchTerm: 'Artificial Intelligence' },
-            { id: 'design', name: 'Design Tools', searchTerm: 'Design Tools' },
-            { id: 'developer', name: 'Developer Tools', searchTerm: 'Developer Tools' },
-            { id: 'no-code', name: 'No-Code', searchTerm: 'No-Code' },
-            { id: 'web', name: 'WebBuild', searchTerm: 'Website Builder' },
-            { id: 'icons', name: 'Icons', searchTerm: 'Icons' },
-            { id: 'health', name: 'Health', searchTerm: 'Health' },
-            { id: 'news', name: 'News', searchTerm: 'News' },
-            { id: 'newsl', name: 'Newsletters', searchTerm: 'Newsletters' },
-            { id: 'notes', name: 'Notes', searchTerm: 'Notes' },
-            { id: 'socm', name: 'Social Media', searchTerm: 'Social Media' },
-            { id: 'soci', name: 'Social Impact', searchTerm: 'Social Impact' },
-            { id: 'socn', name: 'Social Networking', searchTerm: 'Social Networking' },
-            { id: 'github', name: 'GitHub', searchTerm: 'GitHub' },
-            { id: 'chrome', name: 'Chrome Extensions', searchTerm: 'Chrome Extensions' },
-            { id: 'softe', name: 'Software Engineering', searchTerm: 'Software Engineering' },
-            { id: 'opensrc', name: 'Open Source', searchTerm: 'Open Source' },
-            { id: 'webd', name: 'Web Design', searchTerm: 'Web Design' },
-            { id: '3dm', name: '3D Modeling', searchTerm: '3D Modeling' },
-            { id: 'video', name: 'Video', searchTerm: 'Video' },
-            { id: 'api', name: 'API', searchTerm: 'API' },
-            { id: 'games', name: 'Games', searchTerm: 'Games' },
-            { id: 'tech', name: 'Tech', searchTerm: 'Tech' },
-            { id: 'ux', name: 'User Experience', searchTerm: 'User Experience' }
+        // Sort field options
+        const sortFields = [
+            { value: 'name', label: 'Product Name' },
+            { value: 'upvotes', label: 'Upvotes' },
+            { value: 'comments', label: 'Comments' },
+            { value: 'description', label: 'Description' }
         ];
 
         // DOM elements
@@ -1503,120 +1404,24 @@
         const addCustomFileBtn = document.getElementById('addCustomFile');
         const helpBtn = document.getElementById('helpBtn');
         const fileCountDiv = document.getElementById('fileCount');
+        const sortControls = document.getElementById('sortControls');
+        const addSortLevelBtn = document.getElementById('addSortLevel');
         const addFileModal = document.getElementById('addFileModal');
         const helpModal = document.getElementById('helpModal');
         const customFileNameInput = document.getElementById('customFileName');
-        const presetDropdown = document.getElementById('presetDropdown');
-        const presetCardsContainer = document.getElementById('presetCards');
 
         // Initialize the application
         document.addEventListener('DOMContentLoaded', function() {
             loadAvailableFiles();
             loadProducts();
             setupEventListeners();
+            initializeSorting();
             setupTableScrollIndicators();
-            initializePresets();
         });
 
-        // Initialize presets
-        function initializePresets() {
-            populatePresetDropdown();
-            createPresetCards();
-        }
-
-        // Populate preset dropdown
-        function populatePresetDropdown() {
-            presetDropdown.innerHTML = '<option value="">NONE</option>';
-            
-            // Sort presets alphabetically for dropdown only
-            const sortedPresets = [...presets].sort((a, b) => a.name.localeCompare(b.name));
-            
-            sortedPresets.forEach(preset => {
-                const option = document.createElement('option');
-                option.value = preset.id;
-                option.textContent = preset.name;
-                presetDropdown.appendChild(option);
-            });
-        }
-
-        // Create preset cards
-        function createPresetCards() {
-            presetCardsContainer.innerHTML = '';
-            presets.forEach(preset => {
-                const card = document.createElement('button');
-                card.className = 'preset-card';
-                card.dataset.presetId = preset.id;
-                card.textContent = preset.name;
-                card.onclick = () => applyPreset(preset.id);
-                presetCardsContainer.appendChild(card);
-            });
-        }
-
-        // Apply a preset
-        function applyPreset(presetId) {
-            if (!presetId) {
-                clearAllFilters();
-                return;
-            }
-
-            const preset = presets.find(p => p.id === presetId);
-            if (!preset) return;
-
-            // Clear existing filters
-            searchInput.value = '';
-            tagFilter.value = '';
-            multiTagSearch.value = '';
-            clearSearchBtn.style.display = 'none';
-
-            // Apply preset search
-            searchInput.value = preset.searchTerm;
-            clearSearchBtn.style.display = 'block';
-
-            // Update dropdown selection
-            presetDropdown.value = presetId;
-
-            // Update card visual state
-            document.querySelectorAll('.preset-card').forEach(card => {
-                card.classList.remove('active');
-            });
-            document.querySelector(`[data-preset-id="${presetId}"]`).classList.add('active');
-
-            applyFilters();
-        }
-
-        // Handle preset dropdown change
-        function handlePresetDropdown() {
-            const selectedPresetId = presetDropdown.value;
-            applyPreset(selectedPresetId);
-        }
-
-        // Simple sorting functions
-        function applySorting() {
-            if (!currentSort.field) return;
-            
-            filteredProducts.sort((a, b) => {
-                let aValue = a[currentSort.field];
-                let bValue = b[currentSort.field];
-                
-                if (typeof aValue === 'string') {
-                    aValue = aValue.toLowerCase();
-                    bValue = bValue.toLowerCase();
-                }
-                
-                let comparison = 0;
-                
-                if (typeof aValue === 'number') {
-                    comparison = currentSort.direction === 'asc' ? aValue - bValue : bValue - aValue;
-                } else {
-                    if (currentSort.direction === 'asc') {
-                        comparison = aValue < bValue ? -1 : aValue > bValue ? 1 : 0;
-                    } else {
-                        comparison = aValue > bValue ? -1 : aValue < bValue ? 1 : 0;
-                    }
-                }
-                
-                return comparison;
-            });
+        // Initialize sorting with default level
+        function initializeSorting() {
+            addSortLevel('upvotes', 'desc');
         }
 
         // Setup table scroll indicators
@@ -1641,6 +1446,143 @@
             } else {
                 tableContainer.classList.remove('has-more');
             }
+        }
+
+        // Add a new sort level
+        function addSortLevel(defaultField = '', defaultDirection = 'desc') {
+            const levelIndex = sortLevels.length;
+            const levelNumber = levelIndex + 1;
+            
+            const sortLevel = {
+                field: defaultField,
+                direction: defaultDirection
+            };
+            
+            sortLevels.push(sortLevel);
+            
+            const sortLevelDiv = document.createElement('div');
+            sortLevelDiv.className = 'sort-level';
+            sortLevelDiv.dataset.levelIndex = levelIndex;
+            
+            sortLevelDiv.innerHTML = `
+                <span class="sort-level-label">${getOrdinalNumber(levelNumber)}:</span>
+                <select class="sort-field-select" onchange="updateSortLevel(${levelIndex}, 'field', this.value)">
+                    <option value="">Choose field...</option>
+                    ${sortFields.map(field => 
+                        `<option value="${field.value}" ${field.value === defaultField ? 'selected' : ''}>${field.label}</option>`
+                    ).join('')}
+                </select>
+                <select class="sort-direction-select" onchange="updateSortLevel(${levelIndex}, 'direction', this.value)">
+                    <option value="desc" ${defaultDirection === 'desc' ? 'selected' : ''}>Desc</option>
+                    <option value="asc" ${defaultDirection === 'asc' ? 'selected' : ''}>Asc</option>
+                </select>
+                <button class="sort-remove-btn" onclick="removeSortLevel(${levelIndex})" ${levelIndex === 0 ? 'style="display: none;"' : ''}>
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            sortControls.appendChild(sortLevelDiv);
+            updateAddSortButtonState();
+            
+            if (allProducts.length > 0) {
+                applyFilters();
+            }
+        }
+
+        function getOrdinalNumber(n) {
+            const ordinals = ['1st', '2nd', '3rd', '4th', '5th'];
+            return ordinals[n - 1] || `${n}th`;
+        }
+
+        function updateSortLevel(levelIndex, property, value) {
+            if (sortLevels[levelIndex]) {
+                sortLevels[levelIndex][property] = value;
+                applyFilters();
+            }
+        }
+
+        function removeSortLevel(levelIndex) {
+            if (levelIndex === 0) return;
+            
+            sortLevels.splice(levelIndex, 1);
+            
+            const levelElement = document.querySelector(`[data-level-index="${levelIndex}"]`);
+            if (levelElement) {
+                levelElement.remove();
+            }
+            
+            const remainingLevels = sortControls.querySelectorAll('.sort-level');
+            remainingLevels.forEach((level, index) => {
+                level.dataset.levelIndex = index;
+                
+                const label = level.querySelector('.sort-level-label');
+                if (label) {
+                    label.textContent = getOrdinalNumber(index + 1) + ':';
+                }
+                
+                const fieldSelect = level.querySelector('.sort-field-select');
+                const directionSelect = level.querySelector('.sort-direction-select');
+                const removeBtn = level.querySelector('.sort-remove-btn');
+                
+                if (fieldSelect) {
+                    fieldSelect.setAttribute('onchange', `updateSortLevel(${index}, 'field', this.value)`);
+                }
+                if (directionSelect) {
+                    directionSelect.setAttribute('onchange', `updateSortLevel(${index}, 'direction', this.value)`);
+                }
+                if (removeBtn) {
+                    removeBtn.setAttribute('onclick', `removeSortLevel(${index})`);
+                    removeBtn.style.display = index === 0 ? 'none' : 'flex';
+                }
+            });
+            
+            updateAddSortButtonState();
+            applyFilters();
+        }
+
+        function updateAddSortButtonState() {
+            const maxLevels = 5;
+            addSortLevelBtn.disabled = sortLevels.length >= maxLevels;
+            
+            if (sortLevels.length >= maxLevels) {
+                addSortLevelBtn.innerHTML = '<i class="fas fa-plus"></i> Max 5 levels';
+            } else {
+                addSortLevelBtn.innerHTML = '<i class="fas fa-plus"></i> Add Sort Level';
+            }
+        }
+
+        function applyMultiLevelSort() {
+            filteredProducts.sort((a, b) => {
+                for (let level of sortLevels) {
+                    if (!level.field) continue;
+                    
+                    let aValue = a[level.field];
+                    let bValue = b[level.field];
+                    
+                    if (typeof aValue === 'string') {
+                        aValue = aValue.toLowerCase();
+                        bValue = bValue.toLowerCase();
+                    }
+                    
+                    let comparison = 0;
+                    
+                    if (typeof aValue === 'number') {
+                        comparison = level.direction === 'asc' ? aValue - bValue : bValue - aValue;
+                    } else {
+                        if (level.direction === 'asc') {
+                            comparison = aValue < bValue ? -1 : aValue > bValue ? 1 : 0;
+                        } else {
+                            comparison = aValue > bValue ? -1 : aValue < bValue ? 1 : 0;
+                        }
+                    }
+                    
+                    if (comparison !== 0) {
+                        return comparison;
+                    }
+                }
+                
+                return 0;
+            });
         }
 
         // Load available files (simplified for mobile)
@@ -1777,10 +1719,6 @@
                 allProducts = await response.json();
                 filteredProducts = [...allProducts];
                 
-                // Initialize default sort
-                currentSort = { field: 'upvotes', direction: 'desc' };
-                updateSortIcons('upvotes', 'desc');
-                
                 populateTagFilter();
                 updateStats();
                 renderTable();
@@ -1812,10 +1750,6 @@
                     allProducts = jsonData;
                     filteredProducts = [...allProducts];
                     currentFileName = selectedFile.split('/').pop();
-                    
-                    // Initialize default sort
-                    currentSort = { field: 'upvotes', direction: 'desc' };
-                    updateSortIcons('upvotes', 'desc');
                     
                     populateTagFilter();
                     updateStats();
@@ -1869,7 +1803,6 @@
             addCustomFileBtn.addEventListener('click', openAddFileModal);
             helpBtn.addEventListener('click', openHelpModal);
             clearAllFiltersBtn.addEventListener('click', clearAllFilters);
-            presetDropdown.addEventListener('change', handlePresetDropdown);
             
             // Table header sorting
             document.querySelectorAll('.sortable').forEach(header => {
@@ -1891,17 +1824,38 @@
         }
 
         function handleTableSort(field) {
-            if (currentSort.field === field) {
-                // Toggle direction if same field
-                currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+            // Add or update sort level
+            const existingLevel = sortLevels.findIndex(level => level.field === field);
+            
+            if (existingLevel !== -1) {
+                // Toggle direction of existing level
+                sortLevels[existingLevel].direction = sortLevels[existingLevel].direction === 'asc' ? 'desc' : 'asc';
             } else {
-                // New field, default to desc
-                currentSort.field = field;
-                currentSort.direction = 'desc';
+                // Add new sort level or update first level
+                if (sortLevels.length === 0) {
+                    addSortLevel(field, 'desc');
+                    return;
+                } else {
+                    // Update first level
+                    sortLevels[0] = { field: field, direction: 'desc' };
+                }
             }
             
+            // Update UI
+            updateSortLevelUI();
             applyFilters();
-            updateSortIcons(field, currentSort.direction);
+            updateSortIcons(field, sortLevels.find(level => level.field === field).direction);
+        }
+
+        function updateSortLevelUI() {
+            const firstLevel = sortControls.querySelector('.sort-level');
+            if (firstLevel && sortLevels[0]) {
+                const fieldSelect = firstLevel.querySelector('.sort-field-select');
+                const directionSelect = firstLevel.querySelector('.sort-direction-select');
+                
+                if (fieldSelect) fieldSelect.value = sortLevels[0].field;
+                if (directionSelect) directionSelect.value = sortLevels[0].direction;
+            }
         }
 
         function updateSortIcons(activeField, direction) {
@@ -1973,7 +1927,7 @@
                 return matchesSearch && matchesSingleTag && matchesMultiTags;
             });
             
-            applySorting();
+            applyMultiLevelSort();
             updateStats();
             renderTable();
             updateActiveFiltersDisplay();
@@ -1985,11 +1939,10 @@
             tagFilter.value = '';
             clearSearchBtn.style.display = 'none';
             
-            // Reset preset selection
-            presetDropdown.value = '';
-            document.querySelectorAll('.preset-card').forEach(card => {
-                card.classList.remove('active');
-            });
+            // Reset sort levels to just one default level
+            sortLevels = [];
+            sortControls.innerHTML = '';
+            addSortLevel('upvotes', 'desc');
             
             activeFilters = {
                 search: '',

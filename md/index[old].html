@@ -642,51 +642,6 @@
         word-wrap: break-word !important;
       }
     }
-  
-    /* --- Compact mobile & collapsible sidebar tweaks --- */
-    .header-row { display: flex; align-items: center; gap: 8px; }
-    .collapse-btn {
-      margin-left: auto;
-      padding: 4px 8px;
-      border: 1px solid #ddd;
-      background: white;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 12px;
-      line-height: 1;
-    }
-    .collapse-btn:hover { background: #f3f4f6; }
-    .dark-mode .collapse-btn { background: #21262d; border-color: #30363d; color: #c9d1d9; }
-    .dark-mode .collapse-btn:hover { background: #30363d; }
-
-    .sidebar.collapsed { max-height: 48px; overflow: hidden; }
-    .sidebar.collapsed .view-mode-toggle,
-    .sidebar.collapsed .controls,
-    .sidebar.collapsed .file-list { display: none !important; }
-    .sidebar.collapsed .sidebar-header { padding: 8px 12px; }
-    .sidebar.collapsed .sidebar-header h1 { margin: 0; font-size: 14px; }
-
-    @media (max-width: 768px) {
-      /* Tighten everything on small screens */
-      .sidebar {
-        width: 100%;
-        height: auto;
-        max-height: 26vh; /* was 40vh; reduce vertical footprint */
-      }
-      .sidebar-header { padding: 8px 12px; }
-      .sidebar-header h1 { font-size: 16px; margin-bottom: 6px; }
-      .view-mode-toggle { gap: 4px; margin-bottom: 6px; }
-      .mode-btn { padding: 4px 6px; font-size: 11px; border-radius: 4px; }
-      .controls { gap: 6px; }
-      .controls input[type="file"] { font-size: 11px; max-width: 50%; }
-      .refresh-btn { padding: 4px 6px; font-size: 11px; }
-      .theme-toggle { font-size: 11px; }
-      .file-list { padding: 4px; }
-      .file-item { padding: 8px; }
-      .file-name { font-size: 13px; }
-      .content-wrapper { padding: 12px; }
-    }
-
   </style>
 </head>
 <body>
@@ -694,7 +649,7 @@
   <!-- Sidebar -->
   <div class="sidebar">
     <div class="sidebar-header">
-      <div class="header-row"><h1>📚 Markdown</h1><button class="collapse-btn" id="toggleSidebar" title="Show/hide files">📁</button></div>
+      <h1>📚 Markdown Viewer</h1>
       
       <div class="view-mode-toggle">
         <button class="mode-btn active" data-mode="replace">📝 Replace Mode</button>
@@ -796,8 +751,6 @@
     //  DOM ELEMENTS
     //=======================
     const fileList = document.getElementById('fileList');
-    const sidebarEl = document.querySelector('.sidebar');
-    const toggleSidebarBtn = document.getElementById('toggleSidebar');
     const fileInput = document.getElementById('fileInput');
     const refreshBtn = document.getElementById('refreshBtn');
     const themeToggle = document.getElementById('themeToggle');
@@ -822,21 +775,6 @@
     }
 
     function setupEventListeners() {
-      // Sidebar collapse/expand
-      if (toggleSidebarBtn) {
-        toggleSidebarBtn.addEventListener('click', () => {
-          sidebarEl.classList.toggle('collapsed');
-        });
-      }
-      // Default to collapsed on small screens
-      if (window.innerWidth <= 768) {
-        sidebarEl.classList.add('collapsed');
-      }
-      // Re-apply collapse on resize when going to small screens
-      window.addEventListener('resize', () => {
-        if (window.innerWidth <= 768) sidebarEl.classList.add('collapsed');
-      });
-
       // Mode toggle
       modeButtons.forEach(btn => {
         btn.addEventListener('click', () => switchMode(btn.dataset.mode));
@@ -986,10 +924,10 @@
         }
 
         if (currentMode === 'replace') {
-          \1
-          // Auto-collapse the sidebar on small screens after opening a file
-          if (window.innerWidth <= 768) { sidebarEl.classList.add('collapsed'); }
-} else {
+          displayContent(fileName, content, file.type);
+          activeFile = fileName;
+          renderFileList();
+        } else {
           // Tab mode
           const existingTab = openTabs.find(tab => tab.name === fileName);
           if (!existingTab) {

@@ -1,1291 +1,485 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Advanced Markdown Viewer</title>
+  <title>Markdown Viewer • Refactored</title>
 
-  <!-- Load Marked.js for Markdown Parsing -->
+  <!-- Marked.js for Markdown -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
-  <!-- Load Prism.js for Syntax Highlighting -->
+  <!-- Prism.js for code highlighting -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-  
-  <!-- Load MathJax for Math Equations -->
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-  
-  <!-- Load language components for syntax highlighting -->
   <script>
-    // Configure MathJax
-    window.MathJax = {
-      tex: {
-        inlineMath: [['$', '$'], ['\\(', '\\)']],
-        displayMath: [['$$', '$$'], ['\\[', '\\]']],
-        processEscapes: true,
-        processEnvironments: true
-      },
-      options: {
-        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-      }
-    };
-
-    // Load Prism components safely with error handling
+    // Load common Prism languages (safe, with fallback on error)
     function loadPrismComponent(src) {
-      return new Promise((resolve, reject) => {
-        const script = document.createElement('script');
-        script.src = src;
-        script.onload = resolve;
-        script.onerror = () => {
-          console.warn(`Failed to load Prism component: ${src}`);
-          resolve(); // Continue even if component fails
-        };
-        document.head.appendChild(script);
+      return new Promise((resolve) => {
+        const s = document.createElement('script');
+        s.src = src;
+        s.onload = resolve;
+        s.onerror = () => { console.warn('Failed to load Prism component:', src); resolve(); };
+        document.head.appendChild(s);
       });
     }
-
-    // Load components after DOM is ready
-    document.addEventListener('DOMContentLoaded', async function() {
-      const components = [
+    document.addEventListener('DOMContentLoaded', async () => {
+      const langs = [
         'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js',
         'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js',
         'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js',
         'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-csharp.min.js',
         'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js',
         'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js',
-        'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js',
-        'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js',
-        'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-html.min.js',
-        'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js',
-        'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-jsx.min.js',
-        'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js'
+        'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js'
       ];
-
-      // Load all components
-      for (const component of components) {
-        await loadPrismComponent(component);
-      }
-
-      // Set up language aliases after all components are loaded
+      for (const l of langs) await loadPrismComponent(l);
       if (typeof Prism !== 'undefined' && Prism.languages) {
-        // Alias PLSQL to SQL so that both ```sql and ```plsql are highlighted the same way
-        if (Prism.languages.sql) {
-          Prism.languages.plsql = Prism.languages.sql;
-        }
-        
-        // Add VB.NET as an alias for Visual Basic if available
-        if (Prism.languages.csharp) {
-          // Use C# highlighting for VB.NET as a fallback
-          Prism.languages.vbnet = Prism.languages.csharp;
-          Prism.languages.vb = Prism.languages.csharp;
-        }
+        if (Prism.languages.sql) Prism.languages.plsql = Prism.languages.sql;
+        if (Prism.languages.csharp) { Prism.languages.vbnet = Prism.languages.csharp; Prism.languages.vb = Prism.languages.csharp; }
       }
     });
   </script>
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f4f4f4; color:#333; }
+    /* Fixed header */
+    .header { position:fixed; top:0; left:0; width:100%; z-index:999; background:#fff; border-bottom:1px solid #ddd; padding:6px 10px; }
+    .header-top, .header-middle, .header-bottom { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:6px; }
+    .header-top h1 { margin:0; font-size:1.1rem; }
+    #filenameDisplay { color:navy; font-weight:bold; }
+    .dark-mode #filenameDisplay { color:gold; }
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f5f5f5;
-      color: #333;
-      display: flex;
-      height: 100vh;
-      overflow: hidden;
-    }
+    .print-controls { display:flex; align-items:center; gap:10px; font-size:12px; }
+    .print-controls button { padding:5px 10px; cursor:pointer; border:1px solid #ccc; background:#fff; border-radius:4px; font-size:12px; }
+    .print-controls button:hover { background:#f0f0f0; }
+    .theme-switch { font-size:14px; margin-left:auto; } /* push to right */
 
-    /* Sidebar styles */
-    .sidebar {
-      width: 300px;
-      background: white;
-      border-right: 1px solid #e1e5e9;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
+    /* File chooser row */
+    .file-row { display:flex; align-items:center; gap:8px; flex:1; }
+    #fileSelect { min-width: 180px; max-width: 60vw; padding:5px; font-size:12px; }
+    #refreshBtn { padding:5px 10px; font-size:12px; border:1px solid #ccc; background:#fff; border-radius:4px; cursor:pointer; }
+    #refreshBtn:hover { background:#f0f0f0; }
+    .status { font-size:12px; color:#666; }
 
-    .sidebar-header {
-      padding: 16px;
-      border-bottom: 1px solid #e1e5e9;
-      background: #f8f9fa;
-    }
-
-    .sidebar-header h1 {
-      margin: 0 0 12px 0;
-      font-size: 1.5rem;
-      color: #2c3e50;
-    }
-
-    .view-mode-toggle {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-
-    .mode-btn {
-      flex: 1;
-      padding: 8px 12px;
-      border: 1px solid #ddd;
-      background: white;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 12px;
-      transition: all 0.2s;
-    }
-
-    .mode-btn.active {
-      background: #007bff;
-      color: white;
-      border-color: #007bff;
-    }
-
-    .mode-btn:hover:not(.active) {
-      background: #f8f9fa;
-    }
-
-    .controls {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    .controls input[type="file"] {
-      font-size: 12px;
-    }
-
-    .theme-toggle {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 12px;
-    }
-
-    .refresh-btn {
-      padding: 6px 12px;
-      background: #28a745;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 12px;
-    }
-
-    .refresh-btn:hover {
-      background: #218838;
-    }
-
-    .file-list {
-      flex: 1;
-      overflow-y: auto;
-      padding: 8px;
-    }
-
-    .file-item {
-      display: flex;
-      align-items: center;
-      padding: 10px 12px;
-      margin: 2px 0;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: all 0.2s;
-      border: 1px solid transparent;
-    }
-
-    .file-item:hover {
-      background: #f8f9fa;
-      border-color: #e9ecef;
-    }
-
-    .file-item.active {
-      background: #e3f2fd;
-      border-color: #2196f3;
-    }
-
-    .file-icon {
-      margin-right: 8px;
-      font-size: 16px;
-    }
-
-    .file-name {
-      flex: 1;
-      font-size: 14px;
-      word-break: break-word;
-    }
-
-    .no-files {
-      text-align: center;
-      padding: 40px 20px;
-      color: #6c757d;
-    }
-
-    /* Main content area */
-    .main-content {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-
-    /* Tab bar */
-    .tab-bar {
-      display: none;
-      background: white;
-      border-bottom: 1px solid #e1e5e9;
-      padding: 0 16px;
-      overflow-x: auto;
-      white-space: nowrap;
-    }
-
-    .tab-bar.visible {
-      display: flex;
-    }
-
-    .tab {
-      display: inline-flex;
-      align-items: center;
-      padding: 12px 16px;
-      border-bottom: 2px solid transparent;
-      cursor: pointer;
-      font-size: 14px;
-      color: #495057;
-      transition: all 0.2s;
-      position: relative;
-      margin-right: 4px;
-    }
-
-    .tab:hover {
-      color: #007bff;
-      background: #f8f9fa;
-    }
-
-    .tab.active {
-      color: #007bff;
-      border-bottom-color: #007bff;
-      background: #f8f9fa;
-    }
-
-    .tab-close {
-      margin-left: 8px;
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      background: #dc3545;
-      color: white;
-      border: none;
-      cursor: pointer;
-      font-size: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .tab-close:hover {
-      background: #c82333;
-    }
+    /* Drop zone */
+    #dropZone { flex:1; border:2px dashed #bbb; border-radius:5px; text-align:center; padding:6px; color:#666; min-width:160px; }
+    #dropZone.dragover { border-color:#666; background:#fafafa; }
 
     /* Content area */
-    .content-area {
-      flex: 1;
-      overflow-y: auto;
-      background: white;
-    }
+    .body-content { margin-top: 118px; padding:10px; }
+    .container { max-width:100%; margin:0 auto; background:#fff; }
+    #content { padding:10px; }
+    pre { padding:5px; border-radius:5px; overflow-x:auto; font-size:14px; margin:0; }
+    .code-block-container { margin:10px 0; border:1px solid #ddd; border-radius:5px; }
+    .code-control-panel { display:flex; justify-content:space-between; align-items:center; background:#eaeaea; padding:5px; font-size:12px; }
+    .code-controls { display:flex; gap:5px; align-items:center; }
+    .code-control-panel button, .code-control-panel select { font-size:12px; padding:3px 6px; cursor:pointer; }
 
-    .content-wrapper {
-      max-width: 1000px;
-      margin: 0 auto;
-      padding: 32px;
-    }
+    /* Print mode */
+    .print-mode .header { display:none !important; }
+    .print-mode .body-content { margin-top:0 !important; padding:0 !important; }
+    .print-mode .container { background:#fff !important; box-shadow:none !important; border:none !important; }
+    .print-mode .code-control-panel { display:none !important; }
+    .print-mode .code-block-container { border:1px solid #ddd !important; break-inside:avoid; }
+    .print-mode pre { white-space:pre-wrap !important; word-wrap:break-word !important; }
 
-    .welcome-screen {
-      text-align: center;
-      padding: 80px 40px;
-      color: #6c757d;
-    }
+    /* Dark mode */
+    .dark-mode { background:#222; color:#ddd; }
+    .dark-mode .header { background:#333; border-bottom:1px solid #222; color:#ddd; }
+    .dark-mode .container { background:#333; color:#fff; }
+    .dark-mode .print-controls button, .dark-mode #refreshBtn { background:#444; border-color:#666; color:#ddd; }
+    .dark-mode .print-controls button:hover, .dark-mode #refreshBtn:hover { background:#555; }
 
-    .welcome-screen h2 {
-      color: #2c3e50;
-      margin-bottom: 16px;
-    }
-
-    .welcome-screen .feature-list {
-      text-align: left;
-      display: inline-block;
-      margin-top: 32px;
-    }
-
-    .welcome-screen .feature-list li {
-      margin: 8px 0;
-      color: #495057;
-    }
-
-    /* Markdown content styles */
-    .markdown-content h1,
-    .markdown-content h2,
-    .markdown-content h3,
-    .markdown-content h4,
-    .markdown-content h5,
-    .markdown-content h6 {
-      color: #2c3e50;
-      margin-top: 32px;
-      margin-bottom: 16px;
-      line-height: 1.25;
-    }
-
-    .markdown-content h1 {
-      border-bottom: 1px solid #eaecef;
-      padding-bottom: 10px;
-    }
-
-    .markdown-content h2 {
-      border-bottom: 1px solid #eaecef;
-      padding-bottom: 8px;
-    }
-
-    .markdown-content p {
-      margin-bottom: 16px;
-      line-height: 1.6;
-    }
-
-    .markdown-content ul,
-    .markdown-content ol {
-      margin-bottom: 16px;
-      padding-left: 32px;
-    }
-
-    .markdown-content li {
-      margin-bottom: 4px;
-    }
-
-    .markdown-content table {
-      border-collapse: collapse;
-      width: 100%;
-      margin: 16px 0;
-    }
-
-    .markdown-content th,
-    .markdown-content td {
-      border: 1px solid #dfe2e5;
-      padding: 8px 12px;
-      text-align: left;
-    }
-
-    .markdown-content th {
-      background: #f6f8fa;
-      font-weight: 600;
-    }
-
-    .markdown-content blockquote {
-      border-left: 4px solid #dfe2e5;
-      padding: 0 16px;
-      color: #6a737d;
-      margin: 16px 0;
-    }
-
-    .markdown-content a {
-      color: #0366d6;
-      text-decoration: none;
-    }
-
-    .markdown-content a:hover {
-      text-decoration: underline;
-    }
-
-    .markdown-content img {
-      max-width: 100%;
-      height: auto;
-      margin: 16px 0;
-      border-radius: 6px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-
-    /* Code block styles */
-    .code-block-container {
-      margin: 16px 0;
-      border: 1px solid #e1e5e9;
-      border-radius: 8px;
-      overflow: hidden;
-    }
-
-    .code-control-panel {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background-color: #f6f8fa;
-      padding: 8px 12px;
-      font-size: 12px;
-      border-bottom: 1px solid #e1e5e9;
-    }
-
-    .code-controls {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-
-    .code-control-panel button,
-    .code-control-panel select {
-      font-size: 12px;
-      padding: 4px 8px;
-      cursor: pointer;
-      border: 1px solid #d0d7de;
-      background: white;
-      border-radius: 4px;
-    }
-
-    .code-control-panel button:hover {
-      background: #f3f4f6;
-    }
-
-    pre {
-      margin: 0;
-      padding: 16px;
-      overflow-x: auto;
-      font-size: 14px;
-      line-height: 1.45;
-      background: #f6f8fa !important;
-    }
-
-    /* Dark mode styles */
-    .dark-mode {
-      background-color: #0d1117;
-      color: #c9d1d9;
-    }
-
-    .dark-mode .sidebar {
-      background: #161b22;
-      border-right-color: #30363d;
-    }
-
-    .dark-mode .sidebar-header {
-      background: #21262d;
-      border-bottom-color: #30363d;
-    }
-
-    .dark-mode .sidebar-header h1 {
-      color: #f0f6fc;
-    }
-
-    .dark-mode .mode-btn {
-      background: #21262d;
-      border-color: #30363d;
-      color: #c9d1d9;
-    }
-
-    .dark-mode .mode-btn.active {
-      background: #238636;
-      border-color: #238636;
-    }
-
-    .dark-mode .mode-btn:hover:not(.active) {
-      background: #30363d;
-    }
-
-    .dark-mode .refresh-btn {
-      background: #238636;
-    }
-
-    .dark-mode .refresh-btn:hover {
-      background: #2ea043;
-    }
-
-    .dark-mode .file-item:hover {
-      background: #21262d;
-      border-color: #30363d;
-    }
-
-    .dark-mode .file-item.active {
-      background: #0d419d;
-      border-color: #1f6feb;
-    }
-
-    .dark-mode .main-content {
-      background: #0d1117;
-    }
-
-    .dark-mode .tab-bar {
-      background: #161b22;
-      border-bottom-color: #30363d;
-    }
-
-    .dark-mode .tab {
-      color: #c9d1d9;
-    }
-
-    .dark-mode .tab:hover {
-      color: #58a6ff;
-      background: #21262d;
-    }
-
-    .dark-mode .tab.active {
-      color: #58a6ff;
-      border-bottom-color: #58a6ff;
-      background: #21262d;
-    }
-
-    .dark-mode .content-area {
-      background: #0d1117;
-    }
-
-    .dark-mode .welcome-screen h2 {
-      color: #f0f6fc;
-    }
-
-    .dark-mode .markdown-content h1,
-    .dark-mode .markdown-content h2,
-    .dark-mode .markdown-content h3,
-    .dark-mode .markdown-content h4,
-    .dark-mode .markdown-content h5,
-    .dark-mode .markdown-content h6 {
-      color: #f0f6fc;
-    }
-
-    .dark-mode .markdown-content h1,
-    .dark-mode .markdown-content h2 {
-      border-bottom-color: #30363d;
-    }
-
-    .dark-mode .markdown-content th,
-    .dark-mode .markdown-content td {
-      border-color: #30363d;
-    }
-
-    .dark-mode .markdown-content th {
-      background: #161b22;
-    }
-
-    .dark-mode .markdown-content blockquote {
-      border-left-color: #30363d;
-      color: #8b949e;
-    }
-
-    .dark-mode .markdown-content a {
-      color: #58a6ff;
-    }
-
-    .dark-mode .code-block-container {
-      border-color: #30363d;
-    }
-
-    .dark-mode .code-control-panel {
-      background: #161b22;
-      border-bottom-color: #30363d;
-    }
-
-    .dark-mode .code-control-panel button,
-    .dark-mode .code-control-panel select {
-      background: #21262d;
-      border-color: #30363d;
-      color: #c9d1d9;
-    }
-
-    .dark-mode .code-control-panel button:hover {
-      background: #30363d;
-    }
-
-    .dark-mode pre {
-      background: #161b22 !important;
-    }
-
-    /* Responsive design */
+    /* Mobile tightening */
     @media (max-width: 768px) {
-      body {
-        flex-direction: column;
-      }
-
-      .sidebar {
-        width: 100%;
-        height: auto;
-        max-height: 40vh;
-      }
-
-      .main-content {
-        flex: 1;
-      }
-
-      .content-wrapper {
-        padding: 16px;
-      }
+      .body-content { margin-top: 132px; }
+      .header-top h1 { font-size:1rem; }
+      #filenameDisplay { font-size:12px; }
+      #fileSelect { max-width: 55vw; }
     }
 
-    /* Print styles */
     @media print {
-      .sidebar,
-      .tab-bar,
-      .code-control-panel {
-        display: none !important;
-      }
-
-      .main-content {
-        margin: 0;
-      }
-
-      .content-wrapper {
-        max-width: none;
-        padding: 0;
-      }
-
-      .code-block-container {
-        break-inside: avoid;
-        page-break-inside: avoid;
-      }
-
-      pre {
-        white-space: pre-wrap !important;
-        word-wrap: break-word !important;
-      }
+      .header { display:none !important; }
+      .body-content { margin-top:0 !important; padding:0 !important; }
+      .container { background:#fff !important; color:#000 !important; box-shadow:none !important; border:none !important; }
+      .code-control-panel { display:none !important; }
+      .code-block-container { border:1px solid #ddd !important; break-inside:avoid; page-break-inside:avoid; }
+      pre { white-space:pre-wrap !important; word-wrap:break-word !important; font-size:10pt !important; overflow:visible !important; }
+      body { font-size:12pt !important; line-height:1.4 !important; color:#000 !important; background:#fff !important; }
+      h1,h2,h3,h4,h5,h6 { page-break-after: avoid; break-after: avoid; }
+      img { max-width:100% !important; height:auto !important; }
+      .page-break { page-break-before: always; }
+      .no-break { page-break-inside: avoid; }
     }
-  
-    /* --- Compact mobile & collapsible sidebar tweaks --- */
-    .header-row { display: flex; align-items: center; gap: 8px; }
-    .collapse-btn {
-      margin-left: auto;
-      padding: 4px 8px;
-      border: 1px solid #ddd;
-      background: white;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 12px;
-      line-height: 1;
-    }
-    .collapse-btn:hover { background: #f3f4f6; }
-    .dark-mode .collapse-btn { background: #21262d; border-color: #30363d; color: #c9d1d9; }
-    .dark-mode .collapse-btn:hover { background: #30363d; }
-
-    .sidebar.collapsed { max-height: 48px; overflow: hidden; }
-    .sidebar.collapsed .view-mode-toggle,
-    .sidebar.collapsed .controls,
-    .sidebar.collapsed .file-list { display: none !important; }
-    .sidebar.collapsed .sidebar-header { padding: 8px 12px; }
-    .sidebar.collapsed .sidebar-header h1 { margin: 0; font-size: 14px; }
-
-    @media (max-width: 768px) {
-      /* Tighten everything on small screens */
-      .sidebar {
-        width: 100%;
-        height: auto;
-        max-height: 26vh; /* was 40vh; reduce vertical footprint */
-      }
-      .sidebar-header { padding: 8px 12px; }
-      .sidebar-header h1 { font-size: 16px; margin-bottom: 6px; }
-      .view-mode-toggle { gap: 4px; margin-bottom: 6px; }
-      .mode-btn { padding: 4px 6px; font-size: 11px; border-radius: 4px; }
-      .controls { gap: 6px; }
-      .controls input[type="file"] { font-size: 11px; max-width: 50%; }
-      .refresh-btn { padding: 4px 6px; font-size: 11px; }
-      .theme-toggle { font-size: 11px; }
-      .file-list { padding: 4px; }
-      .file-item { padding: 8px; }
-      .file-name { font-size: 13px; }
-      .content-wrapper { padding: 12px; }
-    }
-
   </style>
 </head>
 <body>
 
-  <!-- Sidebar -->
-  <div class="sidebar">
-    <div class="sidebar-header">
-      <div class="header-row"><h1>📚 Markdown</h1><button class="collapse-btn" id="toggleSidebar" title="Show/hide files">📁</button></div>
-      
-      <div class="view-mode-toggle">
-        <button class="mode-btn active" data-mode="replace">📝 Replace Mode</button>
-        <button class="mode-btn" data-mode="tabs">🗂️ Tab Mode</button>
+  <div class="header">
+    <!-- Top -->
+    <div class="header-top">
+      <h1>Markdown Viewer</h1>
+      <span id="filenameDisplay">No file loaded</span>
+
+      <!-- Right-aligned theme toggle -->
+      <label class="theme-switch">
+        <input type="checkbox" id="themeToggle"> Dark Mode
+      </label>
+    </div>
+
+    <!-- Middle: print + file list -->
+    <div class="header-middle">
+      <div class="print-controls">
+        <button id="printBtn" title="Print Document">🖨️ Print</button>
+        <label class="print-mode-toggle"><input type="checkbox" id="printModeToggle"> Print Preview Mode</label>
+        <button id="addPageBreak" title="Add Page Break at Cursor">Add Page Break</button>
       </div>
 
-      <div class="controls">
-        <input type="file" id="fileInput" accept=".md,.html" multiple>
-        <button class="refresh-btn" id="refreshBtn">🔄 Refresh</button>
-        <label class="theme-toggle">
-          <input type="checkbox" id="themeToggle"> 🌙 Dark
-        </label>
+      <div class="file-row">
+        <select id="fileSelect" title="Markdown files in /items"></select>
+        <button id="refreshBtn" title="Rescan items">Refresh</button>
+        <span class="status" id="statusMsg"></span>
       </div>
     </div>
 
-    <div class="file-list" id="fileList">
-      <div class="no-files">
-        <p><strong>📁 No files found</strong></p>
-        <p>To get started:</p>
-        <ol style="text-align: left; font-size: 13px;">
-          <li>Create an <code>items/</code> folder</li>
-          <li>Add <code>manifest.json</code> with file list</li>
-          <li>Or use the file input above</li>
-        </ol>
-        <details style="margin-top: 16px; text-align: left; font-size: 12px;">
-          <summary style="cursor: pointer; font-weight: bold;">📋 manifest.json example</summary>
-          <pre style="background: #f8f9fa; padding: 8px; border-radius: 4px; margin-top: 8px; overflow-x: auto;">{
-  "files": [
-    "README.md",
-    "docs/guide.md",
-    "examples/demo.html"
-  ]
-}</pre>
-        </details>
-      </div>
+    <!-- Bottom: dropzone + local file input -->
+    <div class="header-bottom">
+      <div id="dropZone">Drag &amp; Drop .md files</div>
+      <input type="file" id="fileInput" accept=".md">
     </div>
   </div>
 
-  <!-- Main content area -->
-  <div class="main-content">
-    <!-- Tab bar (hidden by default) -->
-    <div class="tab-bar" id="tabBar"></div>
-
-    <!-- Content area -->
-    <div class="content-area">
-      <div class="content-wrapper">
-        <div class="welcome-screen" id="welcomeScreen">
-          <h2>🚀 Advanced Markdown Viewer</h2>
-          <p>A powerful, GitHub Pages-compatible markdown viewer with advanced features</p>
-          
-          <div class="feature-list">
-            <h3>✨ Features</h3>
-            <ul>
-              <li>📂 Auto-discovery of markdown and HTML files</li>
-              <li>🔄 Toggle between Replace and Tab viewing modes</li>
-              <li>🎨 Syntax highlighting for 15+ programming languages</li>
-              <li>🧮 Math equation support (LaTeX/MathJax)</li>
-              <li>📊 Full table support with styling</li>
-              <li>🌙 Dark/Light mode toggle</li>
-              <li>📱 Responsive design for all devices</li>
-              <li>🖨️ Print-optimized layouts</li>
-              <li>⚡ Fast, client-side processing</li>
-              <li>🔧 Interactive code block controls</li>
-            </ul>
-          </div>
+  <div class="body-content">
+    <div class="container">
+      <div id="content">
+        <div style="text-align:center; color:#666; padding:40px;">
+          <h2>Welcome</h2>
+          <p>Select a file from the list above (auto-scanned from <code>/items</code>), or drop a local <code>.md</code> file.</p>
+          <p><strong>Print tools:</strong> Print Preview Mode, page-break insertion, code blocks that avoid page splits.</p>
         </div>
-        
-        <div class="markdown-content" id="markdownContent" style="display: none;"></div>
       </div>
     </div>
   </div>
 
   <script>
-    //=======================
-    //  CONFIGURATION
-    //=======================
+    //======================
+    // CONFIG
+    //======================
     const CONFIG = {
-      ITEMS_FOLDER: 'items/',
-      MANIFEST_FILE: 'items/manifest.json',
-      ACCEPTED_EXTENSIONS: ['.md', '.html', '.htm'],
-      MARKED_OPTIONS: {
-        breaks: true,
-        gfm: true,
-        tables: true,
-        sanitize: false
-      }
+      ACCEPTED_EXTENSIONS: ['.md'],
+      MARKED_OPTIONS: { breaks:true, gfm:true },
+
+      // Auto-scan strategy for /items:
+      // 1) Try items/manifest.json (array of filenames or {files:[]})
+      // 2) If on GitHub Pages, try GitHub API to list /items contents
+      // 3) Optional fallback: explicit owner/repo/branch
+      GITHUB_FALLBACK: {
+        owner: '',    // e.g., 'yourname' (leave blank to auto-detect on *.github.io)
+        repo: '',     // e.g., 'yourname.github.io' or 'project-repo'
+        branch: 'main'
+      },
+      DEFAULT_FILE: '' // e.g., 'README.md'
     };
 
-    //=======================
-    //  STATE MANAGEMENT
-    //=======================
-    let currentMode = 'replace'; // 'replace' or 'tabs'
-    let files = [];
-    let openTabs = [];
-    let activeTab = null;
-    let activeFile = null;
+    //======================
+    // ELEMENTS
+    //======================
+    const dropZone         = document.getElementById('dropZone');
+    const fileInput        = document.getElementById('fileInput');
+    const fileNameDisplay  = document.getElementById('filenameDisplay');
+    const contentContainer = document.getElementById('content');
+    const themeToggle      = document.getElementById('themeToggle');
+    const printBtn         = document.getElementById('printBtn');
+    const printModeToggle  = document.getElementById('printModeToggle');
+    const addPageBreakBtn  = document.getElementById('addPageBreak');
+    const fileSelect       = document.getElementById('fileSelect');
+    const refreshBtn       = document.getElementById('refreshBtn');
+    const statusMsg        = document.getElementById('statusMsg');
 
-    //=======================
-    //  DOM ELEMENTS
-    //=======================
-    const fileList = document.getElementById('fileList');
-    const sidebarEl = document.querySelector('.sidebar');
-    const toggleSidebarBtn = document.getElementById('toggleSidebar');
-    const fileInput = document.getElementById('fileInput');
-    const refreshBtn = document.getElementById('refreshBtn');
-    const themeToggle = document.getElementById('themeToggle');
-    const tabBar = document.getElementById('tabBar');
-    const welcomeScreen = document.getElementById('welcomeScreen');
-    const markdownContent = document.getElementById('markdownContent');
-    const modeButtons = document.querySelectorAll('.mode-btn');
+    //======================
+    // UTIL
+    //======================
+    function setStatus(msg, timeout=3000) {
+      statusMsg.textContent = msg || '';
+      if (timeout) {
+        setTimeout(() => { if (statusMsg.textContent === msg) statusMsg.textContent=''; }, timeout);
+      }
+    }
+    function isMarkdown(name) {
+      const lower = name.toLowerCase();
+      return CONFIG.ACCEPTED_EXTENSIONS.some(ext => lower.endsWith(ext));
+    }
+    function sanitizePath(name) {
+      // Prevent path traversal; only allow simple names
+      return name.replace(/[^a-zA-Z0-9._\-\/]/g, '').replace(/^\/*/, '');
+    }
 
-    //=======================
-    //  INITIALIZATION
-    //=======================
-    document.addEventListener('DOMContentLoaded', function() {
-      initializeApp();
-    });
-
-    function initializeApp() {
-      setupEventListeners();
-      loadFilesFromManifest();
-      
-      // Configure marked
+    //======================
+    // LOADING & RENDERING
+    //======================
+    function renderMarkdown(name, mdText) {
+      fileNameDisplay.textContent = name;
       marked.setOptions(CONFIG.MARKED_OPTIONS);
+      contentContainer.innerHTML = '<h2>' + name + '</h2>' + marked.parse(mdText);
+      Prism.highlightAll();
+      wrapCodeBlocks();
+      // Scroll to top
+      window.scrollTo({ top: 0 });
     }
 
-    function setupEventListeners() {
-      // Sidebar collapse/expand
-      if (toggleSidebarBtn) {
-        toggleSidebarBtn.addEventListener('click', () => {
-          sidebarEl.classList.toggle('collapsed');
-        });
-      }
-      // Default to collapsed on small screens
-      if (window.innerWidth <= 768) {
-        sidebarEl.classList.add('collapsed');
-      }
-      // Re-apply collapse on resize when going to small screens
-      window.addEventListener('resize', () => {
-        if (window.innerWidth <= 768) sidebarEl.classList.add('collapsed');
-      });
-
-      // Mode toggle
-      modeButtons.forEach(btn => {
-        btn.addEventListener('click', () => switchMode(btn.dataset.mode));
-      });
-
-      // File input
-      fileInput.addEventListener('change', handleFileInput);
-
-      // Refresh button
-      refreshBtn.addEventListener('click', loadFilesFromManifest);
-
-      // Theme toggle
-      themeToggle.addEventListener('change', toggleTheme);
-
-      // Keyboard shortcuts
-      document.addEventListener('keydown', handleKeyboardShortcuts);
-    }
-
-    //=======================
-    //  FILE MANAGEMENT
-    //=======================
-    async function loadFilesFromManifest() {
+    async function loadMarkdownFile(url, nameForHeader) {
       try {
-        const response = await fetch(CONFIG.MANIFEST_FILE);
-        if (!response.ok) throw new Error('Manifest not found');
-        
-        const manifest = await response.json();
-        files = manifest.files ? manifest.files.map(file => ({
-          name: file,
-          path: CONFIG.ITEMS_FOLDER + file,
-          type: getFileType(file)
-        })).sort((a, b) => a.name.localeCompare(b.name)) : [];
-        
-        renderFileList();
-      } catch (error) {
-        console.log('No manifest found, showing manual input option');
-        files = [];
-        renderFileList();
+        const res = await fetch(url, { cache: 'no-store' });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const text = await res.text();
+        renderMarkdown(nameForHeader || url, text);
+      } catch (err) {
+        console.error('Markdown loading error:', err);
+        contentContainer.innerHTML = '<p style="color:#b00">Failed to load: ' + url + '</p>';
       }
     }
 
-    function handleFileInput(event) {
-      const selectedFiles = Array.from(event.target.files);
-      
-      selectedFiles.forEach(file => {
-        if (CONFIG.ACCEPTED_EXTENSIONS.some(ext => file.name.toLowerCase().endsWith(ext))) {
-          const fileObj = {
-            name: file.name,
-            file: file,
-            type: getFileType(file.name),
-            isLocal: true
-          };
-          
-          // Add to files array if not already present
-          if (!files.find(f => f.name === file.name)) {
-            files.push(fileObj);
-          }
-        }
-      });
-      
-      // Sort files alphabetically
-      files.sort((a, b) => a.name.localeCompare(b.name));
-      renderFileList();
-    }
+    //======================
+    // CODE BLOCK CONTROLS
+    //======================
+    const CODE_CONF = {
+      DEFAULT_CODE_FONT_SIZE: 14,
+      MIN_CODE_FONT_SIZE: 8,
+      CODE_FONTS: ['Consolas','Courier New','Lucida Console','Monaco'],
+      DEFAULT_LINE_HEIGHT: 1.5,
+      MIN_LINE_HEIGHT: 0.1,
+      LINE_HEIGHT_STEP: 0.1,
+      COPY_FEEDBACK_DURATION: 2000
+    };
 
-    function getFileType(filename) {
-      const ext = filename.toLowerCase().split('.').pop();
-      return ext === 'md' ? 'markdown' : 'html';
-    }
-
-    function getFileIcon(type) {
-      return type === 'markdown' ? '📝' : '🌐';
-    }
-
-    //=======================
-    //  UI RENDERING
-    //=======================
-    function renderFileList() {
-      if (files.length === 0) {
-        fileList.innerHTML = `
-          <div class="no-files">
-            <p><strong>📁 No files found</strong></p>
-            <p>To get started:</p>
-            <ol style="text-align: left; font-size: 13px;">
-              <li>Create an <code>items/</code> folder</li>
-              <li>Add <code>manifest.json</code> with file list</li>
-              <li>Or use the file input above</li>
-            </ol>
-            <details style="margin-top: 16px; text-align: left; font-size: 12px;">
-              <summary style="cursor: pointer; font-weight: bold;">📋 manifest.json example</summary>
-              <pre style="background: #f8f9fa; padding: 8px; border-radius: 4px; margin-top: 8px; overflow-x: auto;">{
-  "files": [
-    "README.md",
-    "docs/guide.md", 
-    "examples/demo.html"
-  ]
-}</pre>
-            </details>
-          </div>
-        `;
-        return;
-      }
-
-      fileList.innerHTML = files.map(file => `
-        <div class="file-item ${activeFile === file.name ? 'active' : ''}" 
-             onclick="openFile('${file.name}')">
-          <span class="file-icon">${getFileIcon(file.type)}</span>
-          <span class="file-name">${file.name}</span>
-        </div>
-      `).join('');
-    }
-
-    function renderTabs() {
-      if (currentMode === 'replace') {
-        tabBar.classList.remove('visible');
-        return;
-      }
-
-      tabBar.classList.add('visible');
-      tabBar.innerHTML = openTabs.map(tab => `
-        <div class="tab ${activeTab === tab.name ? 'active' : ''}" 
-             onclick="switchTab('${tab.name}')">
-          <span>${tab.name}</span>
-          <button class="tab-close" onclick="closeTab('${tab.name}', event)">×</button>
-        </div>
-      `).join('');
-    }
-
-    //=======================
-    //  FILE OPERATIONS
-    //=======================
-    async function openFile(fileName) {
-      const file = files.find(f => f.name === fileName);
-      if (!file) return;
-
-      try {
-        let content;
-        
-        if (file.isLocal) {
-          // Read local file
-          content = await readLocalFile(file.file);
-        } else {
-          // Fetch remote file
-          const response = await fetch(file.path);
-          if (!response.ok) throw new Error(`Failed to load ${fileName}`);
-          content = await response.text();
-        }
-
-        if (currentMode === 'replace') {
-          \1
-          // Auto-collapse the sidebar on small screens after opening a file
-          if (window.innerWidth <= 768) { sidebarEl.classList.add('collapsed'); }
-} else {
-          // Tab mode
-          const existingTab = openTabs.find(tab => tab.name === fileName);
-          if (!existingTab) {
-            openTabs.push({
-              name: fileName,
-              content: content,
-              type: file.type
-            });
-          }
-          switchTab(fileName);
-          renderTabs();
-        }
-      } catch (error) {
-        console.error('Error loading file:', error);
-        alert(`Error loading ${fileName}: ${error.message}`);
-      }
-    }
-
-    function readLocalFile(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = e => resolve(e.target.result);
-        reader.onerror = reject;
-        reader.readAsText(file);
-      });
-    }
-
-    function displayContent(fileName, content, type) {
-      welcomeScreen.style.display = 'none';
-      markdownContent.style.display = 'block';
-
-      if (type === 'markdown') {
-        // Process markdown with MathJax support
-        const html = marked.parse(content);
-        markdownContent.innerHTML = `<h1>${fileName}</h1>${html}`;
-        
-        // Highlight code blocks
-        Prism.highlightAll();
-        wrapCodeBlocks();
-        
-        // Process math equations
-        if (window.MathJax) {
-          MathJax.typesetPromise([markdownContent]).catch(err => {
-            console.warn('MathJax error:', err);
-          });
-        }
-      } else {
-        // Display HTML content
-        markdownContent.innerHTML = `<h1>${fileName}</h1><div>${content}</div>`;
-      }
-    }
-
-    //=======================
-    //  TAB MANAGEMENT
-    //=======================
-    function switchTab(tabName) {
-      const tab = openTabs.find(t => t.name === tabName);
-      if (!tab) return;
-
-      activeTab = tabName;
-      displayContent(tab.name, tab.content, tab.type);
-      renderTabs();
-    }
-
-    function closeTab(tabName, event) {
-      event.stopPropagation();
-      
-      const tabIndex = openTabs.findIndex(t => t.name === tabName);
-      if (tabIndex === -1) return;
-
-      openTabs.splice(tabIndex, 1);
-
-      // Switch to another tab or welcome screen
-      if (activeTab === tabName) {
-        if (openTabs.length > 0) {
-          const newActiveIndex = Math.min(tabIndex, openTabs.length - 1);
-          switchTab(openTabs[newActiveIndex].name);
-        } else {
-          activeTab = null;
-          showWelcomeScreen();
-        }
-      }
-
-      renderTabs();
-    }
-
-    function switchMode(mode) {
-      currentMode = mode;
-      
-      // Update button states
-      modeButtons.forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.mode === mode);
-      });
-
-      if (mode === 'replace') {
-        // Close all tabs and show current file
-        openTabs = [];
-        tabBar.classList.remove('visible');
-        
-        if (activeFile) {
-          const file = files.find(f => f.name === activeFile);
-          if (file) openFile(activeFile);
-        } else {
-          showWelcomeScreen();
-        }
-      } else {
-        // Switch to tab mode
-        renderTabs();
-        if (activeFile && !openTabs.find(t => t.name === activeFile)) {
-          openFile(activeFile);
-        }
-      }
-    }
-
-    function showWelcomeScreen() {
-      welcomeScreen.style.display = 'block';
-      markdownContent.style.display = 'none';
-      activeFile = null;
-      renderFileList();
-    }
-
-    //=======================
-    //  CODE BLOCK ENHANCEMENT
-    //=======================
-    function wrapCodeBlocks() {
-      const preElements = markdownContent.querySelectorAll('pre');
-      preElements.forEach(pre => {
-        if (pre.parentElement.classList.contains('code-block-container')) return;
-
-        const codeElement = pre.querySelector('code');
-        if (!codeElement) return;
-
-        const container = document.createElement('div');
-        container.className = 'code-block-container';
-
-        const topPanel = createCodeControlPanel(codeElement);
-        const bottomPanel = createCodeControlPanel(codeElement);
-
-        pre.parentElement.insertBefore(container, pre);
-        container.appendChild(topPanel);
-        container.appendChild(pre);
-        container.appendChild(bottomPanel);
-      });
-    }
-
-    function createCodeControlPanel(codeElement) {
+    function createControlPanel(codeElement) {
       const panel = document.createElement('div');
       panel.className = 'code-control-panel';
 
-      // Copy button (left)
-      const copyBtnLeft = document.createElement('button');
-      copyBtnLeft.textContent = 'Copy';
-      copyBtnLeft.addEventListener('click', () => copyToClipboard(codeElement, copyBtnLeft));
+      const copyLeft = document.createElement('button');
+      copyLeft.textContent = 'Copy';
+      copyLeft.addEventListener('click', () => {
+        navigator.clipboard.writeText(codeElement.innerText).then(() => {
+          copyLeft.textContent = 'Copied!';
+          setTimeout(() => copyLeft.textContent = 'Copy', CODE_CONF.COPY_FEEDBACK_DURATION);
+        });
+      });
 
-      // Controls container (center)
+      const copyRight = document.createElement('button');
+      copyRight.textContent = 'Copy';
+      copyRight.addEventListener('click', () => {
+        navigator.clipboard.writeText(codeElement.innerText).then(() => {
+          copyRight.textContent = 'Copied!';
+          setTimeout(() => copyRight.textContent = 'Copy', CODE_CONF.COPY_FEEDBACK_DURATION);
+        });
+      });
+
       const controls = document.createElement('div');
       controls.className = 'code-controls';
 
-      // Font size controls
-      const decreaseFont = document.createElement('button');
-      decreaseFont.textContent = 'A-';
-      const increaseFont = document.createElement('button');
-      increaseFont.textContent = 'A+';
+      const decFont = document.createElement('button'); decFont.textContent = 'A-';
+      const incFont = document.createElement('button'); incFont.textContent = 'A+';
+      const fontSel = document.createElement('select');
+      CODE_CONF.CODE_FONTS.forEach(f => { const o=document.createElement('option'); o.value=f; o.textContent=f; fontSel.appendChild(o); });
+      const decLine = document.createElement('button'); decLine.textContent='Line -';
+      const incLine = document.createElement('button'); incLine.textContent='Line +';
 
-      // Font family selector
-      const fontSelector = document.createElement('select');
-      ['Consolas', 'Monaco', 'Courier New', 'SF Mono', 'Menlo'].forEach(font => {
-        const option = document.createElement('option');
-        option.value = font;
-        option.textContent = font;
-        fontSelector.appendChild(option);
-      });
+      let currentFontSize = parseFloat(getComputedStyle(codeElement).fontSize) || CODE_CONF.DEFAULT_CODE_FONT_SIZE;
+      const cs = getComputedStyle(codeElement);
+      const lh = cs.lineHeight;
+      const fs = cs.fontSize;
+      let currentLineHeight;
+      if (lh === 'normal') currentLineHeight = CODE_CONF.DEFAULT_LINE_HEIGHT;
+      else if (lh.endsWith('px')) currentLineHeight = parseFloat(lh) / parseFloat(fs);
+      else currentLineHeight = parseFloat(lh) || CODE_CONF.DEFAULT_LINE_HEIGHT;
 
-      // Line spacing controls
-      const decreaseLine = document.createElement('button');
-      decreaseLine.textContent = 'Line -';
-      const increaseLine = document.createElement('button');
-      increaseLine.textContent = 'Line +';
+      decFont.addEventListener('click', () => { currentFontSize = Math.max(CODE_CONF.MIN_CODE_FONT_SIZE, currentFontSize-1); codeElement.style.fontSize = currentFontSize + 'px'; });
+      incFont.addEventListener('click', () => { currentFontSize += 1; codeElement.style.fontSize = currentFontSize + 'px'; });
+      fontSel.addEventListener('change', () => { codeElement.style.fontFamily = fontSel.value; });
+      decLine.addEventListener('click', () => { currentLineHeight = Math.max(CODE_CONF.MIN_LINE_HEIGHT, currentLineHeight - CODE_CONF.LINE_HEIGHT_STEP); codeElement.style.lineHeight = currentLineHeight; });
+      incLine.addEventListener('click', () => { currentLineHeight += CODE_CONF.LINE_HEIGHT_STEP; codeElement.style.lineHeight = currentLineHeight; });
 
-      controls.appendChild(decreaseFont);
-      controls.appendChild(increaseFont);
-      controls.appendChild(fontSelector);
-      controls.appendChild(decreaseLine);
-      controls.appendChild(increaseLine);
+      controls.appendChild(decFont); controls.appendChild(incFont); controls.appendChild(fontSel); controls.appendChild(decLine); controls.appendChild(incLine);
 
-      // Copy button (right)
-      const copyBtnRight = document.createElement('button');
-      copyBtnRight.textContent = 'Copy';
-      copyBtnRight.addEventListener('click', () => copyToClipboard(codeElement, copyBtnRight));
-
-      // Event listeners
-      let fontSize = 14;
-      let lineHeight = 1.45;
-
-      decreaseFont.addEventListener('click', () => {
-        fontSize = Math.max(8, fontSize - 1);
-        codeElement.style.fontSize = fontSize + 'px';
-      });
-
-      increaseFont.addEventListener('click', () => {
-        fontSize += 1;
-        codeElement.style.fontSize = fontSize + 'px';
-      });
-
-      fontSelector.addEventListener('change', () => {
-        codeElement.style.fontFamily = fontSelector.value;
-      });
-
-      decreaseLine.addEventListener('click', () => {
-        lineHeight = Math.max(0.5, lineHeight - 0.1);
-        codeElement.style.lineHeight = lineHeight;
-      });
-
-      increaseLine.addEventListener('click', () => {
-        lineHeight += 0.1;
-        codeElement.style.lineHeight = lineHeight;
-      });
-
-      panel.appendChild(copyBtnLeft);
+      panel.appendChild(copyLeft);
       panel.appendChild(controls);
-      panel.appendChild(copyBtnRight);
-
+      panel.appendChild(copyRight);
       return panel;
     }
 
-    async function copyToClipboard(codeElement, button) {
+    function wrapCodeBlocks() {
+      const preEls = document.querySelectorAll('pre');
+      preEls.forEach(pre => {
+        if (pre.parentElement.classList.contains('code-block-container')) return;
+        const code = pre.querySelector('code'); if (!code) return;
+        const container = document.createElement('div'); container.className = 'code-block-container';
+        const top = createControlPanel(code); const bottom = createControlPanel(code);
+        pre.parentElement.insertBefore(container, pre); container.appendChild(top); container.appendChild(pre); container.appendChild(bottom);
+      });
+    }
+
+    //======================
+    // PRINT & THEME
+    //======================
+    function togglePrintMode() {
+      document.body.classList.toggle('print-mode');
+      const isPM = document.body.classList.contains('print-mode');
+      if (isPM) {
+        const y = window.pageYOffset; window.scrollTo(0,0); document.body.dataset.scrollY = y;
+      } else {
+        const y = parseInt(document.body.dataset.scrollY || '0', 10); window.scrollTo(0, y);
+      }
+    }
+    function printDocument() {
+      const was = document.body.classList.contains('print-mode');
+      if (!was) document.body.classList.add('print-mode');
+      window.print();
+      if (!was) document.body.classList.remove('print-mode');
+    }
+
+    themeToggle.addEventListener('change', () => document.body.classList.toggle('dark-mode'));
+    printBtn.addEventListener('click', printDocument);
+    printModeToggle.addEventListener('change', togglePrintMode);
+    addPageBreakBtn.addEventListener('click', () => {
+      const sel = window.getSelection();
+      if (sel.rangeCount > 0) {
+        const range = sel.getRangeAt(0);
+        const pb = document.createElement('div');
+        pb.className = 'page-break';
+        pb.innerHTML = '<hr style="border:1px dashed #ccc; margin:20px 0;"><p style="text-align:center; color:#999; font-size:12px;">--- Page Break ---</p>';
+        range.insertNode(pb);
+      } else {
+        alert('Place your cursor where you want to add a page break.');
+      }
+    });
+
+    //======================
+    // DRAG/DROP + LOCAL FILE
+    //======================
+    dropZone.addEventListener('dragover', (e) => { e.preventDefault(); e.stopPropagation(); dropZone.classList.add('dragover'); });
+    dropZone.addEventListener('dragleave', (e) => { e.preventDefault(); e.stopPropagation(); dropZone.classList.remove('dragover'); });
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault(); e.stopPropagation(); dropZone.classList.remove('dragover');
+      const file = e.dataTransfer.files[0];
+      if (file && isMarkdown(file.name)) {
+        const r = new FileReader(); r.onload = ev => renderMarkdown(file.name, ev.target.result); r.readAsText(file);
+      } else { alert('Please drop a .md file.'); }
+    });
+    fileInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file && isMarkdown(file.name)) {
+        const r = new FileReader(); r.onload = ev => renderMarkdown(file.name, ev.target.result); r.readAsText(file);
+      }
+    });
+
+    //======================
+    // AUTO-SCAN /items
+    //======================
+    function tryAutoDetectGithub() {
+      const host = location.hostname.toLowerCase(); // e.g., user.github.io
+      const path = location.pathname;               // e.g., / or /project/
+      const out = { owner:'', repo:'', branch: CONFIG.GITHUB_FALLBACK.branch || 'main' };
+
+      if (host.endsWith('.github.io')) {
+        const owner = host.split('.github.io')[0];
+        out.owner = owner;
+        // If root path or 1st path seg empty => user/organization site
+        const segs = path.split('/').filter(Boolean); // ['', 'project'] -> ['project']
+        if (segs.length === 0) {
+          out.repo = owner + '.github.io';
+        } else {
+          out.repo = segs[0];
+        }
+      }
+      // Allow override if fallback is provided
+      if (CONFIG.GITHUB_FALLBACK.owner) out.owner = CONFIG.GITHUB_FALLBACK.owner;
+      if (CONFIG.GITHUB_FALLBACK.repo) out.repo  = CONFIG.GITHUB_FALLBACK.repo;
+      return (out.owner && out.repo) ? out : null;
+    }
+
+    async function listViaManifest() {
       try {
-        await navigator.clipboard.writeText(codeElement.textContent);
-        const originalText = button.textContent;
-        button.textContent = 'Copied!';
-        setTimeout(() => button.textContent = originalText, 2000);
-      } catch (err) {
-        console.error('Copy failed:', err);
-        button.textContent = 'Failed';
-        setTimeout(() => button.textContent = 'Copy', 2000);
+        const res = await fetch('items/manifest.json', { cache:'no-store' });
+        if (!res.ok) return null;
+        const data = await res.json();
+        if (Array.isArray(data)) return data.filter(isMarkdown);
+        if (Array.isArray(data.files)) return data.files.filter(isMarkdown);
+        return null;
+      } catch { return null; }
+    }
+
+    async function listViaGithubAPI() {
+      const gh = tryAutoDetectGithub();
+      if (!gh) return null;
+      try {
+        const url = `https://api.github.com/repos/${gh.owner}/${gh.repo}/contents/items?ref=${encodeURIComponent(gh.branch)}`;
+        const res = await fetch(url, { headers: { 'Accept': 'application/vnd.github.v3+json' } });
+        if (!res.ok) throw new Error('GitHub API HTTP '+res.status);
+        const data = await res.json();
+        if (!Array.isArray(data)) return null;
+        // Map to filenames (ignore subfolders; GH API returns objects with 'type': 'file'/'dir')
+        return data.filter(entry => entry.type === 'file' && isMarkdown(entry.name)).map(entry => entry.name);
+      } catch (e) {
+        console.warn('GitHub API listing failed:', e);
+        return null;
       }
     }
 
-    //=======================
-    //  THEME MANAGEMENT
-    //=======================
-    function toggleTheme() {
-      document.body.classList.toggle('dark-mode');
-      localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+    async function scanItems() {
+      setStatus('Scanning /items…');
+      let files = await listViaManifest();
+      if (!files) files = await listViaGithubAPI();
+      if (!files) {
+        setStatus('No manifest found; create items/manifest.json or enable GitHub Pages.', 4000);
+        files = [];
+      }
+      files.sort((a,b) => a.localeCompare(b, undefined, {numeric:true, sensitivity:'base'}));
+      fileSelect.innerHTML = '';
+      if (files.length === 0) {
+        const op = document.createElement('option'); op.textContent = 'No files found in /items'; op.disabled = true; op.selected = true;
+        fileSelect.appendChild(op);
+      } else {
+        const prompt = document.createElement('option'); prompt.textContent = 'Select a file…'; prompt.disabled = true; prompt.selected = true;
+        fileSelect.appendChild(prompt);
+        for (const name of files) {
+          const op = document.createElement('option'); op.value = name; op.textContent = name; fileSelect.appendChild(op);
+        }
+        setStatus(`Found ${files.length} file(s).`, 2500);
+      }
+      return files;
     }
 
-    // Load saved theme
-    if (localStorage.getItem('darkMode') === 'true') {
-      document.body.classList.add('dark-mode');
-      themeToggle.checked = true;  
-    }
+    fileSelect.addEventListener('change', async () => {
+      const name = fileSelect.value;
+      if (!name) return;
+      const safe = sanitizePath(name);
+      await loadMarkdownFile('items/' + safe, name);
+      // On mobile, scroll content into view
+      if (window.innerWidth <= 768) window.scrollTo({ top: document.querySelector('.body-content').offsetTop, behavior: 'smooth' });
+    });
 
-    //=======================
-    //  KEYBOARD SHORTCUTS
-    //=======================
-    function handleKeyboardShortcuts(e) {
+    refreshBtn.addEventListener('click', scanItems);
+
+    //======================
+    // INIT
+    //======================
+    document.addEventListener('DOMContentLoaded', async () => {
+      await scanItems();
+      if (CONFIG.DEFAULT_FILE) {
+        const safe = sanitizePath(CONFIG.DEFAULT_FILE);
+        loadMarkdownFile('items/' + safe, CONFIG.DEFAULT_FILE);
+      }
+    });
+
+    //======================
+    // KEYBOARD SHORTCUTS
+    //======================
+    document.addEventListener('keydown', function(e) {
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
-
-      // Ctrl+R: Refresh file list
-      if (e.ctrlKey && e.key === 'r') {
-        e.preventDefault();
-        loadFilesFromManifest();
-      }
-
-      // Ctrl+1: Switch to replace mode
-      if (e.ctrlKey && e.key === '1') {
-        e.preventDefault();
-        switchMode('replace');
-      }
-
-      // Ctrl+2: Switch to tab mode
-      if (e.ctrlKey && e.key === '2') {
-        e.preventDefault();
-        switchMode('tabs');
-      }
-
-      // Ctrl+W: Close current tab (in tab mode)
-      if (e.ctrlKey && e.key === 'w' && currentMode === 'tabs' && activeTab) {
-        e.preventDefault();
-        closeTab(activeTab, e);
-      }
-
-      // Ctrl+T: Toggle theme
-      if (e.ctrlKey && e.key === 't') {
-        e.preventDefault();
-        themeToggle.checked = !themeToggle.checked;
-        toggleTheme();
-      }
-    }
-
-    //=======================
-    //  UTILITY FUNCTIONS
-    //=======================
-    window.openFile = openFile;
-    window.switchTab = switchTab;
-    window.closeTab = closeTab;
+      if (e.ctrlKey && e.key === 'p') { e.preventDefault(); printDocument(); }
+      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'p') { e.preventDefault(); printModeToggle.checked = !printModeToggle.checked; togglePrintMode(); }
+      if (e.altKey && e.key.toLowerCase() === 'r') { e.preventDefault(); scanItems(); }
+    });
   </script>
 
 </body>

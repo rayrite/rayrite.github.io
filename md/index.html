@@ -111,6 +111,17 @@
       .page-break { page-break-before: always; }
       .no-break { page-break-inside: avoid; }
     }
+  
+    /* === Mobile compact header overrides (single-file) === */
+    @media (max-width: 768px) {
+      /* Hide drag & drop and file input row on mobile */
+      .header-bottom { display: none !important; }
+      /* Hide print controls on mobile */
+      .print-controls { display: none !important; }
+      /* Reduce top spacing since header is shorter */
+      .body-content { margin-top: 92px !important; }
+    }
+
   </style>
 </head>
 <body>

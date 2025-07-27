@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS Diagram Viewer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f2f5;
+            margin: 0;
+            height: 100vh;
+            overflow: hidden; /* Prevent body scroll */
+        }
+        h1 {
+            color: #232f3e;
+            padding: 10px 0;
+            margin: 0;
+        }
+        .controls {
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+            z-index: 10;
+        }
+        .controls button {
+            background-color: #232f3e;
+            color: #ffffff;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 0 5px;
+        }
+        .controls button:hover {
+            background-color: #4a617d;
+        }
+        #diagram-viewport {
+            width: 95vw;
+            height: 85vh;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #ffffff;
+            overflow: hidden; /* Crucial for panzoom */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .mermaid {
+            /* Mermaid will replace this with an SVG */
+        }
+    </style>
+</head>
+<body>
+
+    <h1>AWS Well-Architected Framework</h1>
+
+    <div class="controls">
+        <button id="zoom-in">+</button>
+        <button id="zoom-out">-</button>
+        <button id="reset">Reset</button>
+    </div>
+
+    <div id="diagram-viewport">
+        <!-- The Mermaid diagram code goes inside the pre tag below -->
+        <pre class="mermaid">
+            mindmap
+              root((AWS Well-Architected<br/>Framework))
+                <b>Ì†ΩÌª†Ô∏è Operational Excellence</b>
+                  ::icon(fa fa-cogs)
+                  Infrastructure as Code (IaC)
+                  Automation
+                  Monitoring & Logs
+                  Small, Reversible Changes
+                <b>Ì†ΩÌª°Ô∏è Security</b>
+                  ::icon(fa fa-shield-alt)
+                  IAM & Least Privilege
+                  Encryption
+                  Detective Controls
+                  Traceability (CloudTrail)
+                <b>‚öôÔ∏è Reliability</b>
+                  ::icon(fa fa-server)
+                  Multi-AZ Architecture
+                  Auto Scaling
+                  Fault Tolerance
+                  Disaster Recovery
+                <b>‚ö° Performance Efficiency</b>
+                  ::icon(fa fa-bolt)
+                  Right-Sizing Resources
+                  Serverless First
+                  Caching
+                  Go Global in Minutes
+                <b>Ì†ΩÌ≤∞ Cost Optimization</b>
+                  ::icon(fa fa-dollar-sign)
+                  Pay-as-you-go Model
+                  Reservations & Savings Plans
+                  Tagging & Budgets
+                  Eliminate Waste
+                <b>Ì†ºÌºç Sustainability</b>
+                  ::icon(fa fa-leaf)
+                  Maximize Utilization
+                  Use Efficient Hardware
+                  Managed Services
+                  Reduce Downstream Impact
+        </pre>
+    </div>
+
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- Panzoom Library -->
+    <script src="https://unpkg.com/@panzoom/panzoom@4.5.1/dist/panzoom.min.js"></script>
+    
+    <!-- Mermaid Library -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initialize Mermaid
+            mermaid.initialize({ startOnLoad: false });
+
+            async function renderDiagram() {
+                // Find the pre element containing the Mermaid definition
+                const mermaidElement = document.querySelector('.mermaid');
+                const { svg } = await mermaid.render('mermaid-svg', mermaidElement.textContent);
+                
+                // Put the rendered SVG into the viewport
+                const viewport = document.getElementById('diagram-viewport');
+                viewport.innerHTML = svg;
+                const svgElement = viewport.querySelector('svg');
+
+                // Make the SVG take up space
+                svgElement.style.width = '100%';
+                svgElement.style.height = '100%';
+
+                // Initialize Panzoom on the viewport
+                const pz = Panzoom(viewport, {
+                    canvas: true, // Panzoom should target the SVG inside the viewport
+                    maxScale: 5,
+                    minScale: 0.2
+                });
+
+                // Enable mouse wheel zooming
+                viewport.parentElement.addEventListener('wheel', pz.zoomWithWheel);
+
+                // Wire up GUI controls
+                document.getElementById('zoom-in').addEventListener('click', pz.zoomIn);
+                document.getElementById('zoom-out').addEventListener('click', pz.zoomOut);
+                document.getElementById('reset').addEventListener('click', pz.reset);
+            }
+
+            renderDiagram();
+        });
+    </script>
+
+</body>
+</html>

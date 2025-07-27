@@ -1,8 +1,8 @@
-Ôªø# Ì†ΩÌªí **DATABASE & STORAGE ARCHITECTURE SCENARIO: E-Commerce Scale-Up**
+#  **DATABASE & STORAGE ARCHITECTURE SCENARIO: E-Commerce Scale-Up**
 
 ---
 
-## Ì†ΩÌ≥ã **SCENARIO BRIEFING**
+##  **SCENARIO BRIEFING**
 
 You're the **Chief Technology Officer (CTO)** for **StreamShop**, a rapidly growing e-commerce platform that started as a simple online bookstore but has evolved into a multimedia marketplace selling books, movies, music, games, and streaming content. Your company is experiencing explosive growth and your simple database architecture is breaking under the load.
 
@@ -22,9 +22,9 @@ You're the **Chief Technology Officer (CTO)** for **StreamShop**, a rapidly grow
 
 ---
 
-## Ì†ΩÌ∫® **BREAKING: SYSTEM OVERLOAD CRISIS!**
+##  **BREAKING: SYSTEM OVERLOAD CRISIS!**
 
-**Ì†ΩÌ≥ä MONITORING ALERT:** *"Database CPU at 98%, response times exceeding 10 seconds, customer checkout failures at 45%. Estimated revenue loss: $50,000 per hour during peak shopping period."*
+** MONITORING ALERT:** *"Database CPU at 98%, response times exceeding 10 seconds, customer checkout failures at 45%. Estimated revenue loss: $50,000 per hour during peak shopping period."*
 
 ### **Current Architecture Problems:**
 - **Product Catalog:** 2M products in MySQL - slow search, complex joins
@@ -42,7 +42,7 @@ You're the **Chief Technology Officer (CTO)** for **StreamShop**, a rapidly grow
 
 ---
 
-## Ì†ºÌæØ **DATABASE & STORAGE MODERNIZATION CHALLENGE**
+##  **DATABASE & STORAGE MODERNIZATION CHALLENGE**
 
 You have 90 days to architect and implement a modern, scalable database and storage solution using AWS services. Each data type has different requirements:
 
@@ -92,9 +92,9 @@ You have 90 days to architect and implement a modern, scalable database and stor
 
 ---
 
-## Ì†ΩÌ¥ç **STEP 1: RELATIONAL DATABASE MODERNIZATION**
+##  **STEP 1: RELATIONAL DATABASE MODERNIZATION**
 
-Let's start with your core product catalog that requires ACID compliance and complex relationships.### **Ì†æÌ¥î Decision Time - Relational Database Choice**
+Let's start with your core product catalog that requires ACID compliance and complex relationships.### ** Decision Time - Relational Database Choice**
 
 For your product catalog with complex relationships and ACID requirements, which database approach do you choose?
 
@@ -104,7 +104,7 @@ For your product catalog with complex relationships and ACID requirements, which
 **Option D:** Keep current MySQL on EC2 - No migration needed
 
 <details>
-<summary><strong>Ì†ΩÌ≤° Click to see the recommended relational database solution</strong></summary>
+<summary><strong> Click to see the recommended relational database solution</strong></summary>
 
 **Recommended: Option B - Amazon Aurora MySQL**
 
@@ -174,7 +174,7 @@ Aurora-Cluster:
 
 ---
 
-## Ì†ΩÌ≤æ **STEP 2: HIGH-SPEED CACHING SOLUTION**
+##  **STEP 2: HIGH-SPEED CACHING SOLUTION**
 
 Your shopping cart and session data needs sub-millisecond response times to handle 500,000 concurrent users during flash sales.### **ElastiCache Investigation Results:**
 
@@ -188,7 +188,7 @@ Your shopping cart and session data needs sub-millisecond response times to hand
 - **Session Management:** Authentication tokens, user state
 - **Real-time Inventory:** Item availability for cart validation
 
-### **Ì†æÌ¥î Decision Time - Caching Strategy Selection**
+### ** Decision Time - Caching Strategy Selection**
 
 For your high-frequency session data with complex data structures, which caching solution do you implement?
 
@@ -198,7 +198,7 @@ For your high-frequency session data with complex data structures, which caching
 **Option D:** In-application caching - Store in EC2 instance memory
 
 <details>
-<summary><strong>Ì†ΩÌ≤° Click to see the recommended caching solution</strong></summary>
+<summary><strong> Click to see the recommended caching solution</strong></summary>
 
 **Recommended: Option A - ElastiCache for Redis**
 
@@ -278,7 +278,7 @@ Session-Management:
 
 ---
 
-## Ì†ΩÌ≥¶ **STEP 3: OBJECT STORAGE FOR MEDIA FILES**
+##  **STEP 3: OBJECT STORAGE FOR MEDIA FILES**
 
 Your 30TB of media files (product images, videos, music files) need cost-effective storage with global delivery capabilities.### **S3 Storage Strategy Analysis:**
 
@@ -294,7 +294,7 @@ Your 30TB of media files (product images, videos, music files) need cost-effecti
 - **No Global Distribution:** Users worldwide experience slow loading
 - **No Lifecycle Management:** All files treated equally regardless of access patterns
 
-### **Ì†æÌ¥î Decision Time - Media Storage Architecture**
+### ** Decision Time - Media Storage Architecture**
 
 For your media files with different access patterns, which storage strategy do you implement?
 
@@ -304,7 +304,7 @@ For your media files with different access patterns, which storage strategy do y
 **Option D:** Multiple S3 buckets for different media types
 
 <details>
-<summary><strong>Ì†ΩÌ≤° Click to see the recommended media storage solution</strong></summary>
+<summary><strong> Click to see the recommended media storage solution</strong></summary>
 
 **Recommended: Option B - S3 with lifecycle policies + CloudFront CDN distribution**
 
@@ -412,7 +412,7 @@ Monthly Savings:           $2,000 (67% reduction)
 
 ---
 
-## Ì†ΩÌ≥ä **STEP 4: ANALYTICS & DATA WAREHOUSING**
+##  **STEP 4: ANALYTICS & DATA WAREHOUSING**
 
 Your business intelligence team needs to run complex analytics queries on 5 years of transaction data without impacting production database performance.### **Analytics Requirements Analysis:**
 
@@ -429,7 +429,7 @@ Your business intelligence team needs to run complex analytics queries on 5 year
 - **Customer Analytics:** Purchasing patterns, lifetime value, churn analysis
 - **Operational Metrics:** Website performance, conversion rates, traffic patterns
 
-### **Ì†æÌ¥î Decision Time - Analytics Architecture Strategy**
+### ** Decision Time - Analytics Architecture Strategy**
 
 For separating analytics workloads from production, which approach do you choose?
 
@@ -439,7 +439,7 @@ For separating analytics workloads from production, which approach do you choose
 **Option D:** EMR Hadoop cluster for big data processing
 
 <details>
-<summary><strong>Ì†ΩÌ≤° Click to see the recommended analytics solution</strong></summary>
+<summary><strong> Click to see the recommended analytics solution</strong></summary>
 
 **Recommended: Option A - Amazon Redshift data warehouse with ETL pipeline**
 
@@ -610,7 +610,7 @@ def transform_sales_data():
 
 ---
 
-## Ì†ΩÌ¥ç **STEP 5: SEARCH & NoSQL REQUIREMENTS**
+##  **STEP 5: SEARCH & NoSQL REQUIREMENTS**
 
 Your product search functionality needs to handle complex text searches, filters, and recommendations, while user-generated content (reviews, wishlists) requires flexible document storage.### **Search & NoSQL Requirements Analysis:**
 
@@ -626,7 +626,7 @@ Your product search functionality needs to handle complex text searches, filters
 - **Recommendation Engine:** "Users who bought this also bought" relationships
 - **Search Analytics:** Track search terms, results clicked, conversion rates
 
-### **Ì†æÌ¥î Decision Time - Search & NoSQL Architecture Strategy**
+### ** Decision Time - Search & NoSQL Architecture Strategy**
 
 For product search and flexible user-generated content, which combination do you choose?
 
@@ -636,7 +636,7 @@ For product search and flexible user-generated content, which combination do you
 **Option D:** Neptune graph database for recommendations + DynamoDB for user data
 
 <details>
-<summary><strong>Ì†ΩÌ≤° Click to see the recommended search & NoSQL solution</strong></summary>
+<summary><strong> Click to see the recommended search & NoSQL solution</strong></summary>
 
 **Recommended: Option B - OpenSearch for search + DynamoDB for user data**
 
@@ -925,9 +925,9 @@ async function syncProductToOpenSearch(productData) {
 
 ---
 
-## Ì†ºÌæØ **SCENARIO WRAP-UP: DATABASE & STORAGE ARCHITECTURE MASTERY**
+##  **SCENARIO WRAP-UP: DATABASE & STORAGE ARCHITECTURE MASTERY**
 
-### **Ì†ºÌøÜ Complete Architecture Summary:**
+### ** Complete Architecture Summary:**
 Congratulations! You've successfully designed a comprehensive, purpose-built database and storage architecture:
 
 - **‚úÖ Relational Data:** Aurora MySQL for ACID compliance and complex relationships
@@ -937,7 +937,7 @@ Congratulations! You've successfully designed a comprehensive, purpose-built dat
 - **‚úÖ Search Platform:** OpenSearch for advanced product search capabilities
 - **‚úÖ Flexible NoSQL:** DynamoDB for user-generated content and recommendations
 
-### **Ì†æÌ∑† Database & Storage Concepts Mastered:**
+### ** Database & Storage Concepts Mastered:**
 
 **1. Purpose-Built Database Strategy:**
 - **Relational (Aurora):** ACID transactions, complex queries, structured data
@@ -959,7 +959,7 @@ Congratulations! You've successfully designed a comprehensive, purpose-built dat
 - **Real-time Sync:** Event-driven updates between systems
 - **Backup & Recovery:** Cross-region replication and point-in-time recovery
 
-### **Ì†ΩÌ≥ö AWS Database Services Comparison:**
+### ** AWS Database Services Comparison:**
 
 | Service | Use Case | Performance | Scalability | Management |
 |---------|----------|-------------|-------------|------------|
@@ -970,7 +970,7 @@ Congratulations! You've successfully designed a comprehensive, purpose-built dat
 | **OpenSearch** | Search & analytics | Real-time indexing | Horizontal scaling | Fully managed |
 | **S3** | Object storage | High throughput | Virtually unlimited | Fully managed |
 
-### **Ì†ΩÌ≤° Exam-Relevant Takeaways:**
+### ** Exam-Relevant Takeaways:**
 
 1. **Choose the right database for the job** - No single database fits all use cases
 2. **Aurora** provides cloud-native performance improvements over standard RDS
@@ -983,7 +983,7 @@ Congratulations! You've successfully designed a comprehensive, purpose-built dat
 9. **Purpose-built databases** outperform general-purpose solutions
 10. **Cost optimization** through right-sizing and lifecycle management
 
-### **Ì†ºÌøÖ Architecture Best Practices Established:**
+### ** Architecture Best Practices Established:**
 - **Microservices Data Pattern:** Each service owns its data and database
 - **CQRS Implementation:** Separate read/write models for different use cases
 - **Event-Driven Architecture:** Real-time data synchronization between systems
@@ -992,7 +992,7 @@ Congratulations! You've successfully designed a comprehensive, purpose-built dat
 - **Scalability Planning:** Auto-scaling and serverless where appropriate
 - **Data Governance:** Consistent backup, security, and compliance across all systems
 
-### **Ì†ΩÌ≥à Business Results Achieved:**
+### ** Business Results Achieved:**
 - **Performance:** 20x improvement in application response times
 - **Cost Reduction:** 60% savings through purpose-built database selection
 - **Scalability:** Architecture supports 100x growth without redesign
@@ -1002,26 +1002,26 @@ Congratulations! You've successfully designed a comprehensive, purpose-built dat
 
 ---
 
-## Ì†ΩÌ∫Ä **WHAT'S NEXT?**
+##  **WHAT'S NEXT?**
 
 Outstanding work! You've mastered the complex art of database and storage architecture design, demonstrating deep understanding of AWS's purpose-built database portfolio.
 
 **Continue your AWS expertise:**
 
-**Ì†ΩÌ≥ñ Advanced Study:**
+** Advanced Study:**
 - `/domain 4` - Billing & Pricing (final domain for comprehensive coverage!)
 - `/quiz databases-storage` - Test your database knowledge
 - `/define purpose-built-databases` - Deep dive into database selection criteria
 - `/service Aurora` - Master cloud-native database features
 
-**Ì†ΩÌ¥ß Hands-On Practice:**
+** Hands-On Practice:**
 - `/scenario microservices-data` - Practice microservices database patterns
 - `/compare Aurora RDS DynamoDB` - Database service comparison
 - `/service DataSync` - Learn data migration strategies
 
-**Ì†ΩÌ≥ã Exam Preparation:**
+** Exam Preparation:**
 - `/exam-tips` - Database-focused test-taking strategies
 - `/progress` - Final assessment across all domains
 - **Ready for certification!** You now have comprehensive AWS knowledge
 
-**What database or storage concept would you like to explore deeper?** Your AWS database architecture expertise is now at the professional level! Ì†ºÌæØÌ†ΩÌ≥ä‚≠ê
+**What database or storage concept would you like to explore deeper?** Your AWS database architecture expertise is now at the professional level! ‚≠ê

@@ -1,8 +1,8 @@
-Ôªø# Ì†ΩÌ∫® **DISASTER RECOVERY SCENARIO: Financial Services Crisis**
+#  **DISASTER RECOVERY SCENARIO: Financial Services Crisis**
 
 ---
 
-## Ì†ΩÌ≥ã **SCENARIO BRIEFING**
+##  **SCENARIO BRIEFING**
 
 You're the **Chief Technology Officer** for **SecureBank Digital**, a growing online banking platform that handles $2 billion in daily transactions. A major disaster has just struck, and you need to implement your disaster recovery plan immediately.
 
@@ -22,9 +22,9 @@ You're the **Chief Technology Officer** for **SecureBank Digital**, a growing on
 
 ---
 
-## Ì†ΩÌ¥• **BREAKING: DISASTER STRIKES!**
+##  **BREAKING: DISASTER STRIKES!**
 
-**Ì†ΩÌ≥∫ NEWS ALERT:** *"Massive earthquake hits Northern Virginia. Multiple data centers affected. Power outages across the region expected to last 24-48 hours."*
+** NEWS ALERT:** *"Massive earthquake hits Northern Virginia. Multiple data centers affected. Power outages across the region expected to last 24-48 hours."*
 
 ### **Current Situation:**
 - **Time:** 2:30 PM EST (peak trading hours)
@@ -42,11 +42,11 @@ You're the **Chief Technology Officer** for **SecureBank Digital**, a growing on
 
 ---
 
-## Ì†ºÌæØ **DISASTER RECOVERY OBJECTIVES**
+##  **DISASTER RECOVERY OBJECTIVES**
 
 Before we dive into the crisis response, let's establish your disaster recovery targets:
 
-### **Ì†æÌ¥î Decision Time - Set Your Recovery Objectives**
+### ** Decision Time - Set Your Recovery Objectives**
 
 **Recovery Time Objective (RTO):** How quickly must you restore service?
 - A) 5 minutes (Immediate failover)
@@ -61,7 +61,7 @@ Before we dive into the crisis response, let's establish your disaster recovery 
 - D) 1 hour (Significant data loss acceptable)
 
 <details>
-<summary><strong>Ì†ΩÌ≤° Click to see the financial services requirements</strong></summary>
+<summary><strong> Click to see the financial services requirements</strong></summary>
 
 **Banking Industry Standards:**
 
@@ -82,7 +82,7 @@ Before we dive into the crisis response, let's establish your disaster recovery 
 
 ---
 
-## Ì†ΩÌ≥ä **STEP 1: IMMEDIATE CRISIS RESPONSE**
+##  **STEP 1: IMMEDIATE CRISIS RESPONSE**
 
 It's been 10 minutes since the disaster struck. Your monitoring systems are screaming red alerts, and customer complaints are flooding social media.
 
@@ -93,9 +93,9 @@ It's been 10 minutes since the disaster struck. Your monitoring systems are scre
 - **Transaction Processing:** Completely halted
 - **Data Replication Status:** Unknown - need to verify
 
-### **Ì†ΩÌ∫® Immediate Actions Required:**
+### ** Immediate Actions Required:**
 
-**Ì†æÌ¥î Decision Time - What's your first priority?**
+** Decision Time - What's your first priority?**
 
 **Option A:** Immediately activate disaster recovery in US West
 **Option B:** First assess data integrity and replication status
@@ -103,7 +103,7 @@ It's been 10 minutes since the disaster struck. Your monitoring systems are scre
 **Option D:** Communicate with customers and regulators first
 
 <details>
-<summary><strong>Ì†ΩÌ≤° Click to see the recommended crisis response</strong></summary>
+<summary><strong> Click to see the recommended crisis response</strong></summary>
 
 **Correct Priority: Option B - Assess Data Integrity First**
 
@@ -125,7 +125,7 @@ It's been 10 minutes since the disaster struck. Your monitoring systems are scre
 
 ---
 
-## Ì†ΩÌ¥ç **STEP 2: DATA INTEGRITY ASSESSMENT**
+##  **STEP 2: DATA INTEGRITY ASSESSMENT**
 
 Your team has completed the data assessment. Here's what they found:
 
@@ -139,7 +139,7 @@ Your team has completed the data assessment. Here's what they found:
 ### **The Challenge:**
 You have 47 transactions that were being processed when the disaster occurred. These represent $1.2 million in customer transfers and payments.
 
-### **Ì†æÌ¥î Decision Time - How do you handle the in-flight transactions?**
+### ** Decision Time - How do you handle the in-flight transactions?**
 
 **Consider:**
 - Customer impact of lost vs. duplicate transactions
@@ -148,7 +148,7 @@ You have 47 transactions that were being processed when the disaster occurred. T
 - Time pressure to restore service
 
 <details>
-<summary><strong>Ì†ΩÌ≤° Click to see the recommended approach</strong></summary>
+<summary><strong> Click to see the recommended approach</strong></summary>
 
 **Recommended Transaction Recovery Strategy:**
 
@@ -177,19 +177,19 @@ You have 47 transactions that were being processed when the disaster occurred. T
 
 ---
 
-## Ì†ΩÌ∫Ä **STEP 3: DISASTER RECOVERY ACTIVATION**
+##  **STEP 3: DISASTER RECOVERY ACTIVATION**
 
 Time to activate your disaster recovery plan! Your secondary region in US West is ready, but you need to make critical decisions about the failover process.
 
 ### **Available DR Strategies:**
 
-**Ì†ΩÌ¥• Hot Standby (Active-Active)**
+** Hot Standby (Active-Active)**
 - **Setup:** Identical infrastructure running in both regions
 - **Failover Time:** 30 seconds (DNS change only)
 - **Cost:** 2x infrastructure costs
 - **Data Sync:** Real-time replication
 
-**Ì†ΩÌ¥Ñ Warm Standby (Active-Passive)**
+** Warm Standby (Active-Passive)**
 - **Setup:** Reduced infrastructure, scaled up during failover
 - **Failover Time:** 15 minutes (scale up required)
 - **Cost:** 25% of full infrastructure costs
@@ -204,12 +204,12 @@ Time to activate your disaster recovery plan! Your secondary region in US West i
 ### **Your Current Setup:**
 Based on your budget constraints, you implemented a **Warm Standby** strategy.
 
-### **Ì†æÌ¥î Decision Time - Execute the failover plan:**
+### ** Decision Time - Execute the failover plan:**
 
 **What needs to happen for your warm standby activation?**
 
 <details>
-<summary><strong>Ì†ΩÌ≤° Click to see the warm standby activation process</strong></summary>
+<summary><strong> Click to see the warm standby activation process</strong></summary>
 
 **Warm Standby Activation Checklist:**
 
@@ -240,28 +240,28 @@ Based on your budget constraints, you implemented a **Warm Standby** strategy.
 
 ---
 
-## Ì†ºÌºç **STEP 4: GLOBAL IMPACT MANAGEMENT**
+##  **STEP 4: GLOBAL IMPACT MANAGEMENT**
 
 Your disaster recovery is almost complete, but you're discovering secondary impacts you didn't anticipate:
 
 ### **Unexpected Challenges:**
 
-**Ì†ºÌºê Network Latency Issues:**
+** Network Latency Issues:**
 - **Problem:** West Coast users now have 40ms latency (was 10ms)
 - **Impact:** High-frequency trading customers complaining
 - **Regulatory Risk:** Trading performance requirements not met
 
-**Ì†ΩÌ≤∞ Cost Explosion:**
+** Cost Explosion:**
 - **Problem:** DR activation costs $50,000/day vs. normal $10,000/day
 - **Impact:** CFO demanding cost justification
 - **Timeline:** Can sustain for maximum 7 days
 
-**Ì†ΩÌ¥ß Third-Party Dependencies:**
+** Third-Party Dependencies:**
 - **Problem:** Payment processor optimized for East Coast operations
 - **Impact:** 15% higher payment processing fees in West region
 - **Customer Impact:** Some payment methods temporarily unavailable
 
-### **Ì†æÌ¥î Decision Time - How do you address these cascading issues?**
+### ** Decision Time - How do you address these cascading issues?**
 
 **Priority Challenge:** Network latency for trading customers
 
@@ -272,7 +272,7 @@ C) Negotiate with high-value customers individually
 D) Activate AWS Local Zones for ultra-low latency
 
 <details>
-<summary><strong>Ì†ΩÌ≤° Click to see the comprehensive impact management plan</strong></summary>
+<summary><strong> Click to see the comprehensive impact management plan</strong></summary>
 
 **Multi-Pronged Impact Management Strategy:**
 
@@ -308,7 +308,7 @@ D) Activate AWS Local Zones for ultra-low latency
 
 ---
 
-## Ì†ΩÌ¥Ñ **STEP 5: RECOVERY & LESSONS LEARNED**
+##  **STEP 5: RECOVERY & LESSONS LEARNED**
 
 48 hours later, the primary region is back online. Now you face a new challenge: how to safely transition back without causing another outage.
 
@@ -321,7 +321,7 @@ D) Activate AWS Local Zones for ultra-low latency
 
 ### **Transition Decision Points:**
 
-**Ì†æÌ¥î Decision Time - When and how do you fail back to primary?**
+** Decision Time - When and how do you fail back to primary?**
 
 **Timing Options:**
 A) Immediately - minimize DR costs
@@ -336,7 +336,7 @@ C) Canary deployment - small percentage first
 D) Phased migration - service by service
 
 <details>
-<summary><strong>Ì†ΩÌ≤° Click to see the recommended failback strategy</strong></summary>
+<summary><strong> Click to see the recommended failback strategy</strong></summary>
 
 **Recommended Failback Strategy: Phased Weekend Migration**
 
@@ -373,7 +373,7 @@ D) Phased migration - service by service
 
 ---
 
-## Ì†ΩÌ≥ä **STEP 6: POST-INCIDENT ANALYSIS & IMPROVEMENT**
+##  **STEP 6: POST-INCIDENT ANALYSIS & IMPROVEMENT**
 
 One week after the incident, you're conducting a comprehensive post-mortem with your team and stakeholders.
 
@@ -397,7 +397,7 @@ One week after the incident, you're conducting a comprehensive post-mortem with 
 ‚ùå **Third-Party Dependencies:** Payment processor challenges
 ‚ùå **Manual Processes:** Too much manual intervention required
 
-### **Ì†æÌ¥î Decision Time - What's your disaster recovery improvement plan?**
+### ** Decision Time - What's your disaster recovery improvement plan?**
 
 **Budget Allocation for Improvements:**
 - **Total Available:** $500,000 annual DR budget
@@ -411,7 +411,7 @@ C) Enhanced automation and monitoring - $150,000/year
 D) Improved third-party integrations - $100,000/year
 
 <details>
-<summary><strong>Ì†ΩÌ≤° Click to see the recommended improvement plan</strong></summary>
+<summary><strong> Click to see the recommended improvement plan</strong></summary>
 
 **Recommended DR Enhancement Strategy:**
 
@@ -445,9 +445,9 @@ D) Improved third-party integrations - $100,000/year
 
 ---
 
-## Ì†ºÌæØ **SCENARIO WRAP-UP: DISASTER RECOVERY MASTERY**
+##  **SCENARIO WRAP-UP: DISASTER RECOVERY MASTERY**
 
-### **Ì†ºÌøÜ Crisis Management Summary:**
+### ** Crisis Management Summary:**
 Congratulations! You successfully managed a major disaster recovery scenario with:
 
 - **‚úÖ Met SLA:** 14-minute recovery vs. 15-minute target
@@ -457,7 +457,7 @@ Congratulations! You successfully managed a major disaster recovery scenario wit
 - **‚úÖ Business Continuity:** Minimized revenue impact
 - **‚úÖ Lessons Learned:** Comprehensive improvement plan
 
-### **Ì†æÌ∑† Real-World Skills Demonstrated:**
+### ** Real-World Skills Demonstrated:**
 
 **1. Crisis Leadership:**
 - Prioritized data integrity over speed
@@ -479,7 +479,7 @@ Congratulations! You successfully managed a major disaster recovery scenario wit
 - Implemented defense-in-depth strategies
 - Planned for cascading failures
 
-### **Ì†ΩÌ≥ö Key AWS Concepts Applied:**
+### ** Key AWS Concepts Applied:**
 
 **Global Infrastructure:**
 - ‚úÖ **Regions:** Multi-region active-passive architecture
@@ -498,7 +498,7 @@ Congratulations! You successfully managed a major disaster recovery scenario wit
 - ‚úÖ **Platform Benefits:** Automated scaling and monitoring
 - ‚úÖ **Operational Excellence:** Reduced manual intervention
 
-### **Ì†ΩÌ≤° Exam-Relevant Takeaways:**
+### ** Exam-Relevant Takeaways:**
 
 1. **RTO vs RPO:** Recovery Time vs Recovery Point Objectives
 2. **DR Strategies:** Hot, Warm, and Cold standby approaches
@@ -508,25 +508,25 @@ Congratulations! You successfully managed a major disaster recovery scenario wit
 
 ---
 
-## Ì†ΩÌ∫Ä **WHAT'S NEXT?**
+##  **WHAT'S NEXT?**
 
 Outstanding work! You've successfully navigated a complex disaster recovery scenario that demonstrates mastery of AWS global infrastructure concepts.
 
 **Continue building your expertise:**
 
-**Ì†ΩÌ≥ñ Study Path:**
+** Study Path:**
 - `/domain 2` - Security & Compliance (30% of exam - largest domain!)
 - `/quiz disaster-recovery` - Test your DR knowledge
 - `/define RTO-RPO` - Deep dive into recovery objectives
 - `/scenario security-breach` - Practice security incident response
 
-**Ì†ΩÌ¥ß Hands-On Options:**
+** Hands-On Options:**
 - `/service Route53` - Learn DNS failover mechanisms
 - `/service RDS` - Database replication and backup strategies
 - `/compare warm-standby hot-standby` - DR strategy comparison
 
-**Ì†ΩÌ≥ã Exam Preparation:**
+** Exam Preparation:**
 - `/exam-tips` - Test-taking strategies for scenario questions
 - `/progress` - Check your learning progress across all domains
 
-**What disaster recovery concept would you like to explore further?** Ì†ºÌºü
+**What disaster recovery concept would you like to explore further?** 

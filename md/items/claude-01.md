@@ -1,9 +1,9 @@
-Ôªø# Ì†ºÌºü **DOMAIN 1: CLOUD CONCEPTS** (24% of Exam)
+#  **DOMAIN 1: CLOUD CONCEPTS** (24% of Exam)
 *Foundation of Everything - Master This First!*
 
 ---
 
-## Ì†ΩÌ≥ö **LEARNING OBJECTIVES**
+##  **LEARNING OBJECTIVES**
 By the end of this domain, you'll understand:
 - What cloud computing really means and why it matters
 - The different ways to deploy and consume cloud services
@@ -13,14 +13,14 @@ By the end of this domain, you'll understand:
 
 ---
 
-## Ì†ºÌæØ **LESSON 1.1: WHAT IS CLOUD COMPUTING?**
+##  **LESSON 1.1: WHAT IS CLOUD COMPUTING?**
 
 ### **Definition & Core Concept**
 **Cloud Computing** is the **on-demand delivery** of IT resources over the internet with **pay-as-you-go pricing**. Think of it like a utility - just as you pay for electricity only when you use it, you pay for computing power, storage, and services only when you need them.
 
 ### **Traditional IT vs. Cloud Computing**
 
-**Ì†ºÌø¢ Traditional On-Premises IT:**
+** Traditional On-Premises IT:**
 - **YOU manage everything:** Applications, data, runtime, middleware, OS, virtualization, servers, storage, networking
 - **High upfront costs:** Buy servers before you need them
 - **Capacity guessing:** Over-provision (waste money) or under-provision (poor performance)
@@ -34,7 +34,7 @@ By the end of this domain, you'll understand:
 
 ---
 
-## Ì†ºÌæØ **LESSON 1.2: CLOUD SERVICE MODELS** (Critical for Exam!)### **Ì†ΩÌ¥ë Key Service Models Explained:**
+##  **LESSON 1.2: CLOUD SERVICE MODELS** (Critical for Exam!)### ** Key Service Models Explained:**
 
 **1. Infrastructure as a Service (IaaS) - Amazon EC2**
 - **What you get:** Virtual servers, storage, networking
@@ -56,27 +56,27 @@ By the end of this domain, you'll understand:
 
 ---
 
-## Ì†ºÌæØ **LESSON 1.3: CLOUD DEPLOYMENT MODELS**
+##  **LESSON 1.3: CLOUD DEPLOYMENT MODELS**
 
-### **1. Ì†ºÌºê Public Cloud**
+### **1.  Public Cloud**
 - **Definition:** Cloud services offered over the public internet
 - **Examples:** AWS, Microsoft Azure, Google Cloud
 - **Benefits:** Cost-effective, no maintenance, reliable
 - **Use case:** Most common choice for businesses
 
-### **2. Ì†ºÌø¢ Private Cloud**
+### **2.  Private Cloud**
 - **Definition:** Cloud infrastructure operated solely for one organization
 - **Examples:** VMware vSphere, OpenStack on-premises
 - **Benefits:** Complete control, enhanced security
 - **Use case:** Highly regulated industries (banking, government)
 
-### **3. Ì†ΩÌ¥Ñ Hybrid Cloud**
+### **3.  Hybrid Cloud**
 - **Definition:** Combination of public and private clouds
 - **AWS Solution:** AWS Outposts, AWS Direct Connect
 - **Benefits:** Flexibility, gradual migration, data locality
 - **Use case:** Organizations transitioning to cloud gradually
 
-### **4. Ì†ºÌºç Multi-Cloud**
+### **4.  Multi-Cloud**
 - **Definition:** Using multiple cloud providers
 - **Example:** AWS for compute + Google for AI + Azure for Office integration
 - **Benefits:** Avoid vendor lock-in, best-of-breed services
@@ -84,11 +84,11 @@ By the end of this domain, you'll understand:
 
 ---
 
-## Ì†ºÌæØ **LESSON 1.4: AWS GLOBAL INFRASTRUCTURE** (Exam Favorite!)### **AWS Global Infrastructure Components:**
+##  **LESSON 1.4: AWS GLOBAL INFRASTRUCTURE** (Exam Favorite!)### **AWS Global Infrastructure Components:**
 
 **Current Scale:** AWS operates 33 regions and 105+ Availability Zones worldwide, with over 400+ edge locations and ongoing expansion
 
-**1. Ì†ºÌºç AWS Regions**
+**1.  AWS Regions**
 - **Definition:** Geographic locations that contain multiple data centers (Availability Zones)
 - **Key Facts:**
   - Each region is completely isolated and independent from other regions
@@ -102,7 +102,7 @@ By the end of this domain, you'll understand:
 - **Service Availability:** Ensure needed services are available
 - **Cost:** Pricing varies between regions
 
-**2. Ì†ºÌø¢ Availability Zones (AZs)**
+**2.  Availability Zones (AZs)**
 - **Definition:** One or more discrete data centers with redundant power, networking, and connectivity within a region
 - **Key Features:**
   - Each region has at least 3 AZs (usually 3-6)
@@ -112,29 +112,29 @@ By the end of this domain, you'll understand:
 
 **Best Practice:** Always deploy across multiple AZs for high availability!
 
-**3. Ì†ΩÌ∫Ä Edge Locations**
+**3.  Edge Locations**
 - **Definition:** Smaller data points in major cities focused on low-latency content delivery
 - **Current Scale:** Over 700+ edge locations in 50+ countries
 - **Purpose:** Cache content closer to users for faster delivery
 - **Services:** CloudFront CDN, Route 53 DNS
 
-**4. Ì†ºÌø† AWS Local Zones**
+**4.  AWS Local Zones**
 - **Definition:** Extension of AWS regions for latency-sensitive applications in geographic proximity to end-users
 - **Use Cases:** Real-time gaming, media streaming, industrial IoT
 
-**5. Ì†ΩÌ≥° AWS Wavelength**
+**5.  AWS Wavelength**
 - **Definition:** Zones deployed at telecommunications provider locations for ultra-low latency 5G applications
 - **Use Cases:** Autonomous vehicles, AR/VR, real-time analytics
 
-**6. Ì†ΩÌ¥ó AWS Outposts**
+**6.  AWS Outposts**
 - **Definition:** Brings native AWS services to your on-premises data center
 - **Use Cases:** Data residency requirements, hybrid cloud architectures
 
 ---
 
-## Ì†ºÌæØ **LESSON 1.5: CLOUD BENEFITS** (Exam Essential!)
+##  **LESSON 1.5: CLOUD BENEFITS** (Exam Essential!)
 
-### **1. Ì†ΩÌ≤∞ Cost Benefits**
+### **1.  Cost Benefits**
 **Traditional IT Problems:**
 - High upfront capital expenses (servers, networking equipment)
 - Over-provisioning to handle peak loads
@@ -153,7 +153,7 @@ By the end of this domain, you'll understand:
 - **Self-service provisioning:** Developers can create resources instantly
 - **Focus on innovation:** Spend time on features, not infrastructure
 
-### **3. Ì†ΩÌ¥ß Elasticity & Scalability**
+### **3.  Elasticity & Scalability**
 **Elasticity:** Automatically scale resources up/down based on demand
 - **Example:** E-commerce site scales up during Black Friday, down afterward
 
@@ -161,13 +161,13 @@ By the end of this domain, you'll understand:
 - **Horizontal:** Add more servers
 - **Vertical:** Upgrade to more powerful servers
 
-### **4. Ì†ΩÌª°Ô∏è Reliability & Security**
+### **4. Ô∏è Reliability & Security**
 - **99.99% availability** SLAs for many services
 - **Multiple data centers:** Built-in redundancy
 - **Global presence:** Disaster recovery across regions
 - **Security:** AWS handles physical security, you handle data security
 
-### **5. Ì†ºÌºç Global Reach**
+### **5.  Global Reach**
 - Deploy applications worldwide in minutes
 - Low latency for users everywhere
 - Meet local compliance requirements
@@ -175,7 +175,7 @@ By the end of this domain, you'll understand:
 
 ---
 
-## Ì†æÌ∑† **MEMORY AIDS & EXAM TIPS**
+##  **MEMORY AIDS & EXAM TIPS**
 
 ### **Service Model Memory Device: "I-P-S"**
 - **I**aaS = **I**nfrastructure (You manage OS up)
@@ -195,7 +195,7 @@ By the end of this domain, you'll understand:
 
 ---
 
-## Ì†ΩÌ≥ù **PRACTICE QUESTIONS**
+##  **PRACTICE QUESTIONS**
 
 **Question 1:** Which deployment model combines public cloud services with on-premises infrastructure?
 A) Public Cloud
@@ -217,7 +217,7 @@ D) 4
 
 ---
 
-## Ì†ºÌæØ **WHAT'S NEXT?**
+##  **WHAT'S NEXT?**
 
 Excellent work! You've mastered the foundation of cloud computing. You now understand:
 - ‚úÖ What cloud computing is and why it matters
@@ -232,4 +232,4 @@ Excellent work! You've mastered the foundation of cloud computing. You now under
 - `/define elasticity` - Deep dive into any concept
 - `/exam-tips` - Get test-taking strategies
 
-What would you like to explore next? Ì†ΩÌ∫Ä
+What would you like to explore next? 

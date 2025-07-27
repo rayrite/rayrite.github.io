@@ -1,8 +1,8 @@
-Ôªø# Ì†ºÌºç **REAL-WORLD SCENARIO: Global E-Commerce Deployment**
+#  **REAL-WORLD SCENARIO: Global E-Commerce Deployment**
 
 ---
 
-## Ì†ΩÌ≥ã **SCENARIO BRIEFING**
+##  **SCENARIO BRIEFING**
 
 You're the **Cloud Solutions Architect** for **GlobalShop Inc.**, a growing e-commerce company that started in the United States but is rapidly expanding worldwide. Here's your challenge:
 
@@ -24,34 +24,34 @@ You're the **Cloud Solutions Architect** for **GlobalShop Inc.**, a growing e-co
 
 ---
 
-## Ì†ºÌæØ **YOUR MISSION**
+##  **YOUR MISSION**
 
 Design a global AWS deployment strategy that meets all business requirements. You'll make decisions about regions, availability zones, and services while considering real-world constraints.
 
 ---
 
-## Ì†ΩÌ≥ç **STEP 1: Region Selection Analysis**
+##  **STEP 1: Region Selection Analysis**
 
 Let's start with the most critical decision - which AWS regions should you choose?
 
 ### **Available Options & Considerations:**
 
-**Ì†ºÌ∑∫Ì†ºÌ∑∏ North America:**
+** North America:**
 - **US East (N. Virginia)** - Lowest cost, most services
 - **US West (Oregon)** - Current location, established infrastructure
 - **Canada (Central)** - Data sovereignty for Canadian customers
 
-**Ì†ºÌ∑™Ì†ºÌ∑∫ Europe:**
+** Europe:**
 - **EU West (Ireland)** - GDPR compliant, good connectivity
 - **EU Central (Frankfurt)** - Heart of Europe, strict data laws
 - **EU West (London)** - Post-Brexit considerations
 
-**Ì†ºÌºè Asia-Pacific:**
+** Asia-Pacific:**
 - **Asia Pacific (Singapore)** - Regional hub, excellent connectivity
 - **Asia Pacific (Tokyo)** - Large market, high performance requirements
 - **Asia Pacific (Sydney)** - Growing market, data residency laws
 
-### **Ì†æÌ¥î Decision Time - Which regions would you choose and why?**
+### ** Decision Time - Which regions would you choose and why?**
 
 **Think about:**
 - Where are your customers located?
@@ -60,7 +60,7 @@ Let's start with the most critical decision - which AWS regions should you choos
 - How do costs vary between regions?
 
 <details>
-<summary><strong>Ì†ΩÌ≤° Click to see the recommended solution</strong></summary>
+<summary><strong> Click to see the recommended solution</strong></summary>
 
 **Recommended Regional Strategy:**
 
@@ -82,7 +82,7 @@ Let's start with the most critical decision - which AWS regions should you choos
 
 ---
 
-## Ì†ºÌø¢ **STEP 2: Availability Zone Strategy**
+##  **STEP 2: Availability Zone Strategy**
 
 Now that you've selected regions, how will you deploy across Availability Zones within each region?
 
@@ -93,7 +93,7 @@ Your e-commerce platform consists of:
 - **Database servers** (customer data, inventory)
 - **File storage** (product images, documents)
 
-### **Ì†æÌ¥î Decision Time - How many AZs will you use in each region?**
+### ** Decision Time - How many AZs will you use in each region?**
 
 **Consider:**
 - What's the minimum for high availability?
@@ -101,7 +101,7 @@ Your e-commerce platform consists of:
 - What happens if one AZ fails?
 
 <details>
-<summary><strong>Ì†ΩÌ≤° Click to see the recommended solution</strong></summary>
+<summary><strong> Click to see the recommended solution</strong></summary>
 
 **Recommended AZ Strategy:**
 
@@ -124,7 +124,7 @@ Your e-commerce platform consists of:
 
 ---
 
-## Ì†ΩÌ∫Ä **STEP 3: Content Delivery & Performance**
+##  **STEP 3: Content Delivery & Performance**
 
 Your customers in Japan are complaining about slow-loading product images. How do you solve this globally?
 
@@ -133,7 +133,7 @@ Your customers in Japan are complaining about slow-loading product images. How d
 - Japanese customers experience 3-4 second load times for images
 - European customers also reporting slow performance during peak hours
 
-### **Ì†æÌ¥î Decision Time - What AWS services will you use to solve this?**
+### ** Decision Time - What AWS services will you use to solve this?**
 
 **Options to consider:**
 - Store images in every region
@@ -142,7 +142,7 @@ Your customers in Japan are complaining about slow-loading product images. How d
 - Optimize image formats
 
 <details>
-<summary><strong>Ì†ΩÌ≤° Click to see the recommended solution</strong></summary>
+<summary><strong> Click to see the recommended solution</strong></summary>
 
 **Recommended Solution: Amazon CloudFront CDN**
 
@@ -166,7 +166,7 @@ Your customers in Japan are complaining about slow-loading product images. How d
 
 ---
 
-## Ì†ΩÌ≥ä **STEP 4: Traffic Surge Management**
+##  **STEP 4: Traffic Surge Management**
 
 Black Friday is approaching! Last year, traffic increased 10x and your single Oregon data center crashed. How do you prepare this year?
 
@@ -176,7 +176,7 @@ Black Friday is approaching! Last year, traffic increased 10x and your single Or
 - **Geography:** 60% US, 25% Europe, 15% Asia
 - **Requirements:** Zero downtime, maintain performance
 
-### **Ì†æÌ¥î Decision Time - How will you handle this massive traffic spike?**
+### ** Decision Time - How will you handle this massive traffic spike?**
 
 **Consider:**
 - How do you scale compute resources automatically?
@@ -184,7 +184,7 @@ Black Friday is approaching! Last year, traffic increased 10x and your single Or
 - How do you ensure global availability?
 
 <details>
-<summary><strong>Ì†ΩÌ≤° Click to see the recommended solution</strong></summary>
+<summary><strong> Click to see the recommended solution</strong></summary>
 
 **Recommended Auto-Scaling Strategy:**
 
@@ -217,7 +217,7 @@ Black Friday is approaching! Last year, traffic increased 10x and your single Or
 
 ---
 
-## Ì†ΩÌ¥í **STEP 5: Compliance & Data Governance**
+##  **STEP 5: Compliance & Data Governance**
 
 A major European enterprise wants to become your customer, but they have strict GDPR requirements:
 
@@ -228,10 +228,10 @@ A major European enterprise wants to become your customer, but they have strict 
 4. **Data encryption** at rest and in transit
 5. **Access controls** with detailed logging
 
-### **Ì†æÌ¥î Decision Time - How do you ensure compliance while maintaining global operations?**
+### ** Decision Time - How do you ensure compliance while maintaining global operations?**
 
 <details>
-<summary><strong>Ì†ΩÌ≤° Click to see the recommended solution</strong></summary>
+<summary><strong> Click to see the recommended solution</strong></summary>
 
 **Recommended Compliance Strategy:**
 
@@ -263,7 +263,7 @@ A major European enterprise wants to become your customer, but they have strict 
 
 ---
 
-## Ì†ΩÌ≥à **STEP 6: Cost Optimization Strategy**
+##  **STEP 6: Cost Optimization Strategy**
 
 Your CFO is concerned about cloud costs growing too quickly. Current monthly spend: $50,000/month. How do you optimize while maintaining performance?
 
@@ -274,10 +274,10 @@ Your CFO is concerned about cloud costs growing too quickly. Current monthly spe
 - **Networking:** $4,000 (8%)
 - **Other Services:** $3,000 (6%)
 
-### **Ì†æÌ¥î Decision Time - What cost optimization strategies will you implement?**
+### ** Decision Time - What cost optimization strategies will you implement?**
 
 <details>
-<summary><strong>Ì†ΩÌ≤° Click to see the recommended solution</strong></summary>
+<summary><strong> Click to see the recommended solution</strong></summary>
 
 **Recommended Cost Optimization Plan:**
 
@@ -319,9 +319,9 @@ Your CFO is concerned about cloud costs growing too quickly. Current monthly spe
 
 ---
 
-## Ì†ºÌæØ **SCENARIO WRAP-UP: Key Lessons Learned**
+##  **SCENARIO WRAP-UP: Key Lessons Learned**
 
-### **Ì†ºÌøÜ Architecture Summary:**
+### ** Architecture Summary:**
 You've successfully designed a global, resilient, compliant, and cost-effective AWS architecture:
 
 - **3 Primary Regions:** US West, EU West, Asia Pacific Singapore
@@ -331,7 +331,7 @@ You've successfully designed a global, resilient, compliant, and cost-effective 
 - **GDPR Compliance:** EU data isolation and governance
 - **Cost Optimized:** 25% reduction while improving performance
 
-### **Ì†æÌ∑† Real-World Skills Gained:**
+### ** Real-World Skills Gained:**
 1. **Region Selection Criteria:** Latency, compliance, cost, service availability
 2. **High Availability Design:** Multi-AZ deployment strategies
 3. **Global Performance:** CDN and edge location utilization
@@ -339,7 +339,7 @@ You've successfully designed a global, resilient, compliant, and cost-effective 
 5. **Compliance Implementation:** Data residency and governance
 6. **Cost Management:** Optimization without performance impact
 
-### **Ì†ΩÌ≥ù Exam-Relevant Concepts:**
+### ** Exam-Relevant Concepts:**
 - ‚úÖ **Global Infrastructure:** Regions, AZs, Edge Locations
 - ‚úÖ **Cloud Benefits:** Elasticity, scalability, global reach
 - ‚úÖ **Deployment Models:** Multi-region hybrid approach
@@ -348,7 +348,7 @@ You've successfully designed a global, resilient, compliant, and cost-effective 
 
 ---
 
-## Ì†ΩÌ∫Ä **WHAT'S NEXT?**
+##  **WHAT'S NEXT?**
 
 Outstanding work! You've applied Domain 1 concepts to solve a complex real-world challenge. This scenario demonstrates how cloud concepts translate into business solutions.
 
@@ -359,4 +359,4 @@ Outstanding work! You've applied Domain 1 concepts to solve a complex real-world
 - `/define auto-scaling` - Deep dive into any concept
 - `/exam-tips` - Learn test-taking strategies
 
-**What would you like to explore next?** Ì†ºÌºü
+**What would you like to explore next?** 

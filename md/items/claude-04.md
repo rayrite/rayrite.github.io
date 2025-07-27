@@ -1,8 +1,8 @@
-Ôªø# Ì†ΩÌ∫® **SECURITY BREACH SCENARIO: Healthcare Data Crisis**
+#  **SECURITY BREACH SCENARIO: Healthcare Data Crisis**
 
 ---
 
-## Ì†ΩÌ≥ã **SCENARIO BRIEFING**
+##  **SCENARIO BRIEFING**
 
 You're the **Chief Information Security Officer (CISO)** for **MediCare Plus**, a digital healthcare platform serving 2 million patients across the United States. Your worst nightmare has just become reality - a sophisticated cyberattack has breached your AWS infrastructure.
 
@@ -22,9 +22,9 @@ You're the **Chief Information Security Officer (CISO)** for **MediCare Plus**, 
 
 ---
 
-## Ì†ΩÌ¥• **BREAKING: SECURITY INCIDENT DETECTED!**
+##  **BREAKING: SECURITY INCIDENT DETECTED!**
 
-**Ì†ΩÌ≥∫ ALERT:** *"URGENT: GuardDuty has detected cryptocurrency mining activity on your EC2 instances. Unusual API calls detected. Potential data exfiltration in progress."*
+** ALERT:** *"URGENT: GuardDuty has detected cryptocurrency mining activity on your EC2 instances. Unusual API calls detected. Potential data exfiltration in progress."*
 
 ### **Initial Alerts (3:47 AM EST):**
 - **GuardDuty:** Cryptocurrency mining detected on 15 EC2 instances
@@ -42,9 +42,9 @@ You're the **Chief Information Security Officer (CISO)** for **MediCare Plus**, 
 
 ---
 
-## Ì†ºÌæØ **IMMEDIATE CRISIS RESPONSE OBJECTIVES**
+##  **IMMEDIATE CRISIS RESPONSE OBJECTIVES**
 
-### **Ì†æÌ¥î Decision Time - What's your FIRST priority?**
+### ** Decision Time - What's your FIRST priority?**
 
 You have multiple critical alerts simultaneously. In a healthcare security breach, what should you prioritize?
 
@@ -54,7 +54,7 @@ You have multiple critical alerts simultaneously. In a healthcare security breac
 **Option D:** Isolate affected systems while preserving evidence
 
 <details>
-<summary><strong>Ì†ΩÌ≤° Click to see the correct crisis response priority</strong></summary>
+<summary><strong> Click to see the correct crisis response priority</strong></summary>
 
 **Correct Answer: Option D - Isolate while preserving evidence**
 
@@ -79,7 +79,7 @@ You have multiple critical alerts simultaneously. In a healthcare security breac
 
 ---
 
-## Ì†ΩÌ¥ç **STEP 1: ATTACK INVESTIGATION & ANALYSIS**
+##  **STEP 1: ATTACK INVESTIGATION & ANALYSIS**
 
 Your security team has isolated the affected systems. Now you need to understand what happened using AWS security services.
 
@@ -95,7 +95,7 @@ Your security team has isolated the affected systems. Now you need to understand
 - **GetObject** calls accessing patient data buckets at 3:30 AM EST
 - **CreateUser** and **AttachUserPolicy** - New admin users created
 
-### **Ì†æÌ¥î Decision Time - What was the likely attack vector?**
+### ** Decision Time - What was the likely attack vector?**
 
 Based on the evidence, how did the attackers gain initial access?
 
@@ -105,7 +105,7 @@ Based on the evidence, how did the attackers gain initial access?
 **Option D:** Unpatched vulnerability in EC2 instances
 
 <details>
-<summary><strong>Ì†ΩÌ≤° Click to see the attack vector analysis</strong></summary>
+<summary><strong> Click to see the attack vector analysis</strong></summary>
 
 **Most Likely: Option B - Compromised IAM credentials**
 
@@ -127,7 +127,7 @@ Based on the evidence, how did the attackers gain initial access?
 
 ---
 
-## Ì†ΩÌ¥ç **STEP 2: DATA COMPROMISE ASSESSMENT**
+##  **STEP 2: DATA COMPROMISE ASSESSMENT**
 
 Now you need to determine what sensitive data was accessed using AWS Macie and other security services.
 
@@ -152,7 +152,7 @@ Now you need to determine what sensitive data was accessed using AWS Macie and o
 - **4:30 AM:** Your security team detected the breach
 - **Total exposure window:** 59 minutes
 
-### **Ì†æÌ¥î Decision Time - HIPAA Breach Notification Requirements**
+### ** Decision Time - HIPAA Breach Notification Requirements**
 
 You've confirmed PHI was accessed. What are your legal obligations?
 
@@ -163,7 +163,7 @@ You've confirmed PHI was accessed. What are your legal obligations?
 - Do you need to notify media?
 
 <details>
-<summary><strong>Ì†ΩÌ≤° Click to see HIPAA breach notification requirements</strong></summary>
+<summary><strong> Click to see HIPAA breach notification requirements</strong></summary>
 
 **HIPAA Breach Notification Timeline:**
 
@@ -196,7 +196,7 @@ You've confirmed PHI was accessed. What are your legal obligations?
 
 ---
 
-## Ì†ΩÌª°Ô∏è **STEP 3: IMMEDIATE CONTAINMENT & REMEDIATION**
+## Ô∏è **STEP 3: IMMEDIATE CONTAINMENT & REMEDIATION**
 
 You have 59 minutes of confirmed unauthorized access to 2.3 million patient records. Time for aggressive containment.
 
@@ -240,7 +240,7 @@ You have 59 minutes of confirmed unauthorized access to 2.3 million patient reco
    - Remove unnecessary permissions (least privilege)
    - Enable AWS Config for ongoing compliance monitoring
 
-### **Ì†æÌ¥î Decision Time - Communication Strategy**
+### ** Decision Time - Communication Strategy**
 
 The breach is contained but you have multiple stakeholder groups demanding updates. How do you prioritize communications?
 
@@ -251,7 +251,7 @@ C) Executive team first - they need to make business decisions
 D) Legal team first - need guidance on liability exposure
 
 <details>
-<summary><strong>Ì†ΩÌ≤° Click to see the recommended communication strategy</strong></summary>
+<summary><strong> Click to see the recommended communication strategy</strong></summary>
 
 **Recommended Priority: D ‚Üí C ‚Üí B ‚Üí A**
 
@@ -294,7 +294,7 @@ D) Legal team first - need guidance on liability exposure
 
 ---
 
-## Ì†ΩÌ≤∞ **STEP 4: FINANCIAL IMPACT ASSESSMENT**
+##  **STEP 4: FINANCIAL IMPACT ASSESSMENT**
 
 48 hours post-breach, your CFO needs a financial impact estimate for insurance claims and business planning.
 
@@ -314,7 +314,7 @@ D) Legal team first - need guidance on liability exposure
 
 ### **AWS Security Investment for Prevention:**
 
-### **Ì†æÌ¥î Decision Time - Security Investment Strategy**
+### ** Decision Time - Security Investment Strategy**
 
 Your board approves a $10 million annual security budget increase. How do you prioritize AWS security investments?
 
@@ -324,7 +324,7 @@ Your board approves a $10 million annual security budget increase. How do you pr
 **Option D:** Balanced approach across all three areas
 
 <details>
-<summary><strong>Ì†ΩÌ≤° Click to see the recommended security investment strategy</strong></summary>
+<summary><strong> Click to see the recommended security investment strategy</strong></summary>
 
 **Recommended: Option D - Balanced Approach**
 
@@ -382,7 +382,7 @@ Your board approves a $10 million annual security budget increase. How do you pr
 
 ---
 
-## Ì†ΩÌ¥í **STEP 5: LONG-TERM SECURITY ARCHITECTURE**
+##  **STEP 5: LONG-TERM SECURITY ARCHITECTURE**
 
 Six months post-incident, you're implementing a comprehensive security architecture. The board wants to see measurable improvements.
 
@@ -450,9 +450,9 @@ Six months post-incident, you're implementing a comprehensive security architect
 
 ---
 
-## Ì†ºÌæØ **SCENARIO WRAP-UP: SECURITY MASTERY ACHIEVED**
+##  **SCENARIO WRAP-UP: SECURITY MASTERY ACHIEVED**
 
-### **Ì†ºÌøÜ Crisis Management Summary:**
+### ** Crisis Management Summary:**
 Congratulations! You successfully managed a major healthcare security breach with:
 
 - **‚úÖ Rapid Detection:** GuardDuty identified threats within minutes
@@ -462,7 +462,7 @@ Congratulations! You successfully managed a major healthcare security breach wit
 - **‚úÖ Long-term Security:** Implemented comprehensive prevention architecture
 - **‚úÖ Stakeholder Communication:** Managed regulatory, legal, and customer relationships
 
-### **Ì†æÌ∑† Real-World Skills Demonstrated:**
+### ** Real-World Skills Demonstrated:**
 
 **1. Security Incident Response:**
 - Applied AWS security services under pressure
@@ -485,7 +485,7 @@ Congratulations! You successfully managed a major healthcare security breach wit
 - Implemented defense-in-depth security architecture
 - Demonstrated measurable security improvements
 
-### **Ì†ΩÌ≥ö Key AWS Security Concepts Mastered:**
+### ** Key AWS Security Concepts Mastered:**
 
 **Domain 2: Security & Compliance (30% of exam):**
 - ‚úÖ **Shared Responsibility Model:** Understanding AWS vs. customer responsibilities
@@ -495,7 +495,7 @@ Congratulations! You successfully managed a major healthcare security breach wit
 - ‚úÖ **Incident Response:** Detection, containment, investigation, recovery
 - ‚úÖ **Compliance Frameworks:** HIPAA, SOX, PCI DSS requirements
 
-### **Ì†ΩÌ≤° Exam-Relevant Takeaways:**
+### ** Exam-Relevant Takeaways:**
 
 1. **GuardDuty** automatically detects threats using ML and threat intelligence
 2. **Macie** discovers and classifies sensitive data in S3 buckets
@@ -510,25 +510,25 @@ Congratulations! You successfully managed a major healthcare security breach wit
 
 ---
 
-## Ì†ΩÌ∫Ä **WHAT'S NEXT?**
+##  **WHAT'S NEXT?**
 
 Outstanding work! You've successfully navigated a complex security incident that demonstrates mastery of AWS security services and real-world crisis management.
 
 **Continue your security expertise:**
 
-**Ì†ΩÌ≥ñ Advanced Study:**
+** Advanced Study:**
 - `/domain 3` - Technology & Services (34% of exam - largest domain!)
 - `/quiz security-compliance` - Test your security knowledge
 - `/define shared-responsibility` - Deep dive into security fundamentals
 - `/service GuardDuty` - Explore threat detection in detail
 
-**Ì†ΩÌ¥ß Hands-On Practice:**
+** Hands-On Practice:**
 - `/scenario compliance-audit` - Practice regulatory compliance
 - `/compare GuardDuty Macie Inspector` - Security service comparison
 - `/service IAM` - Master identity and access management
 
-**Ì†ΩÌ≥ã Exam Preparation:**
+** Exam Preparation:**
 - `/exam-tips` - Security-focused test-taking strategies
 - `/progress` - Check your learning across all domains
 
-**What security concept would you like to explore deeper?** Your AWS security expertise is now exam-ready! Ì†ΩÌª°Ô∏è‚≠ê
+**What security concept would you like to explore deeper?** Your AWS security expertise is now exam-ready! Ô∏è‚≠ê

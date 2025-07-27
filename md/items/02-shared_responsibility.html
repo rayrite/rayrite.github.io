@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS Diagram Viewer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f2f5;
+            margin: 0;
+            height: 100vh;
+            overflow: hidden; /* Prevent body scroll */
+        }
+        h1 {
+            color: #232f3e;
+            padding: 10px 0;
+            margin: 0;
+        }
+        .controls {
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+            z-index: 10;
+        }
+        .controls button {
+            background-color: #232f3e;
+            color: #ffffff;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 0 5px;
+        }
+        .controls button:hover {
+            background-color: #4a617d;
+        }
+        #diagram-viewport {
+            width: 95vw;
+            height: 85vh;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #ffffff;
+            overflow: hidden; /* Crucial for panzoom */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .mermaid {
+            /* Mermaid will replace this with an SVG */
+        }
+    </style>
+</head>
+<body>
+
+    <h1>AWS Shared Responsibility Model</h1>
+
+    <div class="controls">
+        <button id="zoom-in">+</button>
+        <button id="zoom-out">-</button>
+        <button id="reset">Reset</button>
+    </div>
+
+    <div id="diagram-viewport">
+        <!-- The refactored and corrected Mermaid diagram code goes inside the pre tag below -->
+        <pre class="mermaid">
+flowchart TB
+    subgraph AWS["AWS Responsibility (Security OF the Cloud)"]
+        A1["Global Infrastructure<br/>Regions, AZs, Edge Locations"]
+        A2["Hardware<br/>Compute, Storage, Database, Networking"]
+        A3["Software<br/>Managed Services Infrastructure<br/>e.g., S3, DynamoDB, RDS OS Patching"]
+    end
+    
+    subgraph Customer["Customer Responsibility (Security IN the Cloud)"]
+        B1["Data<br/>Customer Data & Encryption Configuration"]
+        B2["Platform & Applications<br/>Customer Applications & Code"]
+        B3["Operating System & Network<br/>Guest OS Patching on EC2"]
+        B4["Firewall Configuration<br/>Security Groups & NACLs"]
+        B5["Identity & Access<br/>IAM Users, Roles, Policies"]
+        B6["MFA Configuration<br/>Least Privilege"]
+    end
+    
+    AWS -.-> Customer
+    
+    A1 ~~~ A2
+    A2 ~~~ A3
+    B1 ~~~ B2
+    B2 ~~~ B3
+    B3 ~~~ B4
+    B4 ~~~ B5
+    B5 ~~~ B6
+    
+    classDef awsStyle fill:#232f3e,stroke:#fff,stroke-width:2px,color:#fff
+    classDef customerStyle fill:#ff9900,stroke:#fff,stroke-width:2px,color:#000
+    
+    class AWS,A1,A2,A3 awsStyle
+    class Customer,B1,B2,B3,B4,B5,B6 customerStyle
+        </pre>
+    </div>
+    
+    <!-- Panzoom Library -->
+    <script src="https://unpkg.com/@panzoom/panzoom@4.5.1/dist/panzoom.min.js"></script>
+    
+    <!-- Mermaid Library -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initialize Mermaid with specific configuration
+            mermaid.initialize({ 
+                startOnLoad: false,
+                theme: 'default',
+                flowchart: {
+                    htmlLabels: true,
+                    useMaxWidth: true
+                }
+            });
+
+            async function renderDiagram() {
+                // Find the pre element containing the Mermaid definition
+                const mermaidElement = document.querySelector('.mermaid');
+                const { svg } = await mermaid.render('mermaid-svg', mermaidElement.textContent);
+                
+                // Put the rendered SVG into the viewport
+                const viewport = document.getElementById('diagram-viewport');
+                viewport.innerHTML = svg;
+                const svgElement = viewport.querySelector('svg');
+
+                // Make the SVG take up space
+                svgElement.style.width = '100%';
+                svgElement.style.height = '100%';
+
+                // Initialize Panzoom on the viewport
+                const pz = Panzoom(viewport, {
+                    canvas: true, // Panzoom should target the SVG inside the viewport
+                    maxScale: 5,
+                    minScale: 0.2
+                });
+
+                // Enable mouse wheel zooming
+                viewport.parentElement.addEventListener('wheel', pz.zoomWithWheel);
+
+                // Wire up GUI controls
+                document.getElementById('zoom-in').addEventListener('click', pz.zoomIn);
+                document.getElementById('zoom-out').addEventListener('click', pz.zoomOut);
+                document.getElementById('reset').addEventListener('click', pz.reset);
+            }
+
+            renderDiagram();
+        });
+    </script>
+
+</body>
+</html>

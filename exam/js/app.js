@@ -37,6 +37,7 @@ class ExamSimulator {
     async loadQuestions() {
         try {
             const files = [
+                'data/aws_mcq_questions.json',
                 'data/aws_e2_exams.json',
                 'data/aws_e3_exams.json', 
                 'data/aws_e4_exams.json',

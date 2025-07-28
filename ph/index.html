@@ -1556,36 +1556,34 @@
         }
 
         // Apply a preset
+        // Apply a preset by filtering on its tag instead of setting the search box
         function applyPreset(presetId) {
             if (!presetId) {
                 clearAllFilters();
                 return;
             }
-
+        
             const preset = presets.find(p => p.id === presetId);
             if (!preset) return;
-
-            // Clear existing filters
+        
+            // Clear any existing text‐search or multi‐tag filters
             searchInput.value = '';
-            tagFilter.value = '';
-            multiTagSearch.value = '';
             clearSearchBtn.style.display = 'none';
-
-            // Apply preset search
-            searchInput.value = preset.searchTerm;
-            clearSearchBtn.style.display = 'block';
-
-            // Update dropdown selection
+            multiTagSearch.value = '';
+            
+            // Select the preset's tag in the tag‐filter dropdown
+            tagFilter.value = preset.searchTerm;
+        
+            // Reflect the selection in the dropdown and card UI
             presetDropdown.value = presetId;
-
-            // Update card visual state
             document.querySelectorAll('.preset-card').forEach(card => {
-                card.classList.remove('active');
+                card.classList.toggle('active', card.dataset.presetId === presetId);
             });
-            document.querySelector(`[data-preset-id="${presetId}"]`).classList.add('active');
-
+        
+            // Finally, re‐apply all filters (including the new tagFilter value)
             applyFilters();
         }
+
 
         // Handle preset dropdown change
         function handlePresetDropdown() {

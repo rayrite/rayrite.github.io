@@ -33,6 +33,17 @@ class MCQApp {
                 throw new Error(`HTTP error! status: ${response?.status ?? 'unknown'}`);
             }
             this.questions = await response.json() ?? [];
+            // Derive answer_letters for quiz mode based on correct_answers
+            this.questions.forEach(q => {
+                const letters = [];
+                (q.correct_answers || []).forEach(entry => {
+                    entry.split('<br>').forEach(item => {
+                        const m = item.trim().match(/^([A-Z])\./);
+                        if (m) letters.push(m[1]);
+                    });
+                });
+                q.answer_letters = letters;
+            });
             this.filteredQuestions = [...this.questions];
             
             // Extract unique categories
@@ -520,10 +531,12 @@ class MCQApp {
 
         // Show result
         this.showQuizResult(isCorrect, question);
+        // Immediately display correct answer and explanation
+        this.showCurrentAnswer();
 
         // Update buttons
         document.getElementById('checkAnswer')?.style?.setProperty?.('display', 'none');
-        document.getElementById('showAnswer')?.style?.setProperty?.('display', 'inline-block');
+        document.getElementById('showAnswer')?.style?.setProperty?.('display', 'none');
         document.getElementById('nextQuestion')?.style?.setProperty?.('display', 'inline-block');
     }
 

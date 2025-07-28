@@ -236,11 +236,11 @@ class MCQApp {
         const correctAnswers = question?.correct_answers?.join?.(', ') ?? 'No answer provided';
         const hasExplanation = question?.explanation && question.explanation.trim() !== '';
         
-        // Create chapter-based question numbering
+        // Chapter-based numbering or fallback to JSON id
         const chapterMap = {
             'Assessment Test': 'A',
             'Chapter 1': '1',
-            'Chapter 2': '2', 
+            'Chapter 2': '2',
             'Chapter 3': '3',
             'Chapter 4': '4',
             'Chapter 5': '5',
@@ -252,10 +252,12 @@ class MCQApp {
             'Chapter 11': '11',
             'Chapter 12': '12'
         };
-        
-        const chapterPrefix = chapterMap[question?.chapter] || 'X';
-        const questionNum = question?.pdf_question_number?.toString().padStart(2, '0') || '00';
-        const questionNumber = `${chapterPrefix}${questionNum}`;
+        let questionNumber;
+        if (question.chapter && chapterMap[question.chapter] && question.pdf_question_number) {
+            questionNumber = `${chapterMap[question.chapter]}${question.pdf_question_number.toString().padStart(2, '0')}`;
+        } else {
+            questionNumber = question.id;
+        }
             
         // Show verification status if available
         const verificationStatus = question?.answer_verified !== undefined ? 

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS CLF-C02 Exam Simulator</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>AWS CLF-C02 Exam Simulator</h1>
+            <div class="timer-controls">
+                <div class="global-timer">
+                    <h3>Global Timer</h3>
+                    <div id="globalTimer" class="timer-display">90:00</div>
+                    <div class="timer-buttons">
+                        <button id="startGlobalTimer">Start</button>
+                        <button id="pauseGlobalTimer">Pause</button>
+                        <button id="stopGlobalTimer">Stop</button>
+                        <button id="resetGlobalTimer">Reset</button>
+                    </div>
+                </div>
+                <div class="question-timer">
+                    <h3>Question Timer</h3>
+                    <div id="questionTimer" class="timer-display">01:30</div>
+                </div>
+            </div>
+        </header>
+
+        <nav class="tab-navigation">
+            <button id="examTab" class="tab-button active">Exam</button>
+            <button id="reviewTab" class="tab-button">Review</button>
+        </nav>
+
+        <main>
+            <!-- Exam Tab Content -->
+            <div id="examContent" class="tab-content active">
+                <!-- Exam Control Buttons -->
+                <div id="examControls" class="exam-controls">
+                    <div class="exam-control-buttons">
+                        <button id="startExam" class="start-exam-button">Start Exam</button>
+                    </div>
+                    <div id="examStatus" class="exam-status">
+                        <p>Click "Start Exam" to begin your AWS CLF-C02 practice test.</p>
+                        <p>The exam will consist of 65 questions with a 90-minute time limit.</p>
+                    </div>
+                </div>
+
+                <!-- Exam Content (hidden initially) -->
+                <div id="examInterface" class="exam-interface" style="display: none;">
+                    <div class="exam-header">
+                        <div class="question-counter">
+                            <span id="currentQuestion">1</span> / <span id="totalQuestions">65</span>
+                        </div>
+                        <div class="exam-progress">
+                            <div id="progressBar" class="progress-bar">
+                                <div id="progressFill" class="progress-fill"></div>
+                            </div>
+                        </div>
+                        <div class="exam-controls-active">
+                            <button id="stopExam" class="stop-exam-button">Stop Exam</button>
+                        </div>
+                    </div>
+
+                    <div class="question-container">
+                        <div id="questionContent" class="question-content">
+                            <h2 id="questionText">Loading questions...</h2>
+                            <div id="questionOptions" class="question-options">
+                                <!-- Options will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="navigation-controls">
+                        <button id="prevQuestion" class="nav-button" disabled>Previous</button>
+                        <button id="nextQuestion" class="nav-button">Next</button>
+                        <button id="finishExam" class="finish-button" style="display: none;">Finish Exam</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Review Tab Content -->
+            <div id="reviewContent" class="tab-content">
+                <div class="review-header">
+                    <h2>Exam Results</h2>
+                    <div id="scoreDisplay" class="score-display">
+                        <div class="score-circle">
+                            <span id="scorePercentage">0%</span>
+                        </div>
+                        <div class="score-details">
+                            <p>Score: <span id="correctAnswers">0</span> / <span id="totalAnswered">0</span></p>
+                            <p>Time Taken: <span id="totalTime">00:00</span></p>
+                        </div>
+                    </div>
+                    <button id="exportResults" class="export-button">Export Results</button>
+                </div>
+
+                <div id="reviewQuestions" class="review-questions">
+                    <!-- Review content will be populated by JavaScript -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
+

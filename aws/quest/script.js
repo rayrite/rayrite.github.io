@@ -116,6 +116,10 @@ class MCQApp {
             this.endQuiz();
         });
 
+        document.getElementById('checkAnswer')?.addEventListener?.('click', () => {
+            this.checkUserAnswer();
+        });
+
         document.getElementById('showAnswer')?.addEventListener?.('click', () => {
             this.showCurrentAnswer();
         });
@@ -232,11 +236,40 @@ class MCQApp {
         const correctAnswers = question?.correct_answers?.join?.(', ') ?? 'No answer provided';
         const hasExplanation = question?.explanation && question.explanation.trim() !== '';
         
+        // Create chapter-based question numbering
+        const chapterMap = {
+            'Assessment Test': 'A',
+            'Chapter 1': '1',
+            'Chapter 2': '2', 
+            'Chapter 3': '3',
+            'Chapter 4': '4',
+            'Chapter 5': '5',
+            'Chapter 6': '6',
+            'Chapter 7': '7',
+            'Chapter 8': '8',
+            'Chapter 9': '9',
+            'Chapter 10': '10',
+            'Chapter 11': '11',
+            'Chapter 12': '12'
+        };
+        
+        const chapterPrefix = chapterMap[question?.chapter] || 'X';
+        const questionNum = question?.pdf_question_number?.toString().padStart(2, '0') || '00';
+        const questionNumber = `${chapterPrefix}${questionNum}`;
+            
+        // Show verification status if available
+        const verificationStatus = question?.answer_verified !== undefined ? 
+            (question.answer_verified ? 
+                `<span class="verified" title="Answer verified">✅</span>` : 
+                `<span class="unverified" title="Answer not verified">❌</span>`
+            ) : '';
+        
         return `
             <div class="question-card">
                 <div class="question-header">
-                    <span class="question-id">Q${question?.id ?? 'N/A'}</span>
+                    <span class="question-id">${questionNumber}</span>
                     <span class="question-category">${question?.category ?? 'Uncategorized'}</span>
+                    ${verificationStatus}
                 </div>
                 <div class="question-text">${question?.question ?? 'Question text not available'}</div>
                 <div class="options">
@@ -339,26 +372,51 @@ class MCQApp {
             questionNumber.textContent = `Question ${this.currentQuizIndex + 1} of ${this.currentQuizQuestions?.length ?? 0}`;
         }
 
-        // Display question
+        // Check if this is a multiple choice question
+        const isMultipleChoice = question?.answer_letters?.length > 1;
+        const inputType = isMultipleChoice ? 'checkbox' : 'radio';
+
+        // Display question with interactive options
         const quizQuestion = document.getElementById('quizQuestion');
         if (quizQuestion) {
             quizQuestion.innerHTML = `
                 <div class="question-text">${question?.question ?? 'Question not available'}</div>
-                <div class="options">
-                    ${question?.options?.map?.((option, index) => 
-                        `<div class="option">
-                            <span class="option-label">${String.fromCharCode(65 + index)})</span>
-                            <span class="option-text">${option ?? ''}</span>
-                        </div>`
-                    )?.join?.('') ?? ''}
+                <div class="quiz-instructions">
+                    ${isMultipleChoice ? 
+                        `<p><strong>Select ${question.answer_letters.length} answers:</strong></p>` : 
+                        '<p><strong>Select one answer:</strong></p>'
+                    }
+                </div>
+                <div class="quiz-options">
+                    ${question?.options?.map?.((option, index) => {
+                        const letter = String.fromCharCode(65 + index);
+                        return `
+                            <div class="quiz-option" onclick="app.toggleQuizOption('${letter}')">
+                                <input type="${inputType}" 
+                                       id="option-${letter}" 
+                                       name="quiz-answer" 
+                                       value="${letter}" 
+                                       ${inputType === 'radio' ? '' : ''}>
+                                <span class="quiz-option-label">${letter}.</span>
+                                <span class="quiz-option-text">${option ?? ''}</span>
+                            </div>
+                        `;
+                    })?.join?.('') ?? ''}
                 </div>
             `;
         }
 
-        // Reset answer section
+        // Reset answer section and buttons
         document.getElementById('answerSection')?.style?.setProperty?.('display', 'none');
-        document.getElementById('showAnswer')?.style?.setProperty?.('display', 'inline-block');
+        document.getElementById('checkAnswer')?.style?.setProperty?.('display', 'inline-block');
+        document.getElementById('showAnswer')?.style?.setProperty?.('display', 'none');
         document.getElementById('nextQuestion')?.style?.setProperty?.('display', 'none');
+        
+        // Clear any previous result
+        const existingResult = document.querySelector('.quiz-result');
+        if (existingResult) {
+            existingResult.remove();
+        }
     }
 
     showCurrentAnswer() {
@@ -371,7 +429,7 @@ class MCQApp {
         // Update answer content
         const correctAnswerText = document.getElementById('correctAnswerText');
         if (correctAnswerText) {
-            correctAnswerText.textContent = correctAnswers;
+            correctAnswerText.innerHTML = correctAnswers;
         }
 
         const explanationText = document.getElementById('explanationText');
@@ -394,6 +452,97 @@ class MCQApp {
             this.endQuiz();
         } else {
             this.displayCurrentQuizQuestion();
+        }
+    }
+
+    toggleQuizOption(letter) {
+        const question = this.currentQuizQuestions?.[this.currentQuizIndex];
+        if (!question) return;
+
+        const isMultipleChoice = question?.answer_letters?.length > 1;
+        const checkbox = document.getElementById(`option-${letter}`);
+        const option = checkbox?.closest('.quiz-option');
+
+        if (!checkbox || !option) return;
+
+        if (isMultipleChoice) {
+            // Toggle checkbox
+            checkbox.checked = !checkbox.checked;
+            option.classList.toggle('selected', checkbox.checked);
+        } else {
+            // Radio button behavior - uncheck all others
+            document.querySelectorAll('.quiz-option').forEach(opt => {
+                opt.classList.remove('selected');
+                const input = opt.querySelector('input');
+                if (input) input.checked = false;
+            });
+            
+            checkbox.checked = true;
+            option.classList.add('selected');
+        }
+    }
+
+    checkUserAnswer() {
+        const question = this.currentQuizQuestions?.[this.currentQuizIndex];
+        if (!question) return;
+
+        // Get user's selected answers
+        const selectedInputs = document.querySelectorAll('.quiz-option input:checked');
+        const userAnswers = Array.from(selectedInputs).map(input => input.value).sort();
+        const correctAnswers = [...(question?.answer_letters || [])].sort();
+
+        // Check if user selected any answers
+        if (userAnswers.length === 0) {
+            alert('Please select an answer before checking.');
+            return;
+        }
+
+        // Compare answers
+        const isCorrect = JSON.stringify(userAnswers) === JSON.stringify(correctAnswers);
+
+        // Update option styling
+        document.querySelectorAll('.quiz-option').forEach(option => {
+            const input = option.querySelector('input');
+            const letter = input?.value;
+            
+            if (correctAnswers.includes(letter)) {
+                option.classList.add('correct');
+            } else if (userAnswers.includes(letter)) {
+                option.classList.add('incorrect');
+            }
+            
+            // Disable further interaction
+            option.style.pointerEvents = 'none';
+            if (input) input.disabled = true;
+        });
+
+        // Show result
+        this.showQuizResult(isCorrect, question);
+
+        // Update buttons
+        document.getElementById('checkAnswer')?.style?.setProperty?.('display', 'none');
+        document.getElementById('showAnswer')?.style?.setProperty?.('display', 'inline-block');
+        document.getElementById('nextQuestion')?.style?.setProperty?.('display', 'inline-block');
+    }
+
+    showQuizResult(isCorrect, question) {
+        const resultDiv = document.createElement('div');
+        resultDiv.className = `quiz-result ${isCorrect ? 'correct' : 'incorrect'}`;
+        
+        const icon = isCorrect ? '✓' : '✗';
+        const message = isCorrect ? 'Correct!' : 'Incorrect!';
+        const correctAnswersText = question?.answer_letters?.join(', ') || '';
+        
+        resultDiv.innerHTML = `
+            <span class="result-icon">${icon}</span>
+            ${message}
+            ${!isCorrect ? `<br><strong>Correct answer(s): ${correctAnswersText}</strong>` : ''}
+        `;
+
+        // Insert after quiz options
+        const quizQuestion = document.getElementById('quizQuestion');
+        if (quizQuestion) {
+            quizQuestion.appendChild(resultDiv);
         }
     }
 

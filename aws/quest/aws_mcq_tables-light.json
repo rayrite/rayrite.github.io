@@ -1,0 +1,96 @@
+[
+  {
+    "metadata": {
+      "page_number": 6,
+      "end_page": 7,
+      "table_number": 1,
+      "dimensions": {
+        "rows": 4,
+        "columns": 4
+      }
+    },
+    "question": "1",
+    "headers": [
+      "Database\nService",
+      "Type",
+      "Use Case",
+      "Key Features"
+    ],
+    "data": [
+      [
+        "Amazon\nDynamoDB",
+        "NoSQL",
+        "High-performance\napplications,\nserverless\napplications,\ngaming\nleaderboards",
+        "Fully managed,\nauto-scaling, multi-\nregion support"
+      ],
+      [
+        "Amazon\nAurora",
+        "SQL",
+        "Enterprise\napplications,\nSaaS applications",
+        "MySQL/PostgreSQL\ncompatible, high\navailability"
+      ],
+      [
+        "Amazon\nRDS\nPostgreSQL",
+        "SQL",
+        "Traditional\nrelational\ndatabase\nworkloads",
+        "Managed\nPostgreSQL,\nautomatic patching"
+      ],
+      [
+        "Amazon\nDocumentDB",
+        "NoSQL",
+        "MongoDB\nworkloads",
+        "MongoDB\ncompatibility,\ndocument\ndatabase"
+      ]
+    ]
+  },
+  {
+    "metadata": {
+      "page_number": 9,
+      "end_page": 9,
+      "table_number": 2,
+      "dimensions": {
+        "rows": 5,
+        "columns": 4
+      }
+    },
+    "question": "2",
+    "headers": [
+      "Service",
+      "Default Multi-\nAZ Support",
+      "Durability\nSLA",
+      "Additional\nConfiguration\nRequired"
+    ],
+    "data": [
+      [
+        "Amazon\nS3",
+        "Yes",
+        "99.999999999%",
+        "No"
+      ],
+      [
+        "DynamoDB",
+        "Yes",
+        "99.999999999%",
+        "No"
+      ],
+      [
+        "Amazon\nEBS",
+        "No",
+        "99.999%",
+        "Yes"
+      ],
+      [
+        "Amazon\nEC2",
+        "No",
+        "Varies",
+        "Yes"
+      ],
+      [
+        "Amazon\nEFS",
+        "No",
+        "99.999999999%",
+        "Yes"
+      ]
+    ]
+  }
+]

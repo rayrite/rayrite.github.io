@@ -1,5 +1,3 @@
-
-
 class MCQApp {
     constructor() {
         this.questions = [];
@@ -9,6 +7,7 @@ class MCQApp {
         this.currentQuizIndex = 0;
         this.quizInProgress = false;
         this.currentDataset = 'aws_mcq_questions.json';
+        this.tablesWindow = null; // Track the tables window
         
         this.init();
     }
@@ -138,6 +137,23 @@ class MCQApp {
         document.getElementById('nextQuestion')?.addEventListener?.('click', () => {
             this.nextQuizQuestion();
         });
+        // View Tables Button functionality
+        const datasetSelect = document.getElementById('datasetSelect');
+        const viewTablesBtn = document.getElementById('viewTablesBtn');
+        if (viewTablesBtn && datasetSelect) {
+            viewTablesBtn.addEventListener('click', () => {
+                window.open('aws1600t.html', '_blank');
+            });
+            const toggleViewTablesBtn = () => {
+                if (datasetSelect.value === 'aws_mcq_questions.json') {
+                    viewTablesBtn.style.display = 'inline-block';
+                } else {
+                    viewTablesBtn.style.display = 'none';
+                }
+            };
+            datasetSelect.addEventListener('change', toggleViewTablesBtn);
+            toggleViewTablesBtn();
+        }
     }
 
     resetFilters() {
@@ -276,6 +292,10 @@ class MCQApp {
                 `<span class="verified" title="Answer verified">✅</span>` : 
                 `<span class="unverified" title="Answer not verified">❌</span>`
             ) : '';
+
+        // Add View Table button only for aws_mcq_questions.json dataset
+        const viewTableButton = this.currentDataset === 'aws_mcq_questions.json' ? 
+            `<button class="view-table-btn" onclick="app.openTableForQuestion(${question?.id ?? 0})">View Table</button>` : '';
         
         return `
             <div class="question-card">
@@ -305,10 +325,26 @@ class MCQApp {
                             <strong>Correct Answer:</strong> ${correctAnswers}
                         </div>
                         ${hasExplanation ? `<div class="explanation">${question.explanation}</div>` : ''}
+                        ${viewTableButton}
                     </div>
                 </div>
             </div>
         `;
+    }
+
+    // New method to open table for specific question
+    openTableForQuestion(questionId) {
+        const url = `aws1600t.html#question-${questionId}`;
+        
+        // Check if tables window is still open and valid
+        if (this.tablesWindow && !this.tablesWindow.closed) {
+            // Refresh existing window with new URL
+            this.tablesWindow.location.href = url;
+            this.tablesWindow.focus();
+        } else {
+            // Open new window
+            this.tablesWindow = window.open(url, 'tablesWindow');
+        }
     }
 
     toggleAnswer(questionId) {
@@ -449,6 +485,24 @@ class MCQApp {
         if (explanationText) {
             explanationText.innerHTML = hasExplanation ? question.explanation : '';
             explanationText.style.display = hasExplanation ? 'block' : 'none';
+        }
+
+        // Add View Table button for aws_mcq_questions.json dataset in quiz mode
+        if (this.currentDataset === 'aws_mcq_questions.json') {
+            const answerSection = document.getElementById('answerSection');
+            if (answerSection) {
+                // Check if View Table button already exists
+                let viewTableBtn = answerSection.querySelector('.view-table-btn');
+                if (!viewTableBtn) {
+                    viewTableBtn = document.createElement('button');
+                    viewTableBtn.className = 'view-table-btn';
+                    viewTableBtn.textContent = 'View Table';
+                    viewTableBtn.onclick = () => this.openTableForQuestion(question.id);
+                    
+                    // Insert the button at the end of the answer section
+                    answerSection.appendChild(viewTableBtn);
+                }
+            }
         }
 
         // Show answer section and next button

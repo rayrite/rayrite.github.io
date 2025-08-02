@@ -334,7 +334,7 @@ header h1 {
     margin-bottom: 10px;
 }
 
-.show-answer-btn, .start-quiz-btn, .end-quiz-btn, .next-question-btn, .view-table-btn {
+.show-answer-btn, .start-quiz-btn, .end-quiz-btn, .next-question-btn, .view-table-btn, .see-table-btn {
     background: #ff9900;
     color: white;
     border: none;
@@ -348,7 +348,7 @@ header h1 {
     margin-top: 10px;
 }
 
-.show-answer-btn:hover, .start-quiz-btn:hover, .end-quiz-btn:hover, .next-question-btn:hover, .view-table-btn:hover {
+.show-answer-btn:hover, .start-quiz-btn:hover, .end-quiz-btn:hover, .next-question-btn:hover, .view-table-btn:hover, .see-table-btn:hover {
     background: #e6870a;
     transform: translateY(-1px);
 }
@@ -356,10 +356,34 @@ header h1 {
 /* Special styling for View Table button */
 .view-table-btn {
     background: #007bff;
+    margin-left: 0;
 }
 
 .view-table-btn:hover {
     background: #0056b3;
+}
+
+/* Special styling for See Table button */
+.see-table-btn {
+    background: #28a745;
+    margin-left: 0;
+}
+
+.see-table-btn:hover {
+    background: #218838;
+}
+
+/* Question number label styling */
+.question-number-label {
+    display: inline-block;
+    background: #6c757d;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+    margin-right: 10px;
+    margin-top: 10px;
 }
 
 .correct-answer {
@@ -471,6 +495,107 @@ header h1 {
     margin-top: 20px;
 }
 
+/* Table Modal Styles */
+.table-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.table-modal-content {
+    background: white;
+    border-radius: 8px;
+    max-width: 90vw;
+    max-height: 90vh;
+    overflow: auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.table-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid #e1e5e9;
+    background: #f8f9fa;
+    border-radius: 8px 8px 0 0;
+}
+
+.table-modal-header h3 {
+    margin: 0;
+    color: #232f3e;
+}
+
+.close-modal-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #666;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.close-modal-btn:hover {
+    background: #e9ecef;
+    color: #333;
+}
+
+.table-modal-body {
+    padding: 20px;
+}
+
+.dynamic-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.dynamic-table th,
+.dynamic-table td {
+    border: 1px solid #dee2e6;
+    padding: 12px;
+    text-align: left;
+    vertical-align: top;
+}
+
+.dynamic-table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #495057;
+}
+
+.dynamic-table tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+.dynamic-table tr:hover {
+    background-color: #e9ecef;
+}
+
+/* Table metadata info */
+.table-metadata {
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    color: #666;
+}
+
 /* Loading and Error States */
 .loading, .error, .no-results {
     text-align: center;
@@ -536,6 +661,20 @@ header h1 {
         min-width: auto;
         text-align: center;
     }
+    
+    .table-modal-content {
+        max-width: 95vw;
+        max-height: 95vh;
+    }
+    
+    .dynamic-table {
+        font-size: 14px;
+    }
+    
+    .dynamic-table th,
+    .dynamic-table td {
+        padding: 8px;
+    }
 }
 
 /* Verification status styling */
@@ -549,100 +688,4 @@ header h1 {
     color: #dc3545;
     font-size: 14px;
     margin-left: 10px;
-}
-
-/* Table Modal Styles */
-.table-modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    display: none; /* Hidden by default */
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-}
-
-.table-modal-overlay.active {
-    display: flex;
-}
-
-.table-modal-content {
-    background: white;
-    padding: 30px;
-    border-radius: 8px;
-    max-width: 90vw;
-    max-height: 90vh;
-    overflow-y: auto;
-    position: relative;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-}
-
-.table-modal-close {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    font-size: 28px;
-    font-weight: bold;
-    color: #888;
-    cursor: pointer;
-}
-
-.table-modal-close:hover {
-    color: #000;
-}
-
-#tableModalContainer h3 {
-    margin-top: 0;
-    margin-bottom: 20px;
-    color: #232f3e;
-    text-align: center;
-}
-
-#tableModalContainer table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 15px;
-}
-
-#tableModalContainer th,
-#tableModalContainer td {
-    border: 1px solid #ddd;
-    padding: 10px;
-    text-align: left;
-    vertical-align: top;
-    font-size: 14px;
-}
-
-#tableModalContainer th {
-    background-color: #f8f9fa;
-    font-weight: 600;
-    color: #495057;
-}
-
-#tableModalContainer tr:nth-child(even) {
-    background-color: #f8f9fa;
-}
-
-/* Container for the 'See Table' button */
-.table-action-container {
-    margin-top: 15px;
-    padding-top: 15px;
-    border-top: 1px solid #c3e6cb;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.table-question-label {
-    font-size: 14px;
-    font-weight: 500;
-    color: #495057;
-}
-
-/* Re-using view-table-btn class for 'See Table' button and overriding margin */
-.table-action-container .view-table-btn {
-    margin: 0;
 }

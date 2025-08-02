@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AWS MCQ Practice - Question Bank & Mock Exams</title>
     <link rel="stylesheet" href="styles.css">
-<link rel="stylesheet" href="/index.css">
 </head>
 <body>
     <div class="container">
@@ -20,6 +19,7 @@
                     <option value="aws_e3_exams.json">AWS Cloud Practitioner E3 (3e-195 questions)</option>
                     <option value="aws_e4_exams.json">AWS Cloud Practitioner E4 (9e-585 questions)</option>
             <option value="aws_e5_exams.json">ߎ AWS E5 Enhanced (252/252 verified - 100% PERFECT with bold answer letters!)</option>
+            <option value="aws_e6_exams.json">ߎ AWS E5 Truncated (1e-1000 questions)</option>
         </select>
                 <button id="viewTablesBtn" style="display:none; margin-left:10px;">View Tables</button>
             </div>
@@ -100,15 +100,19 @@
         </div>
     </div>
 
-    <!-- Table Modal -->
-    <div id="tableModal" class="table-modal-overlay">
+    <!-- Table Modal for displaying dynamic tables -->
+    <div id="tableModal" class="table-modal" style="display: none;">
         <div class="table-modal-content">
-            <span id="tableModalClose" class="table-modal-close">&times;</span>
-            <div id="tableModalContainer"></div>
+            <div class="table-modal-header">
+                <h3 id="tableModalTitle">Table Data</h3>
+                <button id="closeTableModal" class="close-modal-btn">&times;</button>
+            </div>
+            <div id="tableModalBody" class="table-modal-body">
+                <!-- Dynamic table will be inserted here -->
+            </div>
         </div>
     </div>
 
     <script src="script.js"></script>
-<script type="module" src="/index.tsx"></script>
 </body>
 </html>

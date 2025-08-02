@@ -7,28 +7,39 @@ class MCQApp {
         this.currentQuizIndex = 0;
         this.quizInProgress = false;
         this.currentDataset = 'aws_mcq_questions.json';
-        this.tablesData = []; // To store aws_mcq_tables.json
-
-        // Modal elements
-        this.modal = document.getElementById('tableModal');
-        this.modalContent = document.getElementById('tableModalContainer');
-        this.modalCloseBtn = document.getElementById('tableModalClose');
-
+        this.tablesWindow = null; // Track the tables window
+        this.tablesData = null; // Store loaded tables data
+        
         this.init();
     }
 
     async init() {
         try {
             await this.loadQuestions();
-            await this.loadTablesData(); // Load table data on init
+            await this.loadTablesData(); // Load the tables data
             this.setupEventListeners();
-            this.setupModalEventListeners(); // Setup listeners for the modal
             this.populateCategories();
             this.renderQuestions();
             this.updateStats();
         } catch (error) {
             console.error('Failed to initialize app:', error);
             this.showError('Failed to load questions. Please refresh the page.');
+        }
+    }
+
+    async loadTablesData() {
+        try {
+            const response = await fetch('aws_mcq_tables.json');
+            if (response?.ok) {
+                this.tablesData = await response.json() ?? [];
+                console.log('Tables data loaded:', this.tablesData.length, 'tables');
+            } else {
+                console.warn('Could not load aws_mcq_tables.json - tables functionality will be limited');
+                this.tablesData = [];
+            }
+        } catch (error) {
+            console.warn('Error loading tables data:', error);
+            this.tablesData = [];
         }
     }
 
@@ -65,21 +76,6 @@ class MCQApp {
         }
     }
 
-    async loadTablesData() {
-        try {
-            const response = await fetch('aws_mcq_tables.json');
-            if (response.ok) {
-                this.tablesData = await response.json() ?? [];
-            } else {
-                console.warn('Could not load aws_mcq_tables.json. Table feature will be unavailable.');
-                this.tablesData = [];
-            }
-        } catch (error) {
-            console.error('Error loading tables data:', error);
-            this.tablesData = [];
-        }
-    }
-
     async switchDataset(newDataset) {
         try {
             this.currentDataset = newDataset;
@@ -111,29 +107,6 @@ class MCQApp {
         }
     }
 
-    setupModalEventListeners() {
-        if (this.modalCloseBtn) {
-            this.modalCloseBtn.addEventListener('click', () => this.closeTableModal());
-        }
-        if (this.modal) {
-            this.modal.addEventListener('click', (e) => {
-                // Close if clicking on the overlay itself, not the content
-                if (e.target === this.modal) {
-                    this.closeTableModal();
-                }
-            });
-        }
-    }
-
-    closeTableModal() {
-        if (this.modal) {
-            this.modal.style.display = 'none';
-        }
-        if (this.modalContent) {
-            this.modalContent.innerHTML = ''; // Clear content for next use
-        }
-    }
-
     setupEventListeners() {
         // Dataset selector
         document.getElementById('datasetSelect')?.addEventListener?.('change', (e) => {
@@ -144,11 +117,11 @@ class MCQApp {
         });
 
         // Navigation
-        document.getElementById('searchInput')?.addEventListener?.('input', () => {
+        document.getElementById('searchInput')?.addEventListener?.('input', (e) => {
             this.filterQuestions();
         });
 
-        document.getElementById('categoryFilter')?.addEventListener?.('change', () => {
+        document.getElementById('categoryFilter')?.addEventListener?.('change', (e) => {
             this.filterQuestions();
         });
 
@@ -200,6 +173,31 @@ class MCQApp {
             datasetSelect.addEventListener('change', toggleViewTablesBtn);
             toggleViewTablesBtn();
         }
+
+        // Table modal close functionality
+        const closeModalBtn = document.getElementById('closeTableModal');
+        const tableModal = document.getElementById('tableModal');
+        
+        if (closeModalBtn) {
+            closeModalBtn.addEventListener('click', () => {
+                this.closeTableModal();
+            });
+        }
+        
+        if (tableModal) {
+            tableModal.addEventListener('click', (e) => {
+                if (e.target === tableModal) {
+                    this.closeTableModal();
+                }
+            });
+        }
+
+        // ESC key to close modal
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                this.closeTableModal();
+            }
+        });
     }
 
     resetFilters() {
@@ -309,25 +307,44 @@ class MCQApp {
         const correctAnswers = question?.correct_answers?.join?.(', ') ?? 'No answer provided';
         const hasExplanation = question?.explanation && question.explanation.trim() !== '';
         
+        // Chapter-based numbering or fallback to JSON id
         const chapterMap = {
-            'Assessment Test': 'A', 'Chapter 1': '1', 'Chapter 2': '2', 'Chapter 3': '3',
-            'Chapter 4': '4', 'Chapter 5': '5', 'Chapter 6': '6', 'Chapter 7': '7',
-            'Chapter 8': '8', 'Chapter 9': '9', 'Chapter 10': '10', 'Chapter 11': '11', 'Chapter 12': '12'
+            'Assessment Test': 'A',
+            'Chapter 1': '1',
+            'Chapter 2': '2',
+            'Chapter 3': '3',
+            'Chapter 4': '4',
+            'Chapter 5': '5',
+            'Chapter 6': '6',
+            'Chapter 7': '7',
+            'Chapter 8': '8',
+            'Chapter 9': '9',
+            'Chapter 10': '10',
+            'Chapter 11': '11',
+            'Chapter 12': '12'
         };
-        let questionNumber = (question.chapter && chapterMap[question.chapter] && question.pdf_question_number)
-            ? `${chapterMap[question.chapter]}${question.pdf_question_number.toString().padStart(2, '0')}`
-            : question.id;
+        let questionNumber;
+        if (question.chapter && chapterMap[question.chapter] && question.pdf_question_number) {
+            questionNumber = `${chapterMap[question.chapter]}${question.pdf_question_number.toString().padStart(2, '0')}`;
+        } else {
+            questionNumber = question.id;
+        }
             
-        const verificationStatus = question?.answer_verified !== undefined
-            ? (question.answer_verified ? `<span class="verified" title="Answer verified">✅</span>` : `<span class="unverified" title="Answer not verified">❌</span>`)
-            : '';
+        // Show verification status if available
+        const verificationStatus = question?.answer_verified !== undefined ? 
+            (question.answer_verified ? 
+                `<span class="verified" title="Answer verified">✅</span>` : 
+                `<span class="unverified" title="Answer not verified">❌</span>`
+            ) : '';
 
-        const tableButtonContainer = this.currentDataset === 'aws_mcq_questions.json'
-            ? `<div class="table-action-container">
-                 <span class="table-question-label">Question ${question.id}:</span>
-                 <button class="view-table-btn" onclick="app.openTableForQuestion(${question.id})">See Table</button>
-               </div>`
-            : '';
+        // Add View Table button only for aws_mcq_questions.json dataset
+        const viewTableButton = this.currentDataset === 'aws_mcq_questions.json' ? 
+            `<button class="view-table-btn" onclick="app.openTableForQuestion(${question?.id ?? 0})">View Table</button>` : '';
+        
+        // Add question number label and See Table button for aws_mcq_questions.json dataset
+        const tableControls = this.currentDataset === 'aws_mcq_questions.json' ? 
+            `<span class="question-number-label">Question ${question?.id ?? 'N/A'}</span>
+             <button class="see-table-btn" onclick="app.showTableForQuestion(${question?.id ?? 0})">See Table</button>` : '';
         
         return `
             <div class="question-card">
@@ -346,7 +363,9 @@ class MCQApp {
                     )?.join?.('') ?? ''}
                 </div>
                 <div class="question-actions">
-                    <button class="show-answer-btn" onclick="app.toggleAnswer(${question?.id ?? 0})">Show Answer</button>
+                    <button class="show-answer-btn" onclick="app.toggleAnswer(${question?.id ?? 0})">
+                        Show Answer
+                    </button>
                 </div>
                 <div id="answer-${question?.id ?? 0}" class="correct-answer" style="display: none;">
                     <div class="check-icon">✓</div>
@@ -355,48 +374,126 @@ class MCQApp {
                             <strong>Correct Answer:</strong> ${correctAnswers}
                         </div>
                         ${hasExplanation ? `<div class="explanation">${question.explanation}</div>` : ''}
-                        ${tableButtonContainer}
+                        ${tableControls}
+                        ${viewTableButton}
                     </div>
                 </div>
-            </div>`;
+            </div>
+        `;
     }
 
+    // New method to show table in modal for specific question
+    showTableForQuestion(questionId) {
+        if (!this.tablesData || !Array.isArray(this.tablesData)) {
+            alert('Table data not available. Please ensure aws_mcq_tables.json is loaded.');
+            return;
+        }
+
+        // Find the table data for this question
+        const tableEntry = this.tablesData.find(entry => entry.question === questionId.toString());
+        
+        if (!tableEntry) {
+            alert(`No table data found for question ${questionId}`);
+            return;
+        }
+
+        this.displayTableModal(tableEntry, questionId);
+    }
+
+    displayTableModal(tableEntry, questionId) {
+        const modal = document.getElementById('tableModal');
+        const title = document.getElementById('tableModalTitle');
+        const body = document.getElementById('tableModalBody');
+        
+        if (!modal || !title || !body) {
+            console.error('Table modal elements not found');
+            return;
+        }
+
+        // Set title
+        title.textContent = `Table for Question ${questionId}`;
+
+        // Create table metadata
+        const metadata = tableEntry.metadata || {};
+        const metadataHtml = `
+            <div class="table-metadata">
+                <strong>Table Information:</strong><br>
+                ${metadata.page_number ? `Page: ${metadata.page_number}${metadata.end_page && metadata.end_page !== metadata.page_number ? `-${metadata.end_page}` : ''}` : ''}
+                ${metadata.table_number ? ` | Table #${metadata.table_number}` : ''}
+                ${metadata.dimensions ? ` | Size: ${metadata.dimensions.rows}×${metadata.dimensions.columns}` : ''}
+            </div>
+        `;
+
+        // Create table HTML
+        const tableHtml = this.createTableHTML(tableEntry);
+
+        // Set body content
+        body.innerHTML = metadataHtml + tableHtml;
+
+        // Show modal
+        modal.style.display = 'flex';
+    }
+
+    createTableHTML(tableEntry) {
+        if (!tableEntry.headers || !tableEntry.data) {
+            return '<p>Invalid table data structure</p>';
+        }
+
+        let html = '<table class="dynamic-table">';
+        
+        // Add headers
+        html += '<thead><tr>';
+        tableEntry.headers.forEach(header => {
+            // Replace newlines with <br> for proper display
+            const formattedHeader = header.replace(/\n/g, '<br>');
+            html += `<th>${formattedHeader}</th>`;
+        });
+        html += '</tr></thead>';
+        
+        // Add data rows
+        html += '<tbody>';
+        tableEntry.data.forEach(row => {
+            html += '<tr>';
+            row.forEach(cell => {
+                // Replace newlines with <br> for proper display
+                const formattedCell = cell.replace(/\n/g, '<br>');
+                html += `<td>${formattedCell}</td>`;
+            });
+            html += '</tr>';
+        });
+        html += '</tbody>';
+        
+        html += '</table>';
+        return html;
+    }
+
+    closeTableModal() {
+        const modal = document.getElementById('tableModal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    }
+
+    // Existing method for opening table in new window (improved to handle focus better)
     openTableForQuestion(questionId) {
-        if (!this.tablesData.length) {
-            alert('Table data is not available.');
-            return;
+        const url = `aws1600t.html#question-${questionId}`;
+        
+        // Always open in new window or refresh if exists
+        if (this.tablesWindow && !this.tablesWindow.closed) {
+            // Force navigation to new URL and focus
+            this.tablesWindow.location.href = url;
+            this.tablesWindow.focus();
+            // Small delay to ensure the navigation happens before focusing
+            setTimeout(() => {
+                this.tablesWindow.focus();
+            }, 100);
+        } else {
+            // Open new window
+            this.tablesWindow = window.open(url, 'tablesWindow', 'width=1200,height=800,scrollbars=yes,resizable=yes');
+            if (this.tablesWindow) {
+                this.tablesWindow.focus();
+            }
         }
-        const tableData = this.tablesData.find(t => t.question == questionId.toString());
-
-        if (!tableData) {
-            alert(`No table found for Question ${questionId}.`);
-            return;
-        }
-
-        let tableHtml = `<h3>Table for Question ${questionId}</h3><table>`;
-        if (tableData.headers && tableData.headers.length > 0) {
-            tableHtml += '<thead><tr>';
-            tableData.headers.forEach(header => {
-                tableHtml += `<th>${header.replace(/\n/g, '<br>')}</th>`;
-            });
-            tableHtml += '</tr></thead>';
-        }
-
-        if (tableData.data && tableData.data.length > 0) {
-            tableHtml += '<tbody>';
-            tableData.data.forEach(row => {
-                tableHtml += '<tr>';
-                row.forEach(cell => {
-                    tableHtml += `<td>${cell.toString().replace(/\n/g, '<br>')}</td>`;
-                });
-                tableHtml += '</tr>';
-            });
-            tableHtml += '</tbody>';
-        }
-        tableHtml += '</table>';
-
-        this.modalContent.innerHTML = tableHtml;
-        this.modal.style.display = 'flex';
     }
 
     toggleAnswer(questionId) {
@@ -415,27 +512,41 @@ class MCQApp {
     }
 
     switchTab(tabName) {
-        document.querySelectorAll('.tab-button')?.forEach?.(btn => btn.classList.remove('active'));
-        document.querySelector(`[data-tab="${tabName}"]`)?.classList.add('active');
-        document.querySelectorAll('.tab-content')?.forEach?.(content => content.classList.remove('active'));
-        document.getElementById(`${tabName}Tab`)?.classList.add('active');
+        // Update tab buttons
+        document.querySelectorAll('.tab-button')?.forEach?.(btn => {
+            btn?.classList?.remove?.('active');
+        });
+        document.querySelector(`[data-tab="${tabName}"]`)?.classList?.add?.('active');
+
+        // Update tab content
+        document.querySelectorAll('.tab-content')?.forEach?.(content => {
+            content?.classList?.remove?.('active');
+        });
+        document.getElementById(`${tabName}Tab`)?.classList?.add?.('active');
     }
 
     startQuiz() {
         const selectedCategory = document.getElementById('quizCategory')?.value ?? '';
         const questionCount = parseInt(document.getElementById('questionCount')?.value ?? '10');
-        let availableQuestions = selectedCategory ? this.questions.filter(q => q.category === selectedCategory) : [...this.questions];
 
-        if (!availableQuestions.length) {
+        let availableQuestions = selectedCategory 
+            ? this.questions?.filter?.(q => q?.category === selectedCategory) ?? []
+            : [...this.questions];
+
+        if (!availableQuestions?.length) {
             alert('No questions available for the selected category.');
             return;
         }
 
-        this.currentQuizQuestions = this.shuffleArray(availableQuestions).slice(0, questionCount);
+        // Shuffle and limit questions
+        this.currentQuizQuestions = this.shuffleArray(availableQuestions)?.slice?.(0, questionCount) ?? [];
         this.currentQuizIndex = 0;
         this.quizInProgress = true;
-        document.getElementById('quizSetup').style.display = 'none';
-        document.getElementById('quizContainer').style.display = 'block';
+
+        // Show quiz container
+        document.getElementById('quizSetup')?.style?.setProperty?.('display', 'none');
+        document.getElementById('quizContainer')?.style?.setProperty?.('display', 'block');
+
         this.displayCurrentQuizQuestion();
     }
 
@@ -443,80 +554,128 @@ class MCQApp {
         this.quizInProgress = false;
         this.currentQuizQuestions = [];
         this.currentQuizIndex = 0;
-        document.getElementById('quizSetup').style.display = 'block';
-        document.getElementById('quizContainer').style.display = 'none';
+
+        // Show setup, hide quiz
+        document.getElementById('quizSetup')?.style?.setProperty?.('display', 'block');
+        document.getElementById('quizContainer')?.style?.setProperty?.('display', 'none');
     }
 
     displayCurrentQuizQuestion() {
-        const question = this.currentQuizQuestions[this.currentQuizIndex];
+        const question = this.currentQuizQuestions?.[this.currentQuizIndex];
         if (!question) return;
 
-        document.getElementById('questionNumber').textContent = `Question ${this.currentQuizIndex + 1} of ${this.currentQuizQuestions.length}`;
-        const isMultipleChoice = question.answer_letters?.length > 1;
+        // Update question number
+        const questionNumber = document.getElementById('questionNumber');
+        if (questionNumber) {
+            questionNumber.textContent = `Question ${this.currentQuizIndex + 1} of ${this.currentQuizQuestions?.length ?? 0}`;
+        }
+
+        // Check if this is a multiple choice question
+        const isMultipleChoice = question?.answer_letters?.length > 1;
         const inputType = isMultipleChoice ? 'checkbox' : 'radio';
 
-        document.getElementById('quizQuestion').innerHTML = `
-            <div class="question-text">${question.question}</div>
-            <div class="quiz-instructions">
-                <p><strong>${isMultipleChoice ? `Select ${question.answer_letters.length} answers` : 'Select one answer'}:</strong></p>
-            </div>
-            <div class="quiz-options">
-                ${question.options.map((option, index) => {
-                    const letter = String.fromCharCode(65 + index);
-                    return `
-                        <div class="quiz-option" onclick="app.toggleQuizOption('${letter}')">
-                            <input type="${inputType}" id="option-${letter}" name="quiz-answer" value="${letter}">
-                            <span class="quiz-option-label">${letter}.</span>
-                            <span class="quiz-option-text">${option}</span>
-                        </div>`;
-                }).join('')}
-            </div>`;
+        // Display question with interactive options
+        const quizQuestion = document.getElementById('quizQuestion');
+        if (quizQuestion) {
+            quizQuestion.innerHTML = `
+                <div class="question-text">${question?.question ?? 'Question not available'}</div>
+                <div class="quiz-instructions">
+                    ${isMultipleChoice ? 
+                        `<p><strong>Select ${question.answer_letters.length} answers:</strong></p>` : 
+                        '<p><strong>Select one answer:</strong></p>'
+                    }
+                </div>
+                <div class="quiz-options">
+                    ${question?.options?.map?.((option, index) => {
+                        const letter = String.fromCharCode(65 + index);
+                        return `
+                            <div class="quiz-option" onclick="app.toggleQuizOption('${letter}')">
+                                <input type="${inputType}" 
+                                       id="option-${letter}" 
+                                       name="quiz-answer" 
+                                       value="${letter}" 
+                                       ${inputType === 'radio' ? '' : ''}>
+                                <span class="quiz-option-label">${letter}.</span>
+                                <span class="quiz-option-text">${option ?? ''}</span>
+                            </div>
+                        `;
+                    })?.join?.('') ?? ''}
+                </div>
+            `;
+        }
 
-        document.getElementById('answerSection').style.display = 'none';
-        document.getElementById('checkAnswer').style.display = 'inline-block';
-        document.getElementById('showAnswer').style.display = 'none';
-        document.getElementById('nextQuestion').style.display = 'none';
+        // Reset answer section and buttons
+        document.getElementById('answerSection')?.style?.setProperty?.('display', 'none');
+        document.getElementById('checkAnswer')?.style?.setProperty?.('display', 'inline-block');
+        document.getElementById('showAnswer')?.style?.setProperty?.('display', 'none');
+        document.getElementById('nextQuestion')?.style?.setProperty?.('display', 'none');
+        
+        // Clear any previous result
         const existingResult = document.querySelector('.quiz-result');
-        if (existingResult) existingResult.remove();
+        if (existingResult) {
+            existingResult.remove();
+        }
     }
 
     showCurrentAnswer() {
-        const question = this.currentQuizQuestions[this.currentQuizIndex];
+        const question = this.currentQuizQuestions?.[this.currentQuizIndex];
         if (!question) return;
 
-        const correctAnswers = question.correct_answers.join(', ');
-        const hasExplanation = question.explanation && question.explanation.trim() !== '';
-        document.getElementById('correctAnswerText').innerHTML = correctAnswers;
+        const correctAnswers = question?.correct_answers?.join?.(', ') ?? 'No answer provided';
+        const hasExplanation = question?.explanation && question.explanation.trim() !== '';
+
+        // Update answer content
+        const correctAnswerText = document.getElementById('correctAnswerText');
+        if (correctAnswerText) {
+            correctAnswerText.innerHTML = correctAnswers;
+        }
+
         const explanationText = document.getElementById('explanationText');
-        explanationText.innerHTML = hasExplanation ? question.explanation : '';
-        explanationText.style.display = hasExplanation ? 'block' : 'none';
+        if (explanationText) {
+            explanationText.innerHTML = hasExplanation ? question.explanation : '';
+            explanationText.style.display = hasExplanation ? 'block' : 'none';
+        }
 
-        const answerContentDiv = document.querySelector('#answerSection .answer-content');
-        if (answerContentDiv) {
-            const oldContainer = answerContentDiv.querySelector('.table-action-container');
-            if(oldContainer) oldContainer.remove();
+        // Add table controls for aws_mcq_questions.json dataset in quiz mode
+        if (this.currentDataset === 'aws_mcq_questions.json') {
+            const answerSection = document.getElementById('answerSection');
+            if (answerSection) {
+                // Remove existing table controls to avoid duplicates
+                const existingControls = answerSection.querySelectorAll('.question-number-label, .see-table-btn, .view-table-btn');
+                existingControls.forEach(control => control.remove());
 
-            if (this.currentDataset === 'aws_mcq_questions.json') {
-                const questionId = question.id;
-                const tableContainer = document.createElement('div');
-                tableContainer.className = 'table-action-container';
-                tableContainer.innerHTML = `
-                    <span class="table-question-label">Question ${questionId}:</span>
-                    <button class="view-table-btn">See Table</button>`;
-                tableContainer.querySelector('button').addEventListener('click', () => this.openTableForQuestion(questionId));
-                answerContentDiv.appendChild(tableContainer);
+                // Add question number label
+                const questionLabel = document.createElement('span');
+                questionLabel.className = 'question-number-label';
+                questionLabel.textContent = `Question ${question.id}`;
+                answerSection.appendChild(questionLabel);
+
+                // Add See Table button
+                const seeTableBtn = document.createElement('button');
+                seeTableBtn.className = 'see-table-btn';
+                seeTableBtn.textContent = 'See Table';
+                seeTableBtn.onclick = () => this.showTableForQuestion(question.id);
+                answerSection.appendChild(seeTableBtn);
+
+                // Add View Table button
+                const viewTableBtn = document.createElement('button');
+                viewTableBtn.className = 'view-table-btn';
+                viewTableBtn.textContent = 'View Table';
+                viewTableBtn.onclick = () => this.openTableForQuestion(question.id);
+                answerSection.appendChild(viewTableBtn);
             }
         }
 
-        document.getElementById('answerSection').style.display = 'block';
-        document.getElementById('checkAnswer').style.display = 'none';
-        document.getElementById('showAnswer').style.display = 'none';
-        document.getElementById('nextQuestion').style.display = 'inline-block';
+        // Show answer section and next button
+        document.getElementById('answerSection')?.style?.setProperty?.('display', 'block');
+        document.getElementById('showAnswer')?.style?.setProperty?.('display', 'none');
+        document.getElementById('nextQuestion')?.style?.setProperty?.('display', 'inline-block');
     }
 
     nextQuizQuestion() {
         this.currentQuizIndex++;
-        if (this.currentQuizIndex >= this.currentQuizQuestions.length) {
+        
+        if (this.currentQuizIndex >= (this.currentQuizQuestions?.length ?? 0)) {
             alert('Quiz completed! Well done!');
             this.endQuiz();
         } else {
@@ -525,66 +684,96 @@ class MCQApp {
     }
 
     toggleQuizOption(letter) {
-        const question = this.currentQuizQuestions[this.currentQuizIndex];
+        const question = this.currentQuizQuestions?.[this.currentQuizIndex];
         if (!question) return;
 
-        const isMultipleChoice = question.answer_letters.length > 1;
+        const isMultipleChoice = question?.answer_letters?.length > 1;
         const checkbox = document.getElementById(`option-${letter}`);
         const option = checkbox?.closest('.quiz-option');
+
         if (!checkbox || !option) return;
 
         if (isMultipleChoice) {
+            // Toggle checkbox
             checkbox.checked = !checkbox.checked;
             option.classList.toggle('selected', checkbox.checked);
         } else {
+            // Radio button behavior - uncheck all others
             document.querySelectorAll('.quiz-option').forEach(opt => {
                 opt.classList.remove('selected');
                 const input = opt.querySelector('input');
                 if (input) input.checked = false;
             });
+            
             checkbox.checked = true;
             option.classList.add('selected');
         }
     }
 
     checkUserAnswer() {
-        const question = this.currentQuizQuestions[this.currentQuizIndex];
+        const question = this.currentQuizQuestions?.[this.currentQuizIndex];
         if (!question) return;
 
+        // Get user's selected answers
         const selectedInputs = document.querySelectorAll('.quiz-option input:checked');
         const userAnswers = Array.from(selectedInputs).map(input => input.value).sort();
-        const correctAnswers = [...(question.answer_letters || [])].sort();
+        const correctAnswers = [...(question?.answer_letters || [])].sort();
 
+        // Check if user selected any answers
         if (userAnswers.length === 0) {
             alert('Please select an answer before checking.');
             return;
         }
 
+        // Compare answers
         const isCorrect = JSON.stringify(userAnswers) === JSON.stringify(correctAnswers);
 
+        // Update option styling
         document.querySelectorAll('.quiz-option').forEach(option => {
             const input = option.querySelector('input');
             const letter = input?.value;
+            
             if (correctAnswers.includes(letter)) {
                 option.classList.add('correct');
             } else if (userAnswers.includes(letter)) {
                 option.classList.add('incorrect');
             }
+            
+            // Disable further interaction
             option.style.pointerEvents = 'none';
             if (input) input.disabled = true;
         });
 
+        // Show result
         this.showQuizResult(isCorrect, question);
-        this.showCurrentAnswer(); // Immediately show correct answer details
+        // Immediately display correct answer and explanation
+        this.showCurrentAnswer();
+
+        // Update buttons
+        document.getElementById('checkAnswer')?.style?.setProperty?.('display', 'none');
+        document.getElementById('showAnswer')?.style?.setProperty?.('display', 'none');
+        document.getElementById('nextQuestion')?.style?.setProperty?.('display', 'inline-block');
     }
 
     showQuizResult(isCorrect, question) {
         const resultDiv = document.createElement('div');
         resultDiv.className = `quiz-result ${isCorrect ? 'correct' : 'incorrect'}`;
+        
         const icon = isCorrect ? '✓' : '✗';
         const message = isCorrect ? 'Correct!' : 'Incorrect!';
-        resultDiv.innerHTML = `<span class="result-icon">${icon}</span> ${message}`;
-        document.getElementById('quizQuestion').appendChild(resultDiv);
+        const correctAnswersText = question?.answer_letters?.join(', ') || '';
+        
+        resultDiv.innerHTML = `
+            <span class="result-icon">${icon}</span>
+            ${message}
+            ${!isCorrect ? `<br><strong>Correct answer(s): ${correctAnswersText}</strong>` : ''}
+        `;
+
+        // Insert after quiz options
+        const quizQuestion = document.getElementById('quizQuestion');
+        if (quizQuestion) {
+            quizQuestion.appendChild(resultDiv);
+        }
     }
 
     shuffleArray(array) {

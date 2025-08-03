@@ -5,7 +5,8 @@ class ExamSimulator {
         this.examQuestions = [];
         this.currentQuestionIndex = 0;
         this.userAnswers = {};
-        this.questionTimes = {};
+        this.questionTimes = {}; // Total time spent on each question
+        this.questionRemainingTimes = {}; // Remaining time for each question (countdown)
         this.globalTimer = null;
         this.questionTimer = null;
         this.globalTimeRemaining = 90 * 60; // 90 minutes in seconds
@@ -15,6 +16,7 @@ class ExamSimulator {
         this.examFinished = false;
         this.examInitialized = false;
         this.visitedQuestions = new Set(); // Track which questions user has visited
+        this.globalTimerPaused = false; // Track if global timer is paused
         
         // Domain distribution for CLF-C02 exam
         this.domainDistribution = {
@@ -36,6 +38,8 @@ class ExamSimulator {
     
     async loadQuestions() {
         try {
+            document.getElementById('examStatus').innerHTML = '<div class="loading-message">Loading questions...</div>';
+            
             const files = [
                 'data/aws_mcq_questions.json',
                 'data/aws_e2_exams.json',
@@ -49,40 +53,162 @@ class ExamSimulator {
             ];
             
             for (const file of files) {
-                const response = await fetch(file);
-                const questions = await response.json();
-                this.allQuestions = this.allQuestions.concat(questions);
+                try {
+                    const response = await fetch(file);
+                    if (response.ok) {
+                        const questions = await response.json();
+                        if (Array.isArray(questions) && questions.length > 0) {
+                            this.allQuestions = this.allQuestions.concat(questions);
+                        }
+                    }
+                } catch (error) {
+                    console.warn(`Could not load ${file}:`, error);
+                }
+            }
+            
+            if (this.allQuestions.length === 0) {
+                throw new Error('No questions could be loaded from any data files.');
             }
             
             console.log(`Loaded ${this.allQuestions.length} questions`);
+            this.processQuestions();
             this.mapQuestionDomains();
+            
+            // Show ready state
+            document.getElementById('examStatus').innerHTML = `
+                <p>Click "Start Exam" to begin your AWS CLF-C02 practice test.</p>
+                <p>The exam will consist of 65 questions with a 90-minute time limit.</p>
+                <p><strong>${this.allQuestions.length} questions loaded and ready!</strong></p>
+            `;
+            
         } catch (error) {
             console.error('Error loading questions:', error);
-            alert('Error loading questions. Please check if the data files are available.');
+            document.getElementById('examStatus').innerHTML = `
+                <div class="error-message">
+                    <strong>Error loading questions:</strong><br>
+                    ${error.message}<br><br>
+                    Please ensure the JSON data files are available in the data/ folder.
+                </div>
+            `;
         }
     }
     
+    processQuestions() {
+        // Process each question to ensure consistent format and derive answer letters
+        this.allQuestions.forEach(question => {
+            // Ensure basic fields exist
+            if (!question.id) {
+                question.id = Math.random().toString(36).substr(2, 9);
+            }
+            
+            if (!question.options || !Array.isArray(question.options)) {
+                question.options = [];
+            }
+            
+            if (!question.correct_answers || !Array.isArray(question.correct_answers)) {
+                question.correct_answers = [];
+            }
+            
+            // Derive answer letters from correct_answers
+            const letters = [];
+            const correctAnswers = question.correct_answers || [];
+            
+            correctAnswers.forEach(answer => {
+                // Format 1: "B. Amazon DynamoDB" (aws_mcq_questions.json)
+                let match = answer.match(/^([A-Z])\.\s*/);
+                if (match) {
+                    letters.push(match[1]);
+                    return;
+                }
+                
+                // Format 2: "<b>A. The ability...</b>" (aws_e5_exams.json)
+                match = answer.match(/<b>([A-Z])\.\s*/);
+                if (match) {
+                    letters.push(match[1]);
+                    return;
+                }
+                
+                // Format 3: Split by <br> and look for letter patterns
+                answer.split('<br>').forEach(item => {
+                    const m = item.trim().match(/^([A-Z])\./);
+                    if (m) letters.push(m[1]);
+                });
+                
+                // Format 4: Plain answer text - match against options
+                if (letters.length === 0 && question.options && question.options.length > 0) {
+                    const cleanAnswer = answer.replace(/<[^>]*>/g, '').trim();
+                    question.options.forEach((option, index) => {
+                        const cleanOption = option.replace(/<[^>]*>/g, '').trim();
+                        if (cleanOption === cleanAnswer) {
+                            letters.push(String.fromCharCode(65 + index));
+                        }
+                    });
+                }
+            });
+            
+            // Remove duplicates and sort
+            question.answer_letters = [...new Set(letters)].sort();
+            
+            // Ensure question has answer_letters, even if we couldn't derive them
+            if (question.answer_letters.length === 0 && question.correct_answers.length > 0) {
+                // Fallback: assume first correct answer corresponds to option A
+                question.answer_letters = ['A'];
+            }
+        });
+    }
+    
     mapQuestionDomains() {
-        // Map existing domains to CLF-C02 domains
+        // Map existing categories/domains to CLF-C02 domains
         const domainMapping = {
-            'Cloud Concepts': ['Cloud Concepts'],
-            'Security and Compliance': ['Security and Compliance'],
-            'Cloud Technology and Services': ['Technology'],
-            'Technology': ['Technology'],
-            'AWS Cloud Practitioner': ['Technology'], // Most general questions go to Technology
-            'Billing, Pricing, and Support': ['Billing and Pricing'],
-            'Unknown': ['Technology'] // Default unknown to Technology
+            // Direct matches
+            'Cloud Concepts': 'Cloud Concepts',
+            'Security and Compliance': 'Security and Compliance', 
+            'Technology': 'Technology',
+            'Billing and Pricing': 'Billing and Pricing',
+            
+            // Category mappings
+            'Compute': 'Technology',
+            'Storage': 'Technology',
+            'Database': 'Technology',
+            'Networking': 'Technology',
+            'Analytics': 'Technology',
+            'Machine Learning': 'Technology',
+            'Management Tools': 'Technology',
+            'Developer Tools': 'Technology',
+            'IoT': 'Technology',
+            'Game Development': 'Technology',
+            'Mobile Services': 'Technology',
+            'AR & VR': 'Technology',
+            'Application Integration': 'Technology',
+            'AWS Global Infrastructure': 'Cloud Concepts',
+            'AWS Well-Architected Framework': 'Cloud Concepts',
+            'AWS Pricing': 'Billing and Pricing',
+            'AWS Support': 'Billing and Pricing',
+            'Security': 'Security and Compliance',
+            'Identity and Access Management': 'Security and Compliance',
+            'Compliance': 'Security and Compliance',
+            
+            // Assessment categories
+            'Assessment': 'Technology',
+            'Set 1': 'Technology',
+            'Set 2': 'Technology', 
+            'Set 3': 'Technology',
+            'Mock Exam 1': 'Technology',
+            'Mock Exam 2': 'Technology',
+            
+            // Default fallbacks
+            'Unknown': 'Technology',
+            'Uncategorized': 'Technology'
         };
         
         this.allQuestions.forEach(question => {
-            const originalDomain = question.domain || 'Unknown';
-            const mappedDomains = domainMapping[originalDomain] || ['Technology'];
-            question.mappedDomain = mappedDomains[0];
+            const category = question.category || question.domain || 'Technology';
+            question.mappedDomain = domainMapping[category] || 'Technology';
         });
     }
     
     generateExamQuestions() {
-        const totalQuestions = 65;
+        const totalQuestions = Math.min(65, this.allQuestions.length);
         const selectedQuestions = [];
         
         // Calculate target counts for each domain
@@ -91,41 +217,33 @@ class ExamSimulator {
             domainTargets[domain] = Math.round(totalQuestions * this.domainDistribution[domain]);
         });
         
-        // Separate questions by domain and type
+        // Separate questions by domain
         const questionsByDomain = {};
         Object.keys(this.domainDistribution).forEach(domain => {
-            questionsByDomain[domain] = {
-                single: [],
-                multiple: []
-            };
+            questionsByDomain[domain] = [];
         });
         
         this.allQuestions.forEach(question => {
             const domain = question.mappedDomain;
             if (questionsByDomain[domain]) {
-                const isMultiple = question.correct_answers.length > 1;
-                if (isMultiple) {
-                    questionsByDomain[domain].multiple.push(question);
-                } else {
-                    questionsByDomain[domain].single.push(question);
-                }
+                questionsByDomain[domain].push(question);
             }
         });
         
-        // Select questions for each domain with roughly even split between single/multiple
+        // Select questions for each domain
         Object.keys(domainTargets).forEach(domain => {
             const target = domainTargets[domain];
-            const singleTarget = Math.floor(target * 0.6); // 60% single choice
-            const multipleTarget = target - singleTarget; // 40% multiple choice
+            const availableQuestions = questionsByDomain[domain];
             
-            const singleQuestions = this.shuffleArray(questionsByDomain[domain].single).slice(0, singleTarget);
-            const multipleQuestions = this.shuffleArray(questionsByDomain[domain].multiple).slice(0, multipleTarget);
-            
-            selectedQuestions.push(...singleQuestions, ...multipleQuestions);
+            if (availableQuestions.length > 0) {
+                const shuffled = this.shuffleArray(availableQuestions);
+                const selected = shuffled.slice(0, Math.min(target, shuffled.length));
+                selectedQuestions.push(...selected);
+            }
         });
         
-        // If we don't have exactly 65 questions, adjust
-        while (selectedQuestions.length < totalQuestions) {
+        // If we don't have enough questions, fill from remaining questions
+        while (selectedQuestions.length < totalQuestions && selectedQuestions.length < this.allQuestions.length) {
             const remainingQuestions = this.allQuestions.filter(q => !selectedQuestions.includes(q));
             if (remainingQuestions.length > 0) {
                 selectedQuestions.push(remainingQuestions[Math.floor(Math.random() * remainingQuestions.length)]);
@@ -191,7 +309,8 @@ class ExamSimulator {
         document.getElementById('examControls').style.display = 'block';
         document.getElementById('examInterface').style.display = 'none';
         
-        // Reset timers display
+        // Reset timer states
+        this.globalTimerPaused = false;
         this.updateGlobalTimerDisplay();
         this.updateQuestionTimerDisplay();
         
@@ -202,29 +321,49 @@ class ExamSimulator {
     
     async startExam() {
         try {
-            // Show loading state
-            document.getElementById('examStatus').innerHTML = '<p>Generating exam questions...</p>';
+            if (this.allQuestions.length === 0) {
+                alert('No questions available. Please ensure the data files are loaded correctly.');
+                return;
+            }
+            
+            // Show loading state 
+            document.getElementById('examStatus').innerHTML = '<div class="loading-message">Generating exam questions...</div>';
             
             // Generate exam questions
             this.generateExamQuestions();
+            
+            if (this.examQuestions.length === 0) {
+                throw new Error('No exam questions could be generated.');
+            }
+            
             this.examInitialized = true;
             this.examStarted = true;
+            this.globalTimerPaused = false;
+            
+            // Clear any previous question state
+            this.questionRemainingTimes = {};
+            this.questionTimes = {};
             
             // Hide exam controls and show exam interface
             document.getElementById('examControls').style.display = 'none';
             document.getElementById('examInterface').style.display = 'block';
             
-            // Start the global timer automatically
-            this.startGlobalTimer();
-            
-            // Display first question
+            // Display first question (this will start the question timer)
             this.displayQuestion();
             this.updateUI();
+            
+            // Start the global timer automatically (this will also ensure question timer runs)
+            this.startGlobalTimer();
             
             console.log('Exam started successfully');
         } catch (error) {
             console.error('Error starting exam:', error);
-            alert('Error starting exam. Please try again.');
+            document.getElementById('examStatus').innerHTML = `
+                <div class="error-message">
+                    <strong>Error starting exam:</strong><br>
+                    ${error.message}
+                </div>
+            `;
         }
     }
     
@@ -233,13 +372,9 @@ class ExamSimulator {
             this.examFinished = true;
             this.stopGlobalTimer();
             
-            if (this.questionTimer) {
-                clearInterval(this.questionTimer);
-            }
-            
-            // Record current question time if user was on a question
+            // Save current question state
             if (this.examInitialized && this.examQuestions.length > 0) {
-                this.recordAnswer();
+                this.saveCurrentQuestionState();
             }
             
             // Enable review tab
@@ -290,64 +425,65 @@ class ExamSimulator {
         this.visitedQuestions.add(this.currentQuestionIndex);
         
         // Update question text
-        questionText.textContent = question.question;
+        questionText.textContent = question.question || 'Question text not available';
         
         // Clear previous options
         questionOptions.innerHTML = '';
         
         // Determine if this is a multiple choice question
-        const isMultiple = question.correct_answers.length > 1;
+        const isMultiple = question.answer_letters && question.answer_letters.length > 1;
         const inputType = isMultiple ? 'checkbox' : 'radio';
         
         // Add instruction for multiple choice
         if (isMultiple) {
-            const instruction = document.createElement('p');
+            const instruction = document.createElement('div');
             instruction.className = 'question-instruction';
-            instruction.textContent = `Select ${question.correct_answers.length} answers:`;
-            instruction.style.fontWeight = 'bold';
-            instruction.style.marginBottom = '15px';
-            instruction.style.color = '#007bff';
+            instruction.textContent = `Select ${question.answer_letters.length} answers:`;
             questionOptions.appendChild(instruction);
         }
         
         // Create options
-        question.options.forEach((option, index) => {
-            const optionDiv = document.createElement('div');
-            optionDiv.className = 'option';
-            
-            const input = document.createElement('input');
-            input.type = inputType;
-            input.name = 'answer';
-            input.value = option;
-            input.id = `option${index}`;
-            
-            const label = document.createElement('label');
-            label.htmlFor = `option${index}`;
-            label.className = 'option-text';
-            label.textContent = option;
-            
-            optionDiv.appendChild(input);
-            optionDiv.appendChild(label);
-            
-            // Add click handler for the entire option div
-            optionDiv.addEventListener('click', (e) => {
-                if (e.target !== input) {
-                    if (inputType === 'radio') {
-                        input.checked = true;
-                    } else {
-                        input.checked = !input.checked;
+        if (question.options && question.options.length > 0) {
+            question.options.forEach((option, index) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'option';
+                
+                const input = document.createElement('input');
+                input.type = inputType;
+                input.name = 'answer';
+                input.value = String.fromCharCode(65 + index); // A, B, C, D...
+                input.id = `option${index}`;
+                
+                const label = document.createElement('label');
+                label.htmlFor = `option${index}`;
+                label.className = 'option-text';
+                label.textContent = option;
+                
+                optionDiv.appendChild(input);
+                optionDiv.appendChild(label);
+                
+                // Add click handler for the entire option div
+                optionDiv.addEventListener('click', (e) => {
+                    if (e.target !== input) {
+                        if (inputType === 'radio') {
+                            input.checked = true;
+                        } else {
+                            input.checked = !input.checked;
+                        }
+                        this.recordAnswer();
                     }
-                    this.recordAnswer();
-                }
+                });
+                
+                questionOptions.appendChild(optionDiv);
             });
-            
-            questionOptions.appendChild(optionDiv);
-        });
+        } else {
+            questionOptions.innerHTML = '<div class="error-message">No options available for this question.</div>';
+        }
         
         // Restore previous answers
         this.restoreAnswers();
         
-        // Start question timer
+        // Start question timer (will check if global timer is paused)
         this.startQuestionTimer();
         
         // Update UI
@@ -379,7 +515,7 @@ class ExamSimulator {
         // Update visual selection
         document.querySelectorAll('.option').forEach(option => {
             const input = option.querySelector('input');
-            if (input.checked) {
+            if (input && input.checked) {
                 option.classList.add('selected');
             } else {
                 option.classList.remove('selected');
@@ -402,6 +538,8 @@ class ExamSimulator {
             clearInterval(this.globalTimer);
         }
         
+        this.globalTimerPaused = false;
+        
         this.globalTimer = setInterval(() => {
             this.globalTimeRemaining--;
             this.updateGlobalTimerDisplay();
@@ -410,6 +548,11 @@ class ExamSimulator {
                 this.finishExam();
             }
         }, 1000);
+        
+        // Resume question timer if we're in an exam
+        if (this.examInitialized && this.examQuestions.length > 0) {
+            this.startQuestionTimer();
+        }
         
         // Update button states
         document.getElementById('startGlobalTimer').disabled = true;
@@ -423,6 +566,11 @@ class ExamSimulator {
             this.globalTimer = null;
         }
         
+        this.globalTimerPaused = true;
+        
+        // Also pause the question timer
+        this.stopQuestionTimer();
+        
         // Update button states
         document.getElementById('startGlobalTimer').disabled = false;
         document.getElementById('pauseGlobalTimer').disabled = true;
@@ -434,6 +582,11 @@ class ExamSimulator {
             this.globalTimer = null;
         }
         
+        this.globalTimerPaused = true;
+        
+        // Also stop the question timer
+        this.stopQuestionTimer();
+        
         // Update button states
         document.getElementById('startGlobalTimer').disabled = false;
         document.getElementById('pauseGlobalTimer').disabled = true;
@@ -443,7 +596,16 @@ class ExamSimulator {
     resetGlobalTimer() {
         this.stopGlobalTimer();
         this.globalTimeRemaining = 90 * 60;
+        this.globalTimerPaused = false;
         this.updateGlobalTimerDisplay();
+        
+        // Reset question timer to initial state
+        this.questionTimeRemaining = 90;
+        this.updateQuestionTimerDisplay();
+        
+        // Clear all stored question times
+        this.questionRemainingTimes = {};
+        this.questionTimes = {};
         
         // Reset button states
         document.getElementById('startGlobalTimer').disabled = false;
@@ -452,22 +614,49 @@ class ExamSimulator {
     }
     
     startQuestionTimer() {
+        // Don't start question timer if global timer is paused
+        if (this.globalTimerPaused) {
+            return;
+        }
+        
         if (this.questionTimer) {
             clearInterval(this.questionTimer);
         }
         
-        this.questionTimeRemaining = 90; // 1:30
+        const questionId = this.examQuestions[this.currentQuestionIndex].id;
+        
+        // Use stored remaining time if available, otherwise start with 90 seconds
+        this.questionTimeRemaining = this.questionRemainingTimes[questionId] !== undefined 
+            ? this.questionRemainingTimes[questionId] 
+            : 90;
+        
         this.questionStartTime = Date.now();
+        this.updateQuestionTimerDisplay();
         
         this.questionTimer = setInterval(() => {
-            this.questionTimeRemaining--;
-            this.updateQuestionTimerDisplay();
-            
-            if (this.questionTimeRemaining <= 0) {
-                clearInterval(this.questionTimer);
-                this.questionTimer = null;
+            if (!this.globalTimerPaused) {
+                this.questionTimeRemaining--;
+                this.updateQuestionTimerDisplay();
+                
+                if (this.questionTimeRemaining <= 0) {
+                    clearInterval(this.questionTimer);
+                    this.questionTimer = null;
+                }
             }
         }, 1000);
+    }
+    
+    stopQuestionTimer() {
+        if (this.questionTimer) {
+            clearInterval(this.questionTimer);
+            this.questionTimer = null;
+        }
+        
+        // Save the remaining time for the current question
+        if (this.examQuestions.length > 0) {
+            const questionId = this.examQuestions[this.currentQuestionIndex].id;
+            this.questionRemainingTimes[questionId] = this.questionTimeRemaining;
+        }
     }
     
     updateGlobalTimerDisplay() {
@@ -507,7 +696,8 @@ class ExamSimulator {
     
     previousQuestion() {
         if (this.currentQuestionIndex > 0) {
-            this.recordAnswer();
+            // Save current question state before navigating away
+            this.saveCurrentQuestionState();
             this.currentQuestionIndex--;
             this.displayQuestion();
         }
@@ -515,20 +705,31 @@ class ExamSimulator {
     
     nextQuestion() {
         if (this.currentQuestionIndex < this.examQuestions.length - 1) {
-            this.recordAnswer();
+            // Save current question state before navigating away
+            this.saveCurrentQuestionState();
             this.currentQuestionIndex++;
             this.displayQuestion();
         }
     }
     
-    finishExam() {
+    saveCurrentQuestionState() {
+        // Record the current answer
         this.recordAnswer();
+        
+        // Stop the question timer and save remaining time
+        this.stopQuestionTimer();
+    }
+    
+    finishExam() {
+        // Save current question state
+        this.saveCurrentQuestionState();
+        
         this.examFinished = true;
         this.stopGlobalTimer();
         
-        if (this.questionTimer) {
-            clearInterval(this.questionTimer);
-        }
+        // Enable review tab
+        document.getElementById('reviewTab').style.opacity = '1';
+        document.getElementById('reviewTab').style.pointerEvents = 'auto';
         
         // Switch to review tab
         document.getElementById('reviewTab').click();
@@ -552,8 +753,15 @@ class ExamSimulator {
         
         // Add incomplete exam indicator if applicable
         const scoreDetails = document.querySelector('.score-details');
+        // Remove any existing incomplete note
+        const existingNote = scoreDetails.querySelector('.incomplete-note');
+        if (existingNote) {
+            existingNote.remove();
+        }
+        
         if (totalVisited < totalQuestions) {
             const incompleteNote = document.createElement('p');
+            incompleteNote.className = 'incomplete-note';
             incompleteNote.textContent = `Incomplete Exam: ${totalVisited}/${totalQuestions} questions attempted`;
             incompleteNote.style.color = '#dc3545';
             incompleteNote.style.fontWeight = 'bold';
@@ -591,6 +799,22 @@ class ExamSimulator {
             const questionDiv = document.createElement('div');
             questionDiv.className = `review-question ${isCorrect ? 'correct' : 'incorrect'}`;
             
+            // Format user answers for display
+            const userAnswerTexts = userAnswers.map(letter => {
+                const optionIndex = letter.charCodeAt(0) - 65;
+                return question.options && question.options[optionIndex] 
+                    ? `${letter}. ${question.options[optionIndex]}`
+                    : letter;
+            });
+            
+            // Format correct answers for display
+            const correctAnswerTexts = question.answer_letters.map(letter => {
+                const optionIndex = letter.charCodeAt(0) - 65;
+                return question.options && question.options[optionIndex]
+                    ? `${letter}. ${question.options[optionIndex]}`
+                    : letter;
+            });
+            
             questionDiv.innerHTML = `
                 <div class="review-question-header">
                     <span class="review-question-number">Question ${index + 1}</span>
@@ -599,21 +823,21 @@ class ExamSimulator {
                         ${isCorrect ? 'Correct' : 'Incorrect'}
                     </span>
                 </div>
-                <div class="review-question-text">${question.question}</div>
+                <div class="review-question-text">${question.question || 'Question text not available'}</div>
                 <div class="review-answers">
                     <h4>Your Answer(s):</h4>
-                    ${userAnswers.length > 0 ? 
-                        userAnswers.map(answer => `<div class="review-answer user-answer">${answer}</div>`).join('') :
+                    ${userAnswerTexts.length > 0 ? 
+                        userAnswerTexts.map(answer => `<div class="review-answer user-answer">${answer}</div>`).join('') :
                         '<div class="review-answer user-answer">No answer selected</div>'
                     }
                     <h4>Correct Answer(s):</h4>
-                    ${question.correct_answers.map(answer => 
+                    ${correctAnswerTexts.map(answer => 
                         `<div class="review-answer correct-answer">${answer}</div>`
                     ).join('')}
                 </div>
                 <div class="review-explanation">
                     <h4>Explanation:</h4>
-                    ${question.explanation || 'No explanation available.'}
+                    <div>${question.explanation || 'No explanation available.'}</div>
                 </div>
             `;
             
@@ -640,7 +864,7 @@ class ExamSimulator {
     }
     
     isAnswerCorrect(question, userAnswers) {
-        const correctAnswers = question.correct_answers.sort();
+        const correctAnswers = (question.answer_letters || []).sort();
         const sortedUserAnswers = userAnswers.sort();
         
         return correctAnswers.length === sortedUserAnswers.length &&
@@ -694,7 +918,7 @@ class ExamSimulator {
         const domainStats = this.calculateDomainStats();
         Object.keys(domainStats).forEach(domain => {
             const stats = domainStats[domain];
-            const domainPercentage = Math.round((stats.correct / stats.total) * 100);
+            const domainPercentage = stats.total > 0 ? Math.round((stats.correct / stats.total) * 100) : 0;
             markdown += `- **${domain}:** ${stats.correct}/${stats.total} (${domainPercentage}%)\n`;
         });
         
@@ -713,20 +937,28 @@ class ExamSimulator {
             markdown += `### Question ${index + 1} ${isCorrect ? '✅' : '❌'}\n\n`;
             markdown += `**Domain:** ${question.mappedDomain}\n`;
             markdown += `**Time:** ${this.formatTime(timeSpent)}\n\n`;
-            markdown += `**Question:** ${question.question}\n\n`;
+            markdown += `**Question:** ${question.question || 'Question text not available'}\n\n`;
             
             markdown += `**Your Answer(s):**\n`;
             if (userAnswers.length > 0) {
-                userAnswers.forEach(answer => {
-                    markdown += `- ${answer}\n`;
+                userAnswers.forEach(letter => {
+                    const optionIndex = letter.charCodeAt(0) - 65;
+                    const optionText = question.options && question.options[optionIndex] 
+                        ? question.options[optionIndex] 
+                        : letter;
+                    markdown += `- ${letter}. ${optionText}\n`;
                 });
             } else {
                 markdown += `- No answer selected\n`;
             }
             
             markdown += `\n**Correct Answer(s):**\n`;
-            question.correct_answers.forEach(answer => {
-                markdown += `- ${answer}\n`;
+            (question.answer_letters || []).forEach(letter => {
+                const optionIndex = letter.charCodeAt(0) - 65;
+                const optionText = question.options && question.options[optionIndex] 
+                    ? question.options[optionIndex] 
+                    : letter;
+                markdown += `- ${letter}. ${optionText}\n`;
             });
             
             markdown += `\n**Explanation:** ${question.explanation || 'No explanation available.'}\n\n`;
@@ -739,17 +971,20 @@ class ExamSimulator {
     calculateDomainStats() {
         const stats = {};
         
-        this.examQuestions.forEach(question => {
-            const domain = question.mappedDomain;
-            if (!stats[domain]) {
-                stats[domain] = { correct: 0, total: 0 };
-            }
-            
-            stats[domain].total++;
-            
-            const userAnswers = this.userAnswers[question.id] || [];
-            if (this.isAnswerCorrect(question, userAnswers)) {
-                stats[domain].correct++;
+        this.examQuestions.forEach((question, index) => {
+            // Only count visited questions
+            if (this.visitedQuestions.has(index)) {
+                const domain = question.mappedDomain;
+                if (!stats[domain]) {
+                    stats[domain] = { correct: 0, total: 0 };
+                }
+                
+                stats[domain].total++;
+                
+                const userAnswers = this.userAnswers[question.id] || [];
+                if (this.isAnswerCorrect(question, userAnswers)) {
+                    stats[domain].correct++;
+                }
             }
         });
         
@@ -761,4 +996,3 @@ class ExamSimulator {
 document.addEventListener('DOMContentLoaded', () => {
     new ExamSimulator();
 });
-

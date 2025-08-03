@@ -353,15 +353,6 @@
             margin-top: 0.5rem;
         }
 
-        .quiz-question-id-label {
-            margin-top: 1rem;
-            padding: 0.5rem;
-            background: rgba(0, 0, 0, 0.1);
-            border-radius: 4px;
-            font-size: 0.9rem;
-            color: #495057;
-        }
-
         /* Quiz Mode Styles */
         .quiz-setup {
             padding: 2rem;
@@ -1027,57 +1018,16 @@
                         throw new Error(`HTTP error! status: ${response?.status ?? 'unknown'}`);
                     }
                     this.questions = await response.json() ?? [];
-                    
-                    // Derive answer_letters for all questions based on their correct_answers format
                     this.questions.forEach(q => {
-                        if (q.answer_letters && q.answer_letters.length > 0) {
-                            // Already has answer_letters, keep them
-                            return;
-                        }
-
                         const letters = [];
-                        const correctAnswers = q.correct_answers || [];
-                        
-                        correctAnswers.forEach(answer => {
-                            // Handle different formats of correct_answers
-                            
-                            // Format 1: "B. Amazon DynamoDB" (aws_mcq_questions.json)
-                            let match = answer.match(/^([A-Z])\.\s*/);
-                            if (match) {
-                                letters.push(match[1]);
-                                return;
-                            }
-                            
-                            // Format 2: "<b>A. The ability...</b>" (aws_e5_exams.json)
-                            match = answer.match(/<b>([A-Z])\.\s*/);
-                            if (match) {
-                                letters.push(match[1]);
-                                return;
-                            }
-                            
-                            // Format 3: Split by <br> and look for letter patterns (aws_mcq_questions.json legacy)
-                            answer.split('<br>').forEach(item => {
+                        (q.correct_answers || []).forEach(entry => {
+                            entry.split('<br>').forEach(item => {
                                 const m = item.trim().match(/^([A-Z])\./);
                                 if (m) letters.push(m[1]);
                             });
-                            
-                            // Format 4: Plain answer text - match against options (aws_e2, aws_e3, aws_e6, aws_mock_exams)
-                            if (letters.length === 0 && q.options) {
-                                // Find which option matches this answer
-                                const cleanAnswer = answer.replace(/<[^>]*>/g, '').trim(); // Remove HTML tags
-                                q.options.forEach((option, index) => {
-                                    const cleanOption = option.replace(/<[^>]*>/g, '').trim();
-                                    if (cleanOption === cleanAnswer) {
-                                        letters.push(String.fromCharCode(65 + index)); // A, B, C, D...
-                                    }
-                                });
-                            }
                         });
-                        
-                        // Remove duplicates and sort
-                        q.answer_letters = [...new Set(letters)].sort();
+                        q.answer_letters = letters;
                     });
-                    
                     this.filteredQuestions = [...this.questions];
                     
                     this.categories.clear();
@@ -1303,25 +1253,7 @@
             }
 
             createQuestionCard(question) {
-                // Format correct answers for display
-                let correctAnswersDisplay = '';
-                if (question.answer_letters && question.answer_letters.length > 0) {
-                    // Show letter-based answers with the actual option text
-                    const answerTexts = question.answer_letters.map(letter => {
-                        const optionIndex = letter.charCodeAt(0) - 65; // A=0, B=1, etc.
-                        const optionText = question.options?.[optionIndex] || letter;
-                        return `${letter}. ${optionText}`;
-                    });
-                    correctAnswersDisplay = answerTexts.join(', ');
-                } else if (question.correct_answers && question.correct_answers.length > 0) {
-                    // Clean up HTML tags and show raw answers
-                    correctAnswersDisplay = question.correct_answers
-                        .map(answer => answer.replace(/<[^>]*>/g, '').trim())
-                        .join(', ');
-                } else {
-                    correctAnswersDisplay = 'No answer provided';
-                }
-
+                const correctAnswers = question?.correct_answers?.join?.(', ') ?? 'No answer provided';
                 const hasExplanation = question?.explanation && question.explanation.trim() !== '';
                 
                 const chapterMap = {
@@ -1384,7 +1316,7 @@
                             <div class="check-icon">✓</div>
                             <div class="answer-content">
                                 <div class="answer-text">
-                                    <strong>Correct Answer:</strong> ${correctAnswersDisplay}
+                                    <strong>Correct Answer:</strong> ${correctAnswers}
                                 </div>
                                 ${hasExplanation ? `<div class="explanation">${question.explanation}</div>` : ''}
                                 ${tableControls}
@@ -1606,82 +1538,37 @@
                 const question = this.currentQuizQuestions?.[this.currentQuizIndex];
                 if (!question) return;
 
-                // Format correct answers for display
-                let correctAnswersDisplay = '';
-                if (question.answer_letters && question.answer_letters.length > 0) {
-                    // Show letter-based answers
-                    correctAnswersDisplay = question.answer_letters.join(', ');
-                } else if (question.correct_answers && question.correct_answers.length > 0) {
-                    // Fallback to raw correct_answers
-                    correctAnswersDisplay = question.correct_answers.join(', ');
-                } else {
-                    correctAnswersDisplay = 'No answer provided';
-                }
-
-                // Clean up HTML tags from explanation for better display
-                const explanation = question?.explanation ? 
-                    question.explanation.replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]*>/g, '') : '';
-                const hasExplanation = explanation && explanation.trim() !== '';
+                const correctAnswers = question?.correct_answers?.join?.(', ') ?? 'No answer provided';
+                const hasExplanation = question?.explanation && question.explanation.trim() !== '';
 
                 const correctAnswerText = document.getElementById('correctAnswerText');
                 if (correctAnswerText) {
-                    correctAnswerText.innerHTML = correctAnswersDisplay;
+                    correctAnswerText.innerHTML = correctAnswers;
                 }
 
                 const explanationText = document.getElementById('explanationText');
                 if (explanationText) {
-                    if (hasExplanation) {
-                        // Convert newlines back to <br> for HTML display
-                        explanationText.innerHTML = explanation.replace(/\n/g, '<br>');
-                        explanationText.style.display = 'block';
-                    } else {
-                        explanationText.innerHTML = '';
-                        explanationText.style.display = 'none';
-                    }
+                    explanationText.innerHTML = hasExplanation ? question.explanation : '';
+                    explanationText.style.display = hasExplanation ? 'block' : 'none';
                 }
 
-                // Add question ID display for all datasets in quiz mode
-                const answerSection = document.getElementById('answerSection');
-                if (answerSection && question.id) {
-                    // Remove existing question number labels to avoid duplicates
-                    const existingLabels = answerSection.querySelectorAll('.quiz-question-id-label');
-                    existingLabels.forEach(label => label.remove());
-
-                    const questionIdLabel = document.createElement('div');
-                    questionIdLabel.className = 'quiz-question-id-label';
-                    questionIdLabel.innerHTML = `<strong>Question ID:</strong> ${question.id}`;
-                    questionIdLabel.style.cssText = `
-                        margin-top: 1rem;
-                        padding: 0.5rem;
-                        background: rgba(0,0,0,0.1);
-                        border-radius: 4px;
-                        font-size: 0.9rem;
-                        color: #495057;
-                    `;
-                    answerSection.appendChild(questionIdLabel);
-                }
-
-                // Add table controls only for aws_mcq_questions.json dataset in quiz mode
-                if (this.currentDataset === 'aws_mcq_questions.json' && question.id) {
+                if (this.currentDataset === 'aws_mcq_questions.json') {
+                    const answerSection = document.getElementById('answerSection');
                     if (answerSection) {
-                        // Remove existing table controls to avoid duplicates
                         const existingControls = answerSection.querySelectorAll('.question-number-label, .see-table-btn, .view-table-btn');
                         existingControls.forEach(control => control.remove());
 
-                        // Add question number label
                         const questionLabel = document.createElement('span');
                         questionLabel.className = 'question-number-label';
                         questionLabel.textContent = `Question ${question.id}`;
                         answerSection.appendChild(questionLabel);
 
-                        // Add See Table button
                         const seeTableBtn = document.createElement('button');
                         seeTableBtn.className = 'see-table-btn';
                         seeTableBtn.textContent = 'See Table';
                         seeTableBtn.onclick = () => this.showTableForQuestion(question.id);
                         answerSection.appendChild(seeTableBtn);
 
-                        // Add View Table button
                         const viewTableBtn = document.createElement('button');
                         viewTableBtn.className = 'view-table-btn';
                         viewTableBtn.textContent = 'View Table';
@@ -1690,7 +1577,6 @@
                     }
                 }
 
-                // Show answer section and next button
                 document.getElementById('answerSection')?.style?.setProperty?.('display', 'block');
                 document.getElementById('showAnswer')?.style?.setProperty?.('display', 'none');
                 document.getElementById('nextQuestion')?.style?.setProperty?.('display', 'inline-block');
@@ -1775,39 +1661,7 @@
                 
                 const icon = isCorrect ? '✓' : '✗';
                 const message = isCorrect ? 'Correct!' : 'Incorrect!';
-                
-                // Format correct answers for display
-                let correctAnswersText = '';
-                if (question?.answer_letters?.length > 0) {
-                    correctAnswersText = question.answer_letters.join(', ');
-                } else if (question?.correct_answers?.length > 0) {
-                    // Try to extract letters from correct_answers if answer_letters not available
-                    const letters = [];
-                    question.correct_answers.forEach(answer => {
-                        // Look for letter patterns
-                        let match = answer.match(/^([A-Z])\.\s*/);
-                        if (match) {
-                            letters.push(match[1]);
-                            return;
-                        }
-                        match = answer.match(/<b>([A-Z])\.\s*/);
-                        if (match) {
-                            letters.push(match[1]);
-                            return;
-                        }
-                        // If no letter pattern, try to find matching option
-                        const cleanAnswer = answer.replace(/<[^>]*>/g, '').trim();
-                        question.options?.forEach((option, index) => {
-                            const cleanOption = option.replace(/<[^>]*>/g, '').trim();
-                            if (cleanOption === cleanAnswer) {
-                                letters.push(String.fromCharCode(65 + index));
-                            }
-                        });
-                    });
-                    correctAnswersText = [...new Set(letters)].sort().join(', ');
-                } else {
-                    correctAnswersText = 'N/A';
-                }
+                const correctAnswersText = question?.answer_letters?.join(', ') || '';
                 
                 resultDiv.innerHTML = `
                     <span class="result-icon">${icon}</span>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS Shared Responsibility Model - CLF-C02 Study Guide</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.3;
+            color: #333;
+            margin: 0.5in;
+            font-size: 10pt;
+            background-color: #fff;
+        }
+        h1 {
+            font-size: 18px;
+            text-align: center;
+            border-bottom: 2px solid #ccc;
+            padding-bottom: 5px;
+            margin-bottom: 1em;
+        }
+        h2 {
+            font-size: 15px;
+            padding: 6px 10px;
+            margin-top: 1em;
+            margin-bottom: 0.8em;
+            border-radius: 4px;
+            color: #fff;
+        }
+        .aws-section h2 { background-color: #FF9900; } /* AWS Orange */
+        .customer-section h2 { background-color: #232F3E; } /* AWS Blue */
+        .tips-section h2 { background-color: #1D8102; } /* Green for Tips */
+
+        .section-container {
+            border: 1px solid #ddd;
+            padding: 0.8em;
+            margin-bottom: 1em;
+            border-radius: 5px;
+        }
+        ul {
+            list-style-type: disc;
+            padding-left: 20px;
+            margin: 0;
+        }
+        li {
+            margin-bottom: 0.5em;
+        }
+        strong {
+            font-weight: bold;
+        }
+        .key-phrase {
+            font-style: italic;
+            font-weight: bold;
+        }
+        .scenario {
+            font-style: italic;
+            color: #555;
+            margin-left: 10px;
+        }
+
+        @media print {
+            body {
+                font-size: 9pt;
+                margin: 0.4in;
+                padding: 0;
+                color: #000;
+                background-color: #fff;
+            }
+            .section-container {
+                -webkit-print-color-adjust: exact;
+                color-adjust: exact;
+                border: 1px solid #ccc;
+            }
+            h2 {
+                color: #fff !important; /* Ensure text is white on colored background */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>AWS Shared Responsibility Model: CLF-C02 Study Guide</h1>
+
+    <div class="section-container aws-section">
+        <h2>AWS Responsibility: Security <span class="key-phrase">OF</span> the Cloud</h2>
+        <p>AWS is responsible for protecting the infrastructure that runs all of the services offered in the AWS Cloud. This infrastructure is composed of the hardware, software, networking, and facilities that run AWS Cloud services.</p>
+        <ul>
+            <li><strong>Hardware & Global Infrastructure:</strong>
+                <ul>
+                    <li>Regions, Availability Zones (AZs), and Edge Locations (Points of Presence).</li>
+                    <li>Physical security of data centers (e.g., guards, fences, cameras).</li>
+                </ul>
+            </li>
+            <li><strong>Foundation Services (The "Undifferentiated Heavy Lifting"):</strong>
+                <ul>
+                    <li><strong>Compute:</strong> Physical servers, virtualization layer (hypervisor).</li>
+                    <li><strong>Storage:</strong> Physical disks, storage controllers.</li>
+                    <li><strong>Database:</strong> Physical hosts and infrastructure for RDS, DynamoDB, etc.</li>
+                    <li><strong>Networking:</strong> Physical routers, switches, cables.</li>
+                </ul>
+            </li>
+            <li><strong>Managed Services Patching:</strong> For services like RDS and DynamoDB, AWS manages the underlying OS and software patching.</li>
+        </ul>
+    </div>
+
+    <div class="section-container customer-section">
+        <h2>Customer Responsibility: Security <span class="key-phrase">IN</span> the Cloud</h2>
+        <p>Your responsibility is determined by the AWS Cloud services that you select. This determines the amount of configuration work you must perform as part of your security responsibilities.</p>
+        <ul>
+            <li><strong>Customer Data:</strong> You own your data. You are responsible for its classification, protection, and encryption.</li>
+            <li><strong>Platform, Applications, Identity & Access Management (IAM):</strong>
+                <ul>
+                    <li>Managing users, groups, roles, and permissions using IAM.</li>
+                    <li>Securing your application code and dependencies.</li>
+                </ul>
+            </li>
+            <li><strong>Operating System, Network & Firewall Configuration:</strong>
+                <ul>
+                    <li><strong>For IaaS (like EC2):</strong> You are responsible for patching the guest OS, installing antivirus, etc.</li>
+                    <li>Configuring Security Groups (stateful firewall for instances).</li>
+                    <li>Configuring Network Access Control Lists (NACLs) (stateless firewall for subnets).</li>
+                </ul>
+            </li>
+            <li><strong>Data Encryption & Integrity:</strong>
+                <ul>
+                    <li><strong>Client-Side Encryption:</strong> Encrypting data before sending it to AWS.</li>
+                    <li><strong>Server-Side Encryption (SSE):</strong> Configuring encryption for data at rest in services like S3, EBS, RDS.</li>
+                    <li><strong>Network Traffic Protection:</strong> Encrypting data in transit using TLS/SSL.</li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <div class="section-container tips-section">
+        <h2>Exam Tips for CLF-C02</h2>
+        <p>To correctly answer exam questions, ask yourself: <span class="key-phrase">"Can I configure this myself?"</span></p>
+        <ul>
+            <li>If you can configure it in the AWS Console, CLI, or via API (e.g., an IAM policy, a Security Group rule, an S3 bucket policy), it is <span class="key-phrase">YOUR</span> responsibility.</li>
+            <li>If it relates to the physical data center or the underlying hypervisor that runs EC2, it is <span class="key-phrase">AWS's</span> responsibility.</li>
+        </ul>
+        <p><strong>Common Scenarios:</strong></p>
+        <ul>
+            <li><span class="key-phrase">Patching an EC2 instance's Operating System?</span> -> <span class="scenario">Customer Responsibility.</span></li>
+            <li><span class="key-phrase">Patching the underlying host for RDS?</span> -> <span class="scenario">AWS Responsibility.</span></li>
+            <li><span class="key-phrase">Creating IAM users and assigning permissions?</span> -> <span class="scenario">Customer Responsibility.</span></li>
+            <li><span class="key-phrase">Ensuring physical data center security?</span> -> <span class="scenario">AWS Responsibility.</span></li>
+            <li><span class="key-phrase">Configuring an S3 bucket to be private?</span> -> <span class="scenario">Customer Responsibility.</span></li>
+        </ul>
+    </div>
+
+</body>
+</html>

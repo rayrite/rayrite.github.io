@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visual Study Guide: AWS Well-Architected Framework (CORPSS)</title>
+    <style>
+        /* --- General & Print Styles --- */
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.2; /* Reduced line height */
+            color: #333;
+            margin: 0;
+            padding: 0.5em; /* Reduced padding */
+            background-color: #f4f4f4;
+            font-size: 10pt;
+        }
+
+        /* --- Typography --- */
+        h1, h2 {
+            font-family: 'Helvetica Neue', 'Arial', sans-serif;
+            color: #111;
+            line-height: 1.1;
+        }
+
+        h1 {
+            font-size: 18px; /* Reduced size */
+            text-align: center;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 4px;
+            margin-bottom: 0.8em;
+        }
+
+        h2 {
+            font-size: 14px;
+            padding: 4px 8px; /* Reduced padding */
+            margin-top: 0;
+            margin-bottom: 0.5em; /* Reduced margin */
+            border-radius: 4px 4px 0 0;
+            color: #fff;
+        }
+
+        p {
+            margin-bottom: 0.4em;
+            padding: 0 8px;
+            font-size: 11pt; /* Increased font size */
+        }
+
+        strong {
+            font-weight: bold;
+        }
+
+        .design-principles-title {
+            font-weight: bold;
+            font-style: italic;
+            margin-top: 0.6em;
+            margin-bottom: 0.4em;
+            display: block;
+            padding: 0 8px;
+            font-size: 11pt; /* Increased font size */
+        }
+
+        /* --- List Styling --- */
+        ul {
+            list-style-type: disc;
+            padding-left: 22px; /* Reduced padding */
+            margin: 0 8px; /* Added horizontal margin */
+        }
+
+        li {
+            margin-bottom: 0.3em; /* Reduced margin */
+            font-size: 11pt; /* Increased font size */
+        }
+
+        /* --- Section & Color Styling --- */
+        .pillar-section {
+            margin-bottom: 0.8em; /* Reduced space between cards */
+            border-top: 4px solid;
+            padding: 0;
+            border-radius: 5px;
+            background-color: #fdfdfd;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* Reduced shadow */
+        }
+        
+        /* Inner container for padding */
+        .pillar-content {
+            padding: 0 4px 8px 4px; /* Reduced padding */
+        }
+
+        .cost { border-color: #1D8102; }
+        .cost h2 { background-color: #1D8102; }
+
+        .ops { border-color: #0073bb; }
+        .ops h2 { background-color: #0073bb; }
+
+        .reliability { border-color: #d86613; }
+        .reliability h2 { background-color: #d86613; }
+
+        .performance { border-color: #5d3da1; }
+        .performance h2 { background-color: #5d3da1; }
+
+        .security { border-color: #d13212; }
+        .security h2 { background-color: #d13212; }
+
+        .sustainability { border-color: #00a0a0; }
+        .sustainability h2 { background-color: #00a0a0; }
+
+
+        /* --- Print-Specific Optimizations --- */
+        @media print {
+            body {
+                font-size: 9pt;
+                margin: 0.2in;
+                padding: 0;
+                color: #000;
+                background-color: #fff;
+                box-shadow: none;
+            }
+            .pillar-section {
+                 -webkit-print-color-adjust: exact;
+                color-adjust: exact;
+                box-shadow: none;
+                margin-bottom: 0.5em;
+            }
+            /* Removed the h2 background-color override and text color override to allow colors to print */
+        }
+    </style>
+</head>
+<body>
+
+    <h1>AWS Well-Architected Framework: Condensed Study Guide (C.O.R.P.S.S.)</h1>
+
+    <div class="pillar-section cost">
+        <h2>1. Cost Optimization Pillar</h2>
+        <div class="pillar-content">
+            <p><strong>Core Purpose:</strong> The ability to run systems to deliver business value at the <strong>lowest price point</strong>.</p>
+            <span class="design-principles-title">Design Principles:</span>
+            <ul>
+                <li><strong>Implement Cloud Financial Management:</strong> Have a dedicated practice for managing and optimizing cloud costs.</li>
+                <li><strong>Adopt a consumption model:</strong> Pay only for what you use; shut down unused resources.</li>
+                <li><strong>Measure overall efficiency:</strong> Monitor costs and usage to understand ROI.</li>
+                <li><strong>Stop spending money on data center operations:</strong> Let AWS handle the heavy lifting.</li>
+                <li><strong>Analyze and attribute expenditure:</strong> Use tags and Cost Explorer to get a clear view of AWS spend.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="pillar-section ops">
+        <h2>2. Operational Excellence Pillar</h2>
+        <div class="pillar-content">
+            <p><strong>Core Purpose:</strong> The ability to <strong>run and monitor systems</strong> to deliver business value and to <strong>continuously improve</strong> supporting processes and procedures.</p>
+            <span class="design-principles-title">Design Principles:</span>
+            <ul>
+                <li><strong>Perform operations as code:</strong> Automate deployments, infrastructure changes, and responses to events. (e.g., CloudFormation).</li>
+                <li><strong>Make frequent, small, reversible changes:</strong> Reduces blast radius of failures and makes rollbacks easier.</li>
+                <li><strong>Refine operations procedures frequently:</strong> Evolve procedures and learn from operational events.</li>
+                <li><strong>Anticipate failure:</strong> Proactively identify and plan for potential failures. Run "Game Days" to test responses.</li>
+                <li><strong>Learn from all operational failures:</strong> Treat every failure as a learning opportunity.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="pillar-section reliability">
+        <h2>3. Reliability Pillar</h2>
+        <div class="pillar-content">
+            <p><strong>Core Purpose:</strong> The ability of a workload to <strong>perform its intended function correctly and consistently</strong> and to <strong>recover quickly from failures</strong>.</p>
+            <span class="design-principles-title">Design Principles:</span>
+            <ul>
+                <li><strong>Automatically recover from failure:</strong> Design systems to detect failures and auto-heal. (e.g., ELB health checks, Auto Scaling).</li>
+                <li><strong>Test recovery procedures:</strong> Regularly test recovery plans by simulating failures (e.g., Chaos engineering).</li>
+                <li><strong>Scale horizontally to increase aggregate workload availability:</strong> Replace one large server with multiple small ones.</li>
+                <li><strong>Stop guessing capacity:</strong> Monitor demand and automatically scale resources to meet it. (e.g., Auto Scaling).</li>
+                <li><strong>Manage change in automation:</strong> Use automation to manage all infrastructure changes to reduce human error.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="pillar-section performance">
+        <h2>4. Performance Efficiency Pillar</h2>
+        <div class="pillar-content">
+            <p><strong>Core Purpose:</strong> The ability to use computing resources <strong>efficiently to meet system requirements</strong> and maintain that efficiency as demand changes.</p>
+            <span class="design-principles-title">Design Principles:</span>
+            <ul>
+                <li><strong>Democratize advanced technologies:</strong> Use managed services to avoid needing deep expertise.</li>
+                <li><strong>Go global in minutes:</strong> Deploy in multiple AWS Regions to reduce latency.</li>
+                <li><strong>Use serverless architectures:</strong> Eliminate operational overhead of managing servers. (e.g., Lambda, Fargate).</li>
+                <li><strong>Experiment more often:</strong> Use the low cost of cloud to test and find the most performant configurations.</li>
+                <li><strong>Consider mechanical sympathy:</strong> Choose the technology that aligns best with your goals.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="pillar-section security">
+        <h2>5. Security Pillar</h2>
+        <div class="pillar-content">
+            <p><strong>Core Purpose:</strong> The ability to <strong>protect information, systems, and assets</strong> while delivering business value through risk assessments and mitigation strategies.</p>
+            <span class="design-principles-title">Design Principles:</span>
+            <ul>
+                <li><strong>Implement a strong identity foundation:</strong> Centralize identity management and enforce least privilege. (e.g., IAM).</li>
+                <li><strong>Enable traceability:</strong> Monitor, alert, and audit all actions and changes in real time. (e.g., CloudTrail, CloudWatch).</li>
+                <li><strong>Apply security at all layers:</strong> Apply security to network, instances, applications, and data. (e.g., NACLs, Security Groups, WAF).</li>
+                <li><strong>Automate security best practices:</strong> Use automation to apply security controls at scale.</li>
+                <li><strong>Protect data in transit and at rest:</strong> Encrypt all sensitive data everywhere. (e.g., ACM, KMS).</li>
+                <li><strong>Keep people away from data:</strong> Reduce or eliminate direct human access to sensitive data.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="pillar-section sustainability">
+        <h2>6. Sustainability Pillar</h2>
+        <div class="pillar-content">
+            <p><strong>Core Purpose:</strong> The ability to continuously <strong>improve sustainability impacts</strong> by reducing energy consumption and increasing efficiency.</p>
+            <span class="design-principles-title">Design Principles:</span>
+            <ul>
+                <li><strong>Understand your impact:</strong> Measure the environmental impact of your cloud workload.</li>
+                <li><strong>Establish sustainability goals:</strong> Set goals for reducing resources required per transaction.</li>
+                <li><strong>Maximize utilization:</strong> Choose the smallest number and size of resources that meet business needs.</li>
+                <li><strong>Anticipate and adopt new, more efficient hardware and software offerings:</strong> Plan to adopt power-efficient options like Graviton.</li>
+                <li><strong>Use managed services:</strong> Transfer responsibility for hardware optimization to AWS for greater efficiency.</li>
+            </ul>
+        </div>
+    </div>
+
+</body>
+</html>

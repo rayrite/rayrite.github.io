@@ -543,19 +543,6 @@
             gap: 1rem;
         }
 
-        #timer {
-            font-size: 1.2rem;
-            font-weight: bold;
-            background: rgba(255,255,255,0.2);
-            padding: 0.3rem 0.8rem;
-            border-radius: 8px;
-            transition: color 0.3s, background-color 0.3s;
-        }
-        #timer.low-time {
-            color: white;
-            background-color: #e74c3c;
-        }
-
         #quizInfo {
             flex-grow: 1;
             text-align: center;
@@ -679,6 +666,7 @@
             display: flex;
             gap: 1rem;
             justify-content: center;
+            /* border-radius: 0 0 8px 8px; */ /* Removed to connect with answer section */
             flex-wrap: wrap;
             position: relative;
             z-index: 1;
@@ -730,21 +718,11 @@
             font-size: 2rem;
         }
 
-        .score-summary-container {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            flex-wrap: wrap;
-        }
-
         .score-summary {
             display: flex;
             justify-content: center;
             gap: 3rem;
             margin-bottom: 1.5rem;
-            background: rgba(255,255,255,0.1);
-            padding: 1rem;
-            border-radius: 8px;
         }
 
         .score-stat {
@@ -752,7 +730,7 @@
         }
 
         .score-stat-value {
-            font-size: 2.5rem;
+            font-size: 3rem;
             font-weight: bold;
             color: #fff;
             display: block;
@@ -760,7 +738,7 @@
         }
 
         .score-stat-label {
-            font-size: 0.9rem;
+            font-size: 1rem;
             color: rgba(255,255,255,0.8);
             margin-top: 0.5rem;
         }
@@ -768,7 +746,6 @@
         .score-timestamp {
             color: rgba(255,255,255,0.7);
             font-size: 0.9rem;
-            margin-top: 1rem;
         }
 
         .score-actions {
@@ -845,22 +822,12 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1rem;
-            flex-wrap: wrap;
-            gap: 0.5rem;
         }
 
         .score-question-number {
             font-weight: bold;
             color: #2c3e50;
             font-size: 1.1rem;
-        }
-        
-        .score-time-spent {
-            font-size: 0.85rem;
-            color: #6c757d;
-            background: #f8f9fa;
-            padding: 0.2rem 0.6rem;
-            border-radius: 10px;
         }
 
         .score-result-badge {
@@ -1025,7 +992,7 @@
             .stats { justify-content: center; }
             .dataset-selector { flex-direction: column; gap: 0.5rem; }
             .dataset-selector select { min-width: unset; width: 100%; }
-            .score-summary-container, .score-summary { flex-direction: column; gap: 1.5rem; }
+            .score-summary { flex-direction: column; gap: 1.5rem; }
             .score-stat-value { font-size: 2.5rem; }
             .score-question-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
             .score-actions { flex-direction: column; }
@@ -1068,7 +1035,6 @@
             <button class="tab-button" data-tab="quiz">Quiz Mode</button>
         </div>
 
-        <!-- Question Browser Tab -->
         <div id="browseTab" class="tab-content active">
             <div class="controls">
                 <div class="search-container">
@@ -1081,20 +1047,13 @@
                 </div>
             </div>
             <div id="questionsList" class="questions-list">
-                <!-- Questions will be populated here by JS -->
-            </div>
+                </div>
         </div>
 
-        <!-- Quiz Mode Tab -->
         <div id="quizTab" class="tab-content">
             <div id="quizSetup" class="quiz-setup">
                 <h3>Quiz Setup</h3>
                 <div class="quiz-options">
-                    <div class="option-group">
-                        <label for="timeLimit">Time Limit per Question (seconds):</label>
-                        <input type="number" id="timeLimit" min="10" max="300" value="90">
-                    </div>
-                
                     <div class="option-group">
                         <label for="quizKeywords">Keywords (comma-separated, optional):</label>
                         <input type="text" id="quizKeywords" placeholder="e.g., S3, DynamoDB, Lambda, storage, compute">
@@ -1104,8 +1063,7 @@
                         <label>Select Exam Datasets:</label>
                         <div class="datasets-container">
                             <div class="dataset-checkbox-group" id="datasetCheckboxGroup">
-                                <!-- Checkboxes will be populated here by JS -->
-                            </div>
+                                </div>
                             <div class="dataset-actions">
                                 <button type="button" class="dataset-action-btn" onclick="app.selectAllDatasets()">Select All</button>
                                 <button type="button" class="dataset-action-btn" onclick="app.selectNoneDatasets()">Select None</button>
@@ -1135,29 +1093,24 @@
             <div class="quiz-container" id="quizContainer">
                 <div class="quiz-header">
                     <span id="questionNumber">Question 1 of 10</span>
-                    <span id="timer">01:30</span>
                     <span id="quizInfo"></span>
                     <button id="endQuiz" class="end-quiz-btn">End Quiz</button>
                 </div>
                 <div class="quiz-question" id="quizQuestion">
-                    <!-- Quiz question content will be rendered here -->
-                </div>
+                    </div>
                 <div class="quiz-actions" id="quizActions">
                      <button id="checkAnswer" class="show-answer-btn">Check Answer</button>
                      <button id="nextQuestion" class="next-question-btn" style="display: none;">Next Question</button>
                 </div>
                 <div class="answer-section" id="answerSection" style="display: none;">
-                    <!-- Correct answer and explanation will be shown here -->
-                </div>
+                    </div>
             </div>
             
             <div id="scoreReport" class="tab-content">
-                <!-- Score report will be generated here by JS -->
-            </div>
+                </div>
         </div>
     </div>
 
-    <!-- Table Modal for displaying dynamic tables -->
     <div id="tableModal" class="table-modal">
         <div class="table-modal-content">
             <div class="table-modal-header">
@@ -1165,8 +1118,7 @@
                 <button id="closeTableModal" class="close-modal-btn">&times;</button>
             </div>
             <div id="tableModalBody" class="table-modal-body">
-                <!-- Dynamic table will be inserted here by JS -->
-            </div>
+                </div>
         </div>
     </div>
 
@@ -1182,11 +1134,6 @@
                 this.quizInProgress = false;
                 this.tablesData = null;
                 this.tablesWindow = null;
-                
-                // Timer properties
-                this.timeLimit = 90; // Default time in seconds
-                this.timerInterval = null;
-                this.questionStartTime = 0;
 
                 this.availableDatasets = [
                     { value: 'aws_mcq_questions.json', label: 'Original Question Bank (1,623 questions)' },
@@ -1561,7 +1508,7 @@
                 }
             }
 
-            // --- QUIZ Functionality (Enhanced with Timer) ---
+            // --- QUIZ Functionality (Enhanced) ---
             
             selectAllDatasets = () => document.querySelectorAll('#datasetCheckboxGroup input').forEach(cb => cb.checked = true);
             selectNoneDatasets = () => document.querySelectorAll('#datasetCheckboxGroup input').forEach(cb => cb.checked = false);
@@ -1573,7 +1520,6 @@
                 startBtn.textContent = 'Loading...';
 
                 try {
-                    this.timeLimit = parseInt(document.getElementById('timeLimit').value) || 90;
                     const keywords = document.getElementById('quizKeywords').value.trim();
                     const selectedCategory = document.getElementById('quizCategory').value;
                     const questionCount = parseInt(document.getElementById('questionCount').value);
@@ -1611,6 +1557,7 @@
                     this.quizInProgress = true;
                     this.quizResults = [];
 
+                    // **** ADDED THIS BLOCK ****
                     const quizInfo = document.getElementById('quizInfo');
                     if (quizInfo) {
                         const datasetNames = selectedDatasets.map(ds => {
@@ -1622,6 +1569,7 @@
                         if (selectedCategory) infoText += ` | Category: ${selectedCategory}`;
                         quizInfo.textContent = infoText;
                     }
+                    // **** END OF ADDED BLOCK ****
 
                     document.getElementById('quizSetup').style.display = 'none';
                     document.getElementById('quizContainer').style.display = 'flex';
@@ -1663,11 +1611,10 @@
                     </div>
                 `;
                 
+                // Reset actions UI
                 document.getElementById('answerSection').style.display = 'none';
                 document.getElementById('checkAnswer').style.display = 'inline-block';
                 document.getElementById('nextQuestion').style.display = 'none';
-                
-                this.startTimer();
             }
 
             toggleQuizOption(optionDiv, inputType) {
@@ -1684,27 +1631,21 @@
                 }
             }
 
-            checkUserAnswer(isTimeOut = false) {
-                clearInterval(this.timerInterval);
-                const timeSpent = isTimeOut ? this.timeLimit : (Date.now() - this.questionStartTime) / 1000;
-                
+            checkUserAnswer() {
                 const question = this.currentQuizQuestions[this.currentQuizIndex];
                 const selectedInputs = [...document.querySelectorAll('.quiz-option input:checked')];
                 const userAnswers = selectedInputs.map(input => input.value).sort();
                 const correctAnswers = question.answer_letters.sort();
 
-                if (!isTimeOut && userAnswers.length === 0) {
-                    this.startTimer(parseInt(document.getElementById('timer').textContent.split(':')[0]) * 60 + parseInt(document.getElementById('timer').textContent.split(':')[1]));
-                    return alert('Please select an answer.');
-                }
+                if (userAnswers.length === 0) return alert('Please select an answer.');
 
-                const isCorrect = !isTimeOut && (JSON.stringify(userAnswers) === JSON.stringify(correctAnswers));
-                this.quizResults.push({ question, userAnswers, correctAnswers, isCorrect, timeSpent });
+                const isCorrect = JSON.stringify(userAnswers) === JSON.stringify(correctAnswers);
+                this.quizResults.push({ question, userAnswers, correctAnswers, isCorrect });
 
                 // Visual feedback on options
                 document.querySelectorAll('.quiz-option').forEach(optionDiv => {
                     const input = optionDiv.querySelector('input');
-                    input.disabled = true;
+                    input.disabled = true; // Disable further clicks
                     if (correctAnswers.includes(input.value)) {
                         optionDiv.classList.add('correct');
                     } else if (input.checked) {
@@ -1712,18 +1653,19 @@
                     }
                 });
 
-                this.showCurrentAnswer(isCorrect, isTimeOut);
+                // Display the answer section
+                this.showCurrentAnswer(isCorrect, userAnswers, correctAnswers);
                 
+                // Update action buttons
                 document.getElementById('checkAnswer').style.display = 'none';
                 document.getElementById('nextQuestion').style.display = 'inline-block';
             }
             
-            showCurrentAnswer(isCorrect, isTimeOut) {
+            showCurrentAnswer(isCorrect, userAnswers, correctAnswers) {
                 const question = this.currentQuizQuestions[this.currentQuizIndex];
                 const answerSection = document.getElementById('answerSection');
                 
-                let resultMessage = isCorrect ? 'Correct!' : 'Incorrect';
-                if (isTimeOut) resultMessage = 'Time is up!';
+                const resultMessage = isCorrect ? 'Correct!' : 'Incorrect';
                 const resultClass = isCorrect ? 'correct' : 'incorrect';
 
                 const correctAnswersDisplay = question.answer_letters.map(letter => {
@@ -1761,7 +1703,6 @@
             }
             
             endQuiz() {
-                clearInterval(this.timerInterval);
                 this.quizInProgress = false;
                 this.currentQuizQuestions = [];
                 this.quizResults = [];
@@ -1773,25 +1714,12 @@
             }
 
             showScoreReport() {
-                clearInterval(this.timerInterval);
                 document.getElementById('quizContainer').style.display = 'none';
                 const scoreReportDiv = document.getElementById('scoreReport');
                 
                 const total = this.quizResults.length;
                 const correct = this.quizResults.filter(r => r.isCorrect).length;
                 const score = total > 0 ? Math.round((correct / total) * 100) : 0;
-                
-                // Time calculations
-                const times = this.quizResults.map(r => r.timeSpent);
-                const minTime = total > 0 ? Math.min(...times) : 0;
-                const maxTime = total > 0 ? Math.max(...times) : 0;
-                const avgTime = total > 0 ? times.reduce((a, b) => a + b, 0) / total : 0;
-                let medianTime = 0;
-                if (total > 0) {
-                    const sortedTimes = [...times].sort((a, b) => a - b);
-                    const mid = Math.floor(total / 2);
-                    medianTime = total % 2 !== 0 ? sortedTimes[mid] : (sortedTimes[mid - 1] + sortedTimes[mid]) / 2;
-                }
 
                 const resultsHTML = this.quizResults.map((result, index) => {
                     const q = result.question;
@@ -1801,11 +1729,10 @@
                         <div class="score-report-question">
                             <div class="score-question-header">
                                 <span class="score-question-number">Question ${index + 1} (ID: ${q.id})</span>
-                                <span class="score-time-spent">Time: ${this.formatTime(result.timeSpent)}</span>
                                 <span class="score-result-badge ${result.isCorrect ? 'correct' : 'incorrect'}">${result.isCorrect ? 'Correct' : 'Incorrect'}</span>
                             </div>
                             <div class="score-question-text">${q.question}</div>
-                            <div class="score-user-answer"><span class="score-label">Your Answer:</span><br>${userAnswerText || 'No answer'}</div>
+                            <div class="score-user-answer"><span class="score-label">Your Answer:</span><br>${userAnswerText}</div>
                             ${!result.isCorrect ? `<div class="score-correct-answer"><span class="score-label">Correct Answer:</span><br>${correctAnswerText}</div>` : ''}
                             ${q.explanation ? `<div class="score-explanation"><span class="score-label">Explanation:</span> ${q.explanation}</div>` : ''}
                         </div>
@@ -1816,17 +1743,9 @@
                     <div class="score-report">
                         <div class="score-report-header">
                             <h2>Quiz Results</h2>
-                            <div class="score-summary-container">
-                                <div class="score-summary">
-                                    <div class="score-stat"><span class="score-stat-value">${score}%</span><span class="score-stat-label">Score</span></div>
-                                    <div class="score-stat"><span class="score-stat-value">${correct}/${total}</span><span class="score-stat-label">Correct</span></div>
-                                </div>
-                                <div class="score-summary">
-                                    <div class="score-stat"><span class="score-stat-value">${this.formatTime(avgTime)}</span><span class="score-stat-label">Avg. Time</span></div>
-                                    <div class="score-stat"><span class="score-stat-value">${this.formatTime(medianTime)}</span><span class="score-stat-label">Median</span></div>
-                                    <div class="score-stat"><span class="score-stat-value">${this.formatTime(minTime)}</span><span class="score-stat-label">Min Time</span></div>
-                                    <div class="score-stat"><span class="score-stat-value">${this.formatTime(maxTime)}</span><span class="score-stat-label">Max Time</span></div>
-                                </div>
+                            <div class="score-summary">
+                                <div class="score-stat"><span class="score-stat-value">${score}%</span><span class="score-stat-label">Score</span></div>
+                                <div class="score-stat"><span class="score-stat-value">${correct}/${total}</span><span class="score-stat-label">Correct</span></div>
                             </div>
                             <div class="score-timestamp">Completed: ${new Date().toLocaleString()}</div>
                         </div>
@@ -1849,7 +1768,6 @@
                         userAnswers: r.userAnswers,
                         correctAnswers: r.correctAnswers,
                         isCorrect: r.isCorrect,
-                        timeSpent: r.timeSpent.toFixed(2)
                     }))
                 };
                 const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(exportData, null, 2));
@@ -1859,41 +1777,6 @@
                 document.body.appendChild(dl);
                 dl.click();
                 dl.remove();
-            }
-            
-            // --- Timer Methods ---
-            startTimer() {
-                clearInterval(this.timerInterval);
-                this.questionStartTime = Date.now();
-                let secondsRemaining = this.timeLimit;
-                const timerEl = document.getElementById('timer');
-
-                this.updateTimerDisplay(secondsRemaining, timerEl);
-
-                this.timerInterval = setInterval(() => {
-                    secondsRemaining--;
-                    this.updateTimerDisplay(secondsRemaining, timerEl);
-                    if (secondsRemaining <= 0) {
-                        clearInterval(this.timerInterval);
-                        this.checkUserAnswer(true); // isTimeOut = true
-                    }
-                }, 1000);
-            }
-
-            updateTimerDisplay(seconds, timerEl) {
-                timerEl.textContent = this.formatTime(seconds);
-                if (seconds < 15) {
-                    timerEl.classList.add('low-time');
-                } else {
-                    timerEl.classList.remove('low-time');
-                }
-            }
-
-            formatTime(totalSeconds) {
-                totalSeconds = Math.max(0, totalSeconds);
-                const minutes = Math.floor(totalSeconds / 60);
-                const seconds = Math.floor(totalSeconds % 60);
-                return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
             }
 
             // --- Generic Helpers ---

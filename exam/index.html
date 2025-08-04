@@ -9,21 +9,35 @@
 <body>
     <div class="container">
         <header>
-            <h1>AWS CLF-C02 Exam Simulator</h1>
-            <div class="timer-controls">
-                <div class="global-timer">
-                    <h3>Global Timer</h3>
-                    <div id="globalTimer" class="timer-display">90:00</div>
-                    <div class="timer-buttons">
-                        <button id="startGlobalTimer">Start</button>
-                        <button id="pauseGlobalTimer">Pause</button>
-                        <button id="stopGlobalTimer">Stop</button>
-                        <button id="resetGlobalTimer">Reset</button>
+            <div class="header-top">
+                <h1>AWS CLF-C02 Exam Simulator</h1>
+                <div class="timer-controls">
+                    <div class="global-timer">
+                        <h3>Global Timer</h3>
+                        <div id="globalTimer" class="timer-display">90:00</div>
+                        <div class="timer-buttons">
+                            <button id="startGlobalTimer">Start</button>
+                            <button id="pauseGlobalTimer">Pause</button>
+                            <button id="stopGlobalTimer">Stop</button>
+                            <button id="resetGlobalTimer">Reset</button>
+                        </div>
+                    </div>
+                    <div class="question-timer">
+                        <h3>Question Timer</h3>
+                        <div id="questionTimer" class="timer-display">01:30</div>
                     </div>
                 </div>
-                <div class="question-timer">
-                    <h3>Question Timer</h3>
-                    <div id="questionTimer" class="timer-display">01:30</div>
+            </div>
+            <!-- Exam Legend: Populated by JavaScript when the exam starts -->
+            <div id="examLegend" class="exam-legend">
+                <div class="legend-key">
+                    <span>Key:</span>
+                    <span class="legend-item"><span class="legend-dot not-visited"></span> Not Visited</span>
+                    <span class="legend-item"><span class="legend-dot visited"></span> Visited</span>
+                    <span class="legend-item"><span class="legend-dot answered"></span> Answered</span>
+                </div>
+                <div id="examLegendDots" class="exam-legend-dots">
+                    <!-- Clickable dots will be populated by JavaScript -->
                 </div>
             </div>
         </header>
@@ -93,6 +107,30 @@
                             <p>Time Taken: <span id="totalTime">00:00</span></p>
                         </div>
                     </div>
+
+                    <!-- New Time Statistics Section -->
+                    <div id="timeStats" class="time-stats">
+                        <h3>Time Statistics</h3>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <span class="stat-label">Avg. Time / Question</span>
+                                <span id="avgTime" class="stat-value">--:--</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Min. Time on a Question</span>
+                                <span id="minTime" class="stat-value">--:--</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Max. Time on a Question</span>
+                                <span id="maxTime" class="stat-value">--:--</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Median Time</span>
+                                <span id="medianTime" class="stat-value">--:--</span>
+                            </div>
+                        </div>
+                    </div>
+
                     <button id="exportResults" class="export-button">Export Results</button>
                 </div>
 

@@ -5,17 +5,17 @@ class ExamSimulator {
         this.examQuestions = [];
         this.currentQuestionIndex = 0;
         this.userAnswers = {};
-        this.questionTimes = {}; // Total time spent on each question
+        this.questionTimes = {}; // Total time spent on each question in milliseconds
         this.questionRemainingTimes = {}; // Remaining time for each question (countdown)
         this.globalTimer = null;
         this.questionTimer = null;
         this.globalTimeRemaining = 90 * 60; // 90 minutes in seconds
         this.questionTimeRemaining = 90; // 1:30 in seconds
-        this.questionStartTime = null;
+        this.questionStartTime = null; // Timestamp for when the current question view started
         this.examStarted = false;
         this.examFinished = false;
         this.examInitialized = false;
-        this.visitedQuestions = new Set(); // Track which questions user has visited
+        this.visitedQuestions = new Set(); // Track which questions user has visited by index
         this.globalTimerPaused = false; // Track if global timer is paused
         
         // Domain distribution for CLF-C02 exam
@@ -112,27 +112,20 @@ class ExamSimulator {
             const correctAnswers = question.correct_answers || [];
             
             correctAnswers.forEach(answer => {
-                // Format 1: "B. Amazon DynamoDB" (aws_mcq_questions.json)
                 let match = answer.match(/^([A-Z])\.\s*/);
                 if (match) {
                     letters.push(match[1]);
                     return;
                 }
-                
-                // Format 2: "<b>A. The ability...</b>" (aws_e5_exams.json)
                 match = answer.match(/<b>([A-Z])\.\s*/);
                 if (match) {
                     letters.push(match[1]);
                     return;
                 }
-                
-                // Format 3: Split by <br> and look for letter patterns
                 answer.split('<br>').forEach(item => {
                     const m = item.trim().match(/^([A-Z])\./);
                     if (m) letters.push(m[1]);
                 });
-                
-                // Format 4: Plain answer text - match against options
                 if (letters.length === 0 && question.options && question.options.length > 0) {
                     const cleanAnswer = answer.replace(/<[^>]*>/g, '').trim();
                     question.options.forEach((option, index) => {
@@ -144,59 +137,23 @@ class ExamSimulator {
                 }
             });
             
-            // Remove duplicates and sort
             question.answer_letters = [...new Set(letters)].sort();
             
-            // Ensure question has answer_letters, even if we couldn't derive them
             if (question.answer_letters.length === 0 && question.correct_answers.length > 0) {
-                // Fallback: assume first correct answer corresponds to option A
                 question.answer_letters = ['A'];
             }
         });
     }
     
     mapQuestionDomains() {
-        // Map existing categories/domains to CLF-C02 domains
         const domainMapping = {
-            // Direct matches
-            'Cloud Concepts': 'Cloud Concepts',
-            'Security and Compliance': 'Security and Compliance', 
-            'Technology': 'Technology',
-            'Billing and Pricing': 'Billing and Pricing',
-            
-            // Category mappings
-            'Compute': 'Technology',
-            'Storage': 'Technology',
-            'Database': 'Technology',
-            'Networking': 'Technology',
-            'Analytics': 'Technology',
-            'Machine Learning': 'Technology',
-            'Management Tools': 'Technology',
-            'Developer Tools': 'Technology',
-            'IoT': 'Technology',
-            'Game Development': 'Technology',
-            'Mobile Services': 'Technology',
-            'AR & VR': 'Technology',
-            'Application Integration': 'Technology',
-            'AWS Global Infrastructure': 'Cloud Concepts',
-            'AWS Well-Architected Framework': 'Cloud Concepts',
-            'AWS Pricing': 'Billing and Pricing',
-            'AWS Support': 'Billing and Pricing',
-            'Security': 'Security and Compliance',
-            'Identity and Access Management': 'Security and Compliance',
-            'Compliance': 'Security and Compliance',
-            
-            // Assessment categories
-            'Assessment': 'Technology',
-            'Set 1': 'Technology',
-            'Set 2': 'Technology', 
-            'Set 3': 'Technology',
-            'Mock Exam 1': 'Technology',
-            'Mock Exam 2': 'Technology',
-            
-            // Default fallbacks
-            'Unknown': 'Technology',
-            'Uncategorized': 'Technology'
+            'Cloud Concepts': 'Cloud Concepts', 'Security and Compliance': 'Security and Compliance', 'Technology': 'Technology', 'Billing and Pricing': 'Billing and Pricing',
+            'Compute': 'Technology', 'Storage': 'Technology', 'Database': 'Technology', 'Networking': 'Technology', 'Analytics': 'Technology', 'Machine Learning': 'Technology',
+            'Management Tools': 'Technology', 'Developer Tools': 'Technology', 'IoT': 'Technology', 'Game Development': 'Technology', 'Mobile Services': 'Technology', 'AR & VR': 'Technology',
+            'Application Integration': 'Technology', 'AWS Global Infrastructure': 'Cloud Concepts', 'AWS Well-Architected Framework': 'Cloud Concepts', 'AWS Pricing': 'Billing and Pricing',
+            'AWS Support': 'Billing and Pricing', 'Security': 'Security and Compliance', 'Identity and Access Management': 'Security and Compliance', 'Compliance': 'Security and Compliance',
+            'Assessment': 'Technology', 'Set 1': 'Technology', 'Set 2': 'Technology', 'Set 3': 'Technology', 'Mock Exam 1': 'Technology', 'Mock Exam 2': 'Technology',
+            'Unknown': 'Technology', 'Uncategorized': 'Technology'
         };
         
         this.allQuestions.forEach(question => {
@@ -208,14 +165,11 @@ class ExamSimulator {
     generateExamQuestions() {
         const totalQuestions = Math.min(65, this.allQuestions.length);
         const selectedQuestions = [];
-        
-        // Calculate target counts for each domain
         const domainTargets = {};
         Object.keys(this.domainDistribution).forEach(domain => {
             domainTargets[domain] = Math.round(totalQuestions * this.domainDistribution[domain]);
         });
         
-        // Separate questions by domain
         const questionsByDomain = {};
         Object.keys(this.domainDistribution).forEach(domain => {
             questionsByDomain[domain] = [];
@@ -228,11 +182,9 @@ class ExamSimulator {
             }
         });
         
-        // Select questions for each domain
         Object.keys(domainTargets).forEach(domain => {
             const target = domainTargets[domain];
             const availableQuestions = questionsByDomain[domain];
-            
             if (availableQuestions.length > 0) {
                 const shuffled = this.shuffleArray(availableQuestions);
                 const selected = shuffled.slice(0, Math.min(target, shuffled.length));
@@ -240,7 +192,6 @@ class ExamSimulator {
             }
         });
         
-        // If we don't have enough questions, fill from remaining questions
         while (selectedQuestions.length < totalQuestions && selectedQuestions.length < this.allQuestions.length) {
             const remainingQuestions = this.allQuestions.filter(q => !selectedQuestions.includes(q));
             if (remainingQuestions.length > 0) {
@@ -250,9 +201,7 @@ class ExamSimulator {
             }
         }
         
-        // Shuffle the final selection
         this.examQuestions = this.shuffleArray(selectedQuestions).slice(0, totalQuestions);
-        
         console.log(`Generated exam with ${this.examQuestions.length} questions`);
         console.log('Domain distribution:', this.getActualDomainDistribution());
     }
@@ -276,43 +225,39 @@ class ExamSimulator {
     }
     
     setupEventListeners() {
-        // Exam control buttons
         document.getElementById('startExam').addEventListener('click', () => this.startExam());
         document.getElementById('stopExam').addEventListener('click', () => this.stopExam());
-        
-        // Timer controls
         document.getElementById('startGlobalTimer').addEventListener('click', () => this.startGlobalTimer());
         document.getElementById('pauseGlobalTimer').addEventListener('click', () => this.pauseGlobalTimer());
         document.getElementById('stopGlobalTimer').addEventListener('click', () => this.stopGlobalTimer());
         document.getElementById('resetGlobalTimer').addEventListener('click', () => this.resetGlobalTimer());
-        
-        // Navigation
         document.getElementById('prevQuestion').addEventListener('click', () => this.previousQuestion());
         document.getElementById('nextQuestion').addEventListener('click', () => this.nextQuestion());
         document.getElementById('finishExam').addEventListener('click', () => this.finishExam());
-        
-        // Export
         document.getElementById('exportResults').addEventListener('click', () => this.exportResults());
         
-        // Answer selection
         document.addEventListener('change', (e) => {
             if (e.target.matches('input[name="answer"]')) {
                 this.recordAnswer();
             }
         });
+
+        // Event delegation for clickable legend dots
+        document.getElementById('examLegendDots').addEventListener('click', (e) => {
+            if (e.target.matches('.legend-dot-nav')) {
+                const index = parseInt(e.target.dataset.questionIndex, 10);
+                this.navigateToQuestion(index);
+            }
+        });
     }
     
     showInitialState() {
-        // Show the initial exam controls and hide the exam interface
         document.getElementById('examControls').style.display = 'block';
         document.getElementById('examInterface').style.display = 'none';
-        
-        // Reset timer states
+        document.getElementById('examLegend').style.display = 'none';
         this.globalTimerPaused = false;
         this.updateGlobalTimerDisplay();
         this.updateQuestionTimerDisplay();
-        
-        // Disable review tab initially
         document.getElementById('reviewTab').style.opacity = '0.5';
         document.getElementById('reviewTab').style.pointerEvents = 'none';
     }
@@ -324,10 +269,7 @@ class ExamSimulator {
                 return;
             }
             
-            // Show loading state 
             document.getElementById('examStatus').innerHTML = '<div class="loading-message">Generating exam questions...</div>';
-            
-            // Generate exam questions
             this.generateExamQuestions();
             
             if (this.examQuestions.length === 0) {
@@ -337,20 +279,16 @@ class ExamSimulator {
             this.examInitialized = true;
             this.examStarted = true;
             this.globalTimerPaused = false;
-            
-            // Clear any previous question state
             this.questionRemainingTimes = {};
             this.questionTimes = {};
             
-            // Hide exam controls and show exam interface
             document.getElementById('examControls').style.display = 'none';
             document.getElementById('examInterface').style.display = 'block';
-            
-            // Display first question (this will start the question timer)
+            document.getElementById('examLegend').style.display = 'block';
+
+            this.createExamLegend();
             this.displayQuestion();
             this.updateUI();
-            
-            // Start the global timer automatically (this will also ensure question timer runs)
             this.startGlobalTimer();
             
             console.log('Exam started successfully');
@@ -369,19 +307,12 @@ class ExamSimulator {
         if (confirm('Are you sure you want to stop the exam? Your current progress will be saved and scored.')) {
             this.examFinished = true;
             this.stopGlobalTimer();
-            
-            // Save current question state
             if (this.examInitialized && this.examQuestions.length > 0) {
                 this.saveCurrentQuestionState();
             }
-            
-            // Enable review tab
             document.getElementById('reviewTab').style.opacity = '1';
             document.getElementById('reviewTab').style.pointerEvents = 'auto';
-            
-            // Switch to review tab
             document.getElementById('reviewTab').click();
-            
             alert('Exam stopped! Check the Review tab for your results.');
         }
     }
@@ -419,20 +350,13 @@ class ExamSimulator {
         const questionText = document.getElementById('questionText');
         const questionOptions = document.getElementById('questionOptions');
         
-        // Track that this question has been visited
         this.visitedQuestions.add(this.currentQuestionIndex);
-        
-        // Update question text
         questionText.textContent = question.question || 'Question text not available';
-        
-        // Clear previous options
         questionOptions.innerHTML = '';
         
-        // Determine if this is a multiple choice question
         const isMultiple = question.answer_letters && question.answer_letters.length > 1;
         const inputType = isMultiple ? 'checkbox' : 'radio';
         
-        // Add instruction for multiple choice
         if (isMultiple) {
             const instruction = document.createElement('div');
             instruction.className = 'question-instruction';
@@ -440,27 +364,21 @@ class ExamSimulator {
             questionOptions.appendChild(instruction);
         }
         
-        // Create options
         if (question.options && question.options.length > 0) {
             question.options.forEach((option, index) => {
                 const optionDiv = document.createElement('div');
                 optionDiv.className = 'option';
-                
                 const input = document.createElement('input');
                 input.type = inputType;
                 input.name = 'answer';
-                input.value = String.fromCharCode(65 + index); // A, B, C, D...
+                input.value = String.fromCharCode(65 + index);
                 input.id = `option${index}`;
-                
                 const label = document.createElement('label');
                 label.htmlFor = `option${index}`;
                 label.className = 'option-text';
                 label.textContent = option;
-                
                 optionDiv.appendChild(input);
                 optionDiv.appendChild(label);
-                
-                // Add click handler for the entire option div
                 optionDiv.addEventListener('click', (e) => {
                     if (e.target !== input) {
                         if (inputType === 'radio') {
@@ -471,21 +389,64 @@ class ExamSimulator {
                         this.recordAnswer();
                     }
                 });
-                
                 questionOptions.appendChild(optionDiv);
             });
         } else {
             questionOptions.innerHTML = '<div class="error-message">No options available for this question.</div>';
         }
         
-        // Restore previous answers
         this.restoreAnswers();
-        
-        // Start question timer (will check if global timer is paused)
         this.startQuestionTimer();
-        
-        // Update UI
         this.updateUI();
+        this.updateExamLegend();
+    }
+
+    createExamLegend() {
+        const dotsContainer = document.getElementById('examLegendDots');
+        dotsContainer.innerHTML = ''; // Clear previous legend
+        this.examQuestions.forEach((_, index) => {
+            const dot = document.createElement('div');
+            dot.className = 'legend-dot-nav';
+            dot.dataset.questionIndex = index;
+            dot.textContent = index + 1;
+            dotsContainer.appendChild(dot);
+        });
+        this.updateExamLegend();
+    }
+
+    updateExamLegend() {
+        if (!this.examStarted) return;
+        const dots = document.querySelectorAll('.legend-dot-nav');
+        dots.forEach((dot, index) => {
+            const questionId = this.examQuestions[index].id;
+            const hasAnswer = this.userAnswers[questionId] && this.userAnswers[questionId].length > 0;
+            const isVisited = this.visitedQuestions.has(index);
+
+            dot.classList.remove('not-visited', 'visited', 'answered', 'current');
+
+            if (index === this.currentQuestionIndex) {
+                dot.classList.add('current');
+            }
+
+            if (hasAnswer) {
+                dot.classList.add('answered');
+            } else if (isVisited) {
+                dot.classList.add('visited');
+            } else {
+                dot.classList.add('not-visited');
+            }
+        });
+    }
+
+    navigateToQuestion(index) {
+        if (!this.examStarted || this.examFinished || index === this.currentQuestionIndex) {
+            return;
+        }
+        if (index >= 0 && index < this.examQuestions.length) {
+            this.saveCurrentQuestionState();
+            this.currentQuestionIndex = index;
+            this.displayQuestion();
+        }
     }
     
     restoreAnswers() {
@@ -510,7 +471,6 @@ class ExamSimulator {
         
         this.userAnswers[questionId] = answers;
         
-        // Update visual selection
         document.querySelectorAll('.option').forEach(option => {
             const input = option.querySelector('input');
             if (input && input.checked) {
@@ -519,40 +479,27 @@ class ExamSimulator {
                 option.classList.remove('selected');
             }
         });
-        
-        // Record time spent on this question
-        if (this.questionStartTime) {
-            const timeSpent = Date.now() - this.questionStartTime;
-            this.questionTimes[questionId] = (this.questionTimes[questionId] || 0) + timeSpent;
-        }
+        this.updateExamLegend();
     }
     
     startGlobalTimer() {
         if (!this.examStarted) {
             this.examStarted = true;
         }
-        
         if (this.globalTimer) {
             clearInterval(this.globalTimer);
         }
-        
         this.globalTimerPaused = false;
-        
         this.globalTimer = setInterval(() => {
             this.globalTimeRemaining--;
             this.updateGlobalTimerDisplay();
-            
             if (this.globalTimeRemaining <= 0) {
                 this.finishExam();
             }
         }, 1000);
-        
-        // Resume question timer if we're in an exam
         if (this.examInitialized && this.examQuestions.length > 0) {
             this.startQuestionTimer();
         }
-        
-        // Update button states
         document.getElementById('startGlobalTimer').disabled = true;
         document.getElementById('pauseGlobalTimer').disabled = false;
         document.getElementById('stopGlobalTimer').disabled = false;
@@ -563,13 +510,8 @@ class ExamSimulator {
             clearInterval(this.globalTimer);
             this.globalTimer = null;
         }
-        
         this.globalTimerPaused = true;
-        
-        // Also pause the question timer
         this.stopQuestionTimer();
-        
-        // Update button states
         document.getElementById('startGlobalTimer').disabled = false;
         document.getElementById('pauseGlobalTimer').disabled = true;
     }
@@ -579,13 +521,8 @@ class ExamSimulator {
             clearInterval(this.globalTimer);
             this.globalTimer = null;
         }
-        
         this.globalTimerPaused = true;
-        
-        // Also stop the question timer
         this.stopQuestionTimer();
-        
-        // Update button states
         document.getElementById('startGlobalTimer').disabled = false;
         document.getElementById('pauseGlobalTimer').disabled = true;
         document.getElementById('stopGlobalTimer').disabled = true;
@@ -596,34 +533,20 @@ class ExamSimulator {
         this.globalTimeRemaining = 90 * 60;
         this.globalTimerPaused = false;
         this.updateGlobalTimerDisplay();
-        
-        // Reset question timer to initial state
         this.questionTimeRemaining = 90;
         this.updateQuestionTimerDisplay();
-        
-        // Clear all stored question times
         this.questionRemainingTimes = {};
         this.questionTimes = {};
-        
-        // Reset button states
         document.getElementById('startGlobalTimer').disabled = false;
         document.getElementById('pauseGlobalTimer').disabled = true;
         document.getElementById('stopGlobalTimer').disabled = true;
     }
     
     startQuestionTimer() {
-        // Don't start question timer if global timer is paused
-        if (this.globalTimerPaused) {
-            return;
-        }
-        
-        if (this.questionTimer) {
-            clearInterval(this.questionTimer);
-        }
+        if (this.globalTimerPaused) return;
+        if (this.questionTimer) clearInterval(this.questionTimer);
         
         const questionId = this.examQuestions[this.currentQuestionIndex].id;
-        
-        // Use stored remaining time if available, otherwise start with 90 seconds
         this.questionTimeRemaining = this.questionRemainingTimes[questionId] !== undefined 
             ? this.questionRemainingTimes[questionId] 
             : 90;
@@ -635,7 +558,6 @@ class ExamSimulator {
             if (!this.globalTimerPaused) {
                 this.questionTimeRemaining--;
                 this.updateQuestionTimerDisplay();
-                
                 if (this.questionTimeRemaining <= 0) {
                     clearInterval(this.questionTimer);
                     this.questionTimer = null;
@@ -649,8 +571,6 @@ class ExamSimulator {
             clearInterval(this.questionTimer);
             this.questionTimer = null;
         }
-        
-        // Save the remaining time for the current question
         if (this.examQuestions.length > 0) {
             const questionId = this.examQuestions[this.currentQuestionIndex].id;
             this.questionRemainingTimes[questionId] = this.questionTimeRemaining;
@@ -672,29 +592,17 @@ class ExamSimulator {
     }
     
     updateUI() {
-        // Update question counter
         document.getElementById('currentQuestion').textContent = this.currentQuestionIndex + 1;
         document.getElementById('totalQuestions').textContent = this.examQuestions.length;
-        
-        // Update progress bar
         const progress = ((this.currentQuestionIndex + 1) / this.examQuestions.length) * 100;
         document.getElementById('progressFill').style.width = `${progress}%`;
-        
-        // Update navigation buttons
         document.getElementById('prevQuestion').disabled = this.currentQuestionIndex === 0;
         document.getElementById('nextQuestion').disabled = this.currentQuestionIndex === this.examQuestions.length - 1;
-        
-        // Show finish button on last question
-        if (this.currentQuestionIndex === this.examQuestions.length - 1) {
-            document.getElementById('finishExam').style.display = 'block';
-        } else {
-            document.getElementById('finishExam').style.display = 'none';
-        }
+        document.getElementById('finishExam').style.display = this.currentQuestionIndex === this.examQuestions.length - 1 ? 'block' : 'none';
     }
     
     previousQuestion() {
         if (this.currentQuestionIndex > 0) {
-            // Save current question state before navigating away
             this.saveCurrentQuestionState();
             this.currentQuestionIndex--;
             this.displayQuestion();
@@ -703,7 +611,6 @@ class ExamSimulator {
     
     nextQuestion() {
         if (this.currentQuestionIndex < this.examQuestions.length - 1) {
-            // Save current question state before navigating away
             this.saveCurrentQuestionState();
             this.currentQuestionIndex++;
             this.displayQuestion();
@@ -711,73 +618,81 @@ class ExamSimulator {
     }
     
     saveCurrentQuestionState() {
-        // Record the current answer
         this.recordAnswer();
-        
-        // Stop the question timer and save remaining time
+        if (this.questionStartTime) {
+            const timeSpent = Date.now() - this.questionStartTime;
+            const questionId = this.examQuestions[this.currentQuestionIndex].id;
+            this.questionTimes[questionId] = (this.questionTimes[questionId] || 0) + timeSpent;
+            this.questionStartTime = null;
+        }
         this.stopQuestionTimer();
     }
     
     finishExam() {
-        // Save current question state
         this.saveCurrentQuestionState();
-        
         this.examFinished = true;
         this.stopGlobalTimer();
-        
-        // Enable review tab
         document.getElementById('reviewTab').style.opacity = '1';
         document.getElementById('reviewTab').style.pointerEvents = 'auto';
-        
-        // Switch to review tab
         document.getElementById('reviewTab').click();
-        
         alert('Exam completed! Check the Review tab for your results.');
     }
     
     displayReview() {
         const scoreResult = this.calculateScore();
-        const correctAnswers = scoreResult.correct;
-        const totalVisited = scoreResult.totalVisited;
-        const totalQuestions = this.examQuestions.length;
-        const percentage = totalVisited > 0 ? Math.round((correctAnswers / totalVisited) * 100) : 0;
+        const percentage = scoreResult.totalVisited > 0 ? Math.round((scoreResult.correct / scoreResult.totalVisited) * 100) : 0;
         const totalTimeSpent = this.calculateTotalTime();
         
-        // Update score display
         document.getElementById('scorePercentage').textContent = `${percentage}%`;
-        document.getElementById('correctAnswers').textContent = correctAnswers;
-        document.getElementById('totalAnswered').textContent = totalVisited;
+        document.getElementById('correctAnswers').textContent = scoreResult.correct;
+        document.getElementById('totalAnswered').textContent = scoreResult.totalVisited;
         document.getElementById('totalTime').textContent = this.formatTime(totalTimeSpent);
         
-        // Add incomplete exam indicator if applicable
         const scoreDetails = document.querySelector('.score-details');
-        // Remove any existing incomplete note
         const existingNote = scoreDetails.querySelector('.incomplete-note');
-        if (existingNote) {
-            existingNote.remove();
-        }
+        if (existingNote) existingNote.remove();
         
-        if (totalVisited < totalQuestions) {
+        if (scoreResult.totalVisited < this.examQuestions.length) {
             const incompleteNote = document.createElement('p');
             incompleteNote.className = 'incomplete-note';
-            incompleteNote.textContent = `Incomplete Exam: ${totalVisited}/${totalQuestions} questions attempted`;
+            incompleteNote.textContent = `Incomplete Exam: ${scoreResult.totalVisited}/${this.examQuestions.length} questions attempted`;
             incompleteNote.style.color = '#dc3545';
             incompleteNote.style.fontWeight = 'bold';
             scoreDetails.appendChild(incompleteNote);
         }
         
-        // Update score circle color
         const scoreCircle = document.querySelector('.score-circle');
-        if (percentage >= 70) {
-            scoreCircle.style.background = '#28a745';
-        } else if (percentage >= 50) {
-            scoreCircle.style.background = '#ffc107';
-        } else {
-            scoreCircle.style.background = '#dc3545';
-        }
+        if (percentage >= 70) scoreCircle.style.background = '#28a745';
+        else if (percentage >= 50) scoreCircle.style.background = '#ffc107';
+        else scoreCircle.style.background = '#dc3545';
         
-        // Display review questions
+        // Display time statistics
+        const timeStats = this.calculateTimeStats();
+        document.getElementById('avgTime').textContent = this.formatTime(timeStats.avg);
+        document.getElementById('minTime').textContent = this.formatTime(timeStats.min);
+        document.getElementById('maxTime').textContent = this.formatTime(timeStats.max);
+        document.getElementById('medianTime').textContent = this.formatTime(timeStats.median);
+
         this.displayReviewQuestions();
+    }
+
+    calculateTimeStats() {
+        const times = Object.values(this.questionTimes);
+        if (times.length === 0) {
+            return { min: 0, max: 0, avg: 0, median: 0 };
+        }
+
+        const min = Math.min(...times);
+        const max = Math.max(...times);
+        const avg = times.reduce((sum, time) => sum + time, 0) / times.length;
+
+        const sortedTimes = [...times].sort((a, b) => a - b);
+        const mid = Math.floor(sortedTimes.length / 2);
+        const median = sortedTimes.length % 2 !== 0
+            ? sortedTimes[mid]
+            : (sortedTimes[mid - 1] + sortedTimes[mid]) / 2;
+
+        return { min, max, avg, median };
     }
     
     displayReviewQuestions() {
@@ -785,10 +700,7 @@ class ExamSimulator {
         reviewContainer.innerHTML = '';
         
         this.examQuestions.forEach((question, index) => {
-            // Only show visited questions
-            if (!this.visitedQuestions.has(index)) {
-                return;
-            }
+            if (!this.visitedQuestions.has(index)) return;
             
             const userAnswers = this.userAnswers[question.id] || [];
             const isCorrect = this.isAnswerCorrect(question, userAnswers);
@@ -797,20 +709,16 @@ class ExamSimulator {
             const questionDiv = document.createElement('div');
             questionDiv.className = `review-question ${isCorrect ? 'correct' : 'incorrect'}`;
             
-            // Format user answers for display
             const userAnswerTexts = userAnswers.map(letter => {
                 const optionIndex = letter.charCodeAt(0) - 65;
                 return question.options && question.options[optionIndex] 
-                    ? `${letter}. ${question.options[optionIndex]}`
-                    : letter;
+                    ? `${letter}. ${question.options[optionIndex]}` : letter;
             });
             
-            // Format correct answers for display
             const correctAnswerTexts = question.answer_letters.map(letter => {
                 const optionIndex = letter.charCodeAt(0) - 65;
                 return question.options && question.options[optionIndex]
-                    ? `${letter}. ${question.options[optionIndex]}`
-                    : letter;
+                    ? `${letter}. ${question.options[optionIndex]}` : letter;
             });
             
             questionDiv.innerHTML = `
@@ -829,16 +737,13 @@ class ExamSimulator {
                         '<div class="review-answer user-answer">No answer selected</div>'
                     }
                     <h4>Correct Answer(s):</h4>
-                    ${correctAnswerTexts.map(answer => 
-                        `<div class="review-answer correct-answer">${answer}</div>`
-                    ).join('')}
+                    ${correctAnswerTexts.map(answer => `<div class="review-answer correct-answer">${answer}</div>`).join('')}
                 </div>
                 <div class="review-explanation">
                     <h4>Explanation:</h4>
                     <div>${question.explanation || 'No explanation available.'}</div>
                 </div>
             `;
-            
             reviewContainer.appendChild(questionDiv);
         });
     }
@@ -846,9 +751,7 @@ class ExamSimulator {
     calculateScore() {
         let correct = 0;
         let totalVisited = 0;
-        
         this.examQuestions.forEach((question, index) => {
-            // Only count visited questions
             if (this.visitedQuestions.has(index)) {
                 totalVisited++;
                 const userAnswers = this.userAnswers[question.id] || [];
@@ -857,14 +760,12 @@ class ExamSimulator {
                 }
             }
         });
-        
         return { correct, totalVisited };
     }
     
     isAnswerCorrect(question, userAnswers) {
         const correctAnswers = (question.answer_letters || []).sort();
         const sortedUserAnswers = userAnswers.sort();
-        
         return correctAnswers.length === sortedUserAnswers.length &&
                correctAnswers.every((answer, index) => answer === sortedUserAnswers[index]);
     }
@@ -874,9 +775,9 @@ class ExamSimulator {
     }
     
     formatTime(milliseconds) {
-        const seconds = Math.floor(milliseconds / 1000);
-        const minutes = Math.floor(seconds / 60);
-        const remainingSeconds = seconds % 60;
+        const totalSeconds = Math.floor(milliseconds / 1000);
+        const minutes = Math.floor(totalSeconds / 60);
+        const remainingSeconds = totalSeconds % 60;
         return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
     }
     
@@ -895,17 +796,14 @@ class ExamSimulator {
     
     generateResultsMarkdown() {
         const scoreResult = this.calculateScore();
-        const correctAnswers = scoreResult.correct;
-        const totalVisited = scoreResult.totalVisited;
-        const totalQuestions = this.examQuestions.length;
-        const percentage = totalVisited > 0 ? Math.round((correctAnswers / totalVisited) * 100) : 0;
+        const percentage = scoreResult.totalVisited > 0 ? Math.round((scoreResult.correct / scoreResult.totalVisited) * 100) : 0;
         const totalTimeSpent = this.calculateTotalTime();
         
         let markdown = `# AWS CLF-C02 Exam Results\n\n`;
         markdown += `**Date:** ${new Date().toLocaleDateString()}\n`;
-        markdown += `**Score:** ${correctAnswers}/${totalVisited} (${percentage}%)\n`;
-        if (totalVisited < totalQuestions) {
-            markdown += `**Exam Status:** Incomplete - ${totalVisited}/${totalQuestions} questions attempted\n`;
+        markdown += `**Score:** ${scoreResult.correct}/${scoreResult.totalVisited} (${percentage}%)\n`;
+        if (scoreResult.totalVisited < this.examQuestions.length) {
+            markdown += `**Exam Status:** Incomplete - ${scoreResult.totalVisited}/${this.examQuestions.length} questions attempted\n`;
         } else {
             markdown += `**Exam Status:** Complete\n`;
         }
@@ -923,10 +821,7 @@ class ExamSimulator {
         markdown += `\n## Detailed Results\n\n`;
         
         this.examQuestions.forEach((question, index) => {
-            // Only include visited questions in export
-            if (!this.visitedQuestions.has(index)) {
-                return;
-            }
+            if (!this.visitedQuestions.has(index)) return;
             
             const userAnswers = this.userAnswers[question.id] || [];
             const isCorrect = this.isAnswerCorrect(question, userAnswers);
@@ -941,9 +836,7 @@ class ExamSimulator {
             if (userAnswers.length > 0) {
                 userAnswers.forEach(letter => {
                     const optionIndex = letter.charCodeAt(0) - 65;
-                    const optionText = question.options && question.options[optionIndex] 
-                        ? question.options[optionIndex] 
-                        : letter;
+                    const optionText = question.options && question.options[optionIndex] ? question.options[optionIndex] : letter;
                     markdown += `- ${letter}. ${optionText}\n`;
                 });
             } else {
@@ -953,9 +846,7 @@ class ExamSimulator {
             markdown += `\n**Correct Answer(s):**\n`;
             (question.answer_letters || []).forEach(letter => {
                 const optionIndex = letter.charCodeAt(0) - 65;
-                const optionText = question.options && question.options[optionIndex] 
-                    ? question.options[optionIndex] 
-                    : letter;
+                const optionText = question.options && question.options[optionIndex] ? question.options[optionIndex] : letter;
                 markdown += `- ${letter}. ${optionText}\n`;
             });
             
@@ -968,29 +859,23 @@ class ExamSimulator {
     
     calculateDomainStats() {
         const stats = {};
-        
         this.examQuestions.forEach((question, index) => {
-            // Only count visited questions
             if (this.visitedQuestions.has(index)) {
                 const domain = question.mappedDomain;
                 if (!stats[domain]) {
                     stats[domain] = { correct: 0, total: 0 };
                 }
-                
                 stats[domain].total++;
-                
                 const userAnswers = this.userAnswers[question.id] || [];
                 if (this.isAnswerCorrect(question, userAnswers)) {
                     stats[domain].correct++;
                 }
             }
         });
-        
         return stats;
     }
 }
 
-// Initialize the application when the page loads
 document.addEventListener('DOMContentLoaded', () => {
     new ExamSimulator();
 });

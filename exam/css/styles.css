@@ -21,7 +21,7 @@ body {
 /* Header styles */
 header {
     background: white;
-    padding: 20px;
+    padding: 15px 20px; /* Reduced padding */
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     margin-bottom: 20px;
@@ -32,16 +32,18 @@ header {
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
+    gap: 20px;
 }
 
 header h1 {
     color: #232f3e;
-    font-size: 2rem;
+    font-size: 1.7rem; /* Reduced font size */
+    flex-grow: 1;
 }
 
 .timer-controls {
     display: flex;
-    gap: 30px;
+    gap: 25px; /* Reduced gap */
     align-items: center;
 }
 
@@ -50,21 +52,21 @@ header h1 {
 }
 
 .global-timer h3, .question-timer h3 {
-    font-size: 0.9rem;
+    font-size: 0.8rem; /* Reduced font size */
     color: #666;
-    margin-bottom: 5px;
+    margin-bottom: 4px;
 }
 
 .timer-display {
-    font-size: 2rem;
+    font-size: 1.8rem; /* Reduced font size */
     font-weight: bold;
     color: #232f3e;
     background: #f8f9fa;
-    padding: 10px 20px;
+    padding: 5px 15px; /* Reduced padding */
     border-radius: 6px;
     border: 2px solid #e9ecef;
-    margin-bottom: 10px;
-    min-width: 120px;
+    margin-bottom: 8px; /* Reduced margin */
+    min-width: 110px;
 }
 
 .timer-buttons {
@@ -74,13 +76,13 @@ header h1 {
 }
 
 .timer-buttons button {
-    padding: 5px 10px;
+    padding: 4px 8px; /* Reduced padding */
     border: none;
     border-radius: 4px;
     background: #007bff;
     color: white;
     cursor: pointer;
-    font-size: 0.8rem;
+    font-size: 0.75rem; /* Reduced font size */
     transition: background-color 0.2s;
 }
 
@@ -97,8 +99,8 @@ header h1 {
 .exam-legend {
     display: none; /* Hidden by default, shown by JS */
     border-top: 1px solid #e9ecef;
-    padding-top: 15px;
-    margin-top: 15px;
+    padding-top: 12px; /* Reduced padding */
+    margin-top: 12px; /* Reduced margin */
 }
 
 .legend-key {
@@ -220,8 +222,8 @@ header h1 {
     background: white;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    padding: 30px;
-    min-height: 600px;
+    padding: 25px; /* Reduced padding */
+    min-height: 550px;
 }
 
 .tab-content.active {
@@ -297,8 +299,8 @@ header h1 {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 30px;
-    padding: 20px;
+    margin-bottom: 20px; /* Reduced margin */
+    padding: 15px; /* Reduced padding */
     background: #f8f9fa;
     border-radius: 8px;
 }
@@ -353,13 +355,13 @@ header h1 {
 }
 
 .question-container {
-    margin-bottom: 30px;
+    margin-bottom: 20px; /* Reduced margin */
 }
 
 .question-content h2 {
-    font-size: 1.3rem;
+    font-size: 1.2rem; /* Reduced font size */
     line-height: 1.5;
-    margin-bottom: 25px;
+    margin-bottom: 20px; /* Reduced margin */
     color: #232f3e;
 }
 
@@ -376,13 +378,13 @@ header h1 {
 .question-options {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 12px; /* Reduced gap */
 }
 
 .option {
     display: flex;
     align-items: flex-start;
-    padding: 15px;
+    padding: 12px 15px; /* Reduced padding */
     border: 2px solid #e9ecef;
     border-radius: 8px;
     cursor: pointer;
@@ -683,27 +685,50 @@ header h1 {
 }
 
 /* Responsive design */
+@media (max-width: 992px) {
+    .header-top {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
 @media (max-width: 768px) {
     .container {
         padding: 10px;
     }
-    
-    .header-top {
-        flex-direction: column;
-        text-align: center;
-        gap: 15px;
+
+    header {
+        padding: 15px;
     }
     
+    header h1 {
+        font-size: 1.6rem;
+    }
+
     .timer-controls {
-        flex-direction: column;
         gap: 20px;
-        width: 100%;
+    }
+
+    .timer-display {
+        font-size: 1.8rem;
+        padding: 8px 15px;
+    }
+
+    .legend-dot-nav {
+        width: 26px;
+        height: 26px;
+        font-size: 0.75rem;
+    }
+
+    .exam-legend-dots {
+        gap: 5px;
     }
     
     .exam-header {
         flex-direction: column;
         gap: 15px;
         text-align: center;
+        padding: 15px;
     }
     
     .exam-progress {
@@ -719,6 +744,14 @@ header h1 {
     .tab-content {
         padding: 20px;
     }
+
+    .question-content h2 {
+        font-size: 1.15rem;
+    }
+
+    .option {
+        padding: 12px;
+    }
     
     .navigation-controls {
         flex-direction: column;
@@ -728,7 +761,16 @@ header h1 {
 
 @media (max-width: 480px) {
     header h1 {
-        font-size: 1.5rem;
+        font-size: 1.3rem;
+    }
+
+    .header-top {
+        align-items: center;
+    }
+
+    .timer-controls {
+        flex-direction: column;
+        width: 100%;
     }
     
     .timer-display {
@@ -736,9 +778,19 @@ header h1 {
         padding: 8px 15px;
         min-width: 100px;
     }
+
+    .legend-key {
+        font-size: 0.8rem;
+        gap: 10px;
+    }
+
+    .legend-dot-nav {
+        width: 24px;
+        height: 24px;
+    }
     
     .question-content h2 {
-        font-size: 1.1rem;
+        font-size: 1.05rem;
     }
     
     .tab-content {
@@ -747,5 +799,9 @@ header h1 {
 
     .stats-grid {
         grid-template-columns: 1fr;
+    }
+
+    .option-text {
+        font-size: 0.95rem;
     }
 }

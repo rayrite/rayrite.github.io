@@ -64,6 +64,12 @@
                 <!-- Exam Content (hidden initially) -->
                 <div id="examInterface" class="exam-interface" style="display: none;">
                     <div class="exam-header">
+                         <!-- Hamburger Menu Toggle for Mobile -->
+                        <button id="mobileMenuToggle" class="mobile-menu-toggle">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </button>
                         <div class="question-counter">
                             <span id="currentQuestion">1</span> / <span id="totalQuestions">65</span>
                         </div>
@@ -140,6 +146,19 @@
             </div>
         </main>
     </div>
+
+    <!-- Mobile Menu (Side Panel) -->
+    <div id="mobileMenu" class="mobile-menu">
+        <div class="mobile-menu-header">
+            <h3>Menu</h3>
+            <button id="closeMobileMenu" class="close-mobile-menu">&times;</button>
+        </div>
+        <div class="mobile-menu-content">
+            <button id="stopExamMobile" class="stop-exam-button">Stop Exam</button>
+            <!-- Other menu items can be added here -->
+        </div>
+    </div>
+    <div id="overlay" class="overlay"></div>
 
     <script src="js/app.js"></script>
 </body>

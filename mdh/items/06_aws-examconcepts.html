@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS Certified Cloud Practitioner (CLF-C02) Study Guide</title>
+    <style>
+        /* --- General & Print Styles --- */
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.2; /* Reduced line height */
+            color: #333;
+            margin: 0;
+            padding: 0.5em; /* Reduced padding */
+            background-color: #f4f4f4;
+            font-size: 10pt;
+        }
+
+        /* --- Typography --- */
+        h1, h2, h3 {
+            font-family: 'Helvetica Neue', 'Arial', sans-serif;
+            color: #111;
+            line-height: 1.1;
+        }
+
+        h1 {
+            font-size: 18px; /* Reduced size */
+            text-align: center;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 4px;
+            margin-bottom: 0.8em;
+        }
+
+        h2 {
+            font-size: 16px;
+            padding: 4px 8px; /* Reduced padding */
+            margin-top: 0;
+            margin-bottom: 0.5em; /* Reduced margin */
+            border-radius: 4px 4px 0 0;
+            color: #fff;
+        }
+
+        h3 {
+            font-size: 14px;
+            margin-top: 1em;
+            margin-bottom: 0.5em;
+            padding-left: 8px;
+            border-bottom: 1px solid #eee;
+        }
+
+        p {
+            margin-bottom: 0.4em;
+            padding: 0 8px;
+            font-size: 11pt; /* Increased font size */
+        }
+
+        strong {
+            font-weight: bold;
+        }
+
+        .design-principles-title {
+            font-weight: bold;
+            font-style: italic;
+            margin-top: 0.6em;
+            margin-bottom: 0.4em;
+            display: block;
+            padding: 0 8px;
+            font-size: 11pt; /* Increased font size */
+        }
+
+        /* --- List Styling --- */
+        ul {
+            list-style-type: disc;
+            padding-left: 22px; /* Reduced padding */
+            margin: 0 8px; /* Added horizontal margin */
+        }
+
+        li {
+            margin-bottom: 0.3em; /* Reduced margin */
+            font-size: 11pt; /* Increased font size */
+        }
+
+        /* --- Section & Color Styling --- */
+        .pillar-section {
+            margin-bottom: 0.8em; /* Reduced space between cards */
+            border-top: 4px solid;
+            padding: 0;
+            border-radius: 5px;
+            background-color: #fdfdfd;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* Reduced shadow */
+        }
+        
+        /* Inner container for padding */
+        .pillar-content {
+            padding: 0 4px 8px 4px; /* Reduced padding */
+        }
+
+        .domain1 { border-color: #0073bb; }
+        .domain1 h2 { background-color: #0073bb; }
+
+        .domain2 { border-color: #d13212; }
+        .domain2 h2 { background-color: #d13212; }
+
+        .domain3 { border-color: #5d3da1; }
+        .domain3 h2 { background-color: #5d3da1; }
+
+        .domain4 { border-color: #1D8102; }
+        .domain4 h2 { background-color: #1D8102; }
+
+
+        /* --- Print-Specific Optimizations --- */
+        @media print {
+            body {
+                font-size: 9pt;
+                margin: 0.2in;
+                padding: 0;
+                color: #000;
+                background-color: #fff;
+                box-shadow: none;
+            }
+            .pillar-section {
+                 -webkit-print-color-adjust: exact;
+                color-adjust: exact;
+                box-shadow: none;
+                margin-bottom: 0.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>AWS Certified Cloud Practitioner (CLF-C02) Study Guide</h1>
+
+    <div class="pillar-section domain1">
+        <h2>Domain 1: Cloud Concepts (24%)</h2>
+        <div class="pillar-content">
+            <h3>1.1 Define the AWS Cloud and its value proposition</h3>
+            <ul>
+                <li><strong>Cloud Computing:</strong> On-demand delivery of IT resources over the internet with pay-as-you-go pricing.</li>
+                <li><strong>Deployment Models:</strong>
+                    <ul>
+                        <li><strong>Cloud:</strong> Fully on AWS.</li>
+                        <li><strong>On-premises (Private Cloud):</strong> Using virtualization and resource management tools in your own data center.</li>
+                        <li><strong>Hybrid:</strong> Connecting on-premises infrastructure to the cloud.</li>
+                    </ul>
+                </li>
+                 <li><strong>Types of Cloud Computing:</strong>
+                    <ul>
+                        <li><strong>IaaS (Infrastructure as a Service):</strong> Basic building blocks for cloud IT (e.g., EC2). You manage the OS and applications.</li>
+                        <li><strong>PaaS (Platform as a Service):</strong> AWS manages the underlying infrastructure, you focus on deploying applications (e.g., Elastic Beanstalk).</li>
+                        <li><strong>SaaS (Software as a Service):</strong> A completed product managed by the provider (e.g., AWS Rekognition, Gmail).</li>
+                    </ul>
+                </li>
+                <li><strong>Six Advantages of Cloud Computing:</strong>
+                    <ol>
+                        <li>Trade capital expense (CAPEX) for operational expense (OPEX).</li>
+                        <li>Benefit from massive economies of scale.</li>
+                        <li>Stop guessing capacity.</li>
+                        <li>Increase speed and agility.</li>
+                        <li>Stop spending money on running and maintaining data centers.</li>
+                        <li>Go global in minutes.</li>
+                    </ol>
+                </li>
+            </ul>
+
+            <h3>1.2 Identify aspects of AWS Cloud economics</h3>
+            <ul>
+                <li><strong>Total Cost of Ownership (TCO):</strong> Financial estimate to help identify direct and indirect costs of a system. The TCO Calculator helps compare the costs of running your applications in an on-premises or colocation environment to AWS.</li>
+                 <li><strong>Migration Strategies (The 7 Rs):</strong> Retire, Retain, Relocate, Rehost (lift-and-shift), Replatform (lift-and-reshape), Repurchase (drop-and-shop), Refactor/Re-architect.</li>
+            </ul>
+
+            <h3>1.3 Explain the different cloud architecture design principles</h3>
+            <ul>
+                 <li><strong>Well-Architected Framework:</strong> A set of best practices for cloud architects to build secure, high-performing, resilient, and efficient infrastructure for their applications.</li>
+                 <li><strong>The 6 Pillars:</strong>
+                    <ol>
+                        <li><strong>Operational Excellence:</strong> Run and monitor systems to deliver business value. (Perform operations as code, make small reversible changes).</li>
+                        <li><strong>Security:</strong> Protect information, systems, and assets. (Implement strong identity, enable traceability, apply security at all layers).</li>
+                        <li><strong>Reliability:</strong> Recover from disruptions and meet demand. (Test recovery, automatically recover from failure, scale horizontally).</li>
+                        <li><strong>Performance Efficiency:</strong> Use computing resources efficiently. (Go global in minutes, use serverless architectures, experiment more often).</li>
+                        <li><strong>Cost Optimization:</strong> Deliver business value at the lowest price. (Adopt a consumption model, measure efficiency, stop spending on data centers).</li>
+                        <li><strong>Sustainability:</strong> Minimize the environmental impacts of running cloud workloads. (Understand your impact, maximize utilization, use managed services).</li>
+                    </ol>
+                 </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="pillar-section domain2">
+        <h2>Domain 2: Security and Compliance (30%)</h2>
+        <div class="pillar-content">
+            <h3>2.1 Define the AWS shared responsibility model</h3>
+            <ul>
+                <li><strong>AWS's Responsibility (Security OF the Cloud):</strong> Protecting the infrastructure that runs all of the services offered by AWS. This includes hardware, software, networking, and facilities that run AWS services.</li>
+                <li><strong>Customer's Responsibility (Security IN the Cloud):</strong> Management of guest OS, application software, firewall configuration (Security Groups), data encryption, and IAM.</li>
+            </ul>
+            <h3>2.2 Define AWS Cloud security and compliance concepts</h3>
+            <ul>
+                <li><strong>IAM (Identity and Access Management):</strong> Manage access to AWS services and resources securely.
+                    <ul>
+                        <li><strong>Users:</strong> End users (people, applications). Don't use the root user for daily tasks.</li>
+                        <li><strong>Groups:</strong> A collection of users to simplify permission management.</li>
+                        <li><strong>Roles:</strong> Assumed by trusted entities (users, services, applications) to gain temporary permissions.</li>
+                        <li><strong>Policies:</strong> JSON documents that define permissions (least privilege principle).</li>
+                        <li><strong>MFA (Multi-Factor Authentication):</strong> An extra layer of security for user logins.</li>
+                    </ul>
+                </li>
+                <li><strong>AWS Artifact:</strong> On-demand access to AWS's security and compliance reports (e.g., PCI, SOC).</li>
+                <li><strong>AWS Shield:</strong> Managed DDoS protection. Standard is free; Advanced provides additional protection.</li>
+                <li><strong>AWS WAF (Web Application Firewall):</strong> Protects web applications from common web exploits (Layer 7) like SQL injection and XSS. Deployed on CloudFront, ALB, or API Gateway.</li>
+                <li><strong>AWS KMS (Key Management Service):</strong> Managed service to create and control encryption keys used to encrypt data.</li>
+                <li><strong>Amazon Inspector:</strong> Automated security assessment service for EC2, ECR container images, and Lambda functions to check for vulnerabilities and network accessibility.</li>
+                <li><strong>Amazon GuardDuty:</strong> Intelligent threat detection service that continuously monitors for malicious activity using ML on CloudTrail, VPC Flow Logs, and DNS logs.</li>
+                <li><strong>AWS Security Hub:</strong> A central place that aggregates, organizes, and prioritizes security alerts or findings from various AWS services.</li>
+                <li><strong>Amazon Macie:</strong> A data security service that uses ML to discover, classify, and protect sensitive data (like PII) stored in S3.</li>
+                <li><strong>AWS Config:</strong> Assesses, audits, and evaluates the configurations of your AWS resources. Tracks changes over time.</li>
+                 <li><strong>AWS CloudTrail:</strong> Logs all API calls made within your AWS account, providing an audit trail of actions.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="pillar-section domain3">
+        <h2>Domain 3: Cloud Technology and Services (34%)</h2>
+        <div class="pillar-content">
+            <h3>3.1 Define methods of deploying and operating in the AWS Cloud</h3>
+            <ul>
+                <li><strong>AWS Management Console:</strong> Web-based user interface.</li>
+                <li><strong>AWS CLI (Command Line Interface):</strong> Manage AWS services from the command line using access keys.</li>
+                <li><strong>AWS SDK (Software Development Kit):</strong> Language-specific APIs to manage services programmatically.</li>
+                <li><strong>AWS Elastic Beanstalk:</strong> PaaS for deploying and scaling web applications without worrying about the underlying infrastructure.</li>
+                <li><strong>AWS CloudFormation:</strong> Infrastructure as Code service to model and provision all your cloud resources in a declarative template.</li>
+            </ul>
+            <h3>3.2 Define the AWS global infrastructure</h3>
+            <ul>
+                <li><strong>Regions:</strong> A physical location in the world with multiple Availability Zones. Most services are region-scoped.</li>
+                <li><strong>Availability Zones (AZs):</strong> One or more discrete data centers with redundant power, networking, and connectivity. They are isolated from each other.</li>
+                <li><strong>Edge Locations / Points of Presence:</strong> Used by CloudFront to cache content closer to end users for lower latency.</li>
+            </ul>
+            <h3>3.3 Identify the core AWS services</h3>
+            <ul>
+                <li><strong>Compute:</strong>
+                    <ul>
+                        <li><strong>EC2 (Elastic Compute Cloud):</strong> Virtual servers (instances) in the cloud. Offers various instance types (General Purpose, Compute/Memory/Storage Optimized). Purchasing options include On-Demand, Reserved, Spot, and Dedicated.</li>
+                        <li><strong>Lambda:</strong> Serverless, event-driven compute service that lets you run code without provisioning servers.</li>
+                        <li><strong>Auto Scaling Group (ASG):</strong> Automatically adjusts the number of EC2 instances to maintain performance and optimize costs.</li>
+                        <li><strong>Elastic Load Balancing (ELB):</strong> Distributes incoming application traffic across multiple targets, such as EC2 instances. Types include Application (ALB), Network (NLB), and Gateway (GWLB).</li>
+                        <li><strong>ECS & Fargate:</strong> Run Docker containers. ECS requires managing EC2 instances, while Fargate is serverless.</li>
+                    </ul>
+                </li>
+                <li><strong>Storage:</strong>
+                    <ul>
+                        <li><strong>S3 (Simple Storage Service):</strong> Infinitely scalable object storage. Buckets must have a globally unique name. Key features include Storage Classes (Standard, IA, One Zone-IA, Glacier), Versioning, and Replication.</li>
+                        <li><strong>EBS (Elastic Block Store):</strong> Network-attached block storage for EC2 instances. Bound to a specific AZ.</li>
+                        <li><strong>EFS (Elastic File System):</strong> Managed network file system (NFS) that can be mounted on multiple EC2 instances across AZs.</li>
+                        <li><strong>S3 Glacier:</strong> Low-cost storage for data archiving and long-term backup.</li>
+                        <li><strong>AWS Storage Gateway:</strong> Hybrid service connecting on-premises storage to AWS cloud storage.</li>
+                    </ul>
+                </li>
+                 <li><strong>Networking:</strong>
+                    <ul>
+                        <li><strong>VPC (Virtual Private Cloud):</strong> A logically isolated section of the AWS Cloud where you can launch AWS resources in a virtual network you define.</li>
+                        <li><strong>Route 53:</strong> Scalable Domain Name System (DNS) web service. Offers various routing policies (Simple, Weighted, Latency, Failover).</li>
+                        <li><strong>CloudFront:</strong> Content Delivery Network (CDN) that delivers content through a worldwide network of edge locations.</li>
+                        <li><strong>Direct Connect:</strong> Dedicated private network connection from on-premises to AWS.</li>
+                        <li><strong>AWS Global Accelerator:</strong> Improves application availability and performance by directing traffic over the AWS global network.</li>
+                    </ul>
+                </li>
+                <li><strong>Databases:</strong>
+                    <ul>
+                        <li><strong>RDS (Relational Database Service):</strong> Managed service for relational databases like MySQL, PostgreSQL, Oracle, etc. Supports Multi-AZ for high availability and Read Replicas for read scaling.</li>
+                        <li><strong>Amazon Aurora:</strong> AWS's proprietary relational database, compatible with MySQL and PostgreSQL, offering higher performance.</li>
+                        <li><strong>DynamoDB:</strong> Fully managed, serverless, key-value NoSQL database service with single-digit millisecond latency.</li>
+                        <li><strong>Redshift:</strong> Fast, fully managed data warehousing service for analytics (OLAP).</li>
+                        <li><strong>ElastiCache:</strong> In-memory caching service (Redis or Memcached) to improve performance of read-intensive applications.</li>
+                    </ul>
+                </li>
+                 <li><strong>Integration & Messaging:</strong>
+                    <ul>
+                        <li><strong>SQS (Simple Queue Service):</strong> Fully managed message queuing service to decouple and scale microservices.</li>
+                        <li><strong>SNS (Simple Notification Service):</strong> Fully managed pub/sub messaging service.</li>
+                    </ul>
+                </li>
+            </ul>
+             <h3>3.4 Identify AWS technology support resources</h3>
+            <ul>
+                 <li><strong>AWS Trusted Advisor:</strong> Provides real-time guidance to help you provision your resources following AWS best practices across cost optimization, performance, security, fault tolerance, and service limits.</li>
+                 <li><strong>AWS Support Plans:</strong>
+                    <ul>
+                        <li><strong>Basic:</strong> Free. Access to customer service, forums, and 7 core Trusted Advisor checks.</li>
+                        <li><strong>Developer:</strong> Business hour email access to Cloud Support Associates.</li>
+                        <li><strong>Business:</strong> 24x7 phone, email, chat access. Full Trusted Advisor checks. Sub-1-hour response for production down.</li>
+                        <li><strong>Enterprise On-Ramp & Enterprise:</strong> Includes a Technical Account Manager (TAM) and sub-15-minute response for business-critical down.</li>
+                    </ul>
+                 </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="pillar-section domain4">
+        <h2>Domain 4: Billing, Pricing, and Support (12%)</h2>
+        <div class="pillar-content">
+            <h3>4.1 Compare and contrast the various pricing models for AWS</h3>
+            <ul>
+                <li><strong>Pay-as-you-go:</strong> Pay only for what you use, with no long-term contracts.</li>
+                <li><strong>Save when you reserve:</strong>
+                    <ul>
+                        <li><strong>Reserved Instances (RIs):</strong> Significant discount for a 1 or 3-year commitment on specific instance types.</li>
+                        <li><strong>Savings Plans:</strong> Flexible pricing model offering lower prices in exchange for a commitment to a consistent amount of usage ($/hour) for 1 or 3 years. Covers EC2, Fargate, and Lambda.</li>
+                    </ul>
+                </li>
+                <li><strong>Pay less by using more:</strong> Volume-based discounts for services like S3 and data transfer.</li>
+            </ul>
+            <h3>4.2 Recognize the various account structures in relation to AWS billing and pricing</h3>
+            <ul>
+                <li><strong>AWS Organizations:</strong> An account management service that enables you to consolidate multiple AWS accounts into an organization that you create and centrally manage.</li>
+                <li><strong>Consolidated Billing:</strong> A feature of AWS Organizations that provides one bill for all accounts, volume pricing discounts, and sharing of reserved instances.</li>
+                <li><strong>Service Control Policies (SCPs):</strong> Used in Organizations to manage permissions and restrict access to specific services for member accounts.</li>
+            </ul>
+            <h3>4.3 Identify resources available for billing support</h3>
+            <ul>
+                <li><strong>AWS Pricing Calculator:</strong> Estimate the costs for your AWS architecture.</li>
+                <li><strong>AWS Cost and Usage Report (CUR):</strong> The most comprehensive set of cost and usage data.</li>
+                <li><strong>AWS Cost Explorer:</strong> A tool that lets you visualize, understand, and manage your AWS costs and usage over time.</li>
+                <li><strong>AWS Budgets:</strong> Set custom budgets that alert you when your costs or usage exceed (or are forecasted to exceed) your budgeted amount.</li>
+                <li><strong>AWS Cost Anomaly Detection:</strong> Uses machine learning to continuously monitor your cost and usage to detect unusual spends.</li>
+            </ul>
+        </div>
+    </div>
+
+</body>
+</html>

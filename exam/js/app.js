@@ -249,6 +249,24 @@ class ExamSimulator {
                 this.navigateToQuestion(index);
             }
         });
+
+        // Mobile Menu controls
+        document.getElementById('mobileMenuToggle').addEventListener('click', () => this.toggleMobileMenu(true));
+        document.getElementById('closeMobileMenu').addEventListener('click', () => this.toggleMobileMenu(false));
+        document.getElementById('overlay').addEventListener('click', () => this.toggleMobileMenu(false));
+        document.getElementById('stopExamMobile').addEventListener('click', () => {
+            this.toggleMobileMenu(false); // Close menu first
+            this.stopExam();
+        });
+    }
+
+    toggleMobileMenu(open) {
+        const body = document.body;
+        if (open) {
+            body.classList.add('menu-open');
+        } else {
+            body.classList.remove('menu-open');
+        }
     }
     
     showInitialState() {

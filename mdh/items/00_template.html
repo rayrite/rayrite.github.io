@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title</title>
+    <style>
+        /* --- General & Print Styles --- */
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.2; /* Reduced line height */
+            color: #333;
+            margin: 0;
+            padding: 0.5em; /* Reduced padding */
+            background-color: #f4f4f4;
+            font-size: 10pt;
+        }
+
+        /* --- Typography --- */
+        h1, h2 {
+            font-family: 'Helvetica Neue', 'Arial', sans-serif;
+            color: #111;
+            line-height: 1.1;
+        }
+
+        h1 {
+            font-size: 18px; /* Reduced size */
+            text-align: center;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 4px;
+            margin-bottom: 0.8em;
+        }
+
+        h2 {
+            font-size: 14px;
+            padding: 4px 8px; /* Reduced padding */
+            margin-top: 0;
+            margin-bottom: 0.5em; /* Reduced margin */
+            border-radius: 4px 4px 0 0;
+            color: #fff;
+        }
+
+        p {
+            margin-bottom: 0.4em;
+            padding: 0 8px;
+            font-size: 11pt; /* Increased font size */
+        }
+
+        strong {
+            font-weight: bold;
+        }
+
+        .design-principles-title {
+            font-weight: bold;
+            font-style: italic;
+            margin-top: 0.6em;
+            margin-bottom: 0.4em;
+            display: block;
+            padding: 0 8px;
+            font-size: 11pt; /* Increased font size */
+        }
+
+        /* --- List Styling --- */
+        ul {
+            list-style-type: disc;
+            padding-left: 22px; /* Reduced padding */
+            margin: 0 8px; /* Added horizontal margin */
+        }
+
+        li {
+            margin-bottom: 0.3em; /* Reduced margin */
+            font-size: 11pt; /* Increased font size */
+        }
+
+        /* --- Section & Color Styling --- */
+        .pillar-section {
+            margin-bottom: 0.8em; /* Reduced space between cards */
+            border-top: 4px solid;
+            padding: 0;
+            border-radius: 5px;
+            background-color: #fdfdfd;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* Reduced shadow */
+        }
+        
+        /* Inner container for padding */
+        .pillar-content {
+            padding: 0 4px 8px 4px; /* Reduced padding */
+        }
+
+        .cost { border-color: #1D8102; }
+        .cost h2 { background-color: #1D8102; }
+
+        .ops { border-color: #0073bb; }
+        .ops h2 { background-color: #0073bb; }
+
+        .reliability { border-color: #d86613; }
+        .reliability h2 { background-color: #d86613; }
+
+        .performance { border-color: #5d3da1; }
+        .performance h2 { background-color: #5d3da1; }
+
+        .security { border-color: #d13212; }
+        .security h2 { background-color: #d13212; }
+
+        .sustainability { border-color: #00a0a0; }
+        .sustainability h2 { background-color: #00a0a0; }
+
+        /* New style for advantages table */
+        .advantages-section {
+            margin-top: 1.5em;
+            border-top: 4px solid #1D8102;
+            border-radius: 5px;
+            background-color: #fdfdfd;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .advantages-section h2 {
+             background-color: #1D8102;
+        }
+        .advantages-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .advantages-table th, .advantages-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+            font-size: 10pt;
+        }
+        .advantages-table th {
+             background-color: #f7f7f7;
+        }
+
+
+        /* --- Print-Specific Optimizations --- */
+        @media print {
+            body {
+                font-size: 9pt;
+                margin: 0.2in;
+                padding: 0;
+                color: #000;
+                background-color: #fff;
+                box-shadow: none;
+            }
+            .pillar-section, .advantages-section {
+                 -webkit-print-color-adjust: exact;
+                color-adjust: exact;
+                box-shadow: none;
+                margin-bottom: 0.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Heading</h1>
+
+    <div class="pillar-section cost">
+        <h2>Heading</h2>
+        <div class="pillar-content">
+        </div>
+    </div>
+
+
+
+</body>
+</html>

@@ -12,17 +12,12 @@
             box-sizing: border-box;
         }
         
-        html {
-            overflow-x: hidden;
-        }
-        
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             line-height: 1.4;
             color: #333;
             background-color: #f8f9fa;
             font-size: 14px;
-            overflow-x: hidden;
         }
         
         .container {
@@ -32,7 +27,6 @@
             height: 100vh;
             display: flex;
             flex-direction: column;
-            overflow-x: hidden;
         }
         
         .header {
@@ -78,8 +72,6 @@
             gap: 10px;
             flex: 1;
             min-height: 0;
-            max-width: 100%;
-            overflow: hidden;
         }
         
         .sidebar {
@@ -168,17 +160,12 @@
             display: flex;
             flex-direction: column;
             min-height: 0;
-            max-width: 100%;
-            overflow: hidden;
         }
         
         .content-wrapper {
             flex: 1;
             overflow-y: auto;
-            overflow-x: hidden;
             padding: 15px;
-            word-wrap: break-word;
-            max-width: 100%;
         }
         
         .welcome-message {
@@ -218,9 +205,6 @@
             border-radius: 4px;
             margin: 15px 0;
             font-size: 0.9em;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-            max-width: 100%;
         }
         
         .error h3 {
@@ -250,9 +234,6 @@
         .markdown-content {
             font-size: 0.95em;
             line-height: 1.5;
-            max-width: 100%;
-            overflow-x: hidden;
-            word-wrap: break-word;
         }
         
         .markdown-content h1,
@@ -295,12 +276,9 @@
             background: #f6f8fa;
             border-radius: 4px;
             padding: 12px;
-            overflow-x: auto;
+            overflow: auto;
             margin: 12px 0;
             font-size: 0.9em;
-            max-width: 100%;
-            white-space: pre-wrap;
-            word-wrap: break-word;
         }
         
         .markdown-content code {
@@ -337,15 +315,6 @@
             width: 100%;
             margin: 12px 0;
             font-size: 0.9em;
-            max-width: 100%;
-            overflow-x: auto;
-            display: block;
-            white-space: nowrap;
-        }
-        
-        .markdown-content table tbody {
-            display: table;
-            width: 100%;
         }
         
         .markdown-content th,
@@ -366,9 +335,6 @@
             background: #e9ecef;
             border-radius: 4px;
             font-size: 0.85em;
-            max-width: 100%;
-            overflow-x: auto;
-            white-space: nowrap;
         }
         
         .nav-button {
@@ -451,23 +417,25 @@
 </head>
 <body>
     <div class="container">
-        <button class="toggle-sidebar" onclick="toggleSidebar()">[Menu]</button>
-        
+        <button class="toggle-sidebar" onclick="toggleSidebar()">‚ò∞</button>
+<!---        
         <div class="header">
-            <h1>[Folder] Document Browser</h1>
+            <h1>üìÅ Document Browser</h1>
             <p>Scanning: <code id="currentPath">Loading...</code></p>
         </div>
+
 
         <div id="configNotice" class="config-notice" style="display: none;">
             <strong>Configuration Required:</strong> Please update the <code>GITHUB_REPO</code> and <code>SUBFOLDER</code> variables in the script.
         </div>
         
+-->
         <div class="main-content">
             <div class="sidebar" id="sidebar">
                 <div class="sidebar-header">
                     <h2>Files</h2>
                     <button id="refreshBtn" class="refresh-button" onclick="refreshFiles()" title="Refresh file list">
-                        ‚Üª
+                        üîÑ
                     </button>
                 </div>
                 <div class="file-list-container">
@@ -491,8 +459,8 @@
     </div>
 
     <script>
-        // Ì†ΩÌ¥ß CONFIGURATION: Update these with your repository details
-        const GITHUB_REPO = 'rayrite/rayrite.github.io'';
+        // üîß CONFIGURATION: Update these with your repository details
+        const GITHUB_REPO = 'rayrite/rayrite.github.io';
         const SUBFOLDER = 'mdh/items'; // Only scan this subfolder (e.g., 'docs', 'content', 'pages')
         
         // Example configurations:
@@ -506,7 +474,7 @@
         // Initialize the file browser
         async function init() {
             // Check if GitHub repo is configured
-            if (GITHUB_REPO === 'rayrite/rayrite.github.io'') {
+            if (GITHUB_REPO === 'rayrite/rayrite.github.io') {
                 showConfigNotice();
                 return;
             }
@@ -722,18 +690,8 @@
                     `;
                 }
             } else if (file.type === 'html') {
-                // Display HTML content in isolated iframe to prevent style conflicts
-                const encodedContent = btoa(unescape(encodeURIComponent(content)));
-                contentDiv.innerHTML = nav + `
-                    <div class="html-content" style="max-width: 100%; overflow: hidden;">
-                        <iframe 
-                            src="data:text/html;base64,${encodedContent}" 
-                            style="width: 100%; max-width: 100%; height: calc(100vh - 200px); border: 1px solid #ddd; border-radius: 4px; background: white; box-sizing: border-box;"
-                            frameborder="0"
-                            sandbox="allow-scripts allow-same-origin">
-                        </iframe>
-                    </div>
-                `;
+                // Display HTML content
+                contentDiv.innerHTML = nav + `<div class="html-content">${content}</div>`;
             }
         }
         
@@ -755,7 +713,7 @@
                 nav += `<a href="#${nextFile.name}" class="nav-button" onclick="loadFile(FILES.find(f => f.name === '${nextFile.name}'))">${nextFile.title} ‚Üí</a>`;
             }
             
-            nav += '<a href="#" class="nav-button" onclick="showFileList()">[List]</a>';
+            nav += '<a href="#" class="nav-button" onclick="showFileList()">üìÅ List</a>';
             nav += '</div>';
             
             return nav;

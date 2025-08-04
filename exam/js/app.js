@@ -6,7 +6,6 @@ class ExamSimulator {
         this.currentQuestionIndex = 0;
         this.userAnswers = {};
         this.questionTimes = {}; // Total time spent on each question in milliseconds
-        this.questionRemainingTimes = {}; // Remaining time for each question (countdown)
         this.globalTimer = null;
         this.questionTimer = null;
         this.globalTimeRemaining = 90 * 60; // 90 minutes in seconds
@@ -14,9 +13,8 @@ class ExamSimulator {
         this.questionStartTime = null; // Timestamp for when the current question view started
         this.examStarted = false;
         this.examFinished = false;
-        this.examInitialized = false;
+        this.isPaused = false;
         this.visitedQuestions = new Set(); // Track which questions user has visited by index
-        this.globalTimerPaused = false; // Track if global timer is paused
         
         // Domain distribution for CLF-C02 exam
         this.domainDistribution = {
@@ -41,13 +39,8 @@ class ExamSimulator {
             document.getElementById('examStatus').innerHTML = '<div class="loading-message">Loading questions...</div>';
             
             const files = [
-                'data/aws_mcq_questions.json',
-                'data/aws_e2_exams.json',
-                'data/aws_e3_exams.json', 
-                'data/aws_e4_exams.json',
-                'data/aws_e5_exams.json',
-                'data/aws_e6_exams.json',
-                'data/aws_mock_exams.json'
+                'data/aws_mcq_questions.json', 'data/aws_e2_exams.json', 'data/aws_e3_exams.json', 
+                'data/aws_e4_exams.json', 'data/aws_e5_exams.json', 'data/aws_e6_exams.json', 'data/aws_mock_exams.json'
             ];
             
             for (const file of files) {
@@ -72,7 +65,6 @@ class ExamSimulator {
             this.processQuestions();
             this.mapQuestionDomains();
             
-            // Show ready state
             document.getElementById('examStatus').innerHTML = `
                 <p>Click "Start Exam" to begin your AWS CLF-C02 practice test.</p>
                 <p>The exam will consist of 65 questions with a 90-minute time limit.</p>
@@ -84,30 +76,18 @@ class ExamSimulator {
             document.getElementById('examStatus').innerHTML = `
                 <div class="error-message">
                     <strong>Error loading questions:</strong><br>
-                    ${error.message}<br><br>
-                    Please ensure the JSON data files are available in the data/ folder.
+                    ${error.message}
                 </div>
             `;
         }
     }
     
     processQuestions() {
-        // Process each question to ensure consistent format and derive answer letters
         this.allQuestions.forEach(question => {
-            // Ensure basic fields exist
-            if (!question.id) {
-                question.id = Math.random().toString(36).substr(2, 9);
-            }
+            if (!question.id) question.id = Math.random().toString(36).substr(2, 9);
+            if (!question.options || !Array.isArray(question.options)) question.options = [];
+            if (!question.correct_answers || !Array.isArray(question.correct_answers)) question.correct_answers = [];
             
-            if (!question.options || !Array.isArray(question.options)) {
-                question.options = [];
-            }
-            
-            if (!question.correct_answers || !Array.isArray(question.correct_answers)) {
-                question.correct_answers = [];
-            }
-            
-            // Derive answer letters from correct_answers
             const letters = [];
             const correctAnswers = question.correct_answers || [];
             
@@ -121,13 +101,11 @@ class ExamSimulator {
                     const m = item.trim().match(/^([A-Z])\./);
                     if (m) letters.push(m[1]);
                 });
-                if (letters.length === 0 && question.options && question.options.length > 0) {
+                if (letters.length === 0 && question.options.length > 0) {
                     const cleanAnswer = answer.replace(/<[^>]*>/g, '').trim();
                     question.options.forEach((option, index) => {
                         const cleanOption = option.replace(/<[^>]*>/g, '').trim();
-                        if (cleanOption === cleanAnswer) {
-                            letters.push(String.fromCharCode(65 + index));
-                        }
+                        if (cleanOption === cleanAnswer) letters.push(String.fromCharCode(65 + index));
                     });
                 }
             });
@@ -187,6 +165,7 @@ class ExamSimulator {
         document.getElementById('nextQuestion').addEventListener('click', () => this.nextQuestion());
         document.getElementById('finishExam').addEventListener('click', () => this.finishExam());
         document.getElementById('exportResults').addEventListener('click', () => this.exportResults());
+        document.getElementById('pauseResumeBtn').addEventListener('click', () => this.togglePause());
         
         document.addEventListener('change', e => { if (e.target.matches('input[name="answer"]')) this.recordAnswer(); });
 
@@ -208,6 +187,10 @@ class ExamSimulator {
             this.toggleMobileMenu(false);
             this.stopExam();
         });
+        document.getElementById('pauseResumeMobileBtn').addEventListener('click', () => {
+            this.toggleMobileMenu(false);
+            this.togglePause();
+        });
     }
 
     toggleMobileMenu(open) {
@@ -220,6 +203,7 @@ class ExamSimulator {
         document.getElementById('examLegend').style.display = 'none';
         document.getElementById('reviewTab').style.opacity = '0.5';
         document.getElementById('reviewTab').style.pointerEvents = 'none';
+        document.getElementById('pauseResumeBtn').style.display = 'none';
         this.updateGlobalTimerDisplay();
         this.updateQuestionTimerDisplay();
     }
@@ -233,6 +217,7 @@ class ExamSimulator {
             
         this.examStarted = true;
         this.examFinished = false;
+        this.isPaused = false;
         this.userAnswers = {};
         this.questionTimes = {};
         this.visitedQuestions = new Set();
@@ -242,6 +227,7 @@ class ExamSimulator {
         document.getElementById('examControls').style.display = 'none';
         document.getElementById('examInterface').style.display = 'block';
         document.getElementById('examLegend').style.display = 'flex';
+        document.getElementById('pauseResumeBtn').style.display = 'block';
         
         this.startGlobalTimer();
         this.createExamLegend();
@@ -256,6 +242,33 @@ class ExamSimulator {
             document.getElementById('reviewTab').style.opacity = '1';
             document.getElementById('reviewTab').style.pointerEvents = 'auto';
             document.getElementById('reviewTab').click();
+            document.getElementById('pauseResumeBtn').style.display = 'none';
+        }
+    }
+
+    togglePause() {
+        this.isPaused = !this.isPaused;
+        const pauseOverlay = document.getElementById('pauseOverlay');
+        const pauseBtn = document.getElementById('pauseResumeBtn');
+        const mobilePauseBtn = document.getElementById('pauseResumeMobileBtn');
+
+        if (this.isPaused) {
+            this.stopGlobalTimer();
+            if (this.questionStartTime) {
+                const timeSpent = Date.now() - this.questionStartTime;
+                const questionId = this.examQuestions[this.currentQuestionIndex].id;
+                this.questionTimes[questionId] = (this.questionTimes[questionId] || 0) + timeSpent;
+            }
+            pauseOverlay.style.display = 'flex';
+            pauseBtn.textContent = 'Resume';
+            mobilePauseBtn.textContent = 'Resume Exam';
+        } else {
+            this.startGlobalTimer();
+            this.startQuestionTimer(false); // Resume question timer without resetting
+            
+            pauseOverlay.style.display = 'none';
+            pauseBtn.textContent = 'Pause';
+            mobilePauseBtn.textContent = 'Pause Exam';
         }
     }
     
@@ -330,7 +343,7 @@ class ExamSimulator {
         
         this.visitedQuestions.add(this.currentQuestionIndex);
         this.restoreAnswers();
-        this.startQuestionTimer();
+        this.startQuestionTimer(true); // Reset timer for new question
         this.updateUI();
         this.updateExamLegend();
     }
@@ -378,7 +391,7 @@ class ExamSimulator {
     }
 
     navigateToQuestion(index) {
-        if (!this.examStarted || this.examFinished || index === this.currentQuestionIndex) return;
+        if (!this.examStarted || this.examFinished || this.isPaused || index === this.currentQuestionIndex) return;
         if (index >= 0 && index < this.examQuestions.length) {
             this.currentQuestionIndex = index;
             this.displayQuestion();
@@ -410,9 +423,11 @@ class ExamSimulator {
     startGlobalTimer() {
         if (this.globalTimer) clearInterval(this.globalTimer);
         this.globalTimer = setInterval(() => {
-            this.globalTimeRemaining--;
-            this.updateGlobalTimerDisplay();
-            if (this.globalTimeRemaining <= 0) this.finishExam();
+            if (!this.isPaused) {
+                this.globalTimeRemaining--;
+                this.updateGlobalTimerDisplay();
+                if (this.globalTimeRemaining <= 0) this.finishExam();
+            }
         }, 1000);
     }
     
@@ -421,17 +436,19 @@ class ExamSimulator {
         clearInterval(this.questionTimer);
     }
     
-    startQuestionTimer() {
+    startQuestionTimer(reset = true) {
         if (this.questionTimer) clearInterval(this.questionTimer);
-        this.questionTimeRemaining = 90;
+        if (reset) {
+            this.questionTimeRemaining = 90;
+        }
         this.questionStartTime = Date.now();
         this.updateQuestionTimerDisplay();
         
         this.questionTimer = setInterval(() => {
-            if (!this.examFinished) {
+            if (!this.examFinished && !this.isPaused) {
                 this.questionTimeRemaining--;
                 this.updateQuestionTimerDisplay();
-                if (this.questionTimeRemaining < 0) this.questionTimeRemaining = 0;
+                if (this.questionTimeRemaining <= 0) this.questionTimeRemaining = 0;
             }
         }, 1000);
     }

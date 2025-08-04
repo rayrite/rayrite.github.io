@@ -9,15 +9,18 @@
     <div class="container">
         <header>
             <h1>AWS CLF-C02 Exam Simulator</h1>
-            <div class="header-timers">
-                <div class="timer-group">
-                    <span class="timer-label">Exam</span>
-                    <div id="globalTimer" class="timer-display">90:00</div>
+            <div class="header-controls">
+                <div class="header-timers">
+                    <div class="timer-group">
+                        <span class="timer-label">Exam</span>
+                        <div id="globalTimer" class="timer-display">90:00</div>
+                    </div>
+                    <div class="timer-group">
+                        <span class="timer-label">Question</span>
+                        <div id="questionTimer" class="timer-display">01:30</div>
+                    </div>
                 </div>
-                <div class="timer-group">
-                    <span class="timer-label">Question</span>
-                    <div id="questionTimer" class="timer-display">01:30</div>
-                </div>
+                <button id="pauseResumeBtn" class="header-pause-btn">Pause</button>
             </div>
             <!-- Desktop Exam Legend -->
             <div id="examLegend" class="exam-legend">
@@ -135,6 +138,7 @@
             <button id="closeMobileMenu" class="close-mobile-menu">&times;</button>
         </div>
         <div class="mobile-menu-content">
+            <button id="pauseResumeMobileBtn" class="mobile-menu-btn">Pause Exam</button>
             <button id="stopExamMobile" class="stop-exam-button">Stop Exam</button>
             
             <!-- Mobile Exam Legend Container -->
@@ -152,6 +156,12 @@
         </div>
     </div>
     <div id="overlay" class="overlay"></div>
+    <div id="pauseOverlay" class="overlay pause-overlay">
+        <div class="pause-message">
+            <h2>Exam Paused</h2>
+            <p>Click the button in the header or menu to resume.</p>
+        </div>
+    </div>
 
     <script src="js/app.js"></script>
 </body>

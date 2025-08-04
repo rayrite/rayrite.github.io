@@ -458,6 +458,7 @@
             <p>Scanning: <code id="currentPath">Loading...</code></p>
         </div>
 
+
         
         <div class="main-content">
             <div class="sidebar" id="sidebar">
@@ -722,7 +723,7 @@
                 // Display HTML content in isolated iframe to prevent style conflicts
                 const encodedContent = btoa(unescape(encodeURIComponent(content)));
                 contentDiv.innerHTML = nav + `
-                    <div class="html-content" style="max-width: 100%; overflow: hidden; height: calc(100vh - 120px);">
+                    <div class="html-content" style="max-width: 100%; overflow: hidden; height: calc(100vh - 80px);">
                         <iframe 
                             src="data:text/html;base64,${encodedContent}" 
                             style="width: 100%; max-width: 100%; height: 100%; border: 1px solid #ddd; border-radius: 4px; background: white; box-sizing: border-box;"
@@ -736,26 +737,8 @@
         
         // Create compact navigation buttons
         function createNavigation() {
-            if (FILES.length === 0) return '';
-            
-            const currentIndex = FILES.findIndex(f => f.name === currentFile.name);
-            const prevFile = currentIndex > 0 ? FILES[currentIndex - 1] : null;
-            const nextFile = currentIndex < FILES.length - 1 ? FILES[currentIndex + 1] : null;
-            
-            let nav = '<div class="navigation">';
-            
-            if (prevFile) {
-                nav += `<a href="#${prevFile.name}" class="nav-button" onclick="loadFile(FILES.find(f => f.name === '${prevFile.name}'))">← ${prevFile.title}</a>`;
-            }
-            
-            if (nextFile) {
-                nav += `<a href="#${nextFile.name}" class="nav-button" onclick="loadFile(FILES.find(f => f.name === '${nextFile.name}'))">${nextFile.title} →</a>`;
-            }
-            
-            nav += '<a href="#" class="nav-button" onclick="showFileList()">[List]</a>';
-            nav += '</div>';
-            
-            return nav;
+            // Remove navigation bar to maximize viewing area
+            return '';
         }
         
         // Show file list
@@ -771,6 +754,11 @@
                         <h2>Document Browser</h2>
                         <p><strong>${FILES.length}</strong> files found in <code>${SUBFOLDER}</code></p>
                         <p style="font-size: 0.9em; margin-top: 15px;">Select a file from the sidebar to view its content.</p>
+                        <p style="font-size: 0.8em; margin-top: 10px; color: #6c757d;">
+                            <strong>Keyboard shortcuts:</strong><br>
+                            ← → or P/N: Navigate files<br>
+                            Escape: Return to file list
+                        </p>
                     </div>
                 `;
             }
@@ -805,6 +793,35 @@
                     loadFile(file);
                 }
             } else if (currentFile) {
+                showFileList();
+            }
+        });
+        
+        // Add keyboard shortcuts for navigation
+        document.addEventListener('keydown', (e) => {
+            if (!currentFile || FILES.length === 0) return;
+            
+            const currentIndex = FILES.findIndex(f => f.name === currentFile.name);
+            
+            // Previous file: Left arrow or 'p'
+            if ((e.key === 'ArrowLeft' || e.key === 'p') && currentIndex > 0) {
+                e.preventDefault();
+                const prevFile = FILES[currentIndex - 1];
+                loadFile(prevFile);
+                window.location.hash = prevFile.name;
+            }
+            
+            // Next file: Right arrow or 'n'  
+            if ((e.key === 'ArrowRight' || e.key === 'n') && currentIndex < FILES.length - 1) {
+                e.preventDefault();
+                const nextFile = FILES[currentIndex + 1];
+                loadFile(nextFile);
+                window.location.hash = nextFile.name;
+            }
+            
+            // File list: Escape
+            if (e.key === 'Escape') {
+                e.preventDefault();
                 showFileList();
             }
         });

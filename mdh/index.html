@@ -28,7 +28,7 @@
         .container {
             max-width: 100%;
             margin: 0;
-            padding: 10px;
+            padding: 5px;
             height: 100vh;
             display: flex;
             flex-direction: column;
@@ -37,10 +37,10 @@
         
         .header {
             background: white;
-            padding: 8px 15px;
+            padding: 6px 12px;
             border-radius: 4px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            margin-bottom: 10px;
+            margin-bottom: 5px;
             flex-shrink: 0;
         }
         
@@ -59,9 +59,9 @@
             background: #fff3cd;
             border: 1px solid #ffeaa7;
             color: #856404;
-            padding: 10px;
+            padding: 8px;
             border-radius: 4px;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
             font-size: 0.9em;
         }
         
@@ -75,7 +75,7 @@
         .main-content {
             display: grid;
             grid-template-columns: 220px 1fr;
-            gap: 10px;
+            gap: 5px;
             flex: 1;
             min-height: 0;
             max-width: 100%;
@@ -92,7 +92,7 @@
         }
         
         .sidebar-header {
-            padding: 10px 12px 8px 12px;
+            padding: 8px 10px 6px 10px;
             border-bottom: 1px solid #e9ecef;
             display: flex;
             justify-content: space-between;
@@ -109,7 +109,7 @@
         .file-list-container {
             flex: 1;
             overflow-y: auto;
-            padding: 8px;
+            padding: 6px;
         }
         
         .file-list {
@@ -176,7 +176,7 @@
             flex: 1;
             overflow-y: auto;
             overflow-x: hidden;
-            padding: 15px;
+            padding: 8px;
             word-wrap: break-word;
             max-width: 100%;
         }
@@ -361,8 +361,8 @@
         }
         
         .navigation {
-            margin-bottom: 15px;
-            padding: 8px 12px;
+            margin-bottom: 8px;
+            padding: 6px 10px;
             background: #e9ecef;
             border-radius: 4px;
             font-size: 0.85em;
@@ -458,9 +458,6 @@
             <p>Scanning: <code id="currentPath">Loading...</code></p>
         </div>
 
-        <div id="configNotice" class="config-notice" style="display: none;">
-            <strong>Configuration Required:</strong> Please update the <code>GITHUB_REPO</code> and <code>SUBFOLDER</code> variables in the script.
-        </div>
         
         <div class="main-content">
             <div class="sidebar" id="sidebar">
@@ -725,10 +722,10 @@
                 // Display HTML content in isolated iframe to prevent style conflicts
                 const encodedContent = btoa(unescape(encodeURIComponent(content)));
                 contentDiv.innerHTML = nav + `
-                    <div class="html-content" style="max-width: 100%; overflow: hidden;">
+                    <div class="html-content" style="max-width: 100%; overflow: hidden; height: calc(100vh - 120px);">
                         <iframe 
                             src="data:text/html;base64,${encodedContent}" 
-                            style="width: 100%; max-width: 100%; height: calc(100vh - 200px); border: 1px solid #ddd; border-radius: 4px; background: white; box-sizing: border-box;"
+                            style="width: 100%; max-width: 100%; height: 100%; border: 1px solid #ddd; border-radius: 4px; background: white; box-sizing: border-box;"
                             frameborder="0"
                             sandbox="allow-scripts allow-same-origin">
                         </iframe>

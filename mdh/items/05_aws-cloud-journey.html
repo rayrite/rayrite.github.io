@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visual Study Guide: AWS Cloud Adoption Frameworks</title>
+    <style>
+        /* --- General & Print Styles --- */
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.2;
+            color: #333;
+            margin: 0;
+            padding: 1em;
+            background-color: #f4f4f4;
+            font-size: 10pt;
+        }
+
+        /* --- Typography --- */
+        h1, h2, h3 {
+            font-family: 'Helvetica Neue', 'Arial', sans-serif;
+            color: #111;
+            line-height: 1.1;
+        }
+
+        h1 {
+            font-size: 20px;
+            text-align: center;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 8px;
+            margin-top: 1em;
+            margin-bottom: 1.2em;
+        }
+        
+        h3 {
+            font-size: 16px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 6px;
+            margin-top: 1.5em;
+            margin-bottom: 1.2em;
+        }
+
+        h2 {
+            font-size: 14px;
+            padding: 4px 8px;
+            margin-top: 0;
+            margin-bottom: 0.5em;
+            border-radius: 4px 4px 0 0;
+            color: #fff;
+        }
+
+        p {
+            margin-bottom: 0.4em;
+            padding: 0 8px;
+            font-size: 11pt;
+        }
+
+        strong {
+            font-weight: bold;
+        }
+
+        .section-title {
+            font-weight: bold;
+            font-style: italic;
+            margin-top: 0.6em;
+            margin-bottom: 0.4em;
+            display: block;
+            padding: 0 8px;
+            font-size: 11pt;
+        }
+
+        /* --- List Styling --- */
+        ul {
+            list-style-type: disc;
+            padding-left: 22px;
+            margin: 0 8px;
+        }
+
+        li {
+            margin-bottom: 0.3em;
+            font-size: 11pt;
+        }
+
+        /* --- Section & Color Styling --- */
+        .pillar-section {
+            margin-bottom: 1em;
+            border-top: 4px solid;
+            padding: 0;
+            border-radius: 5px;
+            background-color: #fdfdfd;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .pillar-content {
+            padding: 0 4px 8px 4px;
+        }
+
+        /* Cloud Transformation Journey Colors */
+        .ctj-project { border-color: #4A148C; } /* Deep Purple */
+        .ctj-project h2 { background-color: #4A148C; }
+
+        .ctj-foundation { border-color: #311B92; } /* Deep Indigo */
+        .ctj-foundation h2 { background-color: #311B92; }
+
+        .ctj-migration { border-color: #1A237E; } /* Deep Blue */
+        .ctj-migration h2 { background-color: #1A237E; }
+
+        .ctj-optimization { border-color: #0D47A1; } /* Darker Blue */
+        .ctj-optimization h2 { background-color: #0D47A1; }
+
+        /* Cloud Adoption Framework (CAF) Colors */
+        .caf-envision { border-color: #004D40; } /* Dark Teal */
+        .caf-envision h2 { background-color: #004D40; }
+
+        .caf-align { border-color: #00695C; } /* Teal */
+        .caf-align h2 { background-color: #00695C; }
+
+        .caf-launch { border-color: #00897B; } /* Lighter Teal */
+        .caf-launch h2 { background-color: #00897B; }
+
+        .caf-scale { border-color: #26A69A; } /* Even Lighter Teal */
+        .caf-scale h2 { background-color: #26A69A; }
+
+        /* --- Table Styling --- */
+        table {
+            width: calc(100% - 16px);
+            margin: 0.8em 8px;
+            border-collapse: collapse;
+            font-size: 10pt;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 6px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        
+        /* --- Print-Specific Optimizations --- */
+        @media print {
+            body {
+                font-size: 9pt;
+                margin: 0.2in;
+                padding: 0;
+                color: #000;
+                background-color: #fff;
+                box-shadow: none;
+            }
+            .pillar-section {
+                 -webkit-print-color-adjust: exact;
+                color-adjust: exact;
+                box-shadow: none;
+                margin-bottom: 0.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>AWS Cloud Adoption Frameworks Study Guide</h1>
+
+    <h3>The Four Phases of the Cloud Transformation Journey</h3>
+
+    <div class="pillar-section ctj-project">
+        <h2>Phase 1: Project</h2>
+        <div class="pillar-content">
+            <p><strong>Core Purpose:</strong> The initial "toe in the water" phase to get hands-on experience by migrating a few, non-critical workloads, proving cloud value and building foundational skills.</p>
+            <span class="section-title">Key Activities & Relevant AWS Services:</span>
+            <ul>
+                <li><strong>Experimentation:</strong> Launching a few <strong>EC2</strong> instances.</li>
+                <li><strong>Simple Storage:</strong> Using <strong>Amazon S3</strong> to store backups or project files.</li>
+                <li><strong>Cost Estimation:</strong> Using the <strong>AWS Pricing Calculator</strong>.</li>
+                <li><strong>Basic Skills:</strong> Learning the <strong>AWS Management Console</strong> and setting up initial <strong>IAM</strong> users.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="pillar-section ctj-foundation">
+        <h2>Phase 2: Foundation</h2>
+        <div class="pillar-content">
+            <p><strong>Core Purpose:</strong> To build a secure, scalable, and operationally robust "landing zone." This is about creating the foundational infrastructure and governance for safe and efficient cloud adoption.</p>
+            <span class="section-title">Key Activities & Relevant AWS Services:</span>
+            <ul>
+                <li><strong>Building a Landing Zone:</strong> Often automated with <strong>AWS Control Tower</strong>.</li>
+                <li><strong>Centralizing Governance:</strong> Setting up <strong>AWS Organizations</strong> and using <strong>Service Control Policies (SCPs)</strong>.</li>
+                <li><strong>Establishing Identity:</strong> Using <strong>AWS Directory Service</strong> and <strong>AWS IAM Identity Center (SSO)</strong>.</li>
+                <li><strong>Creating a Secure Network:</strong> Designing a VPC strategy and connecting with <strong>AWS Direct Connect</strong> or VPN.</li>
+                <li><strong>Automating Infrastructure:</strong> Creating templates with <strong>AWS CloudFormation</strong>.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="pillar-section ctj-migration">
+        <h2>Phase 3: Migration</h2>
+        <div class="pillar-content">
+            <p><strong>Core Purpose:</strong> The "heavy lifting" phase to move a significant number of existing, on-premises applications and workloads to the cloud at scale.</p>
+            <span class="section-title">Key Activities & Relevant AWS Services:</span>
+            <ul>
+                <li><strong>Portfolio Discovery:</strong> Using <strong>AWS Application Discovery Service</strong>.</li>
+                <li><strong>Migration Planning & Tracking:</strong> Using <strong>AWS Migration Hub</strong>.</li>
+                <li><strong>Server Migration:</strong> Using <strong>AWS Application Migration Service (MGN)</strong> to "rehost" servers.</li>
+                <li><strong>Database Migration:</strong> Using <strong>AWS Database Migration Service (DMS)</strong>.</li>
+                <li><strong>Large-Scale Data Transfer:</strong> Using the <strong>AWS Snow Family</strong> or <strong>AWS DataSync</strong>.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="pillar-section ctj-optimization">
+        <h2>Phase 4: Optimization & Reinvention</h2>
+        <div class="pillar-content">
+            <p><strong>Core Purpose:</strong> The ongoing, mature phase focused on continuous improvement, cost optimization, and leveraging cloud-native services to reinvent business processes.</p>
+            <span class="section-title">Key Activities & Relevant AWS Services:</span>
+            <ul>
+                <li><strong>Cost Optimization:</strong> Using <strong>AWS Cost Explorer</strong>, <strong>AWS Budgets</strong>, and <strong>AWS Compute Optimizer</strong>.</li>
+                <li><strong>Performance Monitoring:</strong> Deeply using <strong>Amazon CloudWatch</strong> for observability.</li>
+                <li><strong>Modernizing Architectures:</strong> Refactoring to microservices with <strong>Amazon ECS</strong> or <strong>AWS Lambda</strong>.</li>
+                <li><strong>Leveraging AI/ML:</strong> Adding intelligence with services like <strong>Amazon Rekognition</strong> or <strong>Personalize</strong>.</li>
+                <li><strong>Data Analytics:</strong> Building data warehouses with <strong>Amazon Redshift</strong> and dashboards with <strong>Amazon QuickSight</strong>.</li>
+            </ul>
+        </div>
+    </div>
+
+    <h3>The AWS CAF Cloud Adoption Journey Phases</h3>
+
+    <div class="pillar-section caf-envision">
+        <h2>1. Envision Phase</h2>
+        <div class="pillar-content">
+            <p><strong>Core Purpose:</strong> To demonstrate how the cloud can accelerate business outcomes by identifying opportunities and creating a shared vision. Answers: "<strong>Why are we doing this, and what does success look like?</strong>"</p>
+            <span class="section-title">Key Activities:</span>
+            <ul>
+                <li>Identify Business Goals.</li>
+                <li>Envision the Future State.</li>
+                <li>Create the Business Case.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="pillar-section caf-align">
+        <h2>2. Align Phase</h2>
+        <div class="pillar-content">
+            <p><strong>Core Purpose:</strong> To identify capability gaps across the organization and create a plan to address them, ensuring people, processes, and technology are ready. Answers: "<strong>Are we ready, and what do we need to build first?</strong>"</p>
+            <span class="section-title">Key Activities:</span>
+            <ul>
+                <li>Stakeholder Alignment.</li>
+                <li>Capability Assessment (using the six AWS CAF perspectives).</li>
+                <li>Create the Action Plan for the landing zone and upskilling.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="pillar-section caf-launch">
+        <h2>3. Launch Phase</h2>
+        <div class="pillar-content">
+            <p><strong>Core Purpose:</strong> To deliver the initial, pilot cloud workloads and demonstrate business value, learning and refining the process iteratively. Answers: "<strong>Let's start building and prove this works.</strong>"</p>
+            <span class="section-title">Key Activities:</span>
+            <ul>
+                <li>Build the Landing Zone.</li>
+                <li>Execute Pilot Migrations.</li>
+                <li>Iterate and Learn from initial launches.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="pillar-section caf-scale">
+        <h2>4. Scale Phase</h2>
+        <div class="pillar-content">
+            <p><strong>Core Purpose:</strong> To expand production workloads and business value at scale, turning the launch process into a full-scale migration and modernization "factory." Answers: "<strong>How do we do this for the rest of the company?</strong>"</p>
+            <span class="section-title">Key Activities:</span>
+            <ul>
+                <li>Full-Scale Migration of remaining applications.</li>
+                <li>Decommission Old Systems to realize savings.</li>
+                <li>Operate and Optimize continuously.</li>
+                <li>Innovate with cloud-native services.</li>
+            </ul>
+        </div>
+    </div>
+    
+    <h3>Summary Table: The Two Models</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Cloud Transformation Journey</th>
+                <th>AWS CAF Journey Phases</th>
+                <th>Focus</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Phase 1: Project</strong></td>
+                <td><strong>Phase 1: Envision</strong> & <strong>Phase 3: Launch</strong> (for the pilot)</td>
+                <td>Getting started, quick wins, and initial builds.</td>
+            </tr>
+            <tr>
+                <td><strong>Phase 2: Foundation</strong></td>
+                <td><strong>Phase 2: Align</strong></td>
+                <td>Building the secure, governable platform.</td>
+            </tr>
+            <tr>
+                <td><strong>Phase 3: Migration</strong></td>
+                <td><strong>Phase 4: Scale</strong> (the migration part)</td>
+                <td>The "factory" process of moving existing apps.</td>
+            </tr>
+            <tr>
+                <td><strong>Phase 4: Optimization</strong></td>
+                <td><strong>Phase 4: Scale</strong> (the optimization part)</td>
+                <td>Continuous improvement and reinvention.</td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+</html>

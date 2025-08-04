@@ -590,6 +590,196 @@
             margin-top: 1rem;
         }
 
+        /* Score Report Styles */
+        .score-report {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 1rem;
+            width: 100%;
+        }
+
+        .score-report-header {
+            background: linear-gradient(135deg, #34495e, #2c3e50);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: white;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .score-report-header h2 {
+            color: white;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+        }
+
+        .score-summary {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .score-stat {
+            text-align: center;
+        }
+
+        .score-stat-value {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #fff;
+            display: block;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .score-stat-label {
+            font-size: 1rem;
+            color: rgba(255,255,255,0.8);
+            margin-top: 0.5rem;
+        }
+
+        .score-timestamp {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.9rem;
+        }
+
+        .score-actions {
+            margin-bottom: 2rem;
+            text-align: center;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .export-json-btn {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(52, 152, 219, 0.3);
+        }
+
+        .export-json-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(52, 152, 219, 0.4);
+        }
+
+        .back-to-quiz-btn {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(46, 204, 113, 0.3);
+        }
+
+        .back-to-quiz-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(46, 204, 113, 0.4);
+        }
+
+        .score-report-questions {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .score-report-questions h3 {
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #ecf0f1;
+        }
+
+        .score-report-question {
+            border-bottom: 1px solid #ecf0f1;
+            padding: 1.5rem 0;
+        }
+
+        .score-report-question:last-child {
+            border-bottom: none;
+        }
+
+        .score-question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .score-question-number {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 1.1rem;
+        }
+
+        .score-result-badge {
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .score-result-badge.correct {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .score-result-badge.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .score-question-text {
+            font-size: 1.05rem;
+            margin-bottom: 1rem;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .score-user-answer {
+            margin-bottom: 0.75rem;
+            padding: 0.75rem;
+            background: #f8f9fa;
+            border-radius: 6px;
+            border-left: 3px solid #6c757d;
+        }
+
+        .score-correct-answer {
+            margin-bottom: 0.75rem;
+            padding: 0.75rem;
+            background: #d4edda;
+            border-radius: 6px;
+            border-left: 3px solid #28a745;
+        }
+
+        .score-explanation {
+            margin-top: 0.75rem;
+            padding: 0.75rem;
+            background: #e7f3ff;
+            border-radius: 6px;
+            border-left: 3px solid #007bff;
+        }
+
+        .score-label {
+            font-weight: bold;
+            margin-right: 0.5rem;
+            color: #495057;
+        }
+
         /* Table Modal Styles */
         .table-modal {
             position: fixed;
@@ -746,6 +936,33 @@
                 min-width: unset;
                 width: 100%;
             }
+
+            .score-summary {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+
+            .score-stat-value {
+                font-size: 2.5rem;
+            }
+
+            .score-question-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .score-actions {
+                flex-direction: column;
+            }
+
+            .score-report-header {
+                padding: 1.5rem;
+            }
+
+            .score-report-header h2 {
+                font-size: 1.5rem;
+            }
         }
 
         @media (max-width: 480px) {
@@ -770,6 +987,14 @@
             .stats span {
                 font-size: 0.75rem;
                 padding: 0.25rem 0.6rem;
+            }
+
+            .score-stat-value {
+                font-size: 2rem;
+            }
+
+            .score-report-questions {
+                padding: 1rem;
             }
         }
 
@@ -884,7 +1109,8 @@
                     <option value="aws_e5_exams.json">ߎ AWS E5 Enhanced (252/252 verified - 100% PERFECT with bold answer letters!)</option>
                     <option value="aws_e6_exams.json">ߎ AWS E6a Truncated (1e-1000 questions)</option>
                     <option value="aws_e6b_exams.json">ߎ AWS E6b Truncated (1e-425 questions)</option>
-                    <option value="aws_e7_exams.json">ߎ AWS E7b Truncated (old) (1e-65 questions)</option>
+                    <option value="aws_e7_exams.json">ߎ AWS E7 Video Mock Exam Rip (1e-65 questions)</option>
+                    <option value="aws_e8_exams.json">ߎ AWS E8 Weekend Exam Cram (1e-200 questions)</option>
                 </select>
                 <button id="viewTablesBtn" style="display:none;">View Tables</button>
             </div>
@@ -986,6 +1212,7 @@
                 this.currentDataset = 'aws_mcq_questions.json';
                 this.tablesWindow = null;
                 this.tablesData = null;
+                this.quizResults = []; // Store quiz results for score report
                 
                 this.init();
             }
@@ -1386,7 +1613,7 @@
                                 <div class="answer-text">
                                     <strong>Correct Answer:</strong> ${correctAnswersDisplay}
                                 </div>
-                                ${hasExplanation ? `<div class="explanation">${question.explanation}</div>` : ''}
+                                ${hasExplanation ? `<div class="explanation">${question.explanation.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer" style="color: #007bff; text-decoration: underline;">$1</a>')}</div>` : ''}
                                 ${tableControls}
                                 ${viewTableButton}
                             </div>
@@ -1534,6 +1761,7 @@
                 this.currentQuizQuestions = this.shuffleArray(availableQuestions)?.slice?.(0, questionCount) ?? [];
                 this.currentQuizIndex = 0;
                 this.quizInProgress = true;
+                this.quizResults = []; // Reset quiz results
 
                 document.getElementById('quizSetup')?.style?.setProperty?.('display', 'none');
                 document.getElementById('quizContainer')?.style?.setProperty?.('display', 'block');
@@ -1545,6 +1773,7 @@
                 this.quizInProgress = false;
                 this.currentQuizQuestions = [];
                 this.currentQuizIndex = 0;
+                this.quizResults = [];
 
                 document.getElementById('quizSetup')?.style?.setProperty?.('display', 'block');
                 document.getElementById('quizContainer')?.style?.setProperty?.('display', 'none');
@@ -1629,15 +1858,15 @@
                 }
 
                 const explanationText = document.getElementById('explanationText');
-                if (explanationText) {
-                    if (hasExplanation) {
-                        // Convert newlines back to <br> for HTML display
-                        explanationText.innerHTML = explanation.replace(/\n/g, '<br>');
-                        explanationText.style.display = 'block';
-                    } else {
-                        explanationText.innerHTML = '';
-                        explanationText.style.display = 'none';
-                    }
+                if (hasExplanation) {
+                    // Convert newlines back to <br> for HTML display and make URLs clickable
+                    let formattedExplanation = explanation.replace(/\n/g, '<br>');
+                    formattedExplanation = formattedExplanation.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer" style="color: #007bff; text-decoration: underline;">$1</a>');
+                    explanationText.innerHTML = formattedExplanation;
+                    explanationText.style.display = 'block';
+                } else {
+                    explanationText.innerHTML = '';
+                    explanationText.style.display = 'none';
                 }
 
                 // Add question ID display for all datasets in quiz mode
@@ -1700,8 +1929,8 @@
                 this.currentQuizIndex++;
                 
                 if (this.currentQuizIndex >= (this.currentQuizQuestions?.length ?? 0)) {
-                    alert('Quiz completed! Well done!');
-                    this.endQuiz();
+                    // Show score report instead of alert
+                    this.showScoreReport();
                 } else {
                     this.displayCurrentQuizQuestion();
                 }
@@ -1746,6 +1975,17 @@
                 }
 
                 const isCorrect = JSON.stringify(userAnswers) === JSON.stringify(correctAnswers);
+
+                // Store the result for this question
+                const result = {
+                    questionIndex: this.currentQuizIndex,
+                    question: question,
+                    userAnswers: userAnswers,
+                    correctAnswers: correctAnswers,
+                    isCorrect: isCorrect,
+                    timestamp: new Date().toISOString()
+                };
+                this.quizResults.push(result);
 
                 document.querySelectorAll('.quiz-option').forEach(option => {
                     const input = option.querySelector('input');
@@ -1819,6 +2059,162 @@
                 if (quizQuestion) {
                     quizQuestion.appendChild(resultDiv);
                 }
+            }
+
+            showScoreReport() {
+                // Hide quiz container
+                document.getElementById('quizContainer')?.style?.setProperty?.('display', 'none');
+                
+                // Create or show score report
+                let scoreReportDiv = document.getElementById('scoreReport');
+                if (!scoreReportDiv) {
+                    scoreReportDiv = document.createElement('div');
+                    scoreReportDiv.id = 'scoreReport';
+                    scoreReportDiv.className = 'tab-content';
+                    document.getElementById('quizTab').appendChild(scoreReportDiv);
+                }
+                
+                // Calculate statistics
+                const totalQuestions = this.quizResults.length;
+                const correctAnswers = this.quizResults.filter(r => r.isCorrect).length;
+                const score = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
+                const timestamp = new Date().toLocaleString();
+                
+                // Build score report HTML
+                let scoreReportHTML = `
+                    <div class="score-report">
+                        <div class="score-report-header">
+                            <h2>Quiz Results</h2>
+                            <div class="score-summary">
+                                <div class="score-stat">
+                                    <span class="score-stat-value">${score}%</span>
+                                    <span class="score-stat-label">Score</span>
+                                </div>
+                                <div class="score-stat">
+                                    <span class="score-stat-value">${correctAnswers}/${totalQuestions}</span>
+                                    <span class="score-stat-label">Correct Answers</span>
+                                </div>
+                            </div>
+                            <div class="score-timestamp">Completed: ${timestamp}</div>
+                        </div>
+                        
+                        <div class="score-actions">
+                            <button class="export-json-btn" onclick="app.exportScoreReport()">Export to JSON</button>
+                            <button class="back-to-quiz-btn" onclick="app.backToQuizSetup()">Start New Quiz</button>
+                        </div>
+                        
+                        <div class="score-report-questions">
+                            <h3>Question Review</h3>
+                `;
+                
+                // Add each question result
+                this.quizResults.forEach((result, index) => {
+                    const question = result.question;
+                    const userAnswerTexts = result.userAnswers.map(letter => {
+                        const optionIndex = letter.charCodeAt(0) - 65;
+                        return `${letter}. ${question.options[optionIndex]}`;
+                    }).join(', ');
+                    
+                    const correctAnswerTexts = result.correctAnswers.map(letter => {
+                        const optionIndex = letter.charCodeAt(0) - 65;
+                        return `${letter}. ${question.options[optionIndex]}`;
+                    }).join(', ');
+                    
+                    scoreReportHTML += `
+                        <div class="score-report-question">
+                            <div class="score-question-header">
+                                <span class="score-question-number">Question ${index + 1}</span>
+                                <span class="score-result-badge ${result.isCorrect ? 'correct' : 'incorrect'}">
+                                    ${result.isCorrect ? 'Correct' : 'Incorrect'}
+                                </span>
+                            </div>
+                            <div class="score-question-text">${question.question}</div>
+                            <div class="score-user-answer">
+                                <span class="score-label">Your Answer:</span>
+                                ${userAnswerTexts}
+                            </div>
+                            <div class="score-correct-answer">
+                                <span class="score-label">Correct Answer:</span>
+                                ${correctAnswerTexts}
+                            </div>
+                            ${question.explanation ? `
+                                <div class="score-explanation">
+                                    <span class="score-label">Explanation:</span>
+                                    ${question.explanation.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer" style="color: #007bff; text-decoration: underline;">$1</a>')}
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                });
+                
+                scoreReportHTML += `
+                        </div>
+                    </div>
+                `;
+                
+                scoreReportDiv.innerHTML = scoreReportHTML;
+                scoreReportDiv.classList.add('active');
+            }
+
+            exportScoreReport() {
+                const exportData = {
+                    dataset: this.currentDataset,
+                    timestamp: new Date().toISOString(),
+                    totalQuestions: this.quizResults.length,
+                    correctAnswers: this.quizResults.filter(r => r.isCorrect).length,
+                    score: Math.round((this.quizResults.filter(r => r.isCorrect).length / this.quizResults.length) * 100),
+                    results: this.quizResults.map(result => {
+                        // Map letters to full answer text
+                        const userAnswerTexts = result.userAnswers.map(letter => {
+                            const optionIndex = letter.charCodeAt(0) - 65; // A=0, B=1, etc.
+                            return `${letter}. ${result.question.options[optionIndex]}`;
+                        });
+                        
+                        const correctAnswerTexts = result.correctAnswers.map(letter => {
+                            const optionIndex = letter.charCodeAt(0) - 65;
+                            return `${letter}. ${result.question.options[optionIndex]}`;
+                        });
+                        
+                        return {
+                            questionNumber: result.questionIndex + 1,
+                            questionId: result.question.id,
+                            questionText: result.question.question,
+                            userAnswers: userAnswerTexts,
+                            correctAnswers: correctAnswerTexts,
+                            isCorrect: result.isCorrect,
+                            category: result.question.category,
+                            explanation: result.question.explanation || null
+                        };
+                    })
+                };
+                
+                const dataStr = JSON.stringify(exportData, null, 2);
+                const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+                
+                const exportFileDefaultName = `quiz-results-${new Date().toISOString().slice(0,10)}.json`;
+                
+                const linkElement = document.createElement('a');
+                linkElement.setAttribute('href', dataUri);
+                linkElement.setAttribute('download', exportFileDefaultName);
+                linkElement.click();
+            }
+
+            backToQuizSetup() {
+                // Hide score report
+                const scoreReport = document.getElementById('scoreReport');
+                if (scoreReport) {
+                    scoreReport.classList.remove('active');
+                }
+                
+                // Reset quiz data
+                this.quizResults = [];
+                this.currentQuizQuestions = [];
+                this.currentQuizIndex = 0;
+                this.quizInProgress = false;
+                
+                // Show quiz setup
+                document.getElementById('quizSetup')?.style?.setProperty?.('display', 'block');
+                document.getElementById('quizContainer')?.style?.setProperty?.('display', 'none');
             }
 
             shuffleArray(array) {

@@ -9,10 +9,12 @@ class MCQApp {
         this.currentDataset = 'aws_mcq_questions.json';
         this.tablesWindow = null; // Track the tables window
         this.tablesData = null; // Store loaded tables data
+        this.quizResults = []; // Store quiz results for score report
         
         this.init();
     }
 
+    
     async init() {
         try {
             await this.loadQuestions();
@@ -27,6 +29,9 @@ class MCQApp {
         }
     }
 
+    
+
+    
     async loadTablesData() {
         try {
             const response = await fetch('aws_mcq_tables.json');
@@ -42,6 +47,8 @@ class MCQApp {
             this.tablesData = [];
         }
     }
+    
+
 
     async loadQuestions() {
         try {
@@ -373,7 +380,7 @@ class MCQApp {
                         <div class="answer-text">
                             <strong>Correct Answer:</strong> ${correctAnswers}
                         </div>
-                        ${hasExplanation ? `<div class="explanation">${question.explanation}</div>` : ''}
+                        ${hasExplanation ? `<div class="explanation">${question.explanation.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer" style="color: #007bff; text-decoration: underline;">$1</a>')}</div>` : ''}
                         ${tableControls}
                         ${viewTableButton}
                     </div>
@@ -542,6 +549,7 @@ class MCQApp {
         this.currentQuizQuestions = this.shuffleArray(availableQuestions)?.slice?.(0, questionCount) ?? [];
         this.currentQuizIndex = 0;
         this.quizInProgress = true;
+        this.quizResults = []; // Reset quiz results
 
         // Show quiz container
         document.getElementById('quizSetup')?.style?.setProperty?.('display', 'none');
@@ -554,6 +562,7 @@ class MCQApp {
         this.quizInProgress = false;
         this.currentQuizQuestions = [];
         this.currentQuizIndex = 0;
+        this.quizResults = [];
 
         // Show setup, hide quiz
         document.getElementById('quizSetup')?.style?.setProperty?.('display', 'block');
@@ -676,8 +685,8 @@ class MCQApp {
         this.currentQuizIndex++;
         
         if (this.currentQuizIndex >= (this.currentQuizQuestions?.length ?? 0)) {
-            alert('Quiz completed! Well done!');
-            this.endQuiz();
+            // Show score report instead of alert
+            this.showScoreReport();
         } else {
             this.displayCurrentQuizQuestion();
         }
@@ -728,6 +737,17 @@ class MCQApp {
         // Compare answers
         const isCorrect = JSON.stringify(userAnswers) === JSON.stringify(correctAnswers);
 
+        // Store the result for this question
+        const result = {
+            questionIndex: this.currentQuizIndex,
+            question: question,
+            userAnswers: userAnswers,
+            correctAnswers: correctAnswers,
+            isCorrect: isCorrect,
+            timestamp: new Date().toISOString()
+        };
+        this.quizResults.push(result);
+
         // Update option styling
         document.querySelectorAll('.quiz-option').forEach(option => {
             const input = option.querySelector('input');
@@ -774,6 +794,149 @@ class MCQApp {
         if (quizQuestion) {
             quizQuestion.appendChild(resultDiv);
         }
+    }
+
+    showScoreReport() {
+        // Hide quiz container
+        document.getElementById('quizContainer')?.style?.setProperty?.('display', 'none');
+        
+        // Create or show score report
+        let scoreReportDiv = document.getElementById('scoreReport');
+        if (!scoreReportDiv) {
+            scoreReportDiv = document.createElement('div');
+            scoreReportDiv.id = 'scoreReport';
+            scoreReportDiv.className = 'tab-content';
+            document.getElementById('quizTab').appendChild(scoreReportDiv);
+        }
+        
+        // Calculate statistics
+        const totalQuestions = this.quizResults.length;
+        const correctAnswers = this.quizResults.filter(r => r.isCorrect).length;
+        const score = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
+        const timestamp = new Date().toLocaleString();
+        
+        // Build score report HTML
+        let scoreReportHTML = `
+            <div class="score-report">
+                <div class="score-report-header">
+                    <h2>Quiz Results</h2>
+                    <div class="score-summary">
+                        <div class="score-stat">
+                            <span class="score-stat-value">${score}%</span>
+                            <span class="score-stat-label">Score</span>
+                        </div>
+                        <div class="score-stat">
+                            <span class="score-stat-value">${correctAnswers}/${totalQuestions}</span>
+                            <span class="score-stat-label">Correct Answers</span>
+                        </div>
+                    </div>
+                    <div class="score-timestamp">Completed: ${timestamp}</div>
+                </div>
+                
+                <div class="score-actions">
+                    <button class="export-json-btn" onclick="app.exportScoreReport()">Export to JSON</button>
+                    <button class="back-to-quiz-btn" onclick="app.backToQuizSetup()">Start New Quiz</button>
+                </div>
+                
+                <div class="score-report-questions">
+                    <h3>Question Review</h3>
+        `;
+        
+        // Add each question result
+        this.quizResults.forEach((result, index) => {
+            const question = result.question;
+            const userAnswerTexts = result.userAnswers.map(letter => {
+                const optionIndex = letter.charCodeAt(0) - 65;
+                return `${letter}. ${question.options[optionIndex]}`;
+            }).join(', ');
+            
+            const correctAnswerTexts = result.correctAnswers.map(letter => {
+                const optionIndex = letter.charCodeAt(0) - 65;
+                return `${letter}. ${question.options[optionIndex]}`;
+            }).join(', ');
+            
+            scoreReportHTML += `
+                <div class="score-report-question">
+                    <div class="score-question-header">
+                        <span class="score-question-number">Question ${index + 1}</span>
+                        <span class="score-result-badge ${result.isCorrect ? 'correct' : 'incorrect'}">
+                            ${result.isCorrect ? 'Correct' : 'Incorrect'}
+                        </span>
+                    </div>
+                    <div class="score-question-text">${question.question}</div>
+                    <div class="score-user-answer">
+                        <span class="score-label">Your Answer:</span>
+                        ${userAnswerTexts}
+                    </div>
+                    <div class="score-correct-answer">
+                        <span class="score-label">Correct Answer:</span>
+                        ${correctAnswerTexts}
+                    </div>
+                    ${question.explanation ? `
+                        <div class="score-explanation">
+                            <span class="score-label">Explanation:</span>
+                            ${question.explanation}
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        });
+        
+        scoreReportHTML += `
+                </div>
+            </div>
+        `;
+        
+        scoreReportDiv.innerHTML = scoreReportHTML;
+        scoreReportDiv.classList.add('active');
+    }
+
+    exportScoreReport() {
+        const exportData = {
+            dataset: this.currentDataset,
+            timestamp: new Date().toISOString(),
+            totalQuestions: this.quizResults.length,
+            correctAnswers: this.quizResults.filter(r => r.isCorrect).length,
+            score: Math.round((this.quizResults.filter(r => r.isCorrect).length / this.quizResults.length) * 100),
+            results: this.quizResults.map(result => ({
+                questionNumber: result.questionIndex + 1,
+                questionId: result.question.id,
+                questionText: result.question.question,
+                userAnswers: result.userAnswers,
+                correctAnswers: result.correctAnswers,
+                isCorrect: result.isCorrect,
+                category: result.question.category,
+                explanation: result.question.explanation || null
+            }))
+        };
+        
+        const dataStr = JSON.stringify(exportData, null, 2);
+        const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+        
+        const exportFileDefaultName = `quiz-results-${new Date().toISOString().slice(0,10)}.json`;
+        
+        const linkElement = document.createElement('a');
+        linkElement.setAttribute('href', dataUri);
+        linkElement.setAttribute('download', exportFileDefaultName);
+        linkElement.click();
+    }
+
+    backToQuizSetup() {
+        // Hide score report
+        const scoreReport = document.getElementById('scoreReport');
+        if (scoreReport) {
+            scoreReport.classList.remove('active');
+        }
+        
+        // Reset quiz data
+        this.quizResults = [];
+        this.currentQuizQuestions = [];
+        this.currentQuizIndex = 0;
+        this.quizInProgress = false;
+        
+        // Show quiz setup
+        document.getElementById('quizSetup')?.style?.setProperty?.('display', 'block');
+        document.getElementById('quizContainer')?.style?.setProperty?.('display', 'none');
     }
 
     shuffleArray(array) {

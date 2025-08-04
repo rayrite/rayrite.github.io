@@ -46,9 +46,6 @@ class ExamSimulator {
                 'data/aws_e3_exams.json', 
                 'data/aws_e4_exams.json',
                 'data/aws_e5_exams.json',
-                'data/aws_e6_exams.json',
-                'data/aws_e6b_exams.json',
-                'data/aws_e7_exams.json',
                 'data/aws_mock_exams.json'
             ];
             

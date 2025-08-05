@@ -3,24 +3,46 @@ class MCQApp {
         this.questions = [];
         this.filteredQuestions = [];
         this.categories = new Set();
+        this.domains = new Set();
         this.currentQuizQuestions = [];
+        this.quizResults = [];
         this.currentQuizIndex = 0;
         this.quizInProgress = false;
-        this.currentDataset = 'aws_mcq_questions.json';
-        this.tablesWindow = null; // Track the tables window
-        this.tablesData = null; // Store loaded tables data
-        this.quizResults = []; // Store quiz results for score report
+        this.tablesData = null;
+        this.tablesWindow = null;
+        
+        // Timer properties
+        this.timeLimit = 90; // Default time in seconds
+        this.timerInterval = null;
+        this.questionStartTime = 0;
+
+        this.availableDatasets = [
+            { value: 'aws_mcq_questions.json', label: 'Original Question Bank (1,623 questions)' },
+            { value: 'aws_mock_exams.json', label: 'CLF-C02 Mock Exams (325 questions)' },
+            { value: 'aws_e2_exams.json', label: 'AWS Cloud Practitioner E2 (6e-390 questions)' },
+            { value: 'aws_e3_exams.json', label: 'AWS Cloud Practitioner E3 (3e-195 questions)' },
+            { value: 'aws_e4_exams.json', label: 'AWS Cloud Practitioner E4 (9e-585 questions)' },
+            { value: 'aws_e5_exams.json', label: 'AWS E5 Enhanced (252/252 verified)' },
+            { value: 'aws_e6_exams.json', label: 'AWS E6a ShadingPixel (1e-1000 questions)' },
+            { value: 'aws_e6b_exams.json', label: 'AWS E6b ShadingPixel (1e-425 questions)' },
+            { value: 'aws_e7_exams.json', label: 'AWS E7 Video Mock Exam Rip (1e-65 questions)' },
+            { value: 'aws_e8_exams.json', label: 'AWS E8 SP Weekend Exam Cram (1e-200 questions)' },
+            { value: 'aws_e9_exams.json', label: 'AWS E9 ShadingPixel (1e-1000 questions)' }
+        ];
+        this.currentDataset = this.availableDatasets[0].value;
         
         this.init();
     }
 
-    
     async init() {
         try {
+            this.populateDatasetSelect();
             await this.loadQuestions();
-            await this.loadTablesData(); // Load the tables data
+            await this.loadTablesData();
             this.setupEventListeners();
             this.populateCategories();
+            this.populateDomains();
+            this.populateDatasetCheckboxes();
             this.renderQuestions();
             this.updateStats();
         } catch (error) {
@@ -29,17 +51,25 @@ class MCQApp {
         }
     }
 
-    
+    populateDatasetSelect() {
+        const select = document.getElementById('datasetSelect');
+        if (!select) return;
+        select.innerHTML = '';
+        this.availableDatasets.forEach(ds => {
+            const option = document.createElement('option');
+            option.value = ds.value;
+            option.textContent = ds.label;
+            select.appendChild(option);
+        });
+        select.value = this.currentDataset;
+    }
 
-    
     async loadTablesData() {
         try {
             const response = await fetch('aws_mcq_tables.json');
             if (response?.ok) {
                 this.tablesData = await response.json() ?? [];
-                console.log('Tables data loaded:', this.tablesData.length, 'tables');
             } else {
-                console.warn('Could not load aws_mcq_tables.json - tables functionality will be limited');
                 this.tablesData = [];
             }
         } catch (error) {
@@ -48,1072 +78,865 @@ class MCQApp {
         }
     }
     
-
+    _processLoadedQuestions(questions) {
+        questions.forEach(q => {
+            // Enhanced processing to use numchoices field
+            if (typeof q.numchoices === 'number' && q.numchoices > 0) {
+                q.expectedChoices = q.numchoices;
+            } else {
+                // Fallback to existing logic
+                q.expectedChoices = this._extractAnswerLettersCount(q);
+            }
+            
+            // Ensure we have answer_letters for compatibility
+            if (!q.answer_letters || q.answer_letters.length === 0) {
+                q.answer_letters = this._extractAnswerLetters(q);
+            }
+            
+            // Validate that answer_letters matches expected choices
+            if (q.answer_letters.length !== q.expectedChoices) {
+                console.warn(`Question ${q.id}: Answer letters (${q.answer_letters.length}) don't match expected choices (${q.expectedChoices})`);
+                // Use the more reliable numchoices field if available
+                if (q.expectedChoices > 0 && q.expectedChoices <= q.options?.length) {
+                    // Keep expectedChoices as authoritative
+                } else {
+                    q.expectedChoices = q.answer_letters.length;
+                }
+            }
+        });
+        return questions;
+    }
+    
+    _extractAnswerLettersCount(q) {
+        const letters = new Set();
+        const correctAnswers = q.correct_answers || [];
+        
+        correctAnswers.forEach(answer => {
+            let match = answer.match(/^([A-Z])\.\s*/) || answer.match(/<b>([A-Z])\.\s*/);
+            if (match) {
+                letters.add(match[1]);
+                return;
+            }
+            
+            answer.split('<br>').forEach(item => {
+                const m = item.trim().match(/^([A-Z])\./);
+                if (m) letters.add(m[1]);
+            });
+        });
+        
+        return letters.size;
+    }
+    
+    _extractAnswerLetters(q) {
+        const letters = new Set();
+        const correctAnswers = q.correct_answers || [];
+        
+        correctAnswers.forEach(answer => {
+            let match = answer.match(/^([A-Z])\.\s*/) || answer.match(/<b>([A-Z])\.\s*/);
+            if (match) {
+                letters.add(match[1]);
+                return;
+            }
+            
+            answer.split('<br>').forEach(item => {
+                const m = item.trim().match(/^([A-Z])\./);
+                if (m) letters.add(m[1]);
+            });
+            
+            if (letters.size === 0 && q.options) {
+                const cleanAnswer = answer.replace(/<[^>]*>/g, '').trim();
+                q.options.forEach((option, index) => {
+                    const cleanOption = option.replace(/<[^>]*>/g, '').trim();
+                    if (cleanOption === cleanAnswer) {
+                        letters.add(String.fromCharCode(65 + index));
+                    }
+                });
+            }
+        });
+        
+        return [...letters].sort();
+    }
 
     async loadQuestions() {
         try {
             const response = await fetch(this.currentDataset);
-            if (!response?.ok) {
-                throw new Error(`HTTP error! status: ${response?.status ?? 'unknown'}`);
-            }
-            this.questions = await response.json() ?? [];
-            // Derive answer_letters for quiz mode based on correct_answers
-            this.questions.forEach(q => {
-                const letters = [];
-                (q.correct_answers || []).forEach(entry => {
-                    entry.split('<br>').forEach(item => {
-                        const m = item.trim().match(/^([A-Z])\./);
-                        if (m) letters.push(m[1]);
-                    });
-                });
-                q.answer_letters = letters;
-            });
+            if (!response?.ok) throw new Error(`HTTP error! status: ${response?.status ?? 'unknown'}`);
+            
+            let questions = await response.json() ?? [];
+            this.questions = this._processLoadedQuestions(questions);
+            
             this.filteredQuestions = [...this.questions];
             
-            // Extract unique categories
+            // Extract categories and domains
             this.categories.clear();
-            this.questions?.forEach?.(q => {
-                if (q?.category) {
-                    this.categories.add(q.category);
-                }
+            this.domains.clear();
+            this.questions.forEach(q => {
+                if (q?.category) this.categories.add(q.category);
+                if (q?.domain) this.domains.add(q.domain);
             });
+            
+            console.log(`Loaded ${this.questions.length} questions`);
+            console.log(`Categories: ${this.categories.size}, Domains: ${this.domains.size}`);
+            
+            // Log multichoice statistics
+            const multichoiceCount = this.questions.filter(q => q.expectedChoices > 1).length;
+            console.log(`Multichoice questions: ${multichoiceCount} (${Math.round(multichoiceCount/this.questions.length*100)}%)`);
+            
         } catch (error) {
             console.error('Error loading questions:', error);
             throw error;
         }
     }
 
+    async loadMultipleDatasets(datasetFiles) {
+        const allQuestions = [];
+        for (const datasetFile of datasetFiles) {
+            try {
+                const response = await fetch(datasetFile);
+                if (response?.ok) {
+                    let questions = await response.json() ?? [];
+                    questions = this._processLoadedQuestions(questions);
+                    questions.forEach(q => q.sourceDataset = datasetFile); // Tag source
+                    allQuestions.push(...questions);
+                }
+            } catch (error) {
+                console.warn(`Failed to load dataset ${datasetFile}:`, error);
+            }
+        }
+        return allQuestions;
+    }
+    
     async switchDataset(newDataset) {
         try {
             this.currentDataset = newDataset;
-            
-            // Show loading state
-            this.showLoading();
-            
-            // Load new dataset
+            this.showLoading('browse');
             await this.loadQuestions();
-            
-            // Reset filters and UI
             this.resetFilters();
             this.populateCategories();
+            this.populateDomains();
+            this.updateDatasetCheckboxes();
             this.renderQuestions();
             this.updateStats();
+            this.toggleViewTablesBtn();
             
-            // Hide loading state
-            this.hideLoading();
-            
-            // Reset quiz if in progress
-            if (this.quizInProgress) {
-                this.endQuiz();
-            }
-            
+            if (this.quizInProgress) this.endQuiz();
         } catch (error) {
             console.error('Failed to switch dataset:', error);
-            this.showError('Failed to load the selected dataset. Please try again.');
-            this.hideLoading();
+            this.showError('Failed to load the selected dataset. Please try again.', 'browse');
         }
     }
 
     setupEventListeners() {
-        // Dataset selector
-        document.getElementById('datasetSelect')?.addEventListener?.('change', (e) => {
-            const selectedDataset = e?.target?.value;
-            if (selectedDataset && selectedDataset !== this.currentDataset) {
-                this.switchDataset(selectedDataset);
-            }
+        // Main dataset selector
+        document.getElementById('datasetSelect')?.addEventListener('change', (e) => {
+            this.switchDataset(e.target.value);
         });
 
-        // Navigation
-        document.getElementById('searchInput')?.addEventListener?.('input', (e) => {
-            this.filterQuestions();
+        // Tabs
+        document.querySelectorAll('.tab-button')?.forEach(button => {
+            button.addEventListener('click', (e) => this.switchTab(e.target.dataset.tab));
         });
-
-        document.getElementById('categoryFilter')?.addEventListener?.('change', (e) => {
-            this.filterQuestions();
-        });
-
-        // Tab switching
-        document.querySelectorAll('.tab-button')?.forEach?.(button => {
-            button?.addEventListener?.('click', (e) => {
-                const tabName = e?.target?.dataset?.tab;
-                if (tabName) {
-                    this.switchTab(tabName);
-                }
-            });
-        });
-
-        // Quiz functionality
-        document.getElementById('startQuiz')?.addEventListener?.('click', () => {
-            this.startQuiz();
-        });
-
-        document.getElementById('endQuiz')?.addEventListener?.('click', () => {
-            this.endQuiz();
-        });
-
-        document.getElementById('checkAnswer')?.addEventListener?.('click', () => {
-            this.checkUserAnswer();
-        });
-
-        document.getElementById('showAnswer')?.addEventListener?.('click', () => {
-            this.showCurrentAnswer();
-        });
-
-        document.getElementById('nextQuestion')?.addEventListener?.('click', () => {
-            this.nextQuizQuestion();
-        });
-
-        // View Tables Button functionality
-        const datasetSelect = document.getElementById('datasetSelect');
-        const viewTablesBtn = document.getElementById('viewTablesBtn');
-        if (viewTablesBtn && datasetSelect) {
-            viewTablesBtn.addEventListener('click', () => {
-                window.open('aws1600t.html', '_blank');
-            });
-            const toggleViewTablesBtn = () => {
-                if (datasetSelect.value === 'aws_mcq_questions.json') {
-                    viewTablesBtn.style.display = 'inline-block';
-                } else {
-                    viewTablesBtn.style.display = 'none';
-                }
-            };
-            datasetSelect.addEventListener('change', toggleViewTablesBtn);
-            toggleViewTablesBtn();
-        }
-
-        // Table modal close functionality
-        const closeModalBtn = document.getElementById('closeTableModal');
-        const tableModal = document.getElementById('tableModal');
         
-        if (closeModalBtn) {
-            closeModalBtn.addEventListener('click', () => {
-                this.closeTableModal();
-            });
-        }
-        
-        if (tableModal) {
-            tableModal.addEventListener('click', (e) => {
-                if (e.target === tableModal) {
-                    this.closeTableModal();
-                }
-            });
-        }
+        // --- BROWSE Tab Listeners ---
+        document.getElementById('searchInput')?.addEventListener('input', () => this.filterQuestions());
+        document.getElementById('categoryFilter')?.addEventListener('change', () => this.filterQuestions());
+        document.getElementById('domainFilter')?.addEventListener('change', () => this.filterQuestions());
+        document.getElementById('viewTablesBtn')?.addEventListener('click', () => window.open('aws1600t.html', '_blank'));
+        document.getElementById('closeTableModal')?.addEventListener('click', () => this.closeTableModal());
+        document.getElementById('tableModal')?.addEventListener('click', (e) => {
+            if (e.target === document.getElementById('tableModal')) this.closeTableModal();
+        });
 
-        // ESC key to close modal
+        // --- QUIZ Tab Listeners ---
+        document.getElementById('startQuiz')?.addEventListener('click', () => this.startQuiz());
+        document.getElementById('endQuiz')?.addEventListener('click', () => this.endQuiz());
+        document.getElementById('checkAnswer')?.addEventListener('click', () => this.checkUserAnswer());
+        document.getElementById('nextQuestion')?.addEventListener('click', () => this.nextQuizQuestion());
+
+        // Global key listener
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                this.closeTableModal();
-            }
+            if (e.key === 'Escape') this.closeTableModal();
         });
     }
-
-    resetFilters() {
-        const searchInput = document.getElementById('searchInput');
-        if (searchInput) {
-            searchInput.value = '';
-        }
-        
-        const categoryFilter = document.getElementById('categoryFilter');
-        if (categoryFilter) {
-            categoryFilter.value = '';
-        }
-        
-        this.filteredQuestions = [...this.questions];
-    }
-
-    showLoading() {
-        const questionsList = document.getElementById('questionsList');
-        if (questionsList) {
-            questionsList.innerHTML = '<div class="loading">Loading questions...</div>';
-        }
-    }
-
-    hideLoading() {
-        // Loading state will be hidden when questions are rendered
-    }
-
-    showError(message) {
-        const questionsList = document.getElementById('questionsList');
-        if (questionsList) {
-            questionsList.innerHTML = `<div class="error">${message}</div>`;
-        }
-    }
+    
+    // --- UI Update & Population ---
 
     populateCategories() {
         const categoryFilter = document.getElementById('categoryFilter');
         const quizCategory = document.getElementById('quizCategory');
+        const sortedCategories = [...this.categories].sort();
         
-        if (categoryFilter) {
-            categoryFilter.innerHTML = '<option value="">All Categories</option>';
-            [...this.categories]?.sort()?.forEach?.(category => {
+        const populateSelect = (select) => {
+            if (!select) return;
+            const currentValue = select.value;
+            select.innerHTML = '<option value="">All Categories</option>';
+            sortedCategories.forEach(category => {
                 if (category) {
                     const option = document.createElement('option');
                     option.value = category;
                     option.textContent = category;
-                    categoryFilter.appendChild(option);
+                    select.appendChild(option);
                 }
             });
-        }
+            select.value = currentValue;
+        };
 
-        if (quizCategory) {
-            quizCategory.innerHTML = '<option value="">All Categories</option>';
-            [...this.categories]?.sort()?.forEach?.(category => {
-                if (category) {
+        populateSelect(categoryFilter);
+        populateSelect(quizCategory);
+    }
+    
+    populateDomains() {
+        const domainFilter = document.getElementById('domainFilter');
+        const quizDomain = document.getElementById('quizDomain');
+        const sortedDomains = [...this.domains].sort();
+        
+        const populateSelect = (select) => {
+            if (!select) return;
+            const currentValue = select.value;
+            select.innerHTML = '<option value="">All Domains</option>';
+            sortedDomains.forEach(domain => {
+                if (domain) {
                     const option = document.createElement('option');
-                    option.value = category;
-                    option.textContent = category;
-                    quizCategory.appendChild(option);
+                    option.value = domain;
+                    option.textContent = domain;
+                    select.appendChild(option);
                 }
             });
-        }
+            select.value = currentValue;
+        };
+
+        populateSelect(domainFilter);
+        populateSelect(quizDomain);
+    }
+    
+    populateDatasetCheckboxes() {
+        const container = document.getElementById('datasetCheckboxGroup');
+        if (!container) return;
+        container.innerHTML = '';
+        
+        this.availableDatasets.forEach(dataset => {
+            const checkboxDiv = document.createElement('div');
+            checkboxDiv.className = 'dataset-checkbox';
+            checkboxDiv.innerHTML = `
+                <input type="checkbox" id="dataset_${dataset.value.replace('.json', '')}" value="${dataset.value}">
+                <label for="dataset_${dataset.value.replace('.json', '')}">${dataset.label}</label>
+            `;
+            container.appendChild(checkboxDiv);
+        });
+        this.updateDatasetCheckboxes();
+    }
+
+    updateDatasetCheckboxes() {
+        const checkboxes = document.querySelectorAll('#datasetCheckboxGroup input[type="checkbox"]');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = checkbox.value === this.currentDataset;
+        });
     }
 
     updateStats() {
-        const totalQuestions = document.getElementById('totalQuestions');
-        const totalCategories = document.getElementById('totalCategories');
-        
-        if (totalQuestions) {
-            totalQuestions.textContent = `${this.questions?.length ?? 0} Questions`;
-        }
-        
-        if (totalCategories) {
-            totalCategories.textContent = `${this.categories?.size ?? 0} Categories`;
+        document.getElementById('totalQuestions').textContent = `${this.questions?.length ?? 0} Questions`;
+        document.getElementById('totalCategories').textContent = `${this.categories?.size ?? 0} Categories`;
+        document.getElementById('totalDomains').textContent = `${this.domains?.size ?? 0} Domains`;
+    }
+
+    toggleViewTablesBtn() {
+        const viewTablesBtn = document.getElementById('viewTablesBtn');
+        if (viewTablesBtn) {
+            viewTablesBtn.style.display = (this.currentDataset === 'aws_mcq_questions.json') ? 'inline-block' : 'none';
         }
     }
 
+    // --- BROWSE Tab Functionality ---
+    
     filterQuestions() {
         const searchTerm = document.getElementById('searchInput')?.value?.toLowerCase() ?? '';
         const selectedCategory = document.getElementById('categoryFilter')?.value ?? '';
+        const selectedDomain = document.getElementById('domainFilter')?.value ?? '';
 
-        this.filteredQuestions = this.questions?.filter?.(q => {
+        this.filteredQuestions = this.questions?.filter(q => {
             const matchesSearch = !searchTerm || 
-                q?.question?.toLowerCase()?.includes?.(searchTerm) ||
-                q?.options?.some?.(option => option?.toLowerCase()?.includes?.(searchTerm));
-            
-            const matchesCategory = !selectedCategory || q?.category === selectedCategory;
-            
-            return matchesSearch && matchesCategory;
+                q.question?.toLowerCase().includes(searchTerm) ||
+                q.options?.some(option => option.toLowerCase().includes(searchTerm));
+            const matchesCategory = !selectedCategory || q.category === selectedCategory;
+            const matchesDomain = !selectedDomain || q.domain === selectedDomain;
+            return matchesSearch && matchesCategory && matchesDomain;
         }) ?? [];
 
         this.renderQuestions();
     }
-
+    
     renderQuestions() {
         const questionsList = document.getElementById('questionsList');
         if (!questionsList) return;
 
         if (!this.filteredQuestions?.length) {
-            questionsList.innerHTML = '<div class="no-results">No questions found matching your criteria.</div>';
+            questionsList.innerHTML = '<div class="no-results">No questions found.</div>';
             return;
         }
-
-        questionsList.innerHTML = this.filteredQuestions?.map?.(q => this.createQuestionCard(q))?.join?.('') ?? '';
+        questionsList.innerHTML = this.filteredQuestions.map(q => this.createQuestionCard(q)).join('');
     }
+    
+    createQuestionCard(q) {
+        const answerTexts = q.answer_letters.map(letter => {
+            const optionIndex = letter.charCodeAt(0) - 65;
+            return `${letter}. ${q.options?.[optionIndex] || letter}`;
+        });
+        const correctAnswersDisplay = answerTexts.join('<br>');
+        const hasExplanation = q.explanation && q.explanation.trim() !== '';
 
-    createQuestionCard(question) {
-        const correctAnswers = question?.correct_answers?.join?.(', ') ?? 'No answer provided';
-        const hasExplanation = question?.explanation && question.explanation.trim() !== '';
-        
-        // Chapter-based numbering or fallback to JSON id
-        const chapterMap = {
-            'Assessment Test': 'A',
-            'Chapter 1': '1',
-            'Chapter 2': '2',
-            'Chapter 3': '3',
-            'Chapter 4': '4',
-            'Chapter 5': '5',
-            'Chapter 6': '6',
-            'Chapter 7': '7',
-            'Chapter 8': '8',
-            'Chapter 9': '9',
-            'Chapter 10': '10',
-            'Chapter 11': '11',
-            'Chapter 12': '12'
-        };
-        let questionNumber;
-        if (question.chapter && chapterMap[question.chapter] && question.pdf_question_number) {
-            questionNumber = `${chapterMap[question.chapter]}${question.pdf_question_number.toString().padStart(2, '0')}`;
-        } else {
-            questionNumber = question.id;
-        }
-            
-        // Show verification status if available
-        const verificationStatus = question?.answer_verified !== undefined ? 
-            (question.answer_verified ? 
-                `<span class="verified" title="Answer verified">✅</span>` : 
-                `<span class="unverified" title="Answer not verified">❌</span>`
-            ) : '';
+        // Enhanced question type display
+        const questionTypeInfo = q.expectedChoices > 1 ? 
+            ` (${q.expectedChoices} correct answers)` : ' (single choice)';
 
-        // Add View Table button only for aws_mcq_questions.json dataset
-        const viewTableButton = this.currentDataset === 'aws_mcq_questions.json' ? 
-            `<button class="view-table-btn" onclick="app.openTableForQuestion(${question?.id ?? 0})">View Table</button>` : '';
-        
-        // Add question number label and See Table button for aws_mcq_questions.json dataset
-        const tableControls = this.currentDataset === 'aws_mcq_questions.json' ? 
-            `<span class="question-number-label">Question ${question?.id ?? 'N/A'}</span>
-             <button class="see-table-btn" onclick="app.showTableForQuestion(${question?.id ?? 0})">See Table</button>` : '';
-        
+        const tableControls = this.currentDataset === 'aws_mcq_questions.json' ? `
+            <span class="question-number-label">Q-ID ${q.id ?? 'N/A'}</span>
+            <button class="see-table-btn" onclick="app.showTableForQuestion(${q.id})">See Table</button>
+            <button class="view-table-btn" onclick="app.openTableForQuestion(${q.id})">View Table (New Tab)</button>
+        ` : `<span class="question-number-label">Q-ID ${q.id ?? 'N/A'}</span>`;
+
         return `
             <div class="question-card">
                 <div class="question-header">
-                    <span class="question-id">${questionNumber}</span>
-                    <span class="question-category">${question?.category ?? 'Uncategorized'}</span>
-                    ${verificationStatus}
+                    <span class="question-id">ID: ${q.id ?? 'N/A'}${questionTypeInfo}</span>
+                    <span class="question-category">${q.category ?? 'Uncategorized'}</span>
+                    ${q.domain ? `<span class="question-domain" style="background: #007bff; color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; margin-left: 0.5rem;">${q.domain}</span>` : ''}
                 </div>
-                <div class="question-text">${question?.question ?? 'Question text not available'}</div>
+                <div class="question-text">${q.question ?? ''}</div>
                 <div class="options">
-                    ${question?.options?.map?.((option, index) => 
-                        `<div class="option">
+                    ${q.options?.map((option, index) => `
+                        <div class="option">
                             <span class="option-label">${String.fromCharCode(65 + index)})</span>
                             <span class="option-text">${option ?? ''}</span>
-                        </div>`
-                    )?.join?.('') ?? ''}
+                        </div>`).join('') ?? ''}
                 </div>
                 <div class="question-actions">
-                    <button class="show-answer-btn" onclick="app.toggleAnswer(${question?.id ?? 0})">
-                        Show Answer
-                    </button>
+                    <button class="show-answer-btn" onclick="app.toggleAnswer(${q.id})">Show Answer</button>
                 </div>
-                <div id="answer-${question?.id ?? 0}" class="correct-answer" style="display: none;">
+                <div id="answer-${q.id}" class="correct-answer" style="display: none;">
                     <div class="check-icon">✓</div>
                     <div class="answer-content">
-                        <div class="answer-text">
-                            <strong>Correct Answer:</strong> ${correctAnswers}
-                        </div>
-                        ${hasExplanation ? `<div class="explanation">${question.explanation.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer" style="color: #007bff; text-decoration: underline;">$1</a>')}</div>` : ''}
+                        <div class="answer-text"><strong>Correct Answer(s):</strong><br>${correctAnswersDisplay}</div>
+                        ${hasExplanation ? `<div class="explanation">${q.explanation.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank">$1</a>')}</div>` : ''}
                         ${tableControls}
-                        ${viewTableButton}
                     </div>
                 </div>
             </div>
         `;
-    }
-
-    // New method to show table in modal for specific question
-    showTableForQuestion(questionId) {
-        if (!this.tablesData || !Array.isArray(this.tablesData)) {
-            alert('Table data not available. Please ensure aws_mcq_tables.json is loaded.');
-            return;
-        }
-
-        // Find the table data for this question
-        const tableEntry = this.tablesData.find(entry => entry.question === questionId.toString());
-        
-        if (!tableEntry) {
-            alert(`No table data found for question ${questionId}`);
-            return;
-        }
-
-        this.displayTableModal(tableEntry, questionId);
-    }
-
-    displayTableModal(tableEntry, questionId) {
-        const modal = document.getElementById('tableModal');
-        const title = document.getElementById('tableModalTitle');
-        const body = document.getElementById('tableModalBody');
-        
-        if (!modal || !title || !body) {
-            console.error('Table modal elements not found');
-            return;
-        }
-
-        // Set title
-        title.textContent = `Table for Question ${questionId}`;
-
-        // Create table metadata
-        const metadata = tableEntry.metadata || {};
-        const metadataHtml = `
-            <div class="table-metadata">
-                <strong>Table Information:</strong><br>
-                ${metadata.page_number ? `Page: ${metadata.page_number}${metadata.end_page && metadata.end_page !== metadata.page_number ? `-${metadata.end_page}` : ''}` : ''}
-                ${metadata.table_number ? ` | Table #${metadata.table_number}` : ''}
-                ${metadata.dimensions ? ` | Size: ${metadata.dimensions.rows}×${metadata.dimensions.columns}` : ''}
-            </div>
-        `;
-
-        // Create table HTML
-        const tableHtml = this.createTableHTML(tableEntry);
-
-        // Set body content
-        body.innerHTML = metadataHtml + tableHtml;
-
-        // Show modal
-        modal.style.display = 'flex';
-    }
-
-    createTableHTML(tableEntry) {
-        if (!tableEntry.headers || !tableEntry.data) {
-            return '<p>Invalid table data structure</p>';
-        }
-
-        let html = '<table class="dynamic-table">';
-        
-        // Add headers
-        html += '<thead><tr>';
-        tableEntry.headers.forEach(header => {
-            // Replace newlines with <br> for proper display
-            const formattedHeader = header.replace(/\n/g, '<br>');
-            html += `<th>${formattedHeader}</th>`;
-        });
-        html += '</tr></thead>';
-        
-        // Add data rows
-        html += '<tbody>';
-        tableEntry.data.forEach(row => {
-            html += '<tr>';
-            row.forEach(cell => {
-                // Replace newlines with <br> for proper display
-                const formattedCell = cell.replace(/\n/g, '<br>');
-                html += `<td>${formattedCell}</td>`;
-            });
-            html += '</tr>';
-        });
-        html += '</tbody>';
-        
-        html += '</table>';
-        return html;
-    }
-
-    closeTableModal() {
-        const modal = document.getElementById('tableModal');
-        if (modal) {
-            modal.style.display = 'none';
-        }
-    }
-
-    // Existing method for opening table in new window (improved to handle focus better)
-    openTableForQuestion(questionId) {
-        const url = `aws1600t.html#question-${questionId}`;
-        
-        // Always open in new window or refresh if exists
-        if (this.tablesWindow && !this.tablesWindow.closed) {
-            // Force navigation to new URL and focus
-            this.tablesWindow.location.href = url;
-            this.tablesWindow.focus();
-            // Small delay to ensure the navigation happens before focusing
-            setTimeout(() => {
-                this.tablesWindow.focus();
-            }, 100);
-        } else {
-            // Open new window
-            this.tablesWindow = window.open(url, 'tablesWindow', 'width=1200,height=800,scrollbars=yes,resizable=yes');
-            if (this.tablesWindow) {
-                this.tablesWindow.focus();
-            }
-        }
     }
 
     toggleAnswer(questionId) {
         const answerDiv = document.getElementById(`answer-${questionId}`);
         const button = document.querySelector(`button[onclick="app.toggleAnswer(${questionId})"]`);
-        
         if (answerDiv && button) {
-            if (answerDiv.style.display === 'none') {
-                answerDiv.style.display = 'flex';
-                button.textContent = 'Hide Answer';
-            } else {
-                answerDiv.style.display = 'none';
-                button.textContent = 'Show Answer';
-            }
+            const isHidden = answerDiv.style.display === 'none';
+            answerDiv.style.display = isHidden ? 'flex' : 'none';
+            button.textContent = isHidden ? 'Hide Answer' : 'Show Answer';
         }
     }
 
-    switchTab(tabName) {
-        // Update tab buttons
-        document.querySelectorAll('.tab-button')?.forEach?.(btn => {
-            btn?.classList?.remove?.('active');
-        });
-        document.querySelector(`[data-tab="${tabName}"]`)?.classList?.add?.('active');
+    // --- TABLE Functionality ---
 
-        // Update tab content
-        document.querySelectorAll('.tab-content')?.forEach?.(content => {
-            content?.classList?.remove?.('active');
-        });
-        document.getElementById(`${tabName}Tab`)?.classList?.add?.('active');
+    showTableForQuestion(questionId) {
+        if (!this.tablesData || !Array.isArray(this.tablesData)) return alert('Table data not available.');
+        const tableEntry = this.tablesData.find(entry => entry.question === questionId.toString());
+        if (!tableEntry) return alert(`No table data found for question ${questionId}`);
+        this.displayTableModal(tableEntry, questionId);
     }
 
-    startQuiz() {
-        const selectedCategory = document.getElementById('quizCategory')?.value ?? '';
-        const questionCount = parseInt(document.getElementById('questionCount')?.value ?? '10');
-
-        let availableQuestions = selectedCategory 
-            ? this.questions?.filter?.(q => q?.category === selectedCategory) ?? []
-            : [...this.questions];
-
-        if (!availableQuestions?.length) {
-            alert('No questions available for the selected category.');
-            return;
-        }
-
-        // Shuffle and limit questions
-        this.currentQuizQuestions = this.shuffleArray(availableQuestions)?.slice?.(0, questionCount) ?? [];
-        this.currentQuizIndex = 0;
-        this.quizInProgress = true;
-        this.quizResults = []; // Reset quiz results
-
-        // Show quiz container
-        document.getElementById('quizSetup')?.style?.setProperty?.('display', 'none');
-        document.getElementById('quizContainer')?.style?.setProperty?.('display', 'block');
-
-        this.displayCurrentQuizQuestion();
-    }
-
-    endQuiz() {
-        this.quizInProgress = false;
-        this.currentQuizQuestions = [];
-        this.currentQuizIndex = 0;
-        this.quizResults = [];
-
-        // Show setup, hide quiz
-        document.getElementById('quizSetup')?.style?.setProperty?.('display', 'block');
-        document.getElementById('quizContainer')?.style?.setProperty?.('display', 'none');
-    }
-
-    displayCurrentQuizQuestion() {
-        const question = this.currentQuizQuestions?.[this.currentQuizIndex];
-        if (!question) return;
-
-        // Update question number
-        const questionNumber = document.getElementById('questionNumber');
-        if (questionNumber) {
-            questionNumber.textContent = `Question ${this.currentQuizIndex + 1} of ${this.currentQuizQuestions?.length ?? 0}`;
-        }
-
-        // Check if this is a multiple choice question
-        const isMultipleChoice = question?.answer_letters?.length > 1;
-        const inputType = isMultipleChoice ? 'checkbox' : 'radio';
-
-        // Display question with interactive options
-        const quizQuestion = document.getElementById('quizQuestion');
-        if (quizQuestion) {
-            quizQuestion.innerHTML = `
-                <div class="question-text">${question?.question ?? 'Question not available'}</div>
-                <div class="quiz-instructions">
-                    ${isMultipleChoice ? 
-                        `<p><strong>Select ${question.answer_letters.length} answers:</strong></p>` : 
-                        '<p><strong>Select one answer:</strong></p>'
-                    }
-                </div>
-                <div class="quiz-options">
-                    ${question?.options?.map?.((option, index) => {
-                        const letter = String.fromCharCode(65 + index);
-                        return `
-                            <div class="quiz-option" onclick="app.toggleQuizOption('${letter}')">
-                                <input type="${inputType}" 
-                                       id="option-${letter}" 
-                                       name="quiz-answer" 
-                                       value="${letter}" 
-                                       ${inputType === 'radio' ? '' : ''}>
-                                <span class="quiz-option-label">${letter}.</span>
-                                <span class="quiz-option-text">${option ?? ''}</span>
-                            </div>
-                        `;
-                    })?.join?.('') ?? ''}
-                </div>
-            `;
-        }
-
-        // Reset answer section and buttons
-        document.getElementById('answerSection')?.style?.setProperty?.('display', 'none');
-        document.getElementById('checkAnswer')?.style?.setProperty?.('display', 'inline-block');
-        document.getElementById('showAnswer')?.style?.setProperty?.('display', 'none');
-        document.getElementById('nextQuestion')?.style?.setProperty?.('display', 'none');
+    displayTableModal(tableEntry, questionId) {
+        const modal = document.getElementById('tableModal');
+        document.getElementById('tableModalTitle').textContent = `Table for Question ${questionId}`;
+        const body = document.getElementById('tableModalBody');
         
-        // Clear any previous result
-        const existingResult = document.querySelector('.quiz-result');
-        if (existingResult) {
-            existingResult.remove();
+        const createTableHTML = (entry) => {
+            let html = '<table class="dynamic-table"><thead><tr>';
+            entry.headers.forEach(h => html += `<th>${h.replace(/\n/g, '<br>')}</th>`);
+            html += '</tr></thead><tbody>';
+            entry.data.forEach(row => {
+                html += '<tr>';
+                row.forEach(cell => html += `<td>${cell.replace(/\n/g, '<br>')}</td>`);
+                html += '</tr>';
+            });
+            return html + '</tbody></table>';
+        };
+        
+        body.innerHTML = createTableHTML(tableEntry);
+        if (modal) modal.style.display = 'flex';
+    }
+    
+    closeTableModal() {
+        const modal = document.getElementById('tableModal');
+        if (modal) modal.style.display = 'none';
+    }
+    
+    openTableForQuestion(questionId) {
+        const url = `aws1600t.html#question-${questionId}`;
+        if (this.tablesWindow && !this.tablesWindow.closed) {
+            this.tablesWindow.location.href = url;
+            this.tablesWindow.focus();
+        } else {
+            this.tablesWindow = window.open(url, 'tablesWindow', 'width=1200,height=800,scrollbars=yes,resizable=yes');
         }
     }
 
-    showCurrentAnswer() {
-        const question = this.currentQuizQuestions?.[this.currentQuizIndex];
+    // --- QUIZ Functionality (Enhanced with Multichoice Support) ---
+    
+    selectAllDatasets = () => document.querySelectorAll('#datasetCheckboxGroup input').forEach(cb => cb.checked = true);
+    selectNoneDatasets = () => document.querySelectorAll('#datasetCheckboxGroup input').forEach(cb => cb.checked = false);
+    selectCurrentDataset = () => this.updateDatasetCheckboxes();
+    
+    async startQuiz() {
+        const startBtn = document.getElementById('startQuiz');
+        startBtn.disabled = true;
+        startBtn.textContent = 'Loading...';
+
+        try {
+            this.timeLimit = parseInt(document.getElementById('timeLimit').value) || 90;
+            const keywords = document.getElementById('quizKeywords').value.trim();
+            const selectedCategory = document.getElementById('quizCategory').value;
+            const selectedDomain = document.getElementById('quizDomain').value;
+            const questionCount = parseInt(document.getElementById('questionCount').value);
+            const multichoiceRatio = parseInt(document.getElementById('multichoiceRatio').value) || 30;
+            const selectedDatasets = [...document.querySelectorAll('#datasetCheckboxGroup input:checked')].map(cb => cb.value);
+
+            if (selectedDatasets.length === 0) {
+                alert('Please select at least one dataset.');
+                return;
+            }
+
+            let availableQuestions = await this.loadMultipleDatasets(selectedDatasets);
+
+            // Apply filters
+            if (selectedCategory) {
+                availableQuestions = availableQuestions.filter(q => q.category === selectedCategory);
+            }
+            if (selectedDomain) {
+                availableQuestions = availableQuestions.filter(q => q.domain === selectedDomain);
+            }
+            if (keywords) {
+                const keywordList = keywords.toLowerCase().split(',').map(k => k.trim()).filter(Boolean);
+                availableQuestions = availableQuestions.filter(q => {
+                    const searchText = `${q.question} ${q.options.join(' ')}`.toLowerCase();
+                    return keywordList.some(kw => searchText.includes(kw));
+                });
+            }
+
+            if (!availableQuestions.length) {
+                alert('No questions found matching your criteria.');
+                return;
+            }
+
+            // Enhanced quiz generation with multichoice ratio support
+            this.currentQuizQuestions = this.generateBalancedQuiz(availableQuestions, questionCount, multichoiceRatio);
+            
+            if (this.currentQuizQuestions.length === 0) {
+                 alert('No questions found after filtering and balancing.');
+                 return;
+            }
+            
+            this.currentQuizIndex = 0;
+            this.quizInProgress = true;
+            this.quizResults = [];
+
+            // Enhanced quiz info display
+            const quizInfo = document.getElementById('quizInfo');
+            if (quizInfo) {
+                const datasetNames = selectedDatasets.map(ds => {
+                    const dataset = this.availableDatasets.find(d => d.value === ds);
+                    return dataset ? dataset.label.split(' (')[0].trim() : ds;
+                });
+                const multichoiceCount = this.currentQuizQuestions.filter(q => q.expectedChoices > 1).length;
+                const actualMultichoiceRatio = Math.round((multichoiceCount / this.currentQuizQuestions.length) * 100);
+                
+                let infoText = `Sources: ${datasetNames.join(', ')} | Multichoice: ${multichoiceCount}/${this.currentQuizQuestions.length} (${actualMultichoiceRatio}%)`;
+                if (keywords) infoText += ` | Keywords: ${keywords}`;
+                if (selectedCategory) infoText += ` | Category: ${selectedCategory}`;
+                if (selectedDomain) infoText += ` | Domain: ${selectedDomain}`;
+                quizInfo.textContent = infoText;
+            }
+
+            document.getElementById('quizSetup').style.display = 'none';
+            document.getElementById('quizContainer').style.display = 'flex';
+            document.getElementById('scoreReport').classList.remove('active');
+
+            this.displayCurrentQuizQuestion();
+        } catch (error) {
+            console.error("Failed to start quiz:", error);
+            alert("An error occurred while starting the quiz.");
+        } finally {
+            startBtn.disabled = false;
+            startBtn.textContent = 'Start Quiz';
+        }
+    }
+    
+    generateBalancedQuiz(availableQuestions, questionCount, multichoiceRatio) {
+        const multichoiceQuestions = availableQuestions.filter(q => q.expectedChoices > 1);
+        const singleChoiceQuestions = availableQuestions.filter(q => q.expectedChoices === 1);
+        
+        const targetMultichoice = Math.ceil((questionCount * multichoiceRatio) / 100);
+        const targetSingleChoice = questionCount - targetMultichoice;
+        
+        const selectedMultichoice = this.shuffleArray(multichoiceQuestions).slice(0, Math.min(targetMultichoice, multichoiceQuestions.length));
+        const selectedSingleChoice = this.shuffleArray(singleChoiceQuestions).slice(0, Math.min(targetSingleChoice, singleChoiceQuestions.length));
+        
+        // If we don't have enough of one type, fill with the other
+        const combined = [...selectedMultichoice, ...selectedSingleChoice];
+        if (combined.length < questionCount) {
+            const remaining = availableQuestions.filter(q => !combined.includes(q));
+            const additional = this.shuffleArray(remaining).slice(0, questionCount - combined.length);
+            combined.push(...additional);
+        }
+        
+        return this.shuffleArray(combined).slice(0, questionCount);
+    }
+    
+    displayCurrentQuizQuestion() {
+        const question = this.currentQuizQuestions[this.currentQuizIndex];
         if (!question) return;
 
-        const correctAnswers = question?.correct_answers?.join?.(', ') ?? 'No answer provided';
-        const hasExplanation = question?.explanation && question.explanation.trim() !== '';
-
-        // Update answer content
-        const correctAnswerText = document.getElementById('correctAnswerText');
-        if (correctAnswerText) {
-            correctAnswerText.innerHTML = correctAnswers;
-        }
-
-        const explanationText = document.getElementById('explanationText');
-        if (explanationText) {
-            explanationText.innerHTML = hasExplanation ? question.explanation : '';
-            explanationText.style.display = hasExplanation ? 'block' : 'none';
-        }
-
-        // Add table controls for aws_mcq_questions.json dataset in quiz mode
-        if (this.currentDataset === 'aws_mcq_questions.json') {
-            const answerSection = document.getElementById('answerSection');
-            if (answerSection) {
-                // Remove existing table controls to avoid duplicates
-                const existingControls = answerSection.querySelectorAll('.question-number-label, .see-table-btn, .view-table-btn');
-                existingControls.forEach(control => control.remove());
-
-                // Add question number label
-                const questionLabel = document.createElement('span');
-                questionLabel.className = 'question-number-label';
-                questionLabel.textContent = `Question ${question.id}`;
-                answerSection.appendChild(questionLabel);
-
-                // Add See Table button
-                const seeTableBtn = document.createElement('button');
-                seeTableBtn.className = 'see-table-btn';
-                seeTableBtn.textContent = 'See Table';
-                seeTableBtn.onclick = () => this.showTableForQuestion(question.id);
-                answerSection.appendChild(seeTableBtn);
-
-                // Add View Table button
-                const viewTableBtn = document.createElement('button');
-                viewTableBtn.className = 'view-table-btn';
-                viewTableBtn.textContent = 'View Table';
-                viewTableBtn.onclick = () => this.openTableForQuestion(question.id);
-                answerSection.appendChild(viewTableBtn);
-            }
-        }
-
-        // Show answer section and next button
-        document.getElementById('answerSection')?.style?.setProperty?.('display', 'block');
-        document.getElementById('showAnswer')?.style?.setProperty?.('display', 'none');
-        document.getElementById('nextQuestion')?.style?.setProperty?.('display', 'inline-block');
+        document.getElementById('questionNumber').textContent = `Question ${this.currentQuizIndex + 1} of ${this.currentQuizQuestions.length}`;
+        
+        // Enhanced multichoice support using expectedChoices
+        const isMultiple = question.expectedChoices > 1;
+        const inputType = isMultiple ? 'checkbox' : 'radio';
+        const instructions = isMultiple ? 
+            `Select ${question.expectedChoices} answers:` : 'Select one answer:';
+        
+        // Enhanced question display with type info
+        const questionTypeDisplay = isMultiple ? 
+            `<div class="quiz-question-type" style="color: #007bff; font-weight: bold; margin-bottom: 0.5rem;">Multiple Choice (${question.expectedChoices} correct answers)</div>` :
+            `<div class="quiz-question-type" style="color: #28a745; font-weight: bold; margin-bottom: 0.5rem;">Single Choice</div>`;
+        
+        document.getElementById('quizQuestion').innerHTML = `
+            ${questionTypeDisplay}
+            <div class="question-text">${question.question}</div>
+            <div class="quiz-instructions"><p><strong>${instructions}</strong></p></div>
+            <div class="quiz-options">
+                ${question.options.map((option, index) => {
+                    const letter = String.fromCharCode(65 + index);
+                    return `
+                        <div class="quiz-option" onclick="app.toggleQuizOption(this, '${inputType}')">
+                            <input type="${inputType}" id="option-${letter}" name="quiz-answer" value="${letter}">
+                            <span class="quiz-option-label">${letter}.</span>
+                            <span class="quiz-option-text">${option}</span>
+                        </div>`;
+                }).join('')}
+            </div>
+            <div class="quiz-question-id-label">Question ID: ${question.id} | Domain: ${question.domain || 'N/A'} | Category: ${question.category || 'N/A'}</div>
+        `;
+        
+        document.getElementById('answerSection').style.display = 'none';
+        document.getElementById('checkAnswer').style.display = 'inline-block';
+        document.getElementById('nextQuestion').style.display = 'none';
+        
+        this.startTimer();
     }
 
+    toggleQuizOption(optionDiv, inputType) {
+        const input = optionDiv.querySelector('input');
+        if (input.disabled) return;
+        
+        if (inputType === 'radio') {
+            document.querySelectorAll('.quiz-option').forEach(opt => opt.classList.remove('selected'));
+            input.checked = true;
+            optionDiv.classList.add('selected');
+        } else {
+            input.checked = !input.checked;
+            optionDiv.classList.toggle('selected', input.checked);
+        }
+    }
+
+    checkUserAnswer(isTimeOut = false) {
+        clearInterval(this.timerInterval);
+        const timeSpent = isTimeOut ? this.timeLimit : (Date.now() - this.questionStartTime) / 1000;
+        
+        const question = this.currentQuizQuestions[this.currentQuizIndex];
+        const selectedInputs = [...document.querySelectorAll('.quiz-option input:checked')];
+        const userAnswers = selectedInputs.map(input => input.value).sort();
+        const correctAnswers = question.answer_letters.sort();
+
+        // Enhanced validation for multichoice questions
+        if (!isTimeOut && userAnswers.length === 0) {
+            this.startTimer(parseInt(document.getElementById('timer').textContent.split(':')[0]) * 60 + parseInt(document.getElementById('timer').textContent.split(':')[1]));
+            return alert('Please select an answer.');
+        }
+        
+        // Enhanced correctness check using expectedChoices
+        const isCorrect = !isTimeOut && 
+            (userAnswers.length === question.expectedChoices) && 
+            (JSON.stringify(userAnswers) === JSON.stringify(correctAnswers));
+
+        this.quizResults.push({ 
+            question, 
+            userAnswers, 
+            correctAnswers, 
+            expectedChoices: question.expectedChoices,
+            isCorrect, 
+            timeSpent,
+            timedOut: isTimeOut 
+        });
+
+        // Visual feedback on options
+        document.querySelectorAll('.quiz-option').forEach(optionDiv => {
+            const input = optionDiv.querySelector('input');
+            input.disabled = true;
+            if (correctAnswers.includes(input.value)) {
+                optionDiv.classList.add('correct');
+            } else if (input.checked) {
+                optionDiv.classList.add('incorrect');
+            }
+        });
+
+        this.showCurrentAnswer(isCorrect, isTimeOut);
+        
+        document.getElementById('checkAnswer').style.display = 'none';
+        document.getElementById('nextQuestion').style.display = 'inline-block';
+    }
+    
+    showCurrentAnswer(isCorrect, isTimeOut) {
+        const question = this.currentQuizQuestions[this.currentQuizIndex];
+        const answerSection = document.getElementById('answerSection');
+        
+        let resultMessage = isCorrect ? 'Correct!' : 'Incorrect';
+        if (isTimeOut) resultMessage = 'Time is up!';
+        const resultClass = isCorrect ? 'correct' : 'incorrect';
+
+        const correctAnswersDisplay = question.answer_letters.map(letter => {
+            const optionIndex = letter.charCodeAt(0) - 65;
+            return `${letter}. ${question.options[optionIndex]}`;
+        }).join('<br>');
+
+        const questionTypeInfo = question.expectedChoices > 1 ? 
+            ` (Required ${question.expectedChoices} answers)` : '';
+
+        answerSection.innerHTML = `
+            <div class="quiz-result ${resultClass}">
+                <span class="result-icon">${isCorrect ? '✓' : '✗'}</span>
+                ${resultMessage}${questionTypeInfo}
+            </div>
+            <div class="correct-answer">
+                <div class="check-icon">✓</div>
+                <div class="answer-content">
+                    <div class="answer-text">
+                        <strong>Correct Answer(s):</strong><br><span id="correctAnswerText">${correctAnswersDisplay}</span>
+                    </div>
+                    <div id="explanationText" class="explanation" style="${question.explanation ? '' : 'display:none;'}">
+                        ${question.explanation || ''}
+                    </div>
+                </div>
+            </div>
+        `;
+        answerSection.style.display = 'block';
+    }
+    
     nextQuizQuestion() {
         this.currentQuizIndex++;
-        
-        if (this.currentQuizIndex >= (this.currentQuizQuestions?.length ?? 0)) {
-            // Show score report instead of alert
+        if (this.currentQuizIndex >= this.currentQuizQuestions.length) {
             this.showScoreReport();
         } else {
             this.displayCurrentQuizQuestion();
         }
     }
+    
+    endQuiz() {
+        clearInterval(this.timerInterval);
+        this.quizInProgress = false;
+        this.currentQuizQuestions = [];
+        this.quizResults = [];
+        this.currentQuizIndex = 0;
 
-    toggleQuizOption(letter) {
-        const question = this.currentQuizQuestions?.[this.currentQuizIndex];
-        if (!question) return;
-
-        const isMultipleChoice = question?.answer_letters?.length > 1;
-        const checkbox = document.getElementById(`option-${letter}`);
-        const option = checkbox?.closest('.quiz-option');
-
-        if (!checkbox || !option) return;
-
-        if (isMultipleChoice) {
-            // Toggle checkbox
-            checkbox.checked = !checkbox.checked;
-            option.classList.toggle('selected', checkbox.checked);
-        } else {
-            // Radio button behavior - uncheck all others
-            document.querySelectorAll('.quiz-option').forEach(opt => {
-                opt.classList.remove('selected');
-                const input = opt.querySelector('input');
-                if (input) input.checked = false;
-            });
-            
-            checkbox.checked = true;
-            option.classList.add('selected');
-        }
-    }
-
-    checkUserAnswer() {
-        const question = this.currentQuizQuestions?.[this.currentQuizIndex];
-        if (!question) return;
-
-        // Get user's selected answers
-        const selectedInputs = document.querySelectorAll('.quiz-option input:checked');
-        const userAnswers = Array.from(selectedInputs).map(input => input.value).sort();
-        const correctAnswers = [...(question?.answer_letters || [])].sort();
-
-        // Check if user selected any answers
-        if (userAnswers.length === 0) {
-            alert('Please select an answer before checking.');
-            return;
-        }
-
-        // Compare answers
-        const isCorrect = JSON.stringify(userAnswers) === JSON.stringify(correctAnswers);
-
-        // Store the result for this question
-        const result = {
-            questionIndex: this.currentQuizIndex,
-            question: question,
-            userAnswers: userAnswers,
-            correctAnswers: correctAnswers,
-            isCorrect: isCorrect,
-            timestamp: new Date().toISOString()
-        };
-        this.quizResults.push(result);
-
-        // Update option styling
-        document.querySelectorAll('.quiz-option').forEach(option => {
-            const input = option.querySelector('input');
-            const letter = input?.value;
-            
-            if (correctAnswers.includes(letter)) {
-                option.classList.add('correct');
-            } else if (userAnswers.includes(letter)) {
-                option.classList.add('incorrect');
-            }
-            
-            // Disable further interaction
-            option.style.pointerEvents = 'none';
-            if (input) input.disabled = true;
-        });
-
-        // Show result
-        this.showQuizResult(isCorrect, question);
-        // Immediately display correct answer and explanation
-        this.showCurrentAnswer();
-
-        // Update buttons
-        document.getElementById('checkAnswer')?.style?.setProperty?.('display', 'none');
-        document.getElementById('showAnswer')?.style?.setProperty?.('display', 'none');
-        document.getElementById('nextQuestion')?.style?.setProperty?.('display', 'inline-block');
-    }
-
-    showQuizResult(isCorrect, question) {
-        const resultDiv = document.createElement('div');
-        resultDiv.className = `quiz-result ${isCorrect ? 'correct' : 'incorrect'}`;
-        
-        const icon = isCorrect ? '✓' : '✗';
-        const message = isCorrect ? 'Correct!' : 'Incorrect!';
-        const correctAnswersText = question?.answer_letters?.join(', ') || '';
-        
-        resultDiv.innerHTML = `
-            <span class="result-icon">${icon}</span>
-            ${message}
-            ${!isCorrect ? `<br><strong>Correct answer(s): ${correctAnswersText}</strong>` : ''}
-        `;
-
-        // Insert after quiz options
-        const quizQuestion = document.getElementById('quizQuestion');
-        if (quizQuestion) {
-            quizQuestion.appendChild(resultDiv);
-        }
+        document.getElementById('quizSetup').style.display = 'flex';
+        document.getElementById('quizContainer').style.display = 'none';
+        document.getElementById('scoreReport').classList.remove('active');
     }
 
     showScoreReport() {
-        // Hide quiz container
-        document.getElementById('quizContainer')?.style?.setProperty?.('display', 'none');
+        clearInterval(this.timerInterval);
+        document.getElementById('quizContainer').style.display = 'none';
+        const scoreReportDiv = document.getElementById('scoreReport');
         
-        // Create or show score report
-        let scoreReportDiv = document.getElementById('scoreReport');
-        if (!scoreReportDiv) {
-            scoreReportDiv = document.createElement('div');
-            scoreReportDiv.id = 'scoreReport';
-            scoreReportDiv.className = 'tab-content';
-            document.getElementById('quizTab').appendChild(scoreReportDiv);
+        const total = this.quizResults.length;
+        const correct = this.quizResults.filter(r => r.isCorrect).length;
+        const score = total > 0 ? Math.round((correct / total) * 100) : 0;
+        
+        // Enhanced statistics
+        const multichoiceResults = this.quizResults.filter(r => r.expectedChoices > 1);
+        const singleChoiceResults = this.quizResults.filter(r => r.expectedChoices === 1);
+        const multichoiceCorrect = multichoiceResults.filter(r => r.isCorrect).length;
+        const singleChoiceCorrect = singleChoiceResults.filter(r => r.isCorrect).length;
+        const timedOutCount = this.quizResults.filter(r => r.timedOut).length;
+        
+        // Time calculations
+        const times = this.quizResults.map(r => r.timeSpent);
+        const minTime = total > 0 ? Math.min(...times) : 0;
+        const maxTime = total > 0 ? Math.max(...times) : 0;
+        const avgTime = total > 0 ? times.reduce((a, b) => a + b, 0) / total : 0;
+        let medianTime = 0;
+        if (total > 0) {
+            const sortedTimes = [...times].sort((a, b) => a - b);
+            const mid = Math.floor(total / 2);
+            medianTime = total % 2 !== 0 ? sortedTimes[mid] : (sortedTimes[mid - 1] + sortedTimes[mid]) / 2;
         }
-        
-        // Calculate statistics
-        const totalQuestions = this.quizResults.length;
-        const correctAnswers = this.quizResults.filter(r => r.isCorrect).length;
-        const score = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
-        const timestamp = new Date().toLocaleString();
-        
-        // Build score report HTML
-        let scoreReportHTML = `
+
+        const resultsHTML = this.quizResults.map((result, index) => {
+            const q = result.question;
+            const userAnswerText = result.userAnswers.length > 0 ? 
+                result.userAnswers.map(l => `${l}. ${q.options[l.charCodeAt(0)-65]}`).join('<br>') : 'No answer selected';
+            const correctAnswerText = result.correctAnswers.map(l => `${l}. ${q.options[l.charCodeAt(0)-65]}`).join('<br>');
+            const questionTypeLabel = result.expectedChoices > 1 ? 
+                `Multichoice (${result.expectedChoices} required)` : 'Single Choice';
+            const statusLabel = result.timedOut ? 'Timed Out' : (result.isCorrect ? 'Correct' : 'Incorrect');
+            
+            return `
+                <div class="score-report-question">
+                    <div class="score-question-header">
+                        <span class="score-question-number">Question ${index + 1} - ${questionTypeLabel} (ID: ${q.id})</span>
+                        <span class="score-time-spent">Time: ${this.formatTime(result.timeSpent)}</span>
+                        <span class="score-result-badge ${result.isCorrect ? 'correct' : 'incorrect'}">${statusLabel}</span>
+                    </div>
+                    <div class="score-question-text">${q.question}</div>
+                    <div class="score-user-answer"><span class="score-label">Your Answer(s):</span><br>${userAnswerText}</div>
+                    ${!result.isCorrect ? `<div class="score-correct-answer"><span class="score-label">Correct Answer(s):</span><br>${correctAnswerText}</div>` : ''}
+                    ${q.domain ? `<div style="margin-top: 0.5rem;"><span class="score-label">Domain:</span> ${q.domain}</div>` : ''}
+                    ${q.category ? `<div><span class="score-label">Category:</span> ${q.category}</div>` : ''}
+                    ${q.explanation ? `<div class="score-explanation"><span class="score-label">Explanation:</span> ${q.explanation}</div>` : ''}
+                </div>
+            `;
+        }).join('');
+
+        scoreReportDiv.innerHTML = `
             <div class="score-report">
                 <div class="score-report-header">
                     <h2>Quiz Results</h2>
-                    <div class="score-summary">
-                        <div class="score-stat">
-                            <span class="score-stat-value">${score}%</span>
-                            <span class="score-stat-label">Score</span>
+                    <div class="score-summary-container">
+                        <div class="score-summary">
+                            <div class="score-stat"><span class="score-stat-value">${score}%</span><span class="score-stat-label">Overall Score</span></div>
+                            <div class="score-stat"><span class="score-stat-value">${correct}/${total}</span><span class="score-stat-label">Total Correct</span></div>
                         </div>
-                        <div class="score-stat">
-                            <span class="score-stat-value">${correctAnswers}/${totalQuestions}</span>
-                            <span class="score-stat-label">Correct Answers</span>
+                        <div class="score-summary">
+                            <div class="score-stat"><span class="score-stat-value">${multichoiceCorrect}/${multichoiceResults.length}</span><span class="score-stat-label">Multichoice</span></div>
+                            <div class="score-stat"><span class="score-stat-value">${singleChoiceCorrect}/${singleChoiceResults.length}</span><span class="score-stat-label">Single Choice</span></div>
+                            <div class="score-stat"><span class="score-stat-value">${timedOutCount}</span><span class="score-stat-label">Timed Out</span></div>
+                        </div>
+                        <div class="score-summary">
+                            <div class="score-stat"><span class="score-stat-value">${this.formatTime(avgTime)}</span><span class="score-stat-label">Avg. Time</span></div>
+                            <div class="score-stat"><span class="score-stat-value">${this.formatTime(medianTime)}</span><span class="score-stat-label">Median</span></div>
+                            <div class="score-stat"><span class="score-stat-value">${this.formatTime(minTime)}</span><span class="score-stat-label">Min Time</span></div>
+                            <div class="score-stat"><span class="score-stat-value">${this.formatTime(maxTime)}</span><span class="score-stat-label">Max Time</span></div>
                         </div>
                     </div>
-                    <div class="score-timestamp">Completed: ${timestamp}</div>
+                    <div class="score-timestamp">Completed: ${new Date().toLocaleString()}</div>
                 </div>
-                
                 <div class="score-actions">
                     <button class="export-json-btn" onclick="app.exportScoreReport()">Export to JSON</button>
-                    <button class="back-to-quiz-btn" onclick="app.backToQuizSetup()">Start New Quiz</button>
+                    <button class="back-to-quiz-btn" onclick="app.endQuiz()">New Quiz</button>
                 </div>
-                
-                <div class="score-report-questions">
-                    <h3>Question Review</h3>
-        `;
-        
-        // Add each question result
-        this.quizResults.forEach((result, index) => {
-            const question = result.question;
-            const userAnswerTexts = result.userAnswers.map(letter => {
-                const optionIndex = letter.charCodeAt(0) - 65;
-                return `${letter}. ${question.options[optionIndex]}`;
-            }).join(', ');
-            
-            const correctAnswerTexts = result.correctAnswers.map(letter => {
-                const optionIndex = letter.charCodeAt(0) - 65;
-                return `${letter}. ${question.options[optionIndex]}`;
-            }).join(', ');
-            
-            scoreReportHTML += `
-                <div class="score-report-question">
-                    <div class="score-question-header">
-                        <span class="score-question-number">Question ${index + 1}</span>
-                        <span class="score-result-badge ${result.isCorrect ? 'correct' : 'incorrect'}">
-                            ${result.isCorrect ? 'Correct' : 'Incorrect'}
-                        </span>
-                    </div>
-                    <div class="score-question-text">${question.question}</div>
-                    <div class="score-user-answer">
-                        <span class="score-label">Your Answer:</span>
-                        ${userAnswerTexts}
-                    </div>
-                    <div class="score-correct-answer">
-                        <span class="score-label">Correct Answer:</span>
-                        ${correctAnswerTexts}
-                    </div>
-                    ${question.explanation ? `
-                        <div class="score-explanation">
-                            <span class="score-label">Explanation:</span>
-                            ${question.explanation}
-                        </div>
-                    ` : ''}
-                </div>
-            `;
-        });
-        
-        scoreReportHTML += `
-                </div>
+                <div class="score-report-questions"><h3>Question Review</h3>${resultsHTML}</div>
             </div>
         `;
-        
-        scoreReportDiv.innerHTML = scoreReportHTML;
         scoreReportDiv.classList.add('active');
     }
 
     exportScoreReport() {
         const exportData = {
-            dataset: this.currentDataset,
             timestamp: new Date().toISOString(),
-            totalQuestions: this.quizResults.length,
-            correctAnswers: this.quizResults.filter(r => r.isCorrect).length,
-            score: Math.round((this.quizResults.filter(r => r.isCorrect).length / this.quizResults.length) * 100),
-            results: this.quizResults.map(result => ({
-                questionNumber: result.questionIndex + 1,
-                questionId: result.question.id,
-                questionText: result.question.question,
-                userAnswers: result.userAnswers,
-                correctAnswers: result.correctAnswers,
-                isCorrect: result.isCorrect,
-                category: result.question.category,
-                explanation: result.question.explanation || null
+            summary: {
+                totalQuestions: this.quizResults.length,
+                correctAnswers: this.quizResults.filter(r => r.isCorrect).length,
+                multichoiceQuestions: this.quizResults.filter(r => r.expectedChoices > 1).length,
+                timedOutQuestions: this.quizResults.filter(r => r.timedOut).length
+            },
+            results: this.quizResults.map((r, index) => ({
+                questionNumber: index + 1,
+                questionId: r.question.id,
+                questionText: r.question.question,
+                questionType: r.expectedChoices > 1 ? 'multichoice' : 'single',
+                expectedChoices: r.expectedChoices,
+                domain: r.question.domain,
+                category: r.question.category,
+                userAnswers: r.userAnswers,
+                correctAnswers: r.correctAnswers,
+                isCorrect: r.isCorrect,
+                timedOut: r.timedOut,
+                timeSpent: r.timeSpent.toFixed(2)
             }))
         };
-        
-        const dataStr = JSON.stringify(exportData, null, 2);
-        const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-        
-        const exportFileDefaultName = `quiz-results-${new Date().toISOString().slice(0,10)}.json`;
-        
-        const linkElement = document.createElement('a');
-        linkElement.setAttribute('href', dataUri);
-        linkElement.setAttribute('download', exportFileDefaultName);
-        linkElement.click();
+        const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(exportData, null, 2));
+        const dl = document.createElement('a');
+        dl.setAttribute('href', dataStr);
+        dl.setAttribute('download', `quiz-results-${new Date().toISOString()}.json`);
+        document.body.appendChild(dl);
+        dl.click();
+        dl.remove();
+    }
+    
+    // --- Timer Methods ---
+    startTimer() {
+        clearInterval(this.timerInterval);
+        this.questionStartTime = Date.now();
+        let secondsRemaining = this.timeLimit;
+        const timerEl = document.getElementById('timer');
+
+        this.updateTimerDisplay(secondsRemaining, timerEl);
+
+        this.timerInterval = setInterval(() => {
+            secondsRemaining--;
+            this.updateTimerDisplay(secondsRemaining, timerEl);
+            if (secondsRemaining <= 0) {
+                clearInterval(this.timerInterval);
+                this.checkUserAnswer(true); // isTimeOut = true
+            }
+        }, 1000);
     }
 
-    backToQuizSetup() {
-        // Hide score report
-        const scoreReport = document.getElementById('scoreReport');
-        if (scoreReport) {
-            scoreReport.classList.remove('active');
+    updateTimerDisplay(seconds, timerEl) {
+        timerEl.textContent = this.formatTime(seconds);
+        if (seconds < 15) {
+            timerEl.classList.add('low-time');
+        } else {
+            timerEl.classList.remove('low-time');
         }
-        
-        // Reset quiz data
-        this.quizResults = [];
-        this.currentQuizQuestions = [];
-        this.currentQuizIndex = 0;
-        this.quizInProgress = false;
-        
-        // Show quiz setup
-        document.getElementById('quizSetup')?.style?.setProperty?.('display', 'block');
-        document.getElementById('quizContainer')?.style?.setProperty?.('display', 'none');
     }
 
-    shuffleArray(array) {
-        const shuffled = [...array];
-        for (let i = shuffled.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-        }
-        return shuffled;
+    formatTime(totalSeconds) {
+        totalSeconds = Math.max(0, totalSeconds);
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = Math.floor(totalSeconds % 60);
+        return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
     }
+
+    // --- Generic Helpers ---
+    switchTab(tabName) {
+        document.querySelectorAll('.tab-button, .tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+        document.getElementById(`${tabName}Tab`).classList.add('active');
+        
+        if (tabName === 'quiz') {
+            this.endQuiz(); // Reset quiz state when switching to quiz tab
+        }
+    }
+
+    resetFilters() {
+        document.getElementById('searchInput').value = '';
+        document.getElementById('categoryFilter').value = '';
+        document.getElementById('domainFilter').value = '';
+        this.filteredQuestions = [...this.questions];
+    }
+
+    showLoading(tab) {
+        if (tab === 'browse') {
+            document.getElementById('questionsList').innerHTML = '<div class="loading">Loading...</div>';
+        }
+    }
+
+    showError(message, tab) {
+        if (tab === 'browse') {
+            document.getElementById('questionsList').innerHTML = `<div class="error">${message}</div>`;
+        }
+    }
+    
+    shuffleArray = (array) => array.map(value => ({ value, sort: Math.random() })).sort((a, b) => a.sort - b.sort).map(({ value }) => value);
 }
 
 // Initialize the app
 const app = new MCQApp();
-
-/* ======== Lightbox (minimal, self-contained) BEGIN ======== */
-(function () {
-  // Inject base styles
-  const style = document.createElement('style');
-  style.textContent = `
-    .lb-overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.85);
-      display: none; z-index: 9999;
-    }
-    .lb-overlay.active { display: block; }
-    .lb-stage {
-      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-      overflow: hidden; cursor: grab;
-    }
-    .lb-stage:active { cursor: grabbing; }
-    .lb-img {
-      max-width: 90vw; max-height: 90vh; user-select: none; -webkit-user-drag: none;
-      transform-origin: 0 0; /* top-left origin so we can compute translate + scale easily */
-      will-change: transform;
-      image-rendering: auto;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-      border-radius: 8px;
-      background: #111;
-    }
-    .lb-ui {
-      position: absolute; top: 12px; right: 12px; display: flex; gap: 8px; z-index: 2;
-    }
-    .lb-btn {
-      border: none; border-radius: 6px; padding: 6px 10px; font-size: 14px;
-      background: rgba(255,255,255,0.15); color: #fff; cursor: pointer;
-    }
-    .lb-btn:hover { background: rgba(255,255,255,0.25); }
-    .lb-caption {
-      position: absolute; left: 16px; bottom: 12px; right: 16px; color: #eee;
-      font-size: 12px; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    }
-  `;
-  document.head.appendChild(style);
-
-  // Build overlay DOM
-  const overlay = document.createElement('div');
-  overlay.className = 'lb-overlay';
-  overlay.innerHTML = `
-    <div class="lb-stage">
-      <img class="lb-img" alt="Preview"/>
-      <div class="lb-ui">
-        <button class="lb-btn" data-action="reset" title="Reset (double-click image)">Reset</button>
-        <button class="lb-btn" data-action="close" title="Close (Esc)">Close</button>
-      </div>
-      <div class="lb-caption"></div>
-    </div>
-  `;
-  document.body.appendChild(overlay);
-
-  const stage = overlay.querySelector('.lb-stage');
-  const img = overlay.querySelector('.lb-img');
-  const caption = overlay.querySelector('.lb-caption');
-
-  let scale = 1;
-  let tx = 0;
-  let ty = 0;
-  let dragging = false;
-  let lastX = 0;
-  let lastY = 0;
-
-  function applyTransform() {
-    img.style.transform = `translate(${tx}px, ${ty}px) scale(${scale})`;
-  }
-
-  function openLightbox(url) {
-    img.src = url;
-    caption.textContent = url;
-    scale = 1; tx = 0; ty = 0;
-    applyTransform();
-    overlay.classList.add('active');
-  }
-  function closeLightbox() {
-    overlay.classList.remove('active');
-    img.src = '';
-  }
-  function resetView() {
-    scale = 1; tx = 0; ty = 0; applyTransform();
-  }
-
-  // Wheel zoom (zoom to cursor)
-  stage.addEventListener('wheel', (e) => {
-    if (!overlay.classList.contains('active')) return;
-    e.preventDefault();
-    const rect = img.getBoundingClientRect();
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
-
-    const prevScale = scale;
-    const delta = Math.sign(e.deltaY) < 0 ? 0.1 : -0.1;
-    scale = Math.min(6, Math.max(0.2, scale + delta));
-
-    // Keep the mouse point stationary (translate adjust)
-    tx -= (mouseX / prevScale - mouseX / scale);
-    ty -= (mouseY / prevScale - mouseY / scale);
-
-    applyTransform();
-  }, { passive: false });
-
-  // Drag to pan
-  stage.addEventListener('mousedown', (e) => {
-    if (!overlay.classList.contains('active')) return;
-    dragging = true;
-    lastX = e.clientX;
-    lastY = e.clientY;
-  });
-  window.addEventListener('mousemove', (e) => {
-    if (!dragging) return;
-    const dx = e.clientX - lastX;
-    const dy = e.clientY - lastY;
-    lastX = e.clientX;
-    lastY = e.clientY;
-    tx += dx;
-    ty += dy;
-    applyTransform();
-  });
-  window.addEventListener('mouseup', () => dragging = false);
-
-  // Double-click image to reset
-  img.addEventListener('dblclick', (e) => {
-    e.preventDefault();
-    resetView();
-  });
-
-  // Close actions
-  overlay.addEventListener('click', (e) => {
-    // Close only when clicking the backdrop, not when dragging/panning
-    if (e.target === overlay) closeLightbox();
-  });
-  overlay.querySelector('[data-action="close"]').addEventListener('click', closeLightbox);
-  overlay.querySelector('[data-action="reset"]').addEventListener('click', resetView);
-  window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && overlay.classList.contains('active')) closeLightbox();
-  });
-
-  // Event delegation: clicks inside .explanation
-  document.addEventListener('click', (e) => {
-    // Find an <a class="lightbox"> or an <img> inside .explanation
-    const anchor = e.target.closest('.explanation a.lightbox');
-    const imgEl = e.target.closest('.explanation img');
-    if (!anchor && !imgEl) return;
-
-    let url = null;
-    if (anchor) {
-      // Prefer href from the anchor
-      url = anchor.getAttribute('href');
-    } else if (imgEl) {
-      // If the image is not wrapped, use its src
-      url = imgEl.getAttribute('src');
-      // If the image is wrapped in an anchor but missing class, still respect its href
-      const wrapA = imgEl.closest('a[href]');
-      if (wrapA && wrapA.getAttribute('href')) url = wrapA.getAttribute('href');
-    }
-    if (!url) return;
-
-    // If we handle it, prevent default navigation
-    e.preventDefault();
-    openLightbox(url);
-  });
-})();
-/* ======== Lightbox (minimal, self-contained) END ======== */

@@ -4,418 +4,90 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AWS CLF-C02 Exam Simulator</title>
-    <style>
-        /* Reset and base styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            line-height: 1.5;
-            color: #333;
-            background-color: #f5f5f5;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 10px;
-        }
-
-        /* Header styles - Ultra Compact */
-        header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: white;
-            padding: 8px 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            margin-bottom: 15px;
-        }
-
-        header h1 {
-            font-size: 1.2rem;
-            color: #232f3e;
-            margin: 0;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            flex-shrink: 1;
-        }
-
-        .header-controls {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .header-timers {
-            display: flex;
-            gap: 15px;
-        }
-
-        .timer-group {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .timer-label {
-            font-size: 0.8rem;
-            color: #666;
-            font-weight: 500;
-        }
-
-        .timer-display {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #232f3e;
-            background: #f8f9fa;
-            padding: 4px 10px;
-            border-radius: 6px;
-            border: 1px solid #e9ecef;
-        }
-
-        .header-pause-btn {
-            background-color: #ffc107;
-            color: #212529;
-            border: none;
-            padding: 6px 12px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        .header-pause-btn:hover {
-            background-color: #e0a800;
-        }
-
-
-        /* Desktop Exam Legend */
-        .exam-legend {
-            display: none; /* Hidden until exam starts */
-            flex-grow: 1;
-            justify-content: flex-end;
-        }
-
-        .exam-legend-dots {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 5px;
-            max-width: 400px; /* Adjust as needed */
-            justify-content: flex-end;
-        }
-
-        .legend-dot-nav {
-            width: 26px;
-            height: 26px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.75rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            border: 2px solid transparent;
-        }
-
-        /* Tab navigation */
-        .tab-navigation {
-            display: flex;
-            background: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            margin-bottom: 15px;
-        }
-
-        .tab-button {
-            flex: 1;
-            padding: 12px 15px;
-            border: none;
-            background: #f8f9fa;
-            color: #666;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-
-        .tab-button.active {
-            background: #007bff;
-            color: white;
-        }
-
-        .tab-button:hover:not(.active) {
-            background: #e9ecef;
-        }
-
-        /* Tab content */
-        .tab-content {
-            display: none;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            padding: 20px;
-            min-height: 500px;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        /* Exam Interface */
-        .exam-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-            padding: 10px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            gap: 15px;
-        }
-
-        .question-counter {
-            font-size: 1rem;
-            font-weight: bold;
-            color: #232f3e;
-        }
-
-        .exam-progress {
-            flex-grow: 1;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: #e9ecef;
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: #28a745;
-            transition: width 0.3s ease;
-            width: 0%;
-        }
-        
-        /* Mobile Control Bar */
-        .mobile-control-bar {
-            display: none;
-        }
-
-        .exam-controls-active .stop-exam-button {
-            padding: 8px 16px;
-            font-size: 0.9rem;
-        }
-
-        /* Question Area */
-        .question-container {
-            margin-bottom: 15px;
-        }
-
-        .question-content h2 {
-            font-size: 1.15rem;
-            line-height: 1.4;
-            margin-bottom: 15px;
-        }
-
-        .question-options {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .option {
-            display: flex;
-            align-items: flex-start;
-            padding: 12px;
-            border: 1px solid #e9ecef;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .option:hover {
-            border-color: #007bff;
-            background: #e3f2fd;
-        }
-
-        .option.selected {
-            border-color: #007bff;
-            background: #cce5ff;
-        }
-
-        .option input {
-            margin-right: 10px;
-            margin-top: 3px;
-        }
-
-        /* Navigation controls */
-        .navigation-controls {
-            display: flex;
-            justify-content: space-between;
-            padding-top: 15px;
-            border-top: 1px solid #e9ecef;
-        }
-
-        .nav-button, .finish-button {
-            padding: 10px 20px;
-            font-size: 1rem;
-        }
-
-        /* Legend Dot States */
-        .legend-dot-nav.not-visited { background-color: #e9ecef; color: #6c757d; }
-        .legend-dot-nav.visited { background-color: #fff3cd; color: #856404; }
-        .legend-dot-nav.answered { background-color: #d4edda; color: #155724; }
-        .legend-dot-nav.current { border-color: #007bff; transform: scale(1.15); box-shadow: 0 0 8px rgba(0, 123, 255, 0.5); }
-        .legend-dot { display: inline-block; }
-
-        /* Mobile Menu & Overlay */
-        .mobile-menu-toggle { display: none; }
-        .mobile-menu {
-            position: fixed;
-            top: 0;
-            right: -100%;
-            width: 300px;
-            height: 100%;
-            background: white;
-            box-shadow: -4px 0 15px rgba(0,0,0,0.15);
-            z-index: 1002;
-            transition: right 0.4s ease-in-out;
-            display: flex;
-            flex-direction: column;
-        }
-        .mobile-menu-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid #e9ecef; }
-        .mobile-menu-header h3 { margin: 0; }
-        .close-mobile-menu { background: none; border: none; font-size: 2rem; cursor: pointer; }
-        .mobile-menu-content { padding: 20px; overflow-y: auto; }
-        #mobileExamLegend h4 { font-size: 1rem; margin-bottom: 10px; }
-        #mobileExamLegend .legend-key { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; margin-bottom: 15px; font-size: 0.9rem; }
-        #mobileExamLegend .legend-dot { width: 12px; height: 12px; border-radius: 50%; margin-right: 8px; }
-        #mobileExamLegend .exam-legend-dots { display: flex; flex-wrap: wrap; gap: 8px; }
-
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1001; opacity: 0; visibility: hidden; transition: opacity 0.4s ease, visibility 0s 0.4s; }
-        .pause-overlay { display: none; align-items: center; justify-content: center; z-index: 1003; }
-        .pause-message { background: white; padding: 30px; border-radius: 8px; text-align: center; }
-        body.menu-open .mobile-menu { right: 0; }
-        body.menu-open .overlay { opacity: 1; visibility: visible; transition: opacity 0.4s ease; }
-
-        /* Initial State & Other buttons */
-        .exam-controls { text-align: center; padding: 40px 20px; }
-        .start-exam-button, .stop-exam-button, .nav-button, .finish-button { border: none; border-radius: 6px; cursor: pointer; transition: all 0.2s ease; }
-        .start-exam-button { background: #28a745; color: white; padding: 12px 30px; font-size: 1.1rem; }
-        .stop-exam-button { background: #dc3545; color: white; padding: 8px 16px; }
-        .nav-button { background: #6c757d; color: white; }
-        .nav-button:disabled { background: #adb5bd; cursor: not-allowed; }
-        .finish-button { background: #28a745; color: white; }
-
-        /* Review Page */
-        .review-header { text-align: center; margin-bottom: 30px; }
-        .score-display { display: flex; justify-content: center; align-items: center; gap: 30px; margin-bottom: 20px; flex-wrap: wrap; }
-        .score-circle { width: 100px; height: 100px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.3rem; font-weight: bold; }
-        .score-details p { margin: 5px 0; }
-        .incomplete-note { color: #dc3545; font-weight: bold; }
-        .time-stats { margin: 20px auto; }
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; }
-        .stat-item { background: #f8f9fa; padding: 15px; border-radius: 8px; text-align: center; }
-        .stat-label { font-size: 0.8rem; }
-        .stat-value { font-size: 1.3rem; font-weight: bold; }
-        .review-question { border: 1px solid #e9ecef; border-radius: 8px; padding: 15px; margin-bottom: 15px; }
-        .review-question.correct { border-left: 4px solid #28a745; background: #f0fff4; }
-        .review-question.incorrect { border-left: 4px solid #dc3545; background: #fff5f5; }
-        .review-question-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 0.9rem; color: #666; flex-wrap: wrap; }
-        .review-question-status { font-weight: bold; }
-        .review-question.correct .review-question-status { color: #28a745; }
-        .review-question.incorrect .review-question-status { color: #dc3545; }
-        .review-answers, .review-explanation { margin-top: 10px; padding-top: 10px; border-top: 1px dashed #e9ecef; }
-
-        /* Responsive Overrides */
-        @media (max-width: 992px) {
-            header { flex-wrap: wrap; gap: 10px; }
-            header h1 { width: 100%; text-align: center; margin-bottom: 10px; }
-            .header-controls { margin: 0 auto; }
-            #examLegend { display: none; } /* Hide desktop legend */
-        }
-
-        @media (max-width: 768px) {
-            .container { padding: 10px 5px; }
-            header { display: none; } /* Hide original header on mobile */
-            
-            .exam-header {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                padding: 8px;
-                background: white;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            }
-
-            .mobile-control-bar {
-                display: flex;
-                align-items: center;
-                gap: 10px;
-            }
-            .mobile-control-bar .timer-group {
-                display: flex;
-                align-items: center;
-                gap: 5px;
-            }
-            .mobile-control-bar .timer-display {
-                font-size: 0.9rem;
-                padding: 4px 6px;
-            }
-            .mobile-control-bar .header-pause-btn,
-            .mobile-control-bar .stop-exam-button {
-                padding: 6px 10px;
-                font-size: 0.8rem;
-            }
-
-            .mobile-menu-toggle { display: block; background: none; border: none; cursor: pointer; padding: 5px; z-index: 1001; }
-            .mobile-menu-toggle span { display: block; width: 22px; height: 2px; background-color: #333; margin: 4px 0; }
-            .exam-controls-active { display: none; }
-            .question-counter { font-size: 0.9rem; }
-            .exam-progress { display: none; }
-            
-            .question-content h2 { font-size: 1.05rem; }
-            .option { padding: 10px; }
-            .option-text { font-size: 0.95rem; }
-            .nav-button, .finish-button { padding: 8px 15px; font-size: 0.9rem; }
-        }
-    </style>
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+    <div id="overlay"></div>
+
+    <div id="sidePanel" class="side-panel">
+        <div class="side-panel-header">
+            <h3>Menu</h3>
+            <button id="closeSidePanel" class="close-panel-btn">&times;</button>
+        </div>
+        <div class="side-panel-content">
+            <nav id="mobileNav" class="tab-navigation mobile">
+                <button id="examTabMobile" class="tab-button active">Exam</button>
+                <button id="reviewTabMobile" class="tab-button">Review</button>
+            </nav>
+            <div id="mobileTimerControls" class="timer-controls mobile">
+                 <div class="global-timer">
+                    <h3>Global Timer</h3>
+                    <div id="globalTimerMobile" class="timer-display">90:00</div>
+                    <div class="timer-buttons">
+                        <button id="startGlobalTimerMobile">Start</button>
+                        <button id="pauseGlobalTimerMobile">Pause</button>
+                        <button id="stopGlobalTimerMobile">Stop</button>
+                        <button id="resetGlobalTimerMobile">Reset</button>
+                    </div>
+                </div>
+            </div>
+            <div id="examLegendMobile" class="exam-legend mobile">
+                <div class="legend-key">
+                    <span>Key:</span>
+                    <span class="legend-item"><span class="legend-dot not-visited"></span> Not Visited</span>
+                    <span class="legend-item"><span class="legend-dot visited"></span> Visited</span>
+                    <span class="legend-item"><span class="legend-dot answered"></span> Answered</span>
+                </div>
+                <div id="examLegendDotsMobile" class="exam-legend-dots">
+                    <!-- Clickable dots will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="container">
         <header>
-            <h1>AWS CLF-C02 Exam Simulator</h1>
-            <div class="header-controls">
-                <div class="header-timers">
-                    <div class="timer-group">
-                        <span class="timer-label">Exam</span>
+            <div class="header-top">
+                <button id="hamburgerMenu" class="hamburger-menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <h1>AWS CLF-C02 Exam Simulator</h1>
+                <div class="timer-controls desktop">
+                    <div class="global-timer">
+                        <h3>Global Timer</h3>
                         <div id="globalTimer" class="timer-display">90:00</div>
+                        <div class="timer-buttons">
+                            <button id="startGlobalTimer">Start</button>
+                            <button id="pauseGlobalTimer">Pause</button>
+                            <button id="stopGlobalTimer">Stop</button>
+                            <button id="resetGlobalTimer">Reset</button>
+                        </div>
                     </div>
-                    <div class="timer-group">
-                        <span class="timer-label">Question</span>
+                    <div class="question-timer">
+                        <h3>Question Timer</h3>
                         <div id="questionTimer" class="timer-display">01:30</div>
                     </div>
                 </div>
-                <button id="pauseResumeBtn" class="header-pause-btn">Pause</button>
+                 <div class="header-mobile-info">
+                    <div id="mobileGlobalTimer" class="timer-display">90:00</div>
+                    <div id="mobileQuestionTimer" class="timer-display">01:30</div>
+                    <div id="mobileQuestionCounter" class="question-counter"></div>
+                </div>
             </div>
-            <!-- Desktop Exam Legend -->
-            <div id="examLegend" class="exam-legend">
+            <div id="examLegend" class="exam-legend desktop">
+                <div class="legend-key">
+                    <span>Key:</span>
+                    <span class="legend-item"><span class="legend-dot not-visited"></span> Not Visited</span>
+                    <span class="legend-item"><span class="legend-dot visited"></span> Visited</span>
+                    <span class="legend-item"><span class="legend-dot answered"></span> Answered</span>
+                </div>
                 <div id="examLegendDots" class="exam-legend-dots"></div>
             </div>
         </header>
 
-        <nav class="tab-navigation">
+        <nav class="tab-navigation desktop">
             <button id="examTab" class="tab-button active">Exam</button>
             <button id="reviewTab" class="tab-button">Review</button>
         </nav>
@@ -423,19 +95,25 @@
         <main>
             <div id="examContent" class="tab-content active">
                 <div id="examControls" class="exam-controls">
-                    <button id="startExam" class="start-exam-button">Start Exam</button>
+                    <div id="modeSelection" class="mode-selection">
+                        <h3 class="mode-select-title">Select Your Mode:</h3>
+                        <div class="mode-buttons">
+                            <button id="modeExam" class="mode-button active" data-mode="exam">Exam Mode</button>
+                            <button id="modeStudy" class="mode-button" data-mode="study">Study Mode</button>
+                        </div>
+                        <p id="modeDescription" class="mode-description">Timed exam simulation with a final score.</p>
+                    </div>
+                    <div class="exam-control-buttons">
+                        <button id="startSessionButton" class="start-exam-button">Start Session</button>
+                    </div>
                     <div id="examStatus" class="exam-status">
-                        <p>Click "Start Exam" to begin your AWS CLF-C02 practice test.</p>
                         <p>The exam will consist of 65 questions with a 90-minute time limit.</p>
                     </div>
                 </div>
 
                 <div id="examInterface" class="exam-interface" style="display: none;">
                     <div class="exam-header">
-                        <button id="mobileMenuToggle" class="mobile-menu-toggle">
-                            <span></span><span></span><span></span>
-                        </button>
-                        <div class="question-counter">
+                        <div class="question-counter desktop-counter">
                             <span id="currentQuestion">1</span> / <span id="totalQuestions">65</span>
                         </div>
                         <div class="exam-progress">
@@ -443,20 +121,12 @@
                                 <div id="progressFill" class="progress-fill"></div>
                             </div>
                         </div>
-                         <!-- Mobile Control Bar -->
-                        <div class="mobile-control-bar">
-                             <div class="timer-group">
-                                <span class="timer-label">Exam</span>
-                                <div id="mobileGlobalTimer" class="timer-display">90:00</div>
-                            </div>
-                            <div class="timer-group">
-                                <span class="timer-label">Question</span>
-                                <div id="mobileQuestionTimer" class="timer-display">01:30</div>
-                            </div>
-                            <button id="mobilePauseResumeBtn" class="header-pause-btn">Pause</button>
-                            <button id="mobileStopExamBtn" class="stop-exam-button">Stop</button>
-                        </div>
                         <div class="exam-controls-active">
+                            <button id="prevQuestion" class="nav-button">Previous</button>
+                            <button id="checkAnswer" class="check-answer-button" style="display: none;">Check Answer</button>
+                            <button id="nextQuestion" class="nav-button">Next</button>
+                            <button id="finishExam" class="finish-button" style="display: none;">Finish</button>
+                            <button id="pauseResumeExam" class="pause-resume-button">Pause</button>
                             <button id="stopExam" class="stop-exam-button">Stop Exam</button>
                         </div>
                     </div>
@@ -465,19 +135,14 @@
                         <div id="questionContent" class="question-content">
                             <h2 id="questionText">Loading questions...</h2>
                             <div id="questionOptions" class="question-options"></div>
+                            <div id="instantFeedback" class="instant-feedback" style="display: none;"></div>
                         </div>
-                    </div>
-
-                    <div class="navigation-controls">
-                        <button id="prevQuestion" class="nav-button" disabled>Previous</button>
-                        <button id="nextQuestion" class="nav-button">Next</button>
-                        <button id="finishExam" class="finish-button" style="display: none;">Finish Exam</button>
                     </div>
                 </div>
             </div>
 
             <div id="reviewContent" class="tab-content">
-                 <div class="review-header">
+                <div class="review-header">
                     <h2>Exam Results</h2>
                     <div id="scoreDisplay" class="score-display">
                         <div class="score-circle">
@@ -488,6 +153,7 @@
                             <p>Time Taken: <span id="totalTime">00:00</span></p>
                         </div>
                     </div>
+
                     <div id="timeStats" class="time-stats">
                         <h3>Time Statistics</h3>
                         <div class="stats-grid">
@@ -509,643 +175,16 @@
                             </div>
                         </div>
                     </div>
+                    
+                    <!-- FIX: Added the export button here -->
                     <button id="exportResults" class="export-button">Export Results</button>
                 </div>
+
                 <div id="reviewQuestions" class="review-questions"></div>
             </div>
         </main>
     </div>
 
-    <!-- Mobile Menu (Side Panel) -->
-    <div id="mobileMenu" class="mobile-menu">
-        <div class="mobile-menu-header">
-            <h3>Menu</h3>
-            <button id="closeMobileMenu" class="close-mobile-menu">&times;</button>
-        </div>
-        <div class="mobile-menu-content">
-            <div id="mobileExamLegend" class="exam-legend">
-                <h4>Question Navigator</h4>
-                <div class="legend-key">
-                    <span class="legend-item"><span class="legend-dot not-visited"></span> Not Visited</span>
-                    <span class="legend-item"><span class="legend-dot visited"></span> Visited</span>
-                    <span class="legend-item"><span class="legend-dot answered"></span> Answered</span>
-                </div>
-                <div id="mobileExamLegendDots" class="exam-legend-dots"></div>
-            </div>
-        </div>
-    </div>
-    <div id="overlay" class="overlay"></div>
-    <div id="pauseOverlay" class="overlay pause-overlay">
-        <div class="pause-message">
-            <h2>Exam Paused</h2>
-            <p>Click the Resume button to continue.</p>
-        </div>
-    </div>
-
-    <script>
-        // AWS CLF-C02 Exam Simulator
-        class ExamSimulator {
-            constructor() {
-                this.allQuestions = [];
-                this.examQuestions = [];
-                this.currentQuestionIndex = 0;
-                this.userAnswers = {};
-                this.questionTimes = {};
-                this.globalTimer = null;
-                this.questionTimer = null;
-                this.globalTimeRemaining = 90 * 60;
-                this.questionTimeRemaining = 90;
-                this.questionStartTime = null;
-                this.examStarted = false;
-                this.examFinished = false;
-                this.isPaused = false;
-                this.visitedQuestions = new Set();
-                this.domainDistribution = {
-                    'Cloud Concepts': 0.26,
-                    'Security and Compliance': 0.25,
-                    'Technology': 0.33,
-                    'Billing and Pricing': 0.16
-                };
-                this.init();
-            }
-
-            async init() {
-                await this.loadQuestions();
-                this.setupEventListeners();
-                this.setupTabs();
-                this.showInitialState();
-            }
-
-            async loadQuestions() {
-                // In a real application, you would fetch these from a server.
-                // For this example, we'll keep it simple.
-                // You would need to host the JSON files in a 'data' directory.
-                this.allQuestions = []; // Ensure you have your question data available
-                 document.getElementById('examStatus').innerHTML = `
-                    <p>Click "Start Exam" to begin your AWS CLF-C02 practice test.</p>
-                    <p>The exam will consist of 65 questions with a 90-minute time limit.</p>
-                    <p><strong>Note: Question loading from local files is not supported in this environment. Using sample questions.</strong></p>
-                `;
-                // Create some sample questions if loading fails
-                if (this.allQuestions.length === 0) {
-                    for (let i = 0; i < 65; i++) {
-                        this.allQuestions.push({
-                            id: `sample-${i}`,
-                            question: `This is sample question #${i + 1}. What is the correct option?`,
-                            options: [`Option A for Q${i+1}`, `Option B for Q${i+1}`, `Option C for Q${i+1}`, `Option D for Q${i+1}`],
-                            answer_letters: ['A'],
-                            explanation: `This is the explanation for sample question #${i+1}.`,
-                            mappedDomain: 'Technology'
-                        });
-                    }
-                }
-            }
-
-            processQuestions() {
-                this.allQuestions.forEach(question => {
-                    if (!question.id) question.id = Math.random().toString(36).substr(2, 9);
-                    if (!question.options || !Array.isArray(question.options)) question.options = [];
-                    if (!question.correct_answers || !Array.isArray(question.correct_answers)) question.correct_answers = [];
-                    
-                    const letters = [];
-                    const correctAnswers = question.correct_answers || [];
-                    
-                    correctAnswers.forEach(answer => {
-                        let match = answer.match(/^([A-Z])\.\s*/) || answer.match(/<b>([A-Z])\.\s*/);
-                        if (match) {
-                            letters.push(match[1]);
-                            return;
-                        }
-                        answer.split('<br>').forEach(item => {
-                            const m = item.trim().match(/^([A-Z])\./);
-                            if (m) letters.push(m[1]);
-                        });
-                        if (letters.length === 0 && question.options.length > 0) {
-                            const cleanAnswer = answer.replace(/<[^>]*>/g, '').trim();
-                            question.options.forEach((option, index) => {
-                                const cleanOption = option.replace(/<[^>]*>/g, '').trim();
-                                if (cleanOption === cleanAnswer) letters.push(String.fromCharCode(65 + index));
-                            });
-                        }
-                    });
-                    
-                    if(question.answer_letters) {
-                         question.answer_letters = [...new Set(letters)].sort();
-                    }
-                });
-            }
-
-            mapQuestionDomains() {
-                const domainMapping = {
-                    'Cloud Concepts': 'Cloud Concepts', 'Security and Compliance': 'Security and Compliance', 'Technology': 'Technology', 'Billing and Pricing': 'Billing and Pricing',
-                    'Compute': 'Technology', 'Storage': 'Technology', 'Database': 'Technology', 'Networking': 'Technology', 'Analytics': 'Technology', 'Machine Learning': 'Technology',
-                    'Management Tools': 'Technology', 'Developer Tools': 'Technology', 'IoT': 'Technology', 'AWS Global Infrastructure': 'Cloud Concepts', 'AWS Well-Architected Framework': 'Cloud Concepts', 
-                    'AWS Pricing': 'Billing and Pricing', 'AWS Support': 'Billing and Pricing', 'Security': 'Security and Compliance', 'Identity and Access Management': 'Security and Compliance', 
-                    'Compliance': 'Security and Compliance', 'Unknown': 'Technology', 'Uncategorized': 'Technology'
-                };
-                this.allQuestions.forEach(q => q.mappedDomain = domainMapping[q.category || q.domain || 'Technology'] || 'Technology');
-            }
-
-            generateExamQuestions() {
-                this.examQuestions = this.shuffleArray(this.allQuestions).slice(0, 65);
-            }
-
-            shuffleArray(array) {
-                const shuffled = [...array];
-                for (let i = shuffled.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-                }
-                return shuffled;
-            }
-
-            setupEventListeners() {
-                document.getElementById('startExam').addEventListener('click', () => this.startExam());
-                document.getElementById('stopExam').addEventListener('click', () => this.stopExam());
-                document.getElementById('mobileStopExamBtn').addEventListener('click', () => this.stopExam());
-                document.getElementById('prevQuestion').addEventListener('click', () => this.previousQuestion());
-                document.getElementById('nextQuestion').addEventListener('click', () => this.nextQuestion());
-                document.getElementById('finishExam').addEventListener('click', () => this.finishExam());
-                document.getElementById('exportResults').addEventListener('click', () => this.exportResults());
-                document.getElementById('pauseResumeBtn').addEventListener('click', () => this.togglePause());
-                document.getElementById('mobilePauseResumeBtn').addEventListener('click', () => this.togglePause());
-                
-                document.addEventListener('change', e => { if (e.target.matches('input[name="answer"]')) this.recordAnswer(); });
-
-                const navigateFromLegend = (e) => {
-                    if (e.target.matches('.legend-dot-nav')) {
-                        const index = parseInt(e.target.dataset.questionIndex, 10);
-                        this.navigateToQuestion(index);
-                        this.toggleMobileMenu(false);
-                    }
-                };
-                document.getElementById('examLegendDots').addEventListener('click', navigateFromLegend);
-                document.getElementById('mobileExamLegendDots').addEventListener('click', navigateFromLegend);
-
-                document.getElementById('mobileMenuToggle').addEventListener('click', () => this.toggleMobileMenu(true));
-                document.getElementById('closeMobileMenu').addEventListener('click', () => this.toggleMobileMenu(false));
-                document.getElementById('overlay').addEventListener('click', () => this.toggleMobileMenu(false));
-            }
-
-            toggleMobileMenu(open) {
-                document.body.classList.toggle('menu-open', open);
-            }
-
-            showInitialState() {
-                document.getElementById('examControls').style.display = 'block';
-                document.getElementById('examInterface').style.display = 'none';
-                document.getElementById('examLegend').style.display = 'none';
-                document.getElementById('reviewTab').style.opacity = '0.5';
-                document.getElementById('reviewTab').style.pointerEvents = 'none';
-                document.getElementById('pauseResumeBtn').style.display = 'none';
-                this.updateAllTimerDisplays();
-            }
-
-            async startExam() {
-                if (this.allQuestions.length === 0) return alert('No questions available.');
-                
-                this.generateExamQuestions();
-                if (this.examQuestions.length === 0) return alert('No exam questions could be generated.');
-                    
-                this.examStarted = true;
-                this.examFinished = false;
-                this.isPaused = false;
-                this.userAnswers = {};
-                this.questionTimes = {};
-                this.visitedQuestions = new Set();
-                this.currentQuestionIndex = 0;
-                this.globalTimeRemaining = 90 * 60;
-                    
-                document.getElementById('examControls').style.display = 'none';
-                document.getElementById('examInterface').style.display = 'block';
-                document.getElementById('examLegend').style.display = 'flex';
-                document.getElementById('pauseResumeBtn').style.display = 'block';
-                
-                this.startGlobalTimer();
-                this.createExamLegend();
-                this.displayQuestion();
-            }
-
-            stopExam() {
-                if (confirm('Are you sure you want to stop the exam? Your progress will be scored.')) {
-                    this.examFinished = true;
-                    if (this.examStarted) this.saveCurrentQuestionState();
-                    this.stopGlobalTimer();
-                    document.getElementById('reviewTab').style.opacity = '1';
-                    document.getElementById('reviewTab').style.pointerEvents = 'auto';
-                    document.getElementById('reviewTab').click();
-                    document.getElementById('pauseResumeBtn').style.display = 'none';
-                }
-            }
-
-            togglePause() {
-                this.isPaused = !this.isPaused;
-                const pauseOverlay = document.getElementById('pauseOverlay');
-                const pauseBtn = document.getElementById('pauseResumeBtn');
-                const mobilePauseBtn = document.getElementById('mobilePauseResumeBtn');
-
-                if (this.isPaused) {
-                    this.stopGlobalTimer();
-                    if (this.questionStartTime) {
-                        const timeSpent = Date.now() - this.questionStartTime;
-                        const questionId = this.examQuestions[this.currentQuestionIndex].id;
-                        this.questionTimes[questionId] = (this.questionTimes[questionId] || 0) + timeSpent;
-                    }
-                    pauseOverlay.style.display = 'flex';
-                    pauseBtn.textContent = 'Resume';
-                    mobilePauseBtn.textContent = 'Resume';
-                } else {
-                    this.startGlobalTimer();
-                    this.startQuestionTimer(false); // Resume question timer without resetting
-                    
-                    pauseOverlay.style.display = 'none';
-                    pauseBtn.textContent = 'Pause';
-                    mobilePauseBtn.textContent = 'Pause';
-                }
-            }
-
-            setupTabs() {
-                const examTab = document.getElementById('examTab');
-                const reviewTab = document.getElementById('reviewTab');
-                const examContent = document.getElementById('examContent');
-                const reviewContent = document.getElementById('reviewContent');
-                
-                examTab.addEventListener('click', () => {
-                    examTab.classList.add('active');
-                    reviewTab.classList.remove('active');
-                    examContent.classList.add('active');
-                    reviewContent.classList.remove('active');
-                });
-                
-                reviewTab.addEventListener('click', () => {
-                    if (this.examFinished) {
-                        reviewTab.classList.add('active');
-                        examTab.classList.remove('active');
-                        reviewContent.classList.add('active');
-                        examContent.classList.remove('active');
-                        this.displayReview();
-                    }
-                });
-            }
-
-            displayQuestion() {
-                if (this.examQuestions.length === 0) return;
-                
-                if(this.questionStartTime) this.saveCurrentQuestionState(false);
-
-                const question = this.examQuestions[this.currentQuestionIndex];
-                document.getElementById('questionText').textContent = question.question || 'Question text not available';
-                
-                const questionOptions = document.getElementById('questionOptions');
-                questionOptions.innerHTML = '';
-                
-                const isMultiple = question.answer_letters && question.answer_letters.length > 1;
-                const inputType = isMultiple ? 'checkbox' : 'radio';
-                
-                if (isMultiple) {
-                    const instruction = document.createElement('div');
-                    instruction.className = 'question-instruction';
-                    instruction.textContent = `Select ${question.answer_letters.length} answers:`;
-                    questionOptions.appendChild(instruction);
-                }
-                
-                question.options.forEach((option, index) => {
-                    const optionDiv = document.createElement('div');
-                    optionDiv.className = 'option';
-                    const input = document.createElement('input');
-                    input.type = inputType;
-                    input.name = 'answer';
-                    input.value = String.fromCharCode(65 + index);
-                    input.id = `option${index}`;
-                    const label = document.createElement('label');
-                    label.htmlFor = `option${index}`;
-                    label.className = 'option-text';
-                    label.textContent = option;
-                    optionDiv.appendChild(input);
-                    optionDiv.appendChild(label);
-                    optionDiv.addEventListener('click', (e) => {
-                        if (e.target !== input) {
-                            if (inputType === 'radio') input.checked = true;
-                            else input.checked = !input.checked;
-                            this.recordAnswer();
-                        }
-                    });
-                    questionOptions.appendChild(optionDiv);
-                });
-                
-                this.visitedQuestions.add(this.currentQuestionIndex);
-                this.restoreAnswers();
-                this.startQuestionTimer(true);
-                this.updateUI();
-                this.updateExamLegend();
-            }
-
-            createExamLegend() {
-                const desktopContainer = document.getElementById('examLegendDots');
-                const mobileContainer = document.getElementById('mobileExamLegendDots');
-                desktopContainer.innerHTML = '';
-                mobileContainer.innerHTML = '';
-
-                this.examQuestions.forEach((_, index) => {
-                    const dot = document.createElement('div');
-                    dot.className = 'legend-dot-nav';
-                    dot.dataset.questionIndex = index;
-                    dot.textContent = index + 1;
-                    desktopContainer.appendChild(dot);
-                    mobileContainer.appendChild(dot.cloneNode(true));
-                });
-                this.updateExamLegend();
-            }
-
-            updateExamLegend() {
-                if (!this.examStarted) return;
-                const dots = document.querySelectorAll('.legend-dot-nav');
-                dots.forEach(dot => {
-                    const index = parseInt(dot.dataset.questionIndex, 10);
-                    const questionId = this.examQuestions[index].id;
-                    const hasAnswer = this.userAnswers[questionId] && this.userAnswers[questionId].length > 0;
-                    const isVisited = this.visitedQuestions.has(index);
-
-                    dot.className = 'legend-dot-nav';
-
-                    if (index === this.currentQuestionIndex) dot.classList.add('current');
-                    if (hasAnswer) dot.classList.add('answered');
-                    else if (isVisited) dot.classList.add('visited');
-                    else dot.classList.add('not-visited');
-                });
-            }
-
-            navigateToQuestion(index) {
-                if (!this.examStarted || this.examFinished || this.isPaused || index === this.currentQuestionIndex) return;
-                if (index >= 0 && index < this.examQuestions.length) {
-                    this.currentQuestionIndex = index;
-                    this.displayQuestion();
-                }
-            }
-            
-            restoreAnswers() {
-                const questionId = this.examQuestions[this.currentQuestionIndex].id;
-                const savedAnswers = this.userAnswers[questionId];
-                
-                document.querySelectorAll('input[name="answer"]').forEach(input => {
-                    input.checked = savedAnswers && savedAnswers.includes(input.value);
-                    input.closest('.option').classList.toggle('selected', input.checked);
-                });
-            }
-            
-            recordAnswer() {
-                const questionId = this.examQuestions[this.currentQuestionIndex].id;
-                const selectedInputs = document.querySelectorAll('input[name="answer"]:checked');
-                this.userAnswers[questionId] = Array.from(selectedInputs).map(input => input.value);
-                
-                document.querySelectorAll('.option').forEach(option => {
-                    const input = option.querySelector('input');
-                    option.classList.toggle('selected', input && input.checked);
-                });
-                this.updateExamLegend();
-            }
-            
-            startGlobalTimer() {
-                if (this.globalTimer) clearInterval(this.globalTimer);
-                this.globalTimer = setInterval(() => {
-                    if (!this.isPaused) {
-                        this.globalTimeRemaining--;
-                        this.updateAllTimerDisplays();
-                        if (this.globalTimeRemaining <= 0) this.finishExam();
-                    }
-                }, 1000);
-            }
-            
-            stopGlobalTimer() {
-                clearInterval(this.globalTimer);
-                clearInterval(this.questionTimer);
-            }
-            
-            startQuestionTimer(reset = true) {
-                if (this.questionTimer) clearInterval(this.questionTimer);
-                if (reset) this.questionTimeRemaining = 90;
-                
-                this.questionStartTime = Date.now();
-                this.updateAllTimerDisplays();
-                
-                this.questionTimer = setInterval(() => {
-                    if (!this.examFinished && !this.isPaused) {
-                        this.questionTimeRemaining--;
-                        this.updateAllTimerDisplays();
-                        if (this.questionTimeRemaining <= 0) this.questionTimeRemaining = 0;
-                    }
-                }, 1000);
-            }
-            
-            updateAllTimerDisplays() {
-                const format = (time) => {
-                    const minutes = Math.floor(time / 60);
-                    const seconds = time % 60;
-                    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-                }
-                document.getElementById('globalTimer').textContent = format(this.globalTimeRemaining);
-                document.getElementById('mobileGlobalTimer').textContent = format(this.globalTimeRemaining);
-                document.getElementById('questionTimer').textContent = format(this.questionTimeRemaining);
-                document.getElementById('mobileQuestionTimer').textContent = format(this.questionTimeRemaining);
-            }
-            
-            updateUI() {
-                document.getElementById('currentQuestion').textContent = this.currentQuestionIndex + 1;
-                document.getElementById('totalQuestions').textContent = this.examQuestions.length;
-                const progress = ((this.currentQuestionIndex + 1) / this.examQuestions.length) * 100;
-                document.getElementById('progressFill').style.width = `${progress}%`;
-                document.getElementById('prevQuestion').disabled = this.currentQuestionIndex === 0;
-                document.getElementById('nextQuestion').disabled = this.currentQuestionIndex === this.examQuestions.length - 1;
-                document.getElementById('finishExam').style.display = this.currentQuestionIndex === this.examQuestions.length - 1 ? 'block' : 'none';
-            }
-            
-            previousQuestion() {
-                if (this.currentQuestionIndex > 0) {
-                    this.currentQuestionIndex--;
-                    this.displayQuestion();
-                }
-            }
-            
-            nextQuestion() {
-                if (this.currentQuestionIndex < this.examQuestions.length - 1) {
-                    this.currentQuestionIndex++;
-                    this.displayQuestion();
-                }
-            }
-            
-            saveCurrentQuestionState(recordAnswer = true) {
-                if(recordAnswer) this.recordAnswer();
-                if (this.questionStartTime) {
-                    const timeSpent = Date.now() - this.questionStartTime;
-                    const questionId = this.examQuestions[this.currentQuestionIndex].id;
-                    this.questionTimes[questionId] = (this.questionTimes[questionId] || 0) + timeSpent;
-                }
-            }
-            
-            finishExam() {
-                this.saveCurrentQuestionState();
-                this.examFinished = true;
-                this.stopGlobalTimer();
-                document.getElementById('reviewTab').style.opacity = '1';
-                document.getElementById('reviewTab').style.pointerEvents = 'auto';
-                document.getElementById('reviewTab').click();
-            }
-            
-            displayReview() {
-                const scoreResult = this.calculateScore();
-                const percentage = scoreResult.totalVisited > 0 ? Math.round((scoreResult.correct / scoreResult.totalVisited) * 100) : 0;
-                const totalTimeSpent = Object.values(this.questionTimes).reduce((a, b) => a + b, 0);
-                
-                document.getElementById('scorePercentage').textContent = `${percentage}%`;
-                document.getElementById('correctAnswers').textContent = scoreResult.correct;
-                document.getElementById('totalAnswered').textContent = scoreResult.totalVisited;
-                document.getElementById('totalTime').textContent = this.formatTime(totalTimeSpent);
-                
-                const scoreDetails = document.querySelector('.score-details');
-                const existingNote = scoreDetails.querySelector('.incomplete-note');
-                if (existingNote) existingNote.remove();
-                
-                if (scoreResult.totalVisited < this.examQuestions.length) {
-                    const incompleteNote = document.createElement('p');
-                    incompleteNote.className = 'incomplete-note';
-                    incompleteNote.textContent = `Incomplete Exam: ${scoreResult.totalVisited}/${this.examQuestions.length} attempted`;
-                    scoreDetails.appendChild(incompleteNote);
-                }
-                
-                const scoreCircle = document.querySelector('.score-circle');
-                if (percentage >= 70) scoreCircle.style.background = '#28a745';
-                else if (percentage >= 50) scoreCircle.style.background = '#ffc107';
-                else scoreCircle.style.background = '#dc3545';
-                
-                const timeStats = this.calculateTimeStats();
-                document.getElementById('avgTime').textContent = this.formatTime(timeStats.avg);
-                document.getElementById('minTime').textContent = this.formatTime(timeStats.min);
-                document.getElementById('maxTime').textContent = this.formatTime(timeStats.max);
-                document.getElementById('medianTime').textContent = this.formatTime(timeStats.median);
-
-                this.displayReviewQuestions();
-            }
-
-            calculateTimeStats() {
-                const times = Object.values(this.questionTimes);
-                if (times.length === 0) return { min: 0, max: 0, avg: 0, median: 0 };
-                const min = Math.min(...times);
-                const max = Math.max(...times);
-                const avg = times.reduce((s, t) => s + t, 0) / times.length;
-                const sorted = [...times].sort((a, b) => a - b);
-                const mid = Math.floor(sorted.length / 2);
-                const median = sorted.length % 2 !== 0 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
-                return { min, max, avg, median };
-            }
-            
-            displayReviewQuestions() {
-                const reviewContainer = document.getElementById('reviewQuestions');
-                reviewContainer.innerHTML = '';
-                
-                this.examQuestions.forEach((question, index) => {
-                    if (!this.visitedQuestions.has(index)) return;
-                    
-                    const userAnswers = this.userAnswers[question.id] || [];
-                    const isCorrect = this.isAnswerCorrect(question, userAnswers);
-                    const timeSpent = this.questionTimes[question.id] || 0;
-                    
-                    const questionDiv = document.createElement('div');
-                    questionDiv.className = `review-question ${isCorrect ? 'correct' : 'incorrect'}`;
-                    
-                    const userAnswerTexts = userAnswers.map(l => `${l}. ${this.getOptionText(question, l)}`);
-                    const correctAnswerTexts = question.answer_letters.map(l => `${l}. ${this.getOptionText(question, l)}`);
-                    
-                    questionDiv.innerHTML = `
-                        <div class="review-question-header">
-                            <span class="review-question-number">Question ${index + 1}</span>
-                            <span class="review-question-time">Time: ${this.formatTime(timeSpent)}</span>
-                            <span class="review-question-status">${isCorrect ? 'Correct' : 'Incorrect'}</span>
-                        </div>
-                        <div class="review-question-text">${question.question}</div>
-                        <div class="review-answers">
-                            <h4>Your Answer(s):</h4>
-                            ${userAnswerTexts.length > 0 ? userAnswerTexts.map(a => `<div>${a}</div>`).join('') : '<div>No answer selected</div>'}
-                            <h4>Correct Answer(s):</h4>
-                            ${correctAnswerTexts.map(a => `<div>${a}</div>`).join('')}
-                        </div>
-                        <div class="review-explanation">
-                            <h4>Explanation:</h4>
-                            <div>${question.explanation || 'No explanation available.'}</div>
-                        </div>
-                    `;
-                    reviewContainer.appendChild(questionDiv);
-                });
-            }
-
-            getOptionText(question, letter) {
-                const optionIndex = letter.charCodeAt(0) - 65;
-                return question.options[optionIndex] || letter;
-            }
-            
-            calculateScore() {
-                let correct = 0;
-                this.examQuestions.forEach((question, index) => {
-                    if (this.visitedQuestions.has(index)) {
-                        if (this.isAnswerCorrect(question, this.userAnswers[question.id] || [])) correct++;
-                    }
-                });
-                return { correct, totalVisited: this.visitedQuestions.size };
-            }
-            
-            isAnswerCorrect(question, userAnswers) {
-                const correct = (question.answer_letters || []).sort();
-                const user = userAnswers.sort();
-                return correct.length === user.length && correct.every((val, i) => val === user[i]);
-            }
-            
-            calculateTotalTime() {
-                return Object.values(this.questionTimes).reduce((t, c) => t + c, 0);
-            }
-            
-            formatTime(ms) {
-                const s = Math.floor(ms / 1000);
-                return `${Math.floor(s / 60).toString().padStart(2, '0')}:${(s % 60).toString().padStart(2, '0')}`;
-            }
-            
-            exportResults() {
-                const results = this.generateResultsMarkdown();
-                const blob = new Blob([results], { type: 'text/markdown' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `aws-clf-c02-exam-results-${new Date().toISOString().split('T')[0]}.md`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-            }
-            
-            generateResultsMarkdown() {
-                const scoreResult = this.calculateScore();
-                const percentage = scoreResult.totalVisited > 0 ? Math.round((scoreResult.correct / scoreResult.totalVisited) * 100) : 0;
-                
-                let markdown = `# AWS CLF-C02 Exam Results\n\n`;
-                markdown += `**Score:** ${scoreResult.correct}/${scoreResult.totalVisited} (${percentage}%)\n`;
-                markdown += `**Total Time:** ${this.formatTime(this.calculateTotalTime())}\n\n`;
-                
-                this.examQuestions.forEach((question, index) => {
-                    if (!this.visitedQuestions.has(index)) return;
-                    const userAnswers = this.userAnswers[question.id] || [];
-                    const isCorrect = this.isAnswerCorrect(question, userAnswers);
-                    
-                    markdown += `### Question ${index + 1} ${isCorrect ? '✅' : '❌'}\n\n`;
-                    markdown += `**Question:** ${question.question}\n\n`;
-                    markdown += `**Your Answer(s):** ${userAnswers.join(', ') || 'N/A'}\n`;
-                    markdown += `**Correct Answer(s):** ${question.answer_letters.join(', ')}\n\n`;
-                });
-                
-                return markdown;
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            new ExamSimulator();
-        });
-    </script>
+    <script src="js/app.js"></script>
 </body>
 </html>

@@ -128,34 +128,36 @@ class MCQApp {
     }
     
     _extractAnswerLetters(q) {
-        const letters = new Set();
-        const correctAnswers = q.correct_answers || [];
-        
-        correctAnswers.forEach(answer => {
-            let match = answer.match(/^([A-Z])\.\s*/) || answer.match(/<b>([A-Z])\.\s*/);
-            if (match) {
-                letters.add(match[1]);
-                return;
-            }
+            const letters = new Set();
+            const correctAnswers = q.correct_answers || [];
             
-            answer.split('<br>').forEach(item => {
-                const m = item.trim().match(/^([A-Z])\./);
-                if (m) letters.add(m[1]);
+            correctAnswers.forEach(answer => {
+                // First check if the answer contains multiple choices separated by <br>
+                if (answer.includes('<br>')) {
+                    answer.split('<br>').forEach(item => {
+                        const m = item.trim().match(/^([A-Z])\./);
+                        if (m) letters.add(m[1]);
+                    });
+                } else {
+                    // Single answer format
+                    let match = answer.match(/^([A-Z])\.\s*/) || answer.match(/<b>([A-Z])\.\s*/);
+                    if (match) {
+                        letters.add(match[1]);
+                    } else if (q.options) {
+                        // Try to match the answer text with options
+                        const cleanAnswer = answer.replace(/<[^>]*>/g, '').trim();
+                        q.options.forEach((option, index) => {
+                            const cleanOption = option.replace(/<[^>]*>/g, '').trim();
+                            if (cleanOption === cleanAnswer) {
+                                letters.add(String.fromCharCode(65 + index));
+                            }
+                        });
+                    }
+                }
             });
             
-            if (letters.size === 0 && q.options) {
-                const cleanAnswer = answer.replace(/<[^>]*>/g, '').trim();
-                q.options.forEach((option, index) => {
-                    const cleanOption = option.replace(/<[^>]*>/g, '').trim();
-                    if (cleanOption === cleanAnswer) {
-                        letters.add(String.fromCharCode(65 + index));
-                    }
-                });
-            }
-        });
-        
-        return [...letters].sort();
-    }
+            return [...letters].sort();
+        }
 
     async loadQuestions() {
         try {

@@ -1,4 +1,4 @@
-// AWS CLF-C02 Exam Simulator - Enhanced Version with Global Timers and numchoices Support
+// AWS CLF-C02 Exam Simulator - Enhanced Version with Fixed Multi-Response Support
 class ExamSimulator {
     constructor() {
         this.initializeProperties();
@@ -422,6 +422,7 @@ class ExamSimulator {
         });
     }
     
+    // FIXED: Enhanced extractAnswerLetters method to properly handle multi-response questions
     extractAnswerLetters(question) {
         const letters = new Set();
         const correctAnswers = question.correct_answers || [];
@@ -429,21 +430,32 @@ class ExamSimulator {
         correctAnswers.forEach(answer => {
             if (typeof answer !== 'string') return;
             
-            // Try to match letter patterns
-            const letterMatch = answer.match(/^([A-Z])\./);
-            if (letterMatch) {
-                letters.add(letterMatch[1]);
-                return;
-            }
-            
-            // Try to match content with options
-            const cleanAnswer = answer.replace(/<[^>]*>/g, '').trim();
-            question.options.forEach((option, index) => {
-                const cleanOption = option.replace(/<[^>]*>/g, '').trim();
-                if (cleanOption === cleanAnswer || cleanAnswer.includes(cleanOption)) {
-                    letters.add(String.fromCharCode(65 + index));
+            // First check if the answer contains multiple choices separated by <br>
+            if (answer.includes('<br>')) {
+                // Split by <br> and extract letters from each part
+                answer.split('<br>').forEach(item => {
+                    const itemTrim = item.trim();
+                    const match = itemTrim.match(/^([A-Z])\./);
+                    if (match) {
+                        letters.add(match[1]);
+                    }
+                });
+            } else {
+                // Single answer format - try to match letter patterns
+                const letterMatch = answer.match(/^([A-Z])\./) || answer.match(/<b>([A-Z])\./);
+                if (letterMatch) {
+                    letters.add(letterMatch[1]);
+                } else {
+                    // Try to match content with options
+                    const cleanAnswer = answer.replace(/<[^>]*>/g, '').trim();
+                    question.options.forEach((option, index) => {
+                        const cleanOption = option.replace(/<[^>]*>/g, '').trim();
+                        if (cleanOption === cleanAnswer || cleanAnswer.includes(cleanOption) || cleanOption.includes(cleanAnswer)) {
+                            letters.add(String.fromCharCode(65 + index));
+                        }
+                    });
                 }
-            });
+            }
         });
         
         return Array.from(letters).sort();
@@ -1040,17 +1052,18 @@ class ExamSimulator {
         container.style.display = 'block';
     }
     
+    // FIXED: Enhanced isAnswerCorrect method with better comparison logic
     isAnswerCorrect(question, userAnswers) {
-        // Check if user selected the right number of answers
-        if (userAnswers.length !== question.expectedChoices) {
-            return false;
-        }
-        
         const correctAnswers = [...question.answer_letters].sort();
         const sortedUserAnswers = [...userAnswers].sort();
         
-        return correctAnswers.length === sortedUserAnswers.length &&
-               correctAnswers.every((val, index) => val === sortedUserAnswers[index]);
+        // Must have the same number of answers
+        if (sortedUserAnswers.length !== correctAnswers.length) {
+            return false;
+        }
+        
+        // All answers must match exactly
+        return correctAnswers.every((val, index) => val === sortedUserAnswers[index]);
     }
     
     handlePreviousQuestion() {

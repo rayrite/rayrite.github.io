@@ -68,12 +68,12 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 80px;
+            height: clamp(70px, 12vh, 90px); /* Responsive height */
             background: linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 100%);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 8px 15px;
+            padding: clamp(6px, 2vw, 15px); /* Responsive padding */
             box-shadow: 0 2px 10px rgba(0,0,0,0.2);
             z-index: 100;
         }
@@ -87,54 +87,58 @@
             font-weight: bold;
             justify-content: space-between;
             height: 100%;
+            min-width: 0; /* Prevent flex overflow */
         }
 
         .score-display {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: clamp(4px, 1.5vw, 8px); /* Responsive gap */
             margin-bottom: 3px;
         }
 
         .trophy-icon {
             background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-            width: 20px;
-            height: 20px;
+            width: clamp(18px, 4vw, 24px); /* Responsive icon size */
+            height: clamp(18px, 4vw, 24px);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 10px;
+            font-size: clamp(8px, 2vw, 12px); /* Responsive font */
             box-shadow: 0 2px 4px rgba(0,0,0,0.3);
             border: 2px solid #B8860B;
+            flex-shrink: 0; /* Prevent shrinking */
         }
 
         .score-text {
-            font-size: 16px;
+            font-size: clamp(14px, 4vw, 18px); /* Responsive font size */
             font-weight: 700;
             color: #FFE4B5;
             text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+            white-space: nowrap; /* Prevent text wrapping */
         }
 
         .star-progress-container {
             position: relative;
-            width: 120px;
-            height: 16px;
+            width: clamp(100px, 25vw, 140px); /* Responsive width */
+            height: clamp(14px, 3vw, 18px); /* Responsive height */
             background: rgba(255,255,255,0.25);
             border-radius: 8px;
             border: 1px solid rgba(255,255,255,0.3);
             overflow: hidden;
             box-shadow: inset 0 1px 3px rgba(0,0,0,0.3);
+            cursor: pointer; /* Indicate interactivity */
         }
 
         .progress-area {
             position: relative;
-            width: 120px;
-            height: 32px;
+            width: clamp(100px, 25vw, 140px); /* Match container width */
+            height: clamp(28px, 6vw, 36px); /* Responsive height for better touch */
         }
 
         .star-progress-container {
-            margin-top: 16px;
+            margin-top: clamp(12px, 3vw, 18px); /* Responsive margin */
         }
 
         .star-progress-bar {
@@ -235,46 +239,55 @@
             align-items: center;
             justify-content: center;
             position: relative;
-            gap: 4px;
+            gap: clamp(3px, 1vw, 6px); /* Responsive gap */
+            min-width: 0; /* Prevent overflow */
         }
 
         /* Level Display */
         .level-display {
-            font-size: 12px;
+            font-size: clamp(11px, 3vw, 14px); /* Responsive font size */
             font-weight: 600;
             color: #FFE4B5;
             text-shadow: 0 1px 2px rgba(0,0,0,0.4);
             background: rgba(0,0,0,0.15);
             border: 1px solid rgba(255,255,255,0.1);
             border-radius: 8px;
-            padding: 4px 8px;
-            min-width: 60px;
+            padding: clamp(3px, 1vw, 6px) clamp(6px, 2vw, 10px); /* Responsive padding */
+            min-width: clamp(50px, 12vw, 70px); /* Responsive min-width */
             text-align: center;
             box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            white-space: nowrap;
         }
 
         .timer-container {
             background: rgba(0,0,0,0.2);
             border: 1px solid rgba(255,255,255,0.2);
             border-radius: 12px;
-            padding: 8px 12px;
+            padding: clamp(6px, 2vw, 10px) clamp(8px, 3vw, 14px); /* Responsive padding */
             display: flex;
             align-items: center;
             justify-content: center;
-            min-width: 70px;
+            min-width: clamp(60px, 15vw, 80px); /* Responsive min-width */
+            min-height: 44px; /* Minimum touch target */
             box-shadow: 0 2px 6px rgba(0,0,0,0.2);
             cursor: pointer;
             transition: all 0.3s ease;
             position: relative;
         }
 
+        .timer-container:hover {
+            background: rgba(0,0,0,0.3);
+            transform: translateY(-1px);
+        }
+
         .timer-text {
-            font-size: 14px;
+            font-size: clamp(12px, 3.5vw, 16px); /* Responsive font size */
             font-weight: 600;
             color: #FFE4B5;
             text-shadow: 0 1px 2px rgba(0,0,0,0.4);
             font-variant-numeric: tabular-nums;
             transition: all 0.3s ease;
+            white-space: nowrap;
         }
 
         .timer-text.timer-warning {
@@ -300,17 +313,21 @@
             align-items: flex-end;
             justify-content: space-between;
             height: 100%;
+            min-width: 0; /* Prevent overflow */
         }
 
         .top-buttons {
             display: flex;
-            gap: 8px;
+            gap: clamp(6px, 2vw, 10px); /* Responsive gap */
             align-items: center;
+            flex-wrap: wrap; /* Allow wrapping on very small screens */
         }
 
         .settings-button, .reset-button {
-            width: 32px;
-            height: 32px;
+            width: clamp(32px, 8vw, 44px); /* Responsive size with 44px max for touch */
+            height: clamp(32px, 8vw, 44px);
+            min-width: 44px; /* Minimum touch target */
+            min-height: 44px;
             background: rgba(0,0,0,0.2);
             border: 1px solid rgba(255,255,255,0.2);
             border-radius: 8px;
@@ -321,19 +338,34 @@
             transition: all 0.3s ease;
             color: #FFE4B5;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        .settings-button:hover, .reset-button:hover {
+            background: rgba(0,0,0,0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+        }
+
+        .settings-button:active, .reset-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
         }
 
         .reset-icon {
-            width: 14px;
-            height: 14px;
+            width: clamp(12px, 3vw, 16px); /* Responsive icon size */
+            height: clamp(12px, 3vw, 16px);
             color: #FFE4B5;
-            font-size: 12px;
+            font-size: clamp(10px, 3vw, 14px); /* Responsive font */
             font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .pause-icon {
-            width: 14px;
-            height: 14px;
+            width: clamp(12px, 3vw, 16px);
+            height: clamp(12px, 3vw, 16px);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -342,7 +374,7 @@
 
         .pause-bar {
             width: 3px;
-            height: 12px;
+            height: clamp(10px, 3vw, 14px); /* Responsive height */
             background: #FFE4B5;
             border-radius: 1px;
         }
@@ -350,26 +382,38 @@
         .coin-counter {
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: clamp(4px, 1.5vw, 7px); /* Responsive gap */
             background: rgba(0,0,0,0.2);
-            padding: 5px 10px;
+            padding: clamp(4px, 1.5vw, 7px) clamp(8px, 2.5vw, 12px); /* Responsive padding */
             border-radius: 10px;
             border: 1px solid rgba(255,255,255,0.2);
             cursor: pointer;
             transition: all 0.3s ease;
+            min-height: 44px; /* Minimum touch target */
+            min-width: 60px; /* Minimum width for readability */
+        }
+
+        .coin-counter:hover {
+            background: rgba(0,0,0,0.3);
+            transform: translateY(-1px);
         }
 
         .coin-icon {
-            width: 16px;
-            height: 16px;
-            font-size: 12px;
+            width: clamp(14px, 4vw, 18px); /* Responsive icon size */
+            height: clamp(14px, 4vw, 18px);
+            font-size: clamp(10px, 3vw, 14px); /* Responsive font */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
         }
 
         .coin-amount {
-            font-size: 14px;
+            font-size: clamp(12px, 3.5vw, 16px); /* Responsive font size */
             font-weight: 600;
             color: #FFE4B5;
             text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+            white-space: nowrap; /* Prevent text wrapping */
         }
 
         /* Timer Mode Indicator */
@@ -404,16 +448,16 @@
         /* Docking Area - Shape Selection */
         .docking-area {
             position: absolute;
-            top: 80px;
+            top: clamp(70px, 12vh, 90px); /* Match HUD height */
             left: 0;
             right: 0;
-            height: 140px;  /* Increased from 100px to accommodate 2 rows of 60px slots */
+            height: clamp(120px, 20vh, 160px); /* Responsive height */
             background: #34495e;
             display: grid;
-            grid-template-columns: repeat(5, minmax(60px, max-content)); /* Allow columns to expand for content */
-            grid-template-rows: repeat(2, minmax(60px, max-content)); /* Allow rows to expand for content */
-            gap: 8px;
-            padding: 0; /* Remove padding that constrains viewing area */
+            grid-template-columns: repeat(5, 1fr); /* Equal column distribution */
+            grid-template-rows: repeat(2, 1fr); /* Equal row distribution */
+            gap: clamp(4px, 1.5vw, 10px); /* Responsive gap */
+            padding: clamp(4px, 2vw, 8px); /* Responsive padding */
             box-shadow: 0 2px 10px rgba(0,0,0,0.3);
             z-index: 50;
             align-items: center;
@@ -424,6 +468,10 @@
         .shape-slot {
             width: 100%;
             height: 100%;
+            min-width: clamp(50px, 12vw, 70px); /* Responsive minimum size */
+            min-height: clamp(50px, 12vw, 70px);
+            max-width: 80px; /* Prevent too large on desktop */
+            max-height: 80px;
             background: rgba(255,255,255,0.1);
             border: 2px dashed rgba(255,255,255,0.3);
             border-radius: 10px;
@@ -432,10 +480,17 @@
             justify-content: center;
             position: relative;
             transition: all 0.3s ease;
-            padding: 0; /* Remove any implicit padding */
-            margin: 0; /* Remove all margins that could constrain viewing area */
-            overflow: visible; /* Ensure content is not cut off */
-            box-sizing: border-box; /* Include border in size calculations */
+            padding: 0;
+            margin: 0;
+            overflow: visible;
+            box-sizing: border-box;
+            cursor: pointer; /* Indicate interactivity */
+        }
+
+        .shape-slot:hover {
+            background: rgba(255,255,255,0.15);
+            border-color: rgba(255,255,255,0.5);
+            transform: scale(1.05);
         }
 
         .shape-slot.empty {
@@ -443,21 +498,57 @@
             background: rgba(255,255,255,0.05);
         }
 
+        .shape-slot.empty:hover {
+            border-color: rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.1);
+        }
+
         .game-shape {
             cursor: grab;
             transition: all 0.3s ease;
             position: relative;
             z-index: 60;
+            width: 100%; /* Fill slot */
+            height: 100%;
+            min-width: 44px; /* Minimum touch target */
+            min-height: 44px;
         }
 
         .game-shape:active {
             cursor: grabbing;
+            transform: scale(1.15); /* Slightly larger feedback on touch */
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.4));
+            transition: all 0.1s ease; /* Quick response for touch */
+        }
+
+        .game-shape:hover {
+            transform: scale(1.1);
+            filter: drop-shadow(0 3px 10px rgba(0,0,0,0.3));
         }
 
         .game-shape.dragging {
             z-index: 1000;
-            transform: scale(1.1);
-            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
+            transform: scale(1.2); /* Slightly larger when dragging */
+            filter: drop-shadow(0 8px 20px rgba(0,0,0,0.4));
+        }
+
+        /* Enhanced touch feedback for mobile */
+        @media (pointer: coarse) {
+            .game-shape {
+                transition: all 0.2s ease; /* Longer transitions on touch devices */
+            }
+            
+            .game-shape:active {
+                transform: scale(1.2); /* Larger feedback on touch devices */
+                transition: all 0.05s ease; /* Very quick response */
+            }
+            
+            .shape-slot:active {
+                background: rgba(255,255,255,0.2);
+                border-color: rgba(255,255,255,0.7);
+                transform: scale(1.02);
+                transition: all 0.05s ease;
+            }
         }
         
         /* End Level Countdown - 3 Dot Display */
@@ -1050,7 +1141,7 @@
         }
         .game-canvas-container {
             position: absolute;
-            top: 220px; /* Below HUD (80px) + Docking Area (140px) */
+            top: calc(clamp(70px, 12vh, 90px) + clamp(120px, 20vh, 160px)); /* HUD + Docking height */
             left: 0;
             right: 0;
             bottom: 0; /* Use full available space */
@@ -1070,16 +1161,18 @@
         /* Debug Info */
         .debug-info {
             position: absolute;
-            bottom: 10px;
-            left: 10px;
+            bottom: clamp(5px, 2vh, 15px); /* Responsive bottom position */
+            left: clamp(5px, 2vw, 15px); /* Responsive left position */
             color: white;
-            font-size: 12px;
+            font-size: clamp(10px, 2.5vw, 12px); /* Responsive font size */
             opacity: 0.7;
             font-family: monospace;
-            background: rgba(0,0,0,0.5);
-            padding: 5px;
-            border-radius: 4px;
+            background: rgba(0,0,0,0.7);
+            padding: clamp(4px, 1.5vw, 8px); /* Responsive padding */
+            border-radius: 6px;
             z-index: 100;
+            max-width: 70vw; /* Prevent overflow */
+            word-break: break-word;
         }
 
         /* Event Notifications */
@@ -1090,14 +1183,17 @@
             transform: translate(-50%, -50%);
             background: rgba(0,0,0,0.8);
             color: white;
-            padding: 15px 25px;
-            border-radius: 10px;
-            font-size: 16px;
+            padding: clamp(12px, 3vw, 20px) clamp(16px, 4vw, 24px); /* Responsive padding */
+            border-radius: 12px;
+            font-size: clamp(14px, 4vw, 18px); /* Responsive font size */
             font-weight: bold;
             z-index: 1000;
             opacity: 0;
             transition: all 0.3s ease;
             pointer-events: none;
+            max-width: 80vw; /* Prevent overflow on small screens */
+            min-width: 200px; /* Minimum readable width */
+            text-align: center;
         }
 
         .event-notification.show {
@@ -1147,8 +1243,40 @@
                 padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
             }
             
+            .game-hud {
+                height: clamp(60px, 10vh, 70px); /* Slightly smaller on mobile */
+                padding: clamp(4px, 1.5vw, 8px);
+            }
+            
+            .docking-area {
+                height: clamp(100px, 18vh, 140px); /* Adjust for mobile */
+                gap: clamp(3px, 1vw, 6px);
+                padding: clamp(3px, 1vw, 6px);
+            }
+            
+            .shape-slot {
+                min-width: clamp(45px, 15vw, 60px); /* Optimize for mobile touch */
+                min-height: clamp(45px, 15vw, 60px);
+            }
+            
             .game-canvas-container {
                 border-radius: 0;
+                top: calc(clamp(60px, 10vh, 70px) + clamp(100px, 18vh, 140px)); /* Updated for mobile HUD + docking */
+            }
+            
+            /* Enhanced touch targets on mobile */
+            .settings-button, .reset-button {
+                min-width: 48px; /* Larger touch targets */
+                min-height: 48px;
+            }
+            
+            .timer-container {
+                min-height: 48px; /* Better touch target */
+            }
+            
+            .coin-counter {
+                min-height: 48px; /* Better touch target */
+                padding: 6px 10px;
             }
             
             /* Hide design mode on mobile */
@@ -3896,8 +4024,15 @@
                 document.addEventListener('mousemove', (e) => this.throttledHandlePointerMove(e));
                 document.addEventListener('mouseup', (e) => this.handlePointerUp(e));
                 
+                // Touch events for mobile support
+                document.addEventListener('touchstart', (e) => this.handleTouchStart(e), { passive: false });
+                document.addEventListener('touchmove', (e) => this.handleTouchMove(e), { passive: false });
+                document.addEventListener('touchend', (e) => this.handleTouchEnd(e), { passive: false });
+                
                 // Keyboard controls
                 document.addEventListener('keydown', (e) => this.handleRotationKey(e));
+                
+                console.log('🖱️ Drag & Drop Manager initialized with touch support');
             }
             
             // Throttled mouse movement to reduce jerkiness
@@ -4212,6 +4347,64 @@
                 this.draggedShapeType = null;
                 this.currentRotation = 0;
             }
+
+            // Touch event handlers for mobile support
+            handleTouchStart(event) {
+                if (event.touches.length !== 1) return;
+                
+                const touch = event.touches[0];
+                
+                // Add haptic feedback if supported
+                if (navigator.vibrate && touch.target.closest('.game-shape')) {
+                    navigator.vibrate(50); // Light haptic feedback
+                }
+                
+                // Convert touch to mouse-like event
+                const mouseEvent = new MouseEvent('mousedown', {
+                    clientX: touch.clientX,
+                    clientY: touch.clientY,
+                    button: 0
+                });
+                
+                this.handlePointerDown(mouseEvent);
+                event.preventDefault();
+            }
+            
+            handleTouchMove(event) {
+                if (event.touches.length !== 1 || !this.isDragging) return;
+                
+                const touch = event.touches[0];
+                
+                // Convert touch to mouse-like event
+                const mouseEvent = new MouseEvent('mousemove', {
+                    clientX: touch.clientX,
+                    clientY: touch.clientY
+                });
+                
+                this.throttledHandlePointerMove(mouseEvent);
+                event.preventDefault();
+            }
+            
+            handleTouchEnd(event) {
+                if (!this.isDragging) return;
+                
+                const touch = event.changedTouches[0];
+                
+                // Light haptic feedback on drop if supported
+                if (navigator.vibrate) {
+                    navigator.vibrate(25); // Subtle feedback on drop
+                }
+                
+                // Convert touch to mouse-like event
+                const mouseEvent = new MouseEvent('mouseup', {
+                    clientX: touch.clientX,
+                    clientY: touch.clientY,
+                    button: 0
+                });
+                
+                this.handlePointerUp(mouseEvent);
+                event.preventDefault();
+            }
         }
 
         /*╔═══════════════════════════════════════════════════════════════════════════
@@ -4260,7 +4453,7 @@
             }
             
             setupTouchEnhancements() {
-                // Add touch event listeners for mobile-specific features
+                // Add touch event listeners for mobile-specific rotation zone features
                 document.addEventListener('touchstart', (e) => this.handleTouchStart(e), { passive: false });
                 document.addEventListener('touchmove', (e) => this.handleTouchMove(e), { passive: false });
                 document.addEventListener('touchend', (e) => this.handleTouchEnd(e), { passive: false });
@@ -4335,17 +4528,8 @@
                 const touch = event.touches[0];
                 const element = document.elementFromPoint(touch.clientX, touch.clientY);
                 
-                if (element && element.closest('.dock-shape')) {
-                    // Convert touch to mouse-like event for compatibility
-                    const mouseEvent = new MouseEvent('mousedown', {
-                        clientX: touch.clientX,
-                        clientY: touch.clientY,
-                        button: 0
-                    });
-                    
-                    this.dragDropManager.handlePointerDown(mouseEvent);
-                    event.preventDefault();
-                }
+                // Only handle rotation zones here - let DragDropManager handle shape dragging
+                this.checkRotationZones(touch.clientX, touch.clientY);
                 
                 this.touchStartTime = Date.now();
             }
@@ -4356,36 +4540,36 @@
                 
                 const touch = event.touches[0];
                 
-                // Check rotation zones
+                // Check rotation zones with haptic feedback
+                const wasInZone = this.currentRotationZone;
                 this.checkRotationZones(touch.clientX, touch.clientY);
                 
-                // Convert touch to mouse-like event for compatibility
-                const mouseEvent = new MouseEvent('mousemove', {
-                    clientX: touch.clientX,
-                    clientY: touch.clientY
-                });
+                // Haptic feedback when entering rotation zone
+                if (this.currentRotationZone && !wasInZone && navigator.vibrate) {
+                    navigator.vibrate(30); // Light feedback when entering rotation zone
+                }
                 
-                this.dragDropManager.handlePointerMove(mouseEvent);
                 event.preventDefault();
             }
-            
+
             handleTouchEnd(event) {
-                if (!this.dragDropManager.isDragging) return;
+                // Rotation handling on touch end
+                if (this.currentRotationZone && this.dragDropManager.isDragging) {
+                    const rotationDirection = this.currentRotationZone === 'left' ? -1 : 1;
+                    this.dragDropManager.rotateShape(rotationDirection * this.dragDropManager.rotationStep);
+                    
+                    // Stronger haptic feedback for rotation
+                    if (navigator.vibrate) {
+                        navigator.vibrate([50, 50, 50]); // Pattern for rotation feedback
+                    }
+                }
                 
-                const touch = event.changedTouches[0];
+                this.hideRotationZones();
+                this.stopRotationTimer();
+                this.currentRotationZone = null;
                 
-                // Convert touch to mouse-like event for compatibility
-                const mouseEvent = new MouseEvent('mouseup', {
-                    clientX: touch.clientX,
-                    clientY: touch.clientY,
-                    button: 0
-                });
-                
-                this.dragDropManager.handlePointerUp(mouseEvent);
                 event.preventDefault();
-            }
-            
-            checkRotationZones(x, y) {
+            }            checkRotationZones(x, y) {
                 let inZone = null;
                 
                 // Debug logging

@@ -1070,6 +1070,38 @@
             box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
         }
 
+        .config-sub-group {
+            margin-left: 20px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .config-sub-group .config-label {
+            min-width: 100px;
+            margin-bottom: 0;
+            font-size: 12px;
+        }
+
+        .config-sub-group input[type="range"] {
+            flex: 1;
+            margin: 0;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+        }
+
+        .range-value {
+            min-width: 50px;
+            text-align: right;
+            font-size: 12px;
+            color: #FFE4B5;
+            font-weight: 600;
+            background: rgba(0,0,0,0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
         .config-btn {
             width: 100%;
             padding: 10px;
@@ -1574,6 +1606,28 @@
                         <input type="checkbox" id="enableAnimations" checked onchange="toggleAnimations()">
                         Shape Animations
                     </label>
+                </div>
+            </div>
+
+            <div class="config-group">
+                <label class="config-label">Mobile Touch Offset</label>
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="enableTouchOffset" checked onchange="toggleTouchOffset()">
+                        Enable Touch Offset
+                    </label>
+                </div>
+                <div class="config-sub-group">
+                    <label class="config-label">X Offset (Horizontal)</label>
+                    <input type="range" id="touchOffsetX" min="-100" max="100" value="0" 
+                           onchange="updateTouchOffset()" oninput="updateTouchOffsetDisplay()">
+                    <span class="range-value" id="touchOffsetXValue">0px</span>
+                </div>
+                <div class="config-sub-group">
+                    <label class="config-label">Y Offset (Vertical)</label>
+                    <input type="range" id="touchOffsetY" min="-150" max="50" value="-80" 
+                           onchange="updateTouchOffset()" oninput="updateTouchOffsetDisplay()">
+                    <span class="range-value" id="touchOffsetYValue">-80px</span>
                 </div>
             </div>
         </div>
@@ -4005,6 +4059,13 @@
                 this.draggedShapeType = null;
                 this.ghostElement = null;
                 
+                // Touch offset configuration for mobile devices
+                this.touchOffset = {
+                    x: 0,      // Horizontal offset (positive = right, negative = left)
+                    y: -80,    // Vertical offset (positive = down, negative = up)
+                    enabled: true // Enable/disable offset system
+                };
+                
                 // Rotation system
                 this.currentRotation = 0; // Current rotation in radians
                 this.rotationStep = Math.PI / 6; // 30 degrees per step
@@ -4014,8 +4075,11 @@
                 this.moveThrottleMs = 16; // ~60fps throttling
                 this.pendingMove = null;
                 
+                // Track if drag started from dock
+                this.dragStartedFromDock = false;
+                
                 this.setupEventListeners();
-                console.log('🖱️ Streamlined Drag & Drop Manager (keyboard only) initialized');
+                console.log('🖱️ Streamlined Drag & Drop Manager with touch offset support initialized');
             }
 
             setupEventListeners() {
@@ -4101,6 +4165,9 @@
                 const element = document.elementFromPoint(pointer.clientX, pointer.clientY);
                 
                 if (element && element.classList.contains('game-shape')) {
+                    // Check if drag started from docking area
+                    this.dragStartedFromDock = element.closest('.docking-area') !== null;
+                    console.log(`🖱️ Starting drag, from dock: ${this.dragStartedFromDock}`);
                     this.startDrag(element, pointer);
                 }
             }
@@ -4213,9 +4280,18 @@
 
             updateGhostPosition(pointer) {
                 if (this.ghostElement) {
+                    let x = pointer.clientX;
+                    let y = pointer.clientY;
+                    
+                    // Apply touch offset if dragging from dock and offset is enabled
+                    if (this.dragStartedFromDock && this.touchOffset.enabled) {
+                        x += this.touchOffset.x;
+                        y += this.touchOffset.y;
+                    }
+                    
                     // Set position using left/top
-                    this.ghostElement.style.left = `${pointer.clientX}px`;
-                    this.ghostElement.style.top = `${pointer.clientY}px`;
+                    this.ghostElement.style.left = `${x}px`;
+                    this.ghostElement.style.top = `${y}px`;
                     
                     // Preserve scale (1.1 during drag) and rotation with centering
                     this.ghostElement.style.transform = `translate(-50%, -50%) scale(1.1) rotate(${this.currentRotation}rad)`;
@@ -4236,14 +4312,27 @@
                 const gameCanvas = document.getElementById('gameCanvas');
                 const canvasRect = gameCanvas.getBoundingClientRect();
                 
-                if (pointer.clientX >= canvasRect.left && 
-                    pointer.clientX <= canvasRect.right &&
-                    pointer.clientY >= canvasRect.top && 
-                    pointer.clientY <= canvasRect.bottom) {
+                // Calculate the actual drop position from ghost element if it exists
+                let dropX, dropY;
+                if (this.ghostElement) {
+                    // Get ghost element's center position
+                    const ghostRect = this.ghostElement.getBoundingClientRect();
+                    dropX = ghostRect.left + ghostRect.width / 2;
+                    dropY = ghostRect.top + ghostRect.height / 2;
+                } else {
+                    // Fallback to pointer position
+                    dropX = pointer.clientX;
+                    dropY = pointer.clientY;
+                }
+                
+                if (dropX >= canvasRect.left && 
+                    dropX <= canvasRect.right &&
+                    dropY >= canvasRect.top && 
+                    dropY <= canvasRect.bottom) {
                     
-                    // Calculate position relative to canvas
-                    const x = pointer.clientX - canvasRect.left;
-                    const y = pointer.clientY - canvasRect.top;
+                    // Calculate position relative to canvas using ghost position
+                    const x = dropX - canvasRect.left;
+                    const y = dropY - canvasRect.top;
                     
                     // Use current rotation as-is (it already includes barbell orientation from dock/ghost)
                     const totalRotation = this.currentRotation;
@@ -4346,6 +4435,20 @@
                 this.draggedElement = null;
                 this.draggedShapeType = null;
                 this.currentRotation = 0;
+                this.dragStartedFromDock = false;
+            }
+
+            // Configuration method for touch offset
+            setTouchOffset(x, y, enabled = true) {
+                this.touchOffset.x = x;
+                this.touchOffset.y = y;
+                this.touchOffset.enabled = enabled;
+                console.log(`📱 Touch offset updated: x=${x}, y=${y}, enabled=${enabled}`);
+            }
+
+            // Get current touch offset settings
+            getTouchOffset() {
+                return { ...this.touchOffset };
             }
 
             // Touch event handlers for mobile support
@@ -6376,6 +6479,40 @@
             }
         }
 
+        // Touch offset configuration functions
+        function toggleTouchOffset() {
+            const enableTouchOffset = document.getElementById('enableTouchOffset');
+            if (window.gameManager && window.gameManager.dragDropManager) {
+                const currentOffset = window.gameManager.dragDropManager.getTouchOffset();
+                window.gameManager.dragDropManager.setTouchOffset(
+                    currentOffset.x, 
+                    currentOffset.y, 
+                    enableTouchOffset.checked
+                );
+                console.log(`📱 Touch offset: ${enableTouchOffset.checked ? 'ON' : 'OFF'}`);
+            }
+        }
+
+        function updateTouchOffset() {
+            const offsetX = parseInt(document.getElementById('touchOffsetX').value);
+            const offsetY = parseInt(document.getElementById('touchOffsetY').value);
+            const enabled = document.getElementById('enableTouchOffset').checked;
+            
+            if (window.gameManager && window.gameManager.dragDropManager) {
+                window.gameManager.dragDropManager.setTouchOffset(offsetX, offsetY, enabled);
+                updateTouchOffsetDisplay();
+                console.log(`📱 Touch offset updated: X=${offsetX}px, Y=${offsetY}px`);
+            }
+        }
+
+        function updateTouchOffsetDisplay() {
+            const offsetX = document.getElementById('touchOffsetX').value;
+            const offsetY = document.getElementById('touchOffsetY').value;
+            
+            document.getElementById('touchOffsetXValue').textContent = `${offsetX}px`;
+            document.getElementById('touchOffsetYValue').textContent = `${offsetY}px`;
+        }
+
         // Toggle shape animations  
         function toggleAnimations() {
             const enableAnimations = document.getElementById('enableAnimations');
@@ -6531,6 +6668,9 @@
             rebuildGameDock();
             
             gameManager = new GameManager();
+            
+            // Initialize touch offset display values
+            updateTouchOffsetDisplay();
             
             // Start dynamic coin bonus system
             startCoinBonusSystem();

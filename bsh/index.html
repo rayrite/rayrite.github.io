@@ -1447,6 +1447,30 @@
             from { transform: translate(-50%, -50%) rotate(0deg); }
             to { transform: translate(-50%, -50%) rotate(360deg); }
         }
+
+        /* Mobile-specific HUD adjustments */
+        @media (max-width: 600px), (pointer: coarse) {
+            /* Hide the play/edit toggle and the purple mobile debug button on mobile devices */
+            #modeToggleSwitch,
+            #mobileDebugButton {
+                display: none !important;
+            }
+            /* Reflow the right section horizontally and allow the coin counter
+               to occupy the space left by the hidden controls. Using flex-start
+               ensures the group of remaining buttons and the coin counter starts
+               from the left of the right section rather than hugging the far edge. */
+            .right-section {
+                flex-direction: row;
+                align-items: center;
+                justify-content: flex-start;
+                gap: clamp(6px, 2vw, 12px);
+            }
+            /* Remove the left margin so the coin counter sits directly next to
+               the remaining HUD buttons. The gap on the parent will handle spacing. */
+            .coin-counter {
+                margin-left: 0;
+            }
+        }
         
     </style>
 </head>
@@ -9352,6 +9376,36 @@ if (!window.textureManager) {
 }
 
 console.log('✅ Texture loading system fixed and initialized');
+
+// Mobile-friendly handlers for HUD icon buttons
+document.addEventListener('DOMContentLoaded', () => {
+    // Helper to attach touch handlers without interfering with existing click handlers
+    function addTouchHandler(element, callback) {
+        if (!element) return;
+        element.addEventListener('touchstart', (e) => {
+            // Prevent default to avoid triggering the delayed click event on mobile
+            e.preventDefault();
+            e.stopPropagation();
+            callback();
+        }, { passive: false });
+    }
+    // Cycle themes on touch
+    addTouchHandler(document.getElementById('themeButton'), () => {
+        try {
+            if (typeof cycleThemes === 'function') cycleThemes();
+        } catch (err) {
+            console.error('Error cycling themes via touch:', err);
+        }
+    });
+    // Reset level on touch
+    addTouchHandler(document.getElementById('resetButton'), () => {
+        try {
+            if (typeof resetLevel === 'function') resetLevel();
+        } catch (err) {
+            console.error('Error resetting level via touch:', err);
+        }
+    });
+});
 
     </script>
 </body>

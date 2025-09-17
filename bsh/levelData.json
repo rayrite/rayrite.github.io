@@ -1,0 +1,129 @@
+{
+  "formatVersion": "2.2",
+  "mode": "LEVEL",
+  "meta": {
+    "levelId": "w4_l1_the_gauntlet",
+    "worldName": "Mechanics Lab",
+    "worldNumber": 4,
+    "levelNumber": 1,
+    "displayName": "The Gauntlet",
+    "description": "Handle with care! This level features volatile shapes. Unlock the second fire shape to clear a path.",
+    "difficulty": "hard",
+    "tags": ["special_shapes", "puzzle"]
+  },
+  "physics": {
+    "gravity": { "x": 0, "y": 1.0 }
+  },
+  "gameplay": {
+    "unlockThresholds": [
+      {
+        "shapesPlayed": 1,
+        "unlocksShapeInSlot": [1]
+      }
+    ]
+  },
+  "victory": {
+    "logic": "ALL",
+    "conditions": [
+      {
+        "type": "REGULAR",
+        "value": 3
+      }
+    ],
+    "stabilityCheck": {
+      "duration": 4.0,
+      "tolerance": 0.01
+    }
+  },
+  "failure": {
+    "conditions": [
+      { "type": "SHAPE_FELL", "immediate": true }
+    ]
+  },
+  "entities": {
+    "platforms": [
+      {
+        "id": "p_main_lab_floor",
+        "prefabId": "static",
+        "transform": {
+          "position": { "x": 250, "y": 500 },
+          "rotation": 0,
+          "scale": { "x": 2.0, "y": 1.2 }
+        }
+      }
+    ]
+  },
+  "dock": {
+    "layout": {
+      "columns": 5,
+      "rows": 1
+    },
+    "slots": [
+      {
+        "slotIndex": 0,
+        "shapeId": "fire_orb_1",
+        "shapePrefabId": "circle",
+        "specialType": {
+          "type": "FIRE",
+          "explosionRadius": 70,
+          "chainReaction": true
+        }
+      },
+      {
+        "slotIndex": 1,
+        "shapeId": "fire_orb_2_locked",
+        "shapePrefabId": "circle",
+        "specialType": {
+          "type": "LOCKED" 
+        }
+      },
+      {
+        "slotIndex": 2,
+        "shapeId": "timer_box_1",
+        "shapePrefabId": "square",
+        "specialType": {
+          "type": "TIMER",
+          "countdownSeconds": 3.5,
+          "triggerCondition": "WEIGHT"
+        }
+      },
+      {
+        "slotIndex": 3,
+        "shapeId": "weighted_girder_1",
+        "shapePrefabId": "cross",
+        "specialType": {
+          "type": "WEIGHTED",
+          "maxWeight": 1,
+          "indicatorColors": {
+            "safe": "#2ECC71",
+            "warning": "#F1C40F",
+            "danger": "#E74C3C"
+          }
+        }
+      },
+      {
+        "slotIndex": 4,
+        "shapeId": "regular_weight",
+        "shapePrefabId": "triangle"
+      }
+    ]
+  },
+  "theme": {
+    "baseThemeId": "metal",
+    "overrides": null
+  },
+  "onboarding": {
+     "sequences": [
+      {
+        "id": "special_shapes_warning",
+        "trigger": { "type": "levelStart" },
+        "steps": [
+          {
+            "content": { "title": "Handle With Care!", "text": "Some shapes in this level have dangerous properties. Read their descriptions carefully." }
+          }
+        ]
+      }
+    ]
+  },
+  "adConfig": null
+}

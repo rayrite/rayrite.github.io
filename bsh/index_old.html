@@ -518,16 +518,6 @@
             cursor: pointer; /* Indicate interactivity */
         }
 
-        .special-effect-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 65;
-        }
-
         .shape-slot:hover {
             background: rgba(255,255,255,0.15);
             border-color: rgba(255,255,255,0.5);
@@ -566,10 +556,6 @@
             transform: scale(1.1);
             filter: drop-shadow(0 3px 10px rgba(0,0,0,0.3));
         }
-
-        /* Locked Shape Styles */
-        .shape-slot .locked { filter: saturate(0.1) brightness(0.5); cursor: not-allowed; }
-        .shape-slot .lock-icon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 28px; height: 28px; pointer-events: none; z-index: 70; }
 
         .game-shape.dragging {
             z-index: 1000;
@@ -842,99 +828,6 @@
         .level-cleared-button:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
-        }
-
-        /* Game Over Popup Modal */
-        .game-over-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 10001;
-            opacity: 0;
-            animation: modalFadeIn 0.45s ease-out forwards;
-        }
-
-        .game-over-content {
-            background: linear-gradient(135deg, #2c3e50 0%, #8e0e00 100%);
-            border-radius: 24px;
-            padding: clamp(28px, 6vw, 48px);
-            text-align: center;
-            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.55);
-            transform: scale(0.6);
-            animation: modalPopIn 0.55s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
-            max-width: min(420px, 90vw);
-        }
-
-        .game-over-title {
-            font-size: clamp(36px, 9vw, 48px);
-            font-weight: 800;
-            color: #FFECEC;
-            text-transform: uppercase;
-            letter-spacing: 4px;
-            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
-            margin-bottom: clamp(12px, 3vw, 20px);
-            animation: titlePulse 1s ease-in-out infinite alternate;
-        }
-
-        .game-over-message {
-            font-size: clamp(18px, 4.2vw, 22px);
-            color: #FFD7D7;
-            margin-bottom: clamp(18px, 4vw, 26px);
-            font-weight: 600;
-        }
-
-        .game-over-stats {
-            display: grid;
-            gap: 10px;
-            color: #FFFFFF;
-            font-size: clamp(16px, 4vw, 20px);
-            margin-bottom: clamp(22px, 5vw, 32px);
-        }
-
-        .game-over-stats strong {
-            color: #FFE082;
-        }
-
-        .game-over-buttons {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: clamp(12px, 3vw, 18px);
-            flex-wrap: wrap;
-        }
-
-        .game-over-button {
-            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
-            color: #FFFFFF;
-            border: none;
-            padding: 14px 28px;
-            font-size: clamp(16px, 4vw, 18px);
-            border-radius: 12px;
-            cursor: pointer;
-            box-shadow: 0 6px 16px rgba(231, 76, 60, 0.45);
-            transition: transform 0.25s ease, box-shadow 0.25s ease;
-            min-width: 150px;
-        }
-
-        .game-over-button.secondary {
-            background: rgba(255, 255, 255, 0.12);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
-        }
-
-        .game-over-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 22px rgba(231, 76, 60, 0.55);
-        }
-
-        .game-over-button.secondary:hover {
-            box-shadow: 0 10px 22px rgba(0, 0, 0, 0.4);
         }
 
         @keyframes modalFadeIn {
@@ -1899,123 +1792,6 @@
          * • Settings and customization options
          * • Performance monitoring and debug tools
          */
-
-        /*╔═══════════════════════════════════════════════════════════════════════════
-          ║ LEVEL LOADER & DATA MANAGER
-          ║ Fetches and stores level JSON data.
-          ╚═══════════════════════════════════════════════════════════════════════════*/
-        class LevelLoader {
-            constructor() {
-                this.levelData = null;
-            }
-            async loadFromFile(filePath) {
-                try {
-                    let response;
-                    try {
-                        response = await fetch(filePath);
-                    } catch (err) {
-                        return new Promise((resolve) => {
-                            const xhr = new XMLHttpRequest();
-                            xhr.overrideMimeType('application/json');
-                            xhr.onreadystatechange = () => {
-                                if (xhr.readyState === 4) {
-                                    if (xhr.status === 200 || xhr.status === 0) {
-                                        try {
-                                            this.levelData = JSON.parse(xhr.responseText);
-                                            console.log(`✅ Level data loaded via XHR from ${filePath}`, this.levelData);
-                                            resolve(true);
-                                        } catch (parseErr) {
-                                            console.error('❌ Failed to parse level data via XHR:', parseErr);
-                                            this.levelData = null;
-                                            resolve(false);
-                                        }
-                                    } else {
-                                        console.error(`❌ Failed to load level data via XHR. Status: ${xhr.status}`);
-                                        resolve(false);
-                                    }
-                                }
-                            };
-                            xhr.open('GET', filePath, true);
-                            xhr.send(null);
-                        });
-                    }
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    this.levelData = await response.json();
-                    console.log(`✅ Level data loaded successfully from ${filePath}`, this.levelData);
-                    return true;
-                } catch (error) {
-                    console.error('❌ Failed to load or parse level data:', error);
-                    this.levelData = null;
-                    return false;
-                }
-            }
-            getData() {
-                return this.levelData;
-            }
-        }
-
-        /*╔═══════════════════════════════════════════════════════════════════════════
-          ║ STUB MANAGERS FOR ADVANCED FEATURES
-          ║ Placeholder classes to store additional level data for future implementation.
-          ╚═══════════════════════════════════════════════════════════════════════════*/
-        class ObjectiveManager {
-            constructor(victoryData, failureData) {
-                this.victoryData = victoryData || null;
-                this.failureData = failureData || null;
-                console.log('🗺️ ObjectiveManager initialized with data:', this.victoryData, this.failureData);
-            }
-        }
-        class StarManager {
-            constructor(starData) {
-                this.starData = starData || [];
-                console.log(`⭐ StarManager initialized with ${this.starData.length} stars.`);
-            }
-        }
-        class OnboardingManager {
-            constructor(onboardingData) {
-                this.onboardingData = onboardingData || null;
-                console.log('🎓 OnboardingManager initialized with data:', this.onboardingData);
-            }
-        }
-        /**
-         * Helper function to deeply merge two objects. The source object's properties overwrite the target's.
-         * @param {object} target - The target object to merge into.
-         * @param {object} source - The source object with new properties.
-         * @returns {object} The merged object.
-         */
-        function deepMerge(target, source) {
-            const output = { ...target };
-            if (isObject(target) && isObject(source)) {
-                Object.keys(source).forEach(key => {
-                    if (isObject(source[key])) {
-                        if (!(key in target)) {
-                            Object.assign(output, { [key]: source[key] });
-                        } else {
-                            output[key] = deepMerge(target[key], source[key]);
-                        }
-                    } else {
-                        Object.assign(output, { [key]: source[key] });
-                    }
-                });
-            }
-            return output;
-        }
-
-        function isObject(item) {
-            return (item && typeof item === 'object' && !Array.isArray(item));
-        }
-
-        /*╔═══════════════════════════════════════════════════════════════════════════
-          ║ AD SEQUENCER (this is for context to find the right location)
-          ╚═══════════════════════════════════════════════════════════════════════════*/
-        class AdSequencer {
-            constructor(adConfig) {
-                this.adConfig = adConfig || null;
-                console.log('📺 AdSequencer initialized with config:', this.adConfig);
-            }
-        }
 
         /*╔═══════════════════════════════════════════════════════════════════════════
           ║ CANVAS ENHANCEMENT CONFIGURATION
@@ -3073,10 +2849,6 @@
                 
                 // Track configuration source
                 this.useUnifiedConfig = typeof UNIFIED_GAME_CONFIG !== 'undefined';
-
-                // Read base theme id and overrides from level data for future use
-                this.baseThemeId = this.gameManager?.levelData?.theme?.baseThemeId || null;
-                this.themeOverrides = this.gameManager?.levelData?.theme?.overrides || null;
                 
                 console.log(`🎨 ThemeManager: Initialized with ${this.useUnifiedConfig ? 'unified' : 'legacy'} config, default theme: ${this.currentTheme}`);
             }
@@ -3112,42 +2884,39 @@
                 this.isTransitioning = true;
 
                 try {
-                    // --- NEW OVERRIDE LOGIC ---
-                    // 1. Create a deep copy of the base theme to avoid modifying the original constant.
-                    let finalThemeConfig = JSON.parse(JSON.stringify(THEME_DEFINITIONS[themeName]));
-
-                    // 2. Check for level-specific overrides and merge them.
-                    if (this.gameManager && this.gameManager.themeOverrides) {
-                        console.log('🎨 Applying level-specific theme overrides...');
-                        finalThemeConfig = deepMerge(finalThemeConfig, this.gameManager.themeOverrides);
+                    // Clear old theme textures before loading new ones
+                    if (this.currentTheme && this.currentTheme !== themeName) {
+                        console.log(`🧹 Clearing textures for old theme: ${this.currentTheme}`);
+                        this.assetManager.clearThemeImages(this.currentTheme);
+                        
+                        // UnifiedPixiManager removed - PixiJS eliminated
+                        // No additional texture cleanup needed for Canvas-only mode
                     }
-                    // --- END NEW LOGIC ---
-
-                    // The asset manager now uses the final, potentially merged, theme configuration.
-                    this.assetManager.themes[themeName] = {
-                        config: finalThemeConfig,
-                        assets: { backgroundImage: null, platformImage: null, shapeTextures: {} },
-                        loaded: false
-                    };
-
-                    await this.assetManager.loadThemeImages(themeName, finalThemeConfig);
-                    this.assetManager.themes[themeName].loaded = true;
-
+                    
+                    // Load the new theme
+                    await this.assetManager.loadTheme(themeName);
+                    
+                    // Update visual elements
                     this.updateBackgroundStyle(themeName);
                     this.updatePlatformStyle(themeName);
                     
-                    if (typeof this.gameManager.rebuildDockFromData === 'function') {
+                    // PixiJS shape theme updates removed with PixiJS elimination
+                    
+                    // Refresh dock shapes with new theme colors
+                    if (typeof rebuildGameDock === 'function') {
                         console.log('🎨 Refreshing dock with new theme colors...');
-                        this.gameManager.rebuildDockFromData();
+                        rebuildGameDock();
                     }
-
+                    
+                    // Update current theme
                     this.currentTheme = themeName;
                     this.assetManager.currentTheme = themeName;
-
+                    
+                    // Notify listeners
                     this.notifyThemeChanged(themeName);
-
-                    console.log(`✅ Theme switched to: ${themeName} (with overrides applied if any)`);
-
+                    
+                    console.log(`✅ Theme switched to: ${themeName}`);
+                    
                 } catch (error) {
                     console.error(`❌ Failed to switch theme to ${themeName}:`, error);
                 } finally {
@@ -3225,40 +2994,9 @@
             }
 
             createParticle(style, x, y, type) {
-                // New particle effect for weighted shape explosions
-                if (type === 'explosion') {
-                    const angle = Math.random() * Math.PI * 2;
-                    const speed = Math.random() * 6 + 2; // Explosion speed from 2 to 8
-                    return {
-                        x: x,
-                        y: y,
-                        vx: Math.cos(angle) * speed,
-                        vy: Math.sin(angle) * speed,
-                        life: Math.random() * 0.5 + 0.5, // Lifetime 0.5s to 1.0s
-                        decay: 0.015 + Math.random() * 0.01, // Slower decay for a bigger effect
-                        size: 3 + Math.random() * 4, // Larger particles
-                        color: ['#ff471a', '#ff7a33', '#ffc300', '#ffffff'][Math.floor(Math.random() * 4)],
-                        style: 'explosion'
-                    };
-                }
-
-                if (style.style === 'flame') {
-                    return {
-                        x: x,
-                        y: y,
-                        vx: (Math.random() - 0.5) * 1.5, // Less horizontal spread
-                        vy: -Math.random() * 2 - 1,   // Move upwards
-                        life: Math.random() * 0.4 + 0.2, // Very short life (0.2s to 0.6s)
-                        decay: 0.05, // Faster decay
-                        size: 2 + Math.random() * 4,
-                        color: ['#FF4500', '#FFA500', '#FFD700'][Math.floor(Math.random() * 3)],
-                        style: 'flame'
-                    };
-                }
-
                 const colors = style.colors;
                 const color = colors[Math.floor(Math.random() * colors.length)];
-
+                
                 return {
                     x: x,
                     y: y,
@@ -3383,41 +3121,45 @@
           ╚═══════════════════════════════════════════════════════════════════════════*/
         class PhysicsShapeRenderer {
             renderShapeOnCanvas(ctx, shapeType, x, y, rotation = 0, scale = 1) {
+                // Commented out verbose rendering logging
+                // console.log(`🎨 renderShapeOnCanvas: ${shapeType} at (${x},${y})`);
                 const config = getShapeConfig(shapeType);
                 if (!config) {
                     console.error(`❌ No config found for renderShapeOnCanvas: ${shapeType}`);
                     return;
                 }
 
-                // --- NEW: Get renderStyle from the current theme ---
-                let renderStyle = { type: 'FLAT' }; // Default fallback
-                if (window.gameManager && window.gameManager.themeManager) {
-                    const currentThemeName = window.gameManager.themeManager.getCurrentTheme();
-                    const currentTheme = window.gameManager.themeManager.assetManager.getTheme(currentThemeName);
-                    if (currentTheme?.config?.shapes?.renderStyle) {
-                        renderStyle = currentTheme.config.shapes.renderStyle;
-                    }
-                }
-                // --- END NEW ---
-
-                // Check for renderStyle overrides specified directly in level data theme overrides
-                if (window.gameManager && window.gameManager.levelData && window.gameManager.levelData.theme && window.gameManager.levelData.theme.overrides && window.gameManager.levelData.theme.overrides.shapes && window.gameManager.levelData.theme.overrides.shapes.renderStyle) {
-                    renderStyle = window.gameManager.levelData.theme.overrides.shapes.renderStyle;
-                }
+                // Commented out verbose config logging
+                // console.log(`📐 Config for ${shapeType}:`, config);
 
                 ctx.save();
                 ctx.translate(x, y);
                 ctx.rotate(rotation);
                 ctx.scale(scale, scale);
 
-                // Path creation is now separate from rendering
-                const path = new Path2D();
-                this.createShapePath(path, config);
-
-                // The new master rendering method does all the work
-                this.renderPathWithStyle(ctx, path, config, renderStyle);
+                switch (config.type) {
+                    case 'rectangle':
+                        console.log(`📦 Drawing rectangle for ${shapeType}`);
+                        this.drawRectangle(ctx, config);
+                        break;
+                    case 'circle':
+                        console.log(`⭕ Drawing circle for ${shapeType}`);
+                        this.drawCircle(ctx, config);
+                        break;
+                    case 'polygon':
+                        console.log(`🔷 Drawing polygon for ${shapeType}`);
+                        this.drawPolygon(ctx, config);
+                        break;
+                    case 'compound':
+                        console.log(`🔗 Drawing compound shape for ${shapeType}`);
+                        this.drawCompoundShape(ctx, config);
+                        break;
+                    default:
+                        console.error(`❌ Unknown shape type: ${config.type} for ${shapeType}`);
+                }
 
                 ctx.restore();
+                console.log(`✅ Rendered ${shapeType}`);
             }
 
             createDockPreview(shapeType, size = UNIFIED_GAME_CONFIG.shapes.dockPreviewSize) {
@@ -3522,434 +3264,245 @@
                 return canvas;
             }
 
-            /* --- Begin new bevel-capable rendering engine --- */
-            createShapePath(path, config) {
-                switch (config.type) {
-                    case 'rectangle':
-                        path.rect(-config.width / 2, -config.height / 2, config.width, config.height);
-                        break;
-                    case 'circle':
-                        path.arc(0, 0, config.radius, 0, Math.PI * 2);
-                        break;
-                    case 'polygon':
-                        if (config.vertices) {
-                            path.moveTo(config.vertices[0].x, config.vertices[0].y);
-                            for (let i = 1; i < config.vertices.length; i++) {
-                                path.lineTo(config.vertices[i].x, config.vertices[i].y);
-                            }
-                            path.closePath();
-                        }
-                        break;
-                    case 'diamond':
-                        // Render a diamond using width and height (rotated square)
-                        {
-                            const halfW = (config.width ?? config.height ?? 0) / 2;
-                            const halfH = (config.height ?? config.width ?? 0) / 2;
-                            path.moveTo(0, -halfH);
-                            path.lineTo(halfW, 0);
-                            path.lineTo(0, halfH);
-                            path.lineTo(-halfW, 0);
-                            path.closePath();
-                        }
-                        break;
-                    case 'compound':
-                        if (config.parts) {
-                            config.parts.forEach(part => {
-                                // Create a Path2D for the sub-part
-                                const partPath = new Path2D();
-                                const partConfigWithOffset = { ...config, ...part };
-                                this.createShapePath(partPath, partConfigWithOffset);
-                                
-                                // Add the sub-path to the main path, applying its offset
-                                path.addPath(partPath, new DOMMatrix().translate(part.offsetX || 0, part.offsetY || 0));
-                            });
-                        }
-                        break;
-                }
-            }
-
-            renderPathWithStyle(ctx, path, shapeConfig, renderStyle) {
-                switch (renderStyle.type) {
-                    case 'BEVEL_STANDARD':
-                    case 'BEVEL_ROUNDED':
-                        this.renderBevel(ctx, path, shapeConfig, renderStyle);
-                        break;
-                    case 'FLAT':
-                    default:
-                        this.renderFlat(ctx, path, shapeConfig);
-                        break;
-                }
-            }
-
-            renderFlat(ctx, path, config) {
-                ctx.fillStyle = config.color;
-                ctx.fill(path);
-                if (config.strokeWidth > 0) {
-                    ctx.strokeStyle = config.stroke;
-                    ctx.lineWidth = config.strokeWidth;
-                    ctx.stroke(path);
-                }
-            }
-
-            renderBevel(ctx, path, config, style) {
-                // Read parameters with sensible defaults
-                const depth = style.depth || 4;
-                const lightAngleRad = (style.lightAngle || 135) * (Math.PI / 180); // Convert angle to radians
-                const highlightOpacity = style.highlightOpacity || 0.8;
-                const shadowOpacity = style.shadowOpacity || 0.6;
-                const softness = style.softness || 0;
-
-                // Calculate offsets for highlight and shadow based on light angle
-                const offsetX = Math.cos(lightAngleRad) * depth / 2;
-                const offsetY = Math.sin(lightAngleRad) * depth / 2;
-
-                // 1. Render Shadow Layer
-                ctx.save();
-                ctx.translate(-offsetX, -offsetY); // Offset opposite to the light source
-                ctx.fillStyle = 'black';
-                ctx.globalAlpha = shadowOpacity;
-                if (softness > 0) {
-                    ctx.filter = `blur(${softness}px)`;
-                }
-                ctx.fill(path);
-                ctx.restore();
-
-                // 2. Render Highlight Layer
-                ctx.save();
-                ctx.translate(offsetX, offsetY); // Offset towards the light source
-                ctx.fillStyle = 'white';
-                ctx.globalAlpha = highlightOpacity;
-                if (softness > 0) {
-                    ctx.filter = `blur(${softness}px)`;
-                }
-                ctx.fill(path);
-                ctx.restore();
-
-                // 3. Render Main Body Color
-                ctx.fillStyle = config.color;
-                ctx.fill(path);
+            drawRectangle(ctx, config) {
+                const { width, height, color, stroke, strokeWidth } = config;
                 
-                // 4. Render Stroke on top for crisp edges
-                if (config.strokeWidth > 0) {
-                    ctx.strokeStyle = config.stroke;
-                    ctx.lineWidth = config.strokeWidth;
-                    ctx.stroke(path);
-                }
-            }
-            /* --- End new bevel-capable rendering engine --- */
-        }
-
-        // Global shape renderer instance
-        const shapeRenderer = new PhysicsShapeRenderer();
-
-        const WEIGHTED_DEFAULTS = {
-            maxWeight: 3,
-            overloadDelayMs: 1000,
-            indicatorColors: {
-                safe: '#2ecc71',
-                warning: '#f1c40f',
-                danger: '#e74c3c'
-            }
-        };
-
-        class DockingSpecialEffectsManager {
-            constructor() {
-                this.entries = [];
-                this.animationFrameId = null;
-                this.lastTimestamp = 0;
-                this.renderFrame = this.renderFrame.bind(this);
-            }
-
-            reset() {
-                this.entries.forEach(entry => {
-                    if (entry.overlay && entry.overlay.parentElement) {
-                        entry.overlay.parentElement.removeChild(entry.overlay);
-                    }
-                    if (entry.sourceElement && entry.sourceElement.dataset) {
-                        delete entry.sourceElement.dataset.specialEffectId;
-                    }
-                });
-                this.entries = [];
-                if (this.animationFrameId !== null) {
-                    cancelAnimationFrame(this.animationFrameId);
-                    this.animationFrameId = null;
-                }
-                this.lastTimestamp = 0;
-            }
-
-            sanitizeSpecialConfig(specialConfig) {
-                const sanitized = { ...specialConfig };
-
-                if (sanitized.type === 'WEIGHTED') {
-                    sanitized.maxWeight = (typeof sanitized.maxWeight === 'number' && sanitized.maxWeight > 0)
-                        ? sanitized.maxWeight
-                        : WEIGHTED_DEFAULTS.maxWeight;
-                    sanitized.overloadDelayMs = (typeof sanitized.overloadDelayMs === 'number' && sanitized.overloadDelayMs >= 0)
-                        ? sanitized.overloadDelayMs
-                        : WEIGHTED_DEFAULTS.overloadDelayMs;
-                    sanitized.indicatorColors = {
-                        ...WEIGHTED_DEFAULTS.indicatorColors,
-                        ...(sanitized.indicatorColors || {})
-                    };
-                }
-
-                if (sanitized.type === 'TIMER') {
-                    const duration = typeof sanitized.countdownSeconds === 'number'
-                        ? sanitized.countdownSeconds
-                        : sanitized.duration;
-                    sanitized.countdownSeconds = Math.max(duration || 3, 0.1);
-                }
-
-                return sanitized;
-            }
-
-            getEntryByElement(element) {
-                if (!element) return null;
-                const effectId = element.dataset?.specialEffectId;
-                for (let i = 0; i < this.entries.length; i++) {
-                    const entry = this.entries[i];
-                    if (entry.sourceElement === element) {
-                        return entry;
-                    }
-                    if (effectId && entry.id === effectId) {
-                        return entry;
-                    }
-                }
-                return null;
-            }
-
-            setEffectVisibility(element, visible) {
-                const entry = this.getEntryByElement(element);
-                if (entry && entry.overlay) {
-                    entry.overlay.style.display = visible ? 'block' : 'none';
-                }
-            }
-
-            unregisterByElement(element) {
-                if (!element) return;
-                const effectId = element.dataset?.specialEffectId;
-                for (let i = this.entries.length - 1; i >= 0; i--) {
-                    const entry = this.entries[i];
-                    if (entry.sourceElement === element || (effectId && entry.id === effectId)) {
-                        if (entry.overlay && entry.overlay.parentElement) {
-                            entry.overlay.parentElement.removeChild(entry.overlay);
-                        }
-                        this.entries.splice(i, 1);
-                    }
-                }
-                if (effectId) {
-                    delete element.dataset.specialEffectId;
-                }
-            }
-
-            register(canvas, specialConfig) {
-                if (!canvas || !specialConfig || !specialConfig.type) return;
-
-                const parent = canvas.parentElement;
-                if (!parent) return;
-
-                this.unregisterByElement(canvas);
-
-                const overlay = document.createElement('canvas');
-                overlay.width = canvas.width;
-                overlay.height = canvas.height;
-                overlay.className = 'special-effect-overlay';
-                overlay.style.width = canvas.style.width || '100%';
-                overlay.style.height = canvas.style.height || '100%';
-                overlay.style.zIndex = '65';
-                overlay.style.pointerEvents = 'none';
-                overlay.style.display = 'block';
-                parent.appendChild(overlay);
-
-                const sanitizedConfig = this.sanitizeSpecialConfig(specialConfig);
-                const entryId = `effect-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-
-                if (!sanitizedConfig.currentStatus) {
-                    sanitizedConfig.currentStatus = 'safe';
-                }
-                if (typeof sanitizedConfig.currentWeight !== 'number') {
-                    sanitizedConfig.currentWeight = 0;
-                }
-
-                const entry = {
-                    id: entryId,
-                    type: sanitizedConfig.type,
-                    overlay,
-                    ctx: overlay.getContext('2d'),
-                    specialParams: sanitizedConfig,
-                    particles: [],
-                    timerElapsed: 0,
-                    timerDuration: Math.max(sanitizedConfig.countdownSeconds || sanitizedConfig.duration || 3, 0.1),
-                    indicatorColors: sanitizedConfig.indicatorColors || {
-                        safe: '#2ecc71',
-                        warning: '#f1c40f',
-                        danger: '#e74c3c'
-                    },
-                    sourceElement: canvas
-                };
-
-                overlay.dataset.specialEffectId = entryId;
-                canvas.dataset.specialEffectId = entryId;
-
-                this.entries.push(entry);
-
-                if (!this.animationFrameId) {
-                    this.lastTimestamp = performance.now();
-                    this.animationFrameId = requestAnimationFrame(this.renderFrame);
-                }
-            }
-
-            renderFrame(timestamp) {
-                if (this.entries.length === 0) {
-                    this.animationFrameId = null;
-                    this.lastTimestamp = 0;
-                    return;
-                }
-
-                const delta = this.lastTimestamp ? (timestamp - this.lastTimestamp) : 16.67;
-                this.lastTimestamp = timestamp;
-                const deltaMultiplier = delta / 16.67;
-
-                for (let i = this.entries.length - 1; i >= 0; i--) {
-                    const entry = this.entries[i];
-                    if (!entry.overlay || !entry.overlay.isConnected) {
-                        this.entries.splice(i, 1);
-                        continue;
-                    }
-
-                    const ctx = entry.ctx;
-                    if (!ctx) {
-                        this.entries.splice(i, 1);
-                        continue;
-                    }
-
-                    ctx.clearRect(0, 0, entry.overlay.width, entry.overlay.height);
-
-                    switch (entry.type) {
-                        case 'FIRE':
-                            this.renderFire(entry, deltaMultiplier);
-                            break;
-                        case 'TIMER':
-                            this.renderTimer(entry, delta);
-                            break;
-                        case 'WEIGHTED':
-                            this.renderWeighted(entry);
-                            break;
-                        default:
-                            break;
-                    }
-                }
-
-                if (this.entries.length > 0) {
-                    this.animationFrameId = requestAnimationFrame(this.renderFrame);
+                // Check if texture is available from config
+                if (config.hasTexture && config.texture) {
+                    // Try to render with texture if available
+                    this.drawWithTexture(ctx, config, () => {
+                        ctx.fillRect(-width / 2, -height / 2, width, height);
+                    });
+                    
+                    // Add stroke
+                    ctx.strokeStyle = stroke;
+                    ctx.lineWidth = strokeWidth;
+                    ctx.strokeRect(-width / 2, -height / 2, width, height);
                 } else {
-                    this.animationFrameId = null;
-                    this.lastTimestamp = 0;
+                    // Fallback to color-based rendering
+                    ctx.fillStyle = color;
+                    ctx.strokeStyle = stroke;
+                    ctx.lineWidth = strokeWidth;
+
+                    ctx.fillRect(-width / 2, -height / 2, width, height);
+                    ctx.strokeRect(-width / 2, -height / 2, width, height);
                 }
             }
 
-            renderFire(entry, deltaMultiplier) {
-                const { overlay, ctx, particles } = entry;
-                const centerX = overlay.width / 2;
-                const centerY = overlay.height / 2;
-                const maxParticles = 40;
-
-                if (Math.random() > 0.4 && particles.length < maxParticles) {
-                    const spawnCount = Math.random() > 0.7 ? 2 : 1;
-                    for (let i = 0; i < spawnCount && particles.length < maxParticles; i++) {
-                        particles.push({
-                            x: centerX + (Math.random() - 0.5) * 6,
-                            y: centerY + 10 + Math.random() * 4,
-                            vx: (Math.random() - 0.5) * 1.2,
-                            vy: -Math.random() * 1.8 - 0.4,
-                            life: Math.random() * 0.4 + 0.2,
-                            decay: 0.05,
-                            size: 2 + Math.random() * 3,
-                            color: ['#FF4500', '#FFA500', '#FFD700'][Math.floor(Math.random() * 3)]
-                        });
-                    }
-                }
-
-                for (let i = particles.length - 1; i >= 0; i--) {
-                    const particle = particles[i];
-                    particle.x += particle.vx * deltaMultiplier;
-                    particle.y += particle.vy * deltaMultiplier;
-                    particle.life -= particle.decay * deltaMultiplier;
-
-                    if (particle.life <= 0) {
-                        particles.splice(i, 1);
-                        continue;
-                    }
-
-                    ctx.save();
-                    ctx.globalAlpha = Math.max(particle.life, 0);
-                    ctx.fillStyle = particle.color;
+            drawCircle(ctx, config) {
+                const { radius, color, stroke, strokeWidth } = config;
+                
+                // Check if texture is available from config
+                if (config.hasTexture && config.texture) {
+                    // Try to render with texture if available
+                    this.drawWithTexture(ctx, config, () => {
+                        ctx.beginPath();
+                        ctx.arc(0, 0, radius, 0, Math.PI * 2);
+                        ctx.fill();
+                    });
+                    
+                    // Add stroke
+                    ctx.strokeStyle = stroke;
+                    ctx.lineWidth = strokeWidth;
                     ctx.beginPath();
-                    ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+                    ctx.arc(0, 0, radius, 0, Math.PI * 2);
+                    ctx.stroke();
+                } else {
+                    // Fallback to color-based rendering
+                    ctx.fillStyle = color;
+                    ctx.strokeStyle = stroke;
+                    ctx.lineWidth = strokeWidth;
+
+                    ctx.beginPath();
+                    ctx.arc(0, 0, radius, 0, Math.PI * 2);
                     ctx.fill();
+                    ctx.stroke();
+                }
+            }
+
+            drawPolygon(ctx, config) {
+                const { vertices, color, stroke, strokeWidth } = config;
+                
+                // Check if texture is available from config
+                if (config.hasTexture && config.texture) {
+                    // Try to render with texture if available
+                    this.drawWithTexture(ctx, config, () => {
+                        ctx.beginPath();
+                        ctx.moveTo(vertices[0].x, vertices[0].y);
+                        for (let i = 1; i < vertices.length; i++) {
+                            ctx.lineTo(vertices[i].x, vertices[i].y);
+                        }
+                        ctx.closePath();
+                        ctx.fill();
+                    });
+                    
+                    // Add stroke
+                    ctx.strokeStyle = stroke;
+                    ctx.lineWidth = strokeWidth;
+                    ctx.beginPath();
+                    ctx.moveTo(vertices[0].x, vertices[0].y);
+                    for (let i = 1; i < vertices.length; i++) {
+                        ctx.lineTo(vertices[i].x, vertices[i].y);
+                    }
+                    ctx.closePath();
+                    ctx.stroke();
+                } else {
+                    // Fallback to color-based rendering
+                    ctx.fillStyle = color;
+                    ctx.strokeStyle = stroke;
+                    ctx.lineWidth = strokeWidth;
+
+                    ctx.beginPath();
+                    ctx.moveTo(vertices[0].x, vertices[0].y);
+                    for (let i = 1; i < vertices.length; i++) {
+                        ctx.lineTo(vertices[i].x, vertices[i].y);
+                    }
+                    ctx.closePath();
+                    ctx.fill();
+                    ctx.stroke();
+                }
+            }
+
+            drawCompoundShape(ctx, config) {
+                for (const part of config.parts) {
+                    ctx.save();
+                    ctx.translate(part.offsetX || 0, part.offsetY || 0);
+
+                    // THEME FIX: Use theme colors from main config instead of part-specific colors
+                    // This ensures compound shapes inherit theme colors properly
+                    const partConfig = {
+                        ...config,
+                        ...part,
+                        // Override part colors with theme-aware colors from main config
+                        color: config.color,      // Use theme color instead of part.color
+                        stroke: config.stroke     // Use theme stroke instead of part.stroke
+                    };
+
+                    switch (part.type) {
+                        case 'rectangle':
+                            this.drawRectangle(ctx, partConfig);
+                            break;
+                        case 'circle':
+                            this.drawCircle(ctx, partConfig);
+                            break;
+                        case 'diamond':
+                            this.drawDiamond(ctx, partConfig);
+                            break;
+                    }
                     ctx.restore();
                 }
             }
 
-            renderWeighted(entry) {
-                const { overlay, ctx, indicatorColors, specialParams } = entry;
-                const centerX = overlay.width / 2;
-                const centerY = overlay.height / 2;
-
+            drawDiamond(ctx, config) {
+                // For dock preview consistency, render diamond exactly as physics will:
+                // as a rotated rectangle to match the planck.Box(..., Math.PI/4) creation
+                const { width, height, color, stroke, strokeWidth } = config;
+                
                 ctx.save();
-                ctx.translate(centerX, centerY);
-                ctx.fillStyle = '#333';
-                ctx.fillRect(-8, -4, 16, 8);
+                // Apply the same rotation that's used in physics fixture creation
+                ctx.rotate(Math.PI / 4);
+                
+                // Check if texture is available from config
+                if (config.hasTexture && config.texture) {
+                    // Try to render with texture if available
+                    this.drawWithTexture(ctx, config, () => {
+                        ctx.fillRect(-width / 2, -height / 2, width, height);
+                    });
+                    
+                    // Add stroke
+                    ctx.strokeStyle = stroke;
+                    ctx.lineWidth = strokeWidth;
+                    ctx.strokeRect(-width / 2, -height / 2, width, height);
+                } else {
+                    // Fallback to color-based rendering
+                    ctx.fillStyle = color;
+                    ctx.strokeStyle = stroke;
+                    ctx.lineWidth = strokeWidth;
 
-                ctx.beginPath();
-                ctx.arc(0, 0, 5, 0, Math.PI * 2);
-                const status = specialParams?.currentStatus || 'safe';
-                const lightColor = indicatorColors[status] || indicatorColors.safe;
-                ctx.fillStyle = lightColor;
-                ctx.fill();
-                ctx.strokeStyle = '#555';
-                ctx.lineWidth = 1;
-                ctx.stroke();
+                    ctx.fillRect(-width / 2, -height / 2, width, height);
+                    ctx.strokeRect(-width / 2, -height / 2, width, height);
+                }
+                
                 ctx.restore();
             }
 
-            renderTimer(entry, delta) {
-                const { overlay, ctx, timerDuration } = entry;
-                const centerX = overlay.width / 2;
-                const centerY = overlay.height / 2;
+            // Helper method for texture-aware drawing with unified texture manager integration
+            drawWithTexture(ctx, config, drawCallback) {
+                // Try to get texture from unified texture manager if available
+                const textureManager = window.unifiedTextureManager || window.textureManager;
+                let hasValidTexture = false;
+                
+                console.log(`🎨 drawWithTexture called for shape with hasTexture: ${config.hasTexture}, textureUrl: ${config.textureUrl}`);
+                
+                if (textureManager && config.hasTexture && config.textureUrl) {
+                    // Check if texture is loaded and available
+                    const textureData = textureManager.getTexture ? textureManager.getTexture(config.textureUrl) : 
+                                       textureManager.textureCache?.get(config.textureUrl);
+                    
+                    console.log(`🔍 Texture data found: ${!!textureData}, complete: ${textureData?.complete}`);
+                    
+                    if (textureData && textureData.complete) {
+                        ctx.save();
+                        
+                        // Create pattern from texture and align it with the current translation
+                        try {
+                            const pattern = ctx.createPattern(textureData, 'repeat');
+                            if (pattern) {
+                                try {
+                                    const tf = ctx.getTransform();
+                                    // Offset pattern by the negative translation components so it moves with the shape
+                                    pattern.setTransform(new DOMMatrix().translate(-tf.e, -tf.f));
+                                } catch (patternErr) {
+                                    console.warn(`⚠️ Failed to set texture pattern transform: ${patternErr.message}`);
+                                }
+                                ctx.fillStyle = pattern;
+                                hasValidTexture = true;
+                                console.log(`✅ Applied texture pattern for shape with ${config.textureUrl}`);
+                            }
+                        } catch (error) {
+                            console.warn(`⚠️ Failed to create texture pattern: ${error.message}`);
+                        }
 
-                entry.timerElapsed += delta / 1000;
-                const progress = timerDuration > 0 ? (entry.timerElapsed % timerDuration) / timerDuration : 0;
-                const angle = progress * Math.PI * 2;
+                        if (hasValidTexture) {
+                            drawCallback();
+                            ctx.restore();
+                            return;
+                        }
 
-                ctx.save();
-                ctx.translate(centerX, centerY);
-
-                ctx.beginPath();
-                ctx.arc(0, 0, 8, 0, Math.PI * 2);
-                ctx.fillStyle = '#E0E0E0';
-                ctx.fill();
-                ctx.strokeStyle = '#757575';
-                ctx.lineWidth = 1.5;
-                ctx.stroke();
-
-                ctx.fillRect(-1.5, -11, 3, 3);
-
-                ctx.save();
-                ctx.rotate(angle);
-                ctx.beginPath();
-                ctx.moveTo(0, 0);
-                ctx.lineTo(0, -6);
-                ctx.lineWidth = 1;
-                ctx.strokeStyle = '#d32f2f';
-                ctx.stroke();
-                ctx.restore();
-
-                ctx.restore();
+                        ctx.restore();
+                    } else {
+                        console.log(`⚠️ Texture not ready: textureData=${!!textureData}, complete=${textureData?.complete}`);
+                    }
+                } else {
+                    console.log(`⚠️ Texture requirements not met: textureManager=${!!textureManager}, hasTexture=${config.hasTexture}, textureUrl=${config.textureUrl}`);
+                }
+                
+                // Fallback to color-based rendering with texture indication
+                ctx.fillStyle = config.color;
+                
+                if (config.hasTexture && !hasValidTexture) {
+                    // Visual indicator for shapes that should have texture but don't
+                    ctx.save();
+                    ctx.globalAlpha = 0.8;
+                    drawCallback();
+                    ctx.restore();
+                    
+                    // Add subtle texture placeholder
+                    ctx.save();
+                    ctx.fillStyle = '#DAA520'; // Gold color to indicate missing texture
+                    ctx.globalAlpha = 0.2;
+                    drawCallback();
+                    ctx.restore();
+                    
+                    console.log(`📝 Rendered shape with texture placeholder (texture not loaded)`);
+                } else {
+                    drawCallback();
+                }
             }
         }
 
-        const dockingSpecialEffectsManager = new DockingSpecialEffectsManager();
+        // Global shape renderer instance
+        const shapeRenderer = new PhysicsShapeRenderer();
 
         /*╔═══════════════════════════════════════════════════════════════════════════
           ║ UNIFIED DOCK SYSTEM
@@ -3964,31 +3517,16 @@
                 return;
             }
 
-            dockingSpecialEffectsManager.reset();
-
-            const isDesignMode = typeof currentMode !== 'undefined' && currentMode === 'design';
-            if (window.gameManager && typeof window.gameManager.rebuildDockFromData === 'function' && !isDesignMode) {
-                console.log('🎯 Delegating dock rebuild to GameManager to preserve level data configuration.');
-                window.gameManager.rebuildDockFromData();
-                return;
-            }
-
             // Get current dock shapes from level config or fallback to all shapes
             const dockShapes = window.currentLevelConfig ? window.currentLevelConfig.dockShapes : getAllShapeTypes();
             console.log('📦 Building dock with shapes:', dockShapes);
             console.log('📦 Current level config exists:', !!window.currentLevelConfig);
             console.log('📦 Shape renderer available:', !!shapeRenderer);
-
-            let levelSlotData = [];
-            if (window.gameManager && window.gameManager.levelData &&
-                window.gameManager.levelData.dock && Array.isArray(window.gameManager.levelData.dock.slots)) {
-                levelSlotData = window.gameManager.levelData.dock.slots.slice();
-            }
-
+            
             // Clear and rebuild dock with canvas previews
             // PixiJS previews removed - no special cleanup needed
             console.log('🧹 Clearing existing Canvas previews...');
-
+            
             dockingArea.innerHTML = '';
             console.log('🧹 Cleared existing dock content');
             
@@ -4009,14 +3547,6 @@
                         canvasPreview.style.visibility = 'visible'; // Ensure visibility is reset
                         slotDiv.appendChild(canvasPreview);
                         console.log(`✅ Created canvas preview for: ${shapeType}`);
-
-                        const matchingIndex = levelSlotData.findIndex(slot => slot.shapePrefabId === shapeType && slot.specialType && slot.specialType.type);
-                        if (matchingIndex !== -1) {
-                            const matchingSlot = levelSlotData.splice(matchingIndex, 1)[0];
-                            if (matchingSlot.specialType.type !== 'LOCKED') {
-                                dockingSpecialEffectsManager.register(canvasPreview, matchingSlot.specialType);
-                            }
-                        }
                     } else {
                         console.error(`❌ Failed to create canvas preview for: ${shapeType}`);
                         // Create a temporary colored div fallback
@@ -4071,7 +3601,7 @@
          * • Performance-optimized rendering pipeline
          */
         class PhysicsManager {
-            constructor(canvas, physicsData = {}) {
+            constructor(canvas) {
                 this.canvas = canvas;
                 this.ctx = canvas.getContext('2d');
                 
@@ -4128,22 +3658,13 @@
                 this.engine = this.Engine.create();
                 this.world = this.engine.world;
                 
-                // Set gravity from physics data or fallback to defaults
-                this.engine.world.gravity.x = physicsData.gravity?.x || 0;
-                this.engine.world.gravity.y = physicsData.gravity?.y || 1;
+                // Set gravity (Matter.js uses different scale than Planck.js)
+                this.engine.world.gravity.x = 0;
+                this.engine.world.gravity.y = 1; // 1 pixel/frame² gravity
                 
                 // Track all dynamic bodies for rendering and cleanup
                 this.dynamicBodies = [];
-                // Track platform bodies for clearing when loading from data
-                this.platformBodies = [];
-                // Store shape defaults and materials for future use
-                this.shapeDefaults = physicsData.shapeDefaults || {};
-                this.materials = physicsData.materials || {};
                 
-                // Explosion timer system
-                this.explosionTimers = [];
-                this.lastExplosionId = 0;
-
                 // Camera shake system
                 this.cameraShake = {
                     active: false,
@@ -4302,54 +3823,9 @@ Note: PixiJS completely removed - Canvas2D only
                 const bodyB = pair.bodyB;
                 const userDataA = bodyA.userData || {};
                 const userDataB = bodyB.userData || {};
-
+                
                 console.log(`🔍 RAW COLLISION: bodyA.userData =`, userDataA, `bodyB.userData =`, userDataB);
-
-                const isFireA = userDataA.specialType?.type === 'FIRE';
-                const isFireB = userDataB.specialType?.type === 'FIRE';
-                if (isFireA && isFireB) {
-                    // Check if either body is already part of a countdown
-                    const existingTimerA = this.explosionTimers.find(t => t.shapes.has(bodyA));
-                    const existingTimerB = this.explosionTimers.find(t => t.shapes.has(bodyB));
-
-                    if (!existingTimerA && !existingTimerB) {
-                        // Neither is ticking, create a new timer
-                        const delayA = userDataA.specialType.explosionDelaySeconds || 1;
-                        const delayB = userDataB.specialType.explosionDelaySeconds || 1;
-                        const delay = Math.min(delayA, delayB); // Use the shorter delay
-
-                        const newTimer = {
-                            id: ++this.lastExplosionId,
-                            timeRemaining: delay * 1000,
-                            shapes: new Set([bodyA, bodyB])
-                        };
-                        this.explosionTimers.push(newTimer);
-                        bodyA.userData.explosionTimerId = newTimer.id;
-                        bodyB.userData.explosionTimerId = newTimer.id;
-                    } else if (existingTimerA && !existingTimerB) {
-                        // Add bodyB to timerA
-                        existingTimerA.shapes.add(bodyB);
-                        bodyB.userData.explosionTimerId = existingTimerA.id;
-                    } else if (!existingTimerA && existingTimerB) {
-                        // Add bodyA to timerB
-                        existingTimerB.shapes.add(bodyA);
-                        bodyA.userData.explosionTimerId = existingTimerB.id;
-                    } else if (existingTimerA && existingTimerB && existingTimerA.id !== existingTimerB.id) {
-                        // Merge timers, keep the one with less time remaining
-                        const timerToKeep = existingTimerA.timeRemaining < existingTimerB.timeRemaining ? existingTimerA : existingTimerB;
-                        const timerToMerge = existingTimerA === timerToKeep ? existingTimerB : existingTimerA;
-
-                        timerToMerge.shapes.forEach(shape => {
-                            timerToKeep.shapes.add(shape);
-                            shape.userData.explosionTimerId = timerToKeep.id;
-                        });
-
-                        // Remove the merged timer
-                        this.explosionTimers = this.explosionTimers.filter(t => t.id !== timerToMerge.id);
-                    }
-                }
-
-
+                
                 this.collisionCount++;
                 this.eventCount++;
                 
@@ -4378,185 +3854,12 @@ Note: PixiJS completely removed - Canvas2D only
             }
 
             handleEndContact(pair) {
+                // Handle when objects stop touching
                 const bodyA = pair.bodyA;
                 const bodyB = pair.bodyB;
-                const userDataA = bodyA.userData || {};
-                const userDataB = bodyB.userData || {};
-
-            }
-
-            triggerExplosion(position, radius = 50) {
-                // Only create particle effects, no force application, as per user request.
-                // The radius parameter is kept for potential future use by the particle system.
-                this.particleSystem.createThemeParticles('explosion', position.x, position.y, 30);
-            }
-
-            cleanupRemovedShapeFromWeighted(removedBodyId) {
-                // Clean up references in all weighted shapes
-                this.dynamicBodies.forEach(body => {
-                    if (body.userData?.specialType?.type === 'WEIGHTED' &&
-                        body.userData.shapesOnTop?.has(removedBodyId)) {
-                        body.userData.shapesOnTop.delete(removedBodyId);
-                        console.log(`⚖️ Cleaned up shape ${removedBodyId} from weighted tracking`);
-                    }
-                });
-            }
-
-            updateSpecialShapes(deltaTime) {
-                const bodiesToRemove = [];
-                this.dynamicBodies.forEach(body => {
-                    const specialType = body.userData.specialType?.type;
-                    if (!specialType) return;
-
-                    if (specialType === 'TIMER') {
-                        const timerState = body.userData.timerState;
-                        if (!timerState) return;
-                        if (typeof timerState.initialCountdown !== 'number' || timerState.initialCountdown <= 0) {
-                            timerState.initialCountdown = timerState.countdown;
-                        }
-                        const isWeightOnTop = this.dynamicBodies.some(otherBody =>
-                            otherBody.id !== body.id &&
-                            Math.abs(otherBody.position.x - body.position.x) < 20 &&
-                            otherBody.position.y < body.position.y &&
-                            Matter.Query.collides(body, [otherBody]).length > 0
-                        );
-                        if (isWeightOnTop && !timerState.isTicking) { timerState.isTicking = true; }
-                        if (timerState.isTicking) {
-                            timerState.countdown -= deltaTime / 1000;
-                            if (timerState.countdown < 0) {
-                                timerState.countdown = 0;
-                            }
-                            if (timerState.countdown <= 0) {
-                                this.triggerExplosion(body.position, body.userData.specialType.explosionRadius);
-                                bodiesToRemove.push(body);
-                            }
-                        }
-                    }
-                    
-                    if (specialType === 'WEIGHTED') {
-                        const weightState = body.userData.weightState;
-                        if (!weightState) return;
-
-                        const specialParams = body.userData.specialType || {};
-                        const maxWeight = (typeof specialParams.maxWeight === 'number' && specialParams.maxWeight > 0)
-                            ? specialParams.maxWeight
-                            : WEIGHTED_DEFAULTS.maxWeight;
-                        const overloadDelay = (typeof specialParams.overloadDelayMs === 'number' && specialParams.overloadDelayMs >= 0)
-                            ? specialParams.overloadDelayMs
-                            : WEIGHTED_DEFAULTS.overloadDelayMs;
-
-                        specialParams.maxWeight = maxWeight;
-                        specialParams.overloadDelayMs = overloadDelay;
-
-                        const colors = {
-                            ...WEIGHTED_DEFAULTS.indicatorColors,
-                            ...(specialParams.indicatorColors || {})
-                        };
-                        specialParams.indicatorColors = colors;
-
-                        // Use a spatial query to find all bodies stacked on top
-                        const bodiesOnTop = this.getBodiesOnTop(body);
-                        weightState.currentWeight = bodiesOnTop.length;
-                        weightState.maxWeight = maxWeight;
-
-                        const previousStatus = weightState.status;
-                        let newStatus;
-                        const currentWeight = weightState.currentWeight;
-
-                        if (currentWeight === 0) {
-                            newStatus = 'safe';
-                        } else if (currentWeight === 1) {
-                            newStatus = 'warning';
-                        } else if (currentWeight === 2) {
-                            newStatus = 'danger';
-                        } else { // currentWeight >= 3
-                            newStatus = 'overloaded';
-                        }
-
-                        weightState.status = newStatus;
-                        specialParams.currentStatus = newStatus;
-                        specialParams.currentWeight = weightState.currentWeight;
-
-                        if (previousStatus !== newStatus) {
-                            const statusColor = colors[newStatus] || (newStatus === 'overloaded' ? colors.danger : '#FFFFFF');
-                            console.log(
-                                `⚖️ WEIGHTED status changed to ${newStatus.toUpperCase()} (${statusColor}). ` +
-                                `Current weight: ${weightState.currentWeight}/${maxWeight} (Max Weight: ${maxWeight}). ` +
-                                `Ranges -> SAFE[0] (${colors.safe}), WARNING[1] (${colors.warning}), DANGER[2] (${colors.danger}), OVERLOADED[${maxWeight}+] (${colors.danger}). ` +
-                                `Overload delay: ${(overloadDelay / 1000).toFixed(2)}s.`
-                            );
-                        }
-
-                        const hasReachedMax = maxWeight > 0 && weightState.currentWeight >= maxWeight;
-
-                        if (hasReachedMax) {
-                            if (!weightState.overloadActive) {
-                                weightState.overloadActive = true;
-                                weightState.overweightTimer = 0;
-                                console.log(`⏱️ WEIGHTED overload timer started (Max Weight: ${maxWeight}, Delay: ${(overloadDelay / 1000).toFixed(2)}s).`);
-                            }
-                            weightState.overweightTimer += deltaTime;
-                            if (weightState.overweightTimer >= overloadDelay) {
-                                console.log(`💥 WEIGHTED shape exceeded Max Weight ${maxWeight}. Triggering explosion.`);
-                                this.triggerExplosion(body.position, specialParams.explosionRadius);
-                                bodiesToRemove.push(body);
-                                weightState.overloadActive = false;
-                                weightState.overweightTimer = 0;
-                            }
-                        } else if (weightState.overloadActive) {
-                            console.log(`✅ WEIGHTED overload timer cancelled. Current weight ${weightState.currentWeight}/${maxWeight}.`);
-                            weightState.overloadActive = false;
-                            weightState.overweightTimer = 0;
-                        } else {
-                            weightState.overweightTimer = 0;
-                        }
-                    }
-                });
                 
-                if (bodiesToRemove.length > 0) {
-                    bodiesToRemove.forEach(body => {
-                        this.World.remove(this.world, body);
-                        this.cleanupRemovedShapeFromWeighted(body.id);
-                    });
-                    this.dynamicBodies = this.dynamicBodies.filter(b => !bodiesToRemove.some(rem => rem.id === b.id));
-                }
-            }
-
-            getBodiesOnTop(body) {
-                const bodyBounds = body.bounds;
-                const queryBounds = {
-                    min: { x: bodyBounds.min.x, y: 0 },
-                    max: { x: bodyBounds.max.x, y: bodyBounds.min.y }
-                };
-
-                // Query for bodies that are in the vertical column above the weighted shape
-                const bodiesInRegion = Matter.Query.region(this.dynamicBodies, queryBounds);
-
-                // Filter out the weighted body itself
-                return bodiesInRegion.filter(otherBody => otherBody.id !== body.id);
-            }
-
-            updateExplosionTimers(deltaTime) {
-                for (let i = this.explosionTimers.length - 1; i >= 0; i--) {
-                    const timer = this.explosionTimers[i];
-                    timer.timeRemaining -= deltaTime;
-
-                    if (timer.timeRemaining <= 0) {
-                        // Time's up, explode all shapes in the set
-                        timer.shapes.forEach(shapeBody => {
-                            // Ensure the body still exists in the world before trying to explode it
-                            if (this.dynamicBodies.includes(shapeBody)) {
-                                this.triggerExplosion(shapeBody.position, shapeBody.userData.specialType.explosionRadius);
-                                this.World.remove(this.world, shapeBody);
-                                this.cleanupRemovedShapeFromWeighted(shapeBody.id);
-                                this.dynamicBodies = this.dynamicBodies.filter(b => b.id !== shapeBody.id);
-                            }
-                        });
-
-                        // Remove this timer
-                        this.explosionTimers.splice(i, 1);
-                    }
-                }
+                // Could implement "unstable" detection here
+                // console.log('📤 Contact ended');
             }
 
             isShapePlatformCollision(dataA, dataB) {
@@ -4737,66 +4040,12 @@ Note: PixiJS completely removed - Canvas2D only
                 console.log(`🏗️ Matter.js angled platform created: -50° at (${platformX}, ${platformY})`);
             }
 
-            /**
-             * Clear all existing platforms from the physics world.
-             */
-            clearAllPlatforms() {
-                if (!this.platformBodies) {
-                    this.platformBodies = [];
-                }
-                this.platformBodies.forEach((body) => {
-                    this.World.remove(this.world, body);
-                    this.cleanupRemovedShapeFromWeighted(body.id);
-                });
-                this.platformBodies = [];
-                console.log('🧹 Cleared all existing platforms.');
-            }
-
-            /**
-             * Create a platform from the provided data configuration.
-             * Supports position, scale, rotation, and fallback appearance color.
-             * @param {Object} platformData
-             */
-            createPlatformFromData(platformData) {
-                const pos = platformData.transform.position;
-                const scale = platformData.transform.scale || { x: 1, y: 1 };
-                const rotationDeg = platformData.transform.rotation || 0;
-                const rotationRad = rotationDeg * (Math.PI / 180);
-                const width = 200 * scale.x;
-                const height = 20 * scale.y;
-                const platform = this.Bodies.rectangle(
-                    pos.x,
-                    pos.y,
-                    width,
-                    height,
-                    {
-                        isStatic: true,
-                        angle: rotationRad,
-                        render: {
-                            fillStyle: platformData.appearance?.fallbackColor || '#95A5A6',
-                            strokeStyle: '#7F8C8D',
-                            lineWidth: 2
-                        },
-                        friction: 0.9,
-                        restitution: 0
-                    }
-                );
-                platform.userData = {
-                    type: 'platform',
-                    id: platformData.id,
-                    ...platformData
-                };
-                this.World.add(this.world, platform);
-                if (!this.platformBodies) this.platformBodies = [];
-                this.platformBodies.push(platform);
-            }
-
-            createCompoundShape(x, y, type, rotation = 0, shapeId = null) {
+            createCompoundShape(x, y, type, rotation = 0) {
                 // Forward to unified createShape method for consistency
-                return this.createShape(x, y, type, rotation, shapeId);
+                return this.createShape(x, y, type, rotation);
             }
 
-            createShape(x, y, type, rotation = 0, shapeId = null) {
+            createShape(x, y, type, rotation = 0) {
                 const config = getShapeConfig(type);
                 if (!config) {
                     console.error(`Unknown shape type: ${type}`);
@@ -4833,57 +4082,13 @@ Note: PixiJS completely removed - Canvas2D only
                         }
                     }, 100); // Brief stabilization period
 
-                    let dockSlotData = null;
-                    if (shapeId) {
-                        dockSlotData = this.gameManager.levelData.dock.slots.find(slot => slot.shapeId === shapeId);
-                    } else {
-                        // Fallback for old behavior (e.g. keyboard shortcuts for testing)
-                        dockSlotData = this.gameManager.levelData.dock.slots.find(slot => slot.shapePrefabId === type && !this.dynamicBodies.some(b => b.userData.shapeId === slot.shapeId));
-                    }
+                    // Set user data for collision detection and rendering
                     body.userData = {
                         type: 'shape',
                         shapeType: type,
-                        shapeId: dockSlotData?.shapeId || `shape_${Date.now()}`,
-                        specialType: dockSlotData?.specialType || { type: 'REGULAR' },
                         ...config
                     };
-                    if (body.userData.specialType.type === 'TIMER') {
-                        body.userData.timerState = {
-                            countdown: body.userData.specialType.countdownSeconds,
-                            initialCountdown: body.userData.specialType.countdownSeconds,
-                            isTicking: false
-                        };
-                    }
-                    if (body.userData.specialType.type === 'WEIGHTED') {
-                        const weightedConfig = body.userData.specialType;
-                        const maxWeight = (typeof weightedConfig.maxWeight === 'number' && weightedConfig.maxWeight > 0)
-                            ? weightedConfig.maxWeight
-                            : WEIGHTED_DEFAULTS.maxWeight;
-                        const overloadDelay = (typeof weightedConfig.overloadDelayMs === 'number' && weightedConfig.overloadDelayMs >= 0)
-                            ? weightedConfig.overloadDelayMs
-                            : WEIGHTED_DEFAULTS.overloadDelayMs;
-
-                        weightedConfig.maxWeight = maxWeight;
-                        weightedConfig.overloadDelayMs = overloadDelay;
-                        weightedConfig.indicatorColors = {
-                            ...WEIGHTED_DEFAULTS.indicatorColors,
-                            ...(weightedConfig.indicatorColors || {})
-                        };
-
-                        body.userData.weightState = {
-                            currentWeight: 0,
-                            status: 'safe',
-                            maxWeight,
-                            overweightTimer: 0,
-                            overloadActive: false
-                        };
-                        console.log(`⚖️ Weighted shape initialized with Max Weight ${maxWeight} and overload delay ${(overloadDelay / 1000).toFixed(2)}s.`);
-                        if (body.userData.specialType?.type === 'WEIGHTED') {
-                            // Initialize shapes tracking
-                            body.userData.shapesOnTop = new Set();
-                            console.log(`⚖️ Initialized collision tracking for weighted shape`);
-                        }
-                    }
+                    
                     console.log(`🏷️ Shape userData set:`, body.userData);
 
                     this.World.add(this.world, body);
@@ -5046,13 +4251,10 @@ Note: PixiJS completely removed - Canvas2D only
                 const render = (currentTime) => {
                     const deltaTime = currentTime - lastTime;
                     lastTime = currentTime;
-
+                    
                     // Update camera shake
                     this.updateCameraShake(deltaTime);
-
-                    this.updateSpecialShapes(deltaTime);
-                    this.updateExplosionTimers(deltaTime);
-
+                    
                     // Step Matter.js physics simulation
                     this.Engine.update(this.engine, 1000 / 60); // 60 FPS
                     
@@ -5356,14 +4558,13 @@ Note: PixiJS completely removed - Canvas2D only
                 const bodies = this.world.bodies;
                 for (let i = 0; i < bodies.length; i++) {
                     this.renderBody(bodies[i]);
-                    this.renderSpecialEffects(bodies[i]);
                 }
             }
 
             renderBody(body) {
                 // Skip rendering invisible bodies
                 if (body.render && body.render.visible === false) return;
-
+                
                 // Render Matter.js body parts directly (no coordinate transformation)
                 if (body.parts && body.parts.length > 1) {
                     // Compound body - render each part separately
@@ -5374,118 +4575,6 @@ Note: PixiJS completely removed - Canvas2D only
                     // Simple body - render directly
                     this.renderMatterPart(body, body);
                 }
-            }
-
-            renderSpecialEffects(body) {
-                const userData = body.userData || {};
-                const specialType = userData.specialType?.type;
-                if (!specialType) return;
-
-                // This will act as a router for different effects
-                switch (specialType) {
-                    case 'FIRE':
-                        // Spawn 1-2 flame particles per frame for a continuous effect
-                        if (this.particleSystem && Math.random() > 0.4) { // 60% chance per frame
-                            const flameStyle = { style: 'flame', colors: [] }; // Style object for the particle system
-                            if (this.particleSystem.particles.length < this.particleSystem.maxParticles) {
-                                this.particleSystem.particles.push(
-                                    this.particleSystem.createParticle(flameStyle, body.position.x, body.position.y, 'flame')
-                                );
-                            }
-                        }
-                        break;
-                    case 'TIMER':
-                        this.drawTimerDecal(body);
-                        break;
-                    case 'WEIGHTED':
-                        this.drawWeightedDecal(body);
-                        break;
-                }
-            }
-
-            drawWeightedDecal(body) {
-                const ctx = this.ctx;
-                const weightState = body.userData.weightState;
-                const colors = body.userData.specialType?.indicatorColors;
-
-                if (!weightState || !colors) return;
-
-                const status = weightState.status || 'safe';
-
-                let lightColor = colors.safe;
-                if (status === 'warning') {
-                    lightColor = colors.warning;
-                } else if (status === 'danger') {
-                    lightColor = colors.danger;
-                } else if (status === 'overloaded') {
-                    // Make the light flash when overloaded
-                    const flash = Math.sin(performance.now() / 150) > 0;
-                    lightColor = flash ? colors.danger : '#333'; // Flash between red and dark gray
-                }
-                
-                ctx.save();
-                ctx.translate(body.position.x, body.position.y);
-                ctx.rotate(body.angle);
-
-                // Draw traffic light body
-                ctx.fillStyle = '#333';
-                ctx.fillRect(-8, -4, 16, 8);
-                
-                // Draw the light
-                ctx.beginPath();
-                ctx.arc(0, 0, 5, 0, Math.PI * 2);
-                ctx.fillStyle = lightColor;
-                ctx.fill();
-                ctx.strokeStyle = '#555';
-                ctx.lineWidth = 1;
-                ctx.stroke();
-
-                ctx.restore();
-            }
-
-            drawTimerDecal(body) {
-                const ctx = this.ctx;
-                const timerState = body.userData.timerState;
-
-                if (!timerState) return;
-
-                ctx.save();
-                ctx.translate(body.position.x, body.position.y);
-                ctx.rotate(body.angle);
-
-                // Draw stopwatch body
-                ctx.beginPath();
-                ctx.arc(0, 0, 8, 0, Math.PI * 2);
-                ctx.fillStyle = '#E0E0E0';
-                ctx.fill();
-                ctx.strokeStyle = '#757575';
-                ctx.lineWidth = 1.5;
-                ctx.stroke();
-
-                // Draw stopwatch plunger
-                ctx.fillRect(-1.5, -11, 3, 3);
-
-                let totalDuration = timerState.initialCountdown;
-                if (typeof totalDuration !== 'number' || totalDuration <= 0) {
-                    const fallback = body.userData.specialType?.countdownSeconds;
-                    totalDuration = (typeof fallback === 'number' && fallback > 0) ? fallback : 1;
-                }
-                const remaining = Math.max(typeof timerState.countdown === 'number' ? timerState.countdown : totalDuration, 0);
-                const elapsed = Math.min(Math.max(totalDuration - remaining, 0), totalDuration);
-                const progress = totalDuration > 0 ? (elapsed / totalDuration) : 0;
-                const needleAngle = timerState.isTicking ? progress * Math.PI * 2 : 0;
-
-                ctx.save();
-                ctx.rotate(needleAngle);
-                ctx.beginPath();
-                ctx.moveTo(0, 0);
-                ctx.lineTo(0, -6);
-                ctx.lineWidth = 1;
-                ctx.strokeStyle = timerState.isTicking ? '#d32f2f' : '#333';
-                ctx.stroke();
-                ctx.restore();
-
-                ctx.restore();
             }
 
             renderMatterPart(part, parentBody) {
@@ -5499,15 +4588,6 @@ Note: PixiJS completely removed - Canvas2D only
                 // Theme-based color selection
                 let fillColor = render.fillStyle || userData.color || '#95A5A6';
                 let strokeColor = render.strokeStyle || userData.stroke || '#7F8C8D';
-
-                // NEW: Add strobe effect for ticking fire shapes
-                if (userData.explosionTimerId) {
-                    // Flash between white and the original color
-                    const flash = Math.floor(performance.now() / 100) % 2 === 0;
-                    if (flash) {
-                        fillColor = '#FFFFFF'; // White
-                    }
-                }
                 
                 // Apply theme colors for platform
                 if (userData.type === 'platform' && this.platformColor) {
@@ -5790,7 +4870,6 @@ Note: PixiJS completely removed - Canvas2D only
                 // Remove all dynamic bodies from Matter.js world
                 this.dynamicBodies.forEach(body => {
                     this.World.remove(this.world, body);
-                    this.cleanupRemovedShapeFromWeighted(body.id);
                 });
                 this.dynamicBodies = [];
                 
@@ -5803,7 +4882,6 @@ Note: PixiJS completely removed - Canvas2D only
                 // Remove all dynamic bodies from Matter.js world
                 this.dynamicBodies.forEach(body => {
                     this.World.remove(this.world, body);
-                    this.cleanupRemovedShapeFromWeighted(body.id);
                 });
                 this.dynamicBodies = [];
                 
@@ -5935,14 +5013,8 @@ Note: PixiJS completely removed - Canvas2D only
             }
 
             handlePointerDown(pointer) {
-                if (!this.gameManager?.gameState?.isGameActive) {
-                    return;
-                }
-
                 const element = document.elementFromPoint(pointer.clientX, pointer.clientY);
-
-                if (element && element.classList.contains('locked')) { return; }
-
+                
                 if (element && element.classList.contains('game-shape')) {
                     // Check if drag started from docking area
                     this.dragStartedFromDock = element.closest('.docking-area') !== null;
@@ -5955,7 +5027,6 @@ Note: PixiJS completely removed - Canvas2D only
                 this.isDragging = true;
                 this.draggedElement = element;
                 this.draggedShapeType = element.dataset.shape;
-                this.draggedShapeId = element.dataset.shapeId;
                 
                 // Initialize rotation based on shape type and dock settings
                 if (this.draggedShapeType && this.draggedShapeType.includes('barbell')) {
@@ -5975,11 +5046,7 @@ Note: PixiJS completely removed - Canvas2D only
                 
                 // Add visual feedback with ghost effect
                 element.classList.add('ghost-active');
-
-                if (this.dragStartedFromDock) {
-                    dockingSpecialEffectsManager.setEffectVisibility(element, false);
-                }
-
+                
                 // Show rotation indicator
                 this.showRotationIndicator();
                 
@@ -6135,7 +5202,7 @@ Note: PixiJS completely removed - Canvas2D only
                     console.log(`🔍 DEBUG: Dropping ${this.draggedShapeType} with total rotation: ${totalRotation} radians (${(totalRotation * 180 / Math.PI).toFixed(1)}°)`);
                     
                     // Create physics shape at drop position with total rotation
-                    this.physicsManager.createCompoundShape(x, y, this.draggedShapeType, totalRotation, this.draggedShapeId);
+                    this.physicsManager.createCompoundShape(x, y, this.draggedShapeType, totalRotation);
                     
                     // Update game state
                     this.gameManager.onShapePlaced(this.draggedShapeType);
@@ -6154,15 +5221,11 @@ Note: PixiJS completely removed - Canvas2D only
             }
 
             markSlotAsEmpty(shapeElement) {
-                if (!shapeElement) return;
                 // Remove the shape from dock and mark slot as empty
                 const slot = shapeElement.parentElement;
-                dockingSpecialEffectsManager.unregisterByElement(shapeElement);
                 shapeElement.remove();
-                if (slot) {
-                    slot.classList.add('empty');
-                }
-
+                slot.classList.add('empty');
+                
                 console.log(`📦 Dock slot emptied: ${this.draggedShapeType}`);
             }
 
@@ -6170,9 +5233,6 @@ Note: PixiJS completely removed - Canvas2D only
                 // Restore the shape visibility in the dock
                 if (this.draggedElement) {
                     this.draggedElement.style.visibility = 'visible';
-                    if (this.dragStartedFromDock) {
-                        dockingSpecialEffectsManager.setEffectVisibility(this.draggedElement, true);
-                    }
                 }
             }
 
@@ -6210,13 +5270,10 @@ Note: PixiJS completely removed - Canvas2D only
             endDrag() {
                 if (this.draggedElement) {
                     this.draggedElement.classList.remove('ghost-active');
-
+                    
                     // If shape is still in dock (not removed), restore visibility
                     if (this.draggedElement.parentElement) {
                         this.draggedElement.style.visibility = 'visible';
-                        if (this.dragStartedFromDock) {
-                            dockingSpecialEffectsManager.setEffectVisibility(this.draggedElement, true);
-                        }
                     }
                 }
                 
@@ -6615,7 +5672,6 @@ Note: PixiJS completely removed - Canvas2D only
                 this.endLevelStarted = false;
                 this.levelFailed = false;
                 this.levelCompleted = false;
-                this.isGameOver = false;
             }
 
             startEndLevelCountdown() {
@@ -6663,7 +5719,6 @@ Note: PixiJS completely removed - Canvas2D only
                 this.endLevelStarted = false;
                 this.levelFailed = false;
                 this.levelCompleted = false;
-                this.isGameOver = false;
                 
                 console.log('🔄 Game state reset for new level');
             }
@@ -6704,12 +5759,9 @@ Note: PixiJS completely removed - Canvas2D only
           ║ Phase 4.1: Integrates physics events with game logic and UI updates
           ╚═══════════════════════════════════════════════════════════════════════════*/
         class GameManager {
-            constructor(levelData) {
-                // Store loaded level data
-                this.levelData = levelData;
+            constructor() {
                 this.canvas = document.getElementById('gameCanvas');
-                // Pass physics configuration (including gravity, shape defaults, materials)
-                this.physicsManager = new PhysicsManager(this.canvas, this.levelData?.physics || {});
+                this.physicsManager = new PhysicsManager(this.canvas);
                 this.gameState = new GameState();
                 this.dragDropManager = new DragDropManager(this.physicsManager, this);
                 this.mobileEnhancementManager = new MobileEnhancementManager(this.dragDropManager);
@@ -6717,32 +5769,17 @@ Note: PixiJS completely removed - Canvas2D only
                 // Canvas Enhancement System
                 this.themeManager = new ThemeManager(this.physicsManager.assetManager, this);
                 
-                // Level management derived from data
-                this.currentWorld = this.levelData?.meta?.worldNumber ?? 1;
-                this.currentLevel = this.levelData?.meta?.levelNumber ?? 1;
+                // Level management (Super Mario Bros style)
+                this.currentWorld = 1;
+                this.currentLevel = 1;
                 
-                // Gameplay settings (rotation zones, auto rotation, unlock thresholds, etc.)
-                this.gameplaySettings = this.levelData?.gameplay || {};
-                
-                // Stub managers for unsupported systems
-                this.objectiveManager = new ObjectiveManager(this.levelData?.victory, this.levelData?.failure);
-                this.starManager = new StarManager(this.levelData?.entities?.stars || []);
-                this.onboardingManager = new OnboardingManager(this.levelData?.onboarding);
-                
-                // Theme overrides and base theme id
-                this.baseThemeId = this.levelData?.theme?.baseThemeId || null;
-                this.themeOverrides = this.levelData?.theme?.overrides || null;
-
                 // Make this globally available for physics events
                 window.gameManager = this;
-                if (this.physicsManager) {
-                    this.physicsManager.gameManager = this;
-                }
-
+                
                 this.setupUI();
                 this.setupEventListeners();
                 
-                console.log(`🎮 Game Manager initialized for level: "${this.levelData?.meta?.displayName ?? 'Unknown'}"`);
+                console.log('🎮 Enhanced Game Manager with Physics Events initialized');
             }
 
             setupUI() {
@@ -6752,10 +5789,10 @@ Note: PixiJS completely removed - Canvas2D only
                 this.updateLevelDisplay();
                 this.updateStars(0);
                 this.updateDebugInfo();
-
+                
                 // Initialize HUD timer system
-                this.startTimer();
-
+                this.timerInterval = setInterval(() => this.updateTimer(), 1000);
+                
                 // Event listeners are handled by onclick in HTML - no need for duplicate listener
                 console.log('🎮 GameManager initialized with unified reset system');
             }
@@ -6809,20 +5846,6 @@ Note: PixiJS completely removed - Canvas2D only
                 });
             }
 
-            startTimer() {
-                if (this.timerInterval) {
-                    clearInterval(this.timerInterval);
-                }
-                this.timerInterval = setInterval(() => this.updateTimer(), 1000);
-            }
-
-            stopTimer() {
-                if (this.timerInterval) {
-                    clearInterval(this.timerInterval);
-                    this.timerInterval = null;
-                }
-            }
-
             // UI Update Methods
             updateScoreDisplay() {
                 const scoreElement = document.getElementById('scoreText');
@@ -6853,12 +5876,7 @@ Note: PixiJS completely removed - Canvas2D only
             updateLevelDisplay() {
                 const levelElement = document.getElementById('levelDisplay');
                 if (levelElement) {
-                    // Use displayName from level data if available
-                    if (this.levelData && this.levelData.meta && this.levelData.meta.displayName) {
-                        levelElement.textContent = this.levelData.meta.displayName;
-                    } else {
-                        levelElement.textContent = `World ${this.currentWorld}-${this.currentLevel}`;
-                    }
+                    levelElement.textContent = `World ${this.currentWorld}-${this.currentLevel}`;
                 }
             }
 
@@ -6885,10 +5903,6 @@ Note: PixiJS completely removed - Canvas2D only
 
             // Physics Event Handlers
             onShapeLandedOnPlatform() {
-                if (!this.gameState.isGameActive) {
-                    return;
-                }
-
                 console.log('🎯 GameManager: Shape landed on platform - triggering camera shake!');
                 this.gameState.recordPhysicsEvent('landing');
                 
@@ -6946,10 +5960,6 @@ Note: PixiJS completely removed - Canvas2D only
             }
 
             onShapeCollision() {
-                if (!this.gameState.isGameActive) {
-                    return;
-                }
-
                 console.log('🔄 GameManager: Shape collision - triggering camera shake!');
                 this.gameState.recordPhysicsEvent('collision');
                 
@@ -7026,11 +6036,6 @@ Note: PixiJS completely removed - Canvas2D only
             }
 
             onShapeFell() {
-                if (this.gameState.isGameOver) {
-                    console.log('⚠️ Ground collision already handled - game over state active.');
-                    return;
-                }
-
                 console.log('💥 GameManager: Shape fell - triggering camera shake!');
                 this.gameState.recordPhysicsEvent('fall');
                 
@@ -7091,19 +6096,20 @@ Note: PixiJS completely removed - Canvas2D only
                 this.playSound('shapeFall');
                 
                 console.log(`💥 FALL PENALTY: -${coinPenalty} coins, -${scorePenalty} points`);
-
+                
+                // Check if level failed due to fall during countdown
                 if (this.gameState.levelFailed) {
                     this.onLevelFailed();
+                    return;
                 }
-
-                this.onGameOver('Ground Collision!');
+                
+                // Check if this should trigger game over (outside of end-level countdown)
+                if (!this.gameState.endLevelStarted && this.gameState.shapeFalls >= 3) {
+                    this.onGameOver();
+                }
             }
 
             onShapePlaced(shapeType) {
-                if (!this.gameState.isGameActive) {
-                    return;
-                }
-
                 this.gameState.addPlacedShape(shapeType);
                 this.updateDebugInfo();
                 
@@ -7122,20 +6128,18 @@ Note: PixiJS completely removed - Canvas2D only
                 // Check for level completion (start end-level countdown)
                 if (this.gameState.placedShapes.length >= totalShapes) {
                     console.log(`🎯 All ${totalShapes} shapes placed! Starting end-level countdown...`);
-
+                    
                     // Coin reward for successfully placing all shapes
                     this.gameState.coins += 5;
                     this.updateCoinDisplay();
-
+                    
                     // Show coin reward particle
                     const coinElement = document.getElementById('coinAmount');
                     this.createFloatingText('+5 All Shapes!', coinElement, '#FFD700');
-
+                    
                     this.gameState.startEndLevelCountdown();
                     this.physicsManager.showEventNotification('End-Level Countdown!', 'balance');
                 }
-
-                this.checkUnlockConditions();
             }
 
             updateStars(shapesPlaced) {
@@ -7290,133 +6294,12 @@ Note: PixiJS completely removed - Canvas2D only
             updateDebugInfo() {
                 const debugInfo = document.getElementById('debugInfo');
                 const physicsStats = this.physicsManager.getEventStats();
-                // Determine total shapes based on loaded level data (for v2.2+ files)
-                let totalShapes = 0;
-                if (this.levelData && this.levelData.dock && Array.isArray(this.levelData.dock.slots)) {
-                    totalShapes = this.levelData.dock.slots.length;
-                } else if (window.currentLevelConfig && Array.isArray(window.currentLevelConfig.dockShapes)) {
-                    totalShapes = window.currentLevelConfig.dockShapes.length;
-                }
-                // Count available shapes (not being dragged)
+                const totalShapes = currentLevelConfig.dockShapes.length;
+                
+                // Fix #4: Count available shapes properly - shapes that are visible and not being dragged
                 const availableShapes = document.querySelectorAll('.game-shape:not(.dragging)').length;
-                if (debugInfo) {
-                    debugInfo.textContent = `Placed: ${this.gameState.placedShapes.length}/${totalShapes} | Dock: ${availableShapes}/${totalShapes} | Events: ${physicsStats.events} | FPS: 60`;
-                }
-            }
-
-            /**
-             * Rebuild the docking area from level data, generating slots and previews.
-             */
-            rebuildDockFromData() {
-                const dockData = this.levelData?.dock;
-                if (!dockData || !Array.isArray(dockData.slots)) {
-                    console.error('❌ Dock data is missing or invalid in level file.');
-                    return;
-                }
-                if (window.currentLevelConfig) {
-                    window.currentLevelConfig.dockShapes = dockData.slots
-                        .map(slot => slot.shapePrefabId)
-                        .filter(shape => !!shape);
-                    window.currentLevelConfig.dockSlots = dockData.slots.length;
-                }
-                const dockingArea = document.getElementById('dockingArea');
-                if (!dockingArea) {
-                    console.error('❌ dockingArea not found!');
-                    return;
-                }
-                dockingSpecialEffectsManager.reset();
-                dockingArea.innerHTML = '';
-                if (dockData.layout) {
-                    dockingArea.style.gridTemplateColumns = `repeat(${dockData.layout.columns}, 1fr)`;
-                    dockingArea.style.gridTemplateRows = `repeat(${dockData.layout.rows}, 1fr)`;
-                }
-                dockData.slots.forEach((slotData) => {
-                    const slotDiv = document.createElement('div');
-                    slotDiv.className = 'shape-slot';
-                    slotDiv.dataset.slotIndex = slotData.slotIndex;
-                    if (slotData.specialType && slotData.specialType.type) {
-                        slotDiv.dataset.specialType = slotData.specialType.type;
-                    }
-                    if (slotData.shapePrefabId && typeof shapeRenderer !== 'undefined') {
-                        const preview = shapeRenderer.createDockPreview(slotData.shapePrefabId, 90);
-                        if (preview) {
-                            preview.id = `shape-${slotData.shapeId || slotData.shapePrefabId}`;
-                            preview.dataset.shape = slotData.shapePrefabId;
-                            preview.dataset.shapeId = slotData.shapeId;
-                            preview.className = 'game-shape shape-preview';
-                            // Mark locked shapes visually
-                            if (slotData.specialType && slotData.specialType.type === 'LOCKED') {
-                                preview.classList.add('locked');
-                                const lockIcon = document.createElement('div');
-                                lockIcon.className = 'lock-icon';
-                                lockIcon.innerHTML = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0 0 2px rgba(0,0,0,0.7));"><rect x="5" y="11" width="14" height="10" rx="2" fill="white" fill-opacity="0.9"/><path d="M8 11V7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7V11" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.9"/></svg>`;
-                                slotDiv.appendChild(lockIcon);
-                            }
-                            slotDiv.appendChild(preview);
-                            if (slotData.specialType && slotData.specialType.type && slotData.specialType.type !== 'LOCKED') {
-                                dockingSpecialEffectsManager.register(preview, slotData.specialType);
-                            }
-                        } else {
-                            slotDiv.classList.add('empty');
-                        }
-                    } else {
-                        slotDiv.classList.add('empty');
-                    }
-                    dockingArea.appendChild(slotDiv);
-                });
-                console.log(`✅ Dock rebuilt from level data with ${dockData.slots.length} slots.`);
-            }
-
-            checkUnlockConditions() {
-                if (!this.gameplaySettings.unlockThresholds) return;
-                const placedCount = this.gameState.placedShapes.length;
-                this.gameplaySettings.unlockThresholds.forEach(threshold => {
-                    if (placedCount === threshold.shapesPlayed) {
-                        threshold.unlocksShapeInSlot.forEach(slotIndex => {
-                            const slot = document.querySelector(`[data-slot-index='${slotIndex}']`);
-                            if (slot) {
-                                const shapeEl = slot.querySelector('.game-shape');
-                                const lockIcon = slot.querySelector('.lock-icon');
-                                if (shapeEl && shapeEl.classList.contains('locked')) {
-                                    shapeEl.classList.remove('locked');
-                                    if (lockIcon) lockIcon.remove();
-                                }
-                            }
-                        });
-                    }
-                });
-            }
-
-            /**
-             * Create static platforms from level data.
-             */
-            createPlatformsFromData() {
-                const platforms = this.levelData?.entities?.platforms;
-                if (!platforms || !Array.isArray(platforms)) {
-                    console.warn('⚠️ No platform data found in level file. Using default single platform.');
-                    if (typeof this.physicsManager.createPlatform === 'function') {
-                        this.physicsManager.createPlatform();
-                    }
-                    return;
-                }
-                if (typeof this.physicsManager.clearAllPlatforms === 'function') {
-                    this.physicsManager.clearAllPlatforms();
-                }
-                platforms.forEach((p) => {
-                    if (typeof this.physicsManager.createPlatformFromData === 'function') {
-                        this.physicsManager.createPlatformFromData(p);
-                    }
-                });
-                console.log(`✅ Created ${platforms.length} platforms from level data.`);
-            }
-
-            /**
-             * Applies the theme specified in the level data on initial load.
-             */
-            async applyLevelTheme() {
-                const baseTheme = this.baseThemeId || 'classic';
-                console.log(`🎨 Applying level's base theme on load: ${baseTheme}`);
-                await this.themeManager.switchTheme(baseTheme, false);
+                
+                debugInfo.textContent = `Placed: ${this.gameState.placedShapes.length}/${totalShapes} | Dock: ${availableShapes}/${totalShapes} | Events: ${physicsStats.events} | FPS: 60`;
             }
 
             onGameTimeUp() {
@@ -7424,30 +6307,9 @@ Note: PixiJS completely removed - Canvas2D only
                 console.log('⏰ Time Up! Level Failed!');
             }
 
-            onGameOver(reason = 'Game Over!') {
-                if (this.gameState.isGameOver) {
-                    return;
-                }
-
-                this.gameState.isGameOver = true;
+            onGameOver() {
                 this.gameState.isGameActive = false;
-                this.gameState.isCountdownActive = false;
-                this.gameState.endLevelStarted = false;
-                this.gameState.levelFailed = true;
-
-                this.stopTimer();
-
-                if (this.dragDropManager) {
-                    this.dragDropManager.endDrag();
-                }
-
-                if (this.physicsManager) {
-                    this.physicsManager.showEventNotification('Game Over!', 'fall');
-                }
-
-                console.log(`💀 Game Over! ${reason}`);
-
-                this.showGameOverPopup(reason);
+                console.log('💀 Game Over! Too many shapes fell.');
             }
 
             /*╔═══════════════════════════════════════════════════════════════════════════
@@ -7520,72 +6382,6 @@ Note: PixiJS completely removed - Canvas2D only
                 }
             }
 
-            showGameOverPopup(reason = 'Game Over!') {
-                this.closeGameOverPopup();
-
-                const modal = document.createElement('div');
-                modal.className = 'game-over-modal';
-                modal.id = 'gameOverModal';
-
-                const content = document.createElement('div');
-                content.className = 'game-over-content';
-
-                const title = document.createElement('div');
-                title.className = 'game-over-title';
-                title.textContent = 'Game Over';
-
-                const message = document.createElement('div');
-                message.className = 'game-over-message';
-                message.textContent = reason;
-
-                const stats = document.createElement('div');
-                stats.className = 'game-over-stats';
-                stats.innerHTML = `
-                    <div>Score: <strong>${this.gameState.score.toLocaleString()}</strong></div>
-                    <div>Coins: <strong>${this.gameState.coins.toLocaleString()}</strong></div>
-                    <div>Shapes Placed: <strong>${this.gameState.placedShapes.length}</strong></div>
-                `;
-
-                const buttons = document.createElement('div');
-                buttons.className = 'game-over-buttons';
-
-                const retryButton = document.createElement('button');
-                retryButton.className = 'game-over-button';
-                retryButton.textContent = 'Retry Level';
-                retryButton.onclick = () => {
-                    this.closeGameOverPopup();
-                    resetLevel();
-                };
-
-                const closeButton = document.createElement('button');
-                closeButton.className = 'game-over-button secondary';
-                closeButton.textContent = 'Close';
-                closeButton.onclick = () => this.closeGameOverPopup();
-
-                buttons.appendChild(retryButton);
-                buttons.appendChild(closeButton);
-
-                content.appendChild(title);
-                content.appendChild(message);
-                content.appendChild(stats);
-                content.appendChild(buttons);
-                modal.appendChild(content);
-
-                document.body.appendChild(modal);
-            }
-
-            closeGameOverPopup() {
-                const modal = document.getElementById('gameOverModal');
-                if (modal) {
-                    modal.style.animation = 'modalFadeIn 0.3s ease-out reverse';
-                    setTimeout(() => {
-                        if (modal.parentNode) {
-                            modal.parentNode.removeChild(modal);
-                        }
-                    }, 300);
-                }
-            }
-
             /*╔═══════════════════════════════════════════════════════════════════════════
               ║ TRIGGER LEVEL COMPLETE EFFECTS
               ║ Creates spectacular visual effects when level is completed successfully.
@@ -7594,13 +6390,11 @@ Note: PixiJS completely removed - Canvas2D only
             triggerLevelCompleteEffects() {
                 // Flash effect for completion
                 const screen = document.querySelector('.screen');
-                if (screen) {
-                    screen.style.animation = 'levelCompleteFlash 1s ease-out';
-                    setTimeout(() => {
-                        screen.style.animation = '';
-                    }, 1000);
-                }
-
+                screen.style.animation = 'levelCompleteFlash 1s ease-out';
+                setTimeout(() => {
+                    screen.style.animation = '';
+                }, 1000);
+                
                 // Cascade star effects
                 const stars = document.querySelectorAll('.star');
                 stars.forEach((star, index) => {
@@ -7609,23 +6403,17 @@ Note: PixiJS completely removed - Canvas2D only
                         this.createFloatingText('★', star, '#FFD700');
                     }, index * 150);
                 });
-
+                
                 // Multiple celebration particles
                 setTimeout(() => {
                     const scoreElement = document.getElementById('scoreText');
                     const coinElement = document.getElementById('coinAmount');
-
-                    if (scoreElement) {
-                        this.createFloatingText('🎉', scoreElement, '#FF6B6B');
-                    }
-                    if (coinElement) {
-                        this.createFloatingText('🎊', coinElement, '#4ECDC4');
-                    }
-
+                    
+                    this.createFloatingText('🎉', scoreElement, '#FF6B6B');
+                    this.createFloatingText('🎊', coinElement, '#4ECDC4');
+                    
                     setTimeout(() => {
-                        if (scoreElement) {
-                            this.createFloatingText('🏆', scoreElement, '#FFD700');
-                        }
+                        this.createFloatingText('🏆', scoreElement, '#FFD700');
                     }, 300);
                 }, 500);
             }
@@ -7697,10 +6485,7 @@ Note: PixiJS completely removed - Canvas2D only
 
             resetLevel() {
                 console.log('🔄 Resetting level...');
-
-                this.closeGameOverPopup();
-                this.stopTimer();
-
+                
                 // Clear all dynamic physics bodies
                 this.physicsManager.cleanup();
                 
@@ -7732,9 +6517,7 @@ Note: PixiJS completely removed - Canvas2D only
                 
                 // Update debug info
                 this.updateDebugInfo();
-
-                this.startTimer();
-
+                
                 console.log('✅ Level reset complete');
             }
 
@@ -8426,12 +7209,7 @@ Note: PixiJS completely removed - Canvas2D only
             if (window.gameManager && window.gameManager.updateDebugInfo) {
                 window.gameManager.updateDebugInfo();
             }
-
-            if (window.gameManager) {
-                window.gameManager.closeGameOverPopup();
-                window.gameManager.startTimer();
-            }
-
+            
             console.log('✅ Level reset completed');
         }
 
@@ -9708,52 +8486,6 @@ Note: PixiJS completely removed - Canvas2D only
         testTextureLoading();
         
         window.addEventListener('load', async () => {
-            // ---------------------------------------------------------------------------
-            // v2.2+ Level loading and initialization
-            console.log('🌍 Page loaded, starting data-driven initialization...');
-            let levelFile = 'levelData.json';
-            try {
-                levelFile = new URL(levelFile, window.location.href).href;
-            } catch (e) {
-                // leave levelFile as relative when URL construction fails
-            }
-            const loader = new LevelLoader();
-            const ok = await loader.loadFromFile(levelFile);
-            if (!ok) {
-                console.error('Halting initialization due to level loading failure.');
-                return;
-            }
-            const data = loader.getData();
-            window.currentLevelData = data;
-            // Initialize UI elements that depend on themes
-            initializeThemeUI();
-            initializePixiControls();
-            if (data.mode === 'PLAYABLE_AD') {
-                console.log('🚀 PLAYABLE_AD mode detected.');
-                window.adSequencer = new AdSequencer(data.adConfig);
-                alert('Playable Ad Mode Initialized! (stub).');
-            } else if (data.mode === 'LEVEL') {
-                console.log('🎮 LEVEL mode detected.');
-                gameManager = new GameManager(data);
-                window.gameManager = gameManager;
-                // Apply the level-specific theme (which includes overrides)
-                await gameManager.applyLevelTheme();
-                // Now that the theme is loaded, build the scene
-                if (typeof gameManager.rebuildDockFromData === 'function') {
-                    gameManager.rebuildDockFromData();
-                }
-                if (typeof gameManager.createPlatformsFromData === 'function') {
-                    gameManager.createPlatformsFromData();
-                }
-                if (gameManager.updateDebugInfo) gameManager.updateDebugInfo();
-            } else {
-                console.error(`❌ Unknown mode in level data: ${data.mode}`);
-                return;
-            }
-            updateTouchOffsetDisplay();
-            startCoinBonusSystem();
-            console.log('✅ Data-driven initialization complete.');
-            return;
             console.log('🌍 Page loaded, starting initialization...');
             console.log('🔧 Current level config:', window.currentLevelConfig);
             console.log('🎨 Shape renderer available:', !!shapeRenderer);

@@ -2,98 +2,134 @@
   "formatVersion": "2.2",
   "mode": "LEVEL",
   "meta": {
-    "levelId": "w4_l1_the_gauntlet",
-    "worldName": "Mechanics Lab",
-    "worldNumber": 4,
+    "levelId": "test_level_v22",
+    "worldName": "Test World",
+    "worldNumber": 1,
     "levelNumber": 1,
-    "displayName": "The Gauntlet",
-    "description": "Handle with care! This level features volatile shapes. Unlock the second fire shape to clear a path.",
-    "difficulty": "hard",
-    "tags": ["special_shapes", "puzzle"]
+    "displayName": "Test Level v2.2",
+    "description": "This is a sample level demonstrating the LEVEL_DATA v2.2 specification.",
+    "difficulty": "easy",
+    "tags": ["sample", "v2.2"],
+    "author": "Example Author",
+    "lastModified": "2025-09-15T14:00:00Z"
   },
   "physics": {
-    "gravity": { "x": 0, "y": 1.0 }
+    "gravity": { "x": 0, "y": 1.0 },
+    "shapeDefaults": { "friction": 0.7, "restitution": 0.2, "density": 0.5 },
+    "materials": {
+      "wood": { "friction": 0.8, "restitution": 0.3, "density": 0.5 }
+    }
   },
   "gameplay": {
+    "rotationZones": {
+      "enabled": true,
+      "left": { "width": "20%", "color": "#FF0000", "borderColor": "#000000" },
+      "right": { "width": "20%", "color": "#0000FF", "borderColor": "#000000" }
+    },
+    "autoRotation": {
+      "enabled": false,
+      "delayMs": 5000,
+      "incrementDegrees": 15
+    },
     "unlockThresholds": [
-      {
-        "shapesPlayed": 1,
-        "unlocksShapeInSlot": [1]
-      }
+      { "shapesPlayed": 3, "unlocksShapeInSlot": [5, 6] }
     ]
   },
   "victory": {
     "logic": "ALL",
     "conditions": [
-      {
-        "type": "REGULAR",
-        "value": 3
-      }
+      { "type": "REGULAR", "value": 5 },
+      { "type": "HEIGHT_THRESHOLD", "value": 250, "operator": ">=" }
     ],
-    "stabilityCheck": {
-      "duration": 4.0,
-      "tolerance": 0.01
-    }
+    "stabilityCheck": { "duration": 5.0, "tolerance": 0.02 }
   },
   "failure": {
     "conditions": [
-      { "type": "SHAPE_FELL", "immediate": true }
+      { "type": "SHAPE_FELL", "immediate": true },
+      { "type": "TIME_EXPIRED", "immediate": false }
     ]
   },
   "entities": {
     "platforms": [
       {
-        "id": "p_main_lab_floor",
+        "id": "p_base",
         "prefabId": "static",
         "transform": {
-          "position": { "x": 250, "y": 500 },
+          "position": { "x": 250, "y": 480 },
           "rotation": 0,
-          "scale": { "x": 2.0, "y": 1.2 }
+          "scale": { "x": 1, "y": 1 }
+        },
+        "appearance": {
+          "fallbackColor": "#95A5A6"
         }
+      },
+      {
+        "id": "p_floating",
+        "prefabId": "static",
+        "transform": {
+          "position": { "x": 400, "y": 350 },
+          "rotation": 0,
+          "scale": { "x": 0.5, "y": 1 }
+        },
+        "appearance": {
+          "fallbackColor": "#7F8C8D"
+        }
+      }
+    ],
+    "stars": [
+      {
+        "id": "star1",
+        "position": { "x": 300, "y": 200 },
+        "size": 10,
+        "value": 1,
+        "required": false,
+        "effects": { "onTouch": "highlight" }
       }
     ]
   },
   "dock": {
-    "layout": {
-      "columns": 5,
-      "rows": 1
+    "layout": { "columns": 5, "rows": 2 },
+    "appearance": {
+      "backgroundColor": "rgba(44, 62, 80, 0.85)",
+      "borderColor": "rgba(255, 255, 255, 0.2)",
+      "borderWidth": "1px",
+      "borderStyle": "solid",
+      "cornerRadius": "0px",
+      "position": {
+        "top": "clamp(70px, 12vh, 90px)"
+      },
+      "size": {
+        "height": "clamp(120px, 20vh, 160px)"
+      },
+      "spacing": {
+        "padding": "clamp(4px, 2vw, 8px)",
+        "gap": "clamp(4px, 1.5vw, 10px)"
+      },
+      "slotAppearance": {
+        "backgroundColor": "rgba(255, 255, 255, 0.1)",
+        "borderColor": "rgba(255, 255, 255, 0.3)",
+        "borderWidth": "2px",
+        "borderStyle": "dashed",
+        "cornerRadius": "10px"
+      }
+    },
+    "animation": {
+      "enabled": true,
+      "staggerMs": 100,
+      "durationMs": 2000,
+      "minScale": 0.1,
+      "easing": "cubic-bezier(0.175, 0.885, 0.32, 1.275)"
     },
     "slots": [
       {
         "slotIndex": 0,
-        "shapeId": "fire_orb_1",
-        "shapePrefabId": "circle",
-        "specialType": {
-          "type": "FIRE",
-          "explosionRadius": 70,
-          "chainReaction": true
-        }
-      },
-      {
-        "slotIndex": 1,
-        "shapeId": "fire_orb_2_locked",
-        "shapePrefabId": "circle",
-        "specialType": {
-          "type": "LOCKED" 
-        }
-      },
-      {
-        "slotIndex": 2,
-        "shapeId": "timer_box_1",
+        "shapeId": "s1",
         "shapePrefabId": "square",
         "specialType": {
-          "type": "TIMER",
-          "countdownSeconds": 3.5,
-          "triggerCondition": "WEIGHT"
-        }
-      },
-      {
-        "slotIndex": 3,
-        "shapeId": "weighted_girder_1",
-        "shapePrefabId": "cross",
-        "specialType": {
           "type": "WEIGHTED",
-          "maxWeight": 1,
+          "maxWeight": 3,
+          "overloadDelayMs": 1000,
+          "explosionRadius": 80,
           "indicatorColors": {
             "safe": "#2ECC71",
             "warning": "#F1C40F",
@@ -102,24 +138,93 @@
         }
       },
       {
-        "slotIndex": 4,
-        "shapeId": "regular_weight",
-        "shapePrefabId": "triangle"
-      }
+        "slotIndex": 1,
+        "shapeId": "s2",
+        "shapePrefabId": "triangle",
+        "specialType": {
+          "type": "TIMER",
+          "countdownSeconds": 5,
+          "explosionRadius": 90
+        }
+      },
+      {
+        "slotIndex": 2,
+        "shapeId": "s3",
+        "shapePrefabId": "circle",
+        "specialType": {
+          "type": "FIRE",
+          "explosionRadius": 100,
+          "explosionDelaySeconds": 2
+        }
+      },
+      { "slotIndex": 3, "shapeId": "s4", "shapePrefabId": "cross" },
+      { "slotIndex": 4, "shapeId": "s5", "shapePrefabId": "barbell-one" },
+      { "slotIndex": 5, "shapeId": "s6", "shapePrefabId": "barbell-two" },
+      { "slotIndex": 6, "shapeId": "s7", "shapePrefabId": "diamond-barbell", "specialType": { "type": "LOCKED" } },
+      {
+        "slotIndex": 7,
+        "shapeId": "s8",
+        "shapePrefabId": "square",
+        "specialType": {
+          "type": "FIRE",
+          "explosionRadius": 100,
+          "explosionDelaySeconds": 2
+        }
+      },
+      { "slotIndex": 8, "shapeId": "s9", "shapePrefabId": "triangle" },
+      { "slotIndex": 9, "shapeId": "s10", "shapePrefabId": "circle" }
     ]
   },
   "theme": {
-    "baseThemeId": "metal",
-    "overrides": null
+    "baseThemeId": "classic",
+    "overrides": {
+      "background": { "type": "gradient", "colors": ["#a8e6cf", "#dcedc1"] },
+      "shapes": {
+        "renderStyle": {
+          "type": "BEVEL_ROUNDED",
+          "depth": 4,
+          "lightAngle": 135,
+          "highlightOpacity": 0.5,
+          "shadowOpacity": 0.4,
+          "radius": 5,
+          "softness": 1
+        }
+      },
+      "ui": {
+        "colorScheme": {
+          "primary": "#ffffff",
+          "accent": "#ff69b4",
+          "text": "#333333"
+        },
+        "typography": {
+          "fontFamily": "Orbitron",
+          "fontSize": {
+            "medium": "16px"
+          }
+        }
+      },
+      "audio": {
+        "backgroundMusic": {
+          "url": "assets/music/level_theme.mp3",
+          "volume": 0.8
+        },
+        "sfx": {
+          "shapeFall": "assets/sfx/shape_fall.wav"
+        }
+      }
+    }
   },
   "onboarding": {
-     "sequences": [
+    "sequences": [
       {
-        "id": "special_shapes_warning",
+        "id": "intro",
         "trigger": { "type": "levelStart" },
         "steps": [
           {
-            "content": { "title": "Handle With Care!", "text": "Some shapes in this level have dangerous properties. Read their descriptions carefully." }
+            "content": { "title": "Welcome!", "text": "Place all shapes to reach the goal." },
+            "presentation": { "highlight": { "target": ".docking-area", "style": "glow" } },
+            "interaction": { "required": true, "type": "drag", "source": ".game-shape" },
+            "accessibility": { "screenReader": { "text": "Drag a shape from the dock to the platform." } }
           }
         ]
       }

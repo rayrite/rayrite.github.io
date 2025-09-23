@@ -493,7 +493,7 @@
             grid-template-rows: repeat(2, 1fr); /* Equal row distribution */
             gap: clamp(4px, 1.5vw, 10px); /* Responsive gap */
             padding: clamp(4px, 2vw, 8px); /* Responsive padding */
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            /* box-shadow: 0 2px 10px rgba(0,0,0,0.3); */
             z-index: 50;
             align-items: center;
             justify-items: center;
@@ -875,15 +875,29 @@
         .level-cleared-button {
             background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
             color: white;
-            padding: 15px 30px;
-            font-size: 18px;
-            border-radius: 10px;
+            padding: clamp(12px, 3vw, 18px) clamp(24px, 6vw, 36px);
+            font-size: clamp(16px, 4vw, 20px);
+            border-radius: 12px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            margin: 10px;
+            margin: clamp(8px, 2vw, 12px);
+            min-height: 44px; /* Minimum touch target */
+            min-width: 120px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            touch-action: manipulation; /* Prevent zoom on double-tap */
+            -webkit-tap-highlight-color: transparent; /* Remove blue highlight on mobile */
         }
 
         .level-cleared-button:hover {
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .level-cleared-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         /* Game Over Popup Modal */
@@ -955,11 +969,18 @@
         .game-over-button {
             background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
             color: #FFFFFF;
-            padding: 14px 28px;
+            padding: clamp(14px, 3.5vw, 18px) clamp(24px, 6vw, 32px);
             font-size: clamp(16px, 4vw, 18px);
             border-radius: 12px;
             box-shadow: 0 6px 16px rgba(231, 76, 60, 0.45);
             min-width: 150px;
+            min-height: 44px; /* Minimum touch target */
+            transition: all 0.3s ease;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            touch-action: manipulation; /* Prevent zoom on double-tap */
+            -webkit-tap-highlight-color: transparent; /* Remove blue highlight on mobile */
         }
 
         .game-over-button.secondary {
@@ -976,6 +997,77 @@
         .game-over-button.secondary:hover {
             transform: translateY(-3px); /* Custom hover transform */
             box-shadow: 0 10px 22px rgba(0, 0, 0, 0.4);
+        }
+
+        .game-over-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(231, 76, 60, 0.45);
+        }
+
+        .game-over-button.secondary:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+        }
+
+        /* Enhanced touch feedback for popup buttons on mobile */
+        @media (pointer: coarse) {
+            .game-over-button, .level-cleared-button {
+                min-height: 48px; /* Larger touch targets on mobile */
+                min-width: 160px;
+                padding: clamp(16px, 4vw, 20px) clamp(28px, 7vw, 36px);
+                font-size: clamp(18px, 4.5vw, 20px);
+                transition: all 0.2s ease; /* Faster response on touch */
+            }
+            
+            .game-over-button:active, .level-cleared-button:active {
+                transform: scale(0.95); /* Scale down for immediate feedback */
+                transition: all 0.1s ease;
+            }
+            
+            .game-over-buttons {
+                gap: clamp(16px, 4vw, 24px); /* More space between buttons on mobile */
+                margin-top: clamp(16px, 4vw, 24px);
+            }
+        }
+
+        /* Additional mobile optimizations for popup modals */
+        @media (max-width: 480px) {
+            .game-over-content, .level-cleared-content {
+                padding: clamp(20px, 5vw, 32px);
+                margin: 20px;
+                max-width: calc(100vw - 40px);
+            }
+            
+            .game-over-buttons {
+                flex-direction: column; /* Stack buttons vertically on small screens */
+                width: 100%;
+            }
+            
+            .game-over-button, .level-cleared-button {
+                width: 100%; /* Full width buttons on small screens */
+                margin: clamp(6px, 1.5vw, 8px) 0;
+            }
+        }
+
+        /* Prevent mobile scroll issues during popup */
+        .modal-open {
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Ensure popup modals work with mobile keyboards */
+        @media (max-height: 500px) {
+            .game-over-modal, .level-cleared-modal {
+                align-items: flex-start;
+                padding-top: 20px;
+            }
+            
+            .game-over-content, .level-cleared-content {
+                max-height: calc(100vh - 40px);
+                overflow-y: auto;
+            }
         }
 
         @keyframes modalFadeIn {
@@ -1325,11 +1417,12 @@
         }
         .game-canvas-container {
             position: absolute;
-            top: calc(clamp(70px, 12vh, 90px) + clamp(120px, 20vh, 160px)); /* HUD + Docking height */
+            top: calc(clamp(70px, 12vh, 90px) + clamp(120px, 20vh, 160px)); /* HUD + Docking height */ 
             left: 0;
             right: 0;
             bottom: 0; /* Use full available space */
-            background: linear-gradient(135deg, #87CEEB 0%, #98FB98 100%);
+            /* background: linear-gradient(135deg, #87CEEB 0%, #98FB98 100%); */
+            background: transparent; /* Changed from gradient to transparent */
             border-radius: 0;
             overflow: visible; /* Allow dragged shapes to extend beyond canvas boundaries */
         }
@@ -1857,8 +1950,83 @@
     
     <script>
         // Debug configuration
-        const DEBUG_MODE = false; // Set to true for verbose logging
+        const DEBUG_MODE = false; // Set to true for verbose logging (change to true for debugging)
         const debugLog = (...args) => DEBUG_MODE && console.log(...args);
+        
+        // Logging helpers for different types of messages
+        const infoLog = (...args) => DEBUG_MODE && console.log(...args);
+        const systemLog = (...args) => DEBUG_MODE && console.log(...args);
+        const assetLog = (...args) => DEBUG_MODE && console.log(...args);
+        
+        // Enhanced debugging for race condition validation
+        const raceConditionDebugger = {
+            operationTimes: new Map(),
+            duplicateCallCount: new Map(),
+            
+            trackOperation(operationName, source = 'unknown') {
+                const timestamp = Date.now();
+                const key = `${operationName}-${source}`;
+                
+                if (this.operationTimes.has(key)) {
+                    const count = this.duplicateCallCount.get(key) || 0;
+                    this.duplicateCallCount.set(key, count + 1);
+                    console.warn(`⚠️ DUPLICATE OPERATION: ${operationName} from ${source} (count: ${count + 1})`);
+                } else {
+                    this.operationTimes.set(key, timestamp);
+                }
+                
+                console.log(`⏱️ [${new Date(timestamp).toISOString()}] ${operationName} started from ${source}`);
+            },
+            
+            getSummary() {
+                return {
+                    totalOperations: this.operationTimes.size,
+                    duplicates: Array.from(this.duplicateCallCount.entries()),
+                    operationHistory: Array.from(this.operationTimes.entries())
+                };
+            },
+            
+            clear() {
+                this.operationTimes.clear();
+                this.duplicateCallCount.clear();
+            }
+        };
+        
+        // Make globally available for testing
+        window.raceConditionDebugger = raceConditionDebugger;
+        
+        // Race condition validation function
+        window.validateRaceConditionFixes = function() {
+            console.log('🔍 Race Condition Fix Validation Report:');
+            console.log('======================================');
+            
+            const summary = raceConditionDebugger.getSummary();
+            console.log(`📊 Total Operations Tracked: ${summary.totalOperations}`);
+            
+            if (summary.duplicates.length === 0) {
+                console.log('✅ NO DUPLICATE OPERATIONS DETECTED - All fixes working correctly!');
+            } else {
+                console.log('⚠️ DUPLICATE OPERATIONS DETECTED:');
+                summary.duplicates.forEach(([operation, count]) => {
+                    console.log(`  - ${operation}: ${count} duplicates`);
+                });
+            }
+            
+            console.log('\n📋 Operation History:');
+            summary.operationHistory.forEach(([operation, timestamp]) => {
+                console.log(`  - ${operation}: ${new Date(timestamp).toISOString()}`);
+            });
+            
+            // Check race condition monitor status
+            if (typeof raceConditionMonitor !== 'undefined' && raceConditionMonitor.getStats) {
+                const stats = raceConditionMonitor.getStats();
+                console.log('\n🔧 Race Condition Monitor Stats:');
+                console.log(`  - Total tracked accesses: ${stats.totalAccesses || 0}`);
+                console.log(`  - Potential race conditions: ${stats.potentialRaceConditions || 0}`);
+            }
+            
+            return summary;
+        };
         
         /*╔═══════════════════════════════════════════════════════════════════════════
           ║ UNIFIED GAME INITIALIZER - RACE CONDITION FIX
@@ -1866,18 +2034,23 @@
           ╚═══════════════════════════════════════════════════════════════════════════*/
         class GameInitializer {
             static isInitialized = false;
+            static isInitializing = false;
             static initPromise = null;
             
             static async initialize() {
+                raceConditionDebugger.trackOperation('GameInitializer.initialize', 'main');
+                
                 if (this.isInitialized) {
-                    console.log('🔄 GameInitializer already initialized, skipping');
+                    debugLog('⚠️ GameInitializer already initialized, skipping');
                     return this.initPromise;
                 }
                 
-                if (this.initPromise) {
-                    console.log('⏳ GameInitializer in progress, waiting...');
+                if (this.isInitializing) {
+                    debugLog('⚠️ GameInitializer already initializing, returning existing promise');
                     return this.initPromise;
                 }
+                
+                this.isInitializing = true;
                 
                 // Wait for mutexes to be available (they're declared later in the file)
                 const waitForMutexes = () => {
@@ -1896,7 +2069,7 @@
                 this.initPromise = (async () => {
                     await waitForMutexes();
                     
-                    console.log('🚀 Starting unified game initialization...');
+                    systemLog('🚀 Starting unified game initialization...');
                     
                     try {
                         // Phase 1: Create AssetManager
@@ -1918,9 +2091,12 @@
                         await this._buildUI();
                         
                         this.isInitialized = true;
-                        console.log('✅ Unified game initialization complete');
+                        this.isInitializing = false;
+                        systemLog('✅ Unified game initialization complete');
                         
                     } catch (error) {
+                        this.isInitializing = false;
+                        this.initPromise = null;
                         console.error('❌ Game initialization failed:', error);
                         throw error;
                     }
@@ -1932,7 +2108,7 @@
             static async _createAssetManager() {
                 if (!window.assetManager) {
                     window.assetManager = new AssetManager();
-                    console.log('✅ AssetManager created');
+                    debugLog('✅ AssetManager created');
                 }
                 // Ensure backward compatibility
                 window.textureManager = window.assetManager;
@@ -1941,8 +2117,11 @@
             static async _loadDefaultTheme() {
                 const defaultTheme = CANVAS_CONFIG.defaultTheme || 'classic';
                 try {
-                    await window.assetManager.loadTheme(defaultTheme);
-                    console.log(`✅ Default theme '${defaultTheme}' loaded`);
+                    // Check if theme is already loaded
+                    if (!window.assetManager.themes[defaultTheme]?.loaded) {
+                        await window.assetManager.loadTheme(defaultTheme);
+                    }
+                    debugLog(`✅ Default theme '${defaultTheme}' loaded`);
                 } catch (error) {
                     console.error('❌ Failed to load default theme:', error);
                     throw error;
@@ -1965,24 +2144,24 @@
                 
                 const data = loader.getData();
                 window.currentLevelData = data;
-                console.log('✅ Level data loaded');
+                debugLog('✅ Level data loaded');
                 return data;
             }
             
             static async _initializeGameSystems(levelData) {
                 if (levelData.mode === 'PLAYABLE_AD') {
-                    console.log('🚀 PLAYABLE_AD mode detected.');
+                    debugLog('🚀 PLAYABLE_AD mode detected.');
                     window.adSequencer = new AdSequencer(levelData.adConfig);
                     alert('Playable Ad Mode Initialized! (stub).');
                 } else if (levelData.mode === 'LEVEL') {
-                    console.log('🎮 LEVEL mode detected.');
+                    debugLog('🎮 LEVEL mode detected.');
                     
                     const gameManager = new GameManager(levelData);
                     window.gameManager = gameManager;
                     
                     // Wait for GameManager async initialization to complete
                     await gameManager.initPromise;
-                    console.log('✅ GameManager initialized');
+                    debugLog('✅ GameManager initialized');
                 } else {
                     throw new Error(`Unknown mode in level data: ${levelData.mode}`);
                 }
@@ -1991,7 +2170,7 @@
             static async _applyLevelTheme() {
                 if (window.gameManager && typeof window.gameManager.applyLevelTheme === 'function') {
                     await window.gameManager.applyLevelTheme();
-                    console.log('✅ Level theme applied');
+                    debugLog('✅ Level theme applied');
                 }
             }
             
@@ -2018,7 +2197,7 @@
                 if (typeof updateTouchOffsetDisplay === 'function') updateTouchOffsetDisplay();
                 if (typeof startCoinBonusSystem === 'function') startCoinBonusSystem();
                 
-                console.log('✅ UI components initialized');
+                debugLog('✅ UI components initialized');
             }
         }
         
@@ -2913,7 +3092,7 @@
         };
 
         // Simple system test - verify MASTER_SHAPE_REGISTRY is accessible
-        console.log('🔍 MASTER_SHAPE_REGISTRY loaded with shapes:', Object.keys(MASTER_SHAPE_REGISTRY));
+        debugLog('🔍 MASTER_SHAPE_REGISTRY loaded with shapes:', Object.keys(MASTER_SHAPE_REGISTRY));
 
         // Shape Attribute Propagator - converts master registry to format-specific configs
         class ShapeAttributePropagator {
@@ -2988,7 +3167,7 @@
                 if (errors.length > 0) {
                     console.error('🚨 Shape registry validation errors:', errors);
                 } else {
-                    console.log('✅ Shape registry validation passed');
+                    debugLog('✅ Shape registry validation passed');
                 }
                 
                 return errors.length === 0;
@@ -3074,20 +3253,37 @@
             }
 
             async loadTheme(themeName) {
+                raceConditionDebugger.trackOperation('AssetManager.loadTheme', `theme-${themeName}`);
+                
+                // Check if theme is already fully loaded
+                if (this.themes[themeName]?.loaded && this.currentTheme === themeName) {
+                    debugLog(`✅ Theme ${themeName} already loaded and active, skipping`);
+                    return;
+                }
+                
+                // Add deduplication check
+                const loadingKey = `theme-${themeName}`;
+                
+                // Check if this theme is already being loaded
+                if (this.loadingPromises.has(loadingKey)) {
+                    debugLog(`⚠️ Theme ${themeName} already loading, returning existing promise`);
+                    return this.loadingPromises.get(loadingKey);
+                }
+                
                 // Track asset loading for race condition monitoring
                 raceConditionMonitor.trackAccess('asset-system', 'loadTheme', 'write', {
                     themeName,
                     currentTheme: this.currentTheme
                 });
                 
-                // Use asset mutex to prevent concurrent theme loading
-                return await assetMutex.execute(async () => {
+                // Create and store the loading promise
+                const loadPromise = assetMutex.execute(async () => {
                     if (!CANVAS_CONFIG.enabled || !CANVAS_CONFIG.useThemes) {
-                        console.log('📦 Asset Manager: Canvas enhancements disabled');
+                        assetLog('📦 Asset Manager: Canvas enhancements disabled');
                         return;
                     }
 
-                    console.log(`📦 Loading theme: ${themeName}`);
+                    assetLog(`📦 Loading theme: ${themeName}`);
                     
                     try {
                         const themeConfig = THEME_DEFINITIONS[themeName];
@@ -3115,7 +3311,7 @@
                         this.loadingProgress = 100;
                         this.isLoaded = true;
                         
-                        console.log(`✅ Theme loaded: ${themeName}`);
+                        assetLog(`✅ Theme loaded: ${themeName}`);
                         debugLog(`🎯 AssetManager current theme set to: ${this.currentTheme}`);
                         this.notifyLoadingComplete(themeName);
                         
@@ -3125,6 +3321,16 @@
                     }
                     
                 }, `asset-load-theme-${themeName}`);
+                
+                this.loadingPromises.set(loadingKey, loadPromise);
+                
+                try {
+                    const result = await loadPromise;
+                    return result;
+                } finally {
+                    // Clean up after loading completes
+                    this.loadingPromises.delete(loadingKey);
+                }
             }
 
             async loadThemeImages(themeName, themeConfig) {
@@ -3136,7 +3342,7 @@
                     const bgPromise = this.loadImage(themeConfig.background.image.url)
                         .then(img => {
                             theme.assets.backgroundImage = img;
-                            console.log(`🖼️ Background image loaded for ${themeName}`);
+                            debugLog(`🖼️ Background image loaded for ${themeName}`);
                         })
                         .catch(err => {
                             console.warn(`⚠️ Background image failed for ${themeName}:`, err.message);
@@ -3149,7 +3355,7 @@
                     const platformPromise = this.loadImage(themeConfig.platform.image.url)
                         .then(img => {
                             theme.assets.platformImage = img;
-                            console.log(`🏗️ Platform image loaded for ${themeName}`);
+                            debugLog(`🏗️ Platform image loaded for ${themeName}`);
                         })
                         .catch(err => {
                             console.warn(`⚠️ Platform image failed for ${themeName}:`, err.message);
@@ -3165,7 +3371,7 @@
                             const shapePromise = this.loadImage(textureConfig.url)
                                 .then(img => {
                                     theme.assets.shapeTextures[shapeType] = img;
-                                    console.log(`🔶 Shape texture loaded for ${shapeType} in ${themeName}`);
+                                    debugLog(`🔶 Shape texture loaded for ${shapeType} in ${themeName}`);
                                 })
                                 .catch(err => {
                                     console.warn(`⚠️ Shape texture failed for ${shapeType} in ${themeName}:`, err.message);
@@ -3184,7 +3390,7 @@
                             shapeNames.forEach(shapeType => {
                                 theme.assets.shapeTextures[shapeType] = img;
                             });
-                            console.log(`🔶 Shared texture loaded for all shapes in ${themeName} from ${sharedTextureUrl}`);
+                            debugLog(`🔶 Shared texture loaded for all shapes in ${themeName} from ${sharedTextureUrl}`);
                         })
                         .catch(err => {
                             console.warn(`⚠️ Shared texture failed for ${themeName}:`, err.message);
@@ -3196,7 +3402,7 @@
                 await Promise.allSettled(loadPromises);
                 
                 const successCount = loadPromises.length;
-                console.log(`📦 Theme ${themeName}: Attempted to load ${successCount} images`);
+                assetLog(`📦 Theme ${themeName}: Attempted to load ${successCount} images`);
             }
 
             async loadImage(url) {
@@ -3336,10 +3542,10 @@
             getCurrentTheme() {
                 // Only log when theme actually changes to avoid spam
                 if (!this._lastLoggedCurrentTheme || this._lastLoggedCurrentTheme !== this.currentTheme) {
-                    console.log(`🔍 AssetManager.getCurrentTheme() - this.currentTheme: '${this.currentTheme}'`);
+                    debugLog(`🔍 AssetManager.getCurrentTheme() - this.currentTheme: '${this.currentTheme}'`);
                     const theme = this.getTheme(this.currentTheme);
-                    console.log(`🔍 AssetManager.getCurrentTheme() - found theme:`, theme?.config?.name || 'null');
-                    console.log(`🔍 Available themes:`, Object.keys(this.themes));
+                    debugLog(`🔍 AssetManager.getCurrentTheme() - found theme:`, theme?.config?.name || 'null');
+                    debugLog(`🔍 Available themes:`, Object.keys(this.themes));
                     this._lastLoggedCurrentTheme = this.currentTheme;
                     return theme;
                 }
@@ -3439,8 +3645,11 @@
 
             // Method to apply texture themes (compatibility)
             async applyTextureTheme(themeName) {
-                console.log(`🎨 Applying texture theme: ${themeName}`);
-                await this.loadTheme(themeName);
+                debugLog(`🎨 Applying texture theme: ${themeName}`);
+                // Check if theme is already loaded before loading
+                if (!this.themes[themeName]?.loaded) {
+                    await this.loadTheme(themeName);
+                }
                 return true;
             }
 
@@ -3896,8 +4105,12 @@
                 if (!currentTheme || !currentTheme.name) {
                     const themeSelector = document.getElementById('themeSelector');
                     const themeName = themeSelector?.value || CANVAS_CONFIG.defaultTheme;
-                    console.log(`⏳ PhysicsShapeRenderer loading theme: ${themeName}`);
-                    await window.assetManager.loadTheme(themeName);
+                    
+                    // Check if theme is already loaded to prevent duplicates
+                    if (!window.assetManager.themes[themeName]?.loaded) {
+                        console.log(`⏳ PhysicsShapeRenderer loading theme: ${themeName}`);
+                        await window.assetManager.loadTheme(themeName);
+                    }
                 }
                 
                 return true;
@@ -3982,12 +4195,12 @@
                     return null;
                 }
                 
-                console.log(`🔍 Shape config for ${shapeType}:`, config);
+                debugLog(`🔍 Shape config for ${shapeType}:`, config);
                 
                 // Use unified texture checking
                 const hasTexture = UnifiedTextureSystem.isTextureAvailable(shapeType);
                 
-                console.log(`🔍 Texture availability for ${shapeType}:`, {
+                debugLog(`🔍 Texture availability for ${shapeType}:`, {
                     hasTexture,
                     textureManagerReady: !!window.textureManager,
                     assetManagerReady: !!window.assetManager
@@ -3995,9 +4208,9 @@
                 
                 // Always use Canvas preview
                 if (hasTexture) {
-                    console.log(`🎨 Creating Canvas preview for ${shapeType} with texture`);
+                    debugLog(`🎨 Creating Canvas preview for ${shapeType} with texture`);
                 } else {
-                    console.log(`🎨 Creating Canvas preview for ${shapeType} (no texture available)`);
+                    debugLog(`🎨 Creating Canvas preview for ${shapeType} (no texture available)`);
                 }
                 return this.createCanvasDockPreview(shapeType, config, size);
             }
@@ -4027,7 +4240,7 @@
                     }
                 };
                 
-                console.log(`🎨 Merged config for ${shapeType}:`, {
+                debugLog(`🎨 Merged config for ${shapeType}:`, {
                     originalColor: unifiedConfig.visual.color,
                     themeColor: legacyConfig.color,
                     finalColor: mergedConfig.visual.color
@@ -4618,10 +4831,10 @@
                     if (!this.locked) {
                         this.locked = true;
                         this.lockCount++;
-                        console.log(`🔒 AsyncMutex '${this.name}' acquired for: ${operation}`);
+                        debugLog(`🔒 AsyncMutex '${this.name}' acquired for: ${operation}`);
                         resolve();
                     } else {
-                        console.log(`⏳ AsyncMutex '${this.name}' queued: ${operation} (queue: ${this.queue.length + 1})`);
+                        debugLog(`⏳ AsyncMutex '${this.name}' queued: ${operation} (queue: ${this.queue.length + 1})`);
                         this.queue.push(lockRequest);
                         
                         // Set timeout for waiting
@@ -4643,14 +4856,14 @@
                     return;
                 }
                 
-                console.log(`🔓 AsyncMutex '${this.name}' released by: ${operation}`);
+                debugLog(`🔓 AsyncMutex '${this.name}' released by: ${operation}`);
                 this.locked = false;
                 
                 if (this.queue.length > 0) {
                     const next = this.queue.shift();
                     this.locked = true;
                     this.lockCount++;
-                    console.log(`🔒 AsyncMutex '${this.name}' acquired for: ${next.operation} (from queue)`);
+                    debugLog(`🔒 AsyncMutex '${this.name}' acquired for: ${next.operation} (from queue)`);
                     next.resolve();
                 }
             }
@@ -4756,7 +4969,7 @@
                     dockingArea.classList.remove('loading', 'error', 'retrying');
                     this.isLoading = false;
                     this.clearLoadingTimeout();
-                    console.log('✅ Dock loading complete');
+                    debugLog('✅ Dock loading complete');
                 }
             }
             
@@ -4977,15 +5190,27 @@
             // Log race condition warning
             logRaceConditionWarning(access1, access2) {
                 const timeDiff = access2.timestamp - access1.timestamp;
-                console.warn(`⚠️ POTENTIAL RACE CONDITION DETECTED:`, {
-                    resource: access1.resourceName,
-                    timeDifference: `${timeDiff.toFixed(2)}ms`,
-                    operations: [
-                        { type: access1.operationType, operation: access1.operation },
-                        { type: access2.operationType, operation: access2.operation }
-                    ],
-                    stackTraces: [access1.stackTrace, access2.stackTrace]
-                });
+                // Only log race conditions that are not properly handled by mutexes
+                // If both operations are using mutexes, they're properly synchronized
+                const isMutexProtected = access1.stackTrace?.includes('AsyncMutex') && access2.stackTrace?.includes('AsyncMutex');
+                
+                if (!isMutexProtected) {
+                    console.warn(`⚠️ POTENTIAL RACE CONDITION DETECTED:`, {
+                        resource: access1.resourceName,
+                        timeDifference: `${timeDiff.toFixed(2)}ms`,
+                        operations: [
+                            { type: access1.operationType, operation: access1.operation },
+                            { type: access2.operationType, operation: access2.operation }
+                        ],
+                        stackTraces: [access1.stackTrace, access2.stackTrace]
+                    });
+                } else {
+                    // Just log a debug message for mutex-protected operations
+                    console.log(`🔒 Concurrent access detected but properly synchronized via mutex:`, {
+                        resource: access1.resourceName,
+                        timeDifference: `${timeDiff.toFixed(2)}ms`
+                    });
+                }
             }
             
             // Get stack trace for debugging
@@ -5058,8 +5283,34 @@
             return rebuildGameDockAsync();
         }
 
+        // Dock rebuild protection variables
+        let dockRebuildInProgress = false;
+        let pendingDockRebuild = null;
+
         async function rebuildGameDockAsync() {
-            debugLog('� Rebuilding game dock...');
+            raceConditionDebugger.trackOperation('rebuildGameDockAsync', 'dock-system');
+            
+            // If already rebuilding, queue this request
+            if (dockRebuildInProgress) {
+                debugLog('⚠️ Dock rebuild already in progress, queueing request');
+                
+                if (!pendingDockRebuild) {
+                    pendingDockRebuild = new Promise((resolve) => {
+                        const checkInterval = setInterval(() => {
+                            if (!dockRebuildInProgress) {
+                                clearInterval(checkInterval);
+                                rebuildGameDockAsync().then(resolve);
+                            }
+                        }, 100);
+                    });
+                }
+                return pendingDockRebuild;
+            }
+            
+            dockRebuildInProgress = true;
+            
+            try {
+                debugLog('🔨 Starting dock rebuild...');
             
             // Track dock access for race condition monitoring
             raceConditionMonitor.trackAccess('dock-system', 'rebuildGameDock', 'write', {
@@ -5107,8 +5358,11 @@
             
             // Load the theme if not already loaded
             if (!currentTheme || currentTheme.name !== currentThemeName) {
-                debugLog(`⏳ Loading theme '${currentThemeName}' before building dock...`);
-                await window.assetManager.loadTheme(currentThemeName);
+                // Additional check to prevent duplicate loading
+                if (!window.assetManager.themes[currentThemeName]?.loaded) {
+                    debugLog(`⏳ Loading theme '${currentThemeName}' before building dock...`);
+                    await window.assetManager.loadTheme(currentThemeName);
+                }
                 currentTheme = window.assetManager.getCurrentTheme();
             }
 
@@ -5187,7 +5441,7 @@
                 }
                 
                 dockingArea.appendChild(slot);
-                console.log(`� Added ${shapeType} to dock slot ${index}`);
+                debugLog(`� Added ${shapeType} to dock slot ${index}`);
             });
 
             console.log(`✅ Dock rebuilt with ${dockShapes.length} shapes`);
@@ -5196,6 +5450,10 @@
             dockLoadingManager.hideLoading();
             
             }, 'dock-rebuild'); // Close dockMutex.execute
+            } finally {
+                dockRebuildInProgress = false;
+                pendingDockRebuild = null;
+            }
         }
 
         // Initialize unified dock system (called after level config is ready)
@@ -5248,7 +5506,7 @@
                 console.log('🔗 PhysicsManager: Using shared AssetManager for theme synchronization');
                 
                 // Use the existing global texture management system
-                console.log('🖼️ PhysicsManager: Using global texture management system');
+                debugLog('🖼️ PhysicsManager: Using global texture management system');
                 this.particleSystem = new ParticleSystem(canvas, this.assetManager);
                 
                 // Canvas-only renderer system
@@ -5316,7 +5574,10 @@
             // Canvas Enhancement: Initialize default theme
             async initializeDefaultTheme() {
                 try {
-                    await this.assetManager.loadTheme(CANVAS_CONFIG.defaultTheme);
+                    // Check if default theme is already loaded
+                    if (!this.assetManager.themes[CANVAS_CONFIG.defaultTheme]?.loaded) {
+                        await this.assetManager.loadTheme(CANVAS_CONFIG.defaultTheme);
+                    }
                     const bgStyle = this.assetManager.getBackgroundStyle();
                     if (bgStyle && bgStyle.type === 'gradient') {
                         this.backgroundGradient = bgStyle.colors;
@@ -6551,13 +6812,13 @@
             renderBackgroundTexture() {
                 const currentTheme = this.assetManager.getCurrentTheme();
                 if (!currentTheme) {
-                    console.log('🚫 No current theme found for background texture');
+                    debugLog('🚫 No current theme found for background texture');
                     return;
                 }
                 
                 // Only log texture details when theme changes, not every frame
                 if (!this._lastLoggedTextureTheme || this._lastLoggedTextureTheme !== currentTheme.config?.name) {
-                    console.log(`🎨 Background texture - Theme: ${currentTheme.config?.name}, Material: ${currentTheme.config?.platform?.material}`);
+                    debugLog(`🎨 Background texture - Theme: ${currentTheme.config?.name}, Material: ${currentTheme.config?.platform?.material}`);
                     this._lastLoggedTextureTheme = currentTheme.config?.name;
                 }
                 
@@ -6581,25 +6842,25 @@
                         break;
                     case 'metal':
                         if (!this._lastLoggedTextureTheme || this._lastLoggedTextureTheme !== currentTheme.config?.name) {
-                            console.log('🔩 Rendering metal texture background (corrugated)');
+                            debugLog('🔩 Rendering metal texture background (corrugated)');
                         }
                         this.renderMetalTexture();
                         break;
                     case 'steel':  // Added steel material for Metal theme
                         if (!this._lastLoggedTextureTheme || this._lastLoggedTextureTheme !== currentTheme.config?.name) {
-                            console.log('🔩 Rendering steel texture background (corrugated)');
+                            debugLog('🔩 Rendering steel texture background (corrugated)');
                         }
                         this.renderMetalTexture();
                         break;
                     case 'coral':
                         if (this._lastLoggedTextureTheme === currentTheme.config?.name) {
-                            console.log('🪸 Rendering coral texture background');
+                            debugLog('🪸 Rendering coral texture background');
                         }
                         this.renderCoralTexture();
                         break;
                     default:
                         if (!this._lastLoggedTextureTheme || this._lastLoggedTextureTheme !== currentTheme.config?.name) {
-                            console.log(`🔲 Rendering default geometric texture (material: '${material}')`);
+                            debugLog(`🔲 Rendering default geometric texture (material: '${material}')`);
                         }
                         this.renderGeometricTexture();
                 }
@@ -6656,7 +6917,7 @@
                     this.ctx.stroke();
                 }
                 
-                console.log('✅ Metal texture pattern completed');
+                debugLog('✅ Metal texture pattern completed');
                 this.ctx.restore();
             }
 
@@ -6969,7 +7230,7 @@
                 
                 // Use consolidated AssetManager for texture lookup
                 if (userData.shapeType && window.assetManager) {
-                    console.log(`🔍 Checking texture for physics body shapeType: ${userData.shapeType}`);
+                    debugLog(`🔍 Checking texture for physics body shapeType: ${userData.shapeType}`);
                     
                     // Try direct texture retrieval first
                     textureImage = UnifiedTextureSystem.getShapeTexture(userData.shapeType);
@@ -6979,7 +7240,7 @@
                             blend: 'multiply',
                             opacity: 0.7
                         };
-                        console.log(`🖼️ Direct AssetManager texture retrieval for ${userData.shapeType}: SUCCESS`);
+                        debugLog(`🖼️ Direct AssetManager texture retrieval for ${userData.shapeType}: SUCCESS`);
                     }
                     // Unified fallback check using consolidated texture management
                     else if (UnifiedTextureSystem.isTextureAvailable(userData.shapeType)) {
@@ -6989,17 +7250,17 @@
                             blend: 'multiply',
                             opacity: 0.7
                         };
-                        console.log(`🖼️ Unified texture check for ${userData.shapeType}: SUCCESS`);
+                        debugLog(`🖼️ Unified texture check for ${userData.shapeType}: SUCCESS`);
                     }
                     
                     if (!textureImage) {
-                        console.log(`⚠️ No texture found for physics body ${userData.shapeType}. AssetManager available: ${!!window.assetManager}, Current theme: ${window.assetManager?.currentTheme}`);
+                        debugLog(`⚠️ No texture found for physics body ${userData.shapeType}. AssetManager available: ${!!window.assetManager}, Current theme: ${window.assetManager?.currentTheme}`);
                         
                         // Debug: Check what's actually in the assets
                         const currentTheme = window.assetManager?.getCurrentTheme();
                         if (currentTheme) {
-                            console.log(`🔍 Current theme assets:`, currentTheme.assets);
-                            console.log(`🔍 Shape textures available:`, Object.keys(currentTheme.assets?.shapeTextures || {}));
+                            debugLog(`🔍 Current theme assets:`, currentTheme.assets);
+                            debugLog(`🔍 Shape textures available:`, Object.keys(currentTheme.assets?.shapeTextures || {}));
                         }
                     }
                 }
@@ -8225,6 +8486,9 @@
                 // Add a flag to ensure the dock animation only plays once
                 this.dockAnimationPlayed = false;
                 
+                // Add flag to prevent duplicate theme applications
+                this.levelThemeApplied = false;
+                
                 // Initialize subsystems in correct order
                 this.initPromise = this.initializeAsync();
             }
@@ -8232,42 +8496,64 @@
             async initializeAsync() {
                 debugLog('⏳ Starting async GameManager initialization...');
                 
-                // Ensure AssetManager is ready
-                if (!window.assetManager) {
-                    window.assetManager = new AssetManager();
+                // Create initialization chain with proper dependencies
+                const initSteps = [
+                    { name: 'AssetManager', fn: () => this.ensureAssetManager() },
+                    { name: 'Physics', fn: () => this.initializePhysics() },
+                    { name: 'DefaultTheme', fn: () => this.physicsManager.initializeDefaultTheme() },
+                    { name: 'UI', fn: () => this.setupUI() },
+                    { name: 'Events', fn: () => this.setupEventListeners() },
+                    { name: 'DragDrop', fn: () => this.initializeDragDrop() },
+                    { name: 'Theme', fn: () => this.initializeThemeManager() },
+                    { name: 'LevelTheme', fn: () => this.conditionallyApplyLevelTheme() }
+                ];
+                
+                for (const step of initSteps) {
+                    try {
+                        debugLog(`⚙️ Initializing ${step.name}...`);
+                        await step.fn();
+                        debugLog(`✅ ${step.name} initialized`);
+                    } catch (error) {
+                        console.error(`❌ Failed to initialize ${step.name}:`, error);
+                        throw error;
+                    }
                 }
                 
-                // Initialize physics FIRST - required for setupUI()
-                const gameCanvas = document.getElementById('gameCanvas');
-                this.physicsManager = new PhysicsManager(gameCanvas, this.levelData.physics || {});
-                
-                // Wait for default theme to load
-                await this.physicsManager.initializeDefaultTheme();
-                
-                // Now setup UI and events (can safely call updateDebugInfo)
-                this.setupUI();
-                this.setupEventListeners();
-                
-                // Initialize other managers
-                this.dragDropManager = new DragDropManager(this.physicsManager, this);
-                this.mobileEnhancementManager = new MobileEnhancementManager(this.dragDropManager);
-                
-                // Initialize theme manager
-                this.themeManager = new ThemeManager(window.assetManager, this);
-                
-                // Make this globally available for physics events
+                // Make this globally available only after all components are ready
                 window.gameManager = this;
                 if (this.physicsManager) {
                     this.physicsManager.gameManager = this;
                 }
                 
-                // Apply level theme if specified
+                debugLog('✅ GameManager initialization complete');
+                debugLog(`🎮 Game Manager initialized for level: "${this.levelData?.meta?.displayName ?? 'Unknown'}"`);
+            }
+            
+            ensureAssetManager() {
+                if (!window.assetManager) {
+                    window.assetManager = new AssetManager();
+                }
+            }
+            
+            initializePhysics() {
+                const gameCanvas = document.getElementById('gameCanvas');
+                this.canvas = gameCanvas;
+                this.physicsManager = new PhysicsManager(gameCanvas, this.levelData.physics || {});
+            }
+            
+            initializeDragDrop() {
+                this.dragDropManager = new DragDropManager(this.physicsManager, this);
+                this.mobileEnhancementManager = new MobileEnhancementManager(this.dragDropManager);
+            }
+            
+            initializeThemeManager() {
+                this.themeManager = new ThemeManager(window.assetManager, this);
+            }
+            
+            async conditionallyApplyLevelTheme() {
                 if (this.levelData.theme) {
                     await this.applyLevelTheme();
                 }
-                
-                debugLog('✅ GameManager initialization complete');
-                debugLog(`🎮 Game Manager initialized for level: "${this.levelData?.meta?.displayName ?? 'Unknown'}"`);
             }
             
             async rebuildDockFromData(isInitialLoad = false) {
@@ -8291,36 +8577,38 @@
             }
 
             triggerDockAnimation() {
-                console.log('Attempting to trigger dock animation...');
+                debugLog('Attempting to trigger dock animation...');
                 if (this.dockAnimationPlayed) {
-                    console.log('Animation already played. Skipping.');
+                    debugLog('Animation already played. Skipping.');
+                    return;
+                }
+
+                // Double-check that dock is actually ready for animation
+                const dockingArea = document.getElementById('dockingArea');
+                if (!dockingArea) {
+                    debugLog('Docking area not found. Skipping animation.');
                     return;
                 }
 
                 const animConfig = this.levelData?.dock?.animation;
                 if (!animConfig || !animConfig.enabled) {
-                    console.log('Animation is disabled in config. Skipping.');
-                    const dockingArea = document.getElementById('dockingArea');
-                    if (dockingArea) {
-                        dockingArea.classList.remove('loading');
-                    }
+                    debugLog('Animation is disabled in config. Skipping.');
+                    dockingArea.classList.remove('loading');
                     return;
                 }
 
-                console.log('Animation config found:', animConfig);
+                debugLog('Animation config found:', animConfig);
 
                 const shapes = document.querySelectorAll('.docking-area .game-shape');
                 if (!shapes.length) {
-                    console.log('No shapes found in the dock to animate. Skipping.');
-                    const dockingArea = document.getElementById('dockingArea');
-                    if (dockingArea) {
-                        dockingArea.classList.remove('loading');
-                    }
+                    debugLog('No shapes found in the dock to animate. Skipping.');
+                    dockingArea.classList.remove('loading');
                     return;
                 }
 
-                console.log(`Found ${shapes.length} shapes to animate.`);
+                debugLog(`Found ${shapes.length} shapes to animate.`);
 
+                // Mark animation as started to prevent multiple triggers
                 this.dockAnimationPlayed = true;
 
                 const lastShape = shapes[shapes.length - 1];
@@ -8333,7 +8621,7 @@
                     const dockingArea = document.getElementById('dockingArea');
                     if (dockingArea) {
                         dockingArea.classList.remove('loading');
-                        console.log('Dock animation complete, removed loading class.');
+                        debugLog('Dock animation complete, removed loading class.');
                     }
                     lastShape.removeEventListener('transitionend', onAnimationEnd);
                 };
@@ -8378,7 +8666,7 @@
                 this.startTimer();
 
                 // Event listeners are handled by onclick in HTML - no need for duplicate listener
-                console.log('🎮 GameManager initialized with unified reset system');
+                debugLog('🎮 GameManager initialized with unified reset system');
             }
 
             setupEventListeners() {
@@ -8987,11 +9275,16 @@
                 });
                 console.log(`✅ Dock rebuilt from level data with ${dockData.slots.length} slots.`);
 
-                if (isInitialLoad) {
-                    this.dockAnimationPlayed = false;
-                    setTimeout(() => this.triggerDockAnimation(), 100);
+                // Only trigger animation if this is truly a new rebuild
+                if (isInitialLoad || !this.dockAnimationPlayed) {
+                    if (isInitialLoad) {
+                        this.dockAnimationPlayed = false;
+                        setTimeout(() => this.triggerDockAnimation(), 100);
+                    } else {
+                        this.triggerDockAnimation();
+                    }
                 } else {
-                    this.triggerDockAnimation();
+                    console.log('Dock animation already played, skipping trigger');
                 }
             }
 
@@ -9099,6 +9392,12 @@
              * Applies the theme specified in the level data on initial load.
              */
             async applyLevelTheme() {
+                if (this.levelThemeApplied) {
+                    debugLog('⚠️ Level theme already applied, skipping');
+                    return;
+                }
+                
+                this.levelThemeApplied = true;
                 const baseTheme = this.baseThemeId || 'classic';
                 console.log(`🎨 Applying level's base theme on load: ${baseTheme}`);
                 await UnifiedThemeController.changeTheme(baseTheme, { 
@@ -9174,6 +9473,19 @@
                 continueBtn.textContent = 'Continue';
                 continueBtn.onclick = () => this.closeLevelClearedPopup();
                 
+                // Enhanced mobile touch support
+                continueBtn.addEventListener('touchstart', (e) => {
+                    e.preventDefault(); // Prevent double-tap zoom
+                    continueBtn.style.transform = 'scale(0.95)';
+                }, { passive: false });
+                
+                continueBtn.addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                    continueBtn.style.transform = '';
+                    // Trigger click after a brief delay to ensure visual feedback
+                    setTimeout(() => continueBtn.click(), 50);
+                }, { passive: false });
+                
                 // Replay button
                 const replayBtn = document.createElement('button');
                 replayBtn.className = 'level-cleared-button';
@@ -9183,6 +9495,19 @@
                     this.closeLevelClearedPopup();
                     resetLevel();
                 };
+                
+                // Enhanced mobile touch support
+                replayBtn.addEventListener('touchstart', (e) => {
+                    e.preventDefault(); // Prevent double-tap zoom
+                    replayBtn.style.transform = 'scale(0.95)';
+                }, { passive: false });
+                
+                replayBtn.addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                    replayBtn.style.transform = '';
+                    // Trigger click after a brief delay to ensure visual feedback
+                    setTimeout(() => replayBtn.click(), 50);
+                }, { passive: false });
                 
                 // Assemble modal
                 content.appendChild(title);
@@ -9195,6 +9520,9 @@
                 // Add to page
                 document.body.appendChild(modal);
                 
+                // Prevent background scrolling on mobile
+                document.body.classList.add('modal-open');
+                
                 console.log('🎉 Level Cleared popup displayed!');
             }
 
@@ -9202,6 +9530,8 @@
                 const modal = document.getElementById('levelClearedModal');
                 if (modal) {
                     modal.style.animation = 'modalFadeIn 0.3s ease-out reverse';
+                    // Re-enable background scrolling
+                    document.body.classList.remove('modal-open');
                     setTimeout(() => {
                         modal.remove();
                     }, 300);
@@ -9244,11 +9574,37 @@
                     this.closeGameOverPopup();
                     resetLevel();
                 };
+                
+                // Enhanced mobile touch support
+                retryButton.addEventListener('touchstart', (e) => {
+                    e.preventDefault(); // Prevent double-tap zoom
+                    retryButton.style.transform = 'scale(0.95)';
+                }, { passive: false });
+                
+                retryButton.addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                    retryButton.style.transform = '';
+                    // Trigger click after a brief delay to ensure visual feedback
+                    setTimeout(() => retryButton.click(), 50);
+                }, { passive: false });
 
                 const closeButton = document.createElement('button');
                 closeButton.className = 'game-over-button secondary';
                 closeButton.textContent = 'Close';
                 closeButton.onclick = () => this.closeGameOverPopup();
+                
+                // Enhanced mobile touch support  
+                closeButton.addEventListener('touchstart', (e) => {
+                    e.preventDefault(); // Prevent double-tap zoom
+                    closeButton.style.transform = 'scale(0.95)';
+                }, { passive: false });
+                
+                closeButton.addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                    closeButton.style.transform = '';
+                    // Trigger click after a brief delay to ensure visual feedback
+                    setTimeout(() => closeButton.click(), 50);
+                }, { passive: false });
 
                 buttons.appendChild(retryButton);
                 buttons.appendChild(closeButton);
@@ -9260,12 +9616,17 @@
                 modal.appendChild(content);
 
                 document.body.appendChild(modal);
+                
+                // Prevent background scrolling on mobile
+                document.body.classList.add('modal-open');
             }
 
             closeGameOverPopup() {
                 const modal = document.getElementById('gameOverModal');
                 if (modal) {
                     modal.style.animation = 'modalFadeIn 0.3s ease-out reverse';
+                    // Re-enable background scrolling
+                    document.body.classList.remove('modal-open');
                     setTimeout(() => {
                         if (modal.parentNode) {
                             modal.parentNode.removeChild(modal);
@@ -10113,8 +10474,8 @@
             // Rebuild dock with current configuration (preserves design mode settings)
             rebuildGameDock();
             
-            // Trigger dock animation after reset
-            if (window.gameManager && typeof window.gameManager.triggerDockAnimation === 'function') {
+            // Trigger dock animation after reset (only if not already played)
+            if (window.gameManager && typeof window.gameManager.triggerDockAnimation === 'function' && !window.gameManager.dockAnimationPlayed) {
                 setTimeout(() => {
                     console.log('🎬 Triggering dock animation after level reset');
                     window.gameManager.triggerDockAnimation();
@@ -10338,7 +10699,12 @@
           ║ Centralized theme management to replace scattered theme application calls
           ╚═══════════════════════════════════════════════════════════════════════════*/
         class UnifiedThemeController {
+            static currentThemeChange = null;
+            static themeChangeQueue = new Map();
+            
             static async changeTheme(themeName, options = {}) {
+                raceConditionDebugger.trackOperation('UnifiedThemeController.changeTheme', `${themeName}-${options.source || 'unknown'}`);
+                
                 const {
                     source = 'unified',
                     animated = true,
@@ -10346,10 +10712,25 @@
                     overrides = null
                 } = options;
 
+                // Check if we're already changing to this theme
+                const changeKey = `${themeName}-${source}`;
+                
+                if (this.themeChangeQueue.has(changeKey)) {
+                    debugLog(`⚠️ Theme change to ${themeName} from ${source} already in progress`);
+                    return this.themeChangeQueue.get(changeKey);
+                }
+
                 console.log(`🎨 UnifiedThemeController: Starting theme change to ${themeName} from ${source}`);
                 
-                // Use mutex for thread safety
-                return await themeMutex.execute(async () => {
+                // Create the change promise
+                const changePromise = themeMutex.execute(async () => {
+                    // Check if theme is already active
+                    if (window.assetManager?.currentTheme === themeName && 
+                        window.gameManager?.themeManager?.currentTheme === themeName) {
+                        debugLog(`✅ Theme ${themeName} already active, skipping change`);
+                        return true;
+                    }
+                    
                     try {
                         // Phase 1: Clear previous theme
                         await this._clearPreviousTheme();
@@ -10378,6 +10759,17 @@
                         throw error;
                     }
                 }, `unified-theme-change-${themeName}`);
+                
+                // Store in queue
+                this.themeChangeQueue.set(changeKey, changePromise);
+                
+                try {
+                    const result = await changePromise;
+                    return result;
+                } finally {
+                    // Clean up
+                    this.themeChangeQueue.delete(changeKey);
+                }
             }
 
             static async _clearPreviousTheme() {
@@ -10393,7 +10785,10 @@
 
             static async _loadThemeAssets(themeName) {
                 try {
-                    await window.assetManager.loadTheme(themeName);
+                    // Check if theme is already loaded to avoid redundant loading
+                    if (!window.assetManager.themes[themeName]?.loaded) {
+                        await window.assetManager.loadTheme(themeName);
+                    }
                     console.log(`✅ Theme assets loaded for ${themeName}`);
                 } catch (error) {
                     console.warn(`⚠️ Failed to load theme assets for ${themeName}:`, error);
@@ -10428,7 +10823,7 @@
                     }
                     window.currentTheme.name = themeName;
 
-                    console.log(`✅ Theme applied to all systems: ${themeName}`);
+                    debugLog(`✅ Theme applied to all systems: ${themeName}`);
                 } catch (error) {
                     console.error(`❌ Error applying theme to systems:`, error);
                     throw error;
@@ -10446,20 +10841,19 @@
 
             static async _rebuildUI() {
                 try {
-                    // Reset dock animation flag
-                    if (window.gameManager) {
-                        window.gameManager.dockAnimationPlayed = false;
-                    }
-
-                    // Use DockRebuildManager when available (todo #5), otherwise fallback
+                    // Only rebuild dock once
                     if (typeof rebuildGameDock === 'function') {
                         await rebuildGameDock();
                     }
 
-                    // Trigger dock animation after rebuild
-                    if (window.gameManager && typeof window.gameManager.triggerDockAnimation === 'function') {
+                    // Only trigger animation if not already played
+                    if (window.gameManager && !window.gameManager.dockAnimationPlayed) {
                         setTimeout(() => {
-                            window.gameManager.triggerDockAnimation();
+                            if (window.gameManager && !window.gameManager.dockAnimationPlayed) {
+                                console.log('🎬 Triggering dock animation after theme rebuild');
+                                window.gameManager.triggerDockAnimation();
+                                window.gameManager.dockAnimationPlayed = true;
+                            }
                         }, 100);
                     }
 
@@ -10854,7 +11248,7 @@
          */
         async function loadShapeTexture(imageUrl, shapeName = 'square', options = {}) {
             try {
-                console.log(`🖼️ Loading texture for ${shapeName}: ${imageUrl}`);
+                debugLog(`🖼️ Loading texture for ${shapeName}: ${imageUrl}`);
                 
                 // Default texture options
                 const textureConfig = {
@@ -10876,22 +11270,22 @@
                     window.currentTheme.shapes.textures = {};
                 }
                 window.currentTheme.shapes.textures[shapeName] = textureConfig;
-                console.log(`✅ Set texture config for ${shapeName}:`, textureConfig);
-                console.log(`🔍 Current theme textures:`, window.currentTheme.shapes.textures);
+                debugLog(`✅ Set texture config for ${shapeName}:`, textureConfig);
+                debugLog(`🔍 Current theme textures:`, window.currentTheme.shapes.textures);
 
                 // Also update THEME_DEFINITIONS so the regular theme loading system knows about this texture
                 if (window.currentTheme.name && THEME_DEFINITIONS[window.currentTheme.name]) {
                     const themeDef = THEME_DEFINITIONS[window.currentTheme.name];
                     if (themeDef.shapes && themeDef.shapes.textures && themeDef.shapes.textures[shapeName]) {
                         themeDef.shapes.textures[shapeName].url = imageUrl;
-                        console.log(`🔄 Updated THEME_DEFINITIONS for ${window.currentTheme.name}.${shapeName}`);
+                        debugLog(`🔄 Updated THEME_DEFINITIONS for ${window.currentTheme.name}.${shapeName}`);
                     }
                 }
 
                 // Load the image
                 const success = await window.assetManager.loadImage(imageUrl);
                 if (success) {
-                    console.log(`✅ Texture loaded successfully for ${shapeName}`);
+                    debugLog(`✅ Texture loaded successfully for ${shapeName}`);
                     return true;
                 } else {
                     console.warn(`❌ Failed to load texture for ${shapeName}`);
@@ -11053,7 +11447,7 @@ if (!window.textureManager && window.gameManager && window.gameManager.physicsMa
     console.log('🖼️ Global textureManager set to use AssetManager');
 }
 
-console.log('✅ Texture loading system fixed and initialized');
+debugLog('✅ Texture loading system fixed and initialized');
 
     </script>
 </body>

@@ -5619,6 +5619,17 @@
 
                 console.log(`🔍 RAW COLLISION: bodyA.userData =`, userDataA, `bodyB.userData =`, userDataB);
 
+                // VALIDATION: Check userData integrity
+                if (Object.keys(userDataA).length === 0 && Object.keys(userDataB).length === 0) {
+                    console.error(`❌ CRITICAL: Both collision bodies have empty userData!`);
+                    console.error(`  BodyA:`, { id: bodyA.id, label: bodyA.label, parts: bodyA.parts?.length });
+                    console.error(`  BodyB:`, { id: bodyB.id, label: bodyB.label, parts: bodyB.parts?.length });
+                } else if (Object.keys(userDataA).length === 0) {
+                    console.warn(`⚠️ Body A has empty userData:`, { id: bodyA.id, label: bodyA.label, parts: bodyA.parts?.length });
+                } else if (Object.keys(userDataB).length === 0) {
+                    console.warn(`⚠️ Body B has empty userData:`, { id: bodyB.id, label: bodyB.label, parts: bodyB.parts?.length });
+                }
+
                 const isFireA = userDataA.specialType?.type === 'FIRE';
                 const isFireB = userDataB.specialType?.type === 'FIRE';
                 if (isFireA && isFireB) {
@@ -5913,15 +5924,23 @@
             }
 
             isGroundCollision(dataA, dataB) {
+                // More robust shape type detection
                 const shapeTypes = ['shape', 'compound', 'rectangle', 'polygon', 'circle'];
-                const isAShape = shapeTypes.includes(dataA.type);
-                const isBShape = shapeTypes.includes(dataB.type);
+                const isAShape = shapeTypes.includes(dataA.type) || dataA.shapeType;
+                const isBShape = shapeTypes.includes(dataB.type) || dataB.shapeType;
                 
-                const result = (isAShape && dataB.type === 'ground') ||
-                              (dataA.type === 'ground' && isBShape);
+                // Check for ground collision
+                const isAGround = dataA.type === 'ground' || dataA.name === 'fallDetectionBoundary';
+                const isBGround = dataB.type === 'ground' || dataB.name === 'fallDetectionBoundary';
+                
+                const result = (isAShape && isBGround) || (isAGround && isBShape);
                               
                 if (result) {
-                    console.log(`🎯 Ground collision detected: ${dataA.type} vs ${dataB.type} - isAShape: ${isAShape}, isBShape: ${isBShape}`);
+                    console.log(`🎯 Ground collision detected: ${dataA.type || dataA.shapeType || 'unknown'} vs ${dataB.type || dataB.shapeType || 'unknown'}`);
+                    console.log(`  - A: type="${dataA.type}", shapeType="${dataA.shapeType}", name="${dataA.name}"`);
+                    console.log(`  - B: type="${dataB.type}", shapeType="${dataB.shapeType}", name="${dataB.name}"`);
+                } else {
+                    console.log(`❌ Not a ground collision: A(${dataA.type || dataA.shapeType || 'unknown'}) vs B(${dataB.type || dataB.shapeType || 'unknown'})`);
                 }
                 
                 return result;
@@ -6135,8 +6154,25 @@
             createShape(x, y, type, rotation = 0, shapeId = null) {
                 console.log(`🎯 Creating shape using unified system: ${type} at (${x}, ${y})`);
 
+                // Get dock slot data FIRST to determine userData
+                let dockSlotData = null;
+                if (shapeId) {
+                    dockSlotData = this.gameManager.levelData.dock.slots.find(slot => slot.shapeId === shapeId);
+                } else {
+                    // Fallback for old behavior (e.g. keyboard shortcuts for testing)
+                    dockSlotData = this.gameManager.levelData.dock.slots.find(slot => slot.shapePrefabId === type && !this.dynamicBodies.some(b => b.userData.shapeId === slot.shapeId));
+                }
+
+                // Prepare userData BEFORE creating the body
+                const shapeUserData = {
+                    type: 'shape',
+                    shapeType: type,
+                    shapeId: dockSlotData?.shapeId || `shape_${Date.now()}`,
+                    specialType: dockSlotData?.specialType || { type: 'REGULAR' }
+                };
+
                 // Use unified shape creation from master registry
-                let body = this.createShapeFromRegistry(x, y, type, rotation);
+                let body = this.createShapeFromRegistry(x, y, type, rotation, shapeUserData);
 
                 if (!body) {
                     console.error(`❌ UNIFIED SYSTEM FAILED: Could not create shape ${type} - this should not happen!`);
@@ -6166,19 +6202,7 @@
                     }
                 }, 100); // Brief stabilization period
 
-                let dockSlotData = null;
-                if (shapeId) {
-                    dockSlotData = this.gameManager.levelData.dock.slots.find(slot => slot.shapeId === shapeId);
-                } else {
-                    // Fallback for old behavior (e.g. keyboard shortcuts for testing)
-                    dockSlotData = this.gameManager.levelData.dock.slots.find(slot => slot.shapePrefabId === type && !this.dynamicBodies.some(b => b.userData.shapeId === slot.shapeId));
-                }
-                body.userData = {
-                    type: 'shape',
-                    shapeType: type,
-                    shapeId: dockSlotData?.shapeId || `shape_${Date.now()}`,
-                    specialType: dockSlotData?.specialType || { type: 'REGULAR' }
-                };
+                // Initialize special type states
                 if (body.userData.specialType.type === 'TIMER') {
                     body.userData.timerState = {
                         countdown: body.userData.specialType.countdownSeconds,
@@ -6376,7 +6400,7 @@
             }
 
             // Unified shape creation using master registry
-            createShapeFromRegistry(x, y, shapeType, rotation = 0) {
+            createShapeFromRegistry(x, y, shapeType, rotation = 0, userData = null) {
                 console.log(`🎯 Creating shape from master registry: ${shapeType}`);
                 
                 // Debug: Check if MASTER_SHAPE_REGISTRY exists and has the shape
@@ -6464,7 +6488,7 @@
 
                     case 'compound':
                         if (geometry.parts) {
-                            body = this.createCompoundFromRegistry(x, y, shapeType, rotation, masterConfig, themedVisual);
+                            body = this.createCompoundFromRegistry(x, y, shapeType, rotation, masterConfig, themedVisual, userData);
                         }
                         break;
 
@@ -6474,14 +6498,21 @@
                 }
 
                 if (body) {
-                    // Set unified userData
-                    body.userData = {
-                        shapeType: shapeType,
-                        type: geometry.type,
-                        geometry: { ...geometry },
-                        physics: { ...physics },
-                        visual: { ...themedVisual }  // Use themed visual
-                    };
+                    // Set userData - use provided userData or create fallback
+                    if (userData) {
+                        body.userData = userData;
+                        console.log(`🏷️ Applied provided userData to ${shapeType}:`, userData);
+                    } else {
+                        // Fallback for backward compatibility
+                        body.userData = {
+                            shapeType: shapeType,
+                            type: geometry.type,
+                            geometry: { ...geometry },
+                            physics: { ...physics },
+                            visual: { ...themedVisual }  // Use themed visual
+                        };
+                        console.log(`🏷️ Applied fallback userData to ${shapeType}`);
+                    }
 
                     console.log(`✅ Unified shape ${shapeType} created from master registry with theme colors`);
                 } else {
@@ -6492,7 +6523,7 @@
             }
 
             // Create compound shape from master registry
-            createCompoundFromRegistry(x, y, shapeType, rotation, masterConfig, themedVisual) {
+            createCompoundFromRegistry(x, y, shapeType, rotation, masterConfig, themedVisual, userData = null) {
                 const geometry = masterConfig.geometry;
                 const physics = masterConfig.physics;
                 const visual = themedVisual || masterConfig.visual; // Use themed visual if provided
@@ -6580,6 +6611,43 @@
                 // Apply rotation to the entire compound body after creation
                 if (rotation !== 0) {
                     this.Body.setAngle(compoundBody, rotation);
+                }
+
+                // Set userData for compound body
+                if (userData) {
+                    compoundBody.userData = userData;
+                    console.log(`🏷️ Applied provided userData to compound ${shapeType}:`, userData);
+                    
+                    // CRITICAL FIX: Apply userData to all parts of the compound body
+                    // Access the parts from the compound body's parts array
+                    if (compoundBody.parts && compoundBody.parts.length > 1) {
+                        // Skip index 0 as it's the main body itself
+                        for (let i = 1; i < compoundBody.parts.length; i++) {
+                            const part = compoundBody.parts[i];
+                            part.userData = { ...userData, partIndex: i };
+                            console.log(`🏷️ Applied userData to part ${i} of compound ${shapeType}:`, part.userData);
+                        }
+                    }
+                } else {
+                    // Fallback for backward compatibility
+                    const fallbackUserData = {
+                        shapeType: shapeType,
+                        type: 'compound',
+                        geometry: { ...geometry },
+                        physics: { ...physics },
+                        visual: { ...visual }
+                    };
+                    compoundBody.userData = fallbackUserData;
+                    console.log(`🏷️ Applied fallback userData to compound ${shapeType}`);
+                    
+                    // Apply fallback userData to all parts
+                    if (compoundBody.parts && compoundBody.parts.length > 1) {
+                        for (let i = 1; i < compoundBody.parts.length; i++) {
+                            const part = compoundBody.parts[i];
+                            part.userData = { ...fallbackUserData, partIndex: i };
+                            console.log(`🏷️ Applied fallback userData to part ${i} of compound ${shapeType}`);
+                        }
+                    }
                 }
 
                 return compoundBody;

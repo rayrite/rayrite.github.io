@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>BSH Game - Physics Puzzle Game v18 (Canvas2D)</title>
+    <title>BSH Game - Physics Puzzle Game v20 (Canvas2D)</title>
     <style>
         * {
             margin: 0;
@@ -487,7 +487,7 @@
             left: 0;
             right: 0;
             height: clamp(120px, 20vh, 160px); /* Responsive height */
-            background: #34495e;
+            background: transparent; /* Changed from #34495e to transparent */
             display: grid;
             grid-template-columns: repeat(5, 1fr); /* Equal column distribution */
             grid-template-rows: repeat(2, 1fr); /* Equal row distribution */
@@ -1861,6 +1861,168 @@
         const debugLog = (...args) => DEBUG_MODE && console.log(...args);
         
         /*╔═══════════════════════════════════════════════════════════════════════════
+          ║ UNIFIED GAME INITIALIZER - RACE CONDITION FIX
+          ║ Single entry point for coordinated startup sequence
+          ╚═══════════════════════════════════════════════════════════════════════════*/
+        class GameInitializer {
+            static isInitialized = false;
+            static initPromise = null;
+            
+            static async initialize() {
+                if (this.isInitialized) {
+                    console.log('🔄 GameInitializer already initialized, skipping');
+                    return this.initPromise;
+                }
+                
+                if (this.initPromise) {
+                    console.log('⏳ GameInitializer in progress, waiting...');
+                    return this.initPromise;
+                }
+                
+                // Wait for mutexes to be available (they're declared later in the file)
+                const waitForMutexes = () => {
+                    return new Promise((resolve) => {
+                        const checkMutexes = () => {
+                            if (typeof assetMutex !== 'undefined' && typeof dockMutex !== 'undefined') {
+                                resolve();
+                            } else {
+                                setTimeout(checkMutexes, 10);
+                            }
+                        };
+                        checkMutexes();
+                    });
+                };
+                
+                this.initPromise = (async () => {
+                    await waitForMutexes();
+                    
+                    console.log('🚀 Starting unified game initialization...');
+                    
+                    try {
+                        // Phase 1: Create AssetManager
+                        await this._createAssetManager();
+                        
+                        // Phase 2: Load default theme
+                        await this._loadDefaultTheme();
+                        
+                        // Phase 3: Load level data
+                        const levelData = await this._loadLevelData();
+                        
+                        // Phase 4: Initialize game systems
+                        await this._initializeGameSystems(levelData);
+                        
+                        // Phase 5: Apply level theme if specified
+                        await this._applyLevelTheme();
+                        
+                        // Phase 6: Build UI
+                        await this._buildUI();
+                        
+                        this.isInitialized = true;
+                        console.log('✅ Unified game initialization complete');
+                        
+                    } catch (error) {
+                        console.error('❌ Game initialization failed:', error);
+                        throw error;
+                    }
+                })();
+                
+                return this.initPromise;
+            }
+            
+            static async _createAssetManager() {
+                if (!window.assetManager) {
+                    window.assetManager = new AssetManager();
+                    console.log('✅ AssetManager created');
+                }
+                // Ensure backward compatibility
+                window.textureManager = window.assetManager;
+            }
+            
+            static async _loadDefaultTheme() {
+                const defaultTheme = CANVAS_CONFIG.defaultTheme || 'classic';
+                try {
+                    await window.assetManager.loadTheme(defaultTheme);
+                    console.log(`✅ Default theme '${defaultTheme}' loaded`);
+                } catch (error) {
+                    console.error('❌ Failed to load default theme:', error);
+                    throw error;
+                }
+            }
+            
+            static async _loadLevelData() {
+                let levelFile = 'levelData.json';
+                try {
+                    levelFile = new URL(levelFile, window.location.href).href;
+                } catch (e) {
+                    console.warn('🔧 Using relative path for level data');
+                }
+                
+                const loader = new LevelLoader();
+                const ok = await loader.loadFromFile(levelFile);
+                if (!ok) {
+                    throw new Error('Failed to load level data');
+                }
+                
+                const data = loader.getData();
+                window.currentLevelData = data;
+                console.log('✅ Level data loaded');
+                return data;
+            }
+            
+            static async _initializeGameSystems(levelData) {
+                if (levelData.mode === 'PLAYABLE_AD') {
+                    console.log('🚀 PLAYABLE_AD mode detected.');
+                    window.adSequencer = new AdSequencer(levelData.adConfig);
+                    alert('Playable Ad Mode Initialized! (stub).');
+                } else if (levelData.mode === 'LEVEL') {
+                    console.log('🎮 LEVEL mode detected.');
+                    
+                    const gameManager = new GameManager(levelData);
+                    window.gameManager = gameManager;
+                    
+                    // Wait for GameManager async initialization to complete
+                    await gameManager.initPromise;
+                    console.log('✅ GameManager initialized');
+                } else {
+                    throw new Error(`Unknown mode in level data: ${levelData.mode}`);
+                }
+            }
+            
+            static async _applyLevelTheme() {
+                if (window.gameManager && typeof window.gameManager.applyLevelTheme === 'function') {
+                    await window.gameManager.applyLevelTheme();
+                    console.log('✅ Level theme applied');
+                }
+            }
+            
+            static async _buildUI() {
+                if (window.gameManager) {
+                    // Use dockMutex for coordinated dock building
+                    await dockMutex.execute(async () => {
+                        await window.gameManager.rebuildDockFromData(true);
+                        
+                        if (typeof window.gameManager.createPlatformsFromData === 'function') {
+                            window.gameManager.createPlatformsFromData();
+                        }
+                        
+                        if (window.gameManager.updateDebugInfo) {
+                            window.gameManager.updateDebugInfo();
+                        }
+                        
+                        console.log('✅ Game UI built');
+                    }, 'initial-ui-build');
+                }
+                
+                // Initialize UI components
+                if (typeof initializeThemeUI === 'function') initializeThemeUI();
+                if (typeof updateTouchOffsetDisplay === 'function') updateTouchOffsetDisplay();
+                if (typeof startCoinBonusSystem === 'function') startCoinBonusSystem();
+                
+                console.log('✅ UI components initialized');
+            }
+        }
+        
+        /*╔═══════════════════════════════════════════════════════════════════════════
           ║ BSH GAME - CANVAS2D ARCHITECTURE
           ║ Complete PixiJS Removal & Canvas2D Optimization
           ╚═══════════════════════════════════════════════════════════════════════════*/
@@ -2132,6 +2294,105 @@
         };
 
         /*╔═══════════════════════════════════════════════════════════════════════════
+         ║ UNIFIED TEXTURE AND THEME SYSTEM
+         ║ Single source of truth for all texture operations
+         ║ Consolidates 4 different texture checking implementations:
+         ║ • isTextureAvailable() [legacy function]
+         ║ • AssetManager.isTextureLoaded() 
+         ║ • PhysicsShapeRenderer.hasTexture()
+         ║ • window.assetManager.isTextureLoaded()
+         ╚═══════════════════════════════════════════════════════════════════════════*/
+        class UnifiedTextureSystem {
+            /**
+             * Master texture availability checker
+             * Replaces all scattered texture checking implementations
+             */
+            static isTextureAvailable(shapeType) {
+                if (!window.assetManager) {
+                    console.warn('UnifiedTextureSystem: AssetManager not available');
+                    return false;
+                }
+                
+                try {
+                    const currentTheme = window.assetManager.currentTheme || 'classic';
+                    
+                    // Get the theme configuration to check if it uses textures
+                    const themeConfig = THEME_DEFINITIONS[currentTheme];
+                    if (!themeConfig || !themeConfig.shapes || !themeConfig.shapes.useTextures) {
+                        return false; // Theme doesn't use textures, use colors instead
+                    }
+                    
+                    // For textured themes, check if texture exists and is loaded
+                    const texture = window.assetManager.getShapeTexture(shapeType);
+                    return texture !== null && texture !== undefined;
+                } catch (error) {
+                    console.warn(`UnifiedTextureSystem: Texture check failed for ${shapeType}:`, error);
+                    return false;
+                }
+            }
+            
+            /**
+             * Master texture retrieval method
+             * Returns texture if available, null otherwise
+             */
+            static getShapeTexture(shapeType) {
+                if (!this.isTextureAvailable(shapeType)) {
+                    return null;
+                }
+                
+                try {
+                    return window.assetManager.getShapeTexture(shapeType);
+                } catch (error) {
+                    console.warn(`UnifiedTextureSystem: Texture retrieval failed for ${shapeType}:`, error);
+                    return null;
+                }
+            }
+            
+            /**
+             * Check if a theme uses textures for shapes
+             */
+            static themeUsesTextures(themeName = null) {
+                const currentTheme = themeName || window.assetManager?.currentTheme || 'classic';
+                const themeConfig = THEME_DEFINITIONS[currentTheme];
+                return !!(themeConfig?.shapes?.useTextures);
+            }
+            
+            /**
+             * Get texture configuration for a shape in current theme
+             */
+            static getTextureConfig(shapeType) {
+                if (!this.isTextureAvailable(shapeType)) {
+                    return null;
+                }
+                
+                const currentTheme = window.assetManager.currentTheme || 'classic';
+                const themeConfig = THEME_DEFINITIONS[currentTheme];
+                
+                return {
+                    repeat: themeConfig.shapes?.textureRepeat || 'repeat',
+                    blend: themeConfig.shapes?.textureBlend || 'multiply', 
+                    opacity: themeConfig.shapes?.textureOpacity || 0.7
+                };
+            }
+            
+            /**
+             * Unified theme application method
+             * Consolidates theme switching logic
+             */
+            static applyTheme(themeName, source = 'unified') {
+                return UnifiedThemeController.changeTheme(themeName, { source });
+            }
+        }
+
+        // Legacy compatibility - gradually replace these calls with UnifiedTextureSystem
+        function isTextureAvailable(shapeType) {
+            return UnifiedTextureSystem.isTextureAvailable(shapeType);
+        }
+
+        // Global access for backward compatibility
+        window.UnifiedTextureSystem = UnifiedTextureSystem;
+
+        /*╔═══════════════════════════════════════════════════════════════════════════
           ║ THEME DEFINITIONS - VISUAL THEMES FOR THE GAME
           ║ Each theme defines complete visual styling for all game elements
           ╚═══════════════════════════════════════════════════════════════════════════*/
@@ -2254,7 +2515,14 @@
                         type: "gradient",
                         colors: ["#8B4513", "#A0522D", "#CD853F"],
                         texture: "wood_grain",
-                        image: createImageConfig()
+                        // image: createImageConfig()
+            		image: createImageConfig({
+                		url: "assets/bkg/bkg1.png",  // Add this
+                		opacity: 0.2,
+                		size: "auto",        // Changed from "cover" to "auto" for tiling
+                                repeat: "repeat",    // Add this for tiling
+                		position: "center"
+            		})
                     },
                     platform: {
                         texture: "wood_grain",
@@ -2262,9 +2530,12 @@
                         material: "wood",
                         pattern: "grain",
                         image: createImageConfig({
-                            repeat: "repeat-x",
-                            blend: "multiply",
-                            opacity: 0.8
+                            // repeat: "repeat-x",
+                            // blend: "multiply",
+                            // opacity: 0.8
+            		    url: "assets/textures/stone/stone1.png",  // Add this
+                            opacity: 0.9,
+                            repeat: "repeat"
                         })
                     },
                     shapes: {
@@ -2307,7 +2578,18 @@
                         baseTexturePath: "textures/stone/",
                         specialEffects: ["dust", "crack"],
                         animations: ["settle", "crumble"],
-                        textureOpacity: 0.8
+                        textureOpacity: 0.8,
+                        colors: {
+                            square: { color: '#696969', stroke: '#555555', strokeWidth: 2 },      // Dark gray granite
+                            triangle: { color: '#778899', stroke: '#556B83', strokeWidth: 2 },   // Light slate gray  
+                            circle: { color: '#708090', stroke: '#5F6F7F', strokeWidth: 2 },     // Slate gray
+                            cross: { color: '#2F4F4F', stroke: '#1F3F3F', strokeWidth: 2 },      // Dark slate gray
+                            'cross2': { color: '#696969', stroke: '#555555', strokeWidth: 2 },   // Granite gray
+                            'l': { color: '#A9A9A9', stroke: '#8A8A8A', strokeWidth: 2 },        // Light gray stone
+                            'barbell-one': { color: '#778899', stroke: '#556B83', strokeWidth: 2 }, // Slate
+                            'barbell-two': { color: '#708090', stroke: '#5F6F7F', strokeWidth: 2 }, // Blue-gray stone
+                            'diamond-barbell': { color: '#2F4F4F', stroke: '#1F3F3F', strokeWidth: 2 } // Dark slate
+                        }
                     },
                     particles: {
                         style: "dust",
@@ -2322,13 +2604,18 @@
                 {
                     background: {
                         type: "gradient",
-                        colors: ["#2F4F4F", "#696969", "#708090"],
-                        texture: null,
-                        image: createImageConfig()
+                        colors: ["#1e3a4f", "#2d5a7b", "#4682b4", "#5a7aa6"],  // Deep blue steel gradient
+                        texture: "corrugated",
+                        pattern: "corrugated-metal",
+                        image: createImageConfig({
+                            repeat: "repeat",
+                            blend: "multiply",
+                            opacity: 0.3
+                        })
                     },
                     platform: {
                         texture: null,
-                        color: "#696969",
+                        color: "#4682B4",  // Steel blue instead of gray
                         material: "steel",
                         pattern: "brushed",
                         image: createImageConfig({
@@ -2342,11 +2629,22 @@
                         baseTexturePath: "textures/metal/",
                         specialEffects: ["spark", "gleam"],
                         animations: ["clang", "shine"],
-                        textureOpacity: 0.9
+                        textureOpacity: 0.9,
+                        colors: {
+                            square: { color: '#4169E1', stroke: '#1E3A8A', strokeWidth: 2 },      // Royal blue steel
+                            triangle: { color: '#4682B4', stroke: '#2F4F7F', strokeWidth: 2 },   // Steel blue
+                            circle: { color: '#6495ED', stroke: '#4169E1', strokeWidth: 2 },     // Cornflower blue
+                            cross: { color: '#1E3A8A', stroke: '#1B1F3A', strokeWidth: 2 },      // Dark blue steel
+                            'cross2': { color: '#5F8DCE', stroke: '#3A5B94', strokeWidth: 2 },   // Medium blue steel
+                            'l': { color: '#87CEEB', stroke: '#5F8DCE', strokeWidth: 2 },        // Sky blue steel
+                            'barbell-one': { color: '#4169E1', stroke: '#1E3A8A', strokeWidth: 2 }, // Royal blue
+                            'barbell-two': { color: '#4682B4', stroke: '#2F4F7F', strokeWidth: 2 }, // Steel blue
+                            'diamond-barbell': { color: '#1E3A8A', stroke: '#0F1F45', strokeWidth: 2 } // Deep blue steel
+                        }
                     },
                     particles: {
                         style: "sparks",
-                        colors: ["#C0C0C0", "#FFD700", "#FF4500"]
+                        colors: ["#87CEEB", "#4682B4", "#1E90FF", "#4169E1"]  // Blue spark colors
                     }
                 }
             )
@@ -2705,12 +3003,34 @@
 
         // Utility functions for shape configuration
         function getShapeConfig(shapeType) {
-            // Start with base config
-            const baseConfig = {...(SHAPE_CONFIG[shapeType] || {})};
+            // Start with MASTER_SHAPE_REGISTRY as base - use visual properties flattened
+            const masterConfig = MASTER_SHAPE_REGISTRY[shapeType];
+            const baseConfig = masterConfig ? {
+                ...masterConfig.geometry,
+                ...masterConfig.physics,
+                ...masterConfig.visual  // Flatten visual properties to root level for compatibility
+            } : {};
+            
+            // Add legacy SHAPE_CONFIG overrides if they exist
+            if (SHAPE_CONFIG[shapeType]) {
+                Object.assign(baseConfig, SHAPE_CONFIG[shapeType]);
+            }
             
             // Use AssetManager for theme-specific overrides if available
             if (window.assetManager) {
                 const currentTheme = window.assetManager.getCurrentTheme();
+                
+                // Check for theme color overrides in the new structure
+                if (currentTheme?.config?.shapes?.colors?.[shapeType]) {
+                    const themeColors = currentTheme.config.shapes.colors[shapeType];
+                    Object.assign(baseConfig, {
+                        color: themeColors.color || baseConfig.color,
+                        stroke: themeColors.stroke || baseConfig.stroke,
+                        strokeWidth: themeColors.strokeWidth || baseConfig.strokeWidth
+                    });
+                }
+                
+                // Legacy theme overrides support
                 if (currentTheme?.config?.shapes?.overrides?.[shapeType]) {
                     const themeOverride = currentTheme.config.shapes.overrides[shapeType];
                     Object.assign(baseConfig, {
@@ -2720,7 +3040,7 @@
                 }
                 
                 // Check for texture through AssetManager
-                const texture = window.assetManager.getShapeTexture(shapeType);
+                const texture = UnifiedTextureSystem.getShapeTexture(shapeType);
                 if (texture) {
                     baseConfig.texture = texture;
                 }
@@ -2730,7 +3050,7 @@
         }
 
         function getAllShapeTypes() {
-            return Object.keys(SHAPE_CONFIG);
+            return Object.keys(MASTER_SHAPE_REGISTRY);
         }
 
         function validateShapeConfig() {
@@ -2853,6 +3173,23 @@
                             loadPromises.push(shapePromise);
                         }
                     });
+                } else if (themeConfig.shapes.useTextures && themeConfig.shapes.textureUrl) {
+                    // Handle themes that use a single shared texture for all shapes
+                    const sharedTextureUrl = themeConfig.shapes.textureUrl;
+                    const shapeNames = ['square', 'circle', 'triangle', 'cross', 'cross2', 'l', 'barbell-one', 'barbell-two', 'diamond-barbell'];
+                    
+                    const sharedPromise = this.loadImage(sharedTextureUrl)
+                        .then(img => {
+                            // Apply the same texture to all shapes
+                            shapeNames.forEach(shapeType => {
+                                theme.assets.shapeTextures[shapeType] = img;
+                            });
+                            console.log(`🔶 Shared texture loaded for all shapes in ${themeName} from ${sharedTextureUrl}`);
+                        })
+                        .catch(err => {
+                            console.warn(`⚠️ Shared texture failed for ${themeName}:`, err.message);
+                        });
+                    loadPromises.push(sharedPromise);
                 }
 
                 // Wait for all images to load (or fail)
@@ -2916,9 +3253,25 @@
             }
 
             getShapeTexture(shapeType, themeName = null) {
-                const theme = themeName ? this.getTheme(themeName) : this.getCurrentTheme();
-                const texture = theme?.assets?.shapeTextures?.[shapeType] || null;
-                return texture;
+                const currentTheme = themeName || this.currentTheme || 'classic';
+                const themeData = this.themes[currentTheme];
+                
+                // Check if theme exists and has assets
+                if (!themeData || !themeData.assets) {
+                    return null;
+                }
+                
+                // Check for loaded texture assets first (preferred)
+                if (themeData.assets.shapeTextures && themeData.assets.shapeTextures.hasOwnProperty(shapeType)) {
+                    return themeData.assets.shapeTextures[shapeType];
+                }
+                
+                // Fallback to legacy textures structure if it exists
+                if (themeData.textures && themeData.textures.hasOwnProperty(shapeType)) {
+                    return themeData.textures[shapeType];
+                }
+                
+                return null;
             }
 
             // Clear cache (useful for development)
@@ -2981,10 +3334,16 @@
             }
 
             getCurrentTheme() {
-                // console.log(`🔍 AssetManager.getCurrentTheme() - this.currentTheme: '${this.currentTheme}'`);
-                const theme = this.getTheme(this.currentTheme);
-                // console.log(`🔍 AssetManager.getCurrentTheme() - found theme:`, theme?.config?.name || 'null');
-                return theme;
+                // Only log when theme actually changes to avoid spam
+                if (!this._lastLoggedCurrentTheme || this._lastLoggedCurrentTheme !== this.currentTheme) {
+                    console.log(`🔍 AssetManager.getCurrentTheme() - this.currentTheme: '${this.currentTheme}'`);
+                    const theme = this.getTheme(this.currentTheme);
+                    console.log(`🔍 AssetManager.getCurrentTheme() - found theme:`, theme?.config?.name || 'null');
+                    console.log(`🔍 Available themes:`, Object.keys(this.themes));
+                    this._lastLoggedCurrentTheme = this.currentTheme;
+                    return theme;
+                }
+                return this.getTheme(this.currentTheme);
             }
 
             getBackgroundStyle(themeName = null) {
@@ -3057,19 +3416,6 @@
 
             onThemeLoaded(callback) {
                 this.loadingCallbacks.push(callback);
-            }
-
-            // Unified texture checking method - primary interface only
-            isTextureLoaded(shapeType) {
-                // Check if texture exists in current theme
-                const texture = this.getShapeTexture(shapeType);
-                if (texture) {
-                    console.log(`🔍 isTextureLoaded(${shapeType}): true`);
-                    return true;
-                }
-                
-                console.log(`🔍 isTextureLoaded(${shapeType}): false`);
-                return false;
             }
 
             getTextureUrl(shapeType) {
@@ -3242,6 +3588,7 @@
 
                     this.currentTheme = themeName;
                     this.assetManager.currentTheme = themeName;
+                    console.log(`🔄 ThemeManager: Set currentTheme to '${themeName}' on both ThemeManager and AssetManager`);
 
                     this.notifyThemeChanged(themeName);
 
@@ -3569,18 +3916,6 @@
                 }
             }
             
-            // Unified texture availability check
-            hasTexture(shapeType) {
-                const config = getShapeConfig(shapeType);
-                if (!config) return false;
-                
-                // Check if texture is explicitly set in config
-                if (config.texture) return true;
-                
-                // Check if we can get a texture image
-                return !!window.assetManager.getShapeTexture(shapeType);
-            }
-            
             renderShapeOnCanvas(ctx, shapeType, x, y, rotation = 0, scale = 1, forcedTexture = null, unifiedConfig = null) {
                 // Use unified config if provided, otherwise fallback to legacy system
                 const config = unifiedConfig || getShapeConfig(shapeType);
@@ -3608,14 +3943,16 @@
                     renderStyle = window.gameManager.levelData.theme.overrides.shapes.renderStyle;
                 }
 
-                // --- NEW: Retrieve texture image if not provided and texture is available ---
+                // --- UNIFIED: Retrieve texture image and config if not provided ---
+                let textureConfig = null;
                 if (!forcedTexture) {
-                    const textureImage = window.assetManager.getShapeTexture(shapeType);
+                    const textureImage = UnifiedTextureSystem.getShapeTexture(shapeType);
                     if (textureImage) {
                         forcedTexture = textureImage;
+                        textureConfig = UnifiedTextureSystem.getTextureConfig(shapeType);
                     }
                 }
-                // --- END NEW ---
+                // --- END UNIFIED ---
 
                 ctx.save();
                 ctx.translate(x, y);
@@ -3630,8 +3967,8 @@
                     return;
                 }
 
-                // The new master rendering method does all the work, with optional forced texture
-                this.renderPathWithStyle(ctx, path, config, renderStyle, forcedTexture);
+                // The unified rendering method with texture configuration
+                this.renderPathWithStyle(ctx, path, config, renderStyle, forcedTexture, textureConfig);
 
                 ctx.restore();
             }
@@ -3648,7 +3985,7 @@
                 console.log(`🔍 Shape config for ${shapeType}:`, config);
                 
                 // Use unified texture checking
-                const hasTexture = this.hasTexture(shapeType);
+                const hasTexture = UnifiedTextureSystem.isTextureAvailable(shapeType);
                 
                 console.log(`🔍 Texture availability for ${shapeType}:`, {
                     hasTexture,
@@ -3666,17 +4003,35 @@
             }
 
             createCanvasDockPreview(shapeType, config, size = 90) {
-                // Use unified attribute system for consistent dock previews - direct access to MASTER_SHAPE_REGISTRY
+                // Use SHAPE_CONFIG for theme-aware colors instead of master registry
+                const legacyConfig = SHAPE_CONFIG[shapeType];
                 const unifiedConfig = MASTER_SHAPE_REGISTRY[shapeType];
                 
-                if (!unifiedConfig) {
-                    console.error(`❌ Shape ${shapeType} not found in MASTER_SHAPE_REGISTRY for dock preview`);
+                if (!unifiedConfig || !legacyConfig) {
+                    console.error(`❌ Shape ${shapeType} not found in registries for dock preview`);
                     // Return a fallback canvas so dock doesn't break
                     const canvas = this.getCanvasFromPool(size, size);
                     canvas.className = `shape-preview`;
                     canvas.dataset.shape = shapeType;
                     return canvas;
                 }
+                
+                // Merge unified config with theme-aware colors from SHAPE_CONFIG
+                const mergedConfig = {
+                    ...unifiedConfig,
+                    visual: {
+                        ...unifiedConfig.visual,
+                        color: legacyConfig.color || unifiedConfig.visual.color,
+                        stroke: legacyConfig.stroke || unifiedConfig.visual.stroke,
+                        strokeWidth: legacyConfig.strokeWidth || unifiedConfig.visual.strokeWidth
+                    }
+                };
+                
+                console.log(`🎨 Merged config for ${shapeType}:`, {
+                    originalColor: unifiedConfig.visual.color,
+                    themeColor: legacyConfig.color,
+                    finalColor: mergedConfig.visual.color
+                });
                 
                 // Use canvas pool for better performance
                 const canvas = this.getCanvasFromPool(size, size);
@@ -3688,7 +4043,7 @@
                 ctx.imageSmoothingQuality = 'high';
 
                 // Use unified texture checking
-                const hasTexture = this.hasTexture(shapeType);
+                const hasTexture = UnifiedTextureSystem.isTextureAvailable(shapeType);
                 
                 if (hasTexture) {
                     debugLog(`🎨 Canvas preview for ${shapeType} - texture available`);
@@ -3717,10 +4072,10 @@
                 }
                 
                 // Get texture for rendering if available
-                const textureImage = window.assetManager.getShapeTexture(shapeType);
+                const textureImage = UnifiedTextureSystem.getShapeTexture(shapeType);
                 
-                // Render the shape in the center of the preview canvas with unified rendering
-                this.renderShapeOnCanvas(ctx, shapeType, size / 2, size / 2, rotation, scale, textureImage, unifiedConfig);
+                // Render the shape in the center of the preview canvas with theme-aware colors
+                this.renderShapeOnCanvas(ctx, shapeType, size / 2, size / 2, rotation, scale, textureImage, mergedConfig);
                 
                 debugLog(`✅ Canvas preview created for: ${shapeType} with scale ${scale}, rotation ${(rotation * 180 / Math.PI).toFixed(0)}°, textured: ${!!textureImage}`);
                 return canvas;
@@ -3772,10 +4127,10 @@
                 }
             }
 
-            renderPathWithStyle(ctx, path, shapeConfig, renderStyle, forcedTexture = null) {
+            renderPathWithStyle(ctx, path, shapeConfig, renderStyle, forcedTexture = null, textureConfig = null) {
                 // If a forced texture is provided, render with texture
                 if (forcedTexture) {
-                    this.renderWithTexture(ctx, path, shapeConfig, forcedTexture);
+                    this.renderWithTexture(ctx, path, shapeConfig, forcedTexture, textureConfig);
                 } else {
                     switch (renderStyle.type) {
                         case 'BEVEL_STANDARD':
@@ -3790,7 +4145,7 @@
                 }
             }
 
-            renderWithTexture(ctx, path, config, textureImage) {
+            renderWithTexture(ctx, path, config, textureImage, textureConfig = null) {
                 if (!textureImage) {
                     this.renderFlat(ctx, path, config);
                     return;
@@ -3799,8 +4154,19 @@
                 // Save the context state before applying texture
                 ctx.save();
                 
-                // Create and apply the texture pattern first
-                const pattern = ctx.createPattern(textureImage, 'repeat');
+                // Apply texture configuration if provided
+                if (textureConfig) {
+                    if (textureConfig.opacity && textureConfig.opacity < 1) {
+                        ctx.globalAlpha = textureConfig.opacity;
+                    }
+                    if (textureConfig.blend && textureConfig.blend !== 'source-over') {
+                        ctx.globalCompositeOperation = textureConfig.blend;
+                    }
+                }
+                
+                // Create and apply the texture pattern
+                const repeatPattern = textureConfig?.repeat || 'repeat';
+                const pattern = ctx.createPattern(textureImage, repeatPattern);
                 if (pattern) {
                     ctx.fillStyle = pattern;
                     // Fill the path with the texture pattern
@@ -3809,20 +4175,27 @@
                 
                 ctx.restore();
                 
-                // Add stroke if configured
-                if (config.strokeWidth > 0) {
-                    ctx.strokeStyle = config.stroke;
-                    ctx.lineWidth = config.strokeWidth;
+                // Add stroke if configured - handle both old and new structure
+                const strokeWidth = config.visual?.strokeWidth || config.strokeWidth || 0;
+                const stroke = config.visual?.stroke || config.stroke || '#666666';
+                if (strokeWidth > 0) {
+                    ctx.strokeStyle = stroke;
+                    ctx.lineWidth = strokeWidth;
                     ctx.stroke(path);
                 }
             }
 
             renderFlat(ctx, path, config) {
-                ctx.fillStyle = config.color;
+                // Handle both old flat structure and new nested structure
+                const color = config.visual?.color || config.color || '#808080';
+                const stroke = config.visual?.stroke || config.stroke || '#666666';
+                const strokeWidth = config.visual?.strokeWidth || config.strokeWidth || 0;
+                
+                ctx.fillStyle = color;
                 ctx.fill(path);
-                if (config.strokeWidth > 0) {
-                    ctx.strokeStyle = config.stroke;
-                    ctx.lineWidth = config.strokeWidth;
+                if (strokeWidth > 0) {
+                    ctx.strokeStyle = stroke;
+                    ctx.lineWidth = strokeWidth;
                     ctx.stroke(path);
                 }
             }
@@ -3861,14 +4234,18 @@
                 ctx.fill(path);
                 ctx.restore();
 
-                // 3. Render Main Body Color
-                ctx.fillStyle = config.color;
+                // 3. Render Main Body Color - handle both old and new structure
+                const color = config.visual?.color || config.color || '#808080';
+                const stroke = config.visual?.stroke || config.stroke || '#666666';
+                const strokeWidth = config.visual?.strokeWidth || config.strokeWidth || 0;
+                
+                ctx.fillStyle = color;
                 ctx.fill(path);
                 
                 // 4. Render Stroke on top for crisp edges
-                if (config.strokeWidth > 0) {
-                    ctx.strokeStyle = config.stroke;
-                    ctx.lineWidth = config.strokeWidth;
+                if (strokeWidth > 0) {
+                    ctx.strokeStyle = stroke;
+                    ctx.lineWidth = strokeWidth;
                     ctx.stroke(path);
                 }
             }
@@ -3979,19 +4356,33 @@
             }
 
             register(canvas, specialConfig) {
-                if (!canvas || !specialConfig || !specialConfig.type) return;
+                console.log(`🎨 DockingSpecialEffectsManager.register called:`, { canvas, specialConfig });
+                if (!canvas || !specialConfig || !specialConfig.type) {
+                    console.log(`❌ Registration failed - missing data:`, { hasCanvas: !!canvas, hasSpecialConfig: !!specialConfig, hasType: !!specialConfig?.type });
+                    return;
+                }
 
                 const parent = canvas.parentElement;
-                if (!parent) return;
+                if (!parent) {
+                    console.log(`❌ Registration failed - no parent element for canvas`);
+                    return;
+                }
 
                 this.unregisterByElement(canvas);
 
                 const overlay = document.createElement('canvas');
                 overlay.width = canvas.width;
                 overlay.height = canvas.height;
+                
+                // Copy all styles from the original canvas
+                const computedStyle = window.getComputedStyle(canvas);
+                overlay.style.cssText = canvas.style.cssText;
+                
+                // Override with overlay-specific styles
                 overlay.className = 'special-effect-overlay';
-                overlay.style.width = canvas.style.width || '100%';
-                overlay.style.height = canvas.style.height || '100%';
+                overlay.style.position = 'absolute';
+                overlay.style.top = '0';
+                overlay.style.left = '0';
                 overlay.style.zIndex = '65';
                 overlay.style.pointerEvents = 'none';
                 overlay.style.display = 'block';
@@ -4028,10 +4419,17 @@
                 canvas.dataset.specialEffectId = entryId;
 
                 this.entries.push(entry);
+                console.log(`✅ Special effect registered successfully:`, { 
+                    id: entryId, 
+                    type: sanitizedConfig.type,
+                    canvas: canvas.id || 'unnamed',
+                    overlaySize: { width: overlay.width, height: overlay.height }
+                });
 
                 if (!this.animationFrameId) {
                     this.lastTimestamp = performance.now();
                     this.animationFrameId = requestAnimationFrame(this.renderFrame);
+                    console.log(`🎬 Started special effects animation loop`);
                 }
             }
 
@@ -4061,6 +4459,8 @@
 
                     ctx.clearRect(0, 0, entry.overlay.width, entry.overlay.height);
 
+                    // console.log(`🎬 Rendering special effect:`, { id: entry.id, type: entry.type, canvasSize: { width: entry.overlay.width, height: entry.overlay.height } });
+
                     switch (entry.type) {
                         case 'FIRE':
                             this.renderFire(entry, deltaMultiplier);
@@ -4072,6 +4472,7 @@
                             this.renderWeighted(entry);
                             break;
                         default:
+                            console.log(`⚠️ Unknown special effect type: ${entry.type}`);
                             break;
                     }
                 }
@@ -4085,6 +4486,7 @@
             }
 
             renderFire(entry, deltaMultiplier) {
+                // console.log(`🔥 renderFire called for entry:`, { id: entry.id, particles: entry.particles.length });
                 const { overlay, ctx, particles } = entry;
                 const centerX = overlay.width / 2;
                 const centerY = overlay.height / 2;
@@ -4128,6 +4530,7 @@
             }
 
             renderWeighted(entry) {
+                // console.log(`⚖️ renderWeighted called for entry:`, { id: entry.id, status: entry.specialParams?.currentStatus });
                 const { overlay, ctx, indicatorColors, specialParams } = entry;
                 const centerX = overlay.width / 2;
                 const centerY = overlay.height / 2;
@@ -4150,6 +4553,7 @@
             }
 
             renderTimer(entry, delta) {
+                // console.log(`⏱️ renderTimer called for entry:`, { id: entry.id, elapsed: entry.timerElapsed });
                 const { overlay, ctx, timerDuration } = entry;
                 const centerX = overlay.width / 2;
                 const centerY = overlay.height / 2;
@@ -4655,7 +5059,7 @@
         }
 
         async function rebuildGameDockAsync() {
-            console.log('🔧 rebuildGameDock() called');
+            debugLog('� Rebuilding game dock...');
             
             // Track dock access for race condition monitoring
             raceConditionMonitor.trackAccess('dock-system', 'rebuildGameDock', 'write', {
@@ -4670,14 +5074,14 @@
                 const dockingArea = document.getElementById('dockingArea');
             if (!dockingArea) {
                 dockLoadingManager.showError('Docking area not found in DOM');
-                console.warn('⚠️ Docking area not found in DOM');
+                console.error('❌ Docking area not found!');
                 return;
             }
 
             // Wait for AssetManager to be ready
             if (!window.assetManager) {
                 dockLoadingManager.showLoading('Waiting for AssetManager...');
-                console.warn('⚠️ AssetManager not available, deferring dock rebuild');
+                debugLog('⚠️ AssetManager not available, deferring dock rebuild');
                 setTimeout(() => rebuildGameDock(), 100);
                 return;
             }
@@ -4691,36 +5095,34 @@
                 const themeSelector = document.getElementById('themeSelector');
                 if (themeSelector && themeSelector.value) {
                     currentThemeName = themeSelector.value;
-                    console.log(`🔍 Using theme from selector: ${currentThemeName}`);
+                    debugLog(`🔍 Using theme from selector: ${currentThemeName}`);
                 }
             }
             
             // If still no theme, use default
             if (!currentThemeName) {
                 currentThemeName = CANVAS_CONFIG.defaultTheme;
-                console.log(`🔍 Falling back to default theme: ${currentThemeName}`);
+                debugLog(`🔍 Falling back to default theme: ${currentThemeName}`);
             }
             
             // Load the theme if not already loaded
             if (!currentTheme || currentTheme.name !== currentThemeName) {
-                console.log(`⏳ Loading theme '${currentThemeName}' before building dock...`);
+                debugLog(`⏳ Loading theme '${currentThemeName}' before building dock...`);
                 await window.assetManager.loadTheme(currentThemeName);
                 currentTheme = window.assetManager.getCurrentTheme();
             }
 
             dockingSpecialEffectsManager.reset();
             
-            console.log('🔧 Building dock with loaded theme:', currentTheme?.name);
+            debugLog('🔧 Building dock with loaded theme:', currentTheme?.name);
 
             // Always use current configuration instead of delegating to GameManager
             // This ensures design mode changes are preserved
-            console.log('🎯 Building dock from current configuration (not delegating to GameManager)');
+            debugLog('🎯 Building dock from current configuration (not delegating to GameManager)');
 
             // Get current dock shapes from level config or fallback to all shapes
             const dockShapes = window.currentLevelConfig ? window.currentLevelConfig.dockShapes : getAllShapeTypes();
-            console.log('📦 Building dock with shapes:', dockShapes);
-            console.log('📦 Current level config exists:', !!window.currentLevelConfig);
-            console.log('📦 Shape renderer available:', !!shapeRenderer);
+            debugLog('📦 Building dock with shapes:', dockShapes);
 
             let levelSlotData = [];
             if (window.gameManager && window.gameManager.levelData &&
@@ -4738,12 +5140,50 @@
                 slot.className = 'shape-slot';
                 slot.dataset.slotIndex = index;
                 
+                // Find corresponding level slot data for special effects
+                const levelSlot = levelSlotData.find(slotData => slotData.slotIndex === index);
+                
+                // Set special type data attribute if available
+                if (levelSlot && levelSlot.specialType && levelSlot.specialType.type) {
+                    slot.dataset.specialType = levelSlot.specialType.type;
+                }
+                
                 // Create shape preview
                 const shapePreview = shapeRenderer.createDockPreview(shapeType, 90);
                 if (shapePreview) {
                     shapePreview.classList.add('game-shape');
                     shapePreview.dataset.shape = shapeType;
+                    
+                    // Add shape ID if available from level data
+                    if (levelSlot && levelSlot.shapeId) {
+                        shapePreview.dataset.shapeId = levelSlot.shapeId;
+                        shapePreview.id = `shape-${levelSlot.shapeId}`;
+                    }
+                    
+                    // Handle LOCKED shapes
+                    if (levelSlot && levelSlot.specialType && levelSlot.specialType.type === 'LOCKED') {
+                        shapePreview.classList.add('locked');
+                        const lockIcon = document.createElement('div');
+                        lockIcon.className = 'lock-icon';
+                        lockIcon.innerHTML = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0 0 2px rgba(0,0,0,0.7));"><rect x="5" y="11" width="14" height="10" rx="2" fill="white" fill-opacity="0.9"/><path d="M8 11V7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7V11" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.9"/></svg>`;
+                        slot.appendChild(lockIcon);
+                    }
+                    
                     slot.appendChild(shapePreview);
+                    
+                    // Register special effects for non-LOCKED special types
+                    if (levelSlot && levelSlot.specialType && levelSlot.specialType.type && levelSlot.specialType.type !== 'LOCKED') {
+                        console.log(`🎨 Registering special effect for slot ${index}:`, { shapeType: shapeType, specialType: levelSlot.specialType });
+                        dockingSpecialEffectsManager.register(shapePreview, levelSlot.specialType);
+                    } else if (levelSlot && levelSlot.specialType) {
+                        console.log(`⚪ Skipping special effect registration for slot ${index}:`, { 
+                            shapeType: shapeType, 
+                            specialType: levelSlot.specialType.type,
+                            reason: levelSlot.specialType.type === 'LOCKED' ? 'LOCKED type uses CSS styling' : 'No special type'
+                        });
+                    }
+                } else {
+                    console.warn(`⚠️ Failed to create shape preview for ${shapeType}`);
                 }
                 
                 dockingArea.appendChild(slot);
@@ -4800,7 +5240,12 @@
                 this.fallCount = 0;
                 
                 // Canvas Enhancement System
-                this.assetManager = new AssetManager();
+                // Use shared AssetManager to ensure theme synchronization
+                this.assetManager = window.assetManager || new AssetManager();
+                if (!window.assetManager) {
+                    window.assetManager = this.assetManager;
+                }
+                console.log('🔗 PhysicsManager: Using shared AssetManager for theme synchronization');
                 
                 // Use the existing global texture management system
                 console.log('🖼️ PhysicsManager: Using global texture management system');
@@ -5974,7 +6419,16 @@
 
             // Enhanced background rendering with theme support
             renderBackground() {
+                // console.log(`🎨 renderBackground() called - currentTheme: ${this.assetManager.currentTheme}`);
+                
+                // Only log once per theme change, not every frame
+                if (!this._lastLoggedTheme || this._lastLoggedTheme !== this.assetManager.currentTheme) {
+                    console.log(`🎨 renderBackground() - Theme changed to: ${this.assetManager.currentTheme}`);
+                    this._lastLoggedTheme = this.assetManager.currentTheme;
+                }
+                
                 if (!CANVAS_CONFIG.enabled || !CANVAS_CONFIG.useBackgroundTextures) {
+                    console.log(`❌ renderBackground() skipped - enabled: ${CANVAS_CONFIG.enabled}, useBackgroundTextures: ${CANVAS_CONFIG.useBackgroundTextures}`);
                     return; // Use default CSS background
                 }
 
@@ -6096,23 +6550,57 @@
             // Add subtle texture to background
             renderBackgroundTexture() {
                 const currentTheme = this.assetManager.getCurrentTheme();
-                if (!currentTheme) return;
+                if (!currentTheme) {
+                    console.log('🚫 No current theme found for background texture');
+                    return;
+                }
+                
+                // Only log texture details when theme changes, not every frame
+                if (!this._lastLoggedTextureTheme || this._lastLoggedTextureTheme !== currentTheme.config?.name) {
+                    console.log(`🎨 Background texture - Theme: ${currentTheme.config?.name}, Material: ${currentTheme.config?.platform?.material}`);
+                    this._lastLoggedTextureTheme = currentTheme.config?.name;
+                }
                 
                 this.ctx.save();
                 this.ctx.globalAlpha = 0.1;
                 
                 // Add theme-specific background patterns
-                switch(currentTheme.config.platform.material) {
+                const material = currentTheme.config.platform.material;
+                
+                // Debug log material detection when theme changes
+                if (!this._lastLoggedTextureTheme || this._lastLoggedTextureTheme !== currentTheme.config?.name) {
+                    console.log(`🔍 Material detected: '${material}' for theme '${currentTheme.config?.name}'`);
+                }
+                
+                switch(material) {
                     case 'wood':
+                        if (this._lastLoggedTextureTheme === currentTheme.config?.name) {
+                           // console.log('🌳 Rendering wood texture background');
+                        }
                         this.renderWoodTexture();
                         break;
                     case 'metal':
+                        if (!this._lastLoggedTextureTheme || this._lastLoggedTextureTheme !== currentTheme.config?.name) {
+                            console.log('🔩 Rendering metal texture background (corrugated)');
+                        }
+                        this.renderMetalTexture();
+                        break;
+                    case 'steel':  // Added steel material for Metal theme
+                        if (!this._lastLoggedTextureTheme || this._lastLoggedTextureTheme !== currentTheme.config?.name) {
+                            console.log('🔩 Rendering steel texture background (corrugated)');
+                        }
                         this.renderMetalTexture();
                         break;
                     case 'coral':
+                        if (this._lastLoggedTextureTheme === currentTheme.config?.name) {
+                            console.log('🪸 Rendering coral texture background');
+                        }
                         this.renderCoralTexture();
                         break;
                     default:
+                        if (!this._lastLoggedTextureTheme || this._lastLoggedTextureTheme !== currentTheme.config?.name) {
+                            console.log(`🔲 Rendering default geometric texture (material: '${material}')`);
+                        }
                         this.renderGeometricTexture();
                 }
                 
@@ -6133,15 +6621,43 @@
             }
 
             renderMetalTexture() {
-                // Diagonal line pattern
-                this.ctx.strokeStyle = '#708090';
-                this.ctx.lineWidth = 0.3;
-                for (let i = -this.canvas.width; i < this.canvas.width + this.canvas.height; i += 10) {
+                // Corrugated metal pattern with blue steel tones
+                const corrugationWidth = 20;  // Increased width for better visibility
+                const corrugationHeight = 4;   // Increased height
+                
+                this.ctx.save();
+                this.ctx.globalAlpha = 0.25;  // Increased opacity for better visibility
+                
+                console.log(`🔩 Creating corrugated metal pattern: ${this.canvas.width}x${this.canvas.height}`);
+                
+                // Create horizontal corrugated pattern
+                for (let y = 0; y < this.canvas.height; y += corrugationWidth) {
+                    // Light ridge
+                    this.ctx.fillStyle = '#6495ED';
+                    this.ctx.fillRect(0, y, this.canvas.width, corrugationHeight);
+                    
+                    // Dark valley
+                    this.ctx.fillStyle = '#1E3A8A';
+                    this.ctx.fillRect(0, y + corrugationHeight, this.canvas.width, corrugationHeight);
+                    
+                    // Medium transition
+                    this.ctx.fillStyle = '#4682B4';
+                    this.ctx.fillRect(0, y + corrugationHeight * 2, this.canvas.width, corrugationWidth - corrugationHeight * 2);
+                }
+                
+                // Add subtle diagonal lines for extra texture
+                this.ctx.globalAlpha = 0.1;
+                this.ctx.strokeStyle = '#87CEEB';
+                this.ctx.lineWidth = 1;  // Increased line width
+                for (let i = -this.canvas.width; i < this.canvas.width + this.canvas.height; i += 30) {  // Increased spacing
                     this.ctx.beginPath();
                     this.ctx.moveTo(i, 0);
                     this.ctx.lineTo(i + this.canvas.height, this.canvas.height);
                     this.ctx.stroke();
                 }
+                
+                console.log('✅ Metal texture pattern completed');
+                this.ctx.restore();
             }
 
             renderCoralTexture() {
@@ -6456,7 +6972,7 @@
                     console.log(`🔍 Checking texture for physics body shapeType: ${userData.shapeType}`);
                     
                     // Try direct texture retrieval first
-                    textureImage = window.assetManager.getShapeTexture(userData.shapeType);
+                    textureImage = UnifiedTextureSystem.getShapeTexture(userData.shapeType);
                     if (textureImage) {
                         textureConfig = {
                             repeat: 'repeat',
@@ -6466,8 +6982,8 @@
                         console.log(`🖼️ Direct AssetManager texture retrieval for ${userData.shapeType}: SUCCESS`);
                     }
                     // Unified fallback check using consolidated texture management
-                    else if (window.assetManager.isTextureLoaded(userData.shapeType)) {
-                        textureImage = window.assetManager.getShapeTexture(userData.shapeType);
+                    else if (UnifiedTextureSystem.isTextureAvailable(userData.shapeType)) {
+                        textureImage = UnifiedTextureSystem.getShapeTexture(userData.shapeType);
                         textureConfig = {
                             repeat: 'repeat',
                             blend: 'multiply',
@@ -6519,94 +7035,99 @@
                 }
             }
 
+// ...existing code...
+
             renderCircleWithTexture(part, textureImage, textureConfig) {
-    // Apply transformations and fill the circle in local coordinate space so that the texture moves with the shape.
-    this.ctx.save();
-    
-    // Apply shape transformations first
-    this.ctx.translate(part.position.x, part.position.y);
-    if (part.angle) {
-        this.ctx.rotate(part.angle);
-    }
-    
-    // Create the path for the circle with origin at (0,0)
-    this.ctx.beginPath();
-    this.ctx.arc(0, 0, part.circleRadius, 0, Math.PI * 2);
-    
-    // Apply texture pattern in transformed space
-    if (textureImage) {
-        const pattern = this.ctx.createPattern(textureImage, 'repeat');
-        if (pattern) {
-            this.ctx.fillStyle = pattern;
-        }
-    }
-    
-    this.ctx.fill();
-    this.ctx.restore();
-    
-    // Draw stroke in world coordinates
-    this.ctx.beginPath();
-    this.ctx.arc(part.position.x, part.position.y, part.circleRadius, 0, Math.PI * 2);
-    this.ctx.stroke();
-}
+                // Apply transformations and fill the circle in local coordinate space so that the texture moves with the shape.
+                this.ctx.save();
+                
+                // Apply shape transformations first
+                this.ctx.translate(part.position.x, part.position.y);
+                if (part.angle) {
+                    this.ctx.rotate(part.angle);
+                }
+                
+                // Create the path for the circle with origin at (0,0)
+                this.ctx.beginPath();
+                this.ctx.arc(0, 0, part.circleRadius, 0, Math.PI * 2);
+                
+                // Apply texture pattern in transformed space if available
+                if (textureImage) {
+                    const pattern = this.ctx.createPattern(textureImage, 'repeat');
+                    if (pattern) {
+                        this.ctx.fillStyle = pattern;
+                    }
+                }
+                // fillStyle is already set to color in renderMatterPart if no texture
+                
+                this.ctx.fill();
+                this.ctx.restore();
+                
+                // Draw stroke in world coordinates
+                this.ctx.beginPath();
+                this.ctx.arc(part.position.x, part.position.y, part.circleRadius, 0, Math.PI * 2);
+                this.ctx.stroke();
+            }
 
             renderPolygonWithTexture(part, textureImage, textureConfig) {
-    const vertices = part.vertices;
-    if (!vertices || vertices.length === 0) return;
-    
-    this.ctx.save();
-    
-    // Apply transformations for texture coordinate space
-    this.ctx.translate(part.position.x, part.position.y);
-    if (part.angle) {
-        this.ctx.rotate(part.angle);
-    }
-    
-    // Create path in local coordinate space
-    this.ctx.beginPath();
-    const localVertices = vertices.map(v => ({
-        x: v.x - part.position.x,
-        y: v.y - part.position.y
-    }));
-    
-    // Rotate vertices back to local space
-    if (part.angle) {
-        const cos = Math.cos(-part.angle);
-        const sin = Math.sin(-part.angle);
-        localVertices.forEach(v => {
-            const x = v.x * cos - v.y * sin;
-            const y = v.x * sin + v.y * cos;
-            v.x = x;
-            v.y = y;
-        });
-    }
-    
-    this.ctx.moveTo(localVertices[0].x, localVertices[0].y);
-    for (let i = 1; i < localVertices.length; i++) {
-        this.ctx.lineTo(localVertices[i].x, localVertices[i].y);
-    }
-    this.ctx.closePath();
-    
-    // Apply texture in transformed space
-    if (textureImage) {
-        const pattern = this.ctx.createPattern(textureImage, 'repeat');
-        if (pattern) {
-            this.ctx.fillStyle = pattern;
-        }
-    }
-    
-    this.ctx.fill();
-    this.ctx.restore();
-    
-    // Draw stroke in world coordinates
-    this.ctx.beginPath();
-    this.ctx.moveTo(vertices[0].x, vertices[0].y);
-    for (let i = 1; i < vertices.length; i++) {
-        this.ctx.lineTo(vertices[i].x, vertices[i].y);
-    }
-    this.ctx.closePath();
-    this.ctx.stroke();
-}
+                const vertices = part.vertices;
+                if (!vertices || vertices.length === 0) return;
+                
+                this.ctx.save();
+                
+                // Apply transformations for texture coordinate space
+                this.ctx.translate(part.position.x, part.position.y);
+                if (part.angle) {
+                    this.ctx.rotate(part.angle);
+                }
+                
+                // Create path in local coordinate space
+                this.ctx.beginPath();
+                const localVertices = vertices.map(v => ({
+                    x: v.x - part.position.x,
+                    y: v.y - part.position.y
+                }));
+                
+                // Rotate vertices back to local space
+                if (part.angle) {
+                    const cos = Math.cos(-part.angle);
+                    const sin = Math.sin(-part.angle);
+                    localVertices.forEach(v => {
+                        const x = v.x * cos - v.y * sin;
+                        const y = v.x * sin + v.y * cos;
+                        v.x = x;
+                        v.y = y;
+                    });
+                }
+                
+                this.ctx.moveTo(localVertices[0].x, localVertices[0].y);
+                for (let i = 1; i < localVertices.length; i++) {
+                    this.ctx.lineTo(localVertices[i].x, localVertices[i].y);
+                }
+                this.ctx.closePath();
+                
+                // Apply texture in transformed space
+                if (textureImage) {
+                    const pattern = this.ctx.createPattern(textureImage, 'repeat');
+                    if (pattern) {
+                        this.ctx.fillStyle = pattern;
+                    }
+                }
+                
+                this.ctx.fill();
+                this.ctx.restore();
+                
+                // Draw stroke in world coordinates
+                this.ctx.beginPath();
+                this.ctx.moveTo(vertices[0].x, vertices[0].y);
+                for (let i = 1; i < vertices.length; i++) {
+                    this.ctx.lineTo(vertices[i].x, vertices[i].y);
+                }
+                this.ctx.closePath();
+                this.ctx.stroke();
+            }
+
+// ...existing code...
 
             applyTextureToShape(x, y, width, height, image, textureConfig) {
                 if (!image) return;
@@ -6842,7 +7363,7 @@
                     });
                 }
                 
-                console.log('🖱️ Drag & Drop Manager initialized with unified pointer support');
+                debugLog('🖱️ Drag & Drop Manager initialized with unified pointer support');
             }
             
             // Throttled mouse movement to reduce jerkiness
@@ -7025,13 +7546,14 @@
 
                 const scale = UNIFIED_GAME_CONFIG.performance.scaleMultiplier;
 
-                // Get texture image if available using centralized method
-                const textureImage = window.assetManager.getShapeTexture(shapeType);
+                // Use unified texture checking and retrieval
+                const textureImage = UnifiedTextureSystem.isTextureAvailable(shapeType) ? 
+                    UnifiedTextureSystem.getShapeTexture(shapeType) : null;
 
                 // Render the ghost with or without texture using the unified rendering system
                 shapeRenderer.renderShapeOnCanvas(ctx, shapeType, size / 2, size / 2, 0, scale, textureImage);
 
-                console.log(`👻 Ghost preview created for: ${shapeType} with scale ${scale}, rotation handled by CSS, textured: ${!!textureImage}`);
+                debugLog(`👻 Ghost preview created for: ${shapeType} with scale ${scale}, rotation handled by CSS, textured: ${!!textureImage}`);
                 return canvas;
             }
 
@@ -7708,7 +8230,7 @@
             }
             
             async initializeAsync() {
-                console.log('⏳ Starting async GameManager initialization...');
+                debugLog('⏳ Starting async GameManager initialization...');
                 
                 // Ensure AssetManager is ready
                 if (!window.assetManager) {
@@ -7744,8 +8266,8 @@
                     await this.applyLevelTheme();
                 }
                 
-                console.log('✅ GameManager initialization complete');
-                console.log(`🎮 Game Manager initialized for level: "${this.levelData?.meta?.displayName ?? 'Unknown'}"`);
+                debugLog('✅ GameManager initialization complete');
+                debugLog(`🎮 Game Manager initialized for level: "${this.levelData?.meta?.displayName ?? 'Unknown'}"`);
             }
             
             async rebuildDockFromData(isInitialLoad = false) {
@@ -8445,7 +8967,15 @@
                             }
                             slotDiv.appendChild(preview);
                             if (slotData.specialType && slotData.specialType.type && slotData.specialType.type !== 'LOCKED') {
+                                console.log(`🎨 Registering special effect for slot ${slotData.slotIndex}:`, { shapeType: slotData.shapePrefabId, specialType: slotData.specialType });
                                 dockingSpecialEffectsManager.register(preview, slotData.specialType);
+                            } else {
+                                console.log(`⚪ Skipping special effect registration for slot ${slotData.slotIndex}:`, { 
+                                    shapeType: slotData.shapePrefabId, 
+                                    hasSpecialType: !!slotData.specialType,
+                                    specialType: slotData.specialType?.type,
+                                    isLocked: slotData.specialType?.type === 'LOCKED'
+                                });
                             }
                         } else {
                             slotDiv.classList.add('empty');
@@ -8571,7 +9101,10 @@
             async applyLevelTheme() {
                 const baseTheme = this.baseThemeId || 'classic';
                 console.log(`🎨 Applying level's base theme on load: ${baseTheme}`);
-                await this.themeManager.switchTheme(baseTheme, false);
+                await UnifiedThemeController.changeTheme(baseTheme, { 
+                    source: 'level-theme', 
+                    animated: false 
+                });
             }
 
             onGameTimeUp() {
@@ -9269,10 +9802,10 @@
             const barbellOrientationSelect = document.getElementById('barbellOrientation');
             if (barbellOrientationSelect && currentLevelConfig.barbellOrientation) {
                 barbellOrientationSelect.value = currentLevelConfig.barbellOrientation;
-                console.log('🔧 Synced barbell orientation dropdown to:', currentLevelConfig.barbellOrientation);
+                debugLog('🔧 Synced barbell orientation dropdown to:', currentLevelConfig.barbellOrientation);
             }
             
-            console.log('🔄 Synced design UI to current config - dock shapes:', currentLevelConfig.dockShapes);
+            debugLog('🔄 Synced design UI to current config - dock shapes:', currentLevelConfig.dockShapes);
         }
 
         /*╔═══════════════════════════════════════════════════════════════════════════
@@ -9488,33 +10021,31 @@
           ║ Just cycles through the dropdown options and triggers applyTheme().
           ╚═══════════════════════════════════════════════════════════════════════════*/
         function cycleThemes() {
-            console.log('🎨 Theme cycling requested from HUD button');
+            debugLog('🎨 Cycling themes via button');
             
-            try {
-                const themeSelector = document.getElementById('themeSelector');
-                if (!themeSelector) {
-                    console.error('❌ Theme selector not found');
-                    return;
-                }
+            const themeSelector = document.getElementById('themeSelector');
+            const enhancedSelector = document.getElementById('enhancedThemeSelect');
+            
+            if (enhancedSelector && enhancedSelector.style.display !== 'none') {
+                // Enhanced themes are active - cycle through them
+                const themes = ['wood', 'metal', 'stone', 'neon', 'paper', 'candy'];
+                const currentIndex = themes.indexOf(enhancedSelector.value);
+                const nextIndex = (currentIndex + 1) % themes.length;
+                const nextTheme = themes[nextIndex];
                 
-                // Get all available options
+                enhancedSelector.value = nextTheme;
+                // Use ThemeChangeQueue
+                window.themeChangeQueue.changeTheme(nextTheme, 'cycle-button-enhanced');
+            } else if (themeSelector) {
+                // Classic themes - cycle through them
                 const options = Array.from(themeSelector.options);
                 const currentIndex = themeSelector.selectedIndex;
-                
-                // Calculate next index (cycle back to 0 if at end)
                 const nextIndex = (currentIndex + 1) % options.length;
                 
-                // Set the new value and trigger the change event
                 themeSelector.selectedIndex = nextIndex;
-                const newTheme = themeSelector.value;
-                
-                console.log(`🎨 Cycling to theme: ${newTheme}`);
-                
-                // Trigger the unified theme application function
-                applyTheme(newTheme, 'button');
-                
-            } catch (error) {
-                console.error('❌ Failed to cycle themes:', error);
+                const nextTheme = options[nextIndex].value;
+                // Use ThemeChangeQueue
+                window.themeChangeQueue.changeTheme(nextTheme, 'cycle-button-classic');
             }
         }
         
@@ -9524,7 +10055,7 @@
           ║ and clears physics simulation. Handles both design mode and play mode resets.
           ╚═══════════════════════════════════════════════════════════════════════════*/
         function resetLevel() {
-            console.log('🔄 Starting level reset...');
+            debugLog('🔄 Resetting level...');
 
             if (window.gameManager) {
                 window.gameManager.dockAnimationPlayed = false;
@@ -9533,7 +10064,7 @@
             // Clear all shapes from playfield
             if (window.gameManager && window.gameManager.physicsManager) {
                 window.gameManager.physicsManager.clearAllShapes();
-                console.log('🧹 Cleared physics shapes');
+                debugLog('🧹 Cleared physics shapes');
             }
             
             // Reset timer and game state
@@ -9576,11 +10107,19 @@
                     }
                 }
                 
-                console.log('⏰ Reset timer and game state with mode:', currentLevelConfig.timerMode);
+                debugLog('⏰ Reset timer and game state with mode:', currentLevelConfig.timerMode);
             }
             
             // Rebuild dock with current configuration (preserves design mode settings)
             rebuildGameDock();
+            
+            // Trigger dock animation after reset
+            if (window.gameManager && typeof window.gameManager.triggerDockAnimation === 'function') {
+                setTimeout(() => {
+                    console.log('🎬 Triggering dock animation after level reset');
+                    window.gameManager.triggerDockAnimation();
+                }, 100); // Small delay to ensure dock is fully rebuilt
+            }
             
             // Force reinitialize drag and drop system after dock rebuild
             if (window.gameManager && window.gameManager.dragDropManager) {
@@ -9715,7 +10254,10 @@
                 if (CANVAS_CONFIG.enabled) {
                     // Re-initialize current theme
                     const currentTheme = window.gameManager.themeManager.getCurrentTheme();
-                    window.gameManager.themeManager.switchTheme(currentTheme, false);
+                    UnifiedThemeController.changeTheme(currentTheme, { 
+                        source: 'canvas-enhancement', 
+                        animated: false 
+                    });
                 } else {
                     // Reset to basic appearance
                     window.gameManager.physicsManager.backgroundGradient = null;
@@ -9792,6 +10334,171 @@
         }
 
         /*╔═══════════════════════════════════════════════════════════════════════════
+          ║ UNIFIED THEME CONTROLLER - SINGLE ENTRY POINT FOR ALL THEME CHANGES
+          ║ Centralized theme management to replace scattered theme application calls
+          ╚═══════════════════════════════════════════════════════════════════════════*/
+        class UnifiedThemeController {
+            static async changeTheme(themeName, options = {}) {
+                const {
+                    source = 'unified',
+                    animated = true,
+                    priority = 'normal',
+                    overrides = null
+                } = options;
+
+                console.log(`🎨 UnifiedThemeController: Starting theme change to ${themeName} from ${source}`);
+                
+                // Use mutex for thread safety
+                return await themeMutex.execute(async () => {
+                    try {
+                        // Phase 1: Clear previous theme
+                        await this._clearPreviousTheme();
+                        
+                        // Phase 2: Load new theme assets
+                        await this._loadThemeAssets(themeName);
+                        
+                        // Phase 3: Apply theme to all subsystems
+                        await this._applyToAllSystems(themeName, animated);
+                        
+                        // Phase 4: Apply overrides if provided
+                        if (overrides) {
+                            await this._applyThemeOverrides(themeName, overrides);
+                        }
+                        
+                        // Phase 5: Rebuild UI
+                        await this._rebuildUI();
+                        
+                        // Phase 6: Sync UI controls
+                        this._syncUIControls(themeName);
+                        
+                        console.log(`✅ UnifiedThemeController: Successfully changed theme to ${themeName}`);
+                        
+                    } catch (error) {
+                        console.error(`❌ UnifiedThemeController: Failed to change theme to ${themeName}:`, error);
+                        throw error;
+                    }
+                }, `unified-theme-change-${themeName}`);
+            }
+
+            static async _clearPreviousTheme() {
+                try {
+                    if (typeof clearPreviousThemeTextures === 'function') {
+                        clearPreviousThemeTextures();
+                    }
+                    console.log('✅ Previous theme cleared');
+                } catch (error) {
+                    console.warn('⚠️ Error clearing previous theme:', error);
+                }
+            }
+
+            static async _loadThemeAssets(themeName) {
+                try {
+                    await window.assetManager.loadTheme(themeName);
+                    console.log(`✅ Theme assets loaded for ${themeName}`);
+                } catch (error) {
+                    console.warn(`⚠️ Failed to load theme assets for ${themeName}:`, error);
+                    // Continue with fallback colors
+                }
+            }
+
+            static async _applyToAllSystems(themeName, animated) {
+                try {
+                    // Apply theme colors to SHAPE_CONFIG for fallback colors
+                    if (typeof applyThemeColorsToShapeConfig === 'function') {
+                        applyThemeColorsToShapeConfig(themeName);
+                    }
+
+                    // Apply to ThemeManager if available
+                    const themeManager = window.gameManager?.themeManager;
+                    if (themeManager && typeof themeManager.switchTheme === 'function') {
+                        await themeManager.switchTheme(themeName, animated);
+                    }
+
+                    // Apply material textures for non-classic themes
+                    if (themeName !== 'classic') {
+                        const textureManager = window.textureManager;
+                        if (textureManager && typeof textureManager.applyTextureTheme === 'function') {
+                            await textureManager.applyTextureTheme(themeName);
+                        }
+                    }
+
+                    // Update current theme reference
+                    if (!window.currentTheme) {
+                        window.currentTheme = { shapes: {}, platform: {}, background: {} };
+                    }
+                    window.currentTheme.name = themeName;
+
+                    console.log(`✅ Theme applied to all systems: ${themeName}`);
+                } catch (error) {
+                    console.error(`❌ Error applying theme to systems:`, error);
+                    throw error;
+                }
+            }
+
+            static async _applyThemeOverrides(themeName, overrides) {
+                try {
+                    // This method will be implemented in todo #9
+                    console.log(`🔄 Theme overrides will be applied for ${themeName}:`, overrides);
+                } catch (error) {
+                    console.warn('⚠️ Error applying theme overrides:', error);
+                }
+            }
+
+            static async _rebuildUI() {
+                try {
+                    // Reset dock animation flag
+                    if (window.gameManager) {
+                        window.gameManager.dockAnimationPlayed = false;
+                    }
+
+                    // Use DockRebuildManager when available (todo #5), otherwise fallback
+                    if (typeof rebuildGameDock === 'function') {
+                        await rebuildGameDock();
+                    }
+
+                    // Trigger dock animation after rebuild
+                    if (window.gameManager && typeof window.gameManager.triggerDockAnimation === 'function') {
+                        setTimeout(() => {
+                            window.gameManager.triggerDockAnimation();
+                        }, 100);
+                    }
+
+                    console.log('✅ UI rebuilt after theme change');
+                } catch (error) {
+                    console.error('❌ Error rebuilding UI:', error);
+                    throw error;
+                }
+            }
+
+            static _syncUIControls(themeName) {
+                try {
+                    const selectors = ['themeSelector', 'enhancedThemeSelect'];
+                    selectors.forEach(id => {
+                        const select = document.getElementById(id);
+                        if (select && select.value !== themeName) {
+                            select.value = themeName;
+                        }
+                    });
+                    console.log('✅ UI controls synced');
+                } catch (error) {
+                    console.warn('⚠️ Error syncing UI controls:', error);
+                }
+            }
+
+            // Legacy compatibility methods
+            static async applyTheme(themeName, source = 'legacy') {
+                return this.changeTheme(themeName, { source });
+            }
+
+            static async loadTheme(themeName) {
+                return window.assetManager.loadTheme(themeName);
+            }
+        }
+
+        // Make globally available
+        window.UnifiedThemeController = UnifiedThemeController;
+
+        /*╔═══════════════════════════════════════════════════════════════════════════
           ║ THEME CHANGE QUEUE - RACE CONDITION PREVENTION
           ║ Centralized theme change management to prevent multiple theme change 
           ║ sources from causing conflicts and race conditions
@@ -9809,102 +10516,8 @@
                     source
                 });
                 
-                // Use theme mutex to prevent concurrent theme changes
-                return await themeMutex.execute(async () => {
-                    if (this.isChanging) {
-                        console.log(`⏳ Theme change in progress, queueing ${themeName} from ${source}`);
-                        this.pendingChange = { themeName, source };
-                        return;
-                    }
-                    
-                    this.isChanging = true;
-                    console.log(`🔧 Processing theme change to ${themeName} from ${source}`);
-                
-                try {
-                    // Check if themeManager is available
-                    const themeManager = window.gameManager?.themeManager;
-                    if (!themeManager) {
-                        throw new Error("ThemeManager not available during theme change");
-                    }
-
-                    // Reset dock animation flag for new theme
-                    if (window.gameManager) {
-                        window.gameManager.dockAnimationPlayed = false;
-                        console.log('🎬 Reset dock animation flag for new theme.');
-                    }
-
-                    // Clear previous theme textures globally before applying new theme
-                    clearPreviousThemeTextures();
-
-                    // Apply theme colors to SHAPE_CONFIG for proper fallback colors
-                    applyThemeColorsToShapeConfig(themeName);
-
-                    // Load theme assets with error handling
-                    try {
-                        await window.assetManager.loadTheme(themeName);
-                    } catch (assetError) {
-                        console.error(`❌ Failed to load theme assets for ${themeName}:`, assetError);
-                        // Continue with theme switch using fallback colors
-                    }
-                    
-                    // Apply the theme changes (background, platform colors)
-                    try {
-                        await themeManager.switchTheme(themeName, true);
-                    } catch (themeError) {
-                        console.error(`❌ Failed to switch theme to ${themeName}:`, themeError);
-                        throw themeError; // Re-throw as this is critical
-                    }
-
-                    // Apply enhanced theme with textures
-                    if (!window.currentTheme) {
-                        window.currentTheme = {
-                            name: themeName,
-                            shapes: {},
-                            platform: {},
-                            background: {}
-                        };
-                    }
-                    window.currentTheme.name = themeName;
-
-                    // Apply material textures for non-classic themes
-                    if (themeName !== 'classic') {
-                        try {
-                            const textureManager = window.textureManager;
-                            if (textureManager && typeof textureManager.applyTextureTheme === 'function') {
-                                await textureManager.applyTextureTheme(themeName);
-                            }
-                        } catch (error) {
-                            console.error(`Error in texture loading for ${themeName}:`, error);
-                        }
-                    }
-                    
-                    // Rebuild dock with new theme
-                    await rebuildGameDock();
-                    
-                    // Update dropdowns
-                    const selectors = ['themeSelector', 'enhancedThemeSelect'];
-                    selectors.forEach(id => {
-                        const select = document.getElementById(id);
-                        if (select && select.value !== themeName) {
-                            select.value = themeName;
-                        }
-                    });
-                    
-                    console.log(`✅ Theme changed to ${themeName}`);
-                } catch (error) {
-                    console.error(`❌ Failed to change theme to ${themeName}:`, error);
-                } finally {
-                    this.isChanging = false;
-                    
-                    // Process pending change if any
-                    if (this.pendingChange) {
-                        const pending = this.pendingChange;
-                        this.pendingChange = null;
-                        await this.changeTheme(pending.themeName, pending.source);
-                    }
-                }
-                
-                }, `theme-change-${themeName}`); // Close themeMutex.execute
+                // Delegate to UnifiedThemeController for coordinated theme changes
+                return await UnifiedThemeController.changeTheme(themeName, { source });
             }
         }
 
@@ -10012,63 +10625,57 @@
           ╚═══════════════════════════════════════════════════════════════════════════*/
         function applyThemeColorsToShapeConfig(themeName) {
             try {
-                // Define theme-specific color palettes
-                const themeColors = {
-                    classic: {
-                        square: { color: '#F39C12', stroke: '#E67E22' },
-                        triangle: { color: '#9B59B6', stroke: '#8E44AD' },
-                        circle: { color: '#1ABC9C', stroke: '#16A085' },
-                        cross2: { color: '#3498DB', stroke: '#2980B9' },
-                        l: { color: '#8E44AD', stroke: '#732D91' },
-                        cross: { color: '#E74C3C', stroke: '#C0392B' },
-                        'barbell-one': { color: '#16A085', stroke: '#138D75' },
-                        'barbell-two': { color: '#D35400', stroke: '#BA4A00' },
-                        'diamond-barbell': { color: '#C0392B', stroke: '#A93226' }
-                    },
-                    stone: {
-                        square: { color: '#708090', stroke: '#2F4F4F' },
-                        triangle: { color: '#696969', stroke: '#708090' },
-                        circle: { color: '#778899', stroke: '#2F4F4F' },
-                        cross2: { color: '#D3D3D3', stroke: '#708090' },
-                        l: { color: '#696969', stroke: '#2F4F4F' },
-                        cross: { color: '#708090', stroke: '#2F4F4F' },
-                        'barbell-one': { color: '#778899', stroke: '#696969' },
-                        'barbell-two': { color: '#D3D3D3', stroke: '#708090' },
-                        'diamond-barbell': { color: '#2F4F4F', stroke: '#708090' }
-                    },
-                    metal: {
-                        square: { color: '#696969', stroke: '#C0C0C0' },
-                        triangle: { color: '#808080', stroke: '#696969' },
-                        circle: { color: '#A9A9A9', stroke: '#C0C0C0' },
-                        cross2: { color: '#778899', stroke: '#696969' },
-                        l: { color: '#C0C0C0', stroke: '#808080' },
-                        cross: { color: '#696969', stroke: '#C0C0C0' },
-                        'barbell-one': { color: '#A9A9A9', stroke: '#778899' },
-                        'barbell-two': { color: '#808080', stroke: '#696969' },
-                        'diamond-barbell': { color: '#C0C0C0', stroke: '#A9A9A9' }
-                    },
-                    wood: {
-                        square: { color: '#D2691E', stroke: '#8B4513' },
-                        triangle: { color: '#CD853F', stroke: '#A0522D' },
-                        circle: { color: '#DEB887', stroke: '#D2691E' },
-                        cross2: { color: '#F4A460', stroke: '#CD853F' },
-                        l: { color: '#8B4513', stroke: '#A0522D' },
-                        cross: { color: '#CD7F32', stroke: '#DAA520' },
-                        'barbell-one': { color: '#D2691E', stroke: '#8B4513' },
-                        'barbell-two': { color: '#CD853F', stroke: '#A0522D' },
-                        'diamond-barbell': { color: '#DAA520', stroke: '#B8860B' }
-                    }
-                };
+                // Get colors from THEME_DEFINITIONS instead of hardcoded palettes
+                let colors = null;
                 
-                const colors = themeColors[themeName] || themeColors.classic;
+                // Try to get colors from the theme definition first
+                if (THEME_DEFINITIONS[themeName] && THEME_DEFINITIONS[themeName].shapes && THEME_DEFINITIONS[themeName].shapes.colors) {
+                    colors = THEME_DEFINITIONS[themeName].shapes.colors;
+                    console.log(`🎨 Using theme definition colors for ${themeName}:`, colors);
+                } else {
+                    // Fallback to hardcoded colors if theme definition doesn't have shape colors
+                    const fallbackColors = {
+                        classic: {
+                            square: { color: '#F39C12', stroke: '#E67E22' },
+                            triangle: { color: '#9B59B6', stroke: '#8E44AD' },
+                            circle: { color: '#1ABC9C', stroke: '#16A085' },
+                            cross2: { color: '#3498DB', stroke: '#2980B9' },
+                            l: { color: '#8E44AD', stroke: '#732D91' },
+                            cross: { color: '#E74C3C', stroke: '#C0392B' },
+                            'barbell-one': { color: '#16A085', stroke: '#138D75' },
+                            'barbell-two': { color: '#D35400', stroke: '#BA4A00' },
+                            'diamond-barbell': { color: '#C0392B', stroke: '#A93226' }
+                        },
+                        wood: {
+                            square: { color: '#D2691E', stroke: '#8B4513' },
+                            triangle: { color: '#CD853F', stroke: '#A0522D' },
+                            circle: { color: '#DEB887', stroke: '#D2691E' },
+                            cross2: { color: '#F4A460', stroke: '#CD853F' },
+                            l: { color: '#8B4513', stroke: '#A0522D' },
+                            cross: { color: '#CD7F32', stroke: '#DAA520' },
+                            'barbell-one': { color: '#D2691E', stroke: '#8B4513' },
+                            'barbell-two': { color: '#CD853F', stroke: '#A0522D' },
+                            'diamond-barbell': { color: '#DAA520', stroke: '#B8860B' }
+                        }
+                    };
+                    
+                    colors = fallbackColors[themeName] || fallbackColors.classic;
+                    console.log(`⚠️ Using fallback colors for ${themeName}, theme definition colors not found`);
+                }
                 
                 // Apply colors to SHAPE_CONFIG
                 Object.keys(colors).forEach(shapeType => {
                     if (SHAPE_CONFIG[shapeType]) {
                         SHAPE_CONFIG[shapeType].color = colors[shapeType].color;
                         SHAPE_CONFIG[shapeType].stroke = colors[shapeType].stroke;
+                        if (colors[shapeType].strokeWidth) {
+                            SHAPE_CONFIG[shapeType].strokeWidth = colors[shapeType].strokeWidth;
+                        }
+                        console.log(`🎨 Applied ${themeName} colors to ${shapeType}: ${colors[shapeType].color}`);
                     }
                 });
+                
+                console.log(`✅ Successfully applied ${themeName} theme colors to SHAPE_CONFIG`);
                 
             } catch (error) {
                 console.error(`Error applying ${themeName} theme colors:`, error);
@@ -10222,77 +10829,16 @@
         // Ensure backward compatibility with textureManager references
         window.textureManager = window.assetManager;
         
+        // Use unified initialization to prevent race conditions
         window.addEventListener('load', async () => {
-            console.log('🔧 Page loaded, starting sequential initialization...');
+            console.log('🔧 Page loaded, starting unified initialization...');
             
-            // Phase 1: Initialize AssetManager first
-            if (!window.assetManager) {
-                window.assetManager = new AssetManager();
-                console.log('✅ AssetManager initialized');
-            }
-            window.textureManager = window.assetManager;
-            
-            // Phase 2: Load default theme BEFORE creating game
-            const defaultTheme = CANVAS_CONFIG.defaultTheme || 'classic';
             try {
-                await window.assetManager.loadTheme(defaultTheme);
-                console.log(`✅ Default theme '${defaultTheme}' loaded`);
+                await GameInitializer.initialize();
+                console.log('✅ Unified initialization complete');
             } catch (error) {
-                console.error('❌ Failed to load default theme:', error);
+                console.error('❌ Unified initialization failed:', error);
             }
-            
-            // Phase 3: Load level data
-            let levelFile = 'levelData.json';
-            try {
-                levelFile = new URL(levelFile, window.location.href).href;
-            } catch (e) {
-                console.warn('🔧 Using relative path for level data');
-            }
-            
-            const loader = new LevelLoader();
-            const ok = await loader.loadFromFile(levelFile);
-            if (!ok) {
-                console.error('❌ Failed to load level data');
-                return;
-            }
-            
-            const data = loader.getData();
-            window.currentLevelData = data;
-            
-            // Phase 4: Create game manager (which will build dock)
-            if (data.mode === 'PLAYABLE_AD') {
-                console.log('🚀 PLAYABLE_AD mode detected.');
-                window.adSequencer = new AdSequencer(data.adConfig);
-                alert('Playable Ad Mode Initialized! (stub).');
-            } else if (data.mode === 'LEVEL') {
-                console.log('🎮 LEVEL mode detected.');
-                
-                gameManager = new GameManager(data);
-                window.gameManager = gameManager;
-                
-                // Wait for GameManager async initialization to complete
-                await gameManager.initPromise;
-                
-                // Apply the level-specific theme (which includes overrides)
-                await gameManager.applyLevelTheme();
-                
-                // Now rebuild dock from data with everything ready
-                await gameManager.rebuildDockFromData(true);
-                if (typeof gameManager.createPlatformsFromData === 'function') {
-                    gameManager.createPlatformsFromData();
-                }
-                if (gameManager.updateDebugInfo) gameManager.updateDebugInfo();
-            } else {
-                console.error(`❌ Unknown mode in level data: ${data.mode}`);
-                return;
-            }
-            
-            // Phase 5: Initialize UI after everything is ready
-            initializeThemeUI();
-            updateTouchOffsetDisplay();
-            startCoinBonusSystem();
-            
-            console.log('✅ Sequential initialization complete');
         });
 
         // =============================================================================
@@ -10460,222 +11006,6 @@
         window.loadPlatformTexture = loadPlatformTexture;
         window.loadBackgroundImage = loadBackgroundImage;
         window.clearAllTextures = clearAllTextures;
-
-
-// Fix the PhysicsShapeRenderer.createDockPreview method
-PhysicsShapeRenderer.prototype.createDockPreview = function(shapeType, size = 90) {
-    // Commented out verbose dock preview logging
-    // console.log(`🔍 createDockPreview called for: ${shapeType}, size: ${size}`);
-    const config = getShapeConfig(shapeType);
-    if (!config) {
-        console.error(`❌ No config found for shape: ${shapeType}`);
-        return null;
-    }
-    
-    console.log(`������ Shape config for ${shapeType}:`, config);
-    
-    // Check multiple sources for texture availability using unified method
-    let hasTexture = false;
-    
-    // 1. Check if config directly has texture info
-    if (config.hasTexture && config.textureUrl) {
-        hasTexture = true;
-        console.log(`✅ Texture found in config for ${shapeType}`);
-    }
-    // 2. Use unified texture checking method - but only if AssetManager is ready
-    else if (window.assetManager && window.assetManager.isTextureLoaded) {
-        // Get current theme from multiple sources
-        let currentTheme = window.assetManager.getCurrentTheme();
-        if (!currentTheme || !currentTheme.name) {
-            const themeSelector = document.getElementById('themeSelector');
-            if (themeSelector && themeSelector.value) {
-                console.log(`🔍 Using theme from selector for texture check: ${themeSelector.value}`);
-                // Check if this theme is actually loaded
-                const themeObj = window.assetManager.getTheme(themeSelector.value);
-                if (themeObj) {
-                    currentTheme = themeObj;
-                }
-            }
-        }
-        
-        if (currentTheme && currentTheme.name) {
-            hasTexture = window.assetManager.isTextureLoaded(shapeType);
-            console.log(`🔍 Unified texture check for ${shapeType} in theme '${currentTheme.name}': ${hasTexture}`);
-        } else {
-            console.log(`⚠️ No current theme available for texture check of ${shapeType}`);
-        }
-    }
-    
-    console.log(`🔧 Creating preview for ${shapeType} with texture: ${hasTexture}`);
-    
-    // Always use canvas preview for now (can add PixiJS texture support later)
-    return this.createCanvasDockPreview(shapeType, config, size, hasTexture);
-};
-
-// Enhanced canvas dock preview with texture rendering
-PhysicsShapeRenderer.prototype.createCanvasDockPreview = function(shapeType, config, size = 90, hasTexture = false) {
-    // Check for texture inside this method as backup
-    if (!hasTexture) {
-        // Check if config has texture info directly
-        if (config.hasTexture && config.textureUrl) {
-            hasTexture = true;
-            console.log(`🖼️ Backup texture check: Found in config for ${shapeType}`);
-        }
-        // Use unified texture checking method
-        else if (window.assetManager && window.assetManager.isTextureLoaded) {
-            hasTexture = window.assetManager.isTextureLoaded(shapeType);
-            console.log(`🖼️ Backup unified texture check for ${shapeType}: ${hasTexture}`);
-        }
-    }
-    
-    const canvas = document.createElement('canvas');
-    canvas.width = size;
-    canvas.height = size;
-    canvas.className = `shape-preview`;
-    canvas.dataset.shape = shapeType;
-
-    const ctx = canvas.getContext('2d');
-    ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = 'high';
-    
-    // Visual indicator for textured shapes
-    if (hasTexture) {
-        canvas.style.border = '2px solid #DAA520';
-        canvas.style.boxShadow = '0 0 8px rgba(218, 165, 32, 0.5)';
-        canvas.title = `${shapeType} - Textured`;
-        console.log(`🖼️ Rendering ${shapeType} WITH texture`);
-    } else {
-        canvas.style.border = '1px solid #ccc';
-        canvas.title = `${shapeType}`;
-        console.log(`🔧 Rendering ${shapeType} WITHOUT texture`);
-    }
-
-    const scale = UNIFIED_GAME_CONFIG.performance.scaleMultiplier;
-    
-    // Check for barbell rotation
-    let rotation = 0;
-    if (shapeType && shapeType.includes('barbell')) {
-        const barbellOrientationSelect = document.getElementById('barbellOrientation');
-        if (barbellOrientationSelect && barbellOrientationSelect.value === 'vertical') {
-            rotation = Math.PI / 2;
-        }
-    }
-    
-    // If we have a texture, render with texture pattern
-    if (hasTexture && window.unifiedTextureManager) {
-        const textureUrl = window.unifiedTextureManager.getTextureUrl(shapeType);
-        const cachedImage = window.unifiedTextureManager.textureCache.get(textureUrl);
-        
-        console.log(`🖼️ Applying texture to ${shapeType}: hasTexture=${hasTexture}, textureUrl=${textureUrl}, cachedImage=${!!cachedImage}`);
-        
-        if (cachedImage) {
-            // Create pattern and apply to shape
-            ctx.save();
-            ctx.translate(size / 2, size / 2);
-            ctx.rotate(rotation);
-            ctx.scale(scale, scale);
-            
-            // Create clipping path for the shape
-            this.createShapeClipPath(ctx, shapeType, config);
-            ctx.clip();
-            
-            // Draw the texture pattern
-            const pattern = ctx.createPattern(cachedImage, 'repeat');
-            ctx.fillStyle = pattern;
-            ctx.fillRect(-size, -size, size * 2, size * 2);
-            
-            // Add stroke
-            ctx.restore();
-            ctx.save();
-            ctx.translate(size / 2, size / 2);
-            ctx.rotate(rotation);
-            ctx.scale(scale, scale);
-            this.createShapeClipPath(ctx, shapeType, config);
-            ctx.strokeStyle = config.stroke;
-            ctx.lineWidth = config.strokeWidth;
-            ctx.stroke();
-            
-            ctx.restore();
-        } else {
-            // Fallback to regular rendering
-            this.renderShapeOnCanvas(ctx, shapeType, size / 2, size / 2, rotation, scale);
-        }
-    } else {
-        // Regular rendering without texture
-        this.renderShapeOnCanvas(ctx, shapeType, size / 2, size / 2, rotation, scale);
-    }
-    
-    console.log(`✅ Canvas preview created for: ${shapeType} (textured: ${hasTexture})`);
-    return canvas;
-};
-
-// Add helper method to create clipping path for shapes
-PhysicsShapeRenderer.prototype.createShapeClipPath = function(ctx, shapeType, config) {
-    ctx.beginPath();
-    
-    switch (config.type) {
-        case 'rectangle':
-            ctx.rect(-config.width / 2, -config.height / 2, config.width, config.height);
-            break;
-        case 'circle':
-            ctx.arc(0, 0, config.radius, 0, Math.PI * 2);
-            break;
-        case 'polygon':
-            if (config.vertices) {
-                ctx.moveTo(config.vertices[0].x, config.vertices[0].y);
-                for (let i = 1; i < config.vertices.length; i++) {
-                    ctx.lineTo(config.vertices[i].x, config.vertices[i].y);
-                }
-                ctx.closePath();
-            }
-            break;
-        case 'compound':
-            // For compound shapes, create path for all parts
-            if (config.parts) {
-                for (const part of config.parts) {
-                    ctx.save();
-                    ctx.translate(part.offsetX || 0, part.offsetY || 0);
-                    
-                    if (part.type === 'rectangle') {
-                        ctx.rect(-part.width / 2, -part.height / 2, part.width, part.height);
-                    } else if (part.type === 'circle') {
-                        ctx.moveTo(part.radius, 0);
-                        ctx.arc(0, 0, part.radius, 0, Math.PI * 2);
-                    } else if (part.type === 'diamond') {
-                        // Create a diamond clipping path: top, right, bottom, left points
-                        const size = part.width || part.height || 12;
-                        const halfSize = size / 2;
-                        ctx.moveTo(0, -halfSize);  // Top
-                        ctx.lineTo(halfSize, 0);   // Right
-                        ctx.lineTo(0, halfSize);   // Bottom
-                        ctx.lineTo(-halfSize, 0);  // Left
-                        ctx.closePath();
-                                        }
-                    
-                    ctx.restore();
-                }
-            }
-            break;
-    }
-};
-
-// Override the drawDiamond method to render a proper diamond shape path
-PhysicsShapeRenderer.prototype.drawDiamond = function(ctx, config) {
-    const { width, height, color, stroke, strokeWidth } = config;
-    ctx.fillStyle = color;
-    ctx.strokeStyle = stroke;
-    ctx.lineWidth = strokeWidth;
-    const size = width || height || 12;
-    const halfSize = size / 2;
-    ctx.beginPath();
-    ctx.moveTo(0, -halfSize);
-    ctx.lineTo(halfSize, 0);
-    ctx.lineTo(0, halfSize);
-    ctx.lineTo(-halfSize, 0);
-    ctx.closePath();
-    ctx.fill();
-    ctx.stroke();
-};
 
 // Fix the applyEnhancedTheme function
 window.applyEnhancedTheme = function() {

@@ -142,13 +142,12 @@
             position: relative; /* This is required for the pseudo-element to work */
             isolation: isolate; /* Ensures content stays on top of the new background layer */
 
-
-            aspect-ratio: 9/16;
+            /* Remove aspect-ratio from base - will be applied per device type */
             overflow: visible; /* Allow dragged elements to extend beyond viewport */
             box-shadow: 0 0 50px rgba(0,0,0,0.3);
         }
 
-        /* Desktop screens - size constraints and styling */
+        /* Desktop screens only - size constraints and styling */
         @media (min-width: 1025px) {
             body {
                 background: linear-gradient(135deg, #87CEEB 0%, #98FB98 100%);
@@ -158,6 +157,7 @@
             .game-viewport {
                 max-width: 500px;
                 max-height: 889px; /* 500 * 16/9 for aspect ratio */
+                aspect-ratio: 9/16;
                 border-radius: 20px;
                 box-shadow: 0 10px 50px rgba(0,0,0,0.4);
             }
@@ -1603,8 +1603,8 @@
 
         /* Test Controls (REMOVED - Debug squares eliminated) */
 
-        /* Responsive Design - Mobile and Tablet First */
-        @media (max-width: 1023px) {
+        /* Responsive Design - Mobile and Tablet */
+        @media (max-width: 1024px) {
             body {
                 padding: 0;
             }
@@ -1617,7 +1617,7 @@
                 box-shadow: none;
                 max-width: none;
                 max-height: none;
-                aspect-ratio: unset; /* Allow full screen on mobile/tablet */
+                aspect-ratio: unset; /* Allow full screen on mobile and tablet */
                 padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
             }
             

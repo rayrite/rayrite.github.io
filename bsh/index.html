@@ -21,7 +21,7 @@
         
         body {
             font-family: 'Fredoka', sans-serif;
-            background: linear-gradient(135deg, #87CEEB 0%, #98FB98 100%);
+            /* background: linear-gradient(135deg, #87CEEB 0%, #98FB98 100%); */
             height: 100vh;
             height: 100dvh; /* Dynamic viewport height for mobile */
             overflow: hidden; /* Prevent scrolling */
@@ -32,6 +32,98 @@
             align-items: center;
         }
 
+          /* Dynamic background system - controlled via JavaScript */
+          .game-viewport::before {
+              content: '';
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              
+              /* Dynamic background will be set via JavaScript */
+              background-size: cover;
+              background-position: center top;
+              background-repeat: no-repeat;
+              
+              /* Default opacity - will be overridden by theme */
+              opacity: 0.5;
+              
+              z-index: -1;
+              transition: opacity 0.3s ease, background-image 0.3s ease;
+          }
+
+          /* Theme-based background control */
+          .game-viewport.theme-background::before {
+              opacity: var(--background-opacity, 0.5);
+              background-image: var(--background-image, none);
+          }
+
+          /* Stone granite pattern - HIGHLY VISIBLE VERSION */
+          .game-viewport.stone-pattern::before {
+              content: '';
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              z-index: -1;
+              
+              /* Very visible stone pattern with solid colors */
+              background: 
+                  /* Stone blocks - more opaque */
+                  radial-gradient(ellipse at 15% 15%, #8B4513 0%, rgba(139, 69, 19, 0.6) 30%, transparent 50%),
+                  radial-gradient(ellipse at 85% 20%, #A0522D 0%, rgba(160, 82, 45, 0.6) 25%, transparent 45%),
+                  radial-gradient(ellipse at 25% 75%, #696969 0%, rgba(105, 105, 105, 0.7) 35%, transparent 55%),
+                  radial-gradient(ellipse at 75% 80%, #778899 0%, rgba(119, 136, 153, 0.5) 30%, transparent 50%),
+                  radial-gradient(ellipse at 50% 40%, #CD853F 0%, rgba(205, 133, 63, 0.6) 28%, transparent 48%),
+                  
+                  /* Strong base stone color */
+                  linear-gradient(135deg, 
+                      #8B4513 0%,    /* Saddle Brown */
+                      #A0522D 20%,   /* Sienna */
+                      #CD853F 40%,   /* Peru */
+                      #696969 60%,   /* Dim Gray */
+                      #778899 80%,   /* Light Slate Gray */
+                      #708090 100%   /* Slate Gray */
+                  );
+              
+              background-size: 
+                  120px 90px,   /* Larger, more visible stone blocks */
+                  100px 70px, 
+                  140px 100px,
+                  90px 60px,
+                  110px 80px,
+                  100% 100%;
+                  
+              opacity: 0.75;  /* More visible */
+          }
+
+          /* Metal brushed steel pattern */
+          .game-viewport.metal-pattern::before {
+              content: '';
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              z-index: -1;
+              background-image:
+                  repeating-linear-gradient(90deg, 
+                      transparent, 
+                      transparent 1px, 
+                      rgba(135, 206, 235, 0.1) 1px, 
+                      rgba(135, 206, 235, 0.1) 2px),
+                  repeating-linear-gradient(0deg, 
+                      transparent, 
+                      transparent 2px, 
+                      rgba(70, 130, 180, 0.05) 2px, 
+                      rgba(70, 130, 180, 0.05) 4px),
+                  linear-gradient(45deg, #1e3a4f 0%, #4682B4 25%, #2d5a7b 50%, #5a7aa6 75%, #4682B4 100%);
+              background-size: 4px 4px, 8px 8px, 100% 100%;
+              opacity: 0.7;
+          }
+
         /* New Responsive Game Viewport */
         .game-viewport {
             width: 100vw;
@@ -39,24 +131,33 @@
             height: 100dvh;
             display: flex;
             flex-direction: column;
-            max-width: min(100vw, 500px); /* Cap width at 500px on desktop */
-            max-height: min(100vh, 889px); /* 500 * 16/9 for aspect ratio */
+            /* Remove size constraints for mobile/tablet - let it use full screen */
             margin: 0 auto;
-            background: linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 100%);
-            position: relative;
+            /* background: linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 100%); */
+            /* REMOVE the background-image properties from here */
+                
+            /* ADD a solid background color to sit behind the faded image */
+            background-color: #2c3e50; /* A dark blue-gray is a good starting point */
+        
+            position: relative; /* This is required for the pseudo-element to work */
+            isolation: isolate; /* Ensures content stays on top of the new background layer */
+
+
             aspect-ratio: 9/16;
             overflow: visible; /* Allow dragged elements to extend beyond viewport */
             box-shadow: 0 0 50px rgba(0,0,0,0.3);
         }
 
-        /* Border system for larger screens */
-        @media (min-width: 501px) {
+        /* Desktop screens - size constraints and styling */
+        @media (min-width: 1025px) {
             body {
                 background: linear-gradient(135deg, #87CEEB 0%, #98FB98 100%);
                 padding: 20px;
             }
             
             .game-viewport {
+                max-width: 500px;
+                max-height: 889px; /* 500 * 16/9 for aspect ratio */
                 border-radius: 20px;
                 box-shadow: 0 10px 50px rgba(0,0,0,0.4);
             }
@@ -1502,8 +1603,8 @@
 
         /* Test Controls (REMOVED - Debug squares eliminated) */
 
-        /* Responsive Design - Mobile First */
-        @media (max-width: 500px) {
+        /* Responsive Design - Mobile and Tablet First */
+        @media (max-width: 1023px) {
             body {
                 padding: 0;
             }
@@ -1516,7 +1617,7 @@
                 box-shadow: none;
                 max-width: none;
                 max-height: none;
-                aspect-ratio: unset; /* Allow full screen on mobile */
+                aspect-ratio: unset; /* Allow full screen on mobile/tablet */
                 padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
             }
             
@@ -1559,27 +1660,6 @@
             /* Hide design mode on mobile */
             .design-sidebar {
                 display: none;
-            }
-        }
-
-        /* Tablet Portrait */
-        @media (min-width: 501px) and (max-width: 1024px) and (orientation: portrait) {
-            .game-viewport {
-                max-width: 600px;
-                max-height: 1067px; /* 600 * 16/9 */
-            }
-        }
-
-        /* Desktop and Large Screens */
-        @media (min-width: 1025px) {
-            body {
-                padding: 40px 20px;
-            }
-            
-            .game-viewport {
-                max-width: 500px;
-                max-height: 889px; /* 500 * 16/9 */
-                border-radius: 25px;
             }
         }
 
@@ -2666,6 +2746,11 @@
                         type: "gradient",
                         colors: ["#87CEEB", "#4ECDC4", "#90EE90"],
                         texture: null,
+                        gradient: {
+                            colors: ['#87CEEB', '#98FB98'],
+                            direction: '135deg'
+                        },
+                        opacity: 1.0,
                         image: createImageConfig()
                     },
                     platform: {
@@ -2691,17 +2776,17 @@
                 "Natural wood textures and warm earth tones",
                 {
                     background: {
-                        type: "gradient",
+                        type: "image",
                         colors: ["#8B4513", "#A0522D", "#CD853F"],
                         texture: "wood_grain",
-                        // image: createImageConfig()
-            		image: createImageConfig({
-                		url: "assets/bkg/bkg1.png",  // Add this
-                		opacity: 0.2,
-                		size: "auto",        // Changed from "cover" to "auto" for tiling
-                                repeat: "repeat",    // Add this for tiling
-                		position: "center"
-            		})
+                        image: {
+                            url: "assets/bkg/bkg1.png",
+                            size: "cover",
+                            position: "center top",
+                            repeat: "no-repeat"
+                        },
+                        opacity: 0.5,
+                        fallbackColor: "#8B4513"
                     },
                     platform: {
                         texture: "wood_grain",
@@ -2736,10 +2821,23 @@
                 "Ancient stone structures with granite and marble textures",
                 {
                     background: {
-                        type: "gradient",
+                        type: "pattern",
                         colors: ["#2F4F4F", "#708090", "#778899"],
-                        texture: null,
-                        image: createImageConfig()
+                        texture: "granite",
+                        pattern: {
+                            type: "granite",
+                            baseColor: "#696969",
+                            accentColors: ["#778899", "#708090", "#2F4F4F", "#A9A9A9"],
+                            style: "radial-gradient(circle at 20% 30%, rgba(119, 136, 153, 0.8) 0px, rgba(119, 136, 153, 0.6) 3px, transparent 6px), radial-gradient(circle at 60% 70%, rgba(112, 128, 144, 0.7) 0px, rgba(112, 128, 144, 0.4) 2px, transparent 5px), radial-gradient(circle at 40% 20%, rgba(47, 79, 79, 0.9) 0px, rgba(47, 79, 79, 0.5) 2px, transparent 4px), radial-gradient(circle at 80% 40%, rgba(169, 169, 169, 0.6) 0px, rgba(169, 169, 169, 0.3) 1px, transparent 3px), radial-gradient(circle at 10% 80%, rgba(119, 136, 153, 0.5) 0px, transparent 2px), radial-gradient(circle at 90% 10%, rgba(112, 128, 144, 0.4) 0px, transparent 3px), linear-gradient(135deg, #696969 0%, #708090 50%, #778899 100%)"
+                        },
+                        image: {
+                            url: "assets/textures/stone/granite.txt",
+                            size: "cover",
+                            position: "center",
+                            repeat: "no-repeat"
+                        },
+                        opacity: 0.7,
+                        fallbackColor: "#696969"
                     },
                     platform: {
                         texture: null,
@@ -2782,15 +2880,23 @@
                 "Industrial metal structures with steel and iron textures",
                 {
                     background: {
-                        type: "gradient",
+                        type: "pattern",
                         colors: ["#1e3a4f", "#2d5a7b", "#4682b4", "#5a7aa6"],  // Deep blue steel gradient
-                        texture: "corrugated",
-                        pattern: "corrugated-metal",
-                        image: createImageConfig({
-                            repeat: "repeat",
-                            blend: "multiply",
-                            opacity: 0.3
-                        })
+                        texture: "brushed-steel",
+                        pattern: {
+                            type: "brushed-metal",
+                            baseColor: "#4A4A4A",
+                            accentColors: ["#4682B4", "#1e3a4f", "#2d5a7b", "#87CEEB"],
+                            style: "repeating-linear-gradient(90deg, transparent, transparent 1px, rgba(135, 206, 235, 0.1) 1px, rgba(135, 206, 235, 0.1) 2px), repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(70, 130, 180, 0.05) 1px, rgba(70, 130, 180, 0.05) 3px), linear-gradient(45deg, #1e3a4f 0%, #4682B4 25%, #2d5a7b 50%, #5a7aa6 75%, #4682B4 100%)"
+                        },
+                        image: {
+                            url: "assets/textures/metal/steel.txt",
+                            size: "cover",
+                            position: "center",
+                            repeat: "no-repeat"
+                        },
+                        opacity: 0.4,
+                        fallbackColor: "#4A4A4A"
                     },
                     platform: {
                         texture: null,
@@ -3250,6 +3356,7 @@
                 this.loadingCallbacks = [];
                 this.imageCache = new Map(); // Cache for loaded images
                 this.loadingPromises = new Map(); // Track loading promises
+                this.backgroundImageCache = new Map(); // New cache for background images
             }
 
             async loadTheme(themeName) {
@@ -3306,10 +3413,27 @@
                         // Load all images for this theme
                         await this.loadThemeImages(themeName, themeConfig);
                         
+                        // Load background image if specified
+                        if (themeConfig.background?.type === 'image' && themeConfig.background.image?.url) {
+                            try {
+                                const bgImage = await this.loadBackgroundImage(themeConfig.background.image.url);
+                                this.themes[themeName].assets.backgroundImage = bgImage;
+                                console.log(`✅ Background image loaded for theme: ${themeName}`);
+                            } catch (error) {
+                                console.warn(`⚠️ Failed to load background image for ${themeName}:`, error);
+                                // Mark background as failed but continue with theme loading
+                                if (!themeConfig.background) themeConfig.background = {};
+                                themeConfig.background.loadFailed = true;
+                            }
+                        }
+                        
                         this.themes[themeName].loaded = true;
                         this.currentTheme = themeName;  // Set this theme as current
                         this.loadingProgress = 100;
                         this.isLoaded = true;
+                        
+                        // Apply the background to CSS immediately
+                        this.applyBackgroundToCSS({ name: themeName, ...themeConfig });
                         
                         assetLog(`✅ Theme loaded: ${themeName}`);
                         debugLog(`🎯 AssetManager current theme set to: ${this.currentTheme}`);
@@ -3656,6 +3780,111 @@
             // Property for loaded textures compatibility
             get loadedTextures() {
                 return this.imageCache;
+            }
+
+            /*╔═══════════════════════════════════════════════════════════════════════════
+              ║ BACKGROUND IMAGE MANAGEMENT METHODS
+              ║ Handles CSS background image loading and application
+              ╚═══════════════════════════════════════════════════════════════════════════*/
+            
+            async loadBackgroundImage(url) {
+                if (this.backgroundImageCache.has(url)) {
+                    return this.backgroundImageCache.get(url);
+                }
+
+                return new Promise((resolve, reject) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        this.backgroundImageCache.set(url, img);
+                        console.log(`🖼️ Background image loaded: ${url}`);
+                        resolve(img);
+                    };
+                    img.onerror = () => {
+                        console.error(`❌ Failed to load background image: ${url}`);
+                        reject(new Error(`Failed to load background image: ${url}`));
+                    };
+                    img.src = url;
+                });
+            }
+
+            applyBackgroundToCSS(theme) {
+                const viewport = document.querySelector('.game-viewport');
+                if (!viewport) return;
+
+                const backgroundConfig = theme.background;
+                
+                // Clear previous pattern classes
+                viewport.classList.remove('stone-pattern', 'metal-pattern', 'theme-background');
+                
+                if (backgroundConfig?.type === 'image' && backgroundConfig.image?.url) {
+                    // Apply image background
+                    const imageConfig = backgroundConfig.image;
+                    
+                    // Set CSS custom properties
+                    viewport.style.setProperty('--background-image', `url(${imageConfig.url})`);
+                    viewport.style.setProperty('--background-opacity', backgroundConfig.opacity || 0.5);
+                    
+                    // Add theme background class
+                    viewport.classList.add('theme-background');
+                    
+                    console.log(`🎨 Applied background image for theme: ${theme.name}`);
+                } else if (backgroundConfig?.type === 'pattern' && backgroundConfig.pattern?.type) {
+                    // Apply pattern background using CSS classes
+                    const patternType = backgroundConfig.pattern.type;
+                    
+                    console.log(`🔍 Pattern debug - Type: ${patternType}, Theme: ${theme.name}`);
+                    console.log(`🔍 Pattern config:`, backgroundConfig.pattern);
+                    
+                    if (patternType === 'granite') {
+                        viewport.classList.add('stone-pattern');
+                        console.log(`🎨 Applied granite pattern for theme: ${theme.name} - Class added: stone-pattern`);
+                        console.log(`🔍 Viewport classes:`, viewport.className);
+                    } else if (patternType === 'brushed-metal') {
+                        viewport.classList.add('metal-pattern');
+                        console.log(`🎨 Applied brushed metal pattern for theme: ${theme.name}`);
+                    } else {
+                        // Fallback to custom pattern style
+                        viewport.style.setProperty('--background-image', backgroundConfig.pattern.style);
+                        viewport.classList.add('theme-background');
+                        console.log(`🎨 Applied custom ${patternType} pattern for theme: ${theme.name}`);
+                    }
+                    
+                    // Set opacity
+                    viewport.style.setProperty('--background-opacity', backgroundConfig.opacity || 0.6);
+                    console.log(`🔍 Background opacity set to:`, backgroundConfig.opacity || 0.6);
+                } else if (backgroundConfig?.type === 'gradient') {
+                    // Apply gradient background
+                    const gradientConfig = backgroundConfig.gradient;
+                    if (gradientConfig) {
+                        const gradientCSS = `linear-gradient(${gradientConfig.direction}, ${gradientConfig.colors.join(', ')})`;
+                        
+                        viewport.style.setProperty('--background-image', gradientCSS);
+                        viewport.style.setProperty('--background-opacity', backgroundConfig.opacity || 1.0);
+                        viewport.classList.add('theme-background');
+                        
+                        console.log(`🎨 Applied gradient background for theme: ${theme.name}`);
+                    }
+                } else {
+                    // Fallback or clear background
+                    this.clearBackgroundCSS();
+                    
+                    // Apply fallback color if specified
+                    if (backgroundConfig?.fallbackColor) {
+                        viewport.style.backgroundColor = backgroundConfig.fallbackColor;
+                    }
+                }
+            }
+
+            clearBackgroundCSS() {
+                const viewport = document.querySelector('.game-viewport');
+                if (!viewport) return;
+
+                viewport.style.removeProperty('--background-image');
+                viewport.style.removeProperty('--background-opacity');
+                viewport.classList.remove('theme-background', 'stone-pattern', 'metal-pattern');
+                viewport.style.removeProperty('background-color');
+                
+                console.log('🧹 Cleared CSS background');
             }
         }
 
@@ -4261,8 +4490,9 @@
                 if (hasTexture) {
                     debugLog(`🎨 Canvas preview for ${shapeType} - texture available`);
                     // Add a subtle texture indicator border
-                    canvas.style.border = '2px solid #DAA520';
-                    canvas.style.boxShadow = '0 0 8px rgba(218, 165, 32, 0.5)';
+                    // RdW TODO: leave the following statements commented out in the new version
+                    // canvas.style.border = '2px solid #DAA520';
+                    // canvas.style.boxShadow = '0 0 8px rgba(218, 165, 32, 0.5)';
                     canvas.title = `${shapeType} - Textured`;
                 } else {
                     debugLog(`🎨 Canvas preview for ${shapeType} - using themed colors only`);
@@ -5546,6 +5776,15 @@
                 this.explosionTimers = [];
                 this.lastExplosionId = 0;
 
+                /*══════════════════════════════════════════════════════════════════════════
+                  ║ PULSE MANAGEMENT SYSTEM
+                  ║ Handles accelerating pulse effects for fire and timer shapes
+                  ╚═══════════════════════════════════════════════════════════════════════════*/
+                this.pulseManager = {
+                    activePulses: new Map(), // bodyId -> pulseState
+                    lastPulseId: 0
+                };
+
                 // Camera shake system
                 this.cameraShake = {
                     active: false,
@@ -5651,14 +5890,27 @@
                         this.explosionTimers.push(newTimer);
                         bodyA.userData.explosionTimerId = newTimer.id;
                         bodyB.userData.explosionTimerId = newTimer.id;
+                        
+                        // 🔥 START FIRE PULSING for both shapes
+                        this.startPulsing(bodyA, 'fire');
+                        this.startPulsing(bodyB, 'fire');
+                        console.log(`🔥 Started pulsing for fire collision: ${bodyA.id} & ${bodyB.id}`);
+                        
                     } else if (existingTimerA && !existingTimerB) {
                         // Add bodyB to timerA
                         existingTimerA.shapes.add(bodyB);
                         bodyB.userData.explosionTimerId = existingTimerA.id;
+                        
+                        // 🔥 START PULSING for newly added shape
+                        this.startPulsing(bodyB, 'fire');
+                        
                     } else if (!existingTimerA && existingTimerB) {
                         // Add bodyA to timerB
                         existingTimerB.shapes.add(bodyA);
                         bodyA.userData.explosionTimerId = existingTimerB.id;
+                        
+                        // 🔥 START PULSING for newly added shape
+                        this.startPulsing(bodyA, 'fire');
                     } else if (existingTimerA && existingTimerB && existingTimerA.id !== existingTimerB.id) {
                         // Merge timers, keep the one with less time remaining
                         const timerToKeep = existingTimerA.timeRemaining < existingTimerB.timeRemaining ? existingTimerA : existingTimerB;
@@ -5745,7 +5997,12 @@
                             otherBody.position.y < body.position.y &&
                             Matter.Query.collides(body, [otherBody]).length > 0
                         );
-                        if (isWeightOnTop && !timerState.isTicking) { timerState.isTicking = true; }
+                        if (isWeightOnTop && !timerState.isTicking) { 
+                            timerState.isTicking = true;
+                            // 🔥 START TIMER PULSING when timer starts ticking
+                            this.startPulsing(body, 'timer');
+                            console.log(`⏰ Started timer pulsing for body ${body.id} - countdown: ${timerState.countdown}s`);
+                        }
                         if (timerState.isTicking) {
                             timerState.countdown -= deltaTime / 1000;
                             if (timerState.countdown < 0) {
@@ -5754,6 +6011,8 @@
                             if (timerState.countdown <= 0) {
                                 this.triggerExplosion(body.position, body.userData.specialType.explosionRadius);
                                 bodiesToRemove.push(body);
+                                // 🔥 CLEANUP: Stop pulsing when timer explodes
+                                this.stopPulsing(body.id);
                             }
                         }
                     }
@@ -5875,6 +6134,9 @@
                                 this.World.remove(this.world, shapeBody);
                                 this.cleanupRemovedShapeFromWeighted(shapeBody.id);
                                 this.dynamicBodies = this.dynamicBodies.filter(b => b.id !== shapeBody.id);
+                                
+                                // 🔥 CLEANUP: Stop pulsing for exploded shape
+                                this.stopPulsing(shapeBody.id);
                             }
                         });
 
@@ -5882,6 +6144,240 @@
                         this.explosionTimers.splice(i, 1);
                     }
                 }
+            }
+
+            /*══════════════════════════════════════════════════════════════════════════
+              ║ PULSE MANAGEMENT SYSTEM METHODS  
+              ║ Handles accelerating pulse effects for fire and timer shapes
+              ╚═══════════════════════════════════════════════════════════════════════════*/
+
+            getCurrentPulseInterval(progress) {
+                const initialInterval = 3050; // 3.05 seconds
+                const finalInterval = 200;    // 0.2 seconds (extremely fast at the end)
+    
+                // Exponential decrease for more dramatic effect
+                const easedProgress = 1 - Math.pow(1 - progress, 3);
+                return initialInterval - (initialInterval - finalInterval) * easedProgress;
+            }
+
+            calculateTimerPulse(pulseState, currentTime) {
+                if (!pulseState.isTicking) return { isPulsing: false, pulseIntensity: 0 };
+    
+                const totalDuration = pulseState.initialCountdown || 1;
+                const remaining = Math.max(pulseState.countdown || 0, 0);
+                const progress = Math.min(1 - (remaining / totalDuration), 1); // 0 = start, 1 = expired
+    
+                // Get current pulse interval in milliseconds
+                const currentInterval = this.getCurrentPulseInterval(progress);
+    
+                // Initialize pulse tracking if not exists
+                if (!pulseState.lastPulseTime) {
+                    pulseState.lastPulseTime = currentTime;
+                    pulseState.pulseStartTime = currentTime;
+                    pulseState.isPulseActive = false;
+                }
+    
+                // Check if we should start a new pulse
+                const timeSinceLastPulse = currentTime - pulseState.lastPulseTime;
+    
+                if (!pulseState.isPulseActive && timeSinceLastPulse >= currentInterval) {
+                    // Start new pulse
+                    pulseState.isPulseActive = true;
+                    pulseState.pulseStartTime = currentTime;
+                    pulseState.lastPulseTime = currentTime;
+                }
+    
+                // Handle active pulse
+                let isPulsing = false;
+                let pulseIntensity = 0;
+    
+                if (pulseState.isPulseActive) {
+                    const pulseDuration = 200; // Duration of each pulse in ms
+                    const pulseProgress = (currentTime - pulseState.pulseStartTime) / pulseDuration;
+        
+                    if (pulseProgress >= 1) {
+                        // End current pulse
+                        pulseState.isPulseActive = false;
+                        isPulsing = false;
+                        pulseIntensity = 0;
+                    } else {
+                        // Calculate smooth pulse intensity using sine wave
+                        isPulsing = true;
+                        pulseIntensity = Math.sin(pulseProgress * Math.PI); // Smooth 0->1->0 curve
+                    }
+                }
+    
+                return {
+                    isPulsing,
+                    pulseIntensity,
+                    progress,
+                    currentInterval,
+                    pulsesPerSecond: 1000 / currentInterval // For debugging/display
+                };
+            }
+
+            // Calculate fire collision pulse (based on proximity or countdown)
+            calculateFirePulse(fireState, currentTime) {
+                if (!fireState.isCountingDown) return { isPulsing: false, pulseIntensity: 0 };
+
+                const totalDuration = fireState.explosionDelay || 1000; // Default 1 second
+                const elapsed = currentTime - fireState.countdownStartTime;
+                const remaining = Math.max(totalDuration - elapsed, 0);
+                const progress = Math.min(elapsed / totalDuration, 1); // 0 = start, 1 = explosion
+
+                // Use same pulse interval calculation as timers
+                const currentInterval = this.getCurrentPulseInterval(progress);
+
+                // Initialize pulse tracking if not exists
+                if (!fireState.lastPulseTime) {
+                    fireState.lastPulseTime = currentTime;
+                    fireState.pulseStartTime = currentTime;
+                    fireState.isPulseActive = false;
+                }
+
+                // Check if we should start a new pulse
+                const timeSinceLastPulse = currentTime - fireState.lastPulseTime;
+
+                if (!fireState.isPulseActive && timeSinceLastPulse >= currentInterval) {
+                    // Start new pulse
+                    fireState.isPulseActive = true;
+                    fireState.pulseStartTime = currentTime;
+                    fireState.lastPulseTime = currentTime;
+                }
+
+                // Handle active pulse
+                let isPulsing = false;
+                let pulseIntensity = 0;
+
+                if (fireState.isPulseActive) {
+                    const pulseDuration = 200; // Duration of each pulse in ms
+                    const pulseProgress = (currentTime - fireState.pulseStartTime) / pulseDuration;
+
+                    if (pulseProgress >= 1) {
+                        // End current pulse
+                        fireState.isPulseActive = false;
+                        isPulsing = false;
+                        pulseIntensity = 0;
+                    } else {
+                        // Calculate smooth pulse intensity using sine wave
+                        isPulsing = true;
+                        pulseIntensity = Math.sin(pulseProgress * Math.PI); // Smooth 0->1->0 curve
+                    }
+                }
+
+                return {
+                    isPulsing,
+                    pulseIntensity,
+                    progress,
+                    currentInterval,
+                    pulsesPerSecond: 1000 / currentInterval // For debugging/display
+                };
+            }
+
+            // Update all active pulse states
+            updatePulseStates(currentTime) {
+                this.pulseManager.activePulses.forEach((pulseState, bodyId) => {
+                    const body = this.dynamicBodies.find(b => b.id === bodyId);
+                    if (!body) {
+                        // Body no longer exists, clean up pulse state
+                        this.pulseManager.activePulses.delete(bodyId);
+                        return;
+                    }
+
+                    const userData = body.userData;
+                    if (userData.specialType?.type === 'FIRE') {
+                        // Update fire pulse state
+                        const pulseResult = this.calculateFirePulse(pulseState, currentTime);
+                        Object.assign(pulseState, pulseResult);
+                    } else if (userData.specialType?.type === 'TIMER') {
+                        // Sync timer data from body's timerState to pulseState
+                        const timerState = userData.timerState;
+                        if (timerState) {
+                            pulseState.isTicking = timerState.isTicking;
+                            pulseState.countdown = timerState.countdown;
+                            pulseState.initialCountdown = timerState.initialCountdown;
+                        }
+                        
+                        // Update timer pulse state  
+                        const pulseResult = this.calculateTimerPulse(pulseState, currentTime);
+                        Object.assign(pulseState, pulseResult);
+                    }
+                });
+            }
+
+            // Start pulsing for a shape
+            startPulsing(body, pulseType = 'fire') {
+                const bodyId = body.id;
+                if (this.pulseManager.activePulses.has(bodyId)) {
+                    return; // Already pulsing
+                }
+
+                const currentTime = performance.now();
+                const pulseState = {
+                    id: ++this.pulseManager.lastPulseId,
+                    bodyId: bodyId,
+                    type: pulseType,
+                    startTime: currentTime,
+                    lastPulseTime: 0,
+                    pulseStartTime: 0,
+                    isPulseActive: false,
+                    isPulsing: false,
+                    pulseIntensity: 0,
+                    progress: 0,
+                    currentInterval: 3050,
+                    // Fire-specific
+                    isCountingDown: pulseType === 'fire',
+                    explosionDelay: body.userData.specialType?.explosionDelaySeconds * 1000 || 1000,
+                    countdownStartTime: currentTime,
+                    // Timer-specific - get from actual timer state
+                    isTicking: pulseType === 'timer' ? (body.userData.timerState?.isTicking || false) : false,
+                    initialCountdown: pulseType === 'timer' ? (body.userData.timerState?.initialCountdown || body.userData.timerState?.countdown || 10) : 10000,
+                    countdown: pulseType === 'timer' ? (body.userData.timerState?.countdown || 10) : 10000
+                };
+
+                this.pulseManager.activePulses.set(bodyId, pulseState);
+                console.log(`✨ Started ${pulseType} pulsing for body ${bodyId}`);
+            }
+
+            // Stop pulsing for a shape
+            stopPulsing(bodyId) {
+                if (this.pulseManager.activePulses.has(bodyId)) {
+                    this.pulseManager.activePulses.delete(bodyId);
+                    console.log(`⏹️ Stopped pulsing for body ${bodyId}`);
+                }
+            }
+
+            // Apply visual pulse effects to canvas context
+            applyPulseEffects(pulseIntensity, hasTexture = false) {
+                if (pulseIntensity <= 0) return;
+
+                // Different effects for texture vs fallback colors
+                if (hasTexture) {
+                    // For textures, use composite operations and filters
+                    
+                    // 1. Brightness pulse - makes texture flash brighter
+                    const brightness = 1 + (pulseIntensity * 0.5); // 0.5x boost at peak
+                    this.ctx.filter = `brightness(${brightness})`;
+                    
+                    // 2. Add white overlay for dramatic effect
+                    const overlayAlpha = pulseIntensity * 0.3; // Max 30% white overlay
+                    this.ctx.globalCompositeOperation = 'screen';
+                    this.ctx.globalAlpha = overlayAlpha;
+                    
+                } else {
+                    // For solid colors, apply white tint overlay
+                    const whiteIntensity = pulseIntensity * 0.8; // Strong white pulse
+                    this.ctx.globalCompositeOperation = 'screen';
+                    this.ctx.globalAlpha = whiteIntensity;
+                    this.ctx.fillStyle = 'white';
+                }
+            }
+
+            // Reset pulse effects after rendering
+            resetPulseEffects() {
+                this.ctx.filter = 'none';
+                this.ctx.globalCompositeOperation = 'source-over';
+                this.ctx.globalAlpha = 1.0;
             }
 
             getRecursiveDescendants(body, allBodies) {
@@ -6680,6 +7176,9 @@
 
                         this.updateSpecialShapes(deltaTime);
                         this.updateExplosionTimers(deltaTime);
+                        
+                        // Update pulse states for all pulsing shapes
+                        this.updatePulseStates(performance.now());
 
                         // Step Matter.js physics simulation
                         this.Engine.update(this.engine, 1000 / 60); // 60 FPS
@@ -6748,31 +7247,56 @@
 
             // Enhanced background rendering with theme support
             renderBackground() {
-                // console.log(`🎨 renderBackground() called - currentTheme: ${this.assetManager.currentTheme}`);
+                // Clear the canvas background
+                this.clearCanvas();
                 
-                // Only log once per theme change, not every frame
-                if (!this._lastLoggedTheme || this._lastLoggedTheme !== this.assetManager.currentTheme) {
-                    console.log(`🎨 renderBackground() - Theme changed to: ${this.assetManager.currentTheme}`);
-                    this._lastLoggedTheme = this.assetManager.currentTheme;
-                }
-                
-                if (!CANVAS_CONFIG.enabled || !CANVAS_CONFIG.useBackgroundTextures) {
-                    console.log(`❌ renderBackground() skipped - enabled: ${CANVAS_CONFIG.enabled}, useBackgroundTextures: ${CANVAS_CONFIG.useBackgroundTextures}`);
-                    return; // Use default CSS background
+                // Get current theme
+                const currentTheme = this.assetManager?.getCurrentTheme();
+                if (!currentTheme) {
+                    // Fallback: render simple gradient
+                    this.renderFallbackBackground();
+                    return;
                 }
 
-                const backgroundStyle = this.assetManager.getBackgroundStyle();
-                if (!backgroundStyle) return;
-
-                // Check if we have a background image
-                if (backgroundStyle.image && backgroundStyle.imageConfig) {
-                    this.renderBackgroundImage(backgroundStyle);
-                } else if (backgroundStyle.colors && backgroundStyle.colors.length >= 2) {
-                    this.renderBackgroundGradient(backgroundStyle);
-                }
+                const backgroundConfig = currentTheme.config?.background;
                 
-                // Add texture overlay if configured
-                this.renderBackgroundTexture();
+                if (backgroundConfig?.type === 'image' && backgroundConfig.image?.url && !backgroundConfig.loadFailed) {
+                    // Background image is handled by CSS, but we can add canvas effects if needed
+                    this.renderCanvasBackgroundEffects(backgroundConfig);
+                } else if (backgroundConfig?.type === 'pattern' && backgroundConfig.pattern?.style) {
+                    // Pattern background is handled by CSS, but we can add canvas effects if needed
+                    this.renderCanvasBackgroundEffects(backgroundConfig);
+                } else if (backgroundConfig?.type === 'gradient') {
+                    // Gradient is handled by CSS, but we can add canvas effects if needed
+                    this.renderCanvasBackgroundEffects(backgroundConfig);
+                } else {
+                    // Render fallback on canvas
+                    this.renderFallbackBackground(backgroundConfig?.fallbackColor);
+                }
+            }
+
+            // Helper method for canvas background effects over CSS backgrounds
+            renderCanvasBackgroundEffects(backgroundConfig) {
+                // This method can be used to add additional canvas-based effects
+                // over the CSS background, such as particles, overlays, or animations
+                
+                // Example: Add subtle texture overlay
+                if (backgroundConfig.canvasOverlay) {
+                    this.ctx.save();
+                    this.ctx.globalAlpha = 0.1;
+                    this.ctx.fillStyle = backgroundConfig.canvasOverlay;
+                    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                    this.ctx.restore();
+                }
+            }
+
+            // Helper method for fallback background rendering
+            renderFallbackBackground(fallbackColor = '#2c3e50') {
+                // Render a simple background when theme loading fails
+                this.ctx.save();
+                this.ctx.fillStyle = fallbackColor;
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                this.ctx.restore();
             }
 
             // Render background image
@@ -7367,8 +7891,17 @@
 // ...existing code...
 
             renderCircleWithTexture(part, textureImage, textureConfig) {
+                // Check if this shape should be pulsing
+                const bodyId = part.parent ? part.parent.id : part.id;
+                const pulseState = this.pulseManager.activePulses.get(bodyId);
+                
                 // Apply transformations and fill the circle in local coordinate space so that the texture moves with the shape.
                 this.ctx.save();
+                
+                // Apply pulse effects if active
+                if (pulseState && pulseState.isPulsing) {
+                    this.applyPulseEffects(pulseState.pulseIntensity, textureImage);
+                }
                 
                 // Apply shape transformations first
                 this.ctx.translate(part.position.x, part.position.y);
@@ -7392,6 +7925,11 @@
                 this.ctx.fill();
                 this.ctx.restore();
                 
+                // Reset any pulse effects
+                if (pulseState && pulseState.isPulsing) {
+                    this.resetPulseEffects();
+                }
+                
                 // Draw stroke in world coordinates
                 this.ctx.beginPath();
                 this.ctx.arc(part.position.x, part.position.y, part.circleRadius, 0, Math.PI * 2);
@@ -7402,7 +7940,16 @@
                 const vertices = part.vertices;
                 if (!vertices || vertices.length === 0) return;
                 
+                // Check if this shape should be pulsing
+                const bodyId = part.parent ? part.parent.id : part.id;
+                const pulseState = this.pulseManager.activePulses.get(bodyId);
+                
                 this.ctx.save();
+                
+                // Apply pulse effects if active
+                if (pulseState && pulseState.isPulsing) {
+                    this.applyPulseEffects(pulseState.pulseIntensity, textureImage);
+                }
                 
                 // Apply transformations for texture coordinate space
                 this.ctx.translate(part.position.x, part.position.y);
@@ -7445,6 +7992,11 @@
                 
                 this.ctx.fill();
                 this.ctx.restore();
+                
+                // Reset any pulse effects
+                if (pulseState && pulseState.isPulsing) {
+                    this.resetPulseEffects();
+                }
                 
                 // Draw stroke in world coordinates
                 this.ctx.beginPath();
@@ -10866,6 +11418,26 @@
 
             static async _applyToAllSystems(themeName, animated) {
                 try {
+                    // Load the theme first through AssetManager
+                    if (window.assetManager && typeof window.assetManager.loadTheme === 'function') {
+                        await window.assetManager.loadTheme(themeName);
+                        debugLog(`🎨 Theme loaded through AssetManager: ${themeName}`);
+                    }
+                    
+                    // Apply background to CSS (handled by AssetManager.loadTheme, but ensure it's applied)
+                    if (window.assetManager && typeof window.assetManager.applyBackgroundToCSS === 'function') {
+                        const theme = window.assetManager.getCurrentTheme();
+                        if (theme) {
+                            window.assetManager.applyBackgroundToCSS({ name: themeName, ...theme.config });
+                        }
+                    }
+                    
+                    // Update physics manager if needed
+                    if (window.gameManager?.physicsManager) {
+                        // Trigger background re-render on next frame
+                        window.gameManager.physicsManager.backgroundUpdateNeeded = true;
+                    }
+                    
                     // Apply theme colors to SHAPE_CONFIG for fallback colors
                     if (typeof applyThemeColorsToShapeConfig === 'function') {
                         applyThemeColorsToShapeConfig(themeName);
@@ -10883,6 +11455,11 @@
                         if (textureManager && typeof textureManager.applyTextureTheme === 'function') {
                             await textureManager.applyTextureTheme(themeName);
                         }
+                    }
+
+                    // Rebuild dock with new theme
+                    if (typeof rebuildGameDock === 'function') {
+                        await rebuildGameDock();
                     }
 
                     // Update current theme reference
@@ -11515,7 +12092,441 @@ if (!window.textureManager && window.gameManager && window.gameManager.physicsMa
     console.log('🖼️ Global textureManager set to use AssetManager');
 }
 
+/*╔═══════════════════════════════════════════════════════════════════════════
+  ║ BACKGROUND TESTING FUNCTIONS
+  ║ Manual testing utilities for background image system
+  ╚═══════════════════════════════════════════════════════════════════════════*/
+
+// Test cycling through all themes to verify background loading
+window.testBackgroundSystem = function() {
+    console.log('🧪 Testing Background System');
+    console.log('============================');
+    
+    const themes = Object.keys(THEME_DEFINITIONS);
+    let currentIndex = 0;
+    
+    function testNextTheme() {
+        if (currentIndex >= themes.length) {
+            console.log('✅ All themes tested');
+            return;
+        }
+        
+        const themeName = themes[currentIndex];
+        console.log(`🎨 Testing theme: ${themeName}`);
+        
+        UnifiedThemeController.changeTheme(themeName, { source: 'test' })
+            .then(() => {
+                console.log(`✅ Theme ${themeName} applied successfully`);
+                currentIndex++;
+                
+                // Test next theme after 3 seconds
+                setTimeout(testNextTheme, 3000);
+            })
+            .catch(error => {
+                console.error(`❌ Theme ${themeName} failed:`, error);
+                currentIndex++;
+                setTimeout(testNextTheme, 1000);
+            });
+    }
+    
+    testNextTheme();
+};
+
+// Test individual background image loading
+window.testBackgroundLoading = function() {
+    console.log('🧪 Testing Background Loading');
+    console.log('==============================');
+    
+    // Test individual background loading
+    const testUrls = [
+        'assets/bkg/bkg1.png',
+        'assets/bkg/nonexistent.png', // Should fail gracefully
+        'assets/textures/stone/granite.txt',
+        'assets/textures/metal/steel.txt'
+    ];
+    
+    testUrls.forEach(async (url, index) => {
+        try {
+            const img = await window.assetManager.loadBackgroundImage(url);
+            console.log(`✅ Background ${index + 1} loaded: ${url}`, img);
+        } catch (error) {
+            console.log(`❌ Background ${index + 1} failed: ${url}`, error.message);
+        }
+    });
+};
+
+// Test pattern backgrounds specifically
+window.testPatternBackgrounds = function() {
+    console.log('🧪 Testing Pattern Backgrounds');
+    console.log('===============================');
+    
+    const patternThemes = ['stone', 'metal'];
+    let currentIndex = 0;
+    
+    function testNextPattern() {
+        if (currentIndex >= patternThemes.length) {
+            console.log('✅ All pattern themes tested');
+            // Switch back to classic for comparison
+            setTimeout(() => testTheme('classic'), 1000);
+            return;
+        }
+        
+        const themeName = patternThemes[currentIndex];
+        console.log(`🎨 Testing ${themeName} pattern background...`);
+        
+        testTheme(themeName)
+            .then(() => {
+                const themeConfig = THEME_DEFINITIONS[themeName];
+                if (themeConfig.background.type === 'pattern') {
+                    console.log(`✅ ${themeName} pattern applied:`, themeConfig.background.pattern.type);
+                    console.log(`   Pattern style:`, themeConfig.background.pattern.style.substring(0, 100) + '...');
+                }
+                currentIndex++;
+                setTimeout(testNextPattern, 4000); // Give more time to see the pattern
+            })
+            .catch(error => {
+                console.error(`❌ ${themeName} pattern failed:`, error);
+                currentIndex++;
+                setTimeout(testNextPattern, 1000);
+            });
+    }
+    
+    testNextPattern();
+};
+
+// Test stone pattern with immediate visual feedback
+window.testStonePatternNow = function() {
+    console.log('🧪 Testing NEW stone pattern');
+    
+    const viewport = document.querySelector('.game-viewport');
+    
+    // Clear all existing classes
+    viewport.classList.remove('stone-pattern', 'metal-pattern', 'theme-background');
+    
+    // Apply stone pattern directly
+    viewport.classList.add('stone-pattern');
+    
+    console.log('✅ Stone pattern class applied');
+    console.log('Viewport classes:', viewport.className);
+    
+    // Force browser to recalculate styles
+    viewport.offsetHeight; 
+    
+    setTimeout(() => {
+        const computed = getComputedStyle(viewport, '::before');
+        console.log('::before styles:', {
+            content: computed.content,
+            position: computed.position,
+            background: computed.background,
+            opacity: computed.opacity,
+            zIndex: computed.zIndex
+        });
+    }, 100);
+};
+
+// Emergency fallback - apply pattern with inline styles
+window.forceStonePattern = function() {
+    console.log('🚨 FORCING stone pattern with inline styles');
+    
+    const viewport = document.querySelector('.game-viewport');
+    
+    // Create a style element with very specific CSS
+    const style = document.createElement('style');
+    style.innerHTML = `
+        .force-stone::before {
+            content: '' !important;
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            z-index: -1 !important;
+            background: linear-gradient(45deg, #8B4513 0%, #A0522D 50%, #696969 100%) !important;
+            opacity: 0.7 !important;
+        }
+    `;
+    document.head.appendChild(style);
+    
+    viewport.classList.remove('stone-pattern', 'metal-pattern', 'theme-background');
+    viewport.classList.add('force-stone');
+    
+    console.log('✅ Emergency stone pattern applied');
+};
+
+// Test stone pattern specifically
+window.testStonePattern = function() {
+    console.log('🧪 Testing stone pattern specifically');
+    
+    // Apply stone theme
+    window.themeController.applyTheme('stone');
+    
+    // Wait a moment then check what happened
+    setTimeout(() => {
+        const viewport = document.querySelector('.game-viewport');
+        console.log('Viewport classes:', viewport.className);
+        console.log('Viewport computed styles:', {
+            backgroundImage: getComputedStyle(viewport).backgroundImage,
+            backgroundColor: getComputedStyle(viewport).backgroundColor
+        });
+        
+        // Check ::before pseudo-element if possible
+        const beforeStyles = getComputedStyle(viewport, '::before');
+        console.log('::before pseudo styles:', {
+            backgroundImage: beforeStyles.backgroundImage,
+            opacity: beforeStyles.opacity,
+            content: beforeStyles.content,
+            display: beforeStyles.display,
+            position: beforeStyles.position
+        });
+        
+    }, 100);
+};
+
+// Clear all backgrounds and reset to default
+window.clearAllBackgrounds = function() {
+    console.log('🧹 Clearing all backgrounds');
+    if (window.assetManager) {
+        window.assetManager.clearBackgroundCSS();
+        window.assetManager.backgroundImageCache.clear();
+        console.log('✅ Background system cleared');
+    }
+};
+
+// Test specific theme
+window.testTheme = function(themeName) {
+    console.log(`🎨 Testing individual theme: ${themeName}`);
+    return UnifiedThemeController.changeTheme(themeName, { source: 'manual-test' })
+        .then(() => console.log(`✅ ${themeName} theme applied`))
+        .catch(error => console.error(`❌ ${themeName} theme failed:`, error));
+};
+
+// Inspect CSS properties set by background system
+window.inspectBackgroundCSS = function() {
+    const viewport = document.querySelector('.game-viewport');
+    if (!viewport) {
+        console.log('❌ Game viewport not found');
+        return;
+    }
+    
+    console.log('🔍 Background CSS Properties:');
+    console.log('==============================');
+    console.log('Has theme-background class:', viewport.classList.contains('theme-background'));
+    console.log('--background-image:', viewport.style.getPropertyValue('--background-image'));
+    console.log('--background-opacity:', viewport.style.getPropertyValue('--background-opacity'));
+    console.log('background-color:', viewport.style.backgroundColor);
+    
+    // Check computed styles on ::before pseudo-element
+    const beforeStyles = getComputedStyle(viewport, '::before');
+    console.log('Computed ::before styles:');
+    console.log('  background-image:', beforeStyles.backgroundImage);
+    console.log('  opacity:', beforeStyles.opacity);
+    console.log('  background-size:', beforeStyles.backgroundSize);
+    console.log('  background-position:', beforeStyles.backgroundPosition);
+};
+
+/*══════════════════════════════════════════════════════════════════════════
+  ║ PULSE SYSTEM TESTING FUNCTIONS
+  ║ Test and debug the new accelerating pulse effects
+  ╚═══════════════════════════════════════════════════════════════════════════*/
+
+// Test fire shape pulsing by creating two fire shapes and making them collide
+window.testFirePulsing = function() {
+    console.log('🔥 Testing fire shape pulsing effects');
+    
+    if (!window.physicsManager) {
+        console.error('❌ PhysicsManager not available');
+        return;
+    }
+    
+    // Clear existing shapes
+    window.physicsManager.clearAllShapes();
+    
+    // Create two fire shapes
+    const fireConfig = {
+        specialType: {
+            type: 'FIRE',
+            explosionDelaySeconds: 2, // 2 second delay
+            explosionRadius: 50
+        }
+    };
+    
+    // Create first fire shape
+    const fire1 = window.physicsManager.createBodyFromConfig(300, 200, 'triangle', 0, fireConfig);
+    const fire2 = window.physicsManager.createBodyFromConfig(500, 200, 'circle', 0, fireConfig);
+    
+    if (fire1 && fire2) {
+        console.log('✅ Created fire shapes:', fire1.id, fire2.id);
+        
+        // Give them velocity to collide
+        window.physicsManager.Body.setVelocity(fire1, { x: 2, y: 0 });
+        window.physicsManager.Body.setVelocity(fire2, { x: -2, y: 0 });
+        
+        console.log('🎯 Fire shapes should collide and start pulsing with accelerating effects');
+    } else {
+        console.error('❌ Failed to create fire shapes');
+    }
+};
+
+// Test timer shape pulsing  
+window.testTimerPulsing = function() {
+    console.log('⏰ Testing timer shape pulsing effects');
+    
+    if (!window.physicsManager) {
+        console.error('❌ PhysicsManager not available');
+        return;
+    }
+    
+    // Create timer shape with short countdown
+    const timerConfig = {
+        specialType: {
+            type: 'TIMER',
+            countdownDuration: 5000, // 5 seconds
+            action: 'explode'
+        }
+    };
+    
+    const timer = window.physicsManager.createBodyFromConfig(400, 300, 'hexagon', 0, timerConfig);
+    
+    if (timer) {
+        console.log('✅ Created timer shape:', timer.id);
+        console.log('Timer state:', timer.userData.timerState);
+        
+        // Start the timer pulsing
+        window.physicsManager.startPulsing(timer, 'timer');
+        
+        // Check pulse state after starting
+        setTimeout(() => {
+            const pulseState = window.physicsManager.pulseManager.activePulses.get(timer.id);
+            console.log(`Timer ${timer.id} pulse state after start:`, pulseState);
+        }, 100);
+        
+        console.log('⏰ Timer should pulse with accelerating frequency as countdown approaches zero');
+    } else {
+        console.error('❌ Failed to create timer shape');
+    }
+};
+
+// Quick test timer with weight trigger
+window.quickTimerTest = function() {
+    console.log('🚀 Quick Timer Test Starting...');
+    
+    if (!window.physicsManager) {
+        console.error('❌ PhysicsManager not available');
+        return;
+    }
+    
+    // Find existing timer shapes first
+    const existingTimers = Matter.Composite.allBodies(engine.world).filter(body => 
+        body.userData?.specialType?.type === 'TIMER'
+    );
+    
+    if (existingTimers.length > 0) {
+        const testTimer = existingTimers[0];
+        console.log(`⏰ Found existing timer ${testTimer.id}, testing pulsing...`);
+        console.log('Timer state:', testTimer.userData.timerState);
+        
+        // Manually start pulsing to test
+        window.physicsManager.startPulsing(testTimer, 'timer');
+        
+        // Check pulse state 
+        setTimeout(() => {
+            const pulseState = window.physicsManager.pulseManager.activePulses.get(testTimer.id);
+            console.log(`✅ Timer pulse state:`, pulseState);
+            
+            if (pulseState && pulseState.isPulsing) {
+                console.log('✅ Timer pulsing is active!');
+            } else {
+                console.log('❌ Timer pulsing not working');
+            }
+        }, 200);
+    } else {
+        console.log('❌ No existing timer shapes found in level');
+    }
+};
+
+window.debugPulseStates = function() {
+    console.log('🔍 Active Pulse States Debug');
+    console.log('============================');
+    
+    if (!window.physicsManager || !window.physicsManager.pulseManager) {
+        console.error('❌ Pulse manager not available');
+        return;
+    }
+    
+    const pulseManager = window.physicsManager.pulseManager;
+    console.log(`Active pulses: ${pulseManager.activePulses.size}`);
+    
+    pulseManager.activePulses.forEach((pulseState, bodyId) => {
+        console.log(`Body ${bodyId}:`, {
+            type: pulseState.type,
+            isPulsing: pulseState.isPulsing,
+            pulseIntensity: pulseState.pulseIntensity?.toFixed(3),
+            progress: pulseState.progress?.toFixed(3),
+            currentInterval: `${pulseState.currentInterval}ms`,
+            pulsesPerSecond: pulseState.pulsesPerSecond?.toFixed(2)
+        });
+    });
+};
+
+// Test pulse effects on different texture types
+window.testPulseOnTextures = function() {
+    console.log('🖼️ Testing pulse effects on different texture types');
+    
+    // Test with classic theme (gradient background)
+    window.themeController.applyTheme('classic').then(() => {
+        console.log('🎨 Applied classic theme - testing with gradient background');
+        window.testFirePulsing();
+    });
+    
+    setTimeout(() => {
+        // Test with wood theme (image texture)
+        window.themeController.applyTheme('wood').then(() => {
+            console.log('🌳 Applied wood theme - testing with image texture');
+            window.testFirePulsing();
+        });
+    }, 3000);
+};
+
+// Stress test multiple pulsing shapes
+window.testMultiplePulses = function() {
+    console.log('🚀 Stress testing multiple pulsing shapes');
+    
+    if (!window.physicsManager) {
+        console.error('❌ PhysicsManager not available');
+        return;
+    }
+    
+    window.physicsManager.clearAllShapes();
+    
+    const shapes = ['triangle', 'circle', 'square', 'hexagon', 'pentagon'];
+    const positions = [
+        [200, 200], [400, 200], [600, 200],
+        [300, 350], [500, 350]
+    ];
+    
+    positions.forEach((pos, i) => {
+        const config = {
+            specialType: {
+                type: Math.random() > 0.5 ? 'FIRE' : 'TIMER',
+                explosionDelaySeconds: 1 + Math.random() * 2,
+                explosionRadius: 30 + Math.random() * 20,
+                countdownDuration: 3000 + Math.random() * 4000
+            }
+        };
+        
+        const shape = window.physicsManager.createBodyFromConfig(pos[0], pos[1], shapes[i], 0, config);
+        if (shape) {
+            window.physicsManager.startPulsing(shape, config.specialType.type.toLowerCase());
+        }
+    });
+    
+    console.log('✅ Created 5 shapes with different pulse types and timings');
+};
+
 debugLog('✅ Texture loading system fixed and initialized');
+debugLog('🧪 Background testing functions added: testBackgroundSystem(), testBackgroundLoading(), testPatternBackgrounds(), clearAllBackgrounds(), testTheme(), inspectBackgroundCSS()');
+debugLog('🎨 Enhanced stone and metal themes with CSS patterns: granite texture and brushed steel effects');
+debugLog('🔥 Pulse system testing functions added: testFirePulsing(), testTimerPulsing(), debugPulseStates(), testPulseOnTextures(), testMultiplePulses()');
 
     </script>
 </body>

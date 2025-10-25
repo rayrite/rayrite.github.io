@@ -1,0 +1,114 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bluesky App Reviews Browser</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="title">📱 Bluesky Reviews</h1>
+                <div class="stats" id="stats">
+                    <span class="stat-item">Total: <strong id="totalReviews">Loading...</strong></span>
+                    <span class="stat-item">Avg: <strong id="avgRating">Loading...</strong></span>
+                    <span class="stat-item">Showing: <strong id="showingCount">Loading...</strong></span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Controls -->
+        <div class="controls">
+            <div class="control-row control-row-1">
+                <div class="search-group">
+                    <label for="searchInput">🔍</label>
+                    <input type="text" id="searchInput" placeholder="Search reviews...">
+                </div>
+                
+                <div class="rating-group">
+                    <label>⭐</label>
+                    <div class="rating-checkboxes">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="rating5" value="5" class="rating-checkbox" checked>
+                            <label for="rating5">5</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="rating4" value="4" class="rating-checkbox" checked>
+                            <label for="rating4">4</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="rating3" value="3" class="rating-checkbox" checked>
+                            <label for="rating3">3</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="rating2" value="2" class="rating-checkbox" checked>
+                            <label for="rating2">2</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="rating1" value="1" class="rating-checkbox" checked>
+                            <label for="rating1">1</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sort-group">
+                    <label for="sortBy">📊</label>
+                    <select id="sortBy">
+                        <option value="date-desc">Newest</option>
+                        <option value="date-asc">Oldest</option>
+                        <option value="rating-desc">High Rating</option>
+                        <option value="rating-asc">Low Rating</option>
+                        <option value="thumbs-desc">Most Helpful</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="control-row control-row-2">
+                <div class="date-group">
+                    <label>📅</label>
+                    <input type="date" id="dateFrom" title="From Date">
+                    <span class="date-separator">to</span>
+                    <input type="date" id="dateTo" title="To Date">
+                </div>
+                
+                <button id="clearFilters" class="clear-btn">Clear All</button>
+            </div>
+        </div>
+
+        <!-- Loading indicator -->
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>Loading reviews...</p>
+        </div>
+
+        <!-- Reviews container -->
+        <div id="reviewsContainer" class="reviews-container" style="display: none;">
+            <!-- Reviews will be dynamically inserted here -->
+        </div>
+
+        <!-- Pagination -->
+        <div id="pagination" class="pagination" style="display: none;">
+            <button id="prevPage" class="page-btn">← Previous</button>
+            <div class="page-info">
+                <span id="pageInfo">Page 1 of 1</span>
+            </div>
+            <button id="nextPage" class="page-btn">Next →</button>
+        </div>
+
+        <!-- Error message -->
+        <div id="errorMessage" class="error" style="display: none;">
+            <h3>⚠️ Error Loading Reviews</h3>
+            <p>Could not load the reviews data. Please make sure the 'bluesky_reviews_raw.json' file is in the same directory.</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

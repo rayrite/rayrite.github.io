@@ -1,0 +1,147 @@
+:root {
+  color-scheme: light dark;
+  --bg: #f4f6fb;
+  --bg-dark: #10121a;
+  --card: rgba(255, 255, 255, 0.75);
+  --border: rgba(36, 50, 99, 0.2);
+  --accent: #2f6fed;
+  --accent-strong: #d84b4b;
+  --text: #14213d;
+  --text-muted: rgba(20, 33, 61, 0.65);
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    sans-serif;
+}
+
+body {
+  margin: 0;
+  background: linear-gradient(180deg, rgba(227, 231, 245, 0.7), var(--bg));
+  min-height: 100vh;
+  color: var(--text);
+}
+
+body.dark {
+  background: linear-gradient(180deg, #05070d, var(--bg-dark));
+  color: #eef2ff;
+}
+
+.app {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(1.8rem, 2.5vw + 1.3rem, 2.8rem);
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  margin: 0;
+  color: var(--text-muted);
+  max-width: 46ch;
+}
+
+.status-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(12px);
+}
+
+.status-item {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.status-label {
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.timeline-wrapper {
+  position: relative;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  overflow: hidden;
+  min-height: 320px;
+  box-shadow: 0 24px 40px rgba(15, 26, 54, 0.12);
+}
+
+#timeline {
+  width: 100%;
+  height: 100%;
+  display: block;
+  cursor: grab;
+}
+
+#timeline.dragging {
+  cursor: grabbing;
+}
+
+.mini-map {
+  position: relative;
+  height: 96px;
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#mini-map {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.mini-window {
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  border: 2px solid var(--accent);
+  background: rgba(47, 111, 237, 0.1);
+  border-radius: 0.5rem;
+  pointer-events: none;
+}
+
+footer {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+@media (max-width: 640px) {
+  .app {
+    padding: 1.5rem 1rem 2.5rem;
+  }
+
+  .status-bar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

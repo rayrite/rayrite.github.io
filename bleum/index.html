@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Zoomable Timeline</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header>
+        <h1>Zoomable Timeline</h1>
+        <p class="subtitle">
+          Drag to pan, scroll to zoom. View spans from 100-year groupings down to
+          millisecond precision.
+        </p>
+      </header>
+
+      <section class="status-bar">
+        <div class="status-item">
+          <span class="status-label">Center:</span>
+          <span id="center-readout">Loading…</span>
+        </div>
+        <div class="status-item">
+          <span class="status-label">Scale:</span>
+          <span id="scale-readout">Loading…</span>
+        </div>
+      </section>
+
+      <main>
+        <div class="timeline-wrapper">
+          <canvas id="timeline" aria-label="Interactive timeline"></canvas>
+        </div>
+        <div class="mini-map" aria-label="Timeline navigator">
+          <canvas id="mini-map"></canvas>
+          <div class="mini-window" id="mini-window" aria-hidden="true"></div>
+        </div>
+      </main>
+
+      <footer>
+        <p>
+          Data sourced from <code>data/events.json</code>. Use the navigator below to
+          jump to different eras quickly.
+        </p>
+      </footer>
+    </div>
+
+    <script src="script.js" type="module"></script>
+  </body>
+</html>

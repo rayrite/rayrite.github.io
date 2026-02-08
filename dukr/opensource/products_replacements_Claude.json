@@ -1,0 +1,512 @@
+[
+  {
+    "product_name": "Real-ESRGAN",
+    "product_summary": "Practical algorithms for general image/video restoration and upscaling using deep learning. Supports Apple Silicon via Metal Performance Shaders (MPS) for GPU acceleration on Mac, with ncnn-vulkan binaries for macOS.",
+    "feature_list": ["AI-powered image upscaling (2x, 3x, 4x)", "Apple Silicon MPS (Metal Performance Shaders) GPU acceleration", "Video upscaling support", "Face enhancement via GFPGAN integration", "Cross-platform with macOS/Linux/Windows executables", "Multiple pre-trained models (anime, general, x4plus)"],
+    "github_url": "https://github.com/xinntao/Real-ESRGAN",
+    "product_number": "1",
+    "has_README": "YES",
+    "original_product": "Metal Goose",
+    "replacement_notes": "Real-ESRGAN is the most popular open-source AI image upscaler with 28K+ stars. It supports Apple Silicon via MPS and provides pre-built ncnn-vulkan macOS executables for GPU-accelerated upscaling. BSD-3-Clause license."
+  },
+  {
+    "product_name": "Goose",
+    "product_summary": "An open source, extensible AI agent that goes beyond code suggestions — install, execute, edit, and test with any LLM. Built by Block (formerly Square), it features a plugin/extension ecosystem for extending agent capabilities.",
+    "feature_list": ["Extensible plugin/skill system for adding capabilities", "Works with any LLM provider", "Install, execute, edit and test code autonomously", "MCP server integration for tools", "Desktop and CLI interfaces", "OpenCode plugin ecosystem compatibility"],
+    "github_url": "https://github.com/block/goose",
+    "product_number": "2",
+    "has_README": "YES",
+    "original_product": "OMI OpenCode",
+    "replacement_notes": "Goose by Block is an open-source extensible AI coding agent with 22.2K stars and active development. Its plugin/extension system allows installable modules to expand capabilities, directly matching OMI OpenCode's plugin bundle concept. Apache-2.0 license."
+  },
+  {
+    "product_name": "hackernews-trending-topics",
+    "product_summary": "Automatically index HackerNews content, extract topics using AI (LLM-based extraction), and query trending discussions in real-time. Uses CocoIndex for incremental pipeline processing.",
+    "feature_list": ["Custom HackerNews API source integration", "LLM-powered topic extraction (ExtractByLlm)", "Canonical topic normalization", "Trending topics query interface", "Text search across HN content", "Incremental re-processing of changed threads"],
+    "github_url": "https://github.com/cocoindex-io/hackernews-trending-topics",
+    "product_number": "3",
+    "has_README": "YES",
+    "original_product": "HN Time Capsule",
+    "replacement_notes": "Uses AI/LLM to automatically index and analyze Hacker News content, extracting topics and enabling querying of trending discussions — closely matching HN Time Capsule's AI analysis of Hacker News history. Open source, actively maintained."
+  },
+  {
+    "product_name": "sv-excel-agent",
+    "product_summary": "An Excel AI agent that uses MCP (Model Context Protocol) tools to let LLMs read, edit, and automate Excel spreadsheets. Includes ~30 tools for direct Excel file manipulation and supports multiple LLM backends.",
+    "feature_list": ["~30 MCP tools for Excel manipulation", "AI agent that reads, edits, and automates spreadsheets", "Benchmarked on SpreadsheetBench (50 examples)", "Supports multiple LLM models (GPT-4o, Claude, etc.)", "Slack bot integration for Excel workflows", "Configurable experiment runner with task inputs"],
+    "github_url": "https://github.com/SylvianAI/sv-excel-agent",
+    "product_number": "4",
+    "has_README": "YES",
+    "original_product": "SVXL Agent",
+    "replacement_notes": "sv-excel-agent is an almost exact functional match — an AI assistant specifically for Excel that uses MCP tools, letting LLMs read, edit, and automate Excel spreadsheets. MIT license."
+  },
+  {
+    "product_name": "Uptime Kuma",
+    "product_summary": "A fancy self-hosted monitoring tool for tracking the online/offline status of servers, websites, and services. Provides real-time uptime monitoring with a beautiful dashboard and 90+ notification integrations.",
+    "feature_list": ["HTTP(s)/TCP/Ping/DNS/Docker container monitoring", "90+ notification channels (Telegram, Discord, Slack, Email, etc.)", "Fancy reactive dashboard with real-time status", "Multi-language support", "2FA authentication", "Status pages for public display", "Docker deployment with one command"],
+    "github_url": "https://github.com/louislam/uptime-kuma",
+    "product_number": "5",
+    "has_README": "YES",
+    "original_product": "Device Activity Tracker",
+    "replacement_notes": "Uptime Kuma is the most popular self-hosted monitoring tool (60K+ stars) for tracking device/service online status. MIT license. Very actively maintained with frequent releases."
+  },
+  {
+    "product_name": "changedetection.io",
+    "product_summary": "The best open-source tool for website change detection, web page monitoring, and website change alerts. Monitors websites for content changes, price drops, restock alerts, and defacement.",
+    "feature_list": ["Website content change detection and alerts", "Browser automation via Playwright (click, fill, login)", "Visual selector for targeting specific page elements", "Price and restock monitoring for e-commerce", "90+ notification channels", "PDF change monitoring", "CSS/XPath/JSON selector filtering", "Docker self-hosted deployment"],
+    "github_url": "https://github.com/dgtlmoon/changedetection.io",
+    "product_number": "6",
+    "has_README": "YES",
+    "original_product": "Open Scouts",
+    "replacement_notes": "changedetection.io (29.2K stars) is the leading open-source web monitoring and alert platform — a direct replacement for Open Scouts' AI web monitoring and alerting functionality. Apache-2.0 license."
+  },
+  {
+    "product_name": "GlueSQL",
+    "product_summary": "A Rust library for SQL databases that includes a SQL parser, execution layer, and pluggable storage backends (in-memory, Sled, Redb, JSON, WebStorage, IndexedDB). Works as an embedded SQL engine in Rust and JavaScript/WASM environments.",
+    "feature_list": ["Full SQL parser and execution engine in Rust", "Multiple storage backends (Sled, Redb, JSON, in-memory)", "Embeddable as a library with zero external requirements", "WebAssembly support for browser environments", "AST Builder for programmatic query construction", "Pluggable custom storage engine architecture", "Cross-platform (Rust native + JavaScript/WASM)"],
+    "github_url": "https://github.com/gluesql/gluesql",
+    "product_number": "7",
+    "has_README": "YES",
+    "original_product": "Stoolop",
+    "replacement_notes": "GlueSQL (3K stars) is a mature Rust embedded SQL database engine with pluggable storage — matching Stoolop's core function. Apache-2.0 license."
+  },
+  {
+    "product_name": "LiteLLM",
+    "product_summary": "Python SDK and Proxy Server (AI Gateway) to call 100+ LLM APIs in OpenAI-compatible format. Provides unified interface for routing across multiple LLM providers with cost tracking, guardrails, load balancing, fallbacks, and logging.",
+    "feature_list": ["Unified API for 100+ LLM providers (OpenAI, Anthropic, Azure, Bedrock, etc.)", "Intelligent routing and load balancing across models", "Retry/fallback logic across multiple deployments", "Cost tracking and budget management per project/user", "Streaming, tool calling, structured outputs support", "Proxy server (LLM Gateway) with authentication", "Guardrails and observability integrations"],
+    "github_url": "https://github.com/BerriAI/litellm",
+    "product_number": "8",
+    "has_README": "YES",
+    "original_product": "Puzzle.ai",
+    "replacement_notes": "LiteLLM is the leading open-source multi-LLM orchestration framework with 25K+ stars. Provides a unified interface for calling and routing between 100+ LLMs. MIT license. Extremely actively maintained."
+  },
+  {
+    "product_name": "smolagents",
+    "product_summary": "A barebones, lightweight library for building AI agents that think in code. Core agent logic fits in ~1,000 lines of code. Supports CodeAgent and ToolCallingAgent, with multi-agent hierarchies and sandboxed execution.",
+    "feature_list": ["Ultra-lightweight core (~1,000 lines of code)", "CodeAgent writes actions as executable Python code", "ToolCallingAgent for JSON/text-based tool calling", "Model-agnostic (OpenAI, Anthropic, HuggingFace, Ollama, etc.)", "Multi-agent hierarchies and handoffs", "Sandboxed code execution (E2B, Docker, Modal, Pyodide)", "HuggingFace Hub integration for sharing tools/agents", "MCP server tool integration"],
+    "github_url": "https://github.com/huggingface/smolagents",
+    "product_number": "9",
+    "has_README": "YES",
+    "original_product": "Stirrup",
+    "replacement_notes": "smolagents by Hugging Face is the most prominent lightweight agent framework — ~1,000 lines of core code epitomizes a minimal agent library. Apache-2.0 license. Actively maintained by the Hugging Face team."
+  },
+  {
+    "product_name": "mem0",
+    "product_summary": "Universal memory layer for AI agents. Provides persistent, intelligent, human-like memory and recall for any LLM, enabling personalized AI interactions across sessions.",
+    "feature_list": ["Persistent semantic memory for LLM agents", "Supports OpenAI, Anthropic, and other providers", "Search, add, get, delete memory operations", "User preference tracking across sessions", "Graph-based memory with temporal awareness", "MCP server integration for Claude Desktop, Cursor, etc."],
+    "github_url": "https://github.com/mem0ai/mem0",
+    "product_number": "10",
+    "has_README": "YES",
+    "original_product": "Unsevered Memory",
+    "replacement_notes": "mem0 is the most popular open-source persistent semantic memory system for AI agents (38k+ stars). Provides the same core functionality as Unsevered Memory with broader provider support. Apache-2.0 license."
+  },
+  {
+    "product_name": "ComfyUI Frontend",
+    "product_summary": "Official enhanced front-end implementation of ComfyUI, rebuilt with Vue.js/TypeScript. Provides a modern, extensible UI for the ComfyUI Stable Diffusion workflow tool with native localization and extension API.",
+    "feature_list": ["Modern Vue.js/TypeScript frontend for ComfyUI", "Built-in translation/localization support (6+ languages)", "Extension API for custom sidebar tabs and commands", "Integrated terminal (Ctrl+`)", "Auto-convert widgets to inputs on link drop", "Daily release cycle with frequent updates"],
+    "github_url": "https://github.com/Comfy-Org/ComfyUI_frontend",
+    "product_number": "11",
+    "has_README": "YES",
+    "original_product": "ComfyUIAS",
+    "replacement_notes": "ComfyUI Frontend is the official enhanced frontend for ComfyUI, separated into its own repository in August 2024. Directly replaces any third-party enhanced UIs. GPL-3.0 license."
+  },
+  {
+    "product_name": "react2shell-scanner (Assetnote)",
+    "product_summary": "High-fidelity command-line tool for detecting React Server Component and Next.js vulnerabilities. Developed by Assetnote's security research team with safe side-channel detection modes.",
+    "feature_list": ["Detects RSC/Next.js RCE vulnerabilities", "Safe side-channel detection mode (--safe-check)", "Multi-threaded concurrent scanning", "WAF bypass capabilities", "Custom path testing", "JSON output for integration with other tools", "Follows same-host redirects automatically"],
+    "github_url": "https://github.com/assetnote/react2shell-scanner",
+    "product_number": "12",
+    "has_README": "YES",
+    "original_product": "React2Shell Scanner",
+    "replacement_notes": "The authoritative React2Shell scanner built by Assetnote (Searchlight Cyber). The most trusted and widely referenced scanner for Next.js/RSC vulnerabilities in the security community."
+  },
+  {
+    "product_name": "Paper2Slides (HKUDS)",
+    "product_summary": "AI-powered tool that turns research papers, reports, and documents into professional slides and posters using a 4-stage RAG-powered pipeline. Supports PDF, Word, Excel, PowerPoint, Markdown and more.",
+    "feature_list": ["Universal document support (PDF, Word, Excel, PPT, Markdown)", "RAG-powered content extraction for comprehensive insight capture", "Source-linked accuracy with traceability to original documents", "Custom styling via natural language or built-in themes", "Fast preview mode for rapid experimentation", "Session management with checkpoint system", "Web frontend and CLI interface"],
+    "github_url": "https://github.com/HKUDS/Paper2Slides",
+    "product_number": "13",
+    "has_README": "YES",
+    "original_product": "Paper2Slides",
+    "replacement_notes": "HKUDS/Paper2Slides is a document-to-slides converter with the same name and functionality. Built by HKU Data Science lab. MIT license, actively maintained."
+  },
+  {
+    "product_name": "ViMax",
+    "product_summary": "Agentic Video Generation framework that serves as Director, Screenwriter, Producer, and Video Generator All-in-One. Transforms raw ideas into complete video stories through intelligent multi-agent workflows.",
+    "feature_list": ["End-to-end video generation from concepts/storyboards", "Multi-agent workflow (scriptwriting, storyboarding, character creation, video generation)", "Novel-to-video conversion with narrative compression", "Character consistency across shots via reference image system", "Multi-camera simulation for immersive viewing", "Shot-level storyboard design with cinematography language", "Audio/voice/sound effects integration"],
+    "github_url": "https://github.com/HKUDS/ViMax",
+    "product_number": "14",
+    "has_README": "YES",
+    "original_product": "Storygen Atelier",
+    "replacement_notes": "ViMax is the best actively maintained open-source replacement for AI storyboard-to-video generation. Handles complete pipeline from storyboard to video with character consistency. 2.2k stars, MIT license."
+  },
+  {
+    "product_name": "qmd",
+    "product_summary": "Mini CLI search engine for markdown docs, knowledge bases, meeting notes, and more. Combines BM25 full-text search, vector semantic search, and LLM re-ranking, all running locally.",
+    "feature_list": ["BM25 full-text keyword search (fast)", "Vector semantic search via local embeddings", "Hybrid search with LLM-powered query expansion and re-ranking", "Collection management for organizing different document sets", "Multiple output formats (JSON, CSV, Markdown, XML)", "Runs entirely locally via node-llama-cpp with GGUF models", "Context annotations for collections"],
+    "github_url": "https://github.com/tobi/qmd",
+    "product_number": "15",
+    "has_README": "YES",
+    "original_product": "QMD",
+    "replacement_notes": "tobi/qmd is a direct functional match for QMD (Quick Markdown Search). Provides fast search across markdown files with three search modes. 316 stars. Created by Tobi Lütke (Shopify CEO)."
+  },
+  {
+    "product_name": "Promptomatix",
+    "product_summary": "An automatic prompt optimization framework for Large Language Models by Salesforce AI Research. Provides structured approach to prompt optimization with support for multiple LLM providers.",
+    "feature_list": ["Framework-agnostic design supporting OpenAI, Anthropic, Cohere", "Automated iterative prompt refinement using DSPy", "Synthetic data generation for evaluation", "Real-time human feedback incorporation", "CLI and REST API interfaces", "Comprehensive session management and logging", "Support for custom CSV training data"],
+    "github_url": "https://github.com/SalesforceAIResearch/promptomatix",
+    "product_number": "16",
+    "has_README": "YES",
+    "original_product": "The Rosetta Prompt",
+    "replacement_notes": "Promptomatix from Salesforce AI Research is the best multi-provider prompt optimization framework. Supports multiple LLM providers and automates prompt optimization. Apache-2.0 license."
+  },
+  {
+    "product_name": "Stable Diffusion web UI",
+    "product_summary": "Feature-rich browser-based interface for Stable Diffusion image generation. Supports text-to-image, image-to-image, inpainting, outpainting, and many advanced features with extensive model support.",
+    "feature_list": ["Text-to-image and image-to-image generation", "Supports SD 1.x, 2.x, SDXL, and Flux models", "Inpainting, outpainting, and upscaling", "ControlNet, LoRA, textual inversion support", "16+ samplers and extensive generation controls", "Extension/plugin system for custom features", "Batch processing and prompt editing", "Low VRAM optimizations (works with 2GB+ GPU RAM)"],
+    "github_url": "https://github.com/AUTOMATIC1111/stable-diffusion-webui",
+    "product_number": "17",
+    "has_README": "YES",
+    "original_product": "Pincher",
+    "replacement_notes": "The most popular open-source AI image generation interface with 158k stars. Comprehensive image generation capabilities. AGPL-3.0 license."
+  },
+  {
+    "product_name": "Z-Image",
+    "product_summary": "Efficient 6-billion-parameter bilingual (English & Chinese) image generation model family by Tongyi MAI (Alibaba). Excels in photorealistic generation, bilingual text rendering, and instruction adherence.",
+    "feature_list": ["Bilingual text rendering (English and Chinese)", "6B parameter efficient image generation model", "Z-Image-Turbo: sub-second inference with 8 steps", "Z-Image-Edit: bilingual instruction-based image editing", "Photorealistic generation with fine detail control", "ComfyUI, SGLang, and Candle integration support", "ControlNet support for guided generation"],
+    "github_url": "https://github.com/Tongyi-MAI/Z-Image",
+    "product_number": "18",
+    "has_README": "YES",
+    "original_product": "Longcat Image",
+    "replacement_notes": "Z-Image is a leading open-source bilingual image generation model. Natively supports English and Chinese text rendering. 9.9k stars, Apache-2.0 license."
+  },
+  {
+    "product_name": "imsg",
+    "product_summary": "A macOS Messages.app CLI to send, read, and stream iMessage/SMS with attachment metadata. Uses AppleScript for sending and read-only DB access for receiving.",
+    "feature_list": ["Send text and attachments via iMessage or SMS", "List chats with JSON output", "View message history with date filters", "Live stream new messages via filesystem events", "Phone normalization to E.164 format", "Attachment metadata output (mime, name, path)", "Reusable Swift core library"],
+    "github_url": "https://github.com/steipete/imsg",
+    "product_number": "19",
+    "has_README": "YES",
+    "original_product": "IMSG",
+    "replacement_notes": "steipete/imsg is the most complete and actively maintained iMessage CLI on GitHub. Supports sending, reading, streaming, chat listing, and filtering on macOS 14+. MIT license."
+  },
+  {
+    "product_name": "PromptForge",
+    "product_summary": "A visual prompt management system for AI image generation. Provides an intuitive web interface to organize, browse, and manage artistic style prompts with visual references and image previews.",
+    "feature_list": ["Visual interactive cards with hover descriptions", "Category management with customizable categories", "One-click copy prompts to clipboard", "Search across all prompt pages", "Full CRUD operations (add, edit, delete, reorder)", "JSON-based storage for easy versioning and sharing", "Dark & Light mode support", "Import/Export individual pages as JSON"],
+    "github_url": "https://github.com/intelligencedev/PromptForge",
+    "product_number": "20",
+    "has_README": "YES",
+    "original_product": "Prompt Forge",
+    "replacement_notes": "intelligencedev/PromptForge is a direct functional match for a visual prompt library/manager with Flask-based web UI, visual card previews, and category organization. Open source."
+  },
+  {
+    "product_name": "OpenUI",
+    "product_summary": "An AI-powered tool that lets you describe UI using natural language, then see it rendered live. Supports converting HTML to React, Svelte, Web Components, and more. Built by Weights & Biases.",
+    "feature_list": ["Describe UI in natural language and see it rendered live", "Convert HTML to React, Svelte, Web Components", "Supports OpenAI, Groq, Anthropic, Gemini, and local models via LiteLLM", "Live preview and iteration on designs", "Ollama integration for local open-source models", "Gitpod and Docker support", "Dev container for GitHub Codespaces"],
+    "github_url": "https://github.com/wandb/openui",
+    "product_number": "21",
+    "has_README": "YES",
+    "original_product": "UI-UX Pro Max",
+    "replacement_notes": "wandb/openui is the closest open-source match for AI-powered UI/UX design intelligence. Uses LLMs to generate UI from natural language. Apache-2.0 license, 21.8k stars."
+  },
+  {
+    "product_name": "sc-im",
+    "product_summary": "Spreadsheet Calculator Improvised — an ncurses-based, vim-like spreadsheet calculator for the terminal. Based on the classic 'sc' program with modern enhancements.",
+    "feature_list": ["Vim-like movement commands and key mappings", "UNDO/REDO support", "65,536 rows and 702 columns (expandable to 1M rows)", "CSV/TAB/XLSX import and export, ODS import, Markdown export", "Direct RGB color support and cell formatting (bold, italic, underline)", "Wide character support for multiple languages", "Lua scripting support", "Clipboard and marks system"],
+    "github_url": "https://github.com/andmarti1424/sc-im",
+    "product_number": "22",
+    "has_README": "YES",
+    "original_product": "Go Sheet",
+    "replacement_notes": "sc-im is the most popular and fully-featured terminal spreadsheet application on GitHub. Provides a complete spreadsheet experience with vim-like keybindings and formula support. BSD license."
+  },
+  {
+    "product_name": "RapidRAW",
+    "product_summary": "A beautiful, non-destructive, and GPU-accelerated RAW image editor built with performance in mind. Features professional color grading tools, tone curves, masking, and more.",
+    "feature_list": ["Full RAW format support via rawler library", "Non-destructive workflow with sidecar files", "GPU-accelerated processing with custom WGSL shader", "Color grading: temperature, tint, vibrance, saturation, HSL mixer, color wheels", "Tone curves with Luma/RGB channels", "LUT support, dehaze, vignette, film grain effects", "AI-powered masking (subject/foreground detection)", "Lens correction via Lensfun", "Batch export and image library management"],
+    "github_url": "https://github.com/CyberTimon/RapidRAW",
+    "product_number": "23",
+    "has_README": "YES",
+    "original_product": "Raw Alchemy",
+    "replacement_notes": "RapidRAW is an actively developed RAW photo editor with comprehensive color grading capabilities including tone curves, HSL mixer, color wheels, and LUT application. AGPL-3.0 license, 3.6k stars."
+  },
+  {
+    "product_name": "Langfuse",
+    "product_summary": "Open-source LLM engineering platform providing LLM observability, metrics, evaluations, prompt management, playground, and datasets. Tracks and monitors AI/LLM application sessions.",
+    "feature_list": ["LLM application tracing and observability", "Session-based analysis for user-facing AI apps", "Cost, latency, and token usage monitoring", "Prompt management with version control", "LLM-as-a-judge evaluation framework", "User feedback collection and manual labeling", "Integrates with OpenTelemetry, LangChain, OpenAI SDK, LiteLLM", "Self-hostable with Docker", "Playground for testing prompts"],
+    "github_url": "https://github.com/langfuse/langfuse",
+    "product_number": "24",
+    "has_README": "YES",
+    "original_product": "Agent Sessions",
+    "replacement_notes": "Langfuse is the most comprehensive open-source LLM session monitoring and observability platform. Tracks LLM calls, agent sessions, costs, and performance metrics. MIT license."
+  },
+  {
+    "product_name": "Logseq",
+    "product_summary": "A privacy-first, open-source knowledge base that works on top of local plain-text Markdown and Org-mode files. Supports knowledge graphs, bi-directional linking, and is widely used for research workflows.",
+    "feature_list": ["Privacy-first, local-first architecture", "Plain-text Markdown and Org-mode file storage", "Bi-directional linking and knowledge graph visualization", "Block-level referencing and embedding", "PDF annotation and highlights", "Flashcards with spaced repetition", "Custom queries and advanced search", "Plugin ecosystem for extensibility", "Zotero integration for academic research"],
+    "github_url": "https://github.com/logseq/logseq",
+    "product_number": "25",
+    "has_README": "YES",
+    "original_product": "Jargon",
+    "replacement_notes": "Logseq is the leading open-source personal knowledge management tool for research. Combines outliner-style note-taking with knowledge graphs and research-friendly features. AGPL-3.0 license, 30k+ stars."
+  },
+  {
+    "product_name": "Zettlr",
+    "product_summary": "A Markdown editor for the 21st century — a one-stop publication workbench supporting academic writing, Zettelkasten, and documentation with built-in Mermaid diagram rendering.",
+    "feature_list": ["Full Markdown editing with WYSIWYM rendering", "Built-in Mermaid diagram rendering inline", "Citation management with Zotero/BibTeX integration", "Zettelkasten support with cross-linking", "Multiple document tabs and split windows", "Export via Pandoc to PDF, DOCX, HTML, and more", "Spell checking and LanguageTool grammar checking", "Full-screen and distraction-free modes", "Cross-platform: Windows, macOS, Linux"],
+    "github_url": "https://github.com/Zettlr/Zettlr",
+    "product_number": "26",
+    "has_README": "YES",
+    "original_product": "MarkX",
+    "replacement_notes": "Zettlr is a full-featured Markdown editor with built-in Mermaid diagram support — directly replacing MarkX's core function of markdown editing with diagrams. GPL-3.0 license."
+  },
+  {
+    "product_name": "python-audio-separator",
+    "product_summary": "Easy-to-use audio stem separation from CLI or as a Python package, using pre-trained models from Ultimate Vocal Remover (UVR) including Demucs, MDX-Net, VR Arch, and MDXC architectures.",
+    "feature_list": ["Separate audio into stems (vocals, drums, bass, guitar, piano, other)", "Supports multiple model architectures: Demucs, MDX-Net, VR Arch, MDXC", "CLI and Python package interfaces", "Supports all common audio formats (WAV, MP3, FLAC, M4A)", "GPU acceleration with CUDA support", "Multiple pre-trained models from UVR ecosystem", "Karaoke mode (two-stem vocal/instrumental separation)", "Configurable quality parameters per architecture"],
+    "github_url": "https://github.com/nomadkaraoke/python-audio-separator",
+    "product_number": "27",
+    "has_README": "YES",
+    "original_product": "STEM Lab",
+    "replacement_notes": "python-audio-separator wraps all major separation models (including Demucs) from the UVR ecosystem into a clean CLI/Python interface. More versatile than Demucs alone since it supports multiple architectures. MIT license."
+  },
+  {
+    "product_name": "Nano-PDF",
+    "product_summary": "Edit PDF files using natural language commands powered by Gemini AI. Converts PDF pages to images, uses AI to generate edited versions based on natural language prompts, performs OCR to restore text.",
+    "feature_list": ["Natural language PDF editing via Gemini AI", "Page rendering to images using Poppler", "Style reference pages for matching visual style (fonts, colors, layout)", "OCR re-hydration with Tesseract for searchable text", "PDF stitching to preserve document structure", "Parallel page processing for speed", "Configurable resolution (4K/2K/1K)"],
+    "github_url": "https://github.com/gavrielc/Nano-PDF",
+    "product_number": "28",
+    "has_README": "YES",
+    "original_product": "NanoPDF Editor",
+    "replacement_notes": "Near-perfect functional match. Nano-PDF uses Gemini AI to edit PDFs with natural language instructions — the exact core functionality of NanoPDF Editor. MIT license, 712 stars."
+  },
+  {
+    "product_name": "Stable Diffusion Web UI (API mode)",
+    "product_summary": "A full-featured browser interface for Stable Diffusion with a built-in REST API server for text-to-image generation. Supports txt2img, img2img, inpainting, and upscaling via API endpoints.",
+    "feature_list": ["Built-in REST API for text-to-image generation (--api flag)", "txt2img, img2img, inpainting, upscaling endpoints", "Multiple model support (SD 1.5, SD 2.x, SDXL, SD3)", "Batch processing and concurrent requests", "Docker deployment support", "Extensive extension ecosystem", "GPU-accelerated high-speed image generation"],
+    "github_url": "https://github.com/AUTOMATIC1111/stable-diffusion-webui",
+    "product_number": "29",
+    "has_README": "YES",
+    "original_product": "Z-Image Turbo",
+    "replacement_notes": "The most widely-used open-source text-to-image generation server. With --api flag, it functions as a high-speed API server for text-to-image generation. AGPL-3.0 license, 160k stars."
+  },
+  {
+    "product_name": "OpenAI Translator",
+    "product_summary": "A browser extension and cross-platform desktop application for AI-powered translation using ChatGPT, DeepSeek, and other LLM APIs. Supports text selection translation, word polishing, and summarization across 55+ languages.",
+    "feature_list": ["Browser extension (Chrome/Edge/Firefox)", "Cross-platform desktop application", "Translation, polishing, and summarization modes", "55+ language support", "Streaming mode for real-time output", "Vocabulary book with AI-generated memory aids", "Supports both OpenAI and Azure OpenAI Service"],
+    "github_url": "https://github.com/openai-translator/openai-translator",
+    "product_number": "30",
+    "has_README": "YES",
+    "original_product": "AI Translator",
+    "replacement_notes": "Closest match for a browser-based AI translation extension. Provides the exact same functionality: an AI-powered browser extension for translation. AGPL-3.0 license, ~24k stars."
+  },
+  {
+    "product_name": "LocalAI",
+    "product_summary": "The free, open-source alternative to OpenAI that supports distributed, peer-to-peer, and decentralized AI inference. Self-hosted, local-first, with P2P federated mode for AI swarms.",
+    "feature_list": ["P2P decentralized inference and AI swarms", "Distributed/federated mode for compute sharing", "OpenAI-compatible REST API (drop-in replacement)", "Text generation, image generation, audio, video, voice cloning", "No GPU required - runs on consumer hardware", "Docker deployment", "Backend gallery with installable model backends"],
+    "github_url": "https://github.com/mudler/LocalAI",
+    "product_number": "31",
+    "has_README": "YES",
+    "original_product": "Confidential Compute Open Network",
+    "replacement_notes": "Best open-source match for decentralized AI compute. LocalAI's P2P Dashboard, federated mode, and AI Swarms features provide decentralized computing for AI workloads. MIT license."
+  },
+  {
+    "product_name": "OpenHands",
+    "product_summary": "An open-source autonomous AI software development agent platform (formerly OpenDevin). Cloud-based and remotely controlled AI coding agents that can modify code, run commands, browse the web, and call APIs.",
+    "feature_list": ["Autonomous AI coding agent with terminal/browser/editor access", "Remote operation via CLI, REST API, GUI, and GitHub Actions", "Integrations with GitHub, GitLab, CI/CD, Slack", "Model-agnostic (Claude, GPT, Gemini, local LLMs)", "Sandboxed Docker/Kubernetes execution environments", "SDK for building custom agents", "Solves 87% of bug tickets autonomously"],
+    "github_url": "https://github.com/All-Hands-AI/OpenHands",
+    "product_number": "32",
+    "has_README": "YES",
+    "original_product": "Dynamis Remote Coding Agent",
+    "replacement_notes": "Premier open-source replacement for remotely-controlled AI coding agents. Supports remote operation via REST API, cloud deployment, and GitHub issue assignment. MIT license, 65k+ stars."
+  },
+  {
+    "product_name": "Diagrams",
+    "product_summary": "Diagram as Code tool for prototyping cloud system architecture designs in Python. Allows creating interactive system architecture diagrams without design tools, supporting major cloud providers.",
+    "feature_list": ["Diagram as Code in Python", "Cloud provider support: AWS, Azure, GCP, Oracle, Alibaba", "Kubernetes architecture diagrams", "On-premise and custom node support", "Cluster/group nesting for complex architectures", "Multiple output formats (PNG, SVG, PDF, DOT)", "Used by Apache Airflow for architecture docs"],
+    "github_url": "https://github.com/mingrammer/diagrams",
+    "product_number": "33",
+    "has_README": "YES",
+    "original_product": "System Design Visualizer",
+    "replacement_notes": "The most popular open-source tool for creating system architecture diagrams. Leading tool for system design visualization. MIT license, 40k+ stars."
+  },
+  {
+    "product_name": "Hyperswitch",
+    "product_summary": "An open-source payments switch written in Rust designed to make payments fast, reliable, and affordable. Provides modular payment infrastructure with intelligent routing, vault, reconciliation, and multi-PSP orchestration.",
+    "feature_list": ["Real-time intelligent payment routing across multiple PSPs", "PCI-compliant vault for payment method storage", "Automated 2-way and 3-way reconciliation", "Revenue recovery with retry engine (30+ parameters)", "Cost observability and analytics dashboards", "Alternative payment methods (PayPal, Apple Pay, Google Pay, BNPL)", "One-click Docker/local setup", "Written in Rust for high performance"],
+    "github_url": "https://github.com/juspay/hyperswitch",
+    "product_number": "34",
+    "has_README": "YES",
+    "original_product": "Real-time Payment Architecture",
+    "replacement_notes": "Production-grade, real-time payment processing architecture with modular components. Apache-2.0 license, 39.1k stars, PCI DSS 4.0 compliant."
+  },
+  {
+    "product_name": "RAGFlow",
+    "product_summary": "A leading open-source Retrieval-Augmented Generation (RAG) engine with Docker-first deployment. Provides deep document understanding with configurable LLMs, hybrid search, and streamlined RAG orchestration.",
+    "feature_list": ["Docker-first deployment (docker compose up)", "Deep document understanding (PDF, Word, slides, Excel, images, web)", "Hybrid search: vector similarity + BM25 with fused re-ranking", "Configurable LLMs and embedding models (Ollama, OpenAI, etc.)", "Knowledge graph visualization (GraphRAG)", "Agentic RAG capabilities", "Visual text chunking with human intervention", "Traceable citations with page references", "REST API for integration"],
+    "github_url": "https://github.com/infiniflow/ragflow",
+    "product_number": "35",
+    "has_README": "YES",
+    "original_product": "Knowledge Base Self-Hosting Kit",
+    "replacement_notes": "Best actively-maintained Docker-based self-hosted RAG server. Matches the core concept of a 'Docker RAG server' for knowledge bases. Apache-2.0 license, 40k+ stars."
+  },
+  {
+    "product_name": "LLM",
+    "product_summary": "A CLI tool and Python library for running prompts against large language models. Supports 50+ LLM providers via plugins, both through remote APIs and local models.",
+    "feature_list": ["Run LLM prompts from command-line or Python", "Support for 50+ LLM providers via plugins (OpenAI, Claude, Gemini, Ollama, etc.)", "Interactive chat mode", "Prompt templates and system prompts", "Pipe content (files, images) into prompts", "Conversation logging to SQLite", "Plugin ecosystem for extensibility", "Local model support via Ollama, llama.cpp"],
+    "github_url": "https://github.com/simonw/llm",
+    "product_number": "36",
+    "has_README": "YES",
+    "original_product": "Run Prompt",
+    "replacement_notes": "Simon Willison's 'llm' is the most popular CLI tool for running/executing LLM prompts — exactly matching Run Prompt's core function. Apache-2.0 license, 10.2k stars."
+  },
+  {
+    "product_name": "nightTab",
+    "product_summary": "A highly customizable neutral new tab page accented with a chosen colour. Customize the layout, style, background, and bookmarks to create a personalized browser start page.",
+    "feature_list": ["Fully customizable layout, style, and background", "Bookmark management with visual customization", "Light/dark/custom color themes", "Available as Chrome and Firefox extension", "No browser permissions required", "Import/export settings", "Bookmark visual sharing between entries"],
+    "github_url": "https://github.com/zombieFox/nightTab",
+    "product_number": "37",
+    "has_README": "YES",
+    "original_product": "SIP",
+    "replacement_notes": "nightTab is one of the most popular open-source startpage projects — highly customizable, works on both Chrome and Firefox, and is privacy-friendly. GPL-3.0 license."
+  },
+  {
+    "product_name": "webui-aria2",
+    "product_summary": "A web-based user interface for the aria2 download manager. Provides a modern, responsive web UI to manage downloads of HTTP, FTP, BitTorrent, and Magnet links through a browser.",
+    "feature_list": ["Web-based download manager interface", "Supports HTTP/FTP/BitTorrent/Magnet downloads", "File selection for torrents and metalinks", "Docker support including Raspberry Pi", "Progressive Web App (PWA) - works offline", "Direct file download from webui dashboard", "Configuration via web interface", "Can run as self-hosted service on NAS/server"],
+    "github_url": "https://github.com/ziahamza/webui-aria2",
+    "product_number": "38",
+    "has_README": "YES",
+    "original_product": "Stacks",
+    "replacement_notes": "webui-aria2 is the closest match to Stacks' core function of a web-based download manager with UI. Self-hostable with Docker. MIT license, 9k+ stars."
+  },
+  {
+    "product_name": "gitlogue",
+    "product_summary": "A cinematic Git commit replay tool for the terminal that turns your Git history into a living, animated story with realistic typing animations, syntax highlighting, and file tree transitions.",
+    "feature_list": ["Cinematic commit replay with typing animations", "Syntax highlighting via Tree-sitter (~30 languages)", "File tree transitions between commits", "Multiple display modes: screensaver, single commit, range replay", "Chronological or reverse commit ordering", "Loop mode for continuous display", "Customizable themes and typing speed", "Built in Rust for speed and efficiency"],
+    "github_url": "https://github.com/unhappychoice/gitlogue",
+    "product_number": "39",
+    "has_README": "YES",
+    "original_product": "GitStory",
+    "replacement_notes": "gitlogue transforms commit diffs into animated terminal experiences with typing simulations, directly aligning with the 'cinematic code history view' concept. ISC License."
+  },
+  {
+    "product_name": "parse5",
+    "product_summary": "An HTML parsing/serialization toolset for Node.js that is fully WHATWG HTML Living Standard (HTML5) compliant. The fastest spec-compliant HTML parser for Node.js.",
+    "feature_list": ["Full WHATWG HTML Living Standard compliance", "HTML5 parsing and serialization", "SAX-compatible interface available", "Tree adapters for different DOM implementations", "Used by major projects (Cheerio, Angular, etc.)", "Streaming parsing support", "Error-tolerant parsing", "Works in browser and Node.js environments"],
+    "github_url": "https://github.com/inikulin/parse5",
+    "product_number": "40",
+    "has_README": "YES",
+    "original_product": "Just JSHTL",
+    "replacement_notes": "parse5 is the gold standard JavaScript HTML5 parser library. Most widely used spec-compliant HTML5 parser, used by Cheerio and Angular. MIT License."
+  },
+  {
+    "product_name": "Glow",
+    "product_summary": "A terminal-based markdown reader designed to render markdown beautifully on the CLI. Discover markdown files, read documentation directly on the command line with syntax highlighting and multiple themes.",
+    "feature_list": ["Beautiful terminal markdown rendering", "Local markdown file discovery and Git repo browsing", "Fetch READMEs directly from GitHub/GitLab URLs", "Multiple built-in themes (dark/light auto-detection)", "Custom style/theme support via Glamour", "Pager support for long documents", "Configurable output width and wrapping", "Stash feature for saving and organizing markdown files"],
+    "github_url": "https://github.com/charmbracelet/glow",
+    "product_number": "41",
+    "has_README": "YES",
+    "original_product": "Eckfoss",
+    "replacement_notes": "Glow is the premier terminal markdown tool by Charm. Rich markdown rendering with file discovery, remote fetching, and stash organization ideal for research. MIT License, 21k+ stars."
+  },
+  {
+    "product_name": "rainfrog",
+    "product_summary": "A keyboard-driven database management TUI (terminal user interface) tool, primarily designed for PostgreSQL, with support for MySQL, SQLite, and Oracle databases.",
+    "feature_list": ["Keyboard-first TUI interface for PostgreSQL", "SQL query editor with syntax highlighting", "Table/schema browsing with navigation", "Query result viewer with scrolling", "Support for PostgreSQL, MySQL, SQLite, Oracle", "Connection profiles via config file", "Vi-like keybindings", "Mouse support (optional)", "Lightweight and fast (built in Rust)"],
+    "github_url": "https://github.com/achristmascarl/rainfrog",
+    "product_number": "42",
+    "has_README": "YES",
+    "original_product": "TCL",
+    "replacement_notes": "rainfrog is the best replacement for keyboard-driven PostgreSQL management. Emphasizes keyboard navigation with a clean TUI, built in Rust. MIT License, 4.6k stars."
+  },
+  {
+    "product_name": "DeepLinkDispatch",
+    "product_summary": "A simple, annotation-based library by Airbnb for making deep link handling better on Android. Provides declarative URL routing and deep link registration with type-safe parameter handling.",
+    "feature_list": ["Annotation-based deep link registration", "URL route matching with path and query parameters", "Type-safe parameter extraction", "Regex pattern support for URL matching", "DeepLinkHandler support for Kotlin objects", "Compile-time deep link validation", "Support for App Links and custom URI schemes", "Widely used in production (Airbnb and many others)"],
+    "github_url": "https://github.com/airbnb/DeepLinkDispatch",
+    "product_number": "43",
+    "has_README": "YES",
+    "original_product": "Universal App Opener",
+    "replacement_notes": "DeepLinkDispatch by Airbnb is the most popular open-source deep linking toolkit (4.4k stars). Comprehensive toolkit for handling deep links and universal links. Apache-2.0 License."
+  },
+  {
+    "product_name": "Kyoo",
+    "product_summary": "A self-hosted media server focused on video content (Movies, Series & Anime). An alternative to Jellyfin or Plex with automatic metadata fetching and minimal maintenance requirements.",
+    "feature_list": ["Self-hosted media server for movies, TV shows, and anime", "Automatic metadata fetching (no manual edits needed)", "No specific folder structure required", "Built-in transcoding support", "Modern web UI for browsing media", "Docker deployment", "Low maintenance design"],
+    "github_url": "https://github.com/zoriya/Kyoo",
+    "product_number": "44",
+    "has_README": "YES",
+    "original_product": "Cinephage",
+    "replacement_notes": "Kyoo is an excellent self-hosted media library manager for movies/TV shows. Automatic media scanning, metadata fetching, and a modern UI with minimal setup. GPL-3.0 License."
+  },
+  {
+    "product_name": "MicroRealEstate",
+    "product_summary": "Open-source real estate management system that helps manage properties, rentals, tenants, leases, and payment tracking with Docker-based deployment.",
+    "feature_list": ["Centralized property and tenant information management", "Rent lease creation with customizable templates", "Rent payment tracking and overdue alerts", "Custom document generation (letters, contracts, invoices)", "Multi-user collaboration support", "Docker-based self-hosted deployment"],
+    "github_url": "https://github.com/microrealestate/microrealestate",
+    "product_number": "45",
+    "has_README": "YES",
+    "original_product": "Listing Lab",
+    "replacement_notes": "MicroRealEstate is the most actively maintained open-source real estate management system (981 stars, MIT license). Tracks properties, manages listings, notes, and financial data."
+  },
+  {
+    "product_name": "Memos",
+    "product_summary": "Open-source, self-hosted note-taking and journaling service with privacy-first design. No tracking, no ads, no subscription fees.",
+    "feature_list": ["Self-hosted with Docker support", "Privacy-first — no tracking, ads, or telemetry", "Markdown support for rich text entries", "Tag-based organization system", "RESTful API for integrations", "Multi-platform access via web browser", "Built with Go and React for fast performance"],
+    "github_url": "https://github.com/usememos/memos",
+    "product_number": "46",
+    "has_README": "YES",
+    "original_product": "Jernivine",
+    "replacement_notes": "Memos is the premier self-hosted journaling/note-taking service on GitHub with 40,000+ stars. Lightweight, privacy-first daily journaling platform. MIT license."
+  },
+  {
+    "product_name": "Jan",
+    "product_summary": "Open-source ChatGPT alternative that runs 100% offline on your computer. Download and run LLMs locally with full privacy, no cloud dependencies.",
+    "feature_list": ["100% offline local AI inference", "Download and run LLMs (Llama, Gemma, Qwen, etc.) from HuggingFace", "Cloud integration option (OpenAI, Anthropic, Mistral, Groq)", "Custom AI assistants creation", "OpenAI-compatible local API server (localhost:1337)", "MCP (Model Context Protocol) integration", "Cross-platform: Windows, macOS, Linux", "Multiple engine support (llama.cpp, TensorRT-LLM)"],
+    "github_url": "https://github.com/janhq/jan",
+    "product_number": "47",
+    "has_README": "YES",
+    "original_product": "CLDIS",
+    "replacement_notes": "Jan is the leading open-source local-first AI assistant with 40,200+ stars. Runs entirely on your device with no internet required. AGPLv3 license."
+  },
+  {
+    "product_name": "Proxy Checker (Jesewe)",
+    "product_summary": "A concurrent and efficient proxy checker for testing HTTP, SOCKS4, and SOCKS5 proxies with a modern PyQt6-based GUI interface.",
+    "feature_list": ["Modern GUI built with PyQt6", "HTTP, SOCKS4, and SOCKS5 proxy support", "Multi-threaded concurrent proxy checking", "Configurable timeout, retries, and custom test URL", "Detailed results: response times, anonymity classification, geo-location", "Multiple export formats: TXT, CSV, JSON", "Pause/Resume functionality", "Progress bars and real-time log output", "Automatic update checker"],
+    "github_url": "https://github.com/Jesewe/proxy-checker",
+    "product_number": "48",
+    "has_README": "YES",
+    "original_product": "Proxy Checker Pro",
+    "replacement_notes": "Jesewe/proxy-checker is a Python-based GUI proxy checker (MIT license) that closely matches Proxy Checker Pro's core function of GUI-based proxy validation with PyQt6 interface."
+  },
+  {
+    "product_name": "stltostp",
+    "product_summary": "Command-line utility to convert STL files to STEP (ISO 10303-21) files with direct triangle-to-triangle conversion and tolerance-based edge merging.",
+    "feature_list": ["Converts ASCII and binary STL files to STEP format", "Direct triangle-to-triangle conversion", "Tolerance-based edge merging for cleaner output", "ISO 10303-21 compliant STEP output", "No dependencies on OpenCASCADE or FreeCAD", "Simple command-line interface", "CAD-interoperable STEP file generation"],
+    "github_url": "https://github.com/slugdev/stltostp",
+    "product_number": "49",
+    "has_README": "YES",
+    "original_product": "Stepify",
+    "replacement_notes": "stltostp is the most direct open-source replacement for STL-to-STEP conversion. Lightweight, focused single-purpose design matching Stepify's function."
+  },
+  {
+    "product_name": "YARS (Yet Another Reddit Scraper)",
+    "product_summary": "A lightweight Python package for scraping Reddit posts, comments, user data, and media without requiring official Reddit API keys.",
+    "feature_list": ["No Reddit API keys required — uses public .json endpoints", "Reddit search by keyword query", "Post scraping with title, body, and full comment trees", "User data scraping (recent posts and comments)", "Subreddit posts fetching with category and time filters", "Image downloading from posts", "Proxy rotation support for large-scale scraping", "Installable as Python package via pip"],
+    "github_url": "https://github.com/datavorous/yars",
+    "product_number": "50",
+    "has_README": "YES",
+    "original_product": "Universal Reddit Scraper",
+    "replacement_notes": "YARS is a modern, actively maintained Reddit scraper (~156 stars, MIT license). Covers all core scraping functions: subreddits, posts, comments, user data, and media downloading without API keys."
+  },
+  {
+    "product_name": "Vibe Kanban",
+    "product_summary": "An open-source Kanban board for orchestrating AI coding agents in parallel. Manage tasks, assign multiple AI agents, review diffs, and merge code from a unified visual interface.",
+    "feature_list": ["Kanban board UI (To Do → In Progress → Review → Done)", "Parallel AI agent execution in isolated Git worktrees", "Support for Claude Code, Gemini CLI, Cursor, Codex, OpenAI, and more", "Built-in diff viewer for code review", "One-click PR creation and merge on GitHub", "Task templates for standardized workflows", "MCP server for agent-to-agent orchestration", "Real-time WebSocket updates", "Open in IDE integration (VSCode, SSH remote)", "Rust backend + TypeScript/React frontend"],
+    "github_url": "https://github.com/BloopAI/vibe-kanban",
+    "product_number": "51",
+    "has_README": "YES",
+    "original_product": "VibeConBon",
+    "replacement_notes": "Vibe Kanban is the premier open-source Kanban board for AI agents with 9,400+ stars. Precisely matches VibeConBon's concept of a Kanban-style board for managing AI agent tasks. Apache 2.0 license."
+  }
+]

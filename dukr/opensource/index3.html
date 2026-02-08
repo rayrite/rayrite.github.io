@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Projects Browser</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            font-size: 16px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stats {
+            display: flex;
+            gap: 2rem;
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        .controls {
+            background: white;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        label {
+            font-weight: 500;
+            font-size: 1rem;
+            color: #555;
+        }
+        
+        input, select {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        #search {
+            min-width: 300px;
+        }
+        
+        .container {
+            padding: 1.5rem 2rem;
+            max-width: 100%;
+        }
+        
+        .video-section {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+        
+        .video-header {
+            background: #f8f9fa;
+            padding: 1rem 1.5rem;
+            border-bottom: 2px solid #667eea;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .video-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .video-meta {
+            font-size: 0.95rem;
+            color: #666;
+        }
+        
+        .video-link {
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        .video-link:hover {
+            text-decoration: underline;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 1rem;
+        }
+        
+        th, td {
+            padding: 1rem 1.25rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+            vertical-align: top;
+        }
+        
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #555;
+            white-space: nowrap;
+            font-size: 1.05rem;
+        }
+        
+        tr:hover {
+            background: #f8f9fa;
+        }
+        
+        td {
+            line-height: 1.7;
+        }
+        
+        /* Column specific styles */
+        .col-number {
+            width: 60px;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .col-name {
+            min-width: 200px;
+            font-weight: 600;
+        }
+        
+        .col-timestamp {
+            width: 100px;
+            white-space: nowrap;
+        }
+        
+        .col-date {
+            width: 120px;
+            white-space: nowrap;
+        }
+        
+        .col-links {
+            width: 150px;
+            white-space: nowrap;
+        }
+        
+        .col-sources {
+            width: 120px;
+        }
+        
+        .col-synopsis, .col-transcript {
+            min-width: 350px;
+            max-width: 500px;
+        }
+        
+        a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 0.3rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-right: 0.3rem;
+            margin-bottom: 0.2rem;
+        }
+        
+        .badge-readme {
+            background: #28a745;
+            color: white;
+        }
+        
+        .badge-transcript {
+            background: #17a2b8;
+            color: white;
+        }
+        
+        .link-btn {
+            display: inline-block;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.3rem;
+            text-decoration: none;
+        }
+        
+        .link-github {
+            background: #6f42c1;
+            color: white;
+        }
+        
+        .link-github:hover {
+            background: #5a32a3;
+            text-decoration: none;
+        }
+        
+        .link-readme {
+            background: #28a745;
+            color: white;
+        }
+        
+        .link-readme:hover {
+            background: #218838;
+            text-decoration: none;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            font-size: 1.3rem;
+            color: #666;
+        }
+        
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 1rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+        }
+        
+        .text-content {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-width: 500px;
+            line-height: 1.7;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        @media (max-width: 1200px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            table {
+                font-size: 0.95rem;
+            }
+            
+            th, td {
+                padding: 0.75rem;
+            }
+            
+            .col-synopsis, .col-transcript {
+                min-width: 250px;
+                max-width: 350px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .control-group {
+                width: 100%;
+            }
+            
+            input, select {
+                width: 100%;
+            }
+            
+            .video-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>📁 GitHub Projects Browser</h1>
+        <div class="stats">
+            <span id="total-videos">Videos: 0</span>
+            <span id="total-products">Products: 0</span>
+            <span id="filtered-products">Showing: 0</span>
+        </div>
+    </header>
+    
+    <div class="controls">
+        <div class="control-group">
+            <label for="search">Search:</label>
+            <input type="text" id="search" placeholder="Search products, descriptions, transcripts...">
+        </div>
+        <div class="control-group">
+            <label for="source-filter">Source:</label>
+            <select id="source-filter">
+                <option value="">All Sources</option>
+                <option value="readme">README</option>
+                <option value="transcript">Transcript</option>
+            </select>
+        </div>
+        <div class="control-group">
+            <label for="has-readme">Has README:</label>
+            <select id="has-readme">
+                <option value="">All</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div id="loading" class="loading">Loading data...</div>
+        <div id="error" class="error" style="display: none;"></div>
+        <div id="content" style="display: none;">
+            <!-- Content will be rendered here -->
+        </div>
+        <div id="no-results" class="no-results" style="display: none;">
+            No products found matching your search.
+        </div>
+    </div>
+
+    <script>
+        let allData = [];
+        let filteredData = [];
+        
+        async function loadData() {
+            try {
+                const response = await fetch('listicle_001_updated.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                
+                // Process data
+                const videos = data.videos || data;
+                document.getElementById('total-videos').textContent = `Videos: ${videos.length}`;
+                
+                let productCount = 0;
+                
+                // Process videos and sort by publish date (newest first)
+                videos.forEach((video, videoIndex) => {
+                    const processedProducts = [];
+                    
+                    if (video.products) {
+                        video.products.forEach(product => {
+                            processedProducts.push({
+                                ...product,
+                                video_title: video.title,
+                                video_id: video.video_id,
+                                video_url: video.video_url,
+                                publish_date: video.publish_date,
+                                channel: video.channel_name,
+                                video_index: videoIndex
+                            });
+                            productCount++;
+                        });
+                    }
+                    
+                    allData.push({
+                        ...video,
+                        products: processedProducts
+                    });
+                });
+                
+                // Sort videos by publish date (newest first)
+                allData.sort((a, b) => {
+                    const dateA = new Date(a.publish_date || '1970-01-01');
+                    const dateB = new Date(b.publish_date || '1970-01-01');
+                    return dateB - dateA;
+                });
+                
+                document.getElementById('total-products').textContent = `Products: ${productCount}`;
+                
+                // Initial render
+                filterData();
+                
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('content').style.display = 'block';
+                
+            } catch (err) {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('error').style.display = 'block';
+                document.getElementById('error').textContent = 'Error loading data: ' + err.message;
+            }
+        }
+        
+        function filterData() {
+            const searchTerm = document.getElementById('search').value.toLowerCase();
+            const sourceFilter = document.getElementById('source-filter').value;
+            const hasReadmeFilter = document.getElementById('has-readme').value;
+            
+            // Filter products within each video
+            filteredData = allData.map(video => {
+                const filteredProducts = video.products.filter(product => {
+                    // Source filter
+                    if (sourceFilter) {
+                        const sources = product.synopsis_sources || [];
+                        if (!sources.includes(sourceFilter)) {
+                            return false;
+                        }
+                    }
+                    
+                    // README filter
+                    if (hasReadmeFilter) {
+                        const hasReadme = product.readme_file ? true : false;
+                        if (hasReadmeFilter === 'yes' && !hasReadme) {
+                            return false;
+                        }
+                        if (hasReadmeFilter === 'no' && hasReadme) {
+                            return false;
+                        }
+                    }
+                    
+                    // Search filter
+                    if (searchTerm) {
+                        const searchable = [
+                            product.name,
+                            video.title,
+                            product.synopsis,
+                            product.transcript_segment,
+                            product.transcript_text,
+                            product.url
+                        ].join(' ').toLowerCase();
+                        return searchable.includes(searchTerm);
+                    }
+                    
+                    return true;
+                });
+                
+                return {
+                    ...video,
+                    products: filteredProducts
+                };
+            }).filter(video => video.products.length > 0);
+            
+            const totalFiltered = filteredData.reduce((sum, v) => sum + v.products.length, 0);
+            document.getElementById('filtered-products').textContent = `Showing: ${totalFiltered}`;
+            
+            if (totalFiltered === 0) {
+                document.getElementById('content').style.display = 'none';
+                document.getElementById('no-results').style.display = 'block';
+            } else {
+                document.getElementById('content').style.display = 'block';
+                document.getElementById('no-results').style.display = 'none';
+                renderContent();
+            }
+        }
+        
+        function renderContent() {
+            const container = document.getElementById('content');
+            container.innerHTML = '';
+            
+            filteredData.forEach(video => {
+                const videoSection = document.createElement('div');
+                videoSection.className = 'video-section';
+                
+                // Video header
+                const videoHeader = document.createElement('div');
+                videoHeader.className = 'video-header';
+                
+                const publishDate = video.publish_date ? 
+                    new Date(video.publish_date).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
+                    }) : 'Unknown Date';
+                
+                videoHeader.innerHTML = `
+                    <div>
+                        <div class="video-title">${escapeHtml(video.title)}</div>
+                        <div class="video-meta">
+                            📅 ${publishDate} | 
+                            👤 ${escapeHtml(video.channel_name || 'Unknown')} | 
+                            🎬 <a href="${video.video_url}" target="_blank" class="video-link">Watch Video</a> | 
+                            📦 ${video.products.length} products
+                        </div>
+                    </div>
+                `;
+                
+                videoSection.appendChild(videoHeader);
+                
+                // Products table
+                const table = document.createElement('table');
+                table.innerHTML = `
+                    <thead>
+                        <tr>
+                            <th class="col-number">#</th>
+                            <th class="col-name">Product Name</th>
+                            <th class="col-timestamp">Timestamp</th>
+                            <th class="col-date">Publish Date</th>
+                            <th class="col-links">Links</th>
+                            <th class="col-sources">Sources</th>
+                            <th class="col-synopsis">Synopsis</th>
+                            <th class="col-transcript">Transcript Segment</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                `;
+                
+                const tbody = table.querySelector('tbody');
+                
+                video.products.forEach(product => {
+                    const row = document.createElement('tr');
+                    
+                    // GitHub URL
+                    let githubUrl = product.url || '';
+                    // Clean any remaining ?ref=manuagi
+                    githubUrl = githubUrl.replace('?ref=manuagi', '');
+                    const githubLink = githubUrl ? 
+                        `<a href="${githubUrl}" target="_blank" class="link-btn link-github">🔗 GitHub</a>` : 
+                        '';
+                    
+                    // README link - opens in markdown viewer
+                    const readmePath = product.readme_file;
+                    const readmeLink = readmePath ? 
+                        `<a href="main8-2.html?file=../../${readmePath}" target="_blank" class="link-btn link-readme">📄 README</a>` : 
+                        '';
+                    
+                    // Sources badges
+                    const sources = product.synopsis_sources || [];
+                    const sourceBadges = sources.map(s => 
+                        `<span class="badge badge-${s}">${s}</span>`
+                    ).join('');
+                    
+                    // Full text content
+                    const synopsis = product.synopsis || '';
+                    const transcript = product.transcript_segment || product.transcript_text || '';
+                    const productDate = product.publish_date ? 
+                        new Date(product.publish_date).toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric'
+                        }) : (video.publish_date ? new Date(video.publish_date).toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric'
+                        }) : '-');
+                    
+                    row.innerHTML = `
+                        <td class="col-number">${product.product_number || '-'}</td>
+                        <td class="col-name">${escapeHtml(product.name)}</td>
+                        <td class="col-timestamp">${product.timestamp || '-'}</td>
+                        <td class="col-date">${productDate}</td>
+                        <td class="col-links">${githubLink}${readmeLink}</td>
+                        <td class="col-sources">${sourceBadges}</td>
+                        <td class="col-synopsis"><div class="text-content">${escapeHtml(synopsis)}</div></td>
+                        <td class="col-transcript"><div class="text-content">${escapeHtml(transcript)}</div></td>
+                    `;
+                    
+                    tbody.appendChild(row);
+                });
+                
+                videoSection.appendChild(table);
+                container.appendChild(videoSection);
+            });
+        }
+        
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // Debounce function
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+        
+        // Event listeners
+        document.getElementById('search').addEventListener('input', debounce(filterData, 300));
+        document.getElementById('source-filter').addEventListener('change', filterData);
+        document.getElementById('has-readme').addEventListener('change', filterData);
+        
+        // Initialize
+        loadData();
+    </script>
+</body>
+</html>

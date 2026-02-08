@@ -1,0 +1,779 @@
+[
+  {
+    "product_name": "FidelityFX FSR2",
+    "product_summary": "An open-source, high-quality temporal superresolution technology that upscales lower-resolution inputs to high-resolution frames for improved image quality and performance on GPUs.",
+    "feature_list": [
+      "Temporal feedback-based upscaling technique",
+      "Produces high-resolution frames from low-resolution inputs",
+      "Improves performance for graphically intensive rendering like ray tracing",
+      "Open-source and platform agnostic",
+      "Integrates into modern graphics pipelines"
+    ],
+    "github_url": "https://github.com/GPUOpen-Effects/FidelityFX-FSR2",
+    "product_number": "022",
+    "has_README": "YES"
+  },
+  {
+    "product_name": "Trigger.dev",
+    "product_summary": "An open-source platform for building durable AI workflows with long\u2011running tasks, retries, queues, and human\u2011in\u2011the\u2011loop approvals.",
+    "feature_list": [
+      "Supports long-running tasks without timeouts",
+      "Durable tasks with automatic retries and queues",
+      "Runs Python scripts, FFmpeg and other processes in workflows",
+      "Human-in-the-loop approvals and real-time streaming",
+      "Observability, concurrency control and scheduling for workflows",
+      "Self-hosted deployment option"
+    ],
+    "github_url": "https://github.com/triggerdotdev/trigger.dev",
+    "product_number": "024",
+    "has_README": "YES"
+  },
+  {
+    "product_name": "Hacker News Summary",
+    "product_summary": "Open-source tool that parses Hacker News articles and uses AI to generate concise summaries with optional illustrations.",
+    "feature_list": [
+      "Parses and summarizes Hacker News articles using ChatGPT or local models",
+      "Generates clear summaries and images for each article",
+      "Supports sorting stories by points, comments or time",
+      "Exports RSS feeds for personal digest",
+      "Self-hosted deployment on GitHub Pages"
+    ],
+    "github_url": "https://github.com/polyrabbit/hacker-news-digest",
+    "product_number": "025",
+    "has_README": "YES"
+  },
+  {
+    "product_name": "Excel-Agent",
+    "product_summary": "An AI-powered agent that accepts natural language instructions to automate tasks on Excel or Google Sheets using multiple LLM providers.",
+    "feature_list": [
+      "Natural language interface to manipulate spreadsheets",
+      "Direct file manipulation with multi-agent planning and reflection",
+      "Support for multiple LLM providers (Gemini, OpenAI, DeepSeek, Claude, NVIDIA)",
+      "Automatic persistence and error recovery",
+      "Google Sheets add-on with Slack workflow integration",
+      "Rich console feedback and file upload/download"
+    ],
+    "github_url": "https://github.com/colonel-aureliano/Excel-Agent",
+    "product_number": "026",
+    "has_README": "YES"
+  },
+  {
+    "product_name": "Careless Whisper Python",
+    "product_summary": "Proof-of-concept implementation of silent delivery receipt exploit to monitor user online status on WhatsApp and Signal.",
+    "feature_list": [
+      "Sends reaction messages referencing non-existent IDs to probe status",
+      "Fingerprints users without triggering notifications",
+      "Supports WhatsApp and Signal clients",
+      "CLI for scheduling fingerprinting and metrics collection",
+      "Prometheus metrics exporter and Grafana dashboard"
+    ],
+    "github_url": "https://github.com/ctrlsam/careless-whisper-python",
+    "product_number": "027",
+    "has_README": "YES"
+  },
+  {
+    "product_name": "Huginn",
+    "product_summary": "A self\u2011hosted system for building agents that monitor websites and APIs, watch for events, and take actions to alert you or automate tasks.",
+    "feature_list": [
+      "Create agents to read websites and watch for events",
+      "Monitor weather or keywords on Twitter and send emails or tweets",
+      "Scrape websites and notify on changes or deals",
+      "Connect to services like Slack, Twilio and Twitter to send messages",
+      "Send daily digest emails and track high-frequency events",
+      "Use WebHooks, custom JavaScript and location tracking",
+      "Create Amazon Mechanical Turk workflows"
+    ],
+    "github_url": "https://github.com/huginn/huginn",
+    "product_number": "028",
+    "has_README": "YES"
+  },
+  {
+    "product_name": "Stoolap",
+    "product_summary": "A modern embedded SQL database written in pure Rust, optimized for OLTP workloads and offering advanced time\u2011travel queries and parallel query execution.",
+    "feature_list": [
+      "AS OF time\u2011travel queries and MVCC transactions",
+      "Cost\u2011based optimizer and adaptive execution",
+      "Semantic query caching and parallel query execution",
+      "Pure Rust with no C/C++ dependencies",
+      "Smart indexes with automatic type selection (B\u2011tree, Hash, Bitmap)",
+      "Support for window functions, CTEs and advanced aggregations"
+    ],
+    "github_url": "https://github.com/stoolap/stoolap",
+    "product_number": "029",
+    "has_README": "YES"
+  },
+  {
+    "product_name": "CrewAI",
+    "product_summary": "A lightweight multi\u2011agent framework for orchestrating autonomous AI agents and human tasks using intuitive Crews and Flows.",
+    "feature_list": [
+      "Standalone framework with precise orchestration of autonomous agents",
+      "Supports both autonomous crews and structured flows",
+      "Conditional branching using logical operators (and/or)",
+      "Deep customization of workflows and tasks",
+      "Suitable for complex automations and custom use cases",
+      "Thriving community and high reliability"
+    ],
+    "github_url": "https://github.com/joaomdmoura/crewai",
+    "product_number": "030",
+    "has_README": "YES"
+  },
+  {
+    "product_name": "Agent Development Kit (ADK)",
+    "product_summary": "A code\u2011first Python toolkit for building and deploying sophisticated AI agents with rich tool ecosystems, human\u2011in\u2011the\u2011loop confirmations, and modular multi\u2011agent systems.",
+    "feature_list": [
+      "Rich tool ecosystem including pre\u2011built tools, custom functions and OpenAPI specs",
+      "Code\u2011first agent development with flexible builder and config",
+      "Human\u2011in\u2011the\u2011loop tool confirmation flow",
+      "Modular multi\u2011agent systems for scalable applications",
+      "Deploy anywhere via containerization and Cloud Run/Vertex AI",
+      "Includes code executor and remote agent\u2011to\u2011agent integration"
+    ],
+    "github_url": "https://github.com/google-deepmind/agent-developer-kit",
+    "product_number": "031",
+    "has_README": "YES"
+  },
+  {
+    "product_name": "SimpleMem",
+    "product_summary": "A memory system for LLM agents that compresses dialogues into compact semantic memory units and retrieves relevant information using intent\u2011aware planning.",
+    "feature_list": [
+      "Semantic structured compression with vector, lexical and symbolic indexing",
+      "Online semantic synthesis to reduce redundancy",
+      "Intent\u2011aware retrieval planning using LLM reasoning",
+      "Supports long\u2011term memory storage and context recall",
+      "Efficient retrieval across multiple indexes",
+      "Works with agents to augment context"
+    ],
+    "github_url": "https://github.com/aiming-Lab/SimpleMem",
+    "product_number": "032",
+    "has_README": "YES"
+  },
+  {
+    "product_name": "ComfyUI Workspace Manager",
+    "product_summary": "A ComfyUI extension for managing workflows and models with drag\u2011and\u2011drop subworkflows, version control, and one\u2011click model installation.",
+    "feature_list": [
+      "Switch between workflows via browser tabs and insert subworkflows with drag\u2011and\u2011drop",
+      "Organize workflows with folders and sync with local file system",
+      "Version control with autosave and history",
+      "Bulk import/export workflows and zip downloads",
+      "Models manager to install and browse models with thumbnails",
+      "Image gallery for saving generated images",
+      "Dark/light mode and planned cloud sync"
+    ],
+    "github_url": "https://github.com/cat-kino/comfyui-workspace-manager",
+    "product_number": "033",
+    "has_README": "YES"
+  },
+  {
+    "product_name": "React2Shell Scanner",
+    "product_summary": "Detects RSC, Next.js, RCE vulnerabilities. An open-source Python CLI tool that tests Next.js apps using React Server Components for remote code execution weaknesses tied to recently disclosed CVEs.",
+    "feature_list": [
+      "Next.js RSC vulnerability scanner",
+      "RCE detection",
+      "CVE-based testing",
+      "WAF bypass support",
+      "Window-style payloads",
+      "Thread-based scanning",
+      "JSON output for workflow integration"
+    ],
+    "github_url": "https://github.com/security/react2shell-scanner",
+    "product_number": "034",
+    "has_README": "NO"
+  },
+  {
+    "product_name": "Paper2Slides",
+    "product_summary": "From papers to slides in one click. A free open-source Python-driven pipeline that reads PDFs, Word files, and markdown, builds a RAG-powered index, extracts key content and figures, and generates professional-grade visuals.",
+    "feature_list": [
+      "Document to slide conversion",
+      "PDF, Word, Markdown support",
+      "RAG-powered content extraction",
+      "Automatic figure extraction",
+      "Slide layout planning",
+      "Customizable styles",
+      "Parallel generation for speed"
+    ],
+    "github_url": "https://github.com/paper2slides/paper2slides",
+    "product_number": "035",
+    "has_README": "NO"
+  },
+  {
+    "product_name": "Storygen Atelier",
+    "product_summary": "AI Storyboard to Video Generator. An open-source AI-assisted storyboard and video generation tool that turns your story idea into a full video sequence with intermediate transitions.",
+    "feature_list": [
+      "AI storyboard generation",
+      "Video sequence creation",
+      "LLM-powered storyboard text",
+      "Image frame generation",
+      "Transition clip generation",
+      "React and Vite frontend",
+      "Node.js backend"
+    ],
+    "github_url": "https://github.com/storygen/storygen-atelier",
+    "product_number": "036",
+    "has_README": "NO"
+  },
+  {
+    "product_name": "QMD",
+    "product_summary": "Quick Markdown Search - local markdown search engine. An open-source on-device search engine for markdown files combining BM25 full-text search with vector semantic search and optional LLM re-ranking.",
+    "feature_list": [
+      "Local markdown search",
+      "BM25 full-text search",
+      "Vector semantic search",
+      "LLM re-ranking support",
+      "NodeLlama and GGUF model support",
+      "Keyword and natural language queries",
+      "Privacy-focused local processing"
+    ],
+    "github_url": "https://github.com/qmd-search/qmd",
+    "product_number": "037",
+    "has_README": "NO"
+  },
+  {
+    "product_name": "The Rosetta Prompt",
+    "product_summary": "Adaptive Multi-Provider Prompt Optimizer. An open-source Python prompt optimization system that rewrites prompts to fit the idiosyncrasies of each LLM API you target.",
+    "feature_list": [
+      "Multi-provider prompt optimization",
+      "LLM-specific prompt adjustment",
+      "LangChain integration",
+      "Prompt structure normalization",
+      "Best practice injection",
+      "Consistent outputs across models",
+      "Reduced trial and error"
+    ],
+    "github_url": "https://github.com/rosetta/rosetta-prompt",
+    "product_number": "038",
+    "has_README": "NO"
+  },
+  {
+    "product_name": "Pincher",
+    "product_summary": "General Purpose AI Image Generator. An open-source AI image generation framework built with React, TypeScript, and Tailwind CSS connecting with multiple generative backends like Hugging Face, SD, and ModelScope.",
+    "feature_list": [
+      "Multi-backend image generation",
+      "Hugging Face integration",
+      "Stable Diffusion support",
+      "ModelScope connectivity",
+      "Sleek dark-themed UI",
+      "Flexible API sources",
+      "Straightforward workflow"
+    ],
+    "github_url": "https://github.com/pincherai/pincher",
+    "product_number": "039",
+    "has_README": "NO"
+  },
+  {
+    "product_name": "Longcat Image",
+    "product_summary": "Bilingual Image Generation Foundation Model. A foundation model by Meitu and Longcat team focusing on bilingual Chinese-English text-to-image generation with strong photo-realism at 6 billion parameters.",
+    "feature_list": [
+      "Bilingual Chinese-English support",
+      "6 billion parameter model",
+      "Text-to-image generation",
+      "Photo-realistic outputs",
+      "Modest VRAM requirements",
+      "State-of-the-art text depiction",
+      "Image editing capabilities"
+    ],
+    "github_url": "https://github.com/longcat/longcat-image",
+    "product_number": "040",
+    "has_README": "NO"
+  },
+  {
+    "product_name": "IMSG",
+    "product_summary": "macOS iMessage and SMS CLI. A free open-source Go-based command line app that lets you send, receive, list, and live-stream Apple messages (iMessage and SMS) from your Mac.",
+    "feature_list": [
+      "CLI for iMessage and SMS on macOS",
+      "Send and receive messages",
+      "List and filter chats",
+      "Live-stream new messages",
+      "Export JSON output",
+      "File attachment support",
+      "Privacy-focused local processing"
+    ],
+    "github_url": "https://github.com/imsg-cli/imsg",
+    "product_number": "041",
+    "has_README": "NO"
+  },
+  {
+    "product_name": "Prompt Forge",
+    "product_summary": "Visual Prompt Library for AI Art. An open-source visual prompt management system with an intuitive web interface to organize, browse, edit, and search artistic prompts with visual previews.",
+    "feature_list": [
+      "Visual prompt management",
+      "Web interface for prompts",
+      "Categories (styles, lights, materials, themes)",
+      "One-click clipboard copying",
+      "Dark mode support",
+      "Image previews",
+      "JSON storage format"
+    ],
+    "github_url": "https://github.com/promptforge/prompt-forge",
+    "product_number": "042",
+    "has_README": "NO"
+  },
+  {
+    "product_name": "UI-UX Pro Max",
+    "product_summary": "AI Design Intelligence for UI-UX. An open-source AI skill providing a searchable database of UI styles, color palettes, font pairings, chart types, UX guidelines, and stack-specific best practices.",
+    "feature_list": [
+      "UI/UX design database",
+      "Color palettes and font pairings",
+      "Chart type recommendations",
+      "UX guidelines",
+      "Stack-specific best practices",
+      "Claude Code, Cursor, Copilot integration",
+      "Multi-framework support (HTML, Tailwind, React, Vue, Svelte, SwiftUI)"
+    ],
+    "github_url": "https://github.com/uiuxpromax/ui-ux-pro-max",
+    "product_number": "043",
+    "has_README": "NO"
+  },
+  {
+    "product_name": "Go Sheet",
+    "product_summary": "Terminal Spreadsheet with Rich Features. A robust open-source CLI spreadsheet app written in Go using TUI library with 100+ built-in functions, rich formatting, multi-sheet workbooks, and support for XLSX, CSV, HTML, PDF.",
+    "feature_list": [
+      "100+ built-in spreadsheet functions",
+      "Rich cell formatting",
+      "Multi-sheet workbooks",
+      "XLSX, CSV, HTML, PDF support",
+      "Navigation shortcuts",
+      "Data validation and sorting",
+      "Find/replace, undo/redo, autofill",
+      "Responsive even with large sheets"
+    ],
+    "github_url": "https://github.com/gosheet/gosheet",
+    "product_number": "044",
+    "has_README": "NO"
+  },
+  {
+    "product_name": "Raw Alchemy",
+    "product_summary": "Raw Photo Color Grading Bridge. An open-source Python-based CLI utility that bridges raw photo files and cinematic lookup table color grading by converting raw data into wide gamut linear space.",
+    "feature_list": [
+      "Raw photo processing",
+      "Cinematic LUT color grading",
+      "Wide gamut linear space conversion",
+      "Dynamic range preservation",
+      "Mathematically correct color transforms",
+      "Log-encoded video space support",
+      "No cloud services required"
+    ],
+    "github_url": "https://github.com/rawalchemy/raw-alchemy",
+    "product_number": "045",
+    "has_README": "NO"
+  },
+  {
+    "product_name": "Agent Sessions",
+    "product_summary": "macOS LLM Session Monitor. An open-source desktop app written in Rust with Tauri/React frontend that shows all active Claude Code Agent Sessions with real-time status, quick session focus, and global hotkey access.",
+    "feature_list": [
+      "macOS session monitoring",
+      "Real-time agent status",
+      "Thinking/processing/idle indicators",
+      "Quick session focus",
+      "Customizable session names",
+      "Global hotkey access",
+      "iTerm2 and Terminal integration"
+    ],
+    "github_url": "https://github.com/agentsessions/agent-sessions",
+    "product_number": "046",
+    "has_README": "NO"
+  },
+  {
+    "product_name": "Jargon",
+    "product_summary": "Personal Research Knowledge Base. A free open-source personal research platform that ingests articles, extracts key insights, tracks references, and surfaces unexpected connections between ideas across domains.",
+    "feature_list": [
+      "Article ingestion",
+      "Key insight extraction",
+      "Reference tracking",
+      "Cross-domain connections",
+      "Structured app logic",
+      "Save, query, and explore reading",
+      "Knowledge linking"
+    ],
+    "github_url": "https://github.com/jargonkb/jargon",
+    "product_number": "047",
+    "has_README": "NO"
+  },
+  {
+    "product_name": "MarkX",
+    "product_summary": "Markdown Plus Diagrams, Math Editor. An open-source professional Markdown editor running in the browser with GitHub-flavored Markdown, Mermaid diagram support, and KaTeX math rendering.",
+    "feature_list": [
+      "GitHub-flavored Markdown",
+      "Mermaid diagram support",
+      "KaTeX math rendering",
+      "Auto-saves drafts",
+      "Live preview",
+      "SVG/PNG export from diagrams",
+      "No build step required"
+    ],
+    "github_url": "https://github.com/markxeditor/markx",
+    "product_number": "048",
+    "has_README": "NO"
+  },
+  {
+    "product_name": "STEM Lab",
+    "product_summary": "Local AI Song STEM Separator. An open-source AI-powered audio STEM separation app running locally with no subscriptions, using state-of-the-art models like Demucs and MDX-Net.",
+    "feature_list": [
+      "AI-powered STEM separation",
+      "Demucs and MDX-Net models",
+      "Vocals, drums, bass, etc. extraction",
+      "Batch processing",
+      "Multiple STEM modes",
+      "WAV and MP3 export",
+      "GPU acceleration support"
+    ],
+    "github_url": "https://github.com/stemlab/stem-lab",
+    "product_number": "049",
+    "has_README": "NO"
+  },
+  {
+    "product_name": "NanoPDF Editor",
+    "product_summary": "AI PDF Edit with Natural Language. An open-source CLI tool that lets you edit PDF slides and documents using natural language prompts powered by Google's Gemini 2.0 Pro model.",
+    "feature_list": [
+      "Natural language PDF editing",
+      "Google Gemini 2.0 Pro integration",
+      "Page to image conversion",
+      "OCR text layer restoration",
+      "Text updates and layout fixes",
+      "Parallel processing",
+      "Quality control settings"
+    ],
+    "github_url": "https://github.com/nanopdf/nanopdf-editor",
+    "product_number": "050",
+    "has_README": "NO"
+  },
+  {
+    "product_name": "Z-Image Turbo",
+    "product_summary": "High-speed text to image server. A free open-source web app with React + FastAPI stack that runs Alibaba 6B parameter Z-Image model locally to generate images from text prompts with snappy performance.",
+    "feature_list": [
+      "React + FastAPI stack",
+      "Alibaba Z-Image 6B model",
+      "Local image generation",
+      "MCP (Model Context Protocol) support",
+      "Claude integration",
+      "Polished interface",
+      "Real-time resolution and style controls"
+    ],
+    "github_url": "https://github.com/zimage/zimage-turbo",
+    "product_number": "051",
+    "has_README": "NO"
+  },
+  {
+    "product_name": "AI Translator",
+    "product_summary": "Browser AI translation extension. An open-source browser extension that lets you select text and translate it on the spot using multiple AI providers like OpenAI, Claude, Gemini, DeepSeek, and OpenRouter.",
+    "feature_list": [
+      "Multi-provider AI translation",
+      "On-the-spot text translation",
+      "OpenAI, Claude, Gemini, DeepSeek support",
+      "OpenRouter integration",
+      "Browser-based processing",
+      "Intuitive UI on text selection",
+      "No copy-paste required"
+    ],
+    "github_url": "https://github.com/aitranslator/ai-translator",
+    "product_number": "052",
+    "has_README": "NO"
+  },
+  {
+    "product_name": "Asylo",
+    "product_summary": "An open and flexible framework for developing enclave applications that execute trusted workloads in untrusted environments.",
+    "feature_list": [
+      "Provides containerized enclaves with APIs and libraries for enclave development",
+      "Supports multiple secure hardware backends and dynamic switching",
+      "Portable across different backends",
+      "Open-source framework for confidential computing",
+      "Enables running trusted workloads securely in untrusted infrastructure"
+    ],
+    "github_url": "https://github.com/google/asylo",
+    "product_number": "053",
+    "has_README": "YES"
+  },
+  {
+    "product_name": "OpenDevin",
+    "product_summary": "An open\u2011source project aiming to replicate Devin, providing a chat interface, shell, browser and stable agent framework for autonomous software engineering.",
+    "feature_list": [
+      "Chat interface with integrated shell and browser",
+      "Stable agent framework that can read, write and execute code",
+      "Ability to generate bash scripts, run tests and debug code",
+      "Supports multiple LLM backends with Docker deployment",
+      "Vision\u2011based interface for replicating human\u2011like software engineering tasks"
+    ],
+    "github_url": "https://github.com/OpenDevin/OpenDevin",
+    "product_number": "054",
+    "has_README": "YES"
+  },
+  {
+    "product_name": "System Design Visualizer",
+    "product_summary": "Interactive tool that converts system design images into editable Mermaid.js diagrams and interactive React Flow graphs.",
+    "feature_list": [
+      "AI\u2011powered analysis of uploaded system design images",
+      "Automatic generation of Mermaid diagrams with editable syntax",
+      "Interactive React Flow graphs with clickable components",
+      "Displays technology stack and component roles on click",
+      "Modern dashboard UI with dark/light mode"
+    ],
+    "github_url": "https://github.com/mallahyari/system-design-visualizer",
+    "product_number": "055",
+    "has_README": "YES"
+  },
+  {
+    "product_name": "Real\u2011time Payment Architecture Orchestration",
+    "product_summary": "Reference framework for orchestrating real\u2011time credit transfers using ISO 20022 models and event\u2011driven microservices.",
+    "feature_list": [
+      "End\u2011to\u2011end orchestration of real\u2011time credit transfers",
+      "ISO 20022 data models and event\u2011driven microservices architecture",
+      "Pluggable validation, fraud evaluation and routing services",
+      "Event processing pipeline with Kafka and resilience patterns",
+      "Real\u2011time acknowledgments and integration with payment networks like RTP, FedNow, SEPA and UPI"
+    ],
+    "github_url": "https://github.com/RahulAutade2288/real-time-payment-architecture-orchestration",
+    "product_number": "056",
+    "has_README": "YES"
+  },
+  {
+    "product_name": "Knowledge\u2011Base Self\u2011Hosting Kit (Community Edition)",
+    "product_summary": "Docker\u2011based RAG system with Docling document processing, hybrid search and multi\u2011LLM retrieval pipelines.",
+    "feature_list": [
+      "Processes PDF, DOCX, PPTX, XLSX, HTML and Markdown files using Docling",
+      "Combines vector similarity and keyword search using ChromaDB and BM25",
+      "Includes LlamaIndex retrieval pipelines with self\u2011chunked documents",
+      "Supports multiple LLM backends (Ollama, OpenAI, Anthropic, Gemini)",
+      "Provides a lightweight UI and folder ingestion with progress tracking",
+      "Docker\u2011first deployment with customization options"
+    ],
+    "github_url": "https://github.com/Knowledge-Base-Self-Hosting-Kit/Knowledge-Base-Self-Hosting-Kit",
+    "product_number": "057",
+    "has_README": "YES"
+  },
+  {
+    "product_name": "runprompt",
+    "product_summary": "Python script for running .prompt files with metadata and producing structured responses via shell.",
+    "feature_list": [
+      "Executes .prompt files from the command line",
+      "Supports metadata fields like model, schema and configuration",
+      "Outputs structured JSON responses based on defined schemas",
+      "Allows chaining prompts and executing pre\u2011prompt shell commands",
+      "Shebang support for making .prompt files executable"
+    ],
+    "github_url": "https://github.com/chr15m/runprompt",
+    "product_number": "058",
+    "has_README": "YES"
+  },
+  {
+    "product_name": "gethomepage",
+    "product_summary": "A customizable homepage and dashboard with widgets for search, bookmarks, weather and service monitoring.",
+    "feature_list": [
+      "Quick search across multiple providers and context\u2011aware commands",
+      "Displays bookmarks, RSS feeds, weather and system information",
+      "Integrates with services like Sabnzbd, Sonarr and Prowlarr",
+      "Supports multiple languages and dark/light themes",
+      "Customize via YAML or docker label discovery",
+      "Fast secure static site built with Node.js/React"
+    ],
+    "github_url": "https://github.com/gethomepage/homepage",
+    "product_number": "059",
+    "has_README": "YES"
+  },
+  {
+    "product_name": "stacks",
+    "product_summary": "Containerized download queue manager for Anna\u2019s Archive with secure web interface and real\u2011time dashboard.",
+    "feature_list": [
+      "Password\u2011protected dashboard to queue and manage downloads",
+      "Fast downloads using membership with automatic mirror fallback",
+      "Real\u2011time dashboard to monitor active, queued and completed downloads",
+      "Resume support and download history with retry capability",
+      "Browser integration via userscript and docker\u2011ready deployment",
+      "Beautiful dark\u2011themed UI and shareable history"
+    ],
+    "github_url": "https://github.com/stacks/stacks",
+    "product_number": "060",
+    "has_README": "YES"
+  },
+  {
+    "product_name": "git\u2011history\u2011timeline",
+    "product_summary": "Generates a self\u2011contained animated HTML timeline of GitHub commit history across all branches.",
+    "feature_list": [
+      "Aggregates commit history from all branches and private repositories via GitHub API",
+      "Produces responsive HTML timeline with dark/light themes",
+      "Animated widget shows rolling 365\u2011day contribution window",
+      "Self\u2011contained static output for easy sharing and hosting",
+      "Caches results for faster regeneration"
+    ],
+    "github_url": "https://github.com/kibotu/git-history-timeline",
+    "product_number": "076",
+    "has_README": "YES"
+  },
+  {
+    "product_name": "parse5",
+    "product_summary": "Spec\u2011compliant HTML parsing and serialization toolset for Node.js, used in projects like jsdom and Angular.",
+    "feature_list": [
+      "Fully compliant with WHATWG HTML Living Standard",
+      "Provides parsing and serialization APIs for HTML",
+      "Fastest spec\u2011compliant HTML parser for Node.js",
+      "Used in major projects such as jsdom, Angular and Lit",
+      "Supports Node.js and browser environments"
+    ],
+    "github_url": "https://github.com/inikulin/parse5",
+    "product_number": "082",
+    "has_README": "YES"
+  },
+  {
+    "product_name": "Rucola",
+    "product_summary": "Terminal\u2011based markdown note manager tailored for Zettelkasten users, offering note statistics, link navigation and optional HTML conversion.",
+    "feature_list": [
+      "Provides high\u2011level statistics about notes and filtered subsets",
+      "Follow links and backlinks to visualize connections between notes",
+      "Rename and move notes and integrate with external editor",
+      "Optional conversion to HTML with LaTeX and code highlighting",
+      "Lightweight terminal UI without heavy GUI or Electron",
+      "Advanced filtering, search and automatic renaming of wiki links"
+    ],
+    "github_url": "https://github.com/dannyrb/rucola",
+    "product_number": "085",
+    "has_README": "YES"
+  },
+  {
+    "product_name": "tsql",
+    "product_summary": "Modern keyboard\u2011first PostgreSQL client featuring a full\u2011screen TUI, Vim keybindings and schema\u2011aware auto\u2011completion.",
+    "feature_list": [
+      "Split\u2011pane query editor and results grid with Vim\u2011style keybindings",
+      "Syntax highlighting with tree\u2011sitter and JSON detection/editing",
+      "Schema\u2011aware auto\u2011completion and inline editing with automatic SQL",
+      "Persistent query history with fuzzy search",
+      "Supports psql\u2011compatible commands",
+      "Customizable keybindings and appearance via config file"
+    ],
+    "github_url": "https://github.com/rs/xsql",
+    "product_number": "086",
+    "has_README": "YES"
+  },
+  {
+    "product_name": "Universal App Opener",
+    "product_summary": "JavaScript library that converts standard web URLs into native mobile deep links across multiple platforms.",
+    "feature_list": [
+      "Zero\u2011dependency library for converting HTTP URLs to native deep links",
+      "Automatically selects correct scheme or Android intent for each platform",
+      "Supports YouTube, LinkedIn, Instagram, Facebook, Reddit, Spotify, Threads and WhatsApp",
+      "Provides fallback to web when app is not installed",
+      "Improves cross\u2011platform user experience with seamless redirection"
+    ],
+    "github_url": "https://github.com/mdsaban/universal-app-opener",
+    "product_number": "090",
+    "has_README": "YES"
+  },
+  {
+    "product_name": "MediaServer",
+    "product_summary": "Lightweight self\u2011hosted media player that indexes video and music files and serves them via a responsive web interface.",
+    "feature_list": [
+      "Folder\u2011based browsing and sharing with watch history and playback analytics",
+      "Custom media player supporting video and music with cover art detection",
+      "Subtitle support with automatic extraction and editable metadata",
+      "Music player with lyrics viewer/editor and album art",
+      "Docker\u2011based deployment with server dashboard for library management",
+      "Shareable direct links with open graph previews and responsive UI with dark/light mode"
+    ],
+    "github_url": "https://github.com/aminnausin/mediaServer",
+    "product_number": "091",
+    "has_README": "YES"
+  },
+  {
+    "product_name": "ORPMS",
+    "product_summary": "Open\u2011source real estate property management system that helps property owners track tenants, rent contracts and payments.",
+    "feature_list": [
+      "Stores information about properties and occupants in a database",
+      "Generates rent contracts from templates",
+      "Tracks monthly rent payments and arrears",
+      "Provides template letters for rent recovery",
+      "Node.js backend with MongoDB, Express and other technologies"
+    ],
+    "github_url": "https://github.com/orpms/orpms",
+    "product_number": "092",
+    "has_README": "YES"
+  },
+  {
+    "product_name": "Journal",
+    "product_summary": "Privacy\u2011first self\u2011hosted digital log book with encryption, mobile\u2011friendly UI and advanced content editor.",
+    "feature_list": [
+      "AES\u2011256 encryption for entries, templates and images",
+      "Mobile\u2011friendly interface with categories and predefined templates",
+      "Advanced content editor with image upload and search",
+      "Quick\u2011add widget and ability to order favourite categories",
+      "Multi\u2011user accounts with advanced search and export features"
+    ],
+    "github_url": "https://github.com/samihsoylu/journal",
+    "product_number": "093",
+    "has_README": "YES"
+  },
+  {
+    "product_name": "CLDIS",
+    "product_summary": "Local-first personal AI assistant. A personal AI assistant that lives on your own machines and talks to you on WhatsApp, Telegram, WebChat, and Native Apps.",
+    "feature_list": [
+      "Local-first AI assistant",
+      "Multi-platform messaging",
+      "WhatsApp integration",
+      "Telegram integration",
+      "WebChat support",
+      "Native app companions",
+      "TypeScript core",
+      "Swift macOS component",
+      "Kotlin mobile component",
+      "Local gateway",
+      "Voice understanding",
+      "Live visual canvas"
+    ],
+    "github_url": "https://github.com/cldis/cldis",
+    "product_number": "094",
+    "has_README": "NO"
+  },
+  {
+    "product_name": "Stepify",
+    "product_summary": "Self-hosted STL to Step Converter. A self-hosted web app that converts STL mesh files into solid STEP format on your own hardware using FreeCAD running headless inside Docker.",
+    "feature_list": [
+      "STL to STEP conversion",
+      "Self-hosted web app",
+      "Node.js backend",
+      "Three.js previews",
+      "FreeCAD headless integration",
+      "Docker deployment",
+      "Mesh fixing",
+      "Tolerance adjustment",
+      "Redis queuing",
+      "Batch processing"
+    ],
+    "github_url": "https://github.com/stepify/stepify",
+    "product_number": "096",
+    "has_README": "NO"
+  },
+  {
+    "product_name": "Universal Reddit Scraper",
+    "product_summary": "Universal Reddit Scraper Suite. A full-featured Reddit Scraper Suite that works on any subreddit or user, giving you raw data and analytics without relying on official APIs.",
+    "feature_list": [
+      "Subreddit scraping",
+      "User activity scraping",
+      "Posts and comments extraction",
+      "SQLite storage",
+      "Streamlit dashboard",
+      "Search and visualization",
+      "Sentiment analysis",
+      "Engagement tracking",
+      "Scheduled jobs",
+      "Notification support"
+    ],
+    "github_url": "https://github.com/universalredditscraper/universal-reddit-scraper",
+    "product_number": "098",
+    "has_README": "NO"
+  },
+  {
+    "product_name": "VibeConBon",
+    "product_summary": "Kanban board for AI coding agents. An open-source Kanban board designed to orchestrate AI coding agents and human tasks together. Built with React and Tailwind UI.",
+    "feature_list": [
+      "Kanban board for AI agents",
+      "Human task integration",
+      "React frontend",
+      "Tailwind UI",
+      "Node.js backend",
+      "Optional database support",
+      "Docker Compose deployment",
+      "GitHub integration",
+      "Task planning and tracking",
+      "Agent workflow management"
+    ],
+    "github_url": "https://github.com/vibeconbon/vibeconbon",
+    "product_number": "100",
+    "has_README": "NO"
+  }
+]

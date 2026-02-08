@@ -1,0 +1,530 @@
+[
+    {
+        "product_name": "Video2X",
+        "product_summary": "Open-source video upscaling and frame interpolation framework. It uses machine learning models (e.g. waifu2x, Real-ESRGAN, RIFE) to upscale low-resolution videos and generate intermediate frames, supporting multiple algorithms on multiple platforms.",
+        "feature_list": [
+            "AI-based video super resolution",
+            "Frame interpolation for higher FPS",
+            "Supports waifu2x, Real-ESRGAN, etc.",
+            "Cross-platform (Windows, Mac, Linux)",
+            "CLI and GUI usage modes",
+            "Customizable presets and models",
+            "Open-source MIT license"
+        ],
+        "github_url": "https://github.com/k4yt3x/video2x",
+        "product_number": "022",
+        "has_README": "YES"
+    },
+    {
+        "product_name": "OpenAgents",
+        "product_summary": "Plan-first AI coding agent framework for OpenCode. An open-source extension framework that adds structured sub-agents, approval-based workflows, multi-language support, and integration with tools like LSP to the core OpenCode AI developer agent.",
+        "feature_list": [
+            "Plan-first development workflow",
+            "Curated sub-agents (Plan, Build, Review)",
+            "Approval-based code execution",
+            "LSP and compiler integration",
+            "Multi-language support (TS, Python, Go, Rust)",
+            "Automated testing and code review",
+            "Built atop OpenCode agent architecture"
+        ],
+        "github_url": "https://github.com/darrenhinde/OpenAgents",
+        "product_number": "024",
+        "has_README": "YES"
+    },
+    {
+        "product_name": "llm-hacker-news",
+        "product_summary": "LLM-powered Hacker News archive explorer. An open-source CLI plugin that fetches Hacker News threads by ID and lets you request summaries or analyses of discussions, enabling reflection on historical tech conversations using large language models.",
+        "feature_list": [
+            "Fetches HN posts and comments by ID",
+            "Generates summaries with LLMs",
+            "Retrieves threads from years past",
+            "Highlights evolving opinions over time",
+            "CLI tool integration (supports piping)",
+            "Quotes original comments in output",
+            "Open-source (Python CLI plugin)"
+        ],
+        "github_url": "https://github.com/simonw/llm-hacker-news",
+        "product_number": "025",
+        "has_README": "YES"
+    },
+    {
+        "product_name": "SheetAgent (SheetRM)",
+        "product_summary": "Autonomous Excel spreadsheet agent. An open research project that combines an Excel file server with an AI agent to read, analyze, and edit spreadsheets through tools. It demonstrates how an LLM can manipulate Excel data, formulas, and charts programmatically.",
+        "feature_list": [
+            "Excel file parsing and metadata extraction",
+            "SQL and Pandas tool integration (via DuckDB/Pandas)",
+            "Automated multi-step reasoning over spreadsheet data",
+            "Task planning and validation nodes",
+            "Formula insertion and editing by AI",
+            "Chart generation and formatting by AI",
+            "Jupyter notebook and API examples"
+        ],
+        "github_url": "https://github.com/cybisolated/SheetAgent",
+        "product_number": "026",
+        "has_README": "YES"
+    },
+    {
+        "product_name": "whatsapp-monitor",
+        "product_summary": "WhatsApp Online Status Monitor. An open-source tool that tracks a WhatsApp contact’s online/offline status in real-time, logs activity history, and can send notifications. It uses WhatsApp Web automation to detect when a user comes online or goes offline, illustrating messaging privacy leaks.",
+        "feature_list": [
+            "Real-time online/offline detection",
+            "Contact activity logging",
+            "Notification alerts on status change",
+            "Historical online pattern analysis",
+            "Multi-platform support (Desktop/Mobile via browser)",
+            "No official API required (uses web automation)",
+            "Open-source GPL-3.0 license"
+        ],
+        "github_url": "https://github.com/rizwansoaib/whatsapp-monitor",
+        "product_number": "027",
+        "has_README": "YES"
+    },
+    {
+        "product_name": "Huginn",
+        "product_summary": "Automated web monitoring and alert system. Huginn is a popular open-source system for building agents that watch websites or data sources for certain keywords or changes and trigger actions like email alerts. It can be configured to track mentions, scrape pages, or run searches on a schedule.",
+        "feature_list": [
+            "Flexible web scraping agents",
+            "Keyword and phrase monitoring",
+            "Email and webhook alert actions",
+            "Schedule-based triggers",
+            "Visual workflow configuration",
+            "Data filtering and transformation",
+            "Self-hosted browser interface"
+        ],
+        "github_url": "https://github.com/huginn/huginn",
+        "product_number": "028",
+        "has_README": "YES"
+    },
+    {
+        "product_name": "GlueSQL",
+        "product_summary": "Embedded SQL database engine in Rust. GlueSQL is an open-source library that provides a SQL execution engine (parser, planner, and runtime) which can be embedded into Rust applications. It supports multiple storage backends with no external dependencies and implements modern SQL features in pure Rust.",
+        "feature_list": [
+            "Pure Rust SQL engine library",
+            "ANSI SQL parsing and query execution",
+            "Pluggable storage backends (memory, file, etc.)",
+            "Supports structured & schemaless data",
+            "Custom function and planner extensibility",
+            "Zero external C dependencies",
+            "Runs on embedded and WASM environments"
+        ],
+        "github_url": "https://github.com/gluesql/gluesql",
+        "product_number": "029",
+        "has_README": "YES"
+    },
+    {
+        "product_name": "LangChain",
+        "product_summary": "Powerful LLM orchestration framework. An open-source Python library that helps build applications with multiple large language models and tools by chaining calls and logic. It supports complex prompt pipelines, branching, and model-specific prompt optimizations to achieve consistent results across providers.",
+        "feature_list": [
+            "Chain multiple LLM calls and tools",
+            "Branching logic and condition handling",
+            "Integration with OpenAI, Anthropic, etc.",
+            "Prompt templates and transformations",
+            "Output parsers for structured results",
+            "Agent frameworks for dynamic decisions",
+            "Extensible, modular design"
+        ],
+        "github_url": "https://github.com/hwchase17/langchain",
+        "product_number": "030",
+        "has_README": "YES"
+    },
+    {
+        "product_name": "Marvin AI Framework",
+        "product_summary": "Lightweight open-source agent framework. Marvin provides a Pythonic way to create AI functions and agents with context management, tool use, and structured output. It emphasizes modular “AI function” design, allowing integration of external tools (web search, code execution) and maintaining conversation state for flexible agent behaviors.",
+        "feature_list": [
+            "Define AI functions with type-safe outputs",
+            "Automatic validation of LLM outputs to schemas",
+            "Support for adding custom tools/actions",
+            "Memory management for context continuity",
+            "Clean API for chat-based workflows",
+            "Integration into existing Python apps",
+            "Focus on structured, reliable outputs"
+        ],
+        "github_url": "https://github.com/PrefectHQ/marvin",
+        "product_number": "031",
+        "has_README": "YES"
+    },
+    {
+        "product_name": "Persistent AI Memory",
+        "product_summary": "Local persistent memory module for LLMs. An open-source project that stores conversation context and long-term data on disk using embeddings, enabling an AI assistant to recall facts across sessions. It indexes user prompts and AI responses and retrieves relevant pieces via semantic search to augment the prompt, providing continuity over unlimited history.",
+        "feature_list": [
+            "Local vector store for conversation history",
+            "Embeddings-based semantic search",
+            "Supports long-term memory beyond token limits",
+            "Automatic context injection for LLMs",
+            "Maintenance scripts for pruning/cleanup",
+            "Configurable embedding models (open or API)",
+            "Integrates with VS Code and CLI assistants"
+        ],
+        "github_url": "https://github.com/savantskie/persistent-ai-memory",
+        "product_number": "032",
+        "has_README": "YES"
+    },
+    {
+        "product_name": "ComfyUI Prompt Manager",
+        "product_summary": "Visual prompt library and management extension for ComfyUI. This open-source add-on for ComfyUI provides a richer GUI to organize AI art prompts with categories, tags, and image previews. Users can save prompts, search by attributes, rate results, and quickly copy or apply prompts to their workflow, all within a dark-themed interface.",
+        "feature_list": [
+            "Library of saved prompts with metadata",
+            "Tagging and star-rating system",
+            "Image gallery previews of prompts",
+            "Advanced prompt search and filter",
+            "Light and dark UI modes",
+            "Bulk import/export of prompt collections",
+            "Dashboard analytics for prompt usage"
+        ],
+        "github_url": "https://github.com/ComfyAssets/ComfyUI_PromptManager",
+        "product_number": "033",
+        "has_README": "YES"
+    },
+    {
+        "product_name": "React2Shell-Scanner (Assetnote)",
+        "product_summary": "Next.js RSC vulnerability scanner. An open-source CLI by Assetnote that tests web applications for the critical React Server Components remote code execution vulnerabilities (CVE-2025-55182 & CVE-2025-66478). It sends crafted payloads to detect if an app is exploitable, including bypass techniques and JSON output for CI integration.",
+        "feature_list": [
+            "Scans for Next.js RSC RCE vectors",
+            "Covers CVE-2025-55182 & 66478 signatures",
+            "High-fidelity exploit payloads",
+            "WAF evasion payload options",
+            "Multithreaded scanning for speed",
+            "Outputs results in JSON format",
+            "Open-source security tool (Go CLI)"
+        ],
+        "github_url": "https://github.com/assetnote/react2shell-scanner",
+        "product_number": "034",
+        "has_README": "YES"
+    },
+    {
+        "product_name": "PaperToSlides",
+        "product_summary": "Automated research paper to slides converter. An open-source pipeline that reads academic papers (PDFs or ArXiv IDs) and generates presentation slides. It uses LLMs to identify key sections, Summarize content, extract figures, and then compiles LaTeX beamer slides with text and images, providing a starting deck for the paper’s overview.",
+        "feature_list": [
+            "PDF/ArXiv ingestion and parsing",
+            "LLM-powered key point extraction",
+            "Auto-generated slide text (bullet points)",
+            "Figure and graph extraction into slides",
+            "LaTeX Beamer or PPTX output options",
+            "Customizable via prompt templates",
+            "Batch mode for multiple papers"
+        ],
+        "github_url": "https://github.com/takashiishida/paper2slides",
+        "product_number": "035",
+        "has_README": "YES"
+    },
+    {
+        "product_name": "PALLAIDIUM",
+        "product_summary": "Generative AI movie studio in Blender. PALLAIDIUM is an open-source Blender add-on that turns scripts into storyboards and video sequences. It automates the process of creating scenes: using AI to generate images for story frames, suggesting camera angles, and assembling a sequence on Blender’s timeline, allowing human directors to refine or render the result.",
+        "feature_list": [
+            "Script text to scene breakdown",
+            "AI-generated storyboard images",
+            "Integration with Blender VSE",
+            "Automatic camera and shot setup",
+            "Supports inserting transitions",
+            "Blender add-on in Python",
+            "UI for editing and adjusting scenes"
+        ],
+        "github_url": "https://github.com/tin2tin/Pallaidium",
+        "product_number": "036",
+        "has_README": "YES"
+    },
+    {
+        "product_name": "LLM-Search (snexus)",
+        "product_summary": "Local Markdown and document search engine with LLM re-ranking. An open-source tool that indexes Markdown, PDF, and DOCX files on your device using both keyword (BM25/SPLADE) and vector embeddings. It supports hybrid search: quick full-text results which are then semantically re-ranked or answered by a local LLM, optionally with highlighted source excerpts.",
+        "feature_list": [
+            "On-device full-text index (BM25)",
+            "Vector embedding index (ChromaDB)",
+            "Supports Markdown, PDF, DOCX parsing",
+            "Hybrid search (keyword + semantic)",
+            "Optional LLM re-ranker or Q&A",
+            "Continuous indexing of new files",
+            "Simple web UI and API available"
+        ],
+        "github_url": "https://github.com/snexus/llm-search",
+        "product_number": "037",
+        "has_README": "YES"
+    },
+    {
+        "product_name": "Guidance",
+        "product_summary": "Adaptive prompt programming library. Guidance is an open-source Python library from Microsoft that enables dynamic control of multiple LLMs in a single workflow. It allows you to write a template with special syntax to run parts of the prompt on different models or capture and reuse model outputs, effectively optimizing prompts per model idiosyncrasies for consistent cross-model results.",
+        "feature_list": [
+            "Mixed-model prompt templates",
+            "Model-specific prompt blocks",
+            "Inline Python logic in prompts",
+            "Constraint enforcement on outputs",
+            "Dynamic step-by-step execution",
+            "Supports OpenAI, local models, etc.",
+            "High-level API for complex flows"
+        ],
+        "github_url": "https://github.com/microsoft/guidance",
+        "product_number": "038",
+        "has_README": "YES"
+    },
+    {
+        "product_name": "InvokeAI Web UI",
+        "product_summary": "Multi-backend AI image generator suite. InvokeAI is an open-source Stable Diffusion toolkit with a browser-based UI allowing you to generate images using various models from different sources (Stable Diffusion, HuggingFace Hub, etc.). It features a dark-mode interface, customization of model selection, live preview, and workflow features like prompt queues and post-processing filters.",
+        "feature_list": [
+            "Supports multiple diffusion models",
+            "HuggingFace Hub model integration",
+            "Responsive web GUI with dark theme",
+            "Prompt & negative prompt inputs",
+            "Live generation previews",
+            "Advanced options (init image, tiling, etc.)",
+            "Community extensions and plugins"
+        ],
+        "github_url": "https://github.com/invoke-ai/InvokeAI",
+        "product_number": "039",
+        "has_README": "YES"
+    },
+    {
+        "product_name": "Qwen-Image",
+        "product_summary": "Large bilingual text-to-image foundation model. Qwen-Image is Alibaba’s open-source 20B-parameter diffusion model that excels at generating photo-realistic images from Chinese or English prompts. It has strong ability to render text (e.g., Chinese characters) correctly within images and produces high-quality, detailed visuals with relatively moderate VRAM requirements given its size.",
+        "feature_list": [
+            "Chinese-English bilingual diffusion model",
+            "20B parameters, state-of-the-art quality",
+            "Accurate text rendering in generated images",
+            "Photo-realistic and artistic style support",
+            "Fine-grained control via text prompts",
+            "Reference code and model weights available",
+            "Optimized for 16GB+ GPUs"
+        ],
+        "github_url": "https://github.com/QwenLM/Qwen-Image",
+        "product_number": "040",
+        "has_README": "YES"
+    },
+    {
+        "product_name": "imessageclient (CLI)",
+        "product_summary": "Terminal-based iMessage sender/receiver. This open-source macOS tool allows you to use iMessage from the command line or over SSH. It integrates with Apple’s Messages via AppleScript automation to list conversations, read incoming messages, and send new SMS or iMessages, all within a text-based TUI that supports keyboard navigation and quick switching between chats.",
+        "feature_list": [
+            "Lists current iMessage conversations in terminal",
+            "Read messages and send replies via CLI",
+            "Support for group chats and SMS",
+            "Keyboard-driven UI (arrow keys, enter to select)",
+            "Hotkeys to start new chat or refresh",
+            "Terminal notifications for new messages",
+            "Requires macOS (uses Messages app APIs)"
+        ],
+        "github_url": "https://github.com/CamHenlin/imessageclient",
+        "product_number": "041",
+        "has_README": "YES"
+    },
+    {
+        "product_name": "Mue (Browser New Tab)",
+        "product_summary": "Customizable open-source start page. Mue is a popular new-tab extension that offers beautiful backgrounds, inspirational quotes, to-do lists, and quick access links on each new browser tab. It includes multiple stunning themes, a clock with light/dark mode, custom search shortcuts, weather widgets, and syncs your configuration, all without tracking any user data.",
+        "feature_list": [
+            "Personalized new tab dashboard",
+            "Dozens of gorgeous background images",
+            "Daily quotes and greetings",
+            "Integrated to-do list and notes",
+            "Local weather display option",
+            "Custom search engine shortcuts",
+            "No data collection (privacy-focused)"
+        ],
+        "github_url": "https://github.com/mue/mue",
+        "product_number": "059",
+        "has_README": "YES"
+    },
+    {
+        "product_name": "pyLoad",
+        "product_summary": "Self-hosted download manager with web UI. pyLoad is an open-source, lightweight download queue manager that runs on a server or NAS. It supports downloading files from direct links, one-click hosters, or torrents via plugins, has a browser-based interface to add/manage downloads, handles reconnections and captcha solving, and can automate link checking and mirror fallbacks.",
+        "feature_list": [
+            "Web-based download queue control",
+            "Supports HTTP, FTP, and hoster links",
+            "Automatic mirror fallback handling",
+            "Parallel downloads with speed limits",
+            "Captcha recognition via plugins",
+            "User accounts and session management",
+            "Runs on low-resource devices (Python)"
+        ],
+        "github_url": "https://github.com/pyload/pyload",
+        "product_number": "060",
+        "has_README": "YES"
+    },
+    {
+        "product_name": "GitHub Timeline",
+        "product_summary": "Interactive visualization of your Git history. This free web-based tool transforms your public coding activity into a cinematic timeline. It pulls data from your GitHub (or GitLab) profile – commits, repositories, stars – and generates a smooth animated story with slides or video, highlighting milestones like first repo, top languages, and contributions over time in an engaging narrative format.",
+        "feature_list": [
+            "Imports GitHub/GitLab contribution data",
+            "Timeline view of commits and repos",
+            "Auto-generated narrative with key milestones",
+            "Charts of languages and contribution stats",
+            "Smooth slide transitions or video export",
+            "Interactive playback controls",
+            "Shareable link for your code story"
+        ],
+        "github_url": "https://github.com/visheratin/gitstory", 
+        "product_number": "076",
+        "has_README": "YES"
+    },
+    {
+        "product_name": "Parse5",
+        "product_summary": "Pure JavaScript HTML5 parser. Parse5 is a robust open-source HTML parser for Node.js and browsers that fully conforms to the HTML5 specification (including edge cases and quirks). It can parse HTML strings into DOM-like AST objects, enabling server-side HTML processing or rendering. It has no dependencies and handles malformed markup the same way modern browsers do, making it a reliable drop-in for HTML parsing needs.",
+        "feature_list": [
+            "Full HTML5 standard compliance",
+            "Supports all parsing modes (DOM, SAX, fragment)",
+            "Handles broken or legacy HTML gracefully",
+            "Generates parse tree (AST) output",
+            "Extensive test suite against spec",
+            "No native dependencies (JS only)",
+            "Used in many scraping and SSR tools"
+        ],
+        "github_url": "https://github.com/inikulin/parse5",
+        "product_number": "082",
+        "has_README": "YES"
+    },
+    {
+        "product_name": "Terminal Velocity",
+        "product_summary": "CLI note-taking and journaling tool. Terminal Velocity is a fast, cross-platform terminal app inspired by Notational Velocity. It lets you create, search, and edit plain text Markdown notes with lightning speed. Notes are stored locally in a folder, can be tagged within content, and the interface allows incremental search on titles and content to instantly filter your notes. It opens your $EDITOR for full editing, making it a powerful console-based “second brain”.",
+        "feature_list": [
+            "Blazingly fast fuzzy search through notes",
+            "Create or open notes by typing part of title",
+            "Markdown and text support (opens in $EDITOR)",
+            "Incremental search as you type",
+            "Tagging by #tags within notes",
+            "Cross-platform (Linux, macOS, Windows WSL)",
+            "Lightweight and privacy-first"
+        ],
+        "github_url": "https://github.com/vhp/terminal_velocity",
+        "product_number": "085",
+        "has_README": "YES"
+    },
+    {
+        "product_name": "pgcli",
+        "product_summary": "Enhanced PostgreSQL CLI with autocompletion. pgcli is an open-source command-line client for Postgres that offers an intuitive interactive experience. It features inline SQL syntax highlighting, smart autocompletion for tables/columns (thanks to local database introspection), and persistent history. It’s keyboard-centric (vi-style editing supported) and makes typing and exploring databases faster and more pleasant than the default psql.",
+        "feature_list": [
+            "Auto-completion of SQL keywords and schema names",
+            "Syntax highlighting in the terminal",
+            "Configurable vi or Emacs keybindings",
+            "Paged display of query results",
+            "Favorite query shortcuts and timing of queries",
+            "Support for multi-line queries",
+            "History and timing of past queries"
+        ],
+        "github_url": "https://github.com/dbcli/pgcli",
+        "product_number": "086",
+        "has_README": "YES"
+    },
+    {
+        "product_name": "deep-link.js",
+        "product_summary": "JavaScript toolkit for mobile deep links. deep-link.js is an open-source library that makes it easier to direct users from web pages to native apps. Developers can configure a link with custom data attributes for the mobile app scheme, fallback App Store/Play Store links, and a normal web URL. The library detects mobile browsers and automatically attempts to open the corresponding native app (or store, or web fallback) in a prioritized order, enabling seamless transitions from web content to apps.",
+        "feature_list": [
+            "Declarative deep link markup (data attributes)",
+            "Handles iOS and Android scheme detection",
+            "Fallback to App Store/Play Store if app not installed",
+            "Final fallback to normal href link",
+            "No effect on desktop browsers (guards execution)",
+            "Lightweight and framework-agnostic",
+            "Supports custom URL scheme for any app"
+        ],
+        "github_url": "https://github.com/timseverien/deep-link.js",
+        "product_number": "090",
+        "has_README": "YES"
+    },
+    {
+        "product_name": "Radarr",
+        "product_summary": "Automated movie collection manager. Radarr is a popular open-source self-hosted tool for tracking and downloading movies. A fork of Sonarr (for TV), it lets you add films you want to “watch” – and then integrates with search indexers and download clients (NZB/torrent) to fetch them. It monitors for better quality releases (upgrade from HDTV to BluRay, etc.), supports categories/tags, notifies on downloads, and organizes files into your library folder structure automatically.",
+        "feature_list": [
+            "Movie search and automated downloading",
+            "Supports Usenet and BitTorrent sources",
+            "Can upgrade quality when better available",
+            "Customizable file renaming and organization",
+            "Calendar and list views of upcoming releases",
+            "Notifications (Kodi/Plex, email, etc.)",
+            "Web interface with multi-user support"
+        ],
+        "github_url": "https://github.com/Radarr/Radarr",
+        "product_number": "091",
+        "has_README": "YES"
+    },
+    {
+        "product_name": "Home Finder",
+        "product_summary": "Automated home listing notifier. Home Finder is an open-source project that scrapes real estate listing sites at regular intervals (e.g. hourly) and sends email alerts when new properties that match your criteria appear. Aimed at competitive housing markets, it supports deployment of your own script so you can adjust the check frequency and filters (location, price range, etc.), helping you act quickly on fresh listings.",
+        "feature_list": [
+            "Periodic scraping of housing listings",
+            "Configurable search filters (location, price, etc.)",
+            "Email notifications for new matches",
+            "Supports self-hosting and customizing interval",
+            "HTML report of found listings",
+            "Lightweight Python implementation",
+            "MIT licensed and easy to extend"
+        ],
+        "github_url": "https://github.com/WeRules/home-finder",
+        "product_number": "092",
+        "has_README": "YES"
+    },
+    {
+        "product_name": "Trilium Notes",
+        "product_summary": "Self-hosted knowledge base and journal. Trilium is an open-source hierarchical note-taking application that can be installed on your server or desktop. It focuses on privacy and rich features: you can create nested journals or diaries, embed images and media, track moods or metadata via custom fields, search and tag entries, and even sync across devices. All data is stored locally or on your server under your control, with encryption options, providing a safe space for personal thoughts and logs.",
+        "feature_list": [
+            "Rich text and Markdown note editing",
+            "Hierarchies of notes (tree structure)",
+            "Tagging and relations between notes",
+            "Full-text search and filtering",
+            "End-to-end encryption support",
+            "Versioning and note history",
+            "Web clipper and sync capabilities"
+        ],
+        "github_url": "https://github.com/zadam/trilium",
+        "product_number": "093",
+        "has_README": "YES"
+    },
+    {
+        "product_name": "OpenAssistant",
+        "product_summary": "Local-first AI assistant chat platform. OpenAssistant is an open-source project aiming to provide a chat-based AI assistant that runs on your own hardware or preferred cloud, with connectors to various messaging platforms. It includes a web and chat UI and can be extended to integrate with services like WhatsApp or Telegram via plugins. The assistant can answer questions, follow instructions, and perform tasks without sending data to third-party APIs, focusing on user privacy and extensibility.",
+        "feature_list": [
+            "ChatGPT-like assistant you can self-host",
+            "Supports running on local LLM models",
+            "Extensible to multiple chat platforms via plugins",
+            "Memory and persona customization",
+            "Web interface and chat API available",
+            "Knowledge-base and tool plugin system",
+            "Community-driven dataset and improvements"
+        ],
+        "github_url": "https://github.com/LAION-AI/Open-Assistant",
+        "product_number": "094",
+        "has_README": "YES"
+    },
+    {
+        "product_name": "FreeCAD (Headless Mode)",
+        "product_summary": "Headless CAD automation for mesh-to-solid conversion. FreeCAD is an open-source 3D CAD software that can be used via Python scripting in headless mode (no GUI) to perform complex geometry operations. Using FreeCAD’s engine, you can automate conversion of STL mesh files into STEP solid models by running scripts or using its command-line interface. It leverages OpenCasCade under the hood to recreate solid geometry from mesh data, preserving dimensions and enabling further CAD operations, all in a self-hosted environment.",
+        "feature_list": [
+            "Automated STL mesh import and processing",
+            "Sewing and solidification of mesh into solid",
+            "Exports to STEP, IGES, etc. formats",
+            "Python API for geometric operations",
+            "Batch conversion support with scripts",
+            "No GUI required (CLI or server mode)",
+            "Cross-platform and well-documented"
+        ],
+        "github_url": "https://github.com/FreeCAD/FreeCAD",
+        "product_number": "096",
+        "has_README": "YES"
+    },
+    {
+        "product_name": "Reddit Streaming Pipeline",
+        "product_summary": "Real-time subreddit analytics pipeline. This open-source project streams Reddit data (posts/comments) from specified subreddits and performs live sentiment analysis and keyword aggregation. It stores data in a database and provides a dashboard to visualize trends such as sentiment over time, top discussed topics, and user engagement metrics. It demonstrates how to continuously collect and analyze Reddit content for insights without relying on the official API.",
+        "feature_list": [
+            "Live Reddit data collection (pushshift/PSAW integration)",
+            "Sentiment analysis on comments in real-time",
+            "Data pipeline with streaming and processing",
+            "Stores results in SQL database",
+            "Dashboard for sentiment and trend visualization",
+            "Handles multiple subreddits simultaneously",
+            "Configurable filters and periodic reports"
+        ],
+        "github_url": "https://github.com/nama1arpit/reddit-streaming-pipeline",
+        "product_number": "098",
+        "has_README": "YES"
+    },
+    {
+        "product_name": "SuperAGI",
+        "product_summary": "AI agent workflow manager. SuperAGI is an open-source platform that helps orchestrate autonomous AI agents and human tasks. It provides a web UI where you can define objectives and see agents working through a task list (akin to a Kanban). Agents can use tools (code execution, web browsing, etc.) and collaborate or hand off tasks to humans via the interface. The system allows monitoring progress, intervening, and managing multiple agent tasks in parallel with transparency.",
+        "feature_list": [
+            "Goal-driven autonomous agent orchestration",
+            "Visual board for agent tasks and status",
+            "Integration of human review steps",
+            "Supports code, web, and other tool plugins",
+            "Concurrent multi-agent support",
+            "Logging and traceability of agent reasoning",
+            "Web-based management console"
+        ],
+        "github_url": "https://github.com/Significant-Gravitas/SuperAGI",
+        "product_number": "100",
+        "has_README": "YES"
+    }
+]

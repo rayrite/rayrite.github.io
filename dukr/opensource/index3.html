@@ -10,90 +10,139 @@
             margin: 0;
             padding: 0;
         }
-        
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            background: #f5f5f5;
-            color: #333;
-            line-height: 1.6;
-            font-size: 16px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            padding: 15px;
+            color: #e4e4e7;
+            font-size: 14px;
         }
-        
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            width: 100%;
+        }
+
         header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 1.5rem 2rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            text-align: center;
+            margin-bottom: 15px;
+            padding: 10px;
         }
-        
-        header h1 {
+
+        h1 {
             font-size: 2rem;
-            margin-bottom: 0.5rem;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 5px;
         }
-        
-        .stats {
-            display: flex;
-            gap: 2rem;
+
+        .subtitle {
+            color: #a1a1aa;
             font-size: 1rem;
-            opacity: 0.9;
         }
-        
+
         .controls {
-            background: white;
-            padding: 1rem 2rem;
-            border-bottom: 1px solid #ddd;
             display: flex;
             flex-wrap: wrap;
-            gap: 1rem;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
             align-items: center;
         }
-        
+
+        .search-box {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            background: rgba(0, 0, 0, 0.3);
+            color: #fff;
+            font-size: 14px;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .search-box input::placeholder {
+            color: #71717a;
+        }
+
         .control-group {
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
-        
+
         label {
             font-weight: 500;
-            font-size: 1rem;
-            color: #555;
+            font-size: 14px;
+            color: #a1a1aa;
         }
-        
-        input, select {
-            padding: 0.5rem 0.75rem;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 1rem;
+
+        select {
+            padding: 10px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            background: rgba(0, 0, 0, 0.3);
+            color: #fff;
+            font-size: 14px;
+            cursor: pointer;
         }
-        
-        input:focus, select:focus {
+
+        select:focus {
             outline: none;
             border-color: #667eea;
         }
-        
-        #search {
-            min-width: 300px;
+
+        select option {
+            background: #1a1a2e;
+            color: #fff;
         }
-        
-        .container {
-            padding: 1.5rem 2rem;
-            max-width: 100%;
+
+        .stats {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
         }
-        
+
+        .stat-item {
+            background: rgba(102, 126, 234, 0.2);
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .stat-item strong {
+            color: #667eea;
+        }
+
         .video-section {
-            background: white;
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
             overflow: hidden;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
         }
-        
+
         .video-header {
-            background: #f8f9fa;
+            background: rgba(0, 0, 0, 0.3);
             padding: 1rem 1.5rem;
             border-bottom: 2px solid #667eea;
             display: flex;
@@ -102,101 +151,116 @@
             flex-wrap: wrap;
             gap: 0.5rem;
         }
-        
+
         .video-title {
             font-size: 1.3rem;
             font-weight: 600;
-            color: #333;
+            color: #fff;
         }
-        
+
         .video-meta {
             font-size: 0.95rem;
-            color: #666;
+            color: #a1a1aa;
         }
-        
+
         .video-link {
             color: #667eea;
             text-decoration: none;
         }
-        
+
         .video-link:hover {
             text-decoration: underline;
         }
-        
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 1rem;
+            font-size: 13px;
         }
-        
-        th, td {
-            padding: 1rem 1.25rem;
+
+        thead {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        th {
+            padding: 12px 10px;
             text-align: left;
-            border-bottom: 1px solid #eee;
+            font-weight: 600;
+            color: #a78bfa;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             vertical-align: top;
         }
-        
-        th {
-            background: #f8f9fa;
-            font-weight: 600;
-            color: #555;
-            white-space: nowrap;
-            font-size: 1.05rem;
+
+        tbody tr {
+            transition: background 0.2s;
         }
-        
-        tr:hover {
-            background: #f8f9fa;
+
+        tbody tr:hover {
+            background: rgba(255, 255, 255, 0.05);
         }
-        
-        td {
-            line-height: 1.7;
-        }
-        
+
         /* Column specific styles */
         .col-number {
             width: 60px;
             text-align: center;
             font-weight: 600;
+            color: #667eea;
+            font-family: 'Courier New', monospace;
         }
-        
+
         .col-name {
             min-width: 200px;
             font-weight: 600;
+            color: #fff;
         }
-        
+
         .col-timestamp {
             width: 100px;
             white-space: nowrap;
+            color: #a1a1aa;
         }
-        
+
         .col-date {
             width: 120px;
             white-space: nowrap;
+            color: #a1a1aa;
         }
-        
+
         .col-links {
             width: 150px;
             white-space: nowrap;
         }
-        
+
         .col-sources {
             width: 120px;
         }
-        
+
         .col-synopsis, .col-transcript {
-            min-width: 350px;
-            max-width: 500px;
+            min-width: 300px;
+            max-width: 400px;
         }
-        
+
         a {
             color: #667eea;
             text-decoration: none;
         }
-        
+
         a:hover {
             text-decoration: underline;
         }
-        
+
         .badge {
             display: inline-block;
             padding: 0.3rem 0.6rem;
@@ -206,109 +270,143 @@
             margin-right: 0.3rem;
             margin-bottom: 0.2rem;
         }
-        
+
         .badge-readme {
-            background: #28a745;
-            color: white;
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
         }
-        
+
         .badge-transcript {
-            background: #17a2b8;
-            color: white;
+            background: rgba(23, 162, 184, 0.2);
+            color: #17a2b8;
         }
-        
-        .link-btn {
-            display: inline-block;
-            padding: 0.4rem 0.8rem;
-            border-radius: 4px;
-            font-size: 0.9rem;
-            margin-right: 0.5rem;
-            margin-bottom: 0.3rem;
+
+        .github-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #667eea;
+            text-decoration: none;
+            font-size: 13px;
+            padding: 6px 10px;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 6px;
+            transition: all 0.2s;
+            margin-right: 6px;
+            margin-bottom: 4px;
+        }
+
+        .github-link:hover {
+            background: rgba(102, 126, 234, 0.2);
             text-decoration: none;
         }
-        
-        .link-github {
-            background: #6f42c1;
-            color: white;
+
+        .github-link svg {
+            flex-shrink: 0;
+            width: 14px;
+            height: 14px;
         }
-        
-        .link-github:hover {
-            background: #5a32a3;
+
+        .readme-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #10b981;
+            text-decoration: none;
+            font-size: 13px;
+            padding: 6px 10px;
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .readme-link:hover {
+            background: rgba(16, 185, 129, 0.2);
             text-decoration: none;
         }
-        
-        .link-readme {
-            background: #28a745;
-            color: white;
+
+        .readme-missing {
+            color: #71717a;
+            font-size: 13px;
+            font-style: italic;
         }
-        
-        .link-readme:hover {
-            background: #218838;
-            text-decoration: none;
-        }
-        
-        .loading {
-            text-align: center;
-            padding: 3rem;
-            font-size: 1.3rem;
-            color: #666;
-        }
-        
-        .error {
-            background: #f8d7da;
-            color: #721c24;
-            padding: 1rem;
-            border-radius: 4px;
-            margin: 1rem 0;
-        }
-        
+
         .text-content {
             white-space: pre-wrap;
             word-wrap: break-word;
-            max-width: 500px;
-            line-height: 1.7;
+            max-width: 400px;
+            line-height: 1.6;
+            color: #c4c4c9;
+            font-size: 13px;
         }
-        
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #71717a;
+        }
+
+        .spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid rgba(102, 126, 234, 0.3);
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 12px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            padding: 1rem;
+            border-radius: 6px;
+            margin: 1rem 0;
+        }
+
         .no-results {
             text-align: center;
-            padding: 3rem;
-            color: #666;
-            font-size: 1.1rem;
+            padding: 40px 20px;
+            color: #71717a;
         }
-        
+
+        .no-results-icon {
+            font-size: 36px;
+            margin-bottom: 12px;
+            opacity: 0.5;
+        }
+
         @media (max-width: 1200px) {
-            .container {
-                padding: 1rem;
-            }
-            
-            table {
-                font-size: 0.95rem;
-            }
-            
-            th, td {
-                padding: 0.75rem;
-            }
-            
             .col-synopsis, .col-transcript {
-                min-width: 250px;
-                max-width: 350px;
+                min-width: 200px;
+                max-width: 300px;
             }
         }
-        
+
+        @media (max-width: 1024px) {
+            .table-wrapper {
+                overflow-x: auto;
+            }
+            table {
+                min-width: 900px;
+            }
+        }
+
         @media (max-width: 768px) {
+            h1 {
+                font-size: 1.5rem;
+            }
             .controls {
                 flex-direction: column;
                 align-items: stretch;
             }
-            
-            .control-group {
-                width: 100%;
+            .search-box {
+                min-width: 100%;
             }
-            
-            input, select {
-                width: 100%;
-            }
-            
             .video-header {
                 flex-direction: column;
                 align-items: flex-start;
@@ -317,53 +415,62 @@
     </style>
 </head>
 <body>
-    <header>
-        <h1>📁 GitHub Projects Browser</h1>
-        <div class="stats">
-            <span id="total-videos">Videos: 0</span>
-            <span id="total-products">Products: 0</span>
-            <span id="filtered-products">Showing: 0</span>
-        </div>
-    </header>
-    
-    <div class="controls">
-        <div class="control-group">
-            <label for="search">Search:</label>
-            <input type="text" id="search" placeholder="Search products, descriptions, transcripts...">
-        </div>
-        <div class="control-group">
-            <label for="source-filter">Source:</label>
-            <select id="source-filter">
-                <option value="">All Sources</option>
-                <option value="readme">README</option>
-                <option value="transcript">Transcript</option>
-            </select>
-        </div>
-        <div class="control-group">
-            <label for="has-readme">Has README:</label>
-            <select id="has-readme">
-                <option value="">All</option>
-                <option value="yes">Yes</option>
-                <option value="no">No</option>
-            </select>
-        </div>
-    </div>
-    
     <div class="container">
-        <div id="loading" class="loading">Loading data...</div>
+        <header>
+            <h1>📁 GitHub Projects Browser</h1>
+            <p class="subtitle">Browse projects from multiple videos</p>
+        </header>
+
+        <div class="controls">
+            <div class="search-box">
+                <input type="text" id="search" placeholder="Search products, descriptions, transcripts...">
+            </div>
+            <div class="control-group">
+                <label for="source-filter">Source:</label>
+                <select id="source-filter">
+                    <option value="">All Sources</option>
+                    <option value="readme">README</option>
+                    <option value="transcript">Transcript</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="has-readme">Has README:</label>
+                <select id="has-readme">
+                    <option value="">All</option>
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                </select>
+            </div>
+            <div class="stats">
+                <div class="stat-item">Videos: <strong id="total-videos">0</strong></div>
+                <div class="stat-item">Products: <strong id="total-products">0</strong></div>
+                <div class="stat-item">Showing: <strong id="filtered-products">0</strong></div>
+            </div>
+        </div>
+
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>Loading data...</p>
+        </div>
         <div id="error" class="error" style="display: none;"></div>
         <div id="content" style="display: none;">
             <!-- Content will be rendered here -->
         </div>
         <div id="no-results" class="no-results" style="display: none;">
-            No products found matching your search.
+            <div class="no-results-icon">🔍</div>
+            <h3>No products found</h3>
+            <p>Try adjusting your search terms</p>
         </div>
     </div>
 
     <script>
         let allData = [];
         let filteredData = [];
-        
+
+        const githubIcon = `<svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>`;
+
+        const fileIcon = `<svg viewBox="0 0 16 16" fill="currentColor"><path d="M3 0h10a2 2 0 012 2v12a2 2 0 01-2 2H3a2 2 0 01-2-2V2a2 2 0 012-2zm0 1a1 1 0 00-1 1v12a1 1 0 001 1h10a1 1 0 001-1V2a1 1 0 00-1-1H3zm1 3h8v1H4V4zm0 3h8v1H4V7zm0 3h5v1H4v-1z"/></svg>`;
+
         async function loadData() {
             try {
                 const response = await fetch('listicle_001_updated.json');
@@ -374,7 +481,7 @@
                 
                 // Process data
                 const videos = data.videos || data;
-                document.getElementById('total-videos').textContent = `Videos: ${videos.length}`;
+                document.getElementById('total-videos').textContent = videos.length;
                 
                 let productCount = 0;
                 
@@ -410,7 +517,7 @@
                     return dateB - dateA;
                 });
                 
-                document.getElementById('total-products').textContent = `Products: ${productCount}`;
+                document.getElementById('total-products').textContent = productCount;
                 
                 // Initial render
                 filterData();
@@ -475,7 +582,7 @@
             }).filter(video => video.products.length > 0);
             
             const totalFiltered = filteredData.reduce((sum, v) => sum + v.products.length, 0);
-            document.getElementById('filtered-products').textContent = `Showing: ${totalFiltered}`;
+            document.getElementById('filtered-products').textContent = totalFiltered;
             
             if (totalFiltered === 0) {
                 document.getElementById('content').style.display = 'none';
@@ -521,6 +628,9 @@
                 videoSection.appendChild(videoHeader);
                 
                 // Products table
+                const tableWrapper = document.createElement('div');
+                tableWrapper.className = 'table-wrapper';
+                
                 const table = document.createElement('table');
                 table.innerHTML = `
                     <thead>
@@ -547,15 +657,9 @@
                     let githubUrl = product.url || '';
                     // Clean any remaining ?ref=manuagi
                     githubUrl = githubUrl.replace('?ref=manuagi', '');
-                    const githubLink = githubUrl ? 
-                        `<a href="${githubUrl}" target="_blank" class="link-btn link-github">🔗 GitHub</a>` : 
-                        '';
                     
                     // README link - opens in markdown viewer
                     const readmePath = product.readme_file;
-                    const readmeLink = readmePath ? 
-                        `<a href="main8-2.html?file=../../${readmePath}" target="_blank" class="link-btn link-readme">📄 README</a>` : 
-                        '';
                     
                     // Sources badges
                     const sources = product.synopsis_sources || [];
@@ -582,7 +686,10 @@
                         <td class="col-name">${escapeHtml(product.name)}</td>
                         <td class="col-timestamp">${product.timestamp || '-'}</td>
                         <td class="col-date">${productDate}</td>
-                        <td class="col-links">${githubLink}${readmeLink}</td>
+                        <td class="col-links">
+                            ${githubUrl ? `<a href="${githubUrl}" target="_blank" rel="noopener" class="github-link">${githubIcon} GitHub</a>` : ''}
+                            ${readmePath ? `<a href="main8-2.html?file=../../${readmePath}" target="_blank" class="readme-link">${fileIcon} README</a>` : '<span class="readme-missing">—</span>'}
+                        </td>
                         <td class="col-sources">${sourceBadges}</td>
                         <td class="col-synopsis"><div class="text-content">${escapeHtml(synopsis)}</div></td>
                         <td class="col-transcript"><div class="text-content">${escapeHtml(transcript)}</div></td>
@@ -591,7 +698,8 @@
                     tbody.appendChild(row);
                 });
                 
-                videoSection.appendChild(table);
+                tableWrapper.appendChild(table);
+                videoSection.appendChild(tableWrapper);
                 container.appendChild(videoSection);
             });
         }

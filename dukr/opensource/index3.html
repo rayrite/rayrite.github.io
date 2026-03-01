@@ -473,7 +473,8 @@
 
         async function loadData() {
             try {
-                const response = await fetch('listicle_001_updated.json');
+                // const response = await fetch('listicle_001_updated.json');
+                const response = await fetch('listicle_002_updated.json');
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }

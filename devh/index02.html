@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevHunt - Product Viewer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .loading-spinner {
+            border: 2px solid #f3f4f6;
+            border-top: 2px solid #4f46e5;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        /* Table styles */
+        .table-container {
+            overflow-x: auto;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .data-table th {
+            background-color: #f9fafb;
+            font-weight: 600;
+            text-align: left;
+            padding: 12px 16px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #6b7280;
+            border-bottom: 1px solid #e5e7eb;
+            white-space: nowrap;
+        }
+        .data-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 0.875rem;
+            vertical-align: top;
+        }
+        .data-table tr:hover td {
+            background-color: #f9fafb;
+        }
+        .link-cell {
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .link-cell a {
+            color: #4f46e5;
+            text-decoration: none;
+        }
+        .link-cell a:hover {
+            text-decoration: underline;
+        }
+        .upvote-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background-color: #fff7ed;
+            color: #ea580c;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.75rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="max-w-7xl mx-auto px-4 py-6">
+        <!-- Header -->
+        <header class="mb-6">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-900">DevHunt Products</h1>
+                    <p class="text-sm text-gray-500 mt-1">Discover the latest developer tools with live previews</p>
+                </div>
+                <div class="flex items-center gap-2 flex-wrap">
+                    <span class="text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full" id="count-badge">0 products</span>
+                    <button onclick="sortData('upvotes')" class="text-xs bg-indigo-600 text-white px-3 py-1 rounded-full hover:bg-indigo-700 transition">
+                        Sort by Upvotes
+                    </button>
+                    <button onclick="sortData('name')" class="text-xs bg-gray-200 text-gray-700 px-3 py-1 rounded-full hover:bg-gray-300 transition">
+                        Sort by Name
+                    </button>
+                    <button onclick="sortData('hasPreview')" class="text-xs bg-green-600 text-white px-3 py-1 rounded-full hover:bg-green-700 transition">
+                        Has Preview
+                    </button>
+                </div>
+            </div>
+            <!-- Search -->
+            <div class="mt-4">
+                <input 
+                    type="text" 
+                    id="search-input" 
+                    placeholder="Search products..." 
+                    class="w-full px-4 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    oninput="filterData()"
+                >
+            </div>
+        </header>
+
+        <!-- Loading State -->
+        <div id="loading-state" class="flex flex-col items-center justify-center py-12">
+            <div class="loading-spinner mb-3"></div>
+            <p class="text-sm text-gray-500">Loading products...</p>
+        </div>
+
+        <!-- Error State -->
+        <div id="error-state" class="hidden text-center py-12">
+            <svg class="w-12 h-12 text-red-400 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+            </svg>
+            <p class="text-red-600 font-medium">Failed to load data</p>
+            <p class="text-sm text-gray-500 mt-1" id="error-message"></p>
+            <button onclick="loadData()" class="mt-4 text-sm text-indigo-600 hover:text-indigo-800 font-medium">
+                Try Again
+            </button>
+        </div>
+
+        <!-- Product Table -->
+        <div id="product-table" class="bg-white rounded-lg border border-gray-200 shadow-sm hidden">
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 40px;">#</th>
+                            <th>Product Name</th>
+                            <th>Description</th>
+                            <th>DevHunt Page</th>
+                            <th>Live Preview</th>
+                            <th style="width: 80px;">Upvotes</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        <!-- Rows will be inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Empty State -->
+        <div id="empty-state" class="hidden text-center py-12">
+            <p class="text-gray-400 text-sm">No products found</p>
+        </div>
+    </div>
+
+    <script>
+        // Config
+        const JSON_FILE = 'DevHunt_20260228_with_previews.json';
+        
+        // State
+        let rawData = [];
+        let currentData = [];
+        let sortDirection = { upvotes: 'desc', name: 'asc', hasPreview: 'desc' };
+
+        // Load data from JSON file
+        async function loadData() {
+            const loadingState = document.getElementById('loading-state');
+            const errorState = document.getElementById('error-state');
+            const productTable = document.getElementById('product-table');
+            
+            // Show loading, hide others
+            loadingState.classList.remove('hidden');
+            errorState.classList.add('hidden');
+            productTable.classList.add('hidden');
+            
+            try {
+                const response = await fetch(JSON_FILE);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                rawData = await response.json();
+                currentData = [...rawData];
+                
+                // Hide loading, show table
+                loadingState.classList.add('hidden');
+                productTable.classList.remove('hidden');
+                
+                render(currentData);
+            } catch (error) {
+                loadingState.classList.add('hidden');
+                errorState.classList.remove('hidden');
+                document.getElementById('error-message').textContent = error.message;
+                console.error('Failed to load JSON:', error);
+            }
+        }
+
+        // Truncate text
+        function truncate(text, maxLength) {
+            if (!text) return '';
+            return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
+        }
+
+        // Render the product table
+        function render(data) {
+            const tableBody = document.getElementById('table-body');
+            const emptyState = document.getElementById('empty-state');
+            const countBadge = document.getElementById('count-badge');
+            const productTable = document.getElementById('product-table');
+            
+            countBadge.textContent = `${data.length} product${data.length !== 1 ? 's' : ''}`;
+            
+            if (data.length === 0) {
+                tableBody.innerHTML = '';
+                productTable.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                return;
+            }
+            
+            emptyState.classList.add('hidden');
+            productTable.classList.remove('hidden');
+            
+            tableBody.innerHTML = data.map((item, index) => {
+                const devhuntUrl = item.Link;
+                const livePreview = item.LivePreview;
+                const hasPreview = livePreview && livePreview.trim() !== '';
+                
+                return `
+                    <tr>
+                        <td class="text-gray-400">${index + 1}</td>
+                        <td>
+                            <div class="font-medium text-gray-900">${item.Name}</div>
+                        </td>
+                        <td>
+                            <div class="text-gray-600" title="${item.Description}">
+                                ${truncate(item.Description, 80)}
+                            </div>
+                        </td>
+                        <td class="link-cell">
+                            <a href="${devhuntUrl}" target="_blank" rel="noopener noreferrer" 
+                               title="${devhuntUrl}">
+                                ${truncate(devhuntUrl.replace('https://devhunt.org/tool/', ''), 25)}
+                            </a>
+                        </td>
+                        <td class="link-cell">
+                            ${hasPreview 
+                                ? `<a href="${livePreview}" target="_blank" rel="noopener noreferrer" 
+                                      title="${livePreview}" class="text-green-600 hover:text-green-800">
+                                     ${truncate(livePreview.replace(/^https?:\/\//, ''), 30)}
+                                     <svg class="w-3 h-3 inline ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                                     </svg>
+                                   </a>`
+                                : `<span class="text-gray-400 italic">No preview</span>`
+                            }
+                        </td>
+                        <td>
+                            <span class="upvote-badge">
+                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z"/>
+                                </svg>
+                                ${item.Upvotes || 0}
+                            </span>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Sort data
+        function sortData(criteria) {
+            if (criteria === 'upvotes') {
+                sortDirection.upvotes = sortDirection.upvotes === 'desc' ? 'asc' : 'desc';
+                currentData.sort((a, b) => {
+                    const aVotes = a.Upvotes || 0;
+                    const bVotes = b.Upvotes || 0;
+                    return sortDirection.upvotes === 'desc' 
+                        ? bVotes - aVotes 
+                        : aVotes - bVotes;
+                });
+            } else if (criteria === 'name') {
+                sortDirection.name = sortDirection.name === 'asc' ? 'desc' : 'asc';
+                currentData.sort((a, b) => {
+                    const comparison = a.Name.localeCompare(b.Name);
+                    return sortDirection.name === 'asc' ? comparison : -comparison;
+                });
+            } else if (criteria === 'hasPreview') {
+                sortDirection.hasPreview = sortDirection.hasPreview === 'desc' ? 'asc' : 'desc';
+                currentData.sort((a, b) => {
+                    const aHas = a.LivePreview ? 1 : 0;
+                    const bHas = b.LivePreview ? 1 : 0;
+                    return sortDirection.hasPreview === 'desc' 
+                        ? bHas - aHas 
+                        : aHas - bHas;
+                });
+            }
+            render(currentData);
+        }
+
+        // Filter data based on search
+        function filterData() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            currentData = rawData.filter(item => 
+                item.Name.toLowerCase().includes(query) ||
+                (item.Description && item.Description.toLowerCase().includes(query)) ||
+                (item.LivePreview && item.LivePreview.toLowerCase().includes(query))
+            );
+            render(currentData);
+        }
+
+        // Initial load
+        loadData();
+    </script>
+</body>
+</html>

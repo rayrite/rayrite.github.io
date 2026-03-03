@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ChronoView - Multi-Subject Comparison</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            overscroll-behavior: none;
+            touch-action: none;
+        }
+        
+        ::-webkit-scrollbar { display: none; }
+        
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Adaptive Event Cards */
+        .event-card {
+            width: 160px; /* Small on mobile */
+            height: 70px;
+            will-change: transform;
+            transition: opacity 0.3s ease;
+        }
+
+        @media (min-width: 768px) {
+            .event-card {
+                width: 240px;
+                height: 100px;
+            }
+        }
+
+        .event-card-inner {
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        @media (hover: hover) {
+            .event-card:hover .event-card-inner {
+                transform: scale(1.05) translateY(-4px);
+                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+                border-color: rgba(56, 189, 248, 0.5);
+            }
+        }
+
+        /* Compact Subject Rows */
+        .subject-row {
+            height: 200px; /* Reduced for mobile */
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            transition: background 0.3s ease;
+        }
+
+        @media (min-width: 768px) {
+            .subject-row { height: 320px; }
+        }
+
+        .subject-row:nth-child(even) { background: rgba(255, 255, 255, 0.01); }
+        .subject-row:nth-child(odd) { background: rgba(0, 0, 0, 0.1); }
+
+        /* Row Grid Overlay */
+        .grid-layer {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background-image: linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 100% 33.33%;
+        }
+
+        .subject-header {
+            position: sticky;
+            left: 0;
+            z-index: 40;
+            width: 140px; /* Slimmer for mobile */
+            height: 100%;
+            background: linear-gradient(to right, rgba(2, 6, 23, 1) 80%, rgba(2, 6, 23, 0));
+            pointer-events: none;
+        }
+
+        @media (min-width: 768px) {
+            .subject-header { width: 280px; }
+        }
+
+        .edge-beacon {
+            transition: transform 0.3s cubic-bezier(0.2, 0, 0.2, 1), opacity 0.3s ease;
+        }
+        
+        #minimap-thumb { cursor: grab; }
+        #minimap-thumb:active { cursor: grabbing; }
+
+        #timelineStack {
+            transition: transform 0.3s cubic-bezier(0.2, 0, 0.2, 1);
+        }
+        #timelineStack.is-dragging {
+            transition: none !important;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-200 h-screen w-screen overflow-hidden flex flex-col select-none">
+
+    <!-- Header -->
+    <header class="h-16 glass-panel z-50 flex items-center justify-between px-4 md:px-6 shrink-0 shadow-lg">
+        <div class="flex items-center gap-3 md:gap-4">
+            <div class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-gradient-to-tr from-sky-500 to-indigo-500 flex items-center justify-center shadow-lg">
+                <i data-lucide="layers" class="text-white w-5 h-5 md:w-6 md:h-6"></i>
+            </div>
+            <div>
+                <h1 class="font-bold text-base md:text-lg leading-tight tracking-wide text-white">Chrono<span class="text-sky-400">Sync</span></h1>
+                <p class="text-[10px] text-slate-400">Comparison Mode</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-2 md:gap-4">
+            <div class="relative group">
+                <button id="addSubjectBtn" class="flex items-center gap-2 bg-sky-600 hover:bg-sky-500 text-white px-3 md:px-4 py-1.5 rounded-full text-xs md:text-sm font-semibold transition-all shadow-lg">
+                    <i data-lucide="plus" class="w-4 h-4"></i>
+                    <span class="hidden sm:inline">Compare</span>
+                </button>
+                <div id="subjectMenu" class="absolute top-full right-0 mt-2 w-48 bg-slate-900 border border-slate-700 rounded-xl shadow-2xl hidden z-[60] overflow-hidden">
+                    <div class="p-2 text-[10px] uppercase tracking-widest text-slate-500 font-bold border-bottom border-slate-800 px-3">Available Subjects</div>
+                    <div id="menuItems"></div>
+                </div>
+            </div>
+
+            <div class="h-6 w-px bg-slate-800 mx-1"></div>
+
+            <button id="resetBtn" class="px-3 py-1.5 text-xs md:text-sm font-medium bg-slate-800 hover:bg-slate-700 rounded-md border border-slate-700 transition-colors">Reset</button>
+        </div>
+    </header>
+
+    <div class="absolute top-20 left-1/2 -translate-x-1/2 z-40 flex flex-col items-center pointer-events-none">
+        <div class="glass-panel px-4 md:px-6 py-1.5 md:py-2 rounded-full border border-sky-500/30 shadow-lg flex items-center gap-2 md:gap-3">
+            <i data-lucide="calendar" class="w-3.5 h-3.5 md:w-4 h-4 text-sky-400"></i>
+            <span id="centerDateDisplay" class="font-semibold text-sky-50 tracking-wide text-xs md:text-sm">Initializing...</span>
+        </div>
+    </div>
+
+    <main id="viewport" class="flex-1 relative overflow-hidden bg-black cursor-grab active:cursor-grabbing touch-none">
+        <div id="verticalBeacons" class="absolute inset-0 pointer-events-none z-40"></div>
+        <div id="timelineStack" class="absolute inset-0"></div>
+        <div class="absolute left-1/2 top-0 bottom-12 w-px bg-sky-500/30 z-20 pointer-events-none">
+            <div class="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-4 bg-gradient-to-r from-transparent via-sky-500/5 to-transparent"></div>
+        </div>
+        <canvas id="rulerCanvas" class="absolute bottom-0 left-0 w-full h-12 bg-slate-950 border-t border-slate-800 z-[50]"></canvas>
+    </main>
+
+    <footer class="h-16 bg-slate-950 border-t border-slate-800 z-50 flex items-center px-4 md:px-6 shrink-0 gap-4">
+        <i data-lucide="map" class="w-5 h-5 text-slate-500 shrink-0"></i>
+        <div id="minimapWrapper" class="flex-1 h-8 bg-slate-900 rounded-md border border-slate-800 relative cursor-pointer overflow-hidden group">
+            <div id="minimapDots" class="absolute inset-0 pointer-events-none"></div>
+            <div id="minimapThumb" class="absolute top-0 bottom-0 border-2 border-sky-500 bg-sky-500/10 rounded-[4px] shadow-[0_0_15px_rgba(56,189,248,0.2)] z-10"></div>
+        </div>
+    </footer>
+
+    <!-- Shared Modal -->
+    <div id="eventModal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4">
+        <div id="modalBackdrop" class="absolute inset-0 bg-slate-950/90 backdrop-blur-sm cursor-pointer transition-opacity duration-300 opacity-0"></div>
+        <div id="modalContent" class="relative bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden transform scale-95 opacity-0 transition-all duration-300">
+            <button id="closeModalBtn" class="absolute top-3 right-3 z-20 p-2 bg-black/40 hover:bg-black/60 text-white rounded-full"><i data-lucide="x" class="w-5 h-5"></i></button>
+            <div id="modalBanner" class="h-28 md:h-32 w-full flex items-end p-5 md:p-6 justify-between relative shadow-inner">
+                <div class="absolute inset-0 bg-black/20"></div>
+                <div class="relative z-10 flex justify-between w-full items-end">
+                    <div class="flex items-center gap-2 bg-black/40 px-3 py-1.5 rounded backdrop-blur-md">
+                        <i id="modalIcon" data-lucide="circle" class="w-3.5 h-3.5 text-white/90"></i>
+                        <span id="modalType" class="text-[10px] md:text-xs font-bold tracking-widest text-white/90 uppercase"></span>
+                    </div>
+                    <span id="modalDate" class="text-xs md:text-sm font-bold text-white/90"></span>
+                </div>
+            </div>
+            <div class="p-6 md:p-8">
+                <h2 id="modalTitle" class="text-xl md:text-2xl font-bold text-white mb-3 md:mb-4"></h2>
+                <p id="modalDesc" class="text-sm md:text-base text-slate-400 leading-relaxed"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Media Type Icon Mapping
+        const MEDIA_ICONS = {
+            'youtube': 'youtube',
+            'tiktok': 'clapperboard',
+            'reel': 'instagram',
+            'news': 'newspaper',
+            'audio': 'mic',
+            'streaming': 'tv',
+            'opinion': 'message-square-quote',
+            'editorial': 'pen-tool',
+            'periodical': 'book-open',
+            'research': 'flask-conical',
+            'whitepaper': 'file-text',
+            'patent': 'file-badge',
+            'default': 'circle'
+        };
+
+        function getIconForType(type) {
+            return MEDIA_ICONS[type.toLowerCase()] || MEDIA_ICONS['default'];
+        }
+
+        const DATASETS = {
+            'steve-jobs': {
+                name: "Steve Jobs", color: "sky",
+                events: [
+                    { date: '1976-04-01', title: 'Apple Founded', type: 'news', desc: 'Apple Computer is founded in a garage.' },
+                    { date: '1984-01-24', title: 'Macintosh Launch', type: 'youtube', desc: 'The original Macintosh is introduced. Watch the iconic "1984" ad.' },
+                    { date: '1985-09-16', title: 'Leaves Apple', type: 'editorial', desc: 'Jobs resigns after a power struggle. News outlets reflect on his departure.' },
+                    { date: '1997-09-16', title: 'Named iCEO', type: 'periodical', desc: 'Jobs returns to lead Apple\'s recovery, featured on Fortune cover.' },
+                    { date: '2001-10-23', title: 'iPod Reveal', type: 'patent', desc: 'Apple files foundational patents for digital media interfaces.' },
+                    { date: '2007-01-09', title: 'iPhone Keynote', type: 'streaming', desc: 'A phone, a communicator, and an iPod. Available on Apple TV.' },
+                    { date: '2011-10-05', title: 'Passing', type: 'opinion', desc: 'The world mourns a visionary. Global editorials pay tribute.' }
+                ]
+            },
+            'elon-musk': {
+                name: "Elon Musk", color: "emerald",
+                events: [
+                    { date: '1995-01-01', title: 'Zip2 Founded', type: 'whitepaper', desc: 'Musk outlines the initial web software concepts.' },
+                    { date: '1999-03-01', title: 'X.com (PayPal)', type: 'periodical', desc: 'Featured in finance journals for disruptive banking.' },
+                    { date: '2002-05-06', title: 'SpaceX Founded', type: 'research', desc: 'Detailed whitepaper on making life multi-planetary.' },
+                    { date: '2004-02-01', title: 'Joins Tesla', type: 'patent', desc: 'Electric powertrain patents filed.' },
+                    { date: '2012-05-22', title: 'Dragon Docks to ISS', type: 'youtube', desc: 'Live stream of the historic docking mission.' },
+                    { date: '2020-05-30', title: 'Crew Dragon Launch', type: 'tiktok', desc: 'Behind the scenes viral clips of the launch.' },
+                    { date: '2022-10-27', title: 'Twitter Acquisition', type: 'opinion', desc: 'Musk completes purchase of Twitter. Massive global debate.' }
+                ]
+            },
+            'bill-gates': {
+                name: "Bill Gates", color: "amber",
+                events: [
+                    { date: '1975-04-04', title: 'Microsoft Founded', type: 'periodical', desc: 'The dawn of the software age in computing magazines.' },
+                    { date: '1985-11-20', title: 'Windows 1.0', type: 'whitepaper', desc: 'Technical specifications for the GUI interface.' },
+                    { date: '1995-08-24', title: 'Windows 95', type: 'streaming', desc: 'Global launch broadcast live across major networks.' },
+                    { date: '2000-01-01', title: 'Foundation Launch', type: 'research', desc: 'Research initiatives into global health funded.' },
+                    { date: '2008-06-27', title: 'Retires from MSFT', type: 'audio', desc: 'Final interview on the Future of Computing podcast.' }
+                ]
+            },
+            'mark-zuckerberg': {
+                name: "Mark Zuckerberg", color: "blue",
+                events: [
+                    { date: '2004-02-04', title: 'Facebook Founded', type: 'reel', desc: 'Early stories shared via new media formats.' },
+                    { date: '2012-04-09', title: 'Instagram Acquisition', type: 'reel', desc: 'Meta pivots to short-form video content.' },
+                    { date: '2021-10-28', title: 'Rebrand to Meta', type: 'streaming', desc: 'Keynote presentation on the Metaverse vision.' }
+                ]
+            }
+        };
+
+        const MS_PER_DAY = 24 * 60 * 60 * 1000;
+        const MIN_TIME = new Date('1970-01-01').getTime();
+        const MAX_TIME = new Date('2030-01-01').getTime();
+
+        const getRowHeight = () => window.innerWidth < 768 ? 200 : 320;
+        const getTrackSpacing = () => window.innerWidth < 768 ? 55 : 90;
+        const getCardWidthOffset = () => window.innerWidth < 768 ? 80 : 120;
+        
+        let state = {
+            centerTime: new Date('2000-01-01').getTime(),
+            msPerPx: MS_PER_DAY * 15,
+            subjects: [], 
+            panY: 0,
+            isDragging: false,
+            isScrubbingMinimap: false,
+            lastTouchX: 0,
+            lastTouchY: 0,
+            initialPinchDist: 0,
+            initialMsPerPx: 0
+        };
+
+        const viewport = document.getElementById('viewport');
+        const timelineStack = document.getElementById('timelineStack');
+        const canvas = document.getElementById('rulerCanvas');
+        const ctx = canvas.getContext('2d');
+        const centerDateDisplay = document.getElementById('centerDateDisplay');
+        const subjectMenu = document.getElementById('subjectMenu');
+        const minimapThumb = document.getElementById('minimapThumb');
+        const minimapWrapper = document.getElementById('minimapWrapper');
+        const minimapDots = document.getElementById('minimapDots');
+        const verticalBeacons = document.getElementById('verticalBeacons');
+
+        function init() {
+            lucide.createIcons();
+            setupSubjectsMenu();
+            setupInteractions();
+            
+            addSubject('steve-jobs');
+            addSubject('elon-musk');
+            addSubject('bill-gates');
+            addSubject('mark-zuckerberg');
+
+            window.addEventListener('resize', () => render());
+            window.onload = () => requestAnimationFrame(() => render());
+            
+            document.addEventListener('touchmove', (e) => {
+                if (e.target.closest('#viewport') || e.target.closest('#minimapWrapper')) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+        }
+
+        function setupSubjectsMenu() {
+            const menu = document.getElementById('menuItems');
+            Object.keys(DATASETS).forEach(id => {
+                const item = document.createElement('div');
+                item.className = 'px-4 py-3 md:py-2 hover:bg-slate-800 cursor-pointer text-sm font-medium transition-colors border-b border-slate-800 last:border-0';
+                item.textContent = DATASETS[id].name;
+                item.onclick = () => { addSubject(id); subjectMenu.classList.add('hidden'); };
+                menu.appendChild(item);
+            });
+            document.getElementById('addSubjectBtn').onclick = (e) => { e.stopPropagation(); subjectMenu.classList.toggle('hidden'); };
+            window.onclick = () => subjectMenu.classList.add('hidden');
+        }
+
+        function addSubject(id) {
+            if (state.subjects.find(s => s.id === id)) return;
+            const data = DATASETS[id];
+            const subject = {
+                id, name: data.name, color: data.color,
+                events: data.events.map((e, idx) => ({ ...e, id: `${id}-${idx}`, timestamp: new Date(e.date).getTime(), track: idx % 3 }))
+            };
+            const row = document.createElement('div');
+            row.id = `row-${id}`;
+            row.className = 'subject-row';
+            const colorMap = { sky: 'rgba(14, 165, 233, 0.05)', emerald: 'rgba(16, 185, 129, 0.05)', amber: 'rgba(245, 158, 11, 0.05)', blue: 'rgba(59, 130, 246, 0.05)', orange: 'rgba(249, 115, 22, 0.05)' };
+            row.style.background = `linear-gradient(to bottom, transparent, ${colorMap[subject.color] || 'transparent'})`;
+            row.innerHTML = `
+                <div class="grid-layer"></div>
+                <div class="subject-header flex flex-col justify-center px-4 md:px-8 pointer-events-auto">
+                    <div class="flex items-center justify-between mb-1 md:mb-2">
+                         <span class="text-[9px] md:text-xs font-bold uppercase tracking-widest text-slate-500">Subject</span>
+                         <button class="remove-btn text-slate-600 hover:text-red-400 p-1"><i data-lucide="x" class="w-3 h-3 md:w-4 md:h-4"></i></button>
+                    </div>
+                    <h2 class="text-xl md:text-3xl font-black text-white truncate" title="${subject.name}">${subject.name}</h2>
+                    <div class="w-8 md:w-12 h-0.5 md:h-1 bg-${subject.color}-500 mt-1.5 rounded-full"></div>
+                </div>
+                <div class="events-layer absolute inset-0 pt-12"></div>
+            `;
+            row.querySelector('.remove-btn').onclick = (e) => { e.stopPropagation(); removeSubject(id); };
+            timelineStack.appendChild(row);
+            lucide.createIcons({ root: row });
+            
+            subject.events.forEach(ev => {
+                const dot = document.createElement('div');
+                dot.className = `absolute top-1/2 -translate-y-1/2 w-1 h-1 rounded-full bg-${subject.color}-500 opacity-60 dot-${id}`;
+                dot.style.left = `${(ev.timestamp - MIN_TIME) / (MAX_TIME - MIN_TIME) * 100}%`;
+                minimapDots.appendChild(dot);
+            });
+
+            const beacon = document.createElement('button');
+            beacon.id = `beacon-${id}`;
+            beacon.className = `edge-beacon absolute left-4 md:left-8 z-50 pointer-events-auto px-3 md:px-4 py-1.5 md:py-2 glass-panel border border-${subject.color}-500/50 rounded-full flex items-center gap-2 md:gap-3 opacity-0 scale-90 translate-y-0 shadow-2xl`;
+            beacon.innerHTML = `<div class="w-1.5 md:w-2 h-1.5 md:h-2 rounded-full bg-${subject.color}-500"></div><span class="text-[10px] md:text-xs font-bold text-white whitespace-nowrap">${subject.name}</span><i data-lucide="chevron-up" class="w-3 h-3 text-slate-400 beacon-icon"></i>`;
+            beacon.onclick = () => scrollToSubject(id);
+            verticalBeacons.appendChild(beacon);
+            lucide.createIcons({ root: beacon });
+
+            state.subjects.push(subject);
+            render();
+        }
+
+        function removeSubject(id) {
+            state.subjects = state.subjects.filter(s => s.id !== id);
+            const row = document.getElementById(`row-${id}`);
+            if (row) row.remove();
+            const beacon = document.getElementById(`beacon-${id}`);
+            if (beacon) beacon.remove();
+            document.querySelectorAll(`.dot-${id}`).forEach(d => d.remove());
+            render();
+        }
+
+        function scrollToSubject(id) {
+            const index = state.subjects.findIndex(s => s.id === id);
+            if (index === -1) return;
+            state.panY = -(index * getRowHeight());
+            render();
+        }
+
+        function render() {
+            const width = viewport.clientWidth || window.innerWidth;
+            const halfWidth = width / 2;
+            const rowHeight = getRowHeight();
+            const trackSpacing = getTrackSpacing();
+            const cardOffset = getCardWidthOffset();
+
+            centerDateDisplay.textContent = new Date(state.centerTime).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+
+            state.subjects.forEach(subject => {
+                const row = document.getElementById(`row-${subject.id}`);
+                if (!row) return;
+                const layer = row.querySelector('.events-layer');
+                subject.events.forEach(event => {
+                    let card = document.getElementById(`card-${event.id}`);
+                    const xPos = halfWidth + ((event.timestamp - state.centerTime) / state.msPerPx);
+                    if (xPos < -300 || xPos > width + 300) { if (card) card.style.display = 'none'; } 
+                    else {
+                        if (!card) { card = createCard(event, subject); layer.appendChild(card); }
+                        card.style.display = 'block';
+                        card.style.transform = `translate(${xPos - cardOffset}px, ${event.track * trackSpacing}px)`;
+                    }
+                });
+            });
+
+            timelineStack.style.transform = `translateY(${state.panY}px)`;
+            updateMinimap(width);
+            updateEdgeBeacons();
+            drawRuler(width);
+        }
+
+        function createCard(event, subject) {
+            const el = document.createElement('div');
+            el.id = `card-${event.id}`;
+            el.className = 'event-card absolute cursor-pointer z-30 group';
+            const iconName = getIconForType(event.type);
+            el.innerHTML = `
+                <div class="event-card-inner glass-panel rounded-xl p-2 md:p-4 h-full border-l-4 border-l-${subject.color}-500 transition-colors">
+                    <div class="flex justify-between items-start mb-1">
+                        <span class="text-[8px] md:text-[10px] font-bold text-slate-500 uppercase tracking-tighter">${event.date}</span>
+                        <i data-lucide="${iconName}" class="w-3 h-3 text-slate-500 group-hover:text-white transition-colors"></i>
+                    </div>
+                    <h3 class="font-bold text-white text-[10px] md:text-sm line-clamp-1">${event.title}</h3>
+                    <p class="text-[9px] md:text-[11px] text-slate-400 line-clamp-2 mt-0.5 md:mt-1">${event.desc}</p>
+                </div>
+                <div class="absolute -bottom-4 left-1/2 -translate-x-1/2 w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-slate-700 border border-slate-500 group-hover:border-${subject.color}-500 transition-colors"></div>
+            `;
+            let startX, startY;
+            el.addEventListener('touchstart', (e) => {
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+            }, { passive: true });
+            el.addEventListener('touchend', (e) => {
+                const dist = Math.hypot(e.changedTouches[0].clientX - startX, e.changedTouches[0].clientY - startY);
+                if (dist < 10) openModal(event, subject);
+            }, { passive: true });
+            el.onmousedown = (e) => { startX = e.clientX; startY = e.clientY; };
+            el.onclick = (e) => {
+                const dist = Math.hypot(e.clientX - startX, e.clientY - startY);
+                if (dist < 5) openModal(event, subject);
+            };
+            
+            lucide.createIcons({ root: el });
+            return el;
+        }
+
+        function updateMinimap(width) {
+            const totalDuration = MAX_TIME - MIN_TIME;
+            const startTime = state.centerTime - (width / 2) * state.msPerPx;
+            const endTime = state.centerTime + (width / 2) * state.msPerPx;
+            let startPct = Math.max(0, ((startTime - MIN_TIME) / totalDuration) * 100);
+            let widthPct = ((endTime - startTime) / totalDuration) * 100;
+            if (startPct + widthPct > 100) widthPct = 100 - startPct;
+            minimapThumb.style.left = `${startPct}%`;
+            minimapThumb.style.width = `${widthPct}%`;
+        }
+
+        function updateEdgeBeacons() {
+            const vh = viewport.clientHeight;
+            const rowHeight = getRowHeight();
+            state.subjects.forEach((subject, index) => {
+                const beacon = document.getElementById(`beacon-${subject.id}`);
+                if (!beacon) return;
+                const rowY = state.panY + (index * rowHeight);
+                const rowBottom = rowY + rowHeight;
+                const icon = beacon.querySelector('.beacon-icon');
+                if (rowBottom < 10) {
+                    beacon.style.opacity = "1"; beacon.style.transform = `translateY(26px) scale(1)`;
+                    icon.style.transform = "rotate(0deg)"; beacon.style.pointerEvents = "auto";
+                } else if (rowY > vh - 48 - 10) {
+                    beacon.style.opacity = "1"; beacon.style.transform = `translateY(${vh - 48 - 60}px) scale(1)`;
+                    icon.style.transform = "rotate(180deg)"; beacon.style.pointerEvents = "auto";
+                } else {
+                    beacon.style.opacity = "0"; beacon.style.transform = `translateY(${rowY + (rowHeight/2)}px) scale(0.9)`;
+                    beacon.style.pointerEvents = "none";
+                }
+            });
+        }
+
+        function drawRuler(width) {
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = width * dpr; canvas.height = 48 * dpr;
+            ctx.scale(dpr, dpr); ctx.clearRect(0, 0, width, 48);
+            const startTime = state.centerTime - (width / 2) * state.msPerPx;
+            const endTime = state.centerTime + (width / 2) * state.msPerPx;
+            ctx.strokeStyle = 'rgba(255,255,255,0.15)'; ctx.fillStyle = '#64748b'; ctx.font = '10px Inter'; ctx.textAlign = 'center';
+            const MIN_LABEL_GAP = window.innerWidth < 640 ? 60 : 85; 
+            const pxPerYear = (MS_PER_DAY * 365.25) / state.msPerPx;
+            let unit = 'year', step = 1;
+            if (pxPerYear * 10 > MIN_LABEL_GAP) {
+                if (pxPerYear > MIN_LABEL_GAP) {
+                    unit = 'year'; step = 1;
+                    if (pxPerYear > 250) { unit = 'month'; step = 1; }
+                    if (pxPerYear > 2000) { unit = 'day'; step = 1; }
+                } else {
+                    if (pxPerYear * 5 > MIN_LABEL_GAP) step = 5; else if (pxPerYear * 2 > MIN_LABEL_GAP) step = 2; else step = 10;
+                    unit = 'year';
+                }
+            } else {
+                unit = 'decade'; const pxPerDecade = pxPerYear * 10;
+                if (pxPerDecade * 5 > MIN_LABEL_GAP) step = 50; else if (pxPerDecade * 2 > MIN_LABEL_GAP) step = 20; else step = 100;
+            }
+            let current = new Date(startTime);
+            if (unit === 'decade' || unit === 'year') current = new Date(Math.floor(current.getFullYear() / step) * step, 0, 1);
+            else if (unit === 'month') current = new Date(current.getFullYear(), current.getMonth(), 1);
+            else current = new Date(current.getFullYear(), current.getMonth(), current.getDate());
+            let safety = 0;
+            while (current.getTime() < endTime && safety < 500) {
+                const x = (width / 2) + ((current.getTime() - state.centerTime) / state.msPerPx);
+                if (x >= 0 && x <= width) {
+                    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, 8); ctx.stroke();
+                    let label = unit.includes('year') || unit === 'decade' ? current.getFullYear() :
+                                unit === 'month' ? current.toLocaleDateString('en-US', { month: 'short', year: '2-digit' }) :
+                                current.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                    ctx.fillText(label, x, 25);
+                }
+                if (unit === 'decade' || unit === 'year') current.setFullYear(current.getFullYear() + step);
+                else if (unit === 'month') current.setMonth(current.getMonth() + 1);
+                else current.setDate(current.getDate() + 1);
+                safety++;
+            }
+        }
+
+        function setupInteractions() {
+            viewport.addEventListener('mousedown', (e) => {
+                state.isDragging = true;
+                state.lastTouchX = e.clientX;
+                state.lastTouchY = e.clientY;
+                timelineStack.classList.add('is-dragging');
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                if (!state.isDragging) return;
+                const dx = e.clientX - state.lastTouchX;
+                const dy = e.clientY - state.lastTouchY;
+                state.centerTime -= dx * state.msPerPx;
+                state.panY += dy;
+                clampPan();
+                state.lastTouchX = e.clientX; 
+                state.lastTouchY = e.clientY;
+                render();
+            });
+
+            window.addEventListener('mouseup', () => {
+                state.isDragging = false;
+                timelineStack.classList.remove('is-dragging');
+            });
+
+            viewport.addEventListener('touchstart', (e) => {
+                if (e.touches.length === 1) {
+                    state.isDragging = true;
+                    state.lastTouchX = e.touches[0].clientX;
+                    state.lastTouchY = e.touches[0].clientY;
+                    timelineStack.classList.add('is-dragging');
+                } else if (e.touches.length === 2) {
+                    state.isDragging = false;
+                    state.initialPinchDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+                    state.initialMsPerPx = state.msPerPx;
+                }
+            }, { passive: true });
+
+            viewport.addEventListener('touchmove', (e) => {
+                if (e.touches.length === 1 && state.isDragging) {
+                    const dx = e.touches[0].clientX - state.lastTouchX;
+                    const dy = e.touches[0].clientY - state.lastTouchY;
+                    state.centerTime -= dx * state.msPerPx;
+                    state.panY += dy;
+                    clampPan();
+                    state.lastTouchX = e.touches[0].clientX;
+                    state.lastTouchY = e.touches[0].clientY;
+                    render();
+                } else if (e.touches.length === 2) {
+                    const currentDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+                    const scale = state.initialPinchDist / currentDist;
+                    state.msPerPx = Math.min(MS_PER_DAY * 100, Math.max(MS_PER_DAY / 5, state.initialMsPerPx * scale));
+                    render();
+                }
+            }, { passive: false });
+
+            viewport.addEventListener('touchend', () => {
+                state.isDragging = false;
+                timelineStack.classList.remove('is-dragging');
+            });
+
+            viewport.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                if (Math.abs(e.deltaY) > Math.abs(e.deltaX) && !e.ctrlKey) {
+                    state.panY -= e.deltaY;
+                    clampPan();
+                } else {
+                    const factor = e.deltaY > 0 || e.deltaX > 0 ? 1.1 : 0.9;
+                    state.msPerPx = Math.min(MS_PER_DAY * 100, Math.max(MS_PER_DAY / 5, state.msPerPx * factor));
+                }
+                render();
+            }, { passive: false });
+
+            const scrub = (e) => {
+                const rect = minimapWrapper.getBoundingClientRect();
+                const x = e.touches ? e.touches[0].clientX : e.clientX;
+                let pct = (x - rect.left) / rect.width;
+                state.centerTime = MIN_TIME + Math.max(0, Math.min(1, pct)) * (MAX_TIME - MIN_TIME);
+                render();
+            };
+            minimapWrapper.addEventListener('mousedown', (e) => { state.isScrubbingMinimap = true; scrub(e); });
+            minimapWrapper.addEventListener('touchstart', (e) => { state.isScrubbingMinimap = true; scrub(e); }, { passive: true });
+            window.addEventListener('mousemove', (e) => { if (state.isScrubbingMinimap) scrub(e); });
+            window.addEventListener('touchmove', (e) => { if (state.isScrubbingMinimap) scrub(e); }, { passive: false });
+            window.addEventListener('mouseup', () => state.isScrubbingMinimap = false);
+            window.addEventListener('touchend', () => state.isScrubbingMinimap = false);
+        }
+
+        function clampPan() {
+            const rowHeight = getRowHeight();
+            const minPan = Math.min(0, -(state.subjects.length * rowHeight - viewport.clientHeight + 64));
+            state.panY = Math.min(0, Math.max(minPan, state.panY));
+            state.centerTime = Math.max(MIN_TIME, Math.min(MAX_TIME, state.centerTime));
+        }
+
+        const modal = document.getElementById('eventModal');
+        function openModal(event, subject) {
+            const banner = document.getElementById('modalBanner');
+            banner.className = `h-28 md:h-32 w-full flex items-end p-5 md:p-6 justify-between relative bg-gradient-to-r from-${subject.color}-600 to-${subject.color}-900 shadow-inner`;
+            
+            const typeIcon = document.getElementById('modalIcon');
+            const iconName = getIconForType(event.type);
+            typeIcon.setAttribute('data-lucide', iconName);
+            
+            document.getElementById('modalType').textContent = event.type;
+            document.getElementById('modalDate').textContent = event.date;
+            document.getElementById('modalTitle').textContent = event.title;
+            document.getElementById('modalDesc').textContent = event.desc;
+            
+            lucide.createIcons({ root: banner });
+            
+            modal.classList.remove('hidden'); modal.classList.add('flex');
+            setTimeout(() => {
+                document.getElementById('modalBackdrop').classList.replace('opacity-0', 'opacity-100');
+                document.getElementById('modalContent').classList.replace('scale-95', 'scale-100');
+                document.getElementById('modalContent').classList.replace('opacity-0', 'opacity-100');
+            }, 10);
+        }
+
+        document.getElementById('closeModalBtn').onclick = closeModal;
+        document.getElementById('modalBackdrop').onclick = closeModal;
+        function closeModal() {
+            document.getElementById('modalBackdrop').classList.replace('opacity-100', 'opacity-0');
+            document.getElementById('modalContent').classList.replace('scale-100', 'scale-95');
+            document.getElementById('modalContent').classList.replace('opacity-100', 'opacity-0');
+            setTimeout(() => modal.classList.replace('flex', 'hidden'), 300);
+        }
+
+        document.getElementById('resetBtn').onclick = () => { 
+            state.centerTime = new Date('2000-01-01').getTime(); 
+            state.msPerPx = MS_PER_DAY * 15; 
+            state.panY = 0; 
+            render(); 
+        };
+
+        init();
+    </script>
+</body>
+</html>

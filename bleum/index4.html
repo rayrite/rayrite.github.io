@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ChronoSync - Multi-Subject Comparison</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            overscroll-behavior: none;
+            touch-action: none;
+            background-color: #020617;
+        }
+        
+        ::-webkit-scrollbar { display: none; }
+        
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Adaptive Dimensions */
+        :root {
+            --row-h: 180px;
+            --card-w: 140px;
+            --card-h: 60px;
+            --track-s: 50px;
+        }
+
+        @media (min-width: 768px) {
+            :root {
+                --row-h: 320px;
+                --card-w: 240px;
+                --card-h: 100px;
+                --track-s: 90px;
+            }
+        }
+
+        .subject-row {
+            height: var(--row-h);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Grid Background for Rows */
+        .subject-grid {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background-image: 
+                linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 100% var(--track-s);
+            opacity: 0.5;
+        }
+
+        .event-card {
+            width: var(--card-w);
+            height: var(--card-h);
+            will-change: transform;
+        }
+
+        .event-card-inner {
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        @media (hover: hover) {
+            .event-card:hover .event-card-inner {
+                transform: scale(1.04) translateY(-2px);
+                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+                border-color: rgba(56, 189, 248, 0.4);
+            }
+        }
+
+        .subject-header {
+            position: sticky;
+            left: 0;
+            z-index: 40;
+            width: 130px;
+            height: 100%;
+            background: linear-gradient(to right, #020617 85%, rgba(2, 6, 23, 0));
+            pointer-events: none;
+        }
+
+        @media (min-width: 768px) {
+            .subject-header { width: 280px; }
+        }
+
+        .edge-beacon {
+            transition: transform 0.3s cubic-bezier(0.2, 0, 0.2, 1), opacity 0.3s ease;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+        }
+        
+        #timelineStack {
+            transition: transform 0.3s cubic-bezier(0.2, 0, 0.2, 1);
+        }
+        #timelineStack.is-dragging {
+            transition: none !important;
+        }
+
+        #minimapWrapper {
+            touch-action: none;
+        }
+    </style>
+</head>
+<body class="text-slate-200 h-screen w-screen overflow-hidden flex flex-col select-none">
+
+    <!-- Header -->
+    <header class="h-14 md:h-16 glass-panel z-50 flex items-center justify-between px-4 md:px-6 shrink-0 shadow-xl">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center shadow-lg">
+                <i data-lucide="layers-3" class="text-white w-5 h-5 md:w-6 md:h-6"></i>
+            </div>
+            <div class="hidden xs:block">
+                <h1 class="font-bold text-sm md:text-lg leading-tight tracking-wide text-white">Chrono<span class="text-sky-400">Sync</span></h1>
+                <p class="text-[9px] md:text-xs text-slate-400 font-medium">Multi-Subject Comparison</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-2 md:gap-4">
+            <div class="relative group">
+                <button id="addSubjectBtn" class="flex items-center gap-2 bg-sky-600 hover:bg-sky-500 text-white px-3 md:px-4 py-1.5 rounded-lg text-xs md:text-sm font-bold transition-all shadow-lg active:scale-95">
+                    <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                    <span>Compare</span>
+                </button>
+                <div id="subjectMenu" class="absolute top-full right-0 mt-2 w-48 bg-slate-900 border border-slate-700 rounded-xl shadow-2xl hidden z-[60] overflow-hidden">
+                    <div class="p-2 text-[10px] uppercase tracking-widest text-slate-500 font-bold bg-slate-800/50 px-3">Available Subjects</div>
+                    <div id="menuItems"></div>
+                </div>
+            </div>
+
+            <button id="resetBtn" class="px-3 py-1.5 text-xs md:text-sm font-bold bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg border border-slate-700 transition-colors active:scale-95">Reset</button>
+        </div>
+    </header>
+
+    <!-- Floating UI Elements -->
+    <div class="absolute top-16 left-1/2 -translate-x-1/2 z-40 pointer-events-none">
+        <div class="glass-panel px-4 py-1.5 rounded-full border border-sky-500/40 shadow-2xl flex items-center gap-2">
+            <i data-lucide="clock" class="w-3.5 h-3.5 text-sky-400"></i>
+            <span id="centerDateDisplay" class="font-bold text-sky-50 tracking-wide text-[11px] md:text-xs">Initializing...</span>
+        </div>
+    </div>
+
+    <main id="viewport" class="flex-1 relative overflow-hidden bg-slate-950 cursor-grab active:cursor-grabbing touch-none">
+        <div id="verticalBeacons" class="absolute inset-0 pointer-events-none z-40"></div>
+        <div id="timelineStack" class="absolute inset-0"></div>
+        
+        <!-- Guideline -->
+        <div class="absolute left-1/2 top-0 bottom-12 w-px bg-sky-500/40 z-20 pointer-events-none">
+            <div class="absolute inset-0 w-8 -left-4 bg-gradient-to-r from-transparent via-sky-500/10 to-transparent"></div>
+        </div>
+        
+        <canvas id="rulerCanvas" class="absolute bottom-0 left-0 w-full h-12 bg-slate-900 border-t border-slate-800 z-[50]"></canvas>
+    </main>
+
+    <!-- Footer Minimap -->
+    <footer class="h-14 md:h-16 bg-slate-950 border-t border-slate-800 z-50 flex items-center px-4 md:px-6 shrink-0 gap-3 md:gap-4 shadow-2xl">
+        <i data-lucide="map" class="w-4 h-4 md:w-5 md:h-5 text-slate-500 shrink-0"></i>
+        <div id="minimapWrapper" class="flex-1 h-7 md:h-8 bg-slate-900/50 rounded-lg border border-slate-800 relative cursor-pointer overflow-hidden">
+            <div id="minimapDots" class="absolute inset-0 pointer-events-none"></div>
+            <div id="minimapThumb" class="absolute top-0 bottom-0 border-2 border-sky-500 bg-sky-500/20 rounded-md shadow-lg z-10 transition-colors"></div>
+        </div>
+    </footer>
+
+    <!-- Shared Detail Modal -->
+    <div id="eventModal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4">
+        <div id="modalBackdrop" class="absolute inset-0 bg-slate-950/90 backdrop-blur-md cursor-pointer transition-opacity duration-300 opacity-0"></div>
+        <div id="modalContent" class="relative bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden transform scale-95 opacity-0 transition-all duration-300">
+            <button id="closeModalBtn" class="absolute top-3 right-3 z-20 p-2 bg-black/40 hover:bg-black/60 text-white rounded-full"><i data-lucide="x" class="w-4 h-4"></i></button>
+            <div id="modalBanner" class="h-24 md:h-32 w-full flex items-end p-5 md:p-6 justify-between relative shadow-inner">
+                <div class="absolute inset-0 bg-black/30"></div>
+                <div class="relative z-10 flex justify-between w-full items-end">
+                    <div class="flex items-center gap-2 bg-black/50 px-2.5 py-1.5 rounded-lg backdrop-blur-md border border-white/10">
+                        <i id="modalIcon" data-lucide="circle" class="w-3.5 h-3.5 text-sky-400"></i>
+                        <span id="modalType" class="text-[9px] md:text-xs font-bold tracking-widest text-white uppercase"></span>
+                    </div>
+                    <span id="modalDate" class="text-xs md:text-sm font-bold text-white/90 drop-shadow-lg"></span>
+                </div>
+            </div>
+            <div class="p-6 md:p-8">
+                <h2 id="modalTitle" class="text-lg md:text-2xl font-black text-white mb-3 leading-tight"></h2>
+                <p id="modalDesc" class="text-xs md:text-base text-slate-400 leading-relaxed font-medium"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const MEDIA_TYPES = {
+            'youtube': 'youtube', 'tiktok': 'clapperboard', 'reel': 'instagram', 'news': 'newspaper',
+            'audio': 'mic', 'streaming': 'tv', 'opinion': 'message-square-quote', 'editorial': 'pen-tool',
+            'periodical': 'book-open', 'research': 'flask-conical', 'whitepaper': 'file-text', 'patent': 'file-badge', 'default': 'circle'
+        };
+
+        const DATASETS = {
+            'steve-jobs': {
+                name: "Steve Jobs", color: "sky",
+                events: [
+                    { date: '1976-04-01', title: 'Apple Founded', type: 'news', desc: 'Apple Computer is founded in a garage.' },
+                    { date: '1984-01-24', title: 'Macintosh Launch', type: 'youtube', desc: 'Introduces the original Macintosh.' },
+                    { date: '1985-09-16', title: 'Leaves Apple', type: 'editorial', desc: 'Resigns after a power struggle.' },
+                    { date: '2001-10-23', title: 'iPod Reveal', type: 'patent', desc: 'Foundational patents for digital media.' },
+                    { date: '2007-01-09', title: 'iPhone Keynote', type: 'streaming', desc: 'Redefining the mobile phone.' },
+                    { date: '2011-10-05', title: 'Passing', type: 'opinion', desc: 'Global tribute to a visionary.' }
+                ]
+            },
+            'elon-musk': {
+                name: "Elon Musk", color: "emerald",
+                events: [
+                    { date: '1995-01-01', title: 'Zip2 Founded', type: 'whitepaper', desc: 'Initial web software concepts.' },
+                    { date: '2002-05-06', title: 'SpaceX Founded', type: 'research', desc: 'Mission to make life multi-planetary.' },
+                    { date: '2004-02-01', title: 'Joins Tesla', type: 'patent', desc: 'Electric powertrain patents filed.' },
+                    { date: '2012-05-22', title: 'Dragon Docks', type: 'youtube', desc: 'Live stream of historic ISS docking.' },
+                    { date: '2020-05-30', title: 'Crew Dragon', type: 'tiktok', desc: 'Viral clips of the first human flight.' },
+                    { date: '2022-10-27', title: 'Twitter Buy', type: 'opinion', desc: 'Completes controversial acquisition.' }
+                ]
+            },
+            'bill-gates': {
+                name: "Bill Gates", color: "amber",
+                events: [
+                    { date: '1975-04-04', title: 'Microsoft Founded', type: 'periodical', desc: 'Software age in computing magazines.' },
+                    { date: '1985-11-20', title: 'Windows 1.0', type: 'whitepaper', desc: 'Specs for the GUI interface.' },
+                    { date: '1995-08-24', title: 'Windows 95', type: 'streaming', desc: 'Global launch broadcast live.' },
+                    { date: '2000-01-01', title: 'Foundation', type: 'research', desc: 'Global health research initiatives.' },
+                    { date: '2008-06-27', title: 'Retirement', type: 'audio', desc: 'Final interview on Future of Computing.' }
+                ]
+            },
+            'mark-zuckerberg': {
+                name: "Mark Zuckerberg", color: "blue",
+                events: [
+                    { date: '2004-02-04', title: 'Facebook Born', type: 'reel', desc: 'Launch of TheFacebook at Harvard.' },
+                    { date: '2012-04-09', title: 'Instagram Buy', type: 'reel', desc: 'Pivots to visual media.' },
+                    { date: '2021-10-28', title: 'Meta Rebrand', type: 'streaming', desc: 'The Metaverse vision presentation.' }
+                ]
+            }
+        };
+
+        const MS_PER_DAY = 24 * 60 * 60 * 1000;
+        const MIN_TIME = new Date('1970-01-01').getTime();
+        const MAX_TIME = new Date('2030-01-01').getTime();
+        
+        let state = {
+            centerTime: new Date('2000-01-01').getTime(),
+            msPerPx: MS_PER_DAY * 15,
+            subjects: [], 
+            panY: 0,
+            isDragging: false,
+            isScrubbingMinimap: false,
+            lastX: 0, lastY: 0,
+            pinchDist: 0, initialMsPerPx: 0
+        };
+
+        const getRowHeight = () => window.innerWidth < 768 ? 180 : 320;
+        const getTrackSpacing = () => window.innerWidth < 768 ? 50 : 90;
+        const getCardWidth = () => window.innerWidth < 768 ? 140 : 240;
+
+        const viewport = document.getElementById('viewport');
+        const timelineStack = document.getElementById('timelineStack');
+        const canvas = document.getElementById('rulerCanvas');
+        const ctx = canvas.getContext('2d');
+        const centerDateDisplay = document.getElementById('centerDateDisplay');
+        const subjectMenu = document.getElementById('subjectMenu');
+        const minimapThumb = document.getElementById('minimapThumb');
+        const minimapWrapper = document.getElementById('minimapWrapper');
+        const minimapDots = document.getElementById('minimapDots');
+        const verticalBeacons = document.getElementById('verticalBeacons');
+
+        function init() {
+            lucide.createIcons();
+            setupSubjectsMenu();
+            setupInteractions();
+            
+            addSubject('steve-jobs');
+            addSubject('elon-musk');
+            addSubject('bill-gates');
+            addSubject('mark-zuckerberg');
+
+            window.addEventListener('resize', render);
+            requestAnimationFrame(render);
+        }
+
+        function setupSubjectsMenu() {
+            const menu = document.getElementById('menuItems');
+            Object.keys(DATASETS).forEach(id => {
+                const item = document.createElement('div');
+                item.className = 'px-4 py-3 md:py-2 hover:bg-slate-800 cursor-pointer text-xs font-bold transition-colors border-b border-slate-800 last:border-0 text-slate-300';
+                item.textContent = DATASETS[id].name;
+                item.onclick = () => { addSubject(id); subjectMenu.classList.add('hidden'); };
+                menu.appendChild(item);
+            });
+            document.getElementById('addSubjectBtn').onclick = (e) => { e.stopPropagation(); subjectMenu.classList.toggle('hidden'); };
+            window.onclick = () => subjectMenu.classList.add('hidden');
+        }
+
+        function addSubject(id) {
+            if (state.subjects.find(s => s.id === id)) return;
+            const data = DATASETS[id];
+            const subject = {
+                id, name: data.name, color: data.color,
+                events: data.events.map((e, idx) => ({ ...e, id: `${id}-${idx}`, timestamp: new Date(e.date).getTime(), track: idx % 3 }))
+            };
+            const row = document.createElement('div');
+            row.id = `row-${id}`;
+            row.className = 'subject-row';
+            const colorMap = { sky: 'rgba(14, 165, 233, 0.08)', emerald: 'rgba(16, 185, 129, 0.08)', amber: 'rgba(245, 158, 11, 0.08)', blue: 'rgba(59, 130, 246, 0.08)', orange: 'rgba(249, 115, 22, 0.08)' };
+            row.style.background = `linear-gradient(to bottom, transparent, ${colorMap[subject.color] || 'transparent'})`;
+            row.innerHTML = `
+                <div class="subject-grid"></div>
+                <div class="subject-header flex flex-col justify-center px-4 md:px-8 pointer-events-auto">
+                    <span class="text-[8px] md:text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">Timeline</span>
+                    <h2 class="text-lg md:text-3xl font-black text-white truncate drop-shadow-md" title="${subject.name}">${subject.name}</h2>
+                    <div class="w-8 md:w-12 h-1 bg-${subject.color}-500 mt-2 rounded-full shadow-lg"></div>
+                    <button class="remove-btn absolute top-4 right-4 text-slate-600 hover:text-red-500 transition-colors p-2"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                </div>
+                <div class="events-layer absolute inset-0 pt-10 md:pt-14"></div>
+            `;
+            row.querySelector('.remove-btn').onclick = (e) => { e.stopPropagation(); removeSubject(id); };
+            timelineStack.appendChild(row);
+            lucide.createIcons({ root: row });
+            
+            subject.events.forEach(ev => {
+                const dot = document.createElement('div');
+                dot.className = `absolute top-1/2 -translate-y-1/2 w-1 md:w-1.5 h-1 md:h-1.5 rounded-full bg-${subject.color}-500 opacity-60 dot-${id}`;
+                dot.style.left = `${(ev.timestamp - MIN_TIME) / (MAX_TIME - MIN_TIME) * 100}%`;
+                minimapDots.appendChild(dot);
+            });
+
+            const beacon = document.createElement('button');
+            beacon.id = `beacon-${id}`;
+            beacon.className = `edge-beacon absolute left-4 md:left-8 z-50 pointer-events-auto px-3 py-1.5 md:px-4 md:py-2 glass-panel border border-${subject.color}-500/50 rounded-full flex items-center gap-2 md:gap-3 opacity-0 scale-90 translate-y-0`;
+            beacon.innerHTML = `<div class="w-1.5 md:w-2 h-1.5 md:h-2 rounded-full bg-${subject.color}-500"></div><span class="text-[9px] md:text-xs font-bold text-white whitespace-nowrap">${subject.name}</span><i data-lucide="chevron-up" class="w-3 h-3 text-slate-500 beacon-icon"></i>`;
+            beacon.onclick = () => scrollToSubject(id);
+            verticalBeacons.appendChild(beacon);
+            lucide.createIcons({ root: beacon });
+
+            state.subjects.push(subject);
+            render();
+        }
+
+        function removeSubject(id) {
+            state.subjects = state.subjects.filter(s => s.id !== id);
+            document.getElementById(`row-${id}`)?.remove();
+            document.getElementById(`beacon-${id}`)?.remove();
+            document.querySelectorAll(`.dot-${id}`).forEach(d => d.remove());
+            render();
+        }
+
+        function scrollToSubject(id) {
+            const index = state.subjects.findIndex(s => s.id === id);
+            if (index !== -1) state.panY = -(index * getRowHeight());
+            render();
+        }
+
+        function render() {
+            const width = viewport.clientWidth || window.innerWidth;
+            const halfWidth = width / 2;
+            const trackS = getTrackSpacing();
+            const cardW = getCardWidth();
+
+            centerDateDisplay.textContent = new Date(state.centerTime).toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+
+            state.subjects.forEach(subject => {
+                const row = document.getElementById(`row-${subject.id}`);
+                if (!row) return;
+                const layer = row.querySelector('.events-layer');
+                subject.events.forEach(event => {
+                    let card = document.getElementById(`card-${event.id}`);
+                    const x = halfWidth + ((event.timestamp - state.centerTime) / state.msPerPx);
+                    if (x < -300 || x > width + 300) { if (card) card.style.display = 'none'; } 
+                    else {
+                        if (!card) { card = createCard(event, subject); layer.appendChild(card); }
+                        card.style.display = 'block';
+                        card.style.transform = `translate(${x - (cardW/2)}px, ${event.track * trackS}px)`;
+                    }
+                });
+            });
+
+            timelineStack.style.transform = `translateY(${state.panY}px)`;
+            updateMinimap(width);
+            updateEdgeBeacons();
+            drawRuler(width);
+        }
+
+        function createCard(event, subject) {
+            const el = document.createElement('div');
+            el.id = `card-${event.id}`;
+            el.className = 'event-card absolute cursor-pointer z-30 group';
+            const icon = MEDIA_TYPES[event.type] || MEDIA_TYPES['default'];
+            el.innerHTML = `
+                <div class="event-card-inner glass-panel rounded-lg md:rounded-xl p-2 md:p-4 h-full border-l-[3px] md:border-l-4 border-l-${subject.color}-500 transition-colors">
+                    <div class="flex justify-between items-start mb-0.5 md:mb-1">
+                        <span class="text-[7px] md:text-[10px] font-black text-slate-500 uppercase tracking-tighter">${event.date}</span>
+                        <i data-lucide="${icon}" class="w-2.5 h-2.5 md:w-3.5 md:h-3.5 text-slate-500 group-hover:text-white transition-colors"></i>
+                    </div>
+                    <h3 class="font-bold text-white text-[9px] md:text-sm line-clamp-1 leading-tight">${event.title}</h3>
+                    <p class="text-[8px] md:text-[11px] text-slate-400 line-clamp-1 md:line-clamp-2 mt-0.5 md:mt-1">${event.desc}</p>
+                </div>
+                <div class="absolute -bottom-3 md:-bottom-4 left-1/2 -translate-x-1/2 w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-slate-700 border border-slate-500 group-hover:border-${subject.color}-500 transition-colors"></div>
+            `;
+            let sx, sy;
+            const start = (e) => { const t = e.touches?.[0] || e; sx = t.clientX; sy = t.clientY; };
+            const end = (e) => { 
+                const t = e.changedTouches?.[0] || e; 
+                if (Math.hypot(t.clientX - sx, t.clientY - sy) < 10) openModal(event, subject); 
+            };
+            el.addEventListener('touchstart', start, { passive: true });
+            el.addEventListener('touchend', end, { passive: true });
+            el.onmousedown = start; el.onclick = end;
+            lucide.createIcons({ root: el });
+            return el;
+        }
+
+        function updateMinimap(width) {
+            const total = MAX_TIME - MIN_TIME;
+            const start = state.centerTime - (width / 2) * state.msPerPx;
+            const end = state.centerTime + (width / 2) * state.msPerPx;
+            let startPct = Math.max(0, ((start - MIN_TIME) / total) * 100);
+            let widthPct = ((end - start) / total) * 100;
+            if (startPct + widthPct > 100) widthPct = 100 - startPct;
+            minimapThumb.style.left = `${startPct}%`;
+            minimapThumb.style.width = `${widthPct}%`;
+        }
+
+        function updateEdgeBeacons() {
+            const vh = viewport.clientHeight, rh = getRowHeight();
+            state.subjects.forEach((s, i) => {
+                const b = document.getElementById(`beacon-${s.id}`);
+                if (!b) return;
+                const ry = state.panY + (i * rh), rb = ry + rh, icon = b.querySelector('.beacon-icon');
+                if (rb < 10) { b.style.opacity = "1"; b.style.transform = `translateY(20px) scale(1)`; icon.style.transform = "rotate(0deg)"; b.style.pointerEvents = "auto"; } 
+                else if (ry > vh - 60) { b.style.opacity = "1"; b.style.transform = `translateY(${vh - 100}px) scale(1)`; icon.style.transform = "rotate(180deg)"; b.style.pointerEvents = "auto"; }
+                else { b.style.opacity = "0"; b.style.transform = `translateY(${ry + rh/2}px) scale(0.9)`; b.style.pointerEvents = "none"; }
+            });
+        }
+
+        function drawRuler(width) {
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = width * dpr; canvas.height = 48 * dpr;
+            ctx.scale(dpr, dpr); ctx.clearRect(0, 0, width, 48);
+            const start = state.centerTime - (width / 2) * state.msPerPx;
+            const end = state.centerTime + (width / 2) * state.msPerPx;
+            ctx.strokeStyle = 'rgba(255,255,255,0.15)'; ctx.fillStyle = '#64748b'; ctx.font = 'bold 10px Inter'; ctx.textAlign = 'center';
+            const gap = window.innerWidth < 640 ? 55 : 85; 
+            const pxYear = (MS_PER_DAY * 365.25) / state.msPerPx;
+            let unit = 'year', step = 1;
+            if (pxYear * 10 > gap) {
+                if (pxYear > gap) { unit = 'year'; step = 1; if (pxYear > 250) unit = 'month'; if (pxYear > 2000) unit = 'day'; }
+                else { step = pxYear * 5 > gap ? 5 : pxYear * 2 > gap ? 2 : 10; unit = 'year'; }
+            } else { unit = 'decade'; step = (pxYear * 10 * 5 > gap) ? 50 : (pxYear * 10 * 2 > gap) ? 20 : 100; }
+            let cur = new Date(start);
+            if (unit.includes('year') || unit === 'decade') cur = new Date(Math.floor(cur.getFullYear() / step) * step, 0, 1);
+            else if (unit === 'month') cur = new Date(cur.getFullYear(), cur.getMonth(), 1);
+            else cur = new Date(cur.getFullYear(), cur.getMonth(), cur.getDate());
+            let safety = 0;
+            while (cur.getTime() < end && safety < 400) {
+                const x = (width/2) + ((cur.getTime() - state.centerTime) / state.msPerPx);
+                if (x >= 0 && x <= width) {
+                    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, 8); ctx.stroke();
+                    let lbl = unit.includes('year') || unit === 'decade' ? cur.getFullYear() :
+                              unit === 'month' ? cur.toLocaleDateString('en-US', { month: 'short', year: '2-digit' }) :
+                              cur.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                    ctx.fillText(lbl, x, 25);
+                }
+                if (unit === 'decade' || unit === 'year') cur.setFullYear(cur.getFullYear() + step);
+                else if (unit === 'month') cur.setMonth(cur.getMonth() + 1);
+                else cur.setDate(cur.getDate() + 1);
+                safety++;
+            }
+        }
+
+        function setupInteractions() {
+            const move = (e) => {
+                if (!state.isDragging) return;
+                const t = e.touches?.[0] || e;
+                state.centerTime -= (t.clientX - state.lastX) * state.msPerPx;
+                state.panY += (t.clientY - state.lastY);
+                const rh = getRowHeight(), vh = viewport.clientHeight;
+                state.panY = Math.min(0, Math.max(Math.min(0, -(state.subjects.length * rh - vh + 64)), state.panY));
+                state.centerTime = Math.max(MIN_TIME, Math.min(MAX_TIME, state.centerTime));
+                state.lastX = t.clientX; state.lastY = t.clientY;
+                render();
+            };
+            const down = (e) => {
+                if (e.touches?.length === 2) {
+                    state.pinchDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+                    state.initialMsPerPx = state.msPerPx;
+                    state.isDragging = false;
+                    return;
+                }
+                state.isDragging = true;
+                const t = e.touches?.[0] || e;
+                state.lastX = t.clientX; state.lastY = t.clientY;
+                timelineStack.classList.add('is-dragging');
+            };
+            const zoom = (e) => {
+                if (e.touches?.length !== 2) return;
+                const d = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+                state.msPerPx = Math.min(MS_PER_DAY * 100, Math.max(MS_PER_DAY / 5, state.initialMsPerPx * (state.pinchDist / d)));
+                render();
+            };
+            const up = () => { state.isDragging = false; timelineStack.classList.remove('is-dragging'); };
+
+            viewport.addEventListener('mousedown', down);
+            window.addEventListener('mousemove', move);
+            window.addEventListener('mouseup', up);
+            viewport.addEventListener('touchstart', down, { passive: true });
+            viewport.addEventListener('touchmove', (e) => { e.preventDefault(); e.touches.length === 2 ? zoom(e) : move(e); }, { passive: false });
+            viewport.addEventListener('touchend', up);
+
+            viewport.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                if (Math.abs(e.deltaY) > Math.abs(e.deltaX) && !e.ctrlKey) {
+                    state.panY -= e.deltaY;
+                    const rh = getRowHeight(), vh = viewport.clientHeight;
+                    state.panY = Math.min(0, Math.max(Math.min(0, -(state.subjects.length * rh - vh + 64)), state.panY));
+                } else {
+                    state.msPerPx = Math.min(MS_PER_DAY * 100, Math.max(MS_PER_DAY / 5, state.msPerPx * (e.deltaY > 0 ? 1.1 : 0.9)));
+                }
+                render();
+            }, { passive: false });
+
+            const scrub = (e) => {
+                const rect = minimapWrapper.getBoundingClientRect();
+                const x = e.touches ? e.touches[0].clientX : e.clientX;
+                let p = (x - rect.left) / rect.width;
+                state.centerTime = MIN_TIME + Math.max(0, Math.min(1, p)) * (MAX_TIME - MIN_TIME);
+                render();
+            };
+            minimapWrapper.onmousedown = (e) => { state.isScrubbingMinimap = true; scrub(e); };
+            minimapWrapper.addEventListener('touchstart', (e) => { state.isScrubbingMinimap = true; scrub(e); }, { passive: true });
+            window.addEventListener('mousemove', (e) => { if (state.isScrubbingMinimap) scrub(e); });
+            window.addEventListener('touchmove', (e) => { if (state.isScrubbingMinimap) { e.preventDefault(); scrub(e); } }, { passive: false });
+            window.onmouseup = () => state.isScrubbingMinimap = false;
+            window.ontouchend = () => state.isScrubbingMinimap = false;
+        }
+
+        function openModal(e, s) {
+            const b = document.getElementById('modalBanner');
+            b.className = `h-24 md:h-32 w-full flex items-end p-5 md:p-6 justify-between relative bg-gradient-to-r from-${s.color}-600 to-${s.color}-900`;
+            const icon = MEDIA_TYPES[e.type] || MEDIA_TYPES['default'];
+            document.getElementById('modalIcon').setAttribute('data-lucide', icon);
+            document.getElementById('modalType').textContent = e.type;
+            document.getElementById('modalDate').textContent = e.date;
+            document.getElementById('modalTitle').textContent = e.title;
+            document.getElementById('modalDesc').textContent = e.desc;
+            lucide.createIcons({ root: b });
+            modal.classList.remove('hidden'); modal.classList.add('flex');
+            setTimeout(() => {
+                document.getElementById('modalBackdrop').classList.replace('opacity-0', 'opacity-100');
+                document.getElementById('modalContent').classList.replace('scale-95', 'scale-100');
+                document.getElementById('modalContent').classList.replace('opacity-0', 'opacity-100');
+            }, 10);
+        }
+
+        document.getElementById('closeModalBtn').onclick = closeModal;
+        document.getElementById('modalBackdrop').onclick = closeModal;
+        function closeModal() {
+            document.getElementById('modalBackdrop').classList.replace('opacity-100', 'opacity-0');
+            document.getElementById('modalContent').classList.replace('scale-100', 'scale-95');
+            document.getElementById('modalContent').classList.replace('opacity-100', 'opacity-0');
+            setTimeout(() => modal.classList.replace('flex', 'hidden'), 300);
+        }
+
+        document.getElementById('resetBtn').onclick = () => { 
+            state.centerTime = new Date('2000-01-01').getTime(); state.msPerPx = MS_PER_DAY * 15; state.panY = 0; render(); 
+        };
+
+        init();
+    </script>
+</body>
+</html>

@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChronoView - Multi-Subject Comparison</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            overscroll-behavior-x: none;
+        }
+        
+        ::-webkit-scrollbar { display: none; }
+        
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .event-card {
+            width: 240px;
+            height: 100px;
+            will-change: transform;
+            transition: opacity 0.3s ease;
+        }
+
+        .event-card-inner {
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        .event-card:hover .event-card-inner {
+            transform: scale(1.05) translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+            border-color: rgba(56, 189, 248, 0.5);
+        }
+
+        .subject-row {
+            height: 320px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            transition: background 0.3s ease;
+        }
+
+        .subject-row:nth-child(even) { background: rgba(255, 255, 255, 0.01); }
+        .subject-row:nth-child(odd) { background: rgba(0, 0, 0, 0.1); }
+
+        .subject-header {
+            position: sticky;
+            left: 0;
+            z-index: 40;
+            width: 280px;
+            height: 100%;
+            background: linear-gradient(to right, rgba(2, 6, 23, 1) 80%, rgba(2, 6, 23, 0));
+            pointer-events: none;
+        }
+
+        .edge-beacon {
+            transition: transform 0.3s cubic-bezier(0.2, 0, 0.2, 1), opacity 0.3s ease;
+        }
+        
+        #minimap-thumb { cursor: grab; }
+        #minimap-thumb:active { cursor: grabbing; }
+
+        #timelineStack {
+            transition: transform 0.3s cubic-bezier(0.2, 0, 0.2, 1);
+        }
+        #timelineStack.is-dragging {
+            transition: none !important;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-200 h-screen w-screen overflow-hidden flex flex-col select-none">
+
+    <!-- Header -->
+    <header class="h-16 glass-panel z-50 flex items-center justify-between px-6 shrink-0 shadow-lg">
+        <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-sky-500 to-indigo-500 flex items-center justify-center shadow-lg">
+                <i data-lucide="layers" class="text-white w-6 h-6"></i>
+            </div>
+            <div>
+                <h1 class="font-bold text-lg leading-tight tracking-wide text-white">Chrono<span class="text-sky-400">Sync</span></h1>
+                <p class="text-xs text-slate-400">Multi-Subject Timeline Comparison</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-4">
+            <span class="text-[10px] text-slate-500 bg-slate-900 px-3 py-1 rounded-full border border-slate-800 hidden md:block">Drag anywhere to pan X/Y • Scroll to zoom</span>
+            
+            <div class="relative group">
+                <button id="addSubjectBtn" class="flex items-center gap-2 bg-sky-600 hover:bg-sky-500 text-white px-4 py-1.5 rounded-full text-sm font-semibold transition-all shadow-lg">
+                    <i data-lucide="plus" class="w-4 h-4"></i>
+                    Compare Subject
+                </button>
+                <div id="subjectMenu" class="absolute top-full right-0 mt-2 w-48 bg-slate-900 border border-slate-700 rounded-xl shadow-2xl hidden z-[60] overflow-hidden">
+                    <div class="p-2 text-[10px] uppercase tracking-widest text-slate-500 font-bold border-bottom border-slate-800 px-3">Available Subjects</div>
+                    <div id="menuItems"></div>
+                </div>
+            </div>
+
+            <div class="h-6 w-px bg-slate-800 mx-2"></div>
+
+            <button id="zoomOutBtn" class="p-1.5 rounded-md hover:bg-slate-800 text-slate-400 hover:text-white transition-colors" title="Zoom Out"><i data-lucide="zoom-out" class="w-5 h-5"></i></button>
+            <button id="zoomInBtn" class="p-1.5 rounded-md hover:bg-slate-800 text-slate-400 hover:text-white transition-colors" title="Zoom In"><i data-lucide="zoom-in" class="w-5 h-5"></i></button>
+            <button id="resetBtn" class="px-3 py-1.5 ml-2 text-sm font-medium bg-slate-800 hover:bg-slate-700 rounded-md border border-slate-700 transition-colors">Reset</button>
+        </div>
+    </header>
+
+    <div class="absolute top-20 left-1/2 -translate-x-1/2 z-40 flex flex-col items-center pointer-events-none">
+        <div class="glass-panel px-6 py-2 rounded-full border border-sky-500/30 shadow-lg flex items-center gap-3">
+            <i data-lucide="calendar" class="w-4 h-4 text-sky-400"></i>
+            <span id="centerDateDisplay" class="font-semibold text-sky-50 tracking-wide text-sm">Initializing...</span>
+        </div>
+    </div>
+
+    <main id="viewport" class="flex-1 relative overflow-hidden bg-black cursor-grab active:cursor-grabbing">
+        <div id="verticalBeacons" class="absolute inset-0 pointer-events-none z-40"></div>
+        <div id="timelineStack" class="absolute inset-0"></div>
+        <div class="absolute left-1/2 top-0 bottom-12 w-px bg-sky-500/30 z-20 pointer-events-none">
+            <div class="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-4 bg-gradient-to-r from-transparent via-sky-500/5 to-transparent"></div>
+        </div>
+        <canvas id="rulerCanvas" class="absolute bottom-0 left-0 w-full h-12 bg-slate-950 border-t border-slate-800 z-[50]"></canvas>
+    </main>
+
+    <footer class="h-16 bg-slate-950 border-t border-slate-800 z-50 flex items-center px-6 shrink-0 gap-4">
+        <i data-lucide="map" class="w-5 h-5 text-slate-500 shrink-0"></i>
+        <div id="minimapWrapper" class="flex-1 h-8 bg-slate-900 rounded-md border border-slate-800 relative cursor-pointer overflow-hidden group">
+            <div id="minimapDots" class="absolute inset-0 pointer-events-none"></div>
+            <div id="minimapThumb" class="absolute top-0 bottom-0 border-2 border-sky-500 bg-sky-500/10 rounded-[4px] shadow-[0_0_15px_rgba(56,189,248,0.2)] z-10"></div>
+        </div>
+    </footer>
+
+    <!-- Modal -->
+    <div id="eventModal" class="fixed inset-0 z-[100] hidden items-center justify-center">
+        <div id="modalBackdrop" class="absolute inset-0 bg-slate-950/90 backdrop-blur-sm cursor-pointer transition-opacity duration-300 opacity-0"></div>
+        <div id="modalContent" class="relative bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-lg mx-4 overflow-hidden transform scale-95 opacity-0 transition-all duration-300">
+            <button id="closeModalBtn" class="absolute top-4 right-4 z-20 p-2 bg-black/40 hover:bg-black/60 text-white rounded-full"><i data-lucide="x" class="w-5 h-5"></i></button>
+            <div id="modalBanner" class="h-32 w-full flex items-end p-6 justify-between relative">
+                <div class="absolute inset-0 bg-black/20"></div>
+                <div class="relative z-10 flex justify-between w-full items-end">
+                    <span id="modalType" class="text-xs font-bold tracking-widest text-white/90 uppercase bg-black/40 px-3 py-1.5 rounded backdrop-blur-md"></span>
+                    <span id="modalDate" class="text-sm font-bold text-white/90"></span>
+                </div>
+            </div>
+            <div class="p-8">
+                <h2 id="modalTitle" class="text-2xl font-bold text-white mb-4"></h2>
+                <p id="modalDesc" class="text-slate-400 leading-relaxed"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const DATASETS = {
+            'steve-jobs': {
+                name: "Steve Jobs", color: "sky",
+                events: [
+                    { date: '1976-04-01', title: 'Apple Founded', type: 'business', desc: 'Apple Computer is founded in a garage.' },
+                    { date: '1984-01-24', title: 'Macintosh Launch', type: 'tech', desc: 'The original Macintosh is introduced.' },
+                    { date: '1985-09-16', title: 'Leaves Apple', type: 'career', desc: 'Jobs resigns after a power struggle.' },
+                    { date: '1997-09-16', title: 'Named iCEO', type: 'career', desc: 'Jobs returns to lead Apple\'s recovery.' },
+                    { date: '2001-10-23', title: 'iPod Reveal', type: 'tech', desc: '1,000 songs in your pocket.' },
+                    { date: '2007-01-09', title: 'iPhone Keynote', type: 'tech', desc: 'A phone, a communicator, and an iPod.' },
+                    { date: '2011-10-05', title: 'Passing', type: 'personal', desc: 'The world mourns a visionary.' }
+                ]
+            },
+            'elon-musk': {
+                name: "Elon Musk", color: "emerald",
+                events: [
+                    { date: '1995-01-01', title: 'Zip2 Founded', type: 'business', desc: 'Musk starts his first web software company.' },
+                    { date: '1999-03-01', title: 'X.com (PayPal)', type: 'business', desc: 'Musk co-founds online bank X.com.' },
+                    { date: '2002-05-06', title: 'SpaceX Founded', type: 'tech', desc: 'Mission to make life multi-planetary.' },
+                    { date: '2004-02-01', title: 'Joins Tesla', type: 'business', desc: 'Musk leads Series A funding for Tesla Motors.' },
+                    { date: '2012-05-22', title: 'Dragon Docks to ISS', type: 'tech', desc: 'First private spacecraft to reach the station.' },
+                    { date: '2020-05-30', title: 'Crew Dragon Launch', type: 'tech', desc: 'First human flight for SpaceX.' },
+                    { date: '2022-10-27', title: 'Twitter Acquisition', type: 'business', desc: 'Musk completes purchase of Twitter.' }
+                ]
+            },
+            'bill-gates': {
+                name: "Bill Gates", color: "amber",
+                events: [
+                    { date: '1975-04-04', title: 'Microsoft Founded', type: 'business', desc: 'Gates and Allen found Microsoft.' },
+                    { date: '1985-11-20', title: 'Windows 1.0', type: 'tech', desc: 'The first version of Microsoft Windows.' },
+                    { date: '1995-08-24', title: 'Windows 95', type: 'tech', desc: 'Huge global launch, including Internet Explorer.' },
+                    { date: '2000-01-01', title: 'Foundation Launch', type: 'career', desc: 'Bill & Melinda Gates Foundation created.' },
+                    { date: '2008-06-27', title: 'Retires from MSFT', type: 'career', desc: 'Leaves full-time role to focus on philanthropy.' }
+                ]
+            },
+            'mark-zuckerberg': {
+                name: "Mark Zuckerberg", color: "blue",
+                events: [
+                    { date: '2004-02-04', title: 'Facebook Founded', type: 'business', desc: 'Launch of TheFacebook at Harvard.' },
+                    { date: '2012-04-09', title: 'Instagram Acquisition', type: 'business', desc: 'Facebook buys Instagram for $1bn.' },
+                    { date: '2021-10-28', title: 'Rebrand to Meta', type: 'career', desc: 'Focus shifts to building the metaverse.' }
+                ]
+            },
+            'jeff-bezos': {
+                name: "Jeff Bezos", color: "orange",
+                events: [
+                    { date: '1994-07-05', title: 'Amazon Founded', type: 'business', desc: 'Amazon.com is founded in a garage.' },
+                    { date: '1997-05-15', title: 'Amazon IPO', type: 'business', desc: 'Amazon goes public.' },
+                    { date: '2000-09-01', title: 'Blue Origin Founded', type: 'tech', desc: 'Private aerospace company founded.' },
+                    { date: '2021-07-20', title: 'First Space Flight', type: 'tech', desc: 'Bezos flies to space on New Shepard.' }
+                ]
+            }
+        };
+
+        const MS_PER_DAY = 24 * 60 * 60 * 1000;
+        const MIN_TIME = new Date('1970-01-01').getTime();
+        const MAX_TIME = new Date('2030-01-01').getTime();
+        
+        let state = {
+            centerTime: new Date('2000-01-01').getTime(),
+            msPerPx: MS_PER_DAY * 15,
+            subjects: [], 
+            panY: 0,
+            isDragging: false,
+            isScrubbingMinimap: false
+        };
+
+        const viewport = document.getElementById('viewport');
+        const timelineStack = document.getElementById('timelineStack');
+        const canvas = document.getElementById('rulerCanvas');
+        const ctx = canvas.getContext('2d');
+        const centerDateDisplay = document.getElementById('centerDateDisplay');
+        const subjectMenu = document.getElementById('subjectMenu');
+        const minimapThumb = document.getElementById('minimapThumb');
+        const minimapWrapper = document.getElementById('minimapWrapper');
+        const minimapDots = document.getElementById('minimapDots');
+        const verticalBeacons = document.getElementById('verticalBeacons');
+
+        function init() {
+            lucide.createIcons();
+            setupSubjectsMenu();
+            setupInteractions();
+            
+            // Add initial subjects
+            addSubject('steve-jobs');
+            addSubject('elon-musk');
+            addSubject('bill-gates');
+            addSubject('mark-zuckerberg');
+            addSubject('jeff-bezos');
+
+            window.addEventListener('resize', () => {
+                render();
+            });
+
+            // Small delay to ensure layout is done before first render
+            requestAnimationFrame(() => render());
+        }
+
+        function setupSubjectsMenu() {
+            const menu = document.getElementById('menuItems');
+            Object.keys(DATASETS).forEach(id => {
+                const item = document.createElement('div');
+                item.className = 'px-4 py-2 hover:bg-slate-800 cursor-pointer text-sm font-medium transition-colors';
+                item.textContent = DATASETS[id].name;
+                item.onclick = () => { addSubject(id); subjectMenu.classList.add('hidden'); };
+                menu.appendChild(item);
+            });
+            document.getElementById('addSubjectBtn').onclick = (e) => { e.stopPropagation(); subjectMenu.classList.toggle('hidden'); };
+            window.onclick = () => subjectMenu.classList.add('hidden');
+        }
+
+        function addSubject(id) {
+            if (state.subjects.find(s => s.id === id)) return;
+            const data = DATASETS[id];
+            const subject = {
+                id, name: data.name, color: data.color,
+                events: data.events.map((e, idx) => ({ ...e, id: `${id}-${idx}`, timestamp: new Date(e.date).getTime(), track: idx % 3 }))
+            };
+            const row = document.createElement('div');
+            row.id = `row-${id}`;
+            row.className = 'subject-row';
+            const colorMap = { sky: 'rgba(14, 165, 233, 0.05)', emerald: 'rgba(16, 185, 129, 0.05)', amber: 'rgba(245, 158, 11, 0.05)', blue: 'rgba(59, 130, 246, 0.05)', orange: 'rgba(249, 115, 22, 0.05)' };
+            row.style.background = `linear-gradient(to bottom, transparent, ${colorMap[subject.color] || 'transparent'})`;
+            row.innerHTML = `
+                <div class="subject-header flex flex-col justify-center px-8 pointer-events-auto">
+                    <div class="flex items-center justify-between mb-2">
+                         <span class="text-xs font-bold uppercase tracking-widest text-slate-500">Subject</span>
+                         <button class="remove-btn text-slate-600 hover:text-red-400 transition-colors"><i data-lucide="x" class="w-4 h-4"></i></button>
+                    </div>
+                    <h2 class="text-3xl font-black text-white truncate" title="${subject.name}">${subject.name}</h2>
+                    <div class="w-12 h-1 bg-${subject.color}-500 mt-2 rounded-full"></div>
+                </div>
+                <div class="events-layer absolute inset-0 pt-12"></div>
+            `;
+            row.querySelector('.remove-btn').onclick = () => removeSubject(id);
+            timelineStack.appendChild(row);
+            lucide.createIcons({ root: row });
+            
+            subject.events.forEach(ev => {
+                const dot = document.createElement('div');
+                dot.className = `absolute top-1/2 -translate-y-1/2 w-1 h-1 rounded-full bg-${subject.color}-500 opacity-60 dot-${id}`;
+                dot.style.left = `${(ev.timestamp - MIN_TIME) / (MAX_TIME - MIN_TIME) * 100}%`;
+                minimapDots.appendChild(dot);
+            });
+
+            const beacon = document.createElement('button');
+            beacon.id = `beacon-${id}`;
+            beacon.className = `edge-beacon absolute left-8 z-50 pointer-events-auto px-4 py-2 glass-panel border border-${subject.color}-500/50 rounded-full flex items-center gap-3 opacity-0 scale-90 translate-y-0 shadow-2xl`;
+            beacon.innerHTML = `<div class="w-2 h-2 rounded-full bg-${subject.color}-500"></div><span class="text-xs font-bold text-white whitespace-nowrap">${subject.name}</span><i data-lucide="chevron-up" class="w-3 h-3 text-slate-400 beacon-icon"></i>`;
+            beacon.onclick = () => scrollToSubject(id);
+            verticalBeacons.appendChild(beacon);
+            lucide.createIcons({ root: beacon });
+
+            state.subjects.push(subject);
+            render();
+        }
+
+        function removeSubject(id) {
+            state.subjects = state.subjects.filter(s => s.id !== id);
+            const row = document.getElementById(`row-${id}`);
+            if (row) row.remove();
+            const beacon = document.getElementById(`beacon-${id}`);
+            if (beacon) beacon.remove();
+            document.querySelectorAll(`.dot-${id}`).forEach(d => d.remove());
+            render();
+        }
+
+        function scrollToSubject(id) {
+            const index = state.subjects.findIndex(s => s.id === id);
+            if (index === -1) return;
+            state.panY = -(index * 320);
+            render();
+        }
+
+        function render() {
+            const width = viewport.clientWidth || window.innerWidth;
+            const halfWidth = width / 2;
+            
+            // Update Top Date
+            centerDateDisplay.textContent = new Date(state.centerTime).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+
+            // Layout Events
+            state.subjects.forEach(subject => {
+                const row = document.getElementById(`row-${subject.id}`);
+                if (!row) return;
+                const layer = row.querySelector('.events-layer');
+                subject.events.forEach(event => {
+                    let card = document.getElementById(`card-${event.id}`);
+                    const xPos = halfWidth + ((event.timestamp - state.centerTime) / state.msPerPx);
+                    
+                    if (xPos < -300 || xPos > width + 300) { 
+                        if (card) card.style.display = 'none'; 
+                    } else {
+                        if (!card) { 
+                            card = createCard(event, subject); 
+                            layer.appendChild(card); 
+                        }
+                        card.style.display = 'block';
+                        card.style.transform = `translate(${xPos - 120}px, ${event.track * 90}px)`;
+                    }
+                });
+            });
+
+            timelineStack.style.transform = `translateY(${state.panY}px)`;
+            updateMinimap(width);
+            updateEdgeBeacons();
+            drawRuler(width);
+        }
+
+        function createCard(event, subject) {
+            const el = document.createElement('div');
+            el.id = `card-${event.id}`;
+            el.className = 'event-card absolute cursor-pointer z-30';
+            el.innerHTML = `
+                <div class="event-card-inner glass-panel rounded-xl p-4 h-full border-l-4 border-l-${subject.color}-500 group-hover:bg-slate-800 transition-colors">
+                    <span class="text-[10px] font-bold text-slate-500 uppercase tracking-tighter">${event.date}</span>
+                    <h3 class="font-bold text-white text-sm line-clamp-1">${event.title}</h3>
+                    <p class="text-[11px] text-slate-400 line-clamp-2 mt-1">${event.desc}</p>
+                </div>
+                <div class="absolute -bottom-4 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-slate-700 border border-slate-500"></div>
+            `;
+            let startX, startY;
+            el.onmousedown = (e) => { startX = e.clientX; startY = e.clientY; };
+            el.onclick = (e) => {
+                const dist = Math.sqrt(Math.pow(e.clientX - startX, 2) + Math.pow(e.clientY - startY, 2));
+                if (dist < 5) openModal(event, subject);
+            };
+            return el;
+        }
+
+        function updateMinimap(width) {
+            const totalDuration = MAX_TIME - MIN_TIME;
+            const startTime = state.centerTime - (width / 2) * state.msPerPx;
+            const endTime = state.centerTime + (width / 2) * state.msPerPx;
+            let startPct = Math.max(0, ((startTime - MIN_TIME) / totalDuration) * 100);
+            let widthPct = ((endTime - startTime) / totalDuration) * 100;
+            if (startPct + widthPct > 100) widthPct = 100 - startPct;
+            minimapThumb.style.left = `${startPct}%`;
+            minimapThumb.style.width = `${widthPct}%`;
+        }
+
+        function updateEdgeBeacons() {
+            const vh = viewport.clientHeight;
+            state.subjects.forEach((subject, index) => {
+                const beacon = document.getElementById(`beacon-${subject.id}`);
+                if (!beacon) return;
+                const rowY = state.panY + (index * 320);
+                const rowBottom = rowY + 320;
+                const icon = beacon.querySelector('.beacon-icon');
+                if (rowBottom < 10) {
+                    beacon.style.opacity = "1"; beacon.style.transform = `translateY(26px) scale(1)`;
+                    icon.style.transform = "rotate(0deg)"; beacon.style.pointerEvents = "auto";
+                } else if (rowY > vh - 48 - 10) {
+                    beacon.style.opacity = "1"; beacon.style.transform = `translateY(${vh - 48 - 60}px) scale(1)`;
+                    icon.style.transform = "rotate(180deg)"; beacon.style.pointerEvents = "auto";
+                } else {
+                    beacon.style.opacity = "0"; beacon.style.transform = `translateY(${rowY + 160}px) scale(0.9)`;
+                    beacon.style.pointerEvents = "none";
+                }
+            });
+        }
+
+        function drawRuler(width) {
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = width * dpr; canvas.height = 48 * dpr;
+            ctx.scale(dpr, dpr); ctx.clearRect(0, 0, width, 48);
+
+            const startTime = state.centerTime - (width / 2) * state.msPerPx;
+            const endTime = state.centerTime + (width / 2) * state.msPerPx;
+            
+            ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+            ctx.fillStyle = '#64748b';
+            ctx.font = '10px Inter';
+            ctx.textAlign = 'center';
+
+            // Min pixel gap between labels to prevent bunching
+            const MIN_LABEL_GAP = 85; 
+
+            // Calculate current pixel width of 1 year
+            const pxPerYear = (MS_PER_DAY * 365.25) / state.msPerPx;
+            
+            let unit = 'year';
+            let step = 1;
+
+            if (pxPerYear * 10 > MIN_LABEL_GAP) {
+                // If 10 years fits comfortably
+                if (pxPerYear > MIN_LABEL_GAP) {
+                    // One year fits
+                    unit = 'year'; step = 1;
+                    if (pxPerYear > 250) { unit = 'month'; step = 1; }
+                    if (pxPerYear > 2000) { unit = 'day'; step = 1; }
+                } else {
+                    // Try steps of 2 or 5 years
+                    if (pxPerYear * 5 > MIN_LABEL_GAP) step = 5;
+                    else if (pxPerYear * 2 > MIN_LABEL_GAP) step = 2;
+                    else step = 10;
+                    unit = 'year';
+                }
+            } else {
+                // Decades or larger
+                unit = 'decade';
+                const pxPerDecade = pxPerYear * 10;
+                if (pxPerDecade * 5 > MIN_LABEL_GAP) step = 50;
+                else if (pxPerDecade * 2 > MIN_LABEL_GAP) step = 20;
+                else step = 100;
+            }
+
+            // Align start time to the selected unit/step
+            let current = new Date(startTime);
+            if (unit === 'decade') {
+                current = new Date(Math.floor(current.getFullYear() / step) * step, 0, 1);
+            } else if (unit === 'year') {
+                current = new Date(Math.floor(current.getFullYear() / step) * step, 0, 1);
+            } else if (unit === 'month') {
+                current = new Date(current.getFullYear(), current.getMonth(), 1);
+            } else {
+                current = new Date(current.getFullYear(), current.getMonth(), current.getDate());
+            }
+
+            let safety = 0;
+            while (current.getTime() < endTime && safety < 500) {
+                const t = current.getTime();
+                const x = (width / 2) + ((t - state.centerTime) / state.msPerPx);
+                
+                if (x >= 0 && x <= width) {
+                    ctx.beginPath();
+                    ctx.moveTo(x, 0);
+                    ctx.lineTo(x, 8);
+                    ctx.stroke();
+
+                    let label = "";
+                    if (unit === 'decade' || unit === 'year') {
+                        label = current.getFullYear();
+                    } else if (unit === 'month') {
+                        label = current.toLocaleDateString('en-US', { month: 'short', year: '2-digit' });
+                    } else {
+                        label = current.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                    }
+                    ctx.fillText(label, x, 25);
+                }
+
+                if (unit === 'decade') current.setFullYear(current.getFullYear() + step);
+                else if (unit === 'year') current.setFullYear(current.getFullYear() + step);
+                else if (unit === 'month') current.setMonth(current.getMonth() + 1);
+                else current.setDate(current.getDate() + 1);
+                
+                safety++;
+            }
+        }
+
+        function setupInteractions() {
+            let lastX, lastY;
+
+            viewport.addEventListener('mousedown', (e) => {
+                state.isDragging = true;
+                lastX = e.clientX;
+                lastY = e.clientY;
+                timelineStack.classList.add('is-dragging');
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                if (!state.isDragging) return;
+                const dx = e.clientX - lastX;
+                const dy = e.clientY - lastY;
+                state.centerTime -= dx * state.msPerPx;
+                state.panY += dy;
+                const minPan = Math.min(0, -(state.subjects.length * 320 - viewport.clientHeight + 64));
+                state.panY = Math.min(0, Math.max(minPan, state.panY));
+                lastX = e.clientX; lastY = e.clientY;
+                render();
+            });
+
+            window.addEventListener('mouseup', () => {
+                state.isDragging = false;
+                timelineStack.classList.remove('is-dragging');
+            });
+
+            viewport.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                // Vertical scrolling with shift or natural wheel
+                if (Math.abs(e.deltaY) > Math.abs(e.deltaX) && !e.ctrlKey) {
+                    state.panY -= e.deltaY;
+                    const minPan = Math.min(0, -(state.subjects.length * 320 - viewport.clientHeight + 64));
+                    state.panY = Math.min(0, Math.max(minPan, state.panY));
+                } else {
+                    const factor = e.deltaY > 0 || e.deltaX > 0 ? 1.1 : 0.9;
+                    state.msPerPx = Math.min(MS_PER_DAY * 100, Math.max(MS_PER_DAY / 5, state.msPerPx * factor));
+                }
+                render();
+            }, { passive: false });
+
+            const jump = (e) => {
+                const rect = minimapWrapper.getBoundingClientRect();
+                let pct = (e.clientX - rect.left) / rect.width;
+                state.centerTime = MIN_TIME + Math.max(0, Math.min(1, pct)) * (MAX_TIME - MIN_TIME);
+                render();
+            };
+            minimapWrapper.addEventListener('mousedown', (e) => { state.isScrubbingMinimap = true; jump(e); });
+            window.addEventListener('mousemove', (e) => { if (state.isScrubbingMinimap) jump(e); });
+            window.addEventListener('mouseup', () => state.isScrubbingMinimap = false);
+        }
+
+        const modal = document.getElementById('eventModal');
+        function openModal(event, subject) {
+            document.getElementById('modalBanner').className = `h-32 w-full flex items-end p-6 justify-between relative bg-gradient-to-r from-${subject.color}-600 to-${subject.color}-900 shadow-inner`;
+            document.getElementById('modalType').textContent = event.type;
+            document.getElementById('modalDate').textContent = event.date;
+            document.getElementById('modalTitle').textContent = event.title;
+            document.getElementById('modalDesc').textContent = event.desc;
+            modal.classList.remove('hidden'); modal.classList.add('flex');
+            setTimeout(() => {
+                document.getElementById('modalBackdrop').classList.replace('opacity-0', 'opacity-100');
+                document.getElementById('modalContent').classList.replace('scale-95', 'scale-100');
+                document.getElementById('modalContent').classList.replace('opacity-0', 'opacity-100');
+            }, 10);
+        }
+
+        document.getElementById('closeModalBtn').onclick = closeModal;
+        document.getElementById('modalBackdrop').onclick = closeModal;
+        function closeModal() {
+            document.getElementById('modalBackdrop').classList.replace('opacity-100', 'opacity-0');
+            document.getElementById('modalContent').classList.replace('scale-100', 'scale-95');
+            document.getElementById('modalContent').classList.replace('opacity-100', 'opacity-0');
+            setTimeout(() => modal.classList.replace('flex', 'hidden'), 300);
+        }
+
+        document.getElementById('zoomInBtn').onclick = () => { state.msPerPx *= 0.7; render(); };
+        document.getElementById('zoomOutBtn').onclick = () => { state.msPerPx *= 1.4; render(); };
+        document.getElementById('resetBtn').onclick = () => { 
+            state.centerTime = new Date('2000-01-01').getTime(); 
+            state.msPerPx = MS_PER_DAY * 15; 
+            state.panY = 0; 
+            render(); 
+        };
+
+        // Standard boot
+        window.onload = init;
+    </script>
+</body>
+</html>

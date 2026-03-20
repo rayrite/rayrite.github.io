@@ -25,6 +25,7 @@
   --emerald:   #10b981;
   --emerald-dim:#064e3b;
   --red:       #f87171;
+  --red-dim:   #7f1d1d;
   --radius:    6px;
   --font:      -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;
   --mono:      'SF Mono','Cascadia Code','Fira Code',Consolas,monospace;
@@ -43,10 +44,14 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--t
 .theme-btn:hover{border-color:var(--accent);color:var(--text)}
 
 /* ── Tabs ── */
-.tab-bar{display:flex;background:var(--bg-card);border-bottom:1px solid var(--border);flex-shrink:0;padding:0 12px}
-.tab-btn{padding:8px 18px;font-size:12px;font-weight:600;color:var(--text-dim);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;transition:.15s;white-space:nowrap}
-.tab-btn:hover{color:var(--text)}
-.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+.tab-bar{display:flex;background:var(--bg-card);border-bottom:1px solid var(--border);flex-shrink:0;padding:0 12px;gap:4px}
+.tab-btn{padding:8px 18px;font-size:12px;font-weight:600;color:var(--text-dim);background:none;border:none;border-bottom:2px solid transparent;border-radius:6px 6px 0 0;cursor:pointer;transition:all .2s;white-space:nowrap;position:relative}
+.tab-btn:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.tab-btn[data-tab="watchlist"]{--tab-color:#6c8cff;--tab-glow:rgba(108,140,255,.55);--tab-glow-strong:rgba(108,140,255,.8)}
+.tab-btn[data-tab="links"]{--tab-color:#34d399;--tab-glow:rgba(52,211,153,.55);--tab-glow-strong:rgba(52,211,153,.8)}
+.tab-btn[data-tab="supplychain"]{--tab-color:#fbbf24;--tab-glow:rgba(251,191,36,.55);--tab-glow-strong:rgba(251,191,36,.8)}
+.tab-btn.active{color:var(--tab-color);border-bottom:3px solid var(--tab-color);background:var(--tab-glow);animation:tabPulse 3s ease-in-out infinite}
+@keyframes tabPulse{0%,100%{box-shadow:0 0 8px 2px var(--tab-glow),0 0 20px 4px var(--tab-glow)}50%{box-shadow:0 0 16px 6px var(--tab-glow-strong),0 0 36px 10px var(--tab-glow)}}
 .tab-content{display:none;flex:1;overflow:hidden;flex-direction:column}
 .tab-content.active{display:flex}
 
@@ -97,6 +102,7 @@ table.wl tbody tr:nth-child(even):hover{background:var(--bg-hover)}
 .badge-very{background:var(--green-dim);color:var(--green)}
 .badge-positive{background:var(--blue-dim);color:var(--blue)}
 .badge-cautious{background:var(--amber-dim);color:var(--amber)}
+.badge-mixed{background:var(--red-dim);color:var(--red)}
 
 /* Mention bar */
 .mention-bar{display:inline-block;height:14px;border-radius:2px;background:var(--accent);opacity:.7;vertical-align:middle;min-width:4px}
@@ -109,6 +115,8 @@ table.wl tbody tr:nth-child(even):hover{background:var(--bg-hover)}
 /* Ticker links */
 .ticker-link{color:var(--accent);text-decoration:none;transition:.15s}
 .ticker-link:hover{text-decoration:underline;color:var(--accent2)}
+.ticker-link .g-icon{vertical-align:-1px;margin-left:3px;opacity:.7;transition:opacity .15s}
+.ticker-link:hover .g-icon{opacity:1}
 
 /* Segment tags */
 .seg-tag{display:inline-block;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:600;border:1px solid var(--border);color:var(--text-dim)}
@@ -167,11 +175,16 @@ table.wl tbody tr:nth-child(even):hover{background:var(--bg-hover)}
 .sc-detail .stat-label{font-size:10px;color:var(--text-dim);margin-top:2px}
 
 /* ── Light theme ── */
-body.light{--bg:#f5f6f8;--bg-card:#ffffff;--bg-hover:#eef0f4;--border:#dde0e6;--text:#1a1c21;--text-dim:#6b6e76;--accent:#4f6ef7;--accent2:#7c3aed;--green:#059669;--green-dim:#d1fae5;--blue:#2563eb;--blue-dim:#dbeafe;--amber:#d97706;--amber-dim:#fef3c7;--emerald:#059669;--emerald-dim:#d1fae5}
+body.light{--bg:#f5f6f8;--bg-card:#ffffff;--bg-hover:#eef0f4;--border:#dde0e6;--text:#1a1c21;--text-dim:#6b6e76;--accent:#4f6ef7;--accent2:#7c3aed;--green:#059669;--green-dim:#d1fae5;--blue:#2563eb;--blue-dim:#dbeafe;--amber:#d97706;--amber-dim:#fef3c7;--emerald:#059669;--emerald-dim:#d1fae5;--red:#dc2626;--red-dim:#fef2f2}
 body.light .badge-extreme{background:#d1fae5;color:#059669}
 body.light .badge-very{background:#d1fae5;color:#047857}
 body.light .badge-positive{background:#dbeafe;color:#2563eb}
 body.light .badge-cautious{background:#fef3c7;color:#d97706}
+body.light .badge-mixed{background:#fef2f2;color:#dc2626}
+body.light .tab-btn[data-tab="watchlist"]{--tab-color:#4f6ef7;--tab-glow:rgba(79,110,247,.3);--tab-glow-strong:rgba(79,110,247,.55)}
+body.light .tab-btn[data-tab="links"]{--tab-color:#059669;--tab-glow:rgba(5,150,105,.3);--tab-glow-strong:rgba(5,150,105,.55)}
+body.light .tab-btn[data-tab="supplychain"]{--tab-color:#d97706;--tab-glow:rgba(217,119,6,.3);--tab-glow-strong:rgba(217,119,6,.55)}
+body.light .tab-btn:hover{background:rgba(0,0,0,.04)}
 
 /* ── Responsive ── */
 @media(max-width:900px){
@@ -194,6 +207,7 @@ body.light .badge-cautious{background:#fef3c7;color:#d97706}
   .header h1{font-size:13px}
   .header .subtitle{display:none}
   .tab-btn{padding:6px 10px;font-size:11px}
+  @keyframes tabPulse{0%,100%{box-shadow:0 0 6px 1px var(--tab-glow),0 0 14px 3px var(--tab-glow)}50%{box-shadow:0 0 12px 4px var(--tab-glow-strong),0 0 24px 6px var(--tab-glow)}}
   .col-exchange,.col-mcap,.col-segment{display:none}
   table.wl th,table.wl td{padding:4px 5px}
   .wl-toolbar-row{padding:5px 8px;gap:6px}
@@ -365,6 +379,73 @@ const COMPANIES = [
   // Optical/Interconnect
   {company:"Coherent",ticker:"COHR",exchange:"NASDAQ",mcap:"$15B",mcapSort:15000,segment:"Optical Interconnect",desc:"Optical transceivers for AI data center interconnects. High-bandwidth optical links critical for memory-intensive AI workloads.",mentions:3,sentiment:"Positive",sentimentRank:2},
   {company:"Lumentum",ticker:"LITE",exchange:"NASDAQ",mcap:"$5B",mcapSort:5000,segment:"Optical Interconnect",desc:"Optical components and lasers for data center networking. Increasing bandwidth requirements from AI/memory expansion.",mentions:3,sentiment:"Positive",sentimentRank:2},
+
+  // Foundry & Advanced Packaging
+  {company:"TSMC",ticker:"TSM",exchange:"NYSE",mcap:"$1.76T",mcapSort:1760000,segment:"Foundry & Adv. Packaging",desc:"World's leading foundry. CoWoS/InFO advanced packaging chokepoint for AI systems. ~30% revenue growth expected in 2026. Critical for HBM integration in GPU packages.",mentions:8,sentiment:"Very Positive",sentimentRank:3},
+  {company:"GlobalFoundries",ticker:"GFS",exchange:"NASDAQ",mcap:"$25B",mcapSort:25000,segment:"Foundry & Adv. Packaging",desc:"Foundry services including memory-adjacent components and custom memory solutions. Benefits from increased demand across semiconductor production.",mentions:2,sentiment:"Positive",sentimentRank:2},
+
+  // WFE — Packaging Inspection
+  {company:"Camtek",ticker:"CAMT",exchange:"NASDAQ",mcap:"$7.5B",mcapSort:7500,segment:"WFE — Packaging Inspection",desc:"2D/3D AOI and metrology for advanced packaging. Eagle G5 and Hawk platforms for HBM/chiplet inspection. ~$45M recent orders from tier-1 IDM for AI/HBM.",mentions:2,sentiment:"Very Positive",sentimentRank:3},
+
+  // Equipment — Precision Dispensing
+  {company:"Nordson",ticker:"NDSN",exchange:"NASDAQ",mcap:"$16B",mcapSort:16000,segment:"Packaging Equipment",desc:"Precision dispensing equipment for semiconductor packaging. Adhesive and encapsulant dispensing for memory module and advanced packaging processes.",mentions:1,sentiment:"Positive",sentimentRank:2},
+
+  // Materials — Additional
+  {company:"Qnity",ticker:"Q",exchange:"NYSE",mcap:"$14B",mcapSort:14000,segment:"Materials & Chemicals",desc:"Former DuPont Electronics (spun off Nov 2025, added to S&P 500). FY2025 revenue $4.75B. Largest pure-play semiconductor materials company. CMP pads, photoresists. MOU with SK Hynix.",mentions:1,sentiment:"Very Positive",sentimentRank:3},
+  {company:"Element Solutions",ticker:"ESI",exchange:"NYSE",mcap:"$6B",mcapSort:6000,segment:"Materials & Chemicals",desc:"High-purity specialty and rare gases via EFC Gases acquisition (Jan 2026). ~40% of EFC sales from semiconductor. Electronics segment grew 14% organic in FY2025.",mentions:1,sentiment:"Positive",sentimentRank:2},
+
+  // Silicon Wafer Suppliers
+  {company:"SUMCO Corp",ticker:"SUOPY",exchange:"OTC",mcap:"$5B",mcapSort:5000,segment:"Silicon Wafers",desc:"Major 300mm silicon wafer supplier. Structural wafer bottleneck beneficiary. Capital raise to expand output with Japanese government support.",mentions:3,sentiment:"Positive",sentimentRank:2},
+  {company:"Shin-Etsu Chemical",ticker:"SHECY",exchange:"OTC",mcap:"$40B",mcapSort:40000,segment:"Silicon Wafers",desc:"World's largest silicon wafer producer. Upstream scarcity supports pricing power and long-term agreements. Also supplies photoresist materials.",mentions:3,sentiment:"Positive",sentimentRank:2},
+
+  // IC Package Substrates
+  {company:"Ibiden",ticker:"IBIDF",exchange:"OTC",mcap:"$8B",mcapSort:8000,segment:"IC Package Substrates",desc:"High-performance IC package substrates. ¥500B CapEx (FY2026-FY2028) for AI server substrate expansion. ABF substrates are a recognized chokepoint in advanced packaging.",mentions:2,sentiment:"Very Positive",sentimentRank:3},
+
+  // Power Management — Additional
+  {company:"Monolithic Power Systems",ticker:"MPWR",exchange:"NASDAQ",mcap:"$45B",mcapSort:45000,segment:"Power Management",desc:"DDR5 PMICs on every DDR5 module. Enterprise Data revenue $233.5M Q4 2025 (31% of total), expected to grow ≥50% in 2026. Potentially 70% share of NVIDIA Vera Rubin power delivery.",mentions:1,sentiment:"Very Positive",sentimentRank:3},
+  {company:"ON Semiconductor",ticker:"ON",exchange:"NASDAQ",mcap:"$30B",mcapSort:30000,segment:"Power Management",desc:"Power and signal management for memory systems — automotive, industrial, data center. Voltage regulators and intelligent power stages. Gross margins improved from 35% to >45%.",mentions:3,sentiment:"Positive",sentimentRank:2},
+  {company:"Diodes Incorporated",ticker:"DIOD",exchange:"NASDAQ",mcap:"$3B",mcapSort:3000,segment:"Power Management",desc:"Power management and signal integrity solutions for memory systems. PMIC and voltage regulation for DDR memory applications.",mentions:1,sentiment:"Positive",sentimentRank:2},
+
+  // Memory Modules
+  {company:"Penguin Solutions",ticker:"PENG",exchange:"NASDAQ",mcap:"$2.5B",mcapSort:2500,segment:"Memory Modules",desc:"Formerly SMART Global Holdings. Integrated Memory segment $464M FY2025 revenue (+30% YoY). DDR4/DDR5 ECC server DIMMs. Sampling Non-Volatile CXL Memory Module. SK Telecom $200M investment.",mentions:2,sentiment:"Positive",sentimentRank:2},
+  {company:"Corsair Gaming",ticker:"CRSR",exchange:"NASDAQ",mcap:"$3B",mcapSort:3000,segment:"Memory Modules",desc:"US market leader in consumer DDR4/DDR5 modules and SSDs. FY2025 memory revenue grew 24% with 35% gross margin from pre-purchased inventory gains. Retail DRAM prices surged 400%+.",mentions:2,sentiment:"Mixed",sentimentRank:0},
+
+  // NAND Flash
+  {company:"SanDisk",ticker:"SNDK",exchange:"NASDAQ",mcap:"$45B",mcapSort:45000,segment:"Storage",desc:"Spun off from WDC Feb 2025. Returns exceeding 1,500% since separation. Requiring 100% cash prepayment for 1-3 year supply contracts (unprecedented). FQ2 2026: revenue $3.03B.",mentions:2,sentiment:"Very Positive",sentimentRank:3},
+
+  // AI Infrastructure — Server OEMs
+  {company:"Dell Technologies",ticker:"DELL",exchange:"NYSE",mcap:"$100B",mcapSort:100000,segment:"AI Infrastructure — Server OEM",desc:"FY2026 record revenue $113.5B. AI server orders >$64B. FY2027 guidance $138-142B. Implementing ~15% server price hikes. Revenue beneficiary but margin pressure from memory costs.",mentions:3,sentiment:"Mixed",sentimentRank:0},
+  {company:"Hewlett Packard Enterprise",ticker:"HPE",exchange:"NYSE",mcap:"$30B",mcapSort:30000,segment:"AI Infrastructure — Server OEM",desc:"AI infrastructure demand driver. CEO predicted memory shortage impact lingers into 2027. Implementing ~15% server price increases. Juniper acquisition diversifies toward networking.",mentions:3,sentiment:"Mixed",sentimentRank:0},
+  {company:"Super Micro Computer",ticker:"SMCI",exchange:"NASDAQ",mcap:"$40B",mcapSort:40000,segment:"AI Infrastructure — Server OEM",desc:"FY26 Q2 revenue surged to $12.7B but gross margin collapsed to 6.3% (from 11.8% YoY). Cautionary tale — net margin loser despite top-line growth due to weakest pricing power.",mentions:2,sentiment:"Mixed",sentimentRank:0},
+
+  // AI Infrastructure — Networking
+  {company:"Arista Networks",ticker:"ANET",exchange:"NYSE",mcap:"$120B",mcapSort:120000,segment:"AI Infrastructure — Networking",desc:"Data center networking switches for AI clusters. 400G/800G Ethernet. 2026 revenue growth ~30%. Minimal direct memory cost exposure — uses only modest DRAM/flash for buffering.",mentions:3,sentiment:"Very Positive",sentimentRank:3},
+
+  // AI Infrastructure — Power & Thermal
+  {company:"Vertiv Holdings",ticker:"VRT",exchange:"NYSE",mcap:"$60B",mcapSort:60000,segment:"AI Infrastructure — Power",desc:"Power and thermal management for data centers. Zero memory exposure — consumes no HBM/DRAM/NAND. GB200 NVL72 racks require 130+ kW with liquid cooling. Revenue approaching $10B.",mentions:2,sentiment:"Very Positive",sentimentRank:3},
+
+  // AI Infrastructure — Contract Manufacturing
+  {company:"Celestica",ticker:"CLS",exchange:"NYSE",mcap:"$15B",mcapSort:15000,segment:"AI Infrastructure — Contract Mfg.",desc:"Contract manufacturer of AI servers, networking switches, Google TPU systems. 2025 revenue $12.39B (+28% YoY). Cost-plus model — memory price increases recovered from customers.",mentions:2,sentiment:"Positive",sentimentRank:2},
+
+  // Storage — Flash Arrays
+  {company:"Pure Storage",ticker:"PSTG",exchange:"NYSE",mcap:"$20B",mcapSort:20000,segment:"Storage",desc:"All-flash storage arrays. Raised prices across portfolio Feb 2026. First $1B+ quarter. FY2026 gross margin 72.1%. Some components more than doubling in price.",mentions:2,sentiment:"Mixed",sentimentRank:0},
+  {company:"NetApp",ticker:"NTAP",exchange:"NASDAQ",mcap:"$25B",mcapSort:25000,segment:"Storage",desc:"All-flash and hybrid storage. Record all-flash revenue $1.05B Q3 FY2026 (+11% YoY). Product gross margin fell 4.2pp to 55.3% from memory inflation. Morgan Stanley downgraded.",mentions:1,sentiment:"Mixed",sentimentRank:0},
+
+  // Connectivity
+  {company:"Skyworks Solutions",ticker:"SWKS",exchange:"NASDAQ",mcap:"$15B",mcapSort:15000,segment:"Connectivity",desc:"5G connectivity solutions driving device upgrades with increased memory capacity. Expanding into automotive, industrial, and infrastructure markets.",mentions:1,sentiment:"Cautiously Positive",sentimentRank:1},
+
+  // Silicon Carbide Power
+  {company:"Wolfspeed",ticker:"WOLF",exchange:"NYSE",mcap:"$3B",mcapSort:3000,segment:"Power Management",desc:"Silicon carbide MOSFETs for 48V direct-to-chip power delivery in data centers. Critical for thermal management of high-power processors and memory subsystems.",mentions:1,sentiment:"Cautiously Positive",sentimentRank:1},
+
+  // Specialty Memory
+  {company:"Everspin Technologies",ticker:"MRAM",exchange:"NASDAQ",mcap:"$200M",mcapSort:200,segment:"Specialty Memory",desc:"MRAM (Magnetoresistive RAM) specialist. Benefits from demand for alternative non-volatile memory solutions as DRAM/NAND prices surge.",mentions:1,sentiment:"Cautiously Positive",sentimentRank:1},
+
+  // Memory Interface IP — Micro-cap
+  {company:"Xperi",ticker:"XPER",exchange:"NYSE",mcap:"$276M",mcapSort:276,segment:"Memory Interface IP",desc:"Memory interface technology and IP portfolio. Niche exposure to memory interconnect standards.",mentions:1,sentiment:"Cautiously Positive",sentimentRank:1},
+
+  // Equipment — Micro-cap
+  {company:"Intevac",ticker:"IVAC",exchange:"NASDAQ",mcap:"$105M",mcapSort:105,segment:"WFE — Equipment",desc:"Vacuum deposition equipment for semiconductor thin-film applications. Niche equipment supplier for memory-adjacent manufacturing.",mentions:1,sentiment:"Cautiously Positive",sentimentRank:1},
+  {company:"NVE Corporation",ticker:"NVEC",exchange:"NASDAQ",mcap:"$340M",mcapSort:340,segment:"Sensors & Components",desc:"Specialized sensors and data couplers for memory and automation applications. Spintronic technology for high-speed data interfaces.",mentions:1,sentiment:"Cautiously Positive",sentimentRank:1},
 ];
 
 const SENTIMENT_MAP = {
@@ -372,11 +453,12 @@ const SENTIMENT_MAP = {
   "Very Positive":      {cls:"badge-very",    rank:3},
   "Positive":           {cls:"badge-positive", rank:2},
   "Cautiously Positive":{cls:"badge-cautious", rank:1},
+  "Mixed":              {cls:"badge-mixed",    rank:0},
 };
 
 // Invalid tickers - these redirect to lookup/page not found
-const INVALID_YAHOO_TICKERS = new Set(["NNYAF", "WNBDY"]);
-const INVALID_TRADINGVIEW_TICKERS = new Set(["HXSCL", "NNYAF", "WNBDY", "BESI"]);
+const INVALID_YAHOO_TICKERS = new Set(["NNYAF", "WNBDY", "SUOPY", "SHECY", "IBIDF"]);
+const INVALID_TRADINGVIEW_TICKERS = new Set(["HXSCL", "NNYAF", "WNBDY", "BESI", "SUOPY", "SHECY", "IBIDF"]);
 
 // Company names for Google Search fallbacks
 const COMPANY_NAMES = {
@@ -384,41 +466,179 @@ const COMPANY_NAMES = {
   "NNYAF": "Nanya Technology",
   "WNBDY": "Winbond Electronics",
   "BESI": "BE Semiconductor Besi",
+  "SUOPY": "SUMCO Corp",
+  "SHECY": "Shin-Etsu Chemical",
+  "IBIDF": "Ibiden",
 };
 
 const RESEARCH_LINKS = [
-  // Market Analysis & Pricing
-  {cat:"Market Analysis & Pricing", icon:"&#x1F4C8;", url:"https://www.trendforce.com/", label:"TrendForce", desc:"Memory market analysis, HBM demand projections, layer count forecasts", src:"response_chatGPT, response_gemini31pro, response_genspark, response_kimi, response_minimax"},
-  {cat:"Market Analysis & Pricing", icon:"&#x1F4C8;", url:"https://www.reuters.com/", label:"Reuters", desc:"SK hynix, NVIDIA HBM, wafer shortage and Samsung multi-year contracts coverage", src:"Multiple files (response_chatGPT, response_claude_sonnet46, response_grok, +5 more)"},
-  {cat:"Market Analysis & Pricing", icon:"&#x1F4C8;", url:"https://octopart.com/pulse/", label:"Octopart Pulse", desc:"Memory pricing analysis: DRAM/NAND price surge data for Q1 2026", src:"response_genspark, response_kimi, response_minimax, response_perp_sonar, +2 more"},
-  {cat:"Market Analysis & Pricing", icon:"&#x1F4C8;", url:"https://www.technetbooks.com/", label:"TechNetBooks", desc:"Memory market DRAM NAND price tripling analysis", src:"response_gemini31pro"},
-  {cat:"Market Analysis & Pricing", icon:"&#x1F4C8;", url:"https://nand-research.com/", label:"NAND Research", desc:"NAND research and supply crisis updates", src:"response_gemini31pro"},
-  {cat:"Market Analysis & Pricing", icon:"&#x1F4C8;", url:"https://www.investing.com/", label:"Investing.com", desc:"Structural shift in tech economics 2026 — semiconductor analysis", src:"response_glm5"},
-  {cat:"Market Analysis & Pricing", icon:"&#x1F4C8;", url:"https://www.thelec.net/", label:"The Elec", desc:"HBM as 'black hole' for DRAM capacity — Korean semiconductor coverage", src:"response_glm5"},
-  {cat:"Market Analysis & Pricing", icon:"&#x1F4C8;", url:"https://www.spglobal.com/", label:"S&P Global", desc:"AI memory boom analysis; legacy DRAM supply squeeze market intelligence", src:"response_grok"},
-  {cat:"Market Analysis & Pricing", icon:"&#x1F4C8;", url:"https://www.neumonda.com/", label:"Neumonda", desc:"Memory market 2026 scarcity and supply security analysis", src:"response_kimi"},
+  // ── News Wire Coverage ──────────────────────────────────────────
+  {cat:"News Wire Coverage", icon:"&#x1F4F0;", url:"https://www.reuters.com/world/asia-pacific/south-koreas-sk-group-chairman-expects-chip-wafer-shortage-last-until-2030-eyes-2026-03-16/", label:"SK Group: Wafer Shortage to Last Until 2030", desc:"SK Group chairman expects chip wafer shortage to last until 2030; trying to stabilise memory prices", src:"response_chatGPT"},
+  {cat:"News Wire Coverage", icon:"&#x1F4F0;", url:"https://www.reuters.com/technology/applied-materials-sk-hynix-partner-next-gen-ai-memory-development-2026-03-10/", label:"Applied Materials + SK Hynix/Micron Partnership", desc:"Applied Materials partners with SK Hynix and Micron for next-gen AI memory development", src:"response_chatGPT"},
+  {cat:"News Wire Coverage", icon:"&#x1F4F0;", url:"https://www.reuters.com/world/asia-pacific/ai-boom-seen-lifting-chipmaking-equipment-sales-9-126-billion-2026-2025-12-16/", label:"AI Boom Lifts WFE Sales to $126B", desc:"AI boom projected to lift chipmaking equipment sales 9% to $126 billion in 2026", src:"response_chatGPT"},
+  {cat:"News Wire Coverage", icon:"&#x1F4F0;", url:"https://www.reuters.com/world/china/taiwans-ase-sees-its-advanced-packaging-business-doubling-32-billion-2026-2026-02-05/", label:"ASE Packaging Business Doubling to $3.2B", desc:"Taiwan's ASE advanced packaging business doubling to $3.2 billion in 2026", src:"response_chatGPT"},
+  {cat:"News Wire Coverage", icon:"&#x1F4F0;", url:"https://www.reuters.com/world/asia-pacific/amkor-shares-rally-late-trade-work-with-nvidia-packaging-2025-11-19/", label:"Amkor + NVIDIA Packaging Partnership", desc:"Amkor shares rally on NVIDIA packaging partnership announcement", src:"response_chatGPT"},
+  {cat:"News Wire Coverage", icon:"&#x1F4F0;", url:"https://www.reuters.com/world/china/tsmc-likely-post-fourth-quarter-profit-leap-driven-by-ai-boom-2026-01-14/", label:"TSMC Record Profit & US Expansion", desc:"TSMC smashes forecasts with record profit, flags more US expansion driven by AI boom", src:"response_chatGPT"},
+  {cat:"News Wire Coverage", icon:"&#x1F4F0;", url:"https://www.reuters.com/world/asia-pacific/globalwafers-is-preparing-phase-two-expansion-texas-plant-chairperson-says-2026-01-21/", label:"GlobalWafers Texas Phase Two Expansion", desc:"GlobalWafers preparing phase two expansion at Texas silicon wafer plant", src:"response_chatGPT"},
+  {cat:"News Wire Coverage", icon:"&#x1F4F0;", url:"https://www.reuters.com/world/asia-pacific/japans-sumco-raise-11-bln-new-shares-expand-silicon-wafer-output-2021-09-30/", label:"SUMCO $1.1B Wafer Output Expansion", desc:"Japan's SUMCO raising $1.1 billion from new shares to expand silicon wafer output", src:"response_chatGPT"},
+  {cat:"News Wire Coverage", icon:"&#x1F4F0;", url:"https://www.reuters.com/world/asia-pacific/advantest-hikes-profit-forecast-by-25-ai-boost-2025-10-28/", label:"Advantest Profit Forecast +25% on AI", desc:"Advantest hikes profit forecast by 25% on AI boost for test equipment", src:"response_chatGPT"},
+  {cat:"News Wire Coverage", icon:"&#x1F4F0;", url:"https://www.reuters.com/world/asia-pacific/memory-chipmakers-rise-global-supply-shortage-whets-investor-appetite-2026-01-05/", label:"Memory Chipmakers Rise on Global Shortage", desc:"Memory chipmakers rise as global supply shortage whets investor appetite", src:"response_chatGPT"},
+  {cat:"News Wire Coverage", icon:"&#x1F4F0;", url:"https://www.reuters.com/world/asia-pacific/micron-shares-slip-hefty-spending-plans-eclipse-strong-ai-fueled-earnings-2026-03-19/", label:"Micron Spending Plans vs Strong Earnings", desc:"Micron shares slip as hefty spending plans eclipse strong AI-fueled earnings", src:"response_chatGPT"},
+  {cat:"News Wire Coverage", icon:"&#x1F4F0;", url:"https://www.reuters.com/world/asia-pacific/samsung-sees-ai-driving-strong-chip-demand-2026-executive-says-2026-03-18/", label:"Samsung CEO Seeks Multi-Year Chip Contracts", desc:"Samsung sees AI driving strong chip demand; CEO seeks multi-year contracts with major customers", src:"response_chatGPT"},
+  {cat:"News Wire Coverage", icon:"&#x1F4F0;", url:"https://www.reuters.com/world/china/asml-sees-ai-demand-long-term-growth-driver-2025-annual-report-2026-02-25/", label:"ASML: AI as Long-Term Growth Driver", desc:"ASML sees AI demand as long-term growth driver in 2025 annual report", src:"response_chatGPT"},
+  {cat:"News Wire Coverage", icon:"&#x1F4F0;", url:"https://www.reuters.com/business/besi-attracts-takeover-interest-advanced-chip-packaging-demand-surges-sources-2026-03-12/", label:"Besi Takeover Interest on Packaging Surge", desc:"BE Semiconductor attracts takeover interest as advanced chip packaging demand surges", src:"response_chatGPT"},
+  {cat:"News Wire Coverage", icon:"&#x1F4F0;", url:"https://www.reuters.com/markets/asia/mideast-crisis-puts-asias-earnings-boom-test-2026-03-19/", label:"Mideast Crisis vs Asia Earnings Boom", desc:"Mideast crisis puts Asia's semiconductor earnings boom to the test", src:"response_chatGPT"},
+  {cat:"News Wire Coverage", icon:"&#x1F4F0;", url:"https://www.reuters.com/world/china/micron-beats-quarterly-revenue-estimates-2026-03-18/", label:"Micron Forecasts Strong Revenue on AI", desc:"Micron beats quarterly revenue estimates; forecasts strong revenue driven by AI boom", src:"response_chatGPT"},
+  {cat:"News Wire Coverage", icon:"&#x1F4F0;", url:"https://www.prnewswire.com/news-releases/marvell-launches-new-client-nvme-ssd-controller-family-for-emerging-96-layer-nand-based-ssds-300659758.html", label:"Marvell NVMe SSD Controller Launch", desc:"Marvell launches client NVMe SSD controller family for 96-layer NAND-based SSDs", src:"response_perp_sonar"},
 
-  // Industry Organizations
-  {cat:"Industry & Trade Organizations", icon:"&#x1F3ED;", url:"https://www.semi.org/", label:"SEMI.org", desc:"Global semiconductor equipment sales projections ($156B by 2027)", src:"response_chatGPT"},
-  {cat:"Industry & Trade Organizations", icon:"&#x1F3ED;", url:"https://www.idc.com/", label:"IDC", desc:"Global memory shortage market analysis; smartphone/PC impact data", src:"response_genspark"},
+  // ── Market Analysis & Pricing ───────────────────────────────────
+  {cat:"Market Analysis & Pricing", icon:"&#x1F4C8;", url:"https://www.idc.com/resource-center/blog/global-memory-shortage-crisis-market-analysis-and-the-potential-impact-on-the-smartphone-and-pc-markets-in-2026/", label:"IDC: Global Memory Shortage Crisis", desc:"Market analysis of global memory shortage and impact on smartphone and PC markets in 2026", src:"response_genspark"},
+  {cat:"Market Analysis & Pricing", icon:"&#x1F4C8;", url:"https://www.neumonda.com/memory-market-2026-scarcity-strategy-and-security-of-supply/", label:"Neumonda: Memory Market 2026 Outlook", desc:"Memory Market 2026 — scarcity, strategy, and security of supply analysis", src:"response_genspark"},
+  {cat:"Market Analysis & Pricing", icon:"&#x1F4C8;", url:"https://octopart.com/pulse/p/how-ai-broke-memory-market", label:"Octopart: How AI Broke the Memory Market", desc:"Q1 2026 DRAM contract price forecast (90-95% QoQ rise); AI impact on memory supply", src:"response_genspark"},
+  {cat:"Market Analysis & Pricing", icon:"&#x1F4C8;", url:"https://www.trendforce.com/", label:"TrendForce", desc:"Memory market analysis, HBM demand projections, NAND layer count forecasts", src:"response_chatGPT, response_gemini31pro, response_genspark, response_kimi, response_minimax"},
+  {cat:"Market Analysis & Pricing", icon:"&#x1F4C8;", url:"https://www.technetbooks.com/", label:"TechNetBooks", desc:"Memory market DRAM/NAND price tripling analysis and data", src:"response_gemini31pro, response_claude_sonnet46"},
+  {cat:"Market Analysis & Pricing", icon:"&#x1F4C8;", url:"https://nand-research.com/", label:"NAND Research", desc:"NAND flash research, supply crisis updates, and technology analysis", src:"response_gemini31pro, response_claude_sonnet46"},
+  {cat:"Market Analysis & Pricing", icon:"&#x1F4C8;", url:"https://www.investing.com/", label:"Investing.com", desc:"Structural shift in tech economics 2026 — semiconductor analysis and market data", src:"response_glm5, response_claude_sonnet46"},
+  {cat:"Market Analysis & Pricing", icon:"&#x1F4C8;", url:"https://www.thelec.net/", label:"The Elec", desc:"HBM as 'black hole' for DRAM capacity — Korean semiconductor industry coverage", src:"response_glm5, response_claude_sonnet46"},
+  {cat:"Market Analysis & Pricing", icon:"&#x1F4C8;", url:"https://www.spglobal.com/", label:"S&P Global", desc:"AI memory boom analysis; legacy DRAM supply squeeze market intelligence", src:"response_grok, response_claude_sonnet46"},
 
-  // Company Newsrooms & IR
-  {cat:"Company Newsrooms & IR", icon:"&#x1F3E2;", url:"https://news.skhynix.com/", label:"SK hynix Newsroom", desc:"HBM market outlook, technology announcements, production updates", src:"response_claude_sonnet46"},
-  {cat:"Company Newsrooms & IR", icon:"&#x1F3E2;", url:"https://www.amkor.com/", label:"Amkor Technology", desc:"Memory packaging and test services; advanced packaging updates", src:"response_minimax"},
-  {cat:"Company Newsrooms & IR", icon:"&#x1F3E2;", url:"https://www.lamresearch.com/", label:"Lam Research", desc:"Advanced memory solutions; etch and deposition technology", src:"response_minimax"},
-  {cat:"Company Newsrooms & IR", icon:"&#x1F3E2;", url:"https://www.ibiden.com/", label:"Ibiden", desc:"IC package substrate CapEx plans (¥500B FY2026-2028)", src:"response_chatGPT"},
+  // ── Industry Organizations & Reports ────────────────────────────
+  {cat:"Industry Organizations & Reports", icon:"&#x1F3ED;", url:"https://www.semi.org/en/semi-press-release/global-semiconductor-equipment-sales-projected-to-reach-a-record-of-156-billion-dollars-in-2027-semi-reports", label:"SEMI: WFE Sales to Reach $156B by 2027", desc:"Global semiconductor equipment sales projected to reach record $156 billion in 2027", src:"response_chatGPT"},
+  {cat:"Industry Organizations & Reports", icon:"&#x1F3ED;", url:"https://expo.semi.org/west2025/public/eBooth.aspx?IndexInList=114&ListByBooth=true&BoothID=607178&Nav=False", label:"SEMI Expo West 2025: Camtek Booth", desc:"Camtek booth at SEMI Expo — Hawk platform for HBM/chiplet advanced packaging inspection", src:"response_perp_sonar"},
+  {cat:"Industry Organizations & Reports", icon:"&#x1F3ED;", url:"https://www.marketsandmarkets.com/ResearchInsight/ai-eda-companies.asp", label:"MarketsAndMarkets: AI EDA Market", desc:"AI EDA market analysis — Synopsys and Cadence hold ~30% each; market estimated at $4.27B in 2026", src:"response_genspark"},
+  {cat:"Industry Organizations & Reports", icon:"&#x1F3ED;", url:"https://www.24chemicalresearch.com/reports/269310/global-highpurity-gases-for-semiconductors-forecast-market", label:"24 Chemical Research: Semiconductor Gases", desc:"Global high-purity gases for semiconductors market forecast report", src:"response_perp_sonar"},
+  {cat:"Industry Organizations & Reports", icon:"&#x1F3ED;", url:"https://www.datainsightsmarket.com/reports/semiconductor-manufacturing-chemical-gas-1069263", label:"Data Insights Market: Semiconductor Chemicals", desc:"Semiconductor manufacturing chemical and gas market intelligence report", src:"response_perp_sonar"},
+  {cat:"Industry Organizations & Reports", icon:"&#x1F3ED;", url:"https://www.wiseguyreports.com/reports/specialty-gases-in-semiconductor-market", label:"Wise Guy Reports: Specialty Gases", desc:"Specialty gases in semiconductor market research and forecast", src:"response_perp_sonar"},
+  {cat:"Industry Organizations & Reports", icon:"&#x1F3ED;", url:"https://www.deepresearchglobal.com/p/lam-research-swot-analysis-report", label:"Deep Research Global: Lam Research SWOT", desc:"Lam Research comprehensive SWOT analysis — memory capex beneficiary", src:"response_perp_sonar"},
 
-  // Financial Analysis
-  {cat:"Financial Analysis & Data", icon:"&#x1F4B0;", url:"https://finance.yahoo.com/", label:"Yahoo Finance", desc:"Stock data, analyst commentary, earnings transcripts", src:"response_perp_sonar"},
-  {cat:"Financial Analysis & Data", icon:"&#x1F4B0;", url:"https://www.marketwatch.com/", label:"MarketWatch", desc:"Market data and semiconductor sector analysis", src:"response_perp_sonar"},
-  {cat:"Financial Analysis & Data", icon:"&#x1F4B0;", url:"https://simplywall.st/", label:"Simply Wall St", desc:"KLA financial analysis, valuation models", src:"response_minimax"},
-  {cat:"Financial Analysis & Data", icon:"&#x1F4B0;", url:"https://www.stocktitan.net/", label:"Stock Titan", desc:"Company overview data and press releases", src:"response_perp_sonar"},
+  // ── Company News & IR ───────────────────────────────────────────
+  {cat:"Company News & IR", icon:"&#x1F3E2;", url:"https://www.ibiden.com/company/2026/02/notice-regarding-capital-investment-plan-for-high-performance-ic-package-substrates.html", label:"Ibiden: ¥500B CapEx for IC Substrates", desc:"Capital investment plan for high-performance IC package substrates (FY2026-2028)", src:"response_chatGPT"},
+  {cat:"Company News & IR", icon:"&#x1F3E2;", url:"https://investor.entegris.com/overview/default.aspx", label:"Entegris Investor Relations", desc:"Entegris investor relations — materials for advanced DRAM/NAND/HBM manufacturing", src:"response_chatGPT"},
+  {cat:"Company News & IR", icon:"&#x1F3E2;", url:"https://investors.ontoinnovation.com/overview/default.aspx", label:"Onto Innovation Investor Relations", desc:"Onto Innovation IR — metrology and inspection for memory process control", src:"response_genspark, response_chatGPT"},
+  {cat:"Company News & IR", icon:"&#x1F3E2;", url:"https://investors.ontoinnovation.com/news/news-details/2025/Onto-Innovation-Launches-Next-Generation-OCD-Metrology-Platform-to-Enable-Process-Control-for-Advanced-AI-Devices/default.aspx", label:"Onto Innovation: Atlas G6 OCD Platform", desc:"Next-gen OCD metrology platform for process control of advanced AI/HBM devices", src:"response_chatGPT"},
+  {cat:"Company News & IR", icon:"&#x1F3E2;", url:"https://investors.teradyne.com/news-events/press-releases/detail/419/teradyne-unveils-magnum-7h---the-next-generation-memory-tester-for-high-bandwidth-memory-devices", label:"Teradyne: Magnum 7H for HBM", desc:"Magnum 7H — next-generation memory tester for high-bandwidth memory devices", src:"response_perp_sonar"},
+  {cat:"Company News & IR", icon:"&#x1F3E2;", url:"https://www.camtek.com/news-and-events/camtek-introduced-5th-generation-of-the-eagle-system-supporting-expected-growth-in-2025/", label:"Camtek: 5th-Gen Eagle Inspection", desc:"5th generation Eagle system for advanced packaging inspection supporting HBM growth", src:"response_perp_sonar"},
+  {cat:"Company News & IR", icon:"&#x1F3E2;", url:"https://www.stocktitan.net/news/VECO/veeco-announces-over-50-million-in-wet-processing-system-orders-in2xx9gfh2ql.html", label:"Veeco: $50M+ Wet Processing Orders", desc:"Over $50 million in wet processing system orders for AI advanced packaging", src:"response_perp_sonar"},
+  {cat:"Company News & IR", icon:"&#x1F3E2;", url:"https://www.chipmos.com/index-en.aspx", label:"ChipMOS Technologies", desc:"Taiwan-based back-end memory testing and packaging for DRAM and NAND", src:"response_genspark"},
+  {cat:"Company News & IR", icon:"&#x1F3E2;", url:"https://www.chipmos.com/english/ir/company.aspx", label:"ChipMOS Investor Relations", desc:"Investor relations — back-end testing for high-density memory devices", src:"response_genspark"},
+  {cat:"Company News & IR", icon:"&#x1F3E2;", url:"https://www.linkedin.com/posts/entegris_entegris-announced-its-q425-earnings-today-activity-7426960657725575168-LwAY", label:"Entegris Q4'25 Earnings (LinkedIn)", desc:"Q4 2025 earnings announcement + $700M US R&D investment for HBM4 and DRAM transitions", src:"response_perp_sonar"},
+  {cat:"Company News & IR", icon:"&#x1F3E2;", url:"https://x.com/TheValueist/status/2021315305063031050", label:"Entegris DRAM/HBM Supply Commentary", desc:"Commentary on tight DRAM/HBM supply driving Entegris content-per-wafer opportunities", src:"response_perp_sonar"},
+  {cat:"Company News & IR", icon:"&#x1F3E2;", url:"https://news.skhynix.com/", label:"SK hynix Newsroom", desc:"HBM market outlook, technology announcements, production and capacity updates", src:"response_claude_sonnet46, response_gemini31pro"},
+  {cat:"Company News & IR", icon:"&#x1F3E2;", url:"https://www.amkor.com/", label:"Amkor Technology", desc:"Semiconductor packaging and test services; advanced packaging news and updates", src:"response_minimax, response_genspark"},
+  {cat:"Company News & IR", icon:"&#x1F3E2;", url:"https://www.lamresearch.com/", label:"Lam Research", desc:"Advanced memory solutions; etch and deposition technology for DRAM/NAND/HBM", src:"response_minimax"},
 
-  // Technical & Research
-  {cat:"Technical & Research Sources", icon:"&#x1F52C;", url:"https://www.micron.com/about/blog", label:"Micron Technology Blog", desc:"HBM technology deep-dives, DRAM roadmap, memory architecture insights", src:"response_genspark"},
-  {cat:"Technical & Research Sources", icon:"&#x1F52C;", url:"https://www.appliedmaterials.com/", label:"Applied Materials", desc:"Advanced memory manufacturing technology; deposition and etch innovations", src:"response_genspark"},
-  {cat:"Technical & Research Sources", icon:"&#x1F52C;", url:"https://www.thermofisher.com/", label:"Thermo Fisher Scientific", desc:"Semiconductor materials analysis and quality control equipment", src:"response_genspark"},
-  {cat:"Technical & Research Sources", icon:"&#x1F52C;", url:"https://www.researchgate.net/", label:"ResearchGate", desc:"Academic papers on DRAM fabrication processes and HBM stacking", src:"response_genspark"},
+  // ── Product & Technology Resources ──────────────────────────────
+  {cat:"Product & Technology Resources", icon:"&#x2699;&#xFE0F;", url:"https://www.rambus.com/rambus-sets-new-benchmark-for-ai-memory-performance-with-industry-leading-hbm4e-controller-ip/", label:"Rambus: HBM4E Controller IP", desc:"Industry-leading HBM4E controller IP — 16 Gb/s per pin, 4.1 TB/s bandwidth", src:"response_perp_sonar"},
+  {cat:"Product & Technology Resources", icon:"&#x2699;&#xFE0F;", url:"https://www.rambus.com/memory-interface-chips/ddr5-client-dimm-chipset/", label:"Rambus: DDR5 DIMM Chipset", desc:"DDR5 client DIMM chipset — RCDs, PMICs, SPD hubs, and data buffers", src:"response_perp_sonar"},
+  {cat:"Product & Technology Resources", icon:"&#x2699;&#xFE0F;", url:"https://www.rambus.com/memory-interface-chips/", label:"Rambus: Memory Interface Chips", desc:"Complete memory interface chip portfolio for DDR5/HBM server and client platforms", src:"response_perp_sonar"},
+  {cat:"Product & Technology Resources", icon:"&#x2699;&#xFE0F;", url:"https://www.synopsys.com/designware-ip/interface-ip/hbm/hbm4-phy.html", label:"Synopsys: HBM4 PHY IP", desc:"DesignWare HBM4 PHY IP for AI, HPC, graphics, and networking applications", src:"response_perp_sonar"},
+  {cat:"Product & Technology Resources", icon:"&#x2699;&#xFE0F;", url:"https://www.teradyne.com/products/magnum-epic/", label:"Teradyne: Magnum EPIC Platform", desc:"Magnum EPIC memory test platform for HBM2E through HBM4E testing", src:"response_perp_sonar"},
+  {cat:"Product & Technology Resources", icon:"&#x2699;&#xFE0F;", url:"https://www.axcelis.com/applications/ion-implantation-dram-nand-memory/", label:"Axcelis: DRAM/NAND Ion Implantation", desc:"Purion ion implantation applications for DRAM and NAND memory manufacturing", src:"response_perp_sonar"},
+  {cat:"Product & Technology Resources", icon:"&#x2699;&#xFE0F;", url:"https://amkor.com/packaging/memory/", label:"Amkor: Memory Packaging", desc:"Memory packaging services — over 9 billion die shipped, 20+ years SCSP experience", src:"response_genspark"},
+  {cat:"Product & Technology Resources", icon:"&#x2699;&#xFE0F;", url:"https://www.lamresearch.com/products/our-solutions/advanced-memory-solutions/", label:"Lam Research: Advanced Memory Solutions", desc:"Etch and deposition solutions for 3D NAND, DRAM, and HBM manufacturing", src:"response_chatGPT"},
+  {cat:"Product & Technology Resources", icon:"&#x2699;&#xFE0F;", url:"https://www.formfactor.com/", label:"FormFactor", desc:"Semiconductor test and measurement — advanced probe cards for DRAM/HBM wafer testing", src:"response_chatGPT, response_genspark"},
+  {cat:"Product & Technology Resources", icon:"&#x2699;&#xFE0F;", url:"https://www.microchip.com/en-us/products/power-management/voltage-current-power-conversion/pmic-power-management-ics", label:"Microchip: PMICs for Memory", desc:"Power management ICs for DDR memory power delivery applications", src:"response_genspark"},
+  {cat:"Product & Technology Resources", icon:"&#x2699;&#xFE0F;", url:"https://www.mks.com/s/semiconductor-solutions", label:"MKS Instruments: Semiconductor Solutions", desc:"Power, vacuum, and gas delivery subsystems for semiconductor manufacturing", src:"response_chatGPT"},
+  {cat:"Product & Technology Resources", icon:"&#x2699;&#xFE0F;", url:"https://www.entegris.com/en/home/our-science/by-industry/microelectronics/semiconductor.html", label:"Entegris: Semiconductor Solutions", desc:"Specialty materials, filtration, and purification for advanced memory fabs", src:"response_chatGPT"},
+  {cat:"Product & Technology Resources", icon:"&#x2699;&#xFE0F;", url:"https://www.hikrobot.com/blog/ai-hbm-shortage-semiconductor-equipment-supercycle", label:"Hikrobot: AI HBM Equipment Supercycle", desc:"Analysis of AI-driven HBM shortage and semiconductor equipment supercycle dynamics", src:"response_perp_sonar"},
+  {cat:"Product & Technology Resources", icon:"&#x2699;&#xFE0F;", url:"https://www.micron.com/about/blog", label:"Micron Technology Blog", desc:"HBM technology deep-dives, DRAM roadmap, and memory architecture insights", src:"response_genspark"},
+  {cat:"Product & Technology Resources", icon:"&#x2699;&#xFE0F;", url:"https://www.appliedmaterials.com/", label:"Applied Materials", desc:"Advanced memory manufacturing technology — deposition, etch, and CMP innovations", src:"response_genspark"},
+  {cat:"Product & Technology Resources", icon:"&#x2699;&#xFE0F;", url:"https://www.thermofisher.com/", label:"Thermo Fisher Scientific", desc:"Semiconductor materials analysis, quality control, and characterization equipment", src:"response_genspark"},
+  {cat:"Product & Technology Resources", icon:"&#x2699;&#xFE0F;", url:"https://www.researchgate.net/", label:"ResearchGate", desc:"Academic papers on DRAM fabrication processes, HBM stacking, and memory technology", src:"response_genspark"},
+
+  // ── Industry & Expert Analysis ──────────────────────────────────
+  {cat:"Industry & Expert Analysis", icon:"&#x1F52C;", url:"https://siliconangle.com/2026/03/04/rambus-targets-ai-memory-bottlenecks-new-hbm4e-controller-ip-1/", label:"SiliconANGLE: Rambus HBM4E Controller", desc:"Rambus targets AI memory bottlenecks with new HBM4E controller IP (16 Gb/s, 4.1 TB/s)", src:"response_perp_sonar"},
+  {cat:"Industry & Expert Analysis", icon:"&#x1F52C;", url:"https://www.eetasia.com/strong-dram-hbm-demand-propels-chip-equipment-manufacturers-2024-revenue/", label:"EE Times Asia: DRAM/HBM Equipment Revenue", desc:"Strong DRAM/HBM demand propels chip equipment manufacturers' revenue surge", src:"response_perp_sonar"},
+  {cat:"Industry & Expert Analysis", icon:"&#x1F52C;", url:"https://www.servethehome.com/cadence-ip-for-lpddr6-launched/", label:"ServeTheHome: Cadence LPDDR6 IP", desc:"Cadence launches first LPDDR6/5X memory IP at 14.4 Gb/s for AI infrastructure", src:"response_perp_sonar"},
+  {cat:"Industry & Expert Analysis", icon:"&#x1F52C;", url:"https://business.bigspringherald.com/bigspringherald/article/marketminute-2026-1-9-the-ai-infrastructure-supercycle-lam-research-leads-a-historic-surge-in-semiconductor-equipment", label:"AI Infrastructure Supercycle: Lam Research", desc:"Lam Research leads historic surge in semiconductor equipment during AI supercycle", src:"response_perp_sonar"},
+  {cat:"Industry & Expert Analysis", icon:"&#x1F52C;", url:"https://www.semiconductoronline.com/doc/new-smartmatrix-xp-probe-card-lowers-dram-test-costs-by-more-than-0001", label:"FormFactor SmartMatrix XP Probe Card", desc:"SmartMatrix XP probe card lowers DRAM test costs for 300mm wafer testing", src:"response_perp_sonar"},
+  {cat:"Industry & Expert Analysis", icon:"&#x1F52C;", url:"https://www.trendforce.com/news/2025/10/14/news-amkor-breaks-ground-on-usd-7-billion-advanced-semiconductor-packaging-facility-in-arizona/", label:"TrendForce: Amkor $7B Arizona Facility", desc:"Amkor breaks ground on $7 billion advanced semiconductor packaging facility in Arizona", src:"response_perp_sonar"},
+  {cat:"Industry & Expert Analysis", icon:"&#x1F52C;", url:"https://www.3dincites.com/2025/01/iftle-617-sk-hynix-considers-2-5d-packaging-business-with-amkor/", label:"3D InCites: SK Hynix 2.5D Packaging", desc:"SK Hynix considers 2.5D packaging business partnership with Amkor", src:"response_perp_sonar"},
+  {cat:"Industry & Expert Analysis", icon:"&#x1F52C;", url:"https://drrobertcastellano.substack.com/p/kla-upgraded-by-jefferies-but-why", label:"Dr. Robert Castellano: KLA Analysis", desc:"KLA upgraded by Jefferies — analysis of process control spending in memory", src:"response_perp_sonar"},
+  {cat:"Industry & Expert Analysis", icon:"&#x1F52C;", url:"https://pradeepstechpoints.wordpress.com/2025/05/31/semiconductor-capex-and-capacity-outlook-architecting-growth-in-ai-era/", label:"Semiconductor CapEx & Capacity Outlook", desc:"Architecting growth in the AI era — semiconductor capex and capacity analysis", src:"response_perp_sonar"},
+  {cat:"Industry & Expert Analysis", icon:"&#x1F52C;", url:"https://www.valens-research.com/investor-essentials-daily/acls-axcelis-technologies-company-heart-memory-chip-boom/", label:"Valens Research: Axcelis Analysis", desc:"Axcelis Technologies — 'at the heart of the memory chip boom' investment analysis", src:"response_perp_sonar"},
+  {cat:"Industry & Expert Analysis", icon:"&#x1F52C;", url:"https://www.oreateai.com/blog/formfactors-q2-surge-hbm-and-foundry-logic-probe-cards-drive-revenue-setting-the-stage-for-q3/5a5c8986c3ff0fb009f024b860fe5bc0", label:"FormFactor Q2 Surge: HBM Probe Cards", desc:"HBM and foundry/logic probe cards drive FormFactor revenue surge in Q2", src:"response_perp_sonar"},
+  {cat:"Industry & Expert Analysis", icon:"&#x1F52C;", url:"https://www.scribd.com/document/757625747/Original", label:"Axcelis Ion Implantation Analysis", desc:"Technical document on Axcelis Purion ion implantation for DRAM and NAND memory", src:"response_perp_sonar"},
+  {cat:"Industry & Expert Analysis", icon:"&#x1F52C;", url:"https://csimarket.com/news/cohu-breaks-new-ground-in-high-bandwidth-memory-with-innovative-neon-inspection-platform2024-11-01001465", label:"CSI Market: Cohu Neon HBM Inspection", desc:"Cohu breaks new ground in HBM with innovative Neon inspection metrology platform", src:"response_perp_sonar"},
+
+  // ── Financial Data & Stock Quotes ───────────────────────────────
+  // Yahoo Finance — News & Analysis
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://finance.yahoo.com/news/amat-vs-asml-semiconductor-equipment-152100758.html", label:"AMAT vs ASML Comparison (YF)", desc:"Semiconductor equipment leader comparison — Applied Materials vs ASML analysis", src:"response_genspark"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://finance.yahoo.com/news/applied-materials-fy25-hbm-revenues-154700449.html", label:"Applied Materials FY25 HBM Revenue (YF)", desc:"Applied Materials FY25 HBM revenues (~$1.5B) with path to doubling", src:"response_perp_sonar"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://finance.yahoo.com/news/semiconductor-manufacturing-equipment-research-report-100400135.html", label:"Semiconductor Equipment Report (YF)", desc:"Industry research report on semiconductor manufacturing equipment outlook", src:"response_perp_sonar"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://finance.yahoo.com/news/onto-unveils-atlas-g6-ocd-150800132.html", label:"Onto Atlas G6 OCD System (YF)", desc:"Onto Innovation unveils Atlas G6 OCD metrology for GAA logic and HBM", src:"response_perp_sonar"},
+  // Yahoo Finance — Stock Quotes
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://finance.yahoo.com/quote/ASML/", label:"ASML (Yahoo Finance)", desc:"ASML Holding — EUV/DUV lithography monopoly", src:"response_genspark"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://finance.yahoo.com/quote/AMAT/", label:"AMAT (Yahoo Finance)", desc:"Applied Materials — #1 WFE company", src:"response_genspark"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://finance.yahoo.com/quote/LRCX/", label:"LRCX (Yahoo Finance)", desc:"Lam Research — etch and deposition leader", src:"response_genspark"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://finance.yahoo.com/quote/KLAC/", label:"KLAC (Yahoo Finance)", desc:"KLA Corporation — process control and metrology", src:"response_genspark"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://finance.yahoo.com/quote/TER/", label:"TER (Yahoo Finance)", desc:"Teradyne — memory test equipment leader", src:"response_genspark"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://finance.yahoo.com/quote/MKSI/", label:"MKSI (Yahoo Finance)", desc:"MKS Instruments — semiconductor subsystems", src:"response_genspark"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://finance.yahoo.com/quote/SNPS/", label:"SNPS (Yahoo Finance)", desc:"Synopsys — EDA software and memory IP", src:"response_genspark"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://finance.yahoo.com/quote/CDNS/", label:"CDNS (Yahoo Finance)", desc:"Cadence Design Systems — EDA and memory interface IP", src:"response_genspark"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://finance.yahoo.com/quote/RMBS/", label:"RMBS (Yahoo Finance)", desc:"Rambus — DDR5/HBM memory interface chips", src:"response_genspark"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://finance.yahoo.com/quote/MRVL/", label:"MRVL (Yahoo Finance)", desc:"Marvell Technology — custom ASIC and SSD controllers", src:"response_genspark"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://finance.yahoo.com/quote/WDC/", label:"WDC (Yahoo Finance)", desc:"Western Digital — NAND flash and HDD storage", src:"response_genspark"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://finance.yahoo.com/quote/STX/", label:"STX (Yahoo Finance)", desc:"Seagate Technology — HDD manufacturer", src:"response_genspark"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://finance.yahoo.com/quote/ONTO/", label:"ONTO (Yahoo Finance)", desc:"Onto Innovation — metrology and inspection", src:"response_genspark"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://finance.yahoo.com/quote/NVMI/", label:"NVMI (Yahoo Finance)", desc:"Nova Ltd. — optical and X-ray metrology", src:"response_genspark"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://finance.yahoo.com/quote/UCTT/", label:"UCTT (Yahoo Finance)", desc:"Ultra Clean Holdings — gas/fluid delivery subsystems", src:"response_genspark"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://finance.yahoo.com/quote/FORM/", label:"FORM (Yahoo Finance)", desc:"FormFactor — advanced probe cards for DRAM/HBM", src:"response_genspark"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://finance.yahoo.com/quote/ACLS/", label:"ACLS (Yahoo Finance)", desc:"Axcelis Technologies — ion implantation specialist", src:"response_genspark"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://finance.yahoo.com/quote/ACMR/", label:"ACMR (Yahoo Finance)", desc:"ACM Research — semiconductor cleaning equipment", src:"response_genspark"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://finance.yahoo.com/quote/ENTG/", label:"ENTG (Yahoo Finance)", desc:"Entegris — CMP slurries and specialty materials", src:"response_genspark"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://finance.yahoo.com/quote/PLAB/", label:"PLAB (Yahoo Finance)", desc:"Photronics — photomasks and reticles", src:"response_genspark"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://finance.yahoo.com/quote/SIMO/", label:"SIMO (Yahoo Finance)", desc:"Silicon Motion — NAND flash controllers", src:"response_genspark"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://finance.yahoo.com/quote/MCHP/", label:"MCHP (Yahoo Finance)", desc:"Microchip Technology — memory interface ICs", src:"response_genspark"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://finance.yahoo.com/quote/DIOD/", label:"DIOD (Yahoo Finance)", desc:"Diodes Incorporated — power management for memory", src:"response_genspark"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://finance.yahoo.com/quote/VECO/", label:"VECO (Yahoo Finance)", desc:"Veeco Instruments — wet processing and LSA equipment", src:"response_genspark"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://finance.yahoo.com/quote/ICHR/", label:"ICHR (Yahoo Finance)", desc:"Ichor Holdings — fluid delivery subsystems", src:"response_genspark"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://finance.yahoo.com/quote/NDSN/", label:"NDSN (Yahoo Finance)", desc:"Nordson — precision dispensing for semiconductor packaging", src:"response_genspark"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://finance.yahoo.com/quote/PDFS/", label:"PDFS (Yahoo Finance)", desc:"PDF Solutions — manufacturing analytics and yield", src:"response_genspark"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://finance.yahoo.com/quote/NVEC/", label:"NVEC (Yahoo Finance)", desc:"NVE Corporation — sensors and data couplers", src:"response_genspark"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://finance.yahoo.com/quote/XPER/", label:"XPER (Yahoo Finance)", desc:"Xperi — memory interface technology and IP", src:"response_genspark"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://finance.yahoo.com/quote/IVAC/", label:"IVAC (Yahoo Finance)", desc:"Intevac — vacuum deposition equipment", src:"response_genspark"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://finance.yahoo.com/quote/COHU/", label:"COHU (Yahoo Finance)", desc:"Cohu — back-end test handlers and HBM inspection", src:"response_genspark"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://finance.yahoo.com/quote/HXSCL/", label:"HXSCL (Yahoo Finance)", desc:"SK Hynix ADR — #1 HBM producer (OTC)", src:"response_genspark"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://finance.yahoo.com/quote/SSNLF/", label:"SSNLF (Yahoo Finance)", desc:"Samsung Electronics ADR — largest memory maker (OTC)", src:"response_genspark"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://finance.yahoo.com/quote/6770.TW/", label:"6770.TW (Yahoo Finance)", desc:"PSMC (Powerchip) — Taiwan-listed foundry and specialty memory", src:"response_genspark"},
+  // MarketWatch
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://www.marketwatch.com/investing/stock/ter", label:"TER (MarketWatch)", desc:"Teradyne market data — memory test equipment", src:"response_genspark"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://www.marketwatch.com/investing/stock/cohu", label:"COHU (MarketWatch)", desc:"Cohu market data — back-end equipment and HBM inspection", src:"response_genspark"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://www.marketwatch.com/investing/stock/diod", label:"DIOD (MarketWatch)", desc:"Diodes Incorporated — power management and signal integrity", src:"response_genspark"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://www.marketwatch.com/investing/stock/ichr", label:"ICHR (MarketWatch)", desc:"Ichor Holdings — fluid delivery for semiconductor equipment", src:"response_genspark"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://www.marketwatch.com/investing/stock/xper", label:"XPER (MarketWatch)", desc:"Xperi — memory interface technology", src:"response_genspark"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://www.marketwatch.com/investing/stock/nnyaf", label:"NNYAF (MarketWatch)", desc:"Nanya Technology ADR — DDR4 DRAM specialist (OTC)", src:"response_genspark"},
+  // Stock Analysis & Market Cap
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://stockanalysis.com/stocks/amat/market-cap/", label:"AMAT Market Cap (Stock Analysis)", desc:"Applied Materials market cap and valuation data", src:"response_perp_sonar"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://stockanalysis.com/stocks/asml/market-cap/", label:"ASML Market Cap (Stock Analysis)", desc:"ASML Holding market cap and valuation data", src:"response_perp_sonar"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://stockanalysis.com/stocks/onto/market-cap/", label:"ONTO Market Cap (Stock Analysis)", desc:"Onto Innovation market cap and valuation data", src:"response_perp_sonar"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://stockanalysis.com/stocks/lin/market-cap/", label:"LIN Market Cap (Stock Analysis)", desc:"Linde plc market cap data (~$225-230B)", src:"response_perp_sonar"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://stockanalysis.com/stocks/dd/market-cap/", label:"DD Market Cap (Stock Analysis)", desc:"DuPont de Nemours market cap and valuation data", src:"response_perp_sonar"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://stockanalysis.com/stocks/cdns/market-cap/", label:"CDNS Market Cap (Stock Analysis)", desc:"Cadence Design Systems market cap data", src:"response_perp_sonar"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://stockanalysis.com/stocks/snps/market-cap/", label:"SNPS Market Cap (Stock Analysis)", desc:"Synopsys market cap data", src:"response_perp_sonar"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://stockanalysis.com/stocks/veco/market-cap/", label:"VECO Market Cap (Stock Analysis)", desc:"Veeco Instruments market cap and valuation data", src:"response_perp_sonar"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://companiesmarketcap.com/air-products-and-chemicals/marketcap/", label:"APD Market Cap (CompaniesMarketCap)", desc:"Air Products & Chemicals historical market cap data", src:"response_perp_sonar"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://companiesmarketcap.com/marvell/marketcap/", label:"MRVL Market Cap (CompaniesMarketCap)", desc:"Marvell Technology historical market cap data", src:"response_perp_sonar"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://companiesmarketcap.com/cohu/marketcap/", label:"COHU Market Cap (CompaniesMarketCap)", desc:"Cohu historical market cap data", src:"response_perp_sonar"},
+  // Other Financial Platforms
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://www.tradingview.com/news/zacks:c216de105094b:0-asml-vs-amat-which-semiconductor-equipment-leader-is-a-better-buy/", label:"ASML vs AMAT (TradingView/Zacks)", desc:"Which semiconductor equipment leader is a better buy — Zacks comparison", src:"response_genspark"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://public.com/stocks/ter/market-cap", label:"TER Market Cap (Public.com)", desc:"Teradyne market cap data", src:"response_perp_sonar"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://www.home.saxo/markets/stocks/entg-xnas", label:"ENTG (Saxo Markets)", desc:"Entegris specialty materials stock data and analysis", src:"response_genspark"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://fintel.io/s/us/veco", label:"VECO (Fintel)", desc:"Veeco Instruments company profile and classification", src:"response_perp_sonar"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://www.cnbc.com/quotes/NVMI", label:"NVMI (CNBC)", desc:"Nova Ltd. metrology solutions stock quote", src:"response_genspark"},
+  {cat:"Financial Data & Stock Quotes", icon:"&#x1F4B0;", url:"https://www.msn.com/en-xl/money/stockdetails/rmbs-us-stock-company/fi-a223lh", label:"RMBS (MSN Money)", desc:"Rambus DDR5/DDR4 memory interface chipsets overview", src:"response_genspark"},
+
+  // ── Investment Research ─────────────────────────────────────────
+  {cat:"Investment Research", icon:"&#x1F50D;", url:"https://simplywall.st/stocks/us/semiconductors/nasdaq-klac/kla", label:"Simply Wall St: KLA Analysis", desc:"KLA — 'indispensable gatekeeper of the semiconductor world' financial analysis", src:"response_genspark"},
+  {cat:"Investment Research", icon:"&#x1F50D;", url:"https://www.fool.com/quote/nasdaq/plab/", label:"Motley Fool: Photronics", desc:"Photronics — photomask technology for semiconductor and display manufacturing", src:"response_genspark"},
+  {cat:"Investment Research", icon:"&#x1F50D;", url:"https://www.fool.com/quote/nasdaq/nvec/", label:"Motley Fool: NVE Corporation", desc:"NVE Corporation — specialized sensors and data couplers for memory systems", src:"response_genspark"},
+  {cat:"Investment Research", icon:"&#x1F50D;", url:"https://www.stockopedia.com/share-prices/acm-research-NMQ:ACMR/", label:"Stockopedia: ACM Research", desc:"ACM Research — semiconductor cleaning, electroplating, and polishing equipment", src:"response_genspark"},
+  {cat:"Investment Research", icon:"&#x1F50D;", url:"https://www.marketbeat.com/stocks/NASDAQ/IVAC/", label:"MarketBeat: Intevac", desc:"Intevac — vacuum deposition equipment for semiconductor manufacturing", src:"response_genspark"},
+  {cat:"Investment Research", icon:"&#x1F50D;", url:"https://www.ainvest.com/news/ultra-clean-holdings-leveraging-semiconductor-cleaning-demand-sustainability-earnings-growth-2510/", label:"AInvest: Ultra Clean Holdings", desc:"Leveraging semiconductor cleaning demand for sustainability and earnings growth", src:"response_perp_sonar"},
+  {cat:"Investment Research", icon:"&#x1F50D;", url:"https://www.stocktitan.net/overview/SIMO/", label:"Stock Titan: Silicon Motion", desc:"Silicon Motion — NAND flash controllers and SSD solutions for data centers", src:"response_genspark"},
+  {cat:"Investment Research", icon:"&#x1F50D;", url:"https://www.stocktitan.net/overview/VECO/", label:"Stock Titan: Veeco Instruments", desc:"Veeco — semiconductor process equipment for memory manufacturing", src:"response_genspark"},
+  {cat:"Investment Research", icon:"&#x1F50D;", url:"https://www.stocktitan.net/overview/PDFS/", label:"Stock Titan: PDF Solutions", desc:"PDF Solutions — data analytics platform for semiconductor yield management", src:"response_genspark"},
 ];
 
 const SUPPLY_CHAIN = [
@@ -804,7 +1024,7 @@ function renderTable() {
     tr.innerHTML =
       '<td class="col-num">' + (i+1) + '</td>' +
       '<td class="col-company">' + esc(c.company) + '</td>' +
-      '<td class="col-ticker"><a class="ticker-link" href="' + tickerSearchURL + '" target="_blank" rel="noopener noreferrer" title="Google Search: ' + esc(c.ticker) + '">' + esc(c.ticker) + '</a></td>' +
+      '<td class="col-ticker"><a class="ticker-link" href="' + tickerSearchURL + '" target="_blank" rel="noopener noreferrer" title="Google Search: ' + esc(c.ticker) + '">' + esc(c.ticker) + ' <svg class="g-icon" viewBox="0 0 24 24" width="12" height="12"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.27-4.74 3.27-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.24 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09A6.97 6.97 0 0 1 5.47 12c0-.72.13-1.43.37-2.09V7.07H2.18A11.96 11.96 0 0 0 0 12c0 1.94.46 3.77 1.28 5.4l3.56-2.77.01-.54z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 1.77 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg></a></td>' +
       '<td class="col-exchange">' + flag + ' ' + esc(c.exchange) + '</td>' +
       '<td class="col-yf"><a class="ext-link" href="' + yfLink + '" target="_blank" rel="noopener noreferrer" title="' + yfTitle + '">' + yfIcon + '</a></td>' +
       '<td class="col-tv"><a class="ext-link" href="' + tvLink + '" target="_blank" rel="noopener noreferrer" title="' + tvTitle + '">' + tvIcon + '</a></td>' +

@@ -50,6 +50,7 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--t
 .tab-btn[data-tab="watchlist"]{--tab-color:#6c8cff;--tab-glow:rgba(108,140,255,.55);--tab-glow-strong:rgba(108,140,255,.8)}
 .tab-btn[data-tab="links"]{--tab-color:#34d399;--tab-glow:rgba(52,211,153,.55);--tab-glow-strong:rgba(52,211,153,.8)}
 .tab-btn[data-tab="supplychain"]{--tab-color:#fbbf24;--tab-glow:rgba(251,191,36,.55);--tab-glow-strong:rgba(251,191,36,.8)}
+.tab-btn[data-tab="glossary"]{--tab-color:#f472b6;--tab-glow:rgba(244,114,182,.55);--tab-glow-strong:rgba(244,114,182,.8)}
 .tab-btn.active{color:var(--tab-color);border-bottom:3px solid var(--tab-color);background:var(--tab-glow);animation:tabPulse 3s ease-in-out infinite}
 @keyframes tabPulse{0%,100%{box-shadow:0 0 8px 2px var(--tab-glow),0 0 20px 4px var(--tab-glow)}50%{box-shadow:0 0 16px 6px var(--tab-glow-strong),0 0 36px 10px var(--tab-glow)}}
 .tab-content{display:none;flex:1;overflow:hidden;flex-direction:column}
@@ -184,6 +185,7 @@ body.light .badge-mixed{background:#fef2f2;color:#dc2626}
 body.light .tab-btn[data-tab="watchlist"]{--tab-color:#4f6ef7;--tab-glow:rgba(79,110,247,.3);--tab-glow-strong:rgba(79,110,247,.55)}
 body.light .tab-btn[data-tab="links"]{--tab-color:#059669;--tab-glow:rgba(5,150,105,.3);--tab-glow-strong:rgba(5,150,105,.55)}
 body.light .tab-btn[data-tab="supplychain"]{--tab-color:#d97706;--tab-glow:rgba(217,119,6,.3);--tab-glow-strong:rgba(217,119,6,.55)}
+body.light .tab-btn[data-tab="glossary"]{--tab-color:#db2777;--tab-glow:rgba(219,39,119,.2);--tab-glow-strong:rgba(219,39,119,.45)}
 body.light .tab-btn:hover{background:rgba(0,0,0,.04)}
 
 /* ── Responsive ── */
@@ -233,6 +235,7 @@ body.light .tab-btn:hover{background:rgba(0,0,0,.04)}
     <button class="tab-btn active" data-tab="watchlist">&#x1F4CB; Watchlist</button>
     <button class="tab-btn" data-tab="links">&#x1F517; Research Links</button>
     <button class="tab-btn" data-tab="supplychain">&#x1F504; Supply Chain</button>
+    <button class="tab-btn" data-tab="glossary">&#x1F4D6; Glossary</button>
   </div>
 
   <!-- ═══════════════════ TAB 1: WATCHLIST ═══════════════════ -->
@@ -282,6 +285,15 @@ body.light .tab-btn:hover{background:rgba(0,0,0,.04)}
   </div>
 
   <!-- ═══════════════════ TAB 3: SUPPLY CHAIN ═══════════════════ -->
+  <div class="tab-content" id="tab-glossary">
+    <div class="sc-panel">
+      <div class="sc-title">&#x1F4D6; Glossary of Terms</div>
+      <div class="sc-subtitle">All the acronyms, jargon and technical terms from the Supply Chain tab — explained in plain English</div>
+      <input type="text" class="wl-search" id="glossarySearch" placeholder="&#x1F50D; Search glossary..." style="margin:8px 0 12px;max-width:420px">
+      <div id="glossaryGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:10px;overflow-y:auto;padding-bottom:20px"></div>
+    </div>
+  </div>
+
   <div class="tab-content" id="tab-supplychain">
     <div class="sc-panel">
       <div class="sc-title">DRAM &amp; High Bandwidth Memory (HBM) Memory Supply Chain Pipeline</div>
@@ -875,6 +887,103 @@ Advanced driver assistance (ADAS), electric vehicles, and infotainment systems r
 
 
 /* ════════════════════════════════════════════════════════════════
+   GLOSSARY
+   ════════════════════════════════════════════════════════════════ */
+const GLOSSARY = [
+  {term:"DRAM",full:"Dynamic Random-Access Memory",cat:"Memory Types",def:"The most common type of computer memory. It stores each bit of data as a tiny electrical charge in a capacitor. \"Dynamic\" means it needs to be refreshed thousands of times per second or it loses data. Your PC, phone, and servers all use DRAM."},
+  {term:"HBM",full:"High Bandwidth Memory",cat:"Memory Types",def:"A special type of DRAM designed for AI chips and GPUs. Instead of sitting next to the processor on a circuit board, HBM chips are stacked vertically (like a tiny skyscraper) and placed right next to the processor on the same package. This gives much faster data transfer — critical for AI workloads."},
+  {term:"HBM3E / HBM4",full:"HBM Generation 3E / 4",cat:"Memory Types",def:"Successive generations of HBM technology. HBM3E stacks up to 16 layers of memory dies and is the current high-end standard (used in NVIDIA's B200 GPU). HBM4 is the next generation expected to offer even higher bandwidth."},
+  {term:"NAND",full:"Not-AND Flash Memory",cat:"Memory Types",def:"The type of memory used in SSDs, USB drives, and phone storage. Unlike DRAM, NAND keeps data even when powered off (non-volatile). Named after the NOT-AND logic gate used in its design."},
+  {term:"NOR",full:"Not-OR Flash Memory",cat:"Memory Types",def:"Another type of non-volatile flash memory, but optimized for fast random reads rather than bulk storage. Used in car electronics, IoT devices, and for storing device firmware."},
+  {term:"DDR4 / DDR5 / DDR6",full:"Double Data Rate (Gen 4/5/6)",cat:"Memory Types",def:"Generations of standard DRAM. \"Double Data Rate\" means data transfers happen on both the rising and falling edges of the clock signal, effectively doubling throughput. DDR5 is the current standard for new PCs and servers; DDR6 is the next generation."},
+  {term:"LPDDR5X",full:"Low-Power DDR5X",cat:"Memory Types",def:"A power-efficient version of DDR5 designed for mobile devices like smartphones, tablets, and thin laptops. The \"LP\" means it uses less electricity, which helps battery life."},
+  {term:"SRAM",full:"Static Random-Access Memory",cat:"Memory Types",def:"Very fast but expensive memory that doesn't need refreshing (unlike DRAM). Used for CPU caches and other speed-critical functions inside processors. Too expensive for main memory."},
+  {term:"CXL",full:"Compute Express Link",cat:"Memory Types",def:"A new connection standard that lets servers share pools of memory across multiple computers. Think of it like a memory \"network\" — instead of each server having its own fixed memory, CXL lets them borrow from a shared pool as needed."},
+  {term:"TSV",full:"Through-Silicon Via",cat:"Manufacturing",def:"A tiny copper-filled hole drilled vertically through a silicon chip. TSVs allow stacked chips (like in HBM) to communicate with each other through direct vertical connections instead of going sideways along a circuit board. Think of them like tiny elevators connecting floors in a building."},
+  {term:"EUV",full:"Extreme Ultraviolet Lithography",cat:"Manufacturing",def:"The most advanced technology for printing circuit patterns onto chips, using light with a wavelength of just 13.5 nanometers. A single EUV machine costs over $200M and is essential for making the tiniest, most advanced memory chips. ASML is the only company that makes them."},
+  {term:"DUV",full:"Deep Ultraviolet Lithography",cat:"Manufacturing",def:"The previous generation of chip-printing technology, using light at 193nm wavelength. Still widely used for less advanced process steps. Cheaper and more available than EUV."},
+  {term:"CVD",full:"Chemical Vapor Deposition",cat:"Manufacturing",def:"A process that deposits ultra-thin layers of material onto a chip by flowing chemical gases over the wafer surface. The gases react and leave behind a solid film — like how fog condenses on a cold window, but precisely controlled at the atomic level."},
+  {term:"PVD",full:"Physical Vapor Deposition",cat:"Manufacturing",def:"A process that deposits thin metal films by physically knocking atoms off a target material and letting them land on the wafer. Think of spray-painting, but with individual atoms in a vacuum chamber."},
+  {term:"ALD",full:"Atomic Layer Deposition",cat:"Manufacturing",def:"The most precise deposition method — it lays down material literally one atomic layer at a time. Extremely slow but gives perfect uniformity. Critical for the tiniest structures in advanced memory chips."},
+  {term:"CMP",full:"Chemical-Mechanical Polishing",cat:"Manufacturing",def:"A process that polishes the wafer surface perfectly flat between processing steps, using a combination of chemical slurry and physical grinding. Like sanding wood smooth between coats of paint — but at the nanometer scale."},
+  {term:"Photoresist",full:"",cat:"Manufacturing",def:"A light-sensitive chemical coating applied to wafers during the lithography step. When exposed to UV light through a mask, it hardens (or dissolves) in a precise pattern, creating the blueprint that guides where material gets added or removed."},
+  {term:"Etchant",full:"",cat:"Manufacturing",def:"A chemical or plasma used to selectively remove material from the wafer surface. Etching carves the circuit patterns by dissolving away material not protected by photoresist."},
+  {term:"Ion Implantation",full:"",cat:"Manufacturing",def:"A process where charged atoms (ions) are shot into the silicon wafer at high speed to change its electrical properties. This is how transistors get their ability to switch on and off — by creating regions with different electrical behaviors."},
+  {term:"Czochralski Process",full:"",cat:"Manufacturing",def:"The method used to grow large crystals of ultra-pure silicon. A seed crystal is dipped into molten silicon and slowly pulled upward while rotating, growing into a large cylindrical ingot. These ingots are then sliced into the wafers that chips are made on."},
+  {term:"Wafer",full:"",cat:"Manufacturing",def:"A thin, circular disc of ultra-pure silicon — the canvas on which chips are built. Modern memory wafers are 300mm (about 12 inches) in diameter. Hundreds of individual chips are made on a single wafer, then cut apart."},
+  {term:"Die",full:"",cat:"Manufacturing",def:"A single chip cut from a wafer. Before cutting, the wafer contains many identical copies of the chip design arranged in a grid. Each cut-out rectangle is called a \"die\" (plural: \"dies\")."},
+  {term:"Fab",full:"Fabrication Plant",cat:"Manufacturing",def:"The ultra-clean factory where chips are manufactured. A modern memory fab costs $15-20 billion to build and operates in \"cleanroom\" conditions far cleaner than a hospital operating room. Takes 3-4 years to build."},
+  {term:"Cleanroom",full:"",cat:"Manufacturing",def:"A specially designed room with extremely filtered air. In a chip fab's cleanroom, there are fewer than 1 particle per cubic foot of air — thousands of times cleaner than a hospital. Workers wear full-body \"bunny suits\" to avoid contamination."},
+  {term:"Yield",full:"",cat:"Manufacturing",def:"The percentage of good, working chips produced from a wafer. If a wafer makes 500 chips and 450 work, that's a 90% yield. Higher yield = more chips per wafer = lower cost. Yield management is one of the most critical parts of chip manufacturing."},
+  {term:"Binning",full:"Speed Binning",cat:"Manufacturing",def:"The process of testing and sorting chips by performance. Chips from the same wafer can vary — some run faster, some use less power. Manufacturers test each one and sort them into performance \"bins\" that correspond to different products and price points."},
+  {term:"Burn-in",full:"",cat:"Manufacturing",def:"A stress test where chips are run at elevated temperatures and voltages for hours to weed out units that would fail early in their life (\"infant mortality\"). If a chip survives burn-in, it's likely to last for years."},
+  {term:"1α / 1β / 1γ",full:"Process Node Generations",cat:"Manufacturing",def:"Names for successive generations of DRAM manufacturing technology in the 10-nanometer class. 1α (1-alpha) was first, 1β (1-beta) is current, and 1γ (1-gamma) is next. Each generation packs transistors more densely, improving capacity and efficiency."},
+  {term:"EDA",full:"Electronic Design Automation",cat:"Design & IP",def:"The specialized software tools that engineers use to design chips. Think of EDA as the \"AutoCAD for semiconductors\" — it helps design circuit layouts, simulate how they'll perform, check for errors, and generate the data that controls manufacturing machines."},
+  {term:"IP (Semiconductor)",full:"Intellectual Property",cat:"Design & IP",def:"Pre-designed, verified circuit building blocks that chip designers can license and integrate into their designs — like using a pre-built engine in a car instead of designing one from scratch. Examples: memory interface IP, controller IP."},
+  {term:"PHY",full:"Physical Layer",cat:"Design & IP",def:"The analog circuitry that handles the actual electrical signals going in and out of a chip. PHY IP converts digital data into the precise voltage waveforms needed to communicate at multi-gigabit speeds over wires."},
+  {term:"1T1C",full:"1 Transistor, 1 Capacitor",cat:"Design & IP",def:"The basic building block of a DRAM memory cell. Each bit of data is stored as a charge in one tiny capacitor, controlled by one transistor that acts like a gate. Billions of these 1T1C cells make up a DRAM chip."},
+  {term:"RCD",full:"Register Clock Driver",cat:"Design & IP",def:"A companion chip found on every DDR5 memory module (DIMM). It buffers and re-drives the command/address signals from the CPU to the memory chips, improving signal quality. Rambus dominates this market."},
+  {term:"PMIC",full:"Power Management IC",cat:"Design & IP",def:"A chip on the memory module that regulates and distributes power to the DRAM chips. DDR5 moved power management onto the DIMM itself (from the motherboard), creating a new chip market."},
+  {term:"CoWoS",full:"Chip-on-Wafer-on-Substrate",cat:"Packaging",def:"TSMC's advanced packaging technology that places multiple chips (like a GPU and several HBM stacks) side-by-side on a large silicon interposer, which is then mounted on a package substrate. This is how NVIDIA's AI GPUs connect to their HBM memory."},
+  {term:"Interposer",full:"",cat:"Packaging",def:"A thin silicon layer that sits between chips and the package substrate, acting as a \"bridge\" with extremely fine wiring. It lets chips placed side-by-side communicate through very short, high-speed connections — much faster than going through a circuit board."},
+  {term:"ABF Substrate",full:"Ajinomoto Build-up Film",cat:"Packaging",def:"A special insulating film made by Ajinomoto (yes, the food company!) used in advanced chip packaging. It provides the fine-pitch wiring layers in the organic substrates beneath processor and memory packages. Currently in short supply."},
+  {term:"Hybrid Bonding",full:"",cat:"Packaging",def:"A cutting-edge technique for connecting stacked chips by bonding copper pads directly together — no solder bumps needed. Gives much finer connections (sub-micron pitch) and is key to future HBM generations."},
+  {term:"TCB",full:"Thermocompression Bonding",cat:"Packaging",def:"A chip stacking method that uses heat and pressure to join dies together via solder bumps. Used in current HBM production. Being supplemented by hybrid bonding for next-gen chips."},
+  {term:"OSAT",full:"Outsourced Semiconductor Assembly & Test",cat:"Packaging",def:"Companies that specialize in packaging and testing chips on behalf of chip designers and manufacturers. Major OSATs include ASE and Amkor. They handle the \"back-end\" of chip production after wafer fabrication."},
+  {term:"DIMM",full:"Dual In-line Memory Module",cat:"Modules & Products",def:"The standard memory stick you plug into a computer's motherboard. It's a small circuit board with multiple DRAM chips soldered onto it. \"Dual in-line\" means there are electrical contacts on both sides."},
+  {term:"RDIMM",full:"Registered DIMM",cat:"Modules & Products",def:"A server-grade memory module with a register chip (RCD) that buffers signals between the CPU and memory chips. This allows servers to use many more DIMMs per channel. Virtually all server memory is RDIMM."},
+  {term:"SO-DIMM",full:"Small Outline DIMM",cat:"Modules & Products",def:"A smaller version of a DIMM designed for laptops and compact devices. About half the length of a regular desktop DIMM."},
+  {term:"SSD",full:"Solid-State Drive",cat:"Modules & Products",def:"A storage device that uses NAND flash memory instead of spinning magnetic disks (like old hard drives). SSDs are much faster, more reliable, and use less power. They're in everything from phones to data center servers."},
+  {term:"HDD",full:"Hard Disk Drive",cat:"Modules & Products",def:"The older style of storage drive that stores data on spinning magnetic platters. Slower than SSDs but cheaper for bulk storage. Still used in data centers for large-scale archival storage."},
+  {term:"PCB",full:"Printed Circuit Board",cat:"Modules & Products",def:"The green (or other colored) board that electronic components are soldered onto. Memory modules, motherboards, and graphics cards are all PCBs with chips and other components mounted on them."},
+  {term:"MT/s",full:"Megatransfers per Second",cat:"Modules & Products",def:"A measure of how many data transfers a memory chip can do per second. DDR5 runs at 4800-8400 MT/s. Higher MT/s = faster memory. Not the same as clock speed (MHz) — DDR transfers data twice per clock cycle."},
+  {term:"KGD",full:"Known Good Die",cat:"Testing",def:"A chip die that has been tested and confirmed to work before being assembled into a package. Especially critical for HBM — since you're stacking 8-16 dies, one bad die ruins the entire expensive stack. So you need to know each die is good first."},
+  {term:"ATE",full:"Automatic Test Equipment",cat:"Testing",def:"The expensive machines that test finished chips by sending electrical signals and checking the responses. They can test thousands of functions per second to verify that every chip works correctly before it ships."},
+  {term:"Probe Card",full:"",cat:"Testing",def:"A tool with hundreds of tiny needles that touch the contact pads on each chip while it's still on the wafer, allowing testing before the wafer is cut apart. HBM probe cards are especially complex because of the high number of TSV connections."},
+  {term:"Metrology",full:"",cat:"Testing",def:"The science of measurement — in semiconductor context, it means measuring the dimensions and properties of chip features to nanometer precision. If a layer is 0.5nm too thick, it could ruin the chip. Metrology tools catch these problems."},
+  {term:"GPU",full:"Graphics Processing Unit",cat:"End Use",def:"Originally designed for rendering graphics, GPUs have thousands of small cores that can work in parallel. This makes them ideal for AI training and inference. NVIDIA's GPUs are the primary consumers of HBM memory."},
+  {term:"CPU",full:"Central Processing Unit",cat:"End Use",def:"The main general-purpose processor in a computer. It handles the operating system, applications, and orchestrates work — but delegates heavy parallel math (like AI) to GPUs or specialized accelerators."},
+  {term:"ASIC",full:"Application-Specific Integrated Circuit",cat:"End Use",def:"A chip designed for one specific purpose (as opposed to a general-purpose CPU or GPU). Google's TPU is an AI ASIC. Companies like Broadcom and Marvell design custom ASICs for hyperscalers that also consume HBM."},
+  {term:"SoC",full:"System on Chip",cat:"End Use",def:"A single chip that integrates the CPU, GPU, memory controller, modem, and other components that used to be separate. Smartphone chips (like Qualcomm's Snapdragon) are SoCs."},
+  {term:"ADAS",full:"Advanced Driver Assistance Systems",cat:"End Use",def:"The semi-autonomous driving features in modern cars — lane keeping, adaptive cruise control, automatic emergency braking, etc. These systems need fast, reliable memory (automotive-grade DRAM) to process sensor data in real time."},
+  {term:"Hyperscaler",full:"",cat:"End Use",def:"The giant cloud computing companies — Google, Microsoft Azure, Amazon AWS, Meta, etc. — that operate massive data centers with millions of servers. They are the biggest buyers of memory chips and have locked up much of the 2026 HBM supply with multi-year contracts."},
+  {term:"IoT",full:"Internet of Things",cat:"End Use",def:"The ecosystem of everyday objects connected to the internet — smart thermostats, security cameras, factory sensors, etc. These devices use small amounts of specialty memory (NOR flash, low-power DRAM)."},
+  {term:"WFE",full:"Wafer Fab Equipment",cat:"Industry",def:"The total market for semiconductor manufacturing equipment — lithography systems, deposition tools, etch tools, etc. Global WFE spending is projected to hit $156B by 2027, driven by memory and AI chip demand."},
+  {term:"Capex",full:"Capital Expenditure",cat:"Industry",def:"Money a company spends on big, long-term investments like building factories or buying equipment. Memory capex is surging because companies are spending billions on new fabs and HBM packaging capacity."},
+  {term:"TAM",full:"Total Addressable Market",cat:"Industry",def:"The total revenue opportunity available for a product or service — the theoretical maximum if a company captured 100% of the market."},
+  {term:"CAGR",full:"Compound Annual Growth Rate",cat:"Industry",def:"The average annual growth rate of an investment or market over a period of time, accounting for compounding. For example, a 21% CAGR means the market grows by about 21% each year on average."},
+  {term:"YoY",full:"Year-over-Year",cat:"Industry",def:"A comparison of a metric in one period versus the same period a year earlier. \"HBM demand grew 70% YoY\" means demand is 70% higher than it was at the same time last year."},
+  {term:"LTA",full:"Long-Term Agreement",cat:"Industry",def:"A multi-year supply contract between memory makers and their customers. Hyperscalers are signing take-or-pay LTAs worth billions to lock up HBM supply through 2027, squeezing out smaller buyers."},
+  {term:"IC",full:"Integrated Circuit",cat:"Industry",def:"A complete electronic circuit built on a single small piece of silicon — what most people simply call a \"chip.\" Every processor, memory chip, and controller is an IC."},
+  {term:"nm",full:"Nanometer",cat:"Industry",def:"One billionth of a meter. Used to describe the size of features on a chip. For context, a human hair is ~80,000nm wide. EUV lithography works at 13.5nm wavelength, and modern DRAM features are in the 10-15nm range."},
+  {term:"μm",full:"Micrometer (Micron)",cat:"Industry",def:"One millionth of a meter, or 1,000 nanometers. TSVs in HBM chips are typically 30-50μm deep. Much larger than transistor features, but still incredibly tiny."},
+];
+
+function renderGlossary(filter='') {
+  const grid = document.getElementById('glossaryGrid');
+  const q = filter.toLowerCase();
+  const filtered = GLOSSARY.filter(g => !q || g.term.toLowerCase().includes(q) || (g.full&&g.full.toLowerCase().includes(q)) || g.def.toLowerCase().includes(q) || g.cat.toLowerCase().includes(q));
+  const cats = [...new Set(GLOSSARY.map(g=>g.cat))];
+  let html = '';
+  cats.forEach(cat => {
+    const items = filtered.filter(g=>g.cat===cat);
+    if(!items.length) return;
+    html += `<div style="grid-column:1/-1;margin-top:12px;padding:4px 0;border-bottom:1px solid var(--border)"><span style="font-weight:700;font-size:13px;color:var(--accent2)">${cat}</span></div>`;
+    items.forEach(g => {
+      html += `<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:10px 14px">`;
+      html += `<div style="font-weight:700;font-size:13px;color:var(--text)">${g.term}`;
+      if(g.full) html += ` <span style="font-weight:400;font-size:11px;color:var(--text-dim)">(${g.full})</span>`;
+      html += `</div>`;
+      html += `<div style="font-size:12px;color:var(--text-dim);margin-top:4px;line-height:1.5">${g.def}</div>`;
+      html += `</div>`;
+    });
+  });
+  grid.innerHTML = html || '<p style="color:var(--text-dim);padding:20px">No matching terms found.</p>';
+}
+document.getElementById('glossarySearch').addEventListener('input', e => renderGlossary(e.target.value));
+renderGlossary();
+
+/* ════════════════════════════════════════════════════════════════
    TAB SWITCHING
    ════════════════════════════════════════════════════════════════ */
 document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -1181,9 +1290,6 @@ function showSegmentDetail(seg, activeNode) {
   }
 
   detail.innerHTML = html;
-
-  // Scroll detail into view
-  detail.scrollIntoView({behavior:'smooth', block:'nearest'});
 }
 
 

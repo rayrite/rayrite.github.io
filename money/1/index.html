@@ -33,7 +33,7 @@
 html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--text);font-size:13px;line-height:1.4;overflow:hidden}
 
 /* ── Shell Layout ── */
-.shell{display:flex;flex-direction:column;height:100vh;overflow:hidden}
+.shell{display:flex;flex-direction:column;height:100vh;height:100dvh;overflow:hidden}
 .header{display:flex;align-items:center;justify-content:space-between;padding:8px 16px;background:var(--bg-card);border-bottom:1px solid var(--border);flex-shrink:0;gap:12px}
 .header h1{font-size:15px;font-weight:700;white-space:nowrap;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
 .header .subtitle{font-size:11px;color:var(--text-dim);white-space:nowrap}
@@ -53,7 +53,7 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--t
 .tab-btn[data-tab="glossary"]{--tab-color:#f472b6;--tab-glow:rgba(244,114,182,.55);--tab-glow-strong:rgba(244,114,182,.8)}
 .tab-btn.active{color:var(--tab-color);border-bottom:3px solid var(--tab-color);background:var(--tab-glow);animation:tabPulse 3s ease-in-out infinite}
 @keyframes tabPulse{0%,100%{box-shadow:0 0 8px 2px var(--tab-glow),0 0 20px 4px var(--tab-glow)}50%{box-shadow:0 0 16px 6px var(--tab-glow-strong),0 0 36px 10px var(--tab-glow)}}
-.tab-content{display:none;flex:1;overflow:hidden;flex-direction:column}
+.tab-content{display:none;flex:1;overflow:auto;flex-direction:column;-webkit-overflow-scrolling:touch}
 .tab-content.active{display:flex}
 
 /* ── Tab 1: Watchlist ── */
@@ -72,7 +72,7 @@ html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--t
 .wl-hamburger.open{border-color:var(--accent);color:var(--accent)}
 
 /* Table */
-.table-wrap{flex:1;overflow:auto;position:relative}
+.table-wrap{flex:1;overflow:auto;position:relative;-webkit-overflow-scrolling:touch;padding-bottom:40px}
 table.wl{width:100%;border-collapse:collapse;table-layout:fixed}
 table.wl thead{position:sticky;top:0;z-index:2}
 table.wl th{background:var(--bg-card);border-bottom:2px solid var(--border);padding:6px 8px;text-align:left;font-size:11px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:.4px;cursor:pointer;user-select:none;white-space:nowrap;position:relative}
@@ -123,7 +123,7 @@ table.wl tbody tr:nth-child(even):hover{background:var(--bg-hover)}
 .seg-tag{display:inline-block;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:600;border:1px solid var(--border);color:var(--text-dim)}
 
 /* ── Tab 2: Research Links ── */
-.links-panel{flex:1;overflow:auto;padding:16px 20px}
+.links-panel{flex:1;overflow:auto;padding:16px 20px;padding-bottom:60px;-webkit-overflow-scrolling:touch}
 .links-search-bar{padding:8px 12px;background:var(--bg-card);border-bottom:1px solid var(--border);flex-shrink:0}
 .links-search{width:100%;max-width:400px;padding:5px 10px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:12px;outline:none}
 .links-search:focus{border-color:var(--accent)}
@@ -137,7 +137,7 @@ table.wl tbody tr:nth-child(even):hover{background:var(--bg-hover)}
 .link-item .link-src{color:var(--text-dim);font-size:10px;margin-top:2px}
 
 /* ── Tab 3: Supply Chain ── */
-.sc-panel{flex:1;overflow:auto;padding:20px}
+.sc-panel{flex:1;overflow:auto;padding:20px;padding-bottom:60px;-webkit-overflow-scrolling:touch}
 .sc-title{text-align:center;font-size:18px;font-weight:700;margin-bottom:4px;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
 .sc-subtitle{text-align:center;font-size:12px;color:var(--text-dim);margin-bottom:24px}
 
@@ -290,7 +290,7 @@ body.light .tab-btn:hover{background:rgba(0,0,0,.04)}
       <div class="sc-title">&#x1F4D6; Glossary of Terms</div>
       <div class="sc-subtitle">All the acronyms, jargon and technical terms from the Supply Chain tab — explained in plain English</div>
       <input type="text" class="wl-search" id="glossarySearch" placeholder="&#x1F50D; Search glossary..." style="margin:8px 0 12px;max-width:420px">
-      <div id="glossaryGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:10px;overflow-y:auto;padding-bottom:20px"></div>
+      <div id="glossaryGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:10px;padding-bottom:60px"></div>
     </div>
   </div>
 
@@ -957,6 +957,43 @@ const GLOSSARY = [
   {term:"IC",full:"Integrated Circuit",cat:"Industry",def:"A complete electronic circuit built on a single small piece of silicon — what most people simply call a \"chip.\" Every processor, memory chip, and controller is an IC."},
   {term:"nm",full:"Nanometer",cat:"Industry",def:"One billionth of a meter. Used to describe the size of features on a chip. For context, a human hair is ~80,000nm wide. EUV lithography works at 13.5nm wavelength, and modern DRAM features are in the 10-15nm range."},
   {term:"μm",full:"Micrometer (Micron)",cat:"Industry",def:"One millionth of a meter, or 1,000 nanometers. TSVs in HBM chips are typically 30-50μm deep. Much larger than transistor features, but still incredibly tiny."},
+  {term:"Big 3",full:"Samsung, SK hynix, Micron",cat:"Industry",def:"The three companies that control nearly 100% of global DRAM production: Samsung Electronics (South Korea), SK hynix (South Korea), and Micron Technology (USA). No other companies make meaningful amounts of DRAM."},
+  {term:"Take-or-Pay",full:"",cat:"Industry",def:"A type of contract where the buyer commits to either purchasing a minimum quantity of product or paying a penalty. Hyperscalers are using take-or-pay agreements worth billions to guarantee their HBM and DRAM supply through 2027."},
+  {term:"Utilization Rate",full:"",cat:"Industry",def:"The percentage of a factory's maximum capacity that is actually being used. Memory fabs currently run at 95%+ utilization — meaning they're almost completely maxed out with virtually no spare capacity to increase production."},
+  {term:"Lead Time",full:"",cat:"Industry",def:"The time between ordering something and receiving it. EUV lithography machines have lead times of 12-18+ months. New fabs take 3-4 years. These long lead times are why the 2026 shortage can't be quickly resolved."},
+  {term:"Photomask / Reticle",full:"",cat:"Manufacturing",def:"A glass plate with the chip's circuit pattern etched onto it in chrome — like a photographic negative. During lithography, light shines through the photomask to project the pattern onto the wafer. Each chip layer needs its own mask. EUV photomasks are extremely expensive."},
+  {term:"Ingot",full:"",cat:"Manufacturing",def:"A large cylindrical crystal of ultra-pure silicon, grown using the Czochralski process. Ingots can weigh over 100kg and are about 300mm in diameter. They are sliced into hundreds of thin wafers, like slicing a loaf of bread."},
+  {term:"Lithography",full:"",cat:"Manufacturing",def:"The core process of printing circuit patterns onto a wafer using light. A pattern is projected through a photomask onto a light-sensitive coating (photoresist) on the wafer. The most advanced version uses EUV (extreme ultraviolet) light. This step is repeated dozens of times to build up all the chip's layers."},
+  {term:"Deposition",full:"",cat:"Manufacturing",def:"The process of laying down ultra-thin films of material (metals, oxides, insulators) onto the wafer surface. Think of it like spray-painting but at the atomic level. Major methods include CVD, PVD, and ALD — each offering different trade-offs of speed, precision, and material type."},
+  {term:"Etching",full:"",cat:"Manufacturing",def:"The process of carving patterns into a wafer by selectively removing material, usually with plasma (ionized gas) or chemicals. After lithography defines the pattern, etching cuts it into the actual silicon. For HBM, deep trench etching creates the TSV holes 30-50μm deep."},
+  {term:"Plasma",full:"",cat:"Manufacturing",def:"An ionized gas (the fourth state of matter) used extensively in chip manufacturing. Plasma etching uses energized gas particles to precisely carve patterns into the wafer. Plasma is also used in some deposition processes. It allows extremely precise, directional material removal."},
+  {term:"Dicing",full:"",cat:"Manufacturing",def:"The process of cutting a finished wafer into individual chip dies. A diamond-tipped saw or laser cuts along the grid lines between chips. Before HBM stacking, dies must be thinned and diced with extreme precision."},
+  {term:"Die Thinning",full:"",cat:"Manufacturing",def:"Grinding the back of a chip die to make it extremely thin — sometimes less than 50μm (thinner than a human hair). Essential for HBM stacking, because you need to fit 8-16 dies in a stack. Thinner dies also expose TSV connections on the backside."},
+  {term:"Die Stacking",full:"",cat:"Packaging",def:"The process of stacking multiple chip dies vertically on top of each other, connected by TSVs. HBM memory uses 4, 8, 12, or 16 stacked dies. This is far more complex than laying chips side-by-side, but gives much higher capacity in a small footprint."},
+  {term:"2.5D / 3D Packaging",full:"",cat:"Packaging",def:"Advanced chip packaging approaches. 2.5D places multiple chips side-by-side on an interposer (e.g., GPU + HBM stacks on a CoWoS substrate). 3D stacks chips vertically (e.g., the HBM stack itself). Both are more complex and expensive than traditional single-chip packages."},
+  {term:"Solder Bump",full:"",cat:"Packaging",def:"A tiny ball of solder (usually tin-based) that connects a chip to its substrate or to another chip. Traditional chip packaging uses solder bumps — thousands of them per chip. Newer hybrid bonding eliminates solder bumps for even finer connections."},
+  {term:"Pitch",full:"",cat:"Packaging",def:"The distance between two adjacent connections (bumps, TSVs, wires) on a chip or package. Smaller pitch = more connections in the same area = higher performance. Hybrid bonding achieves sub-micron pitch, while solder bumps are typically 40-130μm pitch."},
+  {term:"Substrate",full:"",cat:"Packaging",def:"The base layer that a chip or chip stack is mounted on. It provides the electrical connections between the chip and the outside world (the circuit board). Advanced substrates use ABF film and have extremely fine wiring. Substrate supply is currently constrained."},
+  {term:"Front-End",full:"",cat:"Manufacturing",def:"The wafer fabrication stage of chip manufacturing — all the steps that happen on the silicon wafer (lithography, etching, deposition, etc.) before it is cut into individual dies. This is the most technically complex and expensive part."},
+  {term:"Back-End",full:"",cat:"Manufacturing",def:"The packaging and testing stage of chip manufacturing — everything that happens after the wafer is diced into individual dies. Includes die attach, wire bonding or bumping, encapsulation, and final testing. For HBM, back-end is where the complex stacking happens."},
+  {term:"Signal Integrity",full:"",cat:"Modules & Products",def:"Ensuring that electrical signals traveling through a circuit arrive clean and undistorted. At DDR5 speeds (4800-8400 MT/s), signals can degrade over even short distances. Module designers carefully engineer trace lengths, impedance, and shielding to maintain signal quality."},
+  {term:"Non-volatile",full:"",cat:"Memory Types",def:"Memory that retains its data even when power is turned off. NAND flash (SSDs) and NOR flash are non-volatile — that's why your files are still there when you restart your computer. The opposite of volatile memory like DRAM."},
+  {term:"Volatile",full:"",cat:"Memory Types",def:"Memory that loses all its data the instant power is removed. DRAM and SRAM are volatile — if you unplug your computer without saving, anything in RAM is gone. This is why DRAM constantly refreshes itself thousands of times per second."},
+  {term:"Bandwidth",full:"",cat:"Memory Types",def:"How much data can be moved per second. Measured in GB/s (gigabytes per second). HBM has vastly higher bandwidth than standard DDR5 — which is exactly why AI chips need it. More bandwidth means the processor can feed on data faster."},
+  {term:"Error Correction",full:"ECC (Error-Correcting Code)",cat:"Design & IP",def:"A feature built into memory controllers that detects and fixes bit errors on the fly. Server and HBM memory always uses ECC because even a single flipped bit could crash a system or corrupt AI training results. Consumer DRAM often skips ECC to save cost."},
+  {term:"Processing-in-Memory",full:"PIM",cat:"Design & IP",def:"An emerging technology that puts simple computing logic directly inside the memory chip itself, so data can be processed where it's stored instead of shuttling it back and forth to the CPU/GPU. Could dramatically reduce power consumption and latency for certain workloads."},
+  {term:"Inference",full:"",cat:"End Use",def:"Running a trained AI model to get results — for example, when ChatGPT generates a response or when your phone recognizes a face. Less compute-intensive than training, but still needs high-bandwidth memory (HBM) for large models. The majority of AI memory demand comes from inference at scale."},
+  {term:"Training",full:"",cat:"End Use",def:"The process of teaching an AI model by feeding it enormous amounts of data and adjusting its parameters over weeks or months. Training GPT-scale models requires thousands of GPUs, each with 192GB of HBM, running continuously. Extremely memory-hungry."},
+  {term:"TPU",full:"Tensor Processing Unit",cat:"End Use",def:"Google's custom AI chip (ASIC) designed specifically for machine learning workloads. TPUs also consume HBM memory, making Google one of the largest HBM buyers alongside NVIDIA GPU customers."},
+  {term:"EV",full:"Electric Vehicle",cat:"End Use",def:"Battery-powered vehicles that increasingly rely on advanced semiconductors for battery management, autonomous driving (ADAS), and infotainment systems. EVs use significantly more memory chips than traditional cars."},
+  {term:"Infotainment",full:"",cat:"End Use",def:"The in-car touchscreen system that combines information and entertainment — navigation, music, climate controls, rear cameras, etc. Modern infotainment systems are essentially embedded computers that require DRAM and flash storage."},
+  {term:"Neon Gas",full:"",cat:"Manufacturing",def:"A noble gas critical for laser-based lithography in chip fabs. Semiconductor-grade neon must be ultra-pure. Ukraine historically supplied ~50% of the world's supply, making it a geopolitical risk factor for the chip industry."},
+  {term:"InP",full:"Indium Phosphide",cat:"Manufacturing",def:"A compound semiconductor material used for optical components and high-speed electronics. Unlike silicon, InP is excellent at converting between electrical signals and light — used in fiber optic transceivers that connect servers in data centers."},
+  {term:"Transistor",full:"",cat:"Design & IP",def:"The fundamental building block of all modern electronics — a tiny switch that can be turned on or off by an electrical signal. A modern DRAM chip contains billions of transistors. In a DRAM cell, one transistor controls access to one capacitor (the 1T1C structure)."},
+  {term:"Capacitor",full:"",cat:"Design & IP",def:"A component that stores electrical charge. In DRAM, each bit of data is stored as a charge in a tiny capacitor. A charged capacitor = 1, an empty one = 0. The charge leaks away quickly, which is why DRAM must be constantly refreshed."},
+  {term:"Cycle Time",full:"",cat:"Manufacturing",def:"The total time it takes a wafer to go from start to finish in a fab. For DRAM, cycle time is typically 3-4 months across ~700 processing steps. Longer cycle times mean slower response to demand changes — you can't quickly ramp up production."},
+  {term:"B200",full:"NVIDIA B200 GPU",cat:"End Use",def:"NVIDIA's high-end AI GPU (Blackwell generation) that requires 192GB of HBM3E memory per chip. It's the primary workhorse for AI training and inference in data centers, and the single largest driver of HBM demand in 2026."},
+  {term:"GB / TB",full:"Gigabyte / Terabyte",cat:"Industry",def:"Units of data storage. 1 GB = roughly one billion bytes (enough for a short movie). 1 TB = 1,000 GB. AI servers need 1-2 TB of total DRAM. A single B200 GPU uses 192 GB of HBM. Your phone probably has 8-12 GB of RAM."},
 ];
 
 function renderGlossary(filter='') {

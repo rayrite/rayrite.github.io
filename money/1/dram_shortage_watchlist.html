@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026 DRAM Shortage Watchlist</title>
+<style>
+/* ── Reset & Base ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:        #0f1117;
+  --bg-card:   #181a20;
+  --bg-hover:  #1e2028;
+  --border:    #2a2d35;
+  --text:      #e4e6ea;
+  --text-dim:  #8b8d93;
+  --accent:    #6c8cff;
+  --accent2:   #a78bfa;
+  --green:     #34d399;
+  --green-dim: #064e3b;
+  --blue:      #60a5fa;
+  --blue-dim:  #1e3a5f;
+  --amber:     #fbbf24;
+  --amber-dim: #78350f;
+  --emerald:   #10b981;
+  --emerald-dim:#064e3b;
+  --red:       #f87171;
+  --radius:    6px;
+  --font:      -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;
+  --mono:      'SF Mono','Cascadia Code','Fira Code',Consolas,monospace;
+}
+html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--text);font-size:13px;line-height:1.4;overflow:hidden}
+
+/* ── Shell Layout ── */
+.shell{display:flex;flex-direction:column;height:100vh;overflow:hidden}
+.header{display:flex;align-items:center;justify-content:space-between;padding:8px 16px;background:var(--bg-card);border-bottom:1px solid var(--border);flex-shrink:0;gap:12px}
+.header h1{font-size:15px;font-weight:700;white-space:nowrap;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
+.header .subtitle{font-size:11px;color:var(--text-dim);white-space:nowrap}
+.header-right{display:flex;align-items:center;gap:10px}
+
+/* Theme toggle */
+.theme-btn{background:none;border:1px solid var(--border);color:var(--text-dim);padding:4px 10px;border-radius:var(--radius);cursor:pointer;font-size:12px;transition:.15s}
+.theme-btn:hover{border-color:var(--accent);color:var(--text)}
+
+/* ── Tabs ── */
+.tab-bar{display:flex;background:var(--bg-card);border-bottom:1px solid var(--border);flex-shrink:0;padding:0 12px}
+.tab-btn{padding:8px 18px;font-size:12px;font-weight:600;color:var(--text-dim);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;transition:.15s;white-space:nowrap}
+.tab-btn:hover{color:var(--text)}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+.tab-content{display:none;flex:1;overflow:hidden;flex-direction:column}
+.tab-content.active{display:flex}
+
+/* ── Tab 1: Watchlist ── */
+.wl-toolbar{background:var(--bg-card);border-bottom:1px solid var(--border);flex-shrink:0}
+.wl-toolbar-row{display:flex;align-items:center;gap:8px;padding:6px 12px}
+.wl-toolbar label{font-size:11px;color:var(--text-dim);font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.wl-search{flex:1 1 160px;min-width:100px;padding:5px 10px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:12px;outline:none;transition:.15s}
+.wl-search:focus{border-color:var(--accent)}
+.wl-select{padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:12px;outline:none;cursor:pointer;min-width:100px}
+.wl-count{font-size:11px;color:var(--text-dim);white-space:nowrap}
+.wl-export{background:var(--bg);border:1px solid var(--border);color:var(--text-dim);padding:4px 10px;border-radius:var(--radius);cursor:pointer;font-size:11px;font-weight:600;transition:.15s}
+.wl-export:hover{border-color:var(--accent);color:var(--text)}
+.wl-filters{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:4px 12px 6px}
+.wl-hamburger{display:none;background:none;border:1px solid var(--border);color:var(--text-dim);width:32px;height:28px;border-radius:var(--radius);cursor:pointer;font-size:16px;line-height:1;transition:.15s;flex-shrink:0}
+.wl-hamburger:hover{border-color:var(--accent);color:var(--text)}
+.wl-hamburger.open{border-color:var(--accent);color:var(--accent)}
+
+/* Table */
+.table-wrap{flex:1;overflow:auto;position:relative}
+table.wl{width:100%;border-collapse:collapse;table-layout:fixed}
+table.wl thead{position:sticky;top:0;z-index:2}
+table.wl th{background:var(--bg-card);border-bottom:2px solid var(--border);padding:6px 8px;text-align:left;font-size:11px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:.4px;cursor:pointer;user-select:none;white-space:nowrap;position:relative}
+table.wl th:hover{color:var(--text)}
+table.wl th .sort-arrow{margin-left:3px;font-size:9px;opacity:.4}
+table.wl th.sorted .sort-arrow{opacity:1;color:var(--accent)}
+table.wl td{padding:5px 8px;border-bottom:1px solid var(--border);font-size:12px;vertical-align:middle}
+table.wl tbody tr:hover{background:var(--bg-hover)}
+table.wl tbody tr:nth-child(even){background:rgba(255,255,255,.01)}
+table.wl tbody tr:nth-child(even):hover{background:var(--bg-hover)}
+
+/* Column widths */
+.col-num{width:32px;text-align:center;color:var(--text-dim)}
+.col-company{width:150px;font-weight:600}
+.col-ticker{width:68px;font-family:var(--mono);font-size:11px;color:var(--accent)}
+.col-exchange{width:72px;font-size:11px}
+.col-mcap{width:70px;text-align:right;font-family:var(--mono);font-size:11px}
+.col-segment{width:160px}
+.col-desc{min-width:180px}
+.col-mentions{width:58px;text-align:center}
+.col-sentiment{width:120px}
+.col-yf{width:40px;text-align:center}
+.col-tv{width:40px;text-align:center}
+
+/* Sentiment badges */
+.badge{display:inline-block;padding:2px 7px;border-radius:10px;font-size:10px;font-weight:700;letter-spacing:.3px;white-space:nowrap}
+.badge-extreme{background:var(--emerald-dim);color:var(--emerald)}
+.badge-very{background:var(--green-dim);color:var(--green)}
+.badge-positive{background:var(--blue-dim);color:var(--blue)}
+.badge-cautious{background:var(--amber-dim);color:var(--amber)}
+
+/* Mention bar */
+.mention-bar{display:inline-block;height:14px;border-radius:2px;background:var(--accent);opacity:.7;vertical-align:middle;min-width:4px}
+.mention-num{font-family:var(--mono);font-size:11px;margin-left:4px}
+
+/* Links */
+.ext-link{color:var(--accent);text-decoration:none;font-size:14px;transition:.15s}
+.ext-link:hover{color:var(--accent2)}
+
+/* Ticker links */
+.ticker-link{color:var(--accent);text-decoration:none;transition:.15s}
+.ticker-link:hover{text-decoration:underline;color:var(--accent2)}
+
+/* Segment tags */
+.seg-tag{display:inline-block;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:600;border:1px solid var(--border);color:var(--text-dim)}
+
+/* ── Tab 2: Research Links ── */
+.links-panel{flex:1;overflow:auto;padding:16px 20px}
+.links-search-bar{padding:8px 12px;background:var(--bg-card);border-bottom:1px solid var(--border);flex-shrink:0}
+.links-search{width:100%;max-width:400px;padding:5px 10px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:12px;outline:none}
+.links-search:focus{border-color:var(--accent)}
+.link-group{margin-bottom:20px}
+.link-group-title{font-size:13px;font-weight:700;color:var(--accent);margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px}
+.link-group-title .icon{font-size:14px}
+.link-item{padding:5px 0 5px 16px;border-left:2px solid var(--border);margin-left:8px;margin-bottom:4px}
+.link-item a{color:var(--accent);text-decoration:none;font-size:12px;word-break:break-all}
+.link-item a:hover{text-decoration:underline;color:var(--accent2)}
+.link-item .link-desc{color:var(--text);font-size:12px;margin-top:1px}
+.link-item .link-src{color:var(--text-dim);font-size:10px;margin-top:2px}
+
+/* ── Tab 3: Supply Chain ── */
+.sc-panel{flex:1;overflow:auto;padding:20px}
+.sc-title{text-align:center;font-size:18px;font-weight:700;margin-bottom:4px;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
+.sc-subtitle{text-align:center;font-size:12px;color:var(--text-dim);margin-bottom:24px}
+
+/* Pipeline Diagram */
+.pipeline{display:flex;flex-wrap:wrap;justify-content:center;gap:0;margin:0 auto 30px;max-width:1200px;position:relative}
+.pipe-node{flex:0 0 130px;text-align:center;cursor:pointer;transition:.2s;position:relative;padding:8px 4px}
+.pipe-node:hover{transform:translateY(-3px)}
+.pipe-node.active .pipe-box{border-color:var(--accent);box-shadow:0 0 12px rgba(108,140,255,.3)}
+.pipe-box{width:110px;height:80px;margin:0 auto 6px;border-radius:10px;border:2px solid var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:.2s;background:var(--bg-card)}
+.pipe-icon{font-size:24px;margin-bottom:4px}
+.pipe-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;color:var(--text)}
+.pipe-arrow{display:flex;align-items:center;justify-content:center;flex:0 0 30px;font-size:18px;color:var(--text-dim);align-self:center;margin-top:-20px}
+
+/* Segment colors */
+.seg-raw .pipe-box{border-color:#f97316;background:rgba(249,115,22,.08)}
+.seg-equip .pipe-box{border-color:#eab308;background:rgba(234,179,8,.08)}
+.seg-eda .pipe-box{border-color:#22c55e;background:rgba(34,197,94,.08)}
+.seg-fab .pipe-box{border-color:#3b82f6;background:rgba(59,130,246,.08)}
+.seg-pkg .pipe-box{border-color:#8b5cf6;background:rgba(139,92,246,.08)}
+.seg-test .pipe-box{border-color:#a855f7;background:rgba(168,85,247,.08)}
+.seg-mod .pipe-box{border-color:#ec4899;background:rgba(236,72,153,.08)}
+.seg-end .pipe-box{border-color:#06b6d4;background:rgba(6,182,212,.08)}
+
+/* Detail panel */
+.sc-detail{max-width:900px;margin:0 auto;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:20px 24px;transition:.2s}
+.sc-detail h3{font-size:15px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.sc-detail .detail-section{margin-bottom:14px}
+.sc-detail .detail-section h4{font-size:12px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.sc-detail p{font-size:12px;line-height:1.6;color:var(--text);margin-bottom:8px}
+.sc-detail ul{padding-left:18px;margin-bottom:8px}
+.sc-detail li{font-size:12px;line-height:1.5;margin-bottom:3px;color:var(--text)}
+.sc-detail li strong{color:var(--accent)}
+.sc-detail .stat-row{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:10px}
+.sc-detail .stat-box{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:8px 12px;flex:1;min-width:120px}
+.sc-detail .stat-val{font-size:16px;font-weight:800;color:var(--accent)}
+.sc-detail .stat-label{font-size:10px;color:var(--text-dim);margin-top:2px}
+
+/* ── Light theme ── */
+body.light{--bg:#f5f6f8;--bg-card:#ffffff;--bg-hover:#eef0f4;--border:#dde0e6;--text:#1a1c21;--text-dim:#6b6e76;--accent:#4f6ef7;--accent2:#7c3aed;--green:#059669;--green-dim:#d1fae5;--blue:#2563eb;--blue-dim:#dbeafe;--amber:#d97706;--amber-dim:#fef3c7;--emerald:#059669;--emerald-dim:#d1fae5}
+body.light .badge-extreme{background:#d1fae5;color:#059669}
+body.light .badge-very{background:#d1fae5;color:#047857}
+body.light .badge-positive{background:#dbeafe;color:#2563eb}
+body.light .badge-cautious{background:#fef3c7;color:#d97706}
+
+/* ── Responsive ── */
+@media(max-width:900px){
+  .pipeline{gap:0}
+  .pipe-node{flex:0 0 100px}
+  .pipe-box{width:85px;height:65px}
+  .pipe-arrow{flex:0 0 16px;font-size:14px}
+  .col-desc{display:none}
+  .wl-hamburger{display:flex;align-items:center;justify-content:center}
+  .wl-filters{display:none;flex-direction:column;align-items:stretch;gap:6px;padding:6px 12px 8px;border-top:1px solid var(--border)}
+  .wl-filters.open{display:flex}
+  .wl-filters label{margin-top:2px}
+}
+@media(max-width:600px){
+  .pipe-node{flex:0 0 80px}
+  .pipe-box{width:70px;height:55px}
+  .pipe-icon{font-size:18px}
+  .pipe-label{font-size:8px}
+  .pipe-arrow{flex:0 0 10px;font-size:11px}
+  .header h1{font-size:13px}
+  .header .subtitle{display:none}
+  .tab-btn{padding:6px 10px;font-size:11px}
+  .col-exchange,.col-mcap,.col-segment{display:none}
+  table.wl th,table.wl td{padding:4px 5px}
+  .wl-toolbar-row{padding:5px 8px;gap:6px}
+  .wl-search{font-size:13px;padding:6px 8px}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <!-- Header -->
+  <div class="header">
+    <div>
+      <h1>&#x1F4CA; 2026 DRAM Shortage Watchlist</h1>
+      <div class="subtitle">Comprehensive semiconductor memory supply chain investment tracker</div>
+    </div>
+    <div class="header-right">
+      <button class="theme-btn" onclick="toggleTheme()" title="Toggle light/dark theme">&#x1F319; Theme</button>
+    </div>
+  </div>
+
+  <!-- Tab Bar -->
+  <div class="tab-bar">
+    <button class="tab-btn active" data-tab="watchlist">&#x1F4CB; Watchlist</button>
+    <button class="tab-btn" data-tab="links">&#x1F517; Research Links</button>
+    <button class="tab-btn" data-tab="supplychain">&#x1F504; Supply Chain</button>
+  </div>
+
+  <!-- ═══════════════════ TAB 1: WATCHLIST ═══════════════════ -->
+  <div class="tab-content active" id="tab-watchlist">
+    <div class="wl-toolbar">
+      <div class="wl-toolbar-row">
+        <input type="text" class="wl-search" id="wlSearch" placeholder="&#x1F50D; Search companies, tickers, segments...">
+        <button class="wl-hamburger" id="wlHamburger" onclick="toggleFilters()" title="Toggle filters">&#x2630;</button>
+        <span class="wl-count" id="wlCount">0 companies</span>
+        <button class="wl-export" onclick="exportCSV()" title="Export as CSV">&#x1F4CB; CSV</button>
+      </div>
+      <div class="wl-filters" id="wlFilters">
+        <label>Segment</label>
+        <select class="wl-select" id="filterSegment"><option value="">All Segments</option></select>
+        <label>Sentiment</label>
+        <select class="wl-select" id="filterSentiment"><option value="">All Sentiments</option></select>
+        <label>Exchange</label>
+        <select class="wl-select" id="filterExchange"><option value="">All Exchanges</option></select>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table class="wl" id="wlTable">
+        <thead><tr>
+          <th class="col-num">#</th>
+          <th class="col-company" data-col="company">Company <span class="sort-arrow">&#x25B2;&#x25BC;</span></th>
+          <th class="col-ticker" data-col="ticker">Ticker <span class="sort-arrow">&#x25B2;&#x25BC;</span></th>
+          <th class="col-exchange" data-col="exchange">Exchange <span class="sort-arrow">&#x25B2;&#x25BC;</span></th>
+          <th class="col-yf">YF</th>
+          <th class="col-tv">TV</th>
+          <th class="col-mcap" data-col="mcapSort">Mkt Cap <span class="sort-arrow">&#x25B2;&#x25BC;</span></th>
+          <th class="col-segment" data-col="segment">Segment <span class="sort-arrow">&#x25B2;&#x25BC;</span></th>
+          <th class="col-desc" data-col="desc">Description <span class="sort-arrow">&#x25B2;&#x25BC;</span></th>
+          <th class="col-mentions" data-col="mentions">Mentions <span class="sort-arrow">&#x25B2;&#x25BC;</span></th>
+          <th class="col-sentiment" data-col="sentimentRank">Sentiment <span class="sort-arrow">&#x25B2;&#x25BC;</span></th>
+        </tr></thead>
+        <tbody id="wlBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ TAB 2: RESEARCH LINKS ═══════════════════ -->
+  <div class="tab-content" id="tab-links">
+    <div class="links-search-bar">
+      <input type="text" class="links-search" id="linksSearch" placeholder="Filter links...">
+    </div>
+    <div class="links-panel" id="linksPanel"></div>
+  </div>
+
+  <!-- ═══════════════════ TAB 3: SUPPLY CHAIN ═══════════════════ -->
+  <div class="tab-content" id="tab-supplychain">
+    <div class="sc-panel">
+      <div class="sc-title">DRAM &amp; High Bandwidth Memory (HBM) Memory Supply Chain Pipeline</div>
+      <div class="sc-subtitle">Click any segment to explore details &bull; A beginner-friendly guide to how memory chips are made</div>
+
+      <div class="pipeline" id="pipeline"></div>
+
+      <div class="sc-detail" id="scDetail">
+        <h3 id="scDetailTitle">&#x1F449; Select a segment above to view details</h3>
+        <p style="color:var(--text-dim)">Click any box in the pipeline diagram to see what happens at that stage, why it matters in the 2026 shortage, and which companies are involved.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ════════════════════════════════════════════════════════════════
+   DATA
+   ════════════════════════════════════════════════════════════════ */
+const COMPANIES = [
+  // Memory Manufacturers
+  {company:"Micron Technology",ticker:"MU",exchange:"NASDAQ",mcap:"$463B",mcapSort:463000,segment:"Memory Manufacturer",desc:"Leading U.S. DRAM/NAND/HBM producer. HBM fully booked through 2026. ~$28.6B DRAM, $8.5B NAND FY2025. 75% gross margin. $7B Singapore HBM packaging facility.",mentions:16,sentiment:"Extremely Positive",sentimentRank:4},
+  {company:"SK hynix",ticker:"HXSCL",exchange:"OTC",mcap:"$110B",mcapSort:110000,segment:"Memory Manufacturer",desc:"World's #1 HBM producer (~62% market share). Primary NVIDIA supplier. Multi-year LTAs with hyperscalers. Yongin & Cheongju mega-fabs expanding.",mentions:14,sentiment:"Very Positive",sentimentRank:3},
+  {company:"Samsung Electronics",ticker:"SSNLF",exchange:"OTC",mcap:"$310B",mcapSort:310000,segment:"Memory Manufacturer",desc:"Largest overall memory maker (DRAM+NAND). ~17% HBM share, recovering with HBM4. Pyeongtaek P4 fab ramping. Vertically integrated.",mentions:14,sentiment:"Positive",sentimentRank:2},
+  {company:"Nanya Technology",ticker:"NNYAF",exchange:"OTC",mcap:"$5B",mcapSort:5000,segment:"Memory Manufacturer",desc:"Taiwan-based DDR4 specialist. Benefits from legacy DRAM price surge as Big 3 shift wafers to HBM. 1A-nm node transition underway.",mentions:8,sentiment:"Cautiously Positive",sentimentRank:1},
+  {company:"Winbond Electronics",ticker:"WNBDY",exchange:"OTC",mcap:"$3B",mcapSort:3000,segment:"Memory Manufacturer",desc:"Specialty DRAM & NOR flash manufacturer. Serves automotive, IoT, and industrial markets. Benefits from DDR4 shortage pricing.",mentions:5,sentiment:"Cautiously Positive",sentimentRank:1},
+
+  // Wafer Fab Equipment
+  {company:"Applied Materials",ticker:"AMAT",exchange:"NASDAQ",mcap:"$280B",mcapSort:280000,segment:"WFE — Equipment",desc:"#1 WFE company. Deposition, etch, CMP tools. $1.5B HBM revenue FY2025, path to double. Hybrid bonding for HBM. 'Picks and shovels' beneficiary.",mentions:16,sentiment:"Very Positive",sentimentRank:3},
+  {company:"Lam Research",ticker:"LRCX",exchange:"NASDAQ",mcap:"$290B",mcapSort:290000,segment:"WFE — Equipment",desc:"Etch & deposition leader. High-aspect-ratio etch for 3D NAND and HBM TSVs. ~34% memory revenue. 50%+ YoY HBM tool growth.",mentions:16,sentiment:"Very Positive",sentimentRank:3},
+  {company:"KLA Corporation",ticker:"KLAC",exchange:"NASDAQ",mcap:"$195B",mcapSort:195000,segment:"WFE — Equipment",desc:"Process control, inspection, metrology monopoly. Memory ~26% of revenue. Higher tool intensity as DRAM/NAND complexity grows.",mentions:16,sentiment:"Very Positive",sentimentRank:3},
+  {company:"ASML Holding",ticker:"ASML",exchange:"NASDAQ",mcap:"$530B",mcapSort:530000,segment:"WFE — Equipment",desc:"EUV/DUV lithography monopoly. Essential for advanced DRAM (1β/1γ), HBM, and NAND. Memory revenues significantly higher in 2026. $200M+ per EUV system.",mentions:14,sentiment:"Very Positive",sentimentRank:3},
+  {company:"Tokyo Electron",ticker:"TOELY",exchange:"OTC",mcap:"$105B",mcapSort:105000,segment:"WFE — Equipment",desc:"Japan's largest WFE maker. Deposition, etch, and cleaning tools. Strong memory exposure. Key supplier to Samsung and SK hynix fabs.",mentions:8,sentiment:"Positive",sentimentRank:2},
+  {company:"Axcelis Technologies",ticker:"ACLS",exchange:"NASDAQ",mcap:"$2.8B",mcapSort:2800,segment:"WFE — Equipment",desc:"Ion implantation specialist. Purion platform for DRAM/NAND. 'At the heart of memory chip boom.' Capacity additions are primary driver.",mentions:6,sentiment:"Positive",sentimentRank:2},
+  {company:"Onto Innovation",ticker:"ONTO",exchange:"NYSE",mcap:"$10.5B",mcapSort:10500,segment:"WFE — Metrology",desc:"Metrology & inspection for 3D NAND and advanced DRAM. Atlas G6 OCD for HBM4. $240M+ volume purchase agreement for HBM inspection systems.",mentions:10,sentiment:"Very Positive",sentimentRank:3},
+  {company:"Nova Ltd.",ticker:"NVMI",exchange:"NASDAQ",mcap:"$5B",mcapSort:5000,segment:"WFE — Metrology",desc:"Optical and X-ray metrology for semiconductor manufacturing. Advanced DRAM process control. Memory fab expansion drives demand.",mentions:4,sentiment:"Positive",sentimentRank:2},
+  {company:"Veeco Instruments",ticker:"VECO",exchange:"NASDAQ",mcap:"$1.9B",mcapSort:1900,segment:"WFE — Equipment",desc:"Wet processing and laser spike annealing (LSA) for advanced DRAM. $50M+ orders for WaferStorm tools from leading HBM manufacturers.",mentions:5,sentiment:"Positive",sentimentRank:2},
+  {company:"ACM Research",ticker:"ACMR",exchange:"NASDAQ",mcap:"$1.5B",mcapSort:1500,segment:"WFE — Equipment",desc:"Single-wafer cleaning systems for memory production. Higher fab utilization rates increase demand for advanced cleaning equipment.",mentions:4,sentiment:"Positive",sentimentRank:2},
+
+  // Equipment Subsystems
+  {company:"Ultra Clean Holdings",ticker:"UCTT",exchange:"NASDAQ",mcap:"$2.5B",mcapSort:2500,segment:"WFE — Subsystems",desc:"Gas/fluid delivery subsystems for major WFE vendors. Lam ~33% of revenue, AMAT ~25%. Leveraged supplier to memory WFE upcycle.",mentions:6,sentiment:"Positive",sentimentRank:2},
+  {company:"Ichor Holdings",ticker:"ICHR",exchange:"NASDAQ",mcap:"$1.6B",mcapSort:1600,segment:"WFE — Subsystems",desc:"Fluid delivery subsystems and components for semiconductor equipment OEMs. Direct leverage to memory WFE expansion cycle.",mentions:5,sentiment:"Positive",sentimentRank:2},
+  {company:"MKS Instruments",ticker:"MKSI",exchange:"NASDAQ",mcap:"$10B",mcapSort:10000,segment:"WFE — Subsystems",desc:"Power, vacuum, and gas delivery subsystems and instruments. Broad WFE supplier serving multiple equipment OEMs.",mentions:3,sentiment:"Positive",sentimentRank:2},
+
+  // Materials & Chemicals
+  {company:"Entegris",ticker:"ENTG",exchange:"NASDAQ",mcap:"$17.5B",mcapSort:17500,segment:"Materials & Chemicals",desc:"CMP slurries, specialty materials, filtration for 3D NAND/DRAM. Acquired CMC Materials. Content-per-wafer expansion with HBM. $700M U.S. R&D investment.",mentions:12,sentiment:"Positive",sentimentRank:2},
+  {company:"Air Products & Chemicals",ticker:"APD",exchange:"NYSE",mcap:"$63B",mcapSort:63000,segment:"Materials & Chemicals",desc:"Ultra-high-purity industrial gases (nitrogen, oxygen, specialty gases) for deposition, etch, and clean processes in memory fabs.",mentions:8,sentiment:"Positive",sentimentRank:2},
+  {company:"Linde",ticker:"LIN",exchange:"NASDAQ",mcap:"$228B",mcapSort:228000,segment:"Materials & Chemicals",desc:"Electronic specialty gases for semiconductor manufacturing. Ultra-high-purity gases critical for advanced DRAM nodes and 3D NAND.",mentions:6,sentiment:"Positive",sentimentRank:2},
+  {company:"DuPont de Nemours",ticker:"DD",exchange:"NYSE",mcap:"$19B",mcapSort:19000,segment:"Materials & Chemicals",desc:"Semiconductor materials including EUV photoresists. Expanding EUV photoresist capacity in Japan. Embedded-barrier photoresist for advanced memory.",mentions:6,sentiment:"Positive",sentimentRank:2},
+  {company:"Dow Inc.",ticker:"DOW",exchange:"NYSE",mcap:"$25B",mcapSort:25000,segment:"Materials & Chemicals",desc:"Electronic chemicals and materials for semiconductor packaging and substrates. Materials for HBM/AI module packaging and encapsulants.",mentions:4,sentiment:"Positive",sentimentRank:2},
+  {company:"Avantor",ticker:"AVTR",exchange:"NYSE",mcap:"$5.5B",mcapSort:5500,segment:"Materials & Chemicals",desc:"High-purity chemicals and materials for semiconductor fabs. Ultra-high-purity supplies for memory fabs. 100% prepayment contract noted.",mentions:4,sentiment:"Positive",sentimentRank:2},
+  {company:"Photronics",ticker:"PLAB",exchange:"NASDAQ",mcap:"$2B",mcapSort:2000,segment:"Materials & Chemicals",desc:"Photomasks and reticles for every layer of DRAM/HBM/NAND. EUV photomask expertise. Record high-end IC photomask revenue.",mentions:5,sentiment:"Positive",sentimentRank:2},
+  {company:"AXT Inc.",ticker:"AXTI",exchange:"NASDAQ",mcap:"$200M",mcapSort:200,segment:"Materials & Chemicals",desc:"Compound semiconductor substrates (InP for optical interconnects). Enables high-speed optical links critical to AI data center memory bandwidth.",mentions:3,sentiment:"Positive",sentimentRank:2},
+
+  // Packaging & OSAT
+  {company:"ASE Technology",ticker:"ASX",exchange:"NYSE",mcap:"$50B",mcapSort:50000,segment:"Packaging & OSAT",desc:"World's largest OSAT. Assembly, test, materials for HBM. Advanced packaging business doubling to $3.2B in 2026. SPIL unit is key NVIDIA partner.",mentions:12,sentiment:"Very Positive",sentimentRank:3},
+  {company:"Amkor Technology",ticker:"AMKR",exchange:"NASDAQ",mcap:"$12B",mcapSort:12000,segment:"Packaging & OSAT",desc:"Major U.S.-based OSAT. 2.5D/3D packaging for HBM and AI accelerators. Record advanced packaging revenue. $7B Arizona facility (production 2028).",mentions:10,sentiment:"Very Positive",sentimentRank:3},
+  {company:"BE Semiconductor (Besi)",ticker:"BESI",exchange:"OTC",mcap:"$14B",mcapSort:14000,segment:"Packaging Equipment",desc:"Advanced packaging equipment. ~70% revenue from advanced packaging. Hybrid bonding solutions for HBM 3D stacking. ~50% of orders tied to AI assembly.",mentions:8,sentiment:"Very Positive",sentimentRank:3},
+  {company:"Kulicke & Soffa",ticker:"KLIC",exchange:"NASDAQ",mcap:"$3.6B",mcapSort:3600,segment:"Packaging Equipment",desc:"Wire bonding and thermocompression bonding (TCB) equipment for HBM-type memory packaging. FY2025 revenue ~$654M.",mentions:5,sentiment:"Positive",sentimentRank:2},
+  {company:"ChipMOS Technologies",ticker:"IMOS",exchange:"NASDAQ",mcap:"$1.4B",mcapSort:1400,segment:"Packaging & OSAT",desc:"Taiwan-based back-end packaging and test services. BGA/CSP solutions for DRAM and NAND. 4.31% dividend yield.",mentions:5,sentiment:"Positive",sentimentRank:2},
+
+  // Test Equipment
+  {company:"Teradyne",ticker:"TER",exchange:"NASDAQ",mcap:"$47B",mcapSort:47000,segment:"Test Equipment",desc:"Memory test equipment leader (Magnum family). Magnum 7H for HBM2E-HBM4E testing. Memory test revenue more than doubled. 88% stock surge.",mentions:12,sentiment:"Very Positive",sentimentRank:3},
+  {company:"FormFactor",ticker:"FORM",exchange:"NASDAQ",mcap:"$7B",mcapSort:7000,segment:"Test Equipment",desc:"Advanced probe cards for DRAM/HBM wafer testing. SmartMatrix 3000XP for 300mm. HBM probe revenue quadrupled YoY. Record DRAM probe-card revenue.",mentions:10,sentiment:"Very Positive",sentimentRank:3},
+  {company:"Cohu",ticker:"COHU",exchange:"NASDAQ",mcap:"$1.4B",mcapSort:1400,segment:"Test Equipment",desc:"Test handlers and back-end equipment. Neon inspection metrology platform for HBM. Recently selected for HBM device inspection.",mentions:5,sentiment:"Positive",sentimentRank:2},
+  {company:"Aehr Test Systems",ticker:"AEHR",exchange:"NASDAQ",mcap:"$500M",mcapSort:500,segment:"Test Equipment",desc:"Thermal burn-in test systems. FOX-XP platform for wafer-level burn-in. Increasing memory test intensity drives demand.",mentions:3,sentiment:"Positive",sentimentRank:2},
+  {company:"Advantest",ticker:"ATEYY",exchange:"OTC",mcap:"$32B",mcapSort:32000,segment:"Test Equipment",desc:"Japan-based ATE (Automatic Test Equipment) leader. V93000 platform for memory and SoC testing. HBM test program growth.",mentions:3,sentiment:"Positive",sentimentRank:2},
+
+  // EDA, IP & Memory Interface
+  {company:"Synopsys",ticker:"SNPS",exchange:"NASDAQ",mcap:"$82B",mcapSort:82000,segment:"EDA & Design IP",desc:"EDA software and memory IP. HBM/DDR controllers and compilers. Memory interface IP revenue growing. AI EDA market ~$4.27B in 2026.",mentions:10,sentiment:"Positive",sentimentRank:2},
+  {company:"Cadence Design Systems",ticker:"CDNS",exchange:"NASDAQ",mcap:"$80B",mcapSort:80000,segment:"EDA & Design IP",desc:"EDA tools, memory PHY/interface IP, NAND controllers, DDR/HBM PHYs. LPDDR6/5X memory IP at 14.4 Gb/s for AI infrastructure.",mentions:10,sentiment:"Positive",sentimentRank:2},
+  {company:"Rambus",ticker:"RMBS",exchange:"NASDAQ",mcap:"$10.5B",mcapSort:10500,segment:"Memory Interface IP",desc:"Memory interface chips (DDR5 RCDs, PMICs, buffers). Every DDR5 DIMM includes Rambus content. Record revenue ~$708M. DDR5 TAM $600M by 2026.",mentions:10,sentiment:"Very Positive",sentimentRank:3},
+  {company:"PDF Solutions",ticker:"PDFS",exchange:"NASDAQ",mcap:"$1.1B",mcapSort:1100,segment:"EDA & Design IP",desc:"Manufacturing analytics and yield improvement software. Exensio Analytics Platform. Enables 10% capacity squeeze in existing fabs ($140B value proposition).",mentions:5,sentiment:"Positive",sentimentRank:2},
+
+  // Memory Controllers & Infrastructure
+  {company:"Silicon Motion",ticker:"SIMO",exchange:"NASDAQ",mcap:"$3B",mcapSort:3000,segment:"Memory Controllers",desc:"NAND flash controller IC leader. SSD controllers for enterprise and client. Benefits from NAND demand and capacity expansion.",mentions:4,sentiment:"Positive",sentimentRank:2},
+  {company:"Microchip Technology",ticker:"MCHP",exchange:"NASDAQ",mcap:"$30B",mcapSort:30000,segment:"Memory Controllers",desc:"Memory interface ICs, embedded memory solutions. Serial memory products. Broad semiconductor portfolio with memory exposure.",mentions:3,sentiment:"Positive",sentimentRank:2},
+
+  // AI Infrastructure (Demand Drivers)
+  {company:"NVIDIA",ticker:"NVDA",exchange:"NASDAQ",mcap:"$2.8T",mcapSort:2800000,segment:"AI Infrastructure",desc:"GPU monopoly. B200/Blackwell consumes 192GB HBM3E per GPU. Single largest HBM consumer (40-50% of production). Supply constraints strengthen moat.",mentions:14,sentiment:"Extremely Positive",sentimentRank:4},
+  {company:"AMD",ticker:"AMD",exchange:"NASDAQ",mcap:"$329B",mcapSort:329000,segment:"AI Infrastructure",desc:"Fabless GPU/CPU designer. MI355X has 288GB HBM3E. MI400 with 432GB HBM4 approaching. Tighter HBM supply constraints than NVIDIA.",mentions:10,sentiment:"Very Positive",sentimentRank:3},
+  {company:"Broadcom",ticker:"AVGO",exchange:"NASDAQ",mcap:"$1.5T",mcapSort:1500000,segment:"AI Infrastructure",desc:"Custom ASIC architect (~60% AI ASIC market). Designs chips for Google TPU, Meta MTIA. $19.9B FY2026 AI revenue. $73B backlog.",mentions:10,sentiment:"Very Positive",sentimentRank:3},
+  {company:"Marvell Technology",ticker:"MRVL",exchange:"NASDAQ",mcap:"$78B",mcapSort:78000,segment:"AI Infrastructure",desc:"Custom ASIC/XPU designer for AWS Trainium, Microsoft Maia. SSD controllers (Bravera). CXL switching for memory pooling. 25% more compute area.",mentions:8,sentiment:"Positive",sentimentRank:2},
+  {company:"Intel",ticker:"INTC",exchange:"NASDAQ",mcap:"$100B",mcapSort:100000,segment:"AI Infrastructure",desc:"Xeon processors, Gaudi AI accelerators with HBM. Foundry Services with advanced packaging. CHIPS Act subsidies for expansion.",mentions:6,sentiment:"Positive",sentimentRank:2},
+  {company:"Qualcomm",ticker:"QCOM",exchange:"NASDAQ",mcap:"$150B",mcapSort:150000,segment:"AI Infrastructure",desc:"Snapdragon platforms for mobile/automotive. Increasing memory content with on-device AI (24GB LPDDR5X on Snapdragon 8 Gen 3).",mentions:4,sentiment:"Positive",sentimentRank:2},
+
+  // Power Management
+  {company:"Texas Instruments",ticker:"TXN",exchange:"NASDAQ",mcap:"$174B",mcapSort:174000,segment:"Power Management",desc:"Power management solutions for memory subsystems. DDR/HBM power delivery ICs. $11B Utah fab + Sherman, Texas greenfield. $1.6B CHIPS Act grants.",mentions:4,sentiment:"Positive",sentimentRank:2},
+  {company:"Analog Devices",ticker:"ADI",exchange:"NASDAQ",mcap:"$105B",mcapSort:105000,segment:"Power Management",desc:"Registered clock drivers, data buffers, and PMICs for enterprise memory (DDR5 RCDs). $1B Beaverton, Oregon fab expansion.",mentions:4,sentiment:"Positive",sentimentRank:2},
+
+  // Storage
+  {company:"Western Digital",ticker:"WDC",exchange:"NASDAQ",mcap:"$103B",mcapSort:103000,segment:"Storage",desc:"NAND flash memory and HDD manufacturer. Spun off SanDisk Feb 2025. NAND supply constraints support pricing. HDD capacity sold out 2026-2028.",mentions:10,sentiment:"Very Positive",sentimentRank:3},
+  {company:"Seagate Technology",ticker:"STX",exchange:"NASDAQ",mcap:"$89B",mcapSort:89000,segment:"Storage",desc:"HDD manufacturer for data centers and enterprises. HDD demand increases as NAND prices surge. HAMR technology (30-40TB drives) ramping.",mentions:8,sentiment:"Positive",sentimentRank:2},
+
+  // Optical/Interconnect
+  {company:"Coherent",ticker:"COHR",exchange:"NASDAQ",mcap:"$15B",mcapSort:15000,segment:"Optical Interconnect",desc:"Optical transceivers for AI data center interconnects. High-bandwidth optical links critical for memory-intensive AI workloads.",mentions:3,sentiment:"Positive",sentimentRank:2},
+  {company:"Lumentum",ticker:"LITE",exchange:"NASDAQ",mcap:"$5B",mcapSort:5000,segment:"Optical Interconnect",desc:"Optical components and lasers for data center networking. Increasing bandwidth requirements from AI/memory expansion.",mentions:3,sentiment:"Positive",sentimentRank:2},
+];
+
+const SENTIMENT_MAP = {
+  "Extremely Positive": {cls:"badge-extreme", rank:4},
+  "Very Positive":      {cls:"badge-very",    rank:3},
+  "Positive":           {cls:"badge-positive", rank:2},
+  "Cautiously Positive":{cls:"badge-cautious", rank:1},
+};
+
+// Invalid tickers - these redirect to lookup/page not found
+const INVALID_YAHOO_TICKERS = new Set(["NNYAF", "WNBDY"]);
+const INVALID_TRADINGVIEW_TICKERS = new Set(["HXSCL", "NNYAF", "WNBDY", "BESI"]);
+
+// Company names for Google Search fallbacks
+const COMPANY_NAMES = {
+  "HXSCL": "SK hynix",
+  "NNYAF": "Nanya Technology",
+  "WNBDY": "Winbond Electronics",
+  "BESI": "BE Semiconductor Besi",
+};
+
+const RESEARCH_LINKS = [
+  // Market Analysis & Pricing
+  {cat:"Market Analysis & Pricing", icon:"&#x1F4C8;", url:"https://www.trendforce.com/", label:"TrendForce", desc:"Memory market analysis, HBM demand projections, layer count forecasts", src:"response_chatGPT, response_gemini31pro, response_genspark, response_kimi, response_minimax"},
+  {cat:"Market Analysis & Pricing", icon:"&#x1F4C8;", url:"https://www.reuters.com/", label:"Reuters", desc:"SK hynix, NVIDIA HBM, wafer shortage and Samsung multi-year contracts coverage", src:"Multiple files (response_chatGPT, response_claude_sonnet46, response_grok, +5 more)"},
+  {cat:"Market Analysis & Pricing", icon:"&#x1F4C8;", url:"https://octopart.com/pulse/", label:"Octopart Pulse", desc:"Memory pricing analysis: DRAM/NAND price surge data for Q1 2026", src:"response_genspark, response_kimi, response_minimax, response_perp_sonar, +2 more"},
+  {cat:"Market Analysis & Pricing", icon:"&#x1F4C8;", url:"https://www.technetbooks.com/", label:"TechNetBooks", desc:"Memory market DRAM NAND price tripling analysis", src:"response_gemini31pro"},
+  {cat:"Market Analysis & Pricing", icon:"&#x1F4C8;", url:"https://nand-research.com/", label:"NAND Research", desc:"NAND research and supply crisis updates", src:"response_gemini31pro"},
+  {cat:"Market Analysis & Pricing", icon:"&#x1F4C8;", url:"https://www.investing.com/", label:"Investing.com", desc:"Structural shift in tech economics 2026 — semiconductor analysis", src:"response_glm5"},
+  {cat:"Market Analysis & Pricing", icon:"&#x1F4C8;", url:"https://www.thelec.net/", label:"The Elec", desc:"HBM as 'black hole' for DRAM capacity — Korean semiconductor coverage", src:"response_glm5"},
+  {cat:"Market Analysis & Pricing", icon:"&#x1F4C8;", url:"https://www.spglobal.com/", label:"S&P Global", desc:"AI memory boom analysis; legacy DRAM supply squeeze market intelligence", src:"response_grok"},
+  {cat:"Market Analysis & Pricing", icon:"&#x1F4C8;", url:"https://www.neumonda.com/", label:"Neumonda", desc:"Memory market 2026 scarcity and supply security analysis", src:"response_kimi"},
+
+  // Industry Organizations
+  {cat:"Industry & Trade Organizations", icon:"&#x1F3ED;", url:"https://www.semi.org/", label:"SEMI.org", desc:"Global semiconductor equipment sales projections ($156B by 2027)", src:"response_chatGPT"},
+  {cat:"Industry & Trade Organizations", icon:"&#x1F3ED;", url:"https://www.idc.com/", label:"IDC", desc:"Global memory shortage market analysis; smartphone/PC impact data", src:"response_genspark"},
+
+  // Company Newsrooms & IR
+  {cat:"Company Newsrooms & IR", icon:"&#x1F3E2;", url:"https://news.skhynix.com/", label:"SK hynix Newsroom", desc:"HBM market outlook, technology announcements, production updates", src:"response_claude_sonnet46"},
+  {cat:"Company Newsrooms & IR", icon:"&#x1F3E2;", url:"https://www.amkor.com/", label:"Amkor Technology", desc:"Memory packaging and test services; advanced packaging updates", src:"response_minimax"},
+  {cat:"Company Newsrooms & IR", icon:"&#x1F3E2;", url:"https://www.lamresearch.com/", label:"Lam Research", desc:"Advanced memory solutions; etch and deposition technology", src:"response_minimax"},
+  {cat:"Company Newsrooms & IR", icon:"&#x1F3E2;", url:"https://www.ibiden.com/", label:"Ibiden", desc:"IC package substrate CapEx plans (¥500B FY2026-2028)", src:"response_chatGPT"},
+
+  // Financial Analysis
+  {cat:"Financial Analysis & Data", icon:"&#x1F4B0;", url:"https://finance.yahoo.com/", label:"Yahoo Finance", desc:"Stock data, analyst commentary, earnings transcripts", src:"response_perp_sonar"},
+  {cat:"Financial Analysis & Data", icon:"&#x1F4B0;", url:"https://www.marketwatch.com/", label:"MarketWatch", desc:"Market data and semiconductor sector analysis", src:"response_perp_sonar"},
+  {cat:"Financial Analysis & Data", icon:"&#x1F4B0;", url:"https://simplywall.st/", label:"Simply Wall St", desc:"KLA financial analysis, valuation models", src:"response_minimax"},
+  {cat:"Financial Analysis & Data", icon:"&#x1F4B0;", url:"https://www.stocktitan.net/", label:"Stock Titan", desc:"Company overview data and press releases", src:"response_perp_sonar"},
+
+  // Technical & Research
+  {cat:"Technical & Research Sources", icon:"&#x1F52C;", url:"https://www.micron.com/about/blog", label:"Micron Technology Blog", desc:"HBM technology deep-dives, DRAM roadmap, memory architecture insights", src:"response_genspark"},
+  {cat:"Technical & Research Sources", icon:"&#x1F52C;", url:"https://www.appliedmaterials.com/", label:"Applied Materials", desc:"Advanced memory manufacturing technology; deposition and etch innovations", src:"response_genspark"},
+  {cat:"Technical & Research Sources", icon:"&#x1F52C;", url:"https://www.thermofisher.com/", label:"Thermo Fisher Scientific", desc:"Semiconductor materials analysis and quality control equipment", src:"response_genspark"},
+  {cat:"Technical & Research Sources", icon:"&#x1F52C;", url:"https://www.researchgate.net/", label:"ResearchGate", desc:"Academic papers on DRAM fabrication processes and HBM stacking", src:"response_genspark"},
+];
+
+const SUPPLY_CHAIN = [
+  {
+    id:"raw", cls:"seg-raw", icon:"&#x26CF;&#xFE0F;", label:"Raw Materials\n& Wafers",
+    title:"1. Raw Materials & Silicon Wafers",
+    what:`This is where everything begins. Ultra-pure silicon — refined to 99.9999999% purity (called "nine nines") — is grown into large crystal ingots using the Czochralski process, then sliced into thin 300mm (12-inch) wafers and polished to an atomic-level smoothness. These wafers are the canvas on which memory chips are built.
+
+In addition, dozens of specialty chemicals are produced: photoresists (light-sensitive coatings), etchants, CMP slurries (for chemical-mechanical polishing), and ultra-high-purity gases like nitrogen, argon, neon, and krypton — all essential for the hundreds of processing steps in a fab.`,
+    why:`Wafer supply is tight heading into 2026. The Big 3 memory makers (Samsung, SK hynix, Micron) are consuming wafers at record rates to feed HBM demand. Geopolitical risks also loom — Ukraine historically supplied ~50% of the world's semiconductor-grade neon gas. Increasing purity requirements for advanced nodes (1β, 1γ) add complexity and cost.`,
+    stats:[
+      {val:"99.9999999%",label:"Silicon purity required"},
+      {val:"300mm",label:"Standard wafer diameter"},
+      {val:"~700",label:"Process steps per DRAM chip"},
+    ],
+    companies:[
+      {name:"Entegris",ticker:"ENTG",role:"CMP slurries, filtration, specialty materials"},
+      {name:"Air Products",ticker:"APD",role:"Ultra-high-purity industrial gases"},
+      {name:"Linde",ticker:"LIN",role:"Electronic specialty gases"},
+      {name:"DuPont",ticker:"DD",role:"EUV photoresists, semiconductor materials"},
+      {name:"Photronics",ticker:"PLAB",role:"Photomasks and reticles (EUV)"},
+      {name:"AXT Inc.",ticker:"AXTI",role:"Compound substrates (InP for optical)"},
+      {name:"Avantor",ticker:"AVTR",role:"High-purity fab chemicals"},
+    ]
+  },
+  {
+    id:"equip", cls:"seg-equip", icon:"&#x2699;&#xFE0F;", label:"Equipment\nManufacturing",
+    title:"2. Equipment Manufacturing",
+    what:`Before a single chip can be made, semiconductor fabs need incredibly sophisticated machines. These include:
+
+• <strong>Lithography systems</strong> — project circuit patterns onto wafers using extreme ultraviolet (EUV) light at 13.5nm wavelength. A single EUV machine costs $200M+ and weighs 180 tons.
+• <strong>Deposition tools</strong> — lay down ultra-thin films of materials (metals, oxides, nitrides) atom by atom using CVD, PVD, or ALD processes.
+• <strong>Etch tools</strong> — carve precise patterns by removing material with plasma or chemicals. For HBM, deep trench etching creates TSVs (Through-Silicon Vias) 30-50μm deep.
+• <strong>Ion implanters</strong> — shoot ions into the silicon to change its electrical properties.
+• <strong>CMP tools</strong> — polish wafer surfaces flat between processing steps.
+• <strong>Metrology/inspection</strong> — measure and verify every layer to nanometer precision.
+
+These machines are the "picks and shovels" of the memory boom — they get sold regardless of which memory maker wins.`,
+    why:`Equipment lead times stretch 12-18 months. EUV machines from ASML are backlogged for years. New fabs announced today won't produce chips until 2028-2029. This means the equipment makers enjoy long-term visibility and pricing power. Memory capex is surging — global WFE spending is projected to hit $156B by 2027.`,
+    stats:[
+      {val:"$200M+",label:"Cost of one EUV system"},
+      {val:"12-18 mo",label:"Equipment lead times"},
+      {val:"$156B",label:"Projected WFE spend by 2027"},
+    ],
+    companies:[
+      {name:"ASML",ticker:"ASML",role:"EUV/DUV lithography monopoly"},
+      {name:"Applied Materials",ticker:"AMAT",role:"Deposition, etch, CMP tools (#1 WFE)"},
+      {name:"Lam Research",ticker:"LRCX",role:"Etch & deposition (memory specialist)"},
+      {name:"KLA Corporation",ticker:"KLAC",role:"Process control, inspection, metrology"},
+      {name:"Tokyo Electron",ticker:"TOELY",role:"Deposition, etch, cleaning"},
+      {name:"Axcelis Technologies",ticker:"ACLS",role:"Ion implantation (Purion platform)"},
+      {name:"Ultra Clean Holdings",ticker:"UCTT",role:"Gas/fluid delivery subsystems"},
+      {name:"Ichor Holdings",ticker:"ICHR",role:"Gas delivery subsystems"},
+    ]
+  },
+  {
+    id:"eda", cls:"seg-eda", icon:"&#x1F4BB;", label:"EDA &\nDesign",
+    title:"3. EDA Software & Chip Design",
+    what:`Before manufacturing begins, memory chips must be designed. This is done using EDA (Electronic Design Automation) software — the digital tools that engineers use to create circuit layouts, simulate performance, verify designs, and generate the instructions that control fab equipment.
+
+Memory design includes:
+• <strong>Memory cell architecture</strong> — designing the tiny capacitor+transistor pairs (1T1C) that store each bit of DRAM
+• <strong>Interface IP</strong> — creating the high-speed I/O circuits that let memory talk to processors (DDR5, LPDDR5X, HBM3E protocols)
+• <strong>Controller IP</strong> — the logic that manages read/write operations, error correction, and power management
+• <strong>PHY (Physical Layer) IP</strong> — the analog circuits that handle electrical signaling at multi-gigabit speeds
+
+Each new memory generation (DDR4→DDR5→DDR6, HBM3→HBM4) requires extensive design work using these tools.`,
+    why:`As memory architectures grow more complex (HBM stacking, CXL memory pooling, processing-in-memory), EDA tools and memory IP become more critical. The AI EDA market alone is projected at ~$4.27B in 2026. Companies like Rambus provide essential interface chips — every single DDR5 DIMM in the world contains Rambus content.`,
+    stats:[
+      {val:"$4.27B",label:"AI EDA market size (2026)"},
+      {val:"$600M",label:"DDR5 companion chip TAM by 2026"},
+      {val:"100%",label:"DDR5 DIMMs with Rambus content"},
+    ],
+    companies:[
+      {name:"Synopsys",ticker:"SNPS",role:"EDA software, memory IP, HBM compilers"},
+      {name:"Cadence Design",ticker:"CDNS",role:"EDA tools, DDR/HBM PHY IP"},
+      {name:"Rambus",ticker:"RMBS",role:"DDR5 RCDs, PMICs, HBM controller IP"},
+      {name:"PDF Solutions",ticker:"PDFS",role:"Yield analytics (Exensio platform)"},
+      {name:"Silicon Motion",ticker:"SIMO",role:"NAND flash controller ICs"},
+    ]
+  },
+  {
+    id:"fab", cls:"seg-fab", icon:"&#x1F3ED;", label:"Wafer\nFabrication",
+    title:"4. Wafer Fabrication (Front-End)",
+    what:`This is the heart of memory production — the fab (fabrication plant). In ultra-clean rooms (Class 1 cleanroom: fewer than 1 particle per cubic foot), silicon wafers undergo ~700 processing steps over 3-4 months to become DRAM chips.
+
+<strong>Key process steps:</strong>
+• <strong>Photolithography</strong> — patterns are projected onto the wafer using light (EUV for the most advanced nodes), then developed like a photograph
+• <strong>Etching</strong> — plasma or chemicals remove material to create circuit structures (including the deep trenches for HBM TSVs)
+• <strong>Deposition</strong> — thin films of metals and insulators are layered onto the wafer
+• <strong>Ion implantation</strong> — atoms are shot into the silicon to create transistor regions
+• <strong>CMP</strong> — wafers are polished flat between each layer
+• <strong>Inspection/metrology</strong> — every layer is checked for defects
+
+For HBM specifically, additional steps create <strong>TSVs (Through-Silicon Vias)</strong> — tiny copper-filled holes punched through the silicon that will later allow stacked dies to communicate vertically.
+
+Modern DRAM uses process nodes like 1α (first-gen 10nm-class), 1β, and 1γ — each requiring more EUV layers and tighter tolerances.`,
+    why:`This is where the 2026 shortage originates. The Big 3 manufacturers (Samsung, SK hynix, Micron) control nearly 100% of DRAM production. HBM requires 3× more wafer capacity per bit than standard DRAM — so every wafer shifted to HBM production means less conventional DDR5 supply. Fabs run at 95%+ utilization with 12-16 week cycle times. New fabs cost $15-20B and take 3-4 years to build. There is simply no quick fix for the shortage.`,
+    stats:[
+      {val:"3-4 mo",label:"Wafer fabrication cycle time"},
+      {val:"95%+",label:"Current fab utilization rate"},
+      {val:"$15-20B",label:"Cost to build a new memory fab"},
+      {val:"3×",label:"HBM wafer capacity vs standard DRAM"},
+    ],
+    companies:[
+      {name:"Micron Technology",ticker:"MU",role:"U.S. DRAM/NAND/HBM producer"},
+      {name:"SK hynix",ticker:"HXSCL",role:"#1 HBM producer (~62% share)"},
+      {name:"Samsung Electronics",ticker:"SSNLF",role:"Largest overall memory maker"},
+      {name:"Nanya Technology",ticker:"NNYAF",role:"DDR4 specialist (Taiwan)"},
+      {name:"Winbond Electronics",ticker:"WNBDY",role:"Specialty/legacy DRAM & NOR"},
+    ]
+  },
+  {
+    id:"pkg", cls:"seg-pkg", icon:"&#x1F4E6;", label:"Advanced\nPackaging",
+    title:"5. Advanced Packaging (Back-End)",
+    what:`After wafers are fabricated and diced into individual chips (dies), they need to be packaged — turned from fragile silicon rectangles into robust, connectable components.
+
+For conventional DRAM, this means attaching the die to a substrate, connecting it with tiny wires or bumps, and encapsulating it in a protective mold.
+
+<strong>For HBM, packaging is far more complex:</strong>
+• <strong>TSV reveal</strong> — the backside of each die is ground thin to expose the copper-filled vias
+• <strong>Die stacking</strong> — 4, 8, 12, or even 16 dies are stacked vertically, each connected through thousands of TSVs
+• <strong>Hybrid bonding</strong> — dies are bonded face-to-face with copper-to-copper connections at sub-micron pitch (no solder bumps needed)
+• <strong>CoWoS integration</strong> — the HBM stack is placed alongside the GPU/accelerator die on a silicon interposer using Chip-on-Wafer-on-Substrate technology
+• <strong>Substrate attachment</strong> — the complete assembly is mounted on an organic substrate (ABF substrate)
+
+This stage has become the <strong>critical bottleneck</strong> in 2026. Advanced packaging capacity is more constrained than fab capacity.`,
+    why:`HBM packaging is extremely complex and capacity-limited. TSV formation, die thinning, and hybrid bonding require specialized equipment with limited global capacity. ABF substrates are in shortage. OSAT companies like ASE and Amkor are investing billions to expand, but new lines take 18-24 months to qualify. This bottleneck constrains the entire memory supply chain.`,
+    stats:[
+      {val:"16 layers",label:"Max HBM3E die stack height"},
+      {val:"$3.2B",label:"ASE advanced packaging revenue (2026)"},
+      {val:"$7B",label:"Amkor Arizona facility investment"},
+    ],
+    companies:[
+      {name:"ASE Technology",ticker:"ASX",role:"World's largest OSAT, HBM stacking"},
+      {name:"Amkor Technology",ticker:"AMKR",role:"2.5D/3D advanced packaging"},
+      {name:"BE Semiconductor (Besi)",ticker:"BESI",role:"Hybrid bonding equipment"},
+      {name:"Kulicke & Soffa",ticker:"KLIC",role:"TCB bonding equipment"},
+      {name:"ChipMOS Technologies",ticker:"IMOS",role:"Back-end packaging/test"},
+    ]
+  },
+  {
+    id:"test", cls:"seg-test", icon:"&#x1F50D;", label:"Testing\n& Yield",
+    title:"6. Testing & Yield Management",
+    what:`Every memory chip must be rigorously tested before it can be sold. Testing happens at multiple stages:
+
+• <strong>Wafer probe testing</strong> — before dicing, probe cards touch each die on the wafer to test basic functionality. This identifies Known Good Dies (KGD) — critical for HBM stacking, since one bad die ruins the entire stack.
+• <strong>Burn-in</strong> — chips are stressed at elevated temperatures and voltages for hours to weed out early failures (infant mortality)
+• <strong>Speed binning</strong> — chips are sorted by performance (speed, power, temperature) into different grades and price points
+• <strong>Final test</strong> — packaged memory undergoes comprehensive functional testing on ATE (Automatic Test Equipment)
+• <strong>HBM-specific testing</strong> — stacked HBM modules require specialized high-parallelism testers that can verify thousands of TSV connections and all memory layers simultaneously
+
+<strong>Yield management</strong> is the science of maximizing the percentage of good chips per wafer. Metrology and inspection tools scan for defects at every process step, and analytics software identifies patterns to improve yield.`,
+    why:`HBM testing is far more intensive than conventional DRAM testing. The "test intensity" (cost of testing per chip) is roughly 2× the broader semiconductor industry average. Probe card revenue for HBM has quadrupled year-over-year. Memory test equipment revenue has more than doubled. As HBM stacks grow to 12-16 layers, test complexity and time increase proportionally.`,
+    stats:[
+      {val:"2×",label:"HBM test intensity vs industry avg"},
+      {val:"4×",label:"HBM probe revenue YoY growth"},
+      {val:"100%+",label:"Memory test revenue growth (Teradyne)"},
+    ],
+    companies:[
+      {name:"Teradyne",ticker:"TER",role:"Memory ATE (Magnum 7H for HBM)"},
+      {name:"FormFactor",ticker:"FORM",role:"DRAM/HBM probe cards"},
+      {name:"KLA Corporation",ticker:"KLAC",role:"Defect inspection & metrology"},
+      {name:"Onto Innovation",ticker:"ONTO",role:"HBM inspection systems"},
+      {name:"Cohu",ticker:"COHU",role:"Test handlers, HBM inspection"},
+      {name:"Aehr Test Systems",ticker:"AEHR",role:"Wafer-level burn-in"},
+      {name:"Advantest",ticker:"ATEYY",role:"ATE systems (V93000)"},
+      {name:"Nova Ltd.",ticker:"NVMI",role:"Optical/X-ray metrology"},
+    ]
+  },
+  {
+    id:"mod", cls:"seg-mod", icon:"&#x1F9E9;", label:"Module\nAssembly",
+    title:"7. Module Assembly & Integration",
+    what:`Tested and binned memory chips are assembled into the modules that end users actually buy and install:
+
+• <strong>DIMMs/RDIMMs</strong> — circuit boards populated with DRAM chips for servers and PCs. A server RDIMM might contain 16-32 individual DRAM packages on a small circuit board, with a register chip (from Rambus) managing signal integrity.
+• <strong>SO-DIMMs</strong> — smaller modules for laptops
+• <strong>HBM stacks</strong> — the vertically stacked and packaged HBM units that get mounted onto GPU/accelerator substrates
+• <strong>SSDs</strong> — NAND flash chips assembled with controller ICs into solid-state drives
+• <strong>Embedded memory</strong> — memory packages for smartphones (LPDDR5X), automotive (LPDDR4X), and IoT applications
+
+Module assemblers add value through:
+• Component selection and qualification
+• PCB design and manufacturing
+• Signal integrity engineering (especially important for DDR5 at 4800-8400 MT/s)
+• Configuration optimization for specific workloads`,
+    why:`Module assembly is constrained by both component supply (DRAM chips are scarce) and substrate availability. Server configurations have grown from 16GB to 64-512GB per DIMM, multiplying the number of chips needed. AI servers require 1-2TB or more of total memory. The combination of per-chip scarcity and per-system memory inflation creates acute shortages at the module level. DDR5 contract prices have surged from ~$7 to $19.50 per unit.`,
+    stats:[
+      {val:"$19.50",label:"DDR5 contract price (up from $7)"},
+      {val:"1-2 TB",label:"Memory per AI server"},
+      {val:"192 GB",label:"HBM per NVIDIA B200 GPU"},
+    ],
+    companies:[
+      {name:"Micron Technology",ticker:"MU",role:"Vertically integrated (fab → module)"},
+      {name:"SK hynix",ticker:"HXSCL",role:"HBM stacks, DDR5 modules"},
+      {name:"Samsung Electronics",ticker:"SSNLF",role:"Full vertical integration"},
+      {name:"Rambus",ticker:"RMBS",role:"DDR5 register chips in every DIMM"},
+      {name:"Western Digital",ticker:"WDC",role:"NAND SSDs and HDDs"},
+    ]
+  },
+  {
+    id:"end", cls:"seg-end", icon:"&#x1F680;", label:"End\nApplications",
+    title:"8. End Applications & Demand Drivers",
+    what:`This is where memory chips meet the real world — the applications and systems that consume the memory produced upstream:
+
+<strong>AI Data Centers (Primary Driver — ~70% of HBM demand):</strong>
+Training and running large AI models (GPT, Gemini, Claude, etc.) requires massive amounts of high-bandwidth memory. A single NVIDIA B200 GPU needs 192GB of HBM3E. A typical AI training cluster uses thousands of these GPUs. Hyperscalers (Google, Microsoft, Meta, Amazon, OpenAI) have locked multi-year purchase agreements consuming ~40% of global DRAM production.
+
+<strong>Cloud & Enterprise Servers:</strong>
+Traditional cloud computing and enterprise workloads require dense DDR5 memory configurations. AI is displacing conventional workloads, but enterprise IT still needs huge memory capacity.
+
+<strong>Consumer Electronics:</strong>
+Smartphones now need 12-24GB of LPDDR5X for on-device AI features. PCs need DDR5 for gaming, content creation, and productivity. These markets see reduced allocations and 15-20% cost increases.
+
+<strong>Automotive:</strong>
+Advanced driver assistance (ADAS), electric vehicles, and infotainment systems require automotive-grade memory (wider temperature range, higher reliability). This segment grows at 21% CAGR but faces supply constraints as AI gets allocation priority.`,
+    why:`The 2026 shortage is fundamentally demand-driven. AI infrastructure buildout has created unprecedented memory demand growth — HBM demand is growing 70% year-over-year. Hyperscalers are signing multi-year "take-or-pay" contracts worth billions, locking up 2026 and 2027 supply. This leaves conventional markets (PCs, smartphones, automotive) fighting over reduced allocations, driving prices up 200-400% for standard DRAM.`,
+    stats:[
+      {val:"70%",label:"HBM demand YoY growth"},
+      {val:"200-400%",label:"DRAM price increase (2026)"},
+      {val:"40%",label:"Global DRAM consumed by hyperscalers"},
+      {val:"2028",label:"Earliest significant supply relief"},
+    ],
+    companies:[
+      {name:"NVIDIA",ticker:"NVDA",role:"GPU monopoly, #1 HBM consumer"},
+      {name:"AMD",ticker:"AMD",role:"MI355X/MI400 GPU, #2 HBM consumer"},
+      {name:"Broadcom",ticker:"AVGO",role:"Custom AI ASICs for hyperscalers"},
+      {name:"Marvell Technology",ticker:"MRVL",role:"Custom ASICs, CXL memory pooling"},
+      {name:"Intel",ticker:"INTC",role:"Xeon CPUs, Gaudi AI accelerators"},
+      {name:"Qualcomm",ticker:"QCOM",role:"Snapdragon SoCs (mobile AI memory)"},
+    ]
+  }
+];
+
+
+/* ════════════════════════════════════════════════════════════════
+   TAB SWITCHING
+   ════════════════════════════════════════════════════════════════ */
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+  });
+});
+
+
+/* ════════════════════════════════════════════════════════════════
+   THEME TOGGLE
+   ════════════════════════════════════════════════════════════════ */
+function toggleTheme() {
+  document.body.classList.toggle('light');
+  const btn = document.querySelector('.theme-btn');
+  btn.innerHTML = document.body.classList.contains('light') ? '&#x2600;&#xFE0F; Theme' : '&#x1F319; Theme';
+}
+
+function toggleFilters() {
+  const f = document.getElementById('wlFilters');
+  const b = document.getElementById('wlHamburger');
+  f.classList.toggle('open');
+  b.classList.toggle('open');
+  b.innerHTML = f.classList.contains('open') ? '&#x2715;' : '&#x2630;';
+}
+
+
+/* ════════════════════════════════════════════════════════════════
+   TAB 1: WATCHLIST TABLE
+   ════════════════════════════════════════════════════════════════ */
+let sortCol = 'mentions';
+let sortDir = -1; // -1 = desc
+let filteredData = [...COMPANIES];
+
+function getYahooURL(ticker) {
+  return 'https://finance.yahoo.com/quote/' + encodeURIComponent(ticker) + '/';
+}
+
+function getTradingViewURL(ticker, exchange) {
+  const ex = exchange === 'OTC' ? 'OTC' : exchange;
+  return 'https://www.tradingview.com/symbols/' + encodeURIComponent(ex + '-' + ticker) + '/';
+}
+
+function populateFilters() {
+  const segments = [...new Set(COMPANIES.map(c => c.segment))].sort();
+  const sentiments = ["Extremely Positive","Very Positive","Positive","Cautiously Positive"];
+  const exchanges = [...new Set(COMPANIES.map(c => c.exchange))].sort();
+
+  const segSel = document.getElementById('filterSegment');
+  segments.forEach(s => { const o = document.createElement('option'); o.value = s; o.textContent = s; segSel.appendChild(o); });
+
+  const senSel = document.getElementById('filterSentiment');
+  sentiments.forEach(s => { const o = document.createElement('option'); o.value = s; o.textContent = s; senSel.appendChild(o); });
+
+  const exSel = document.getElementById('filterExchange');
+  exchanges.forEach(s => { const o = document.createElement('option'); o.value = s; o.textContent = s; exSel.appendChild(o); });
+}
+
+function applyFilters() {
+  const search = document.getElementById('wlSearch').value.toLowerCase().trim();
+  const segFilter = document.getElementById('filterSegment').value;
+  const senFilter = document.getElementById('filterSentiment').value;
+  const exFilter = document.getElementById('filterExchange').value;
+
+  filteredData = COMPANIES.filter(c => {
+    if (segFilter && c.segment !== segFilter) return false;
+    if (senFilter && c.sentiment !== senFilter) return false;
+    if (exFilter && c.exchange !== exFilter) return false;
+    if (search) {
+      const hay = (c.company + ' ' + c.ticker + ' ' + c.exchange + ' ' + c.segment + ' ' + c.desc + ' ' + c.sentiment + ' ' + c.mcap).toLowerCase();
+      if (!hay.includes(search)) return false;
+    }
+    return true;
+  });
+
+  sortData();
+  renderTable();
+}
+
+function sortData() {
+  filteredData.sort((a, b) => {
+    let va = a[sortCol], vb = b[sortCol];
+    if (typeof va === 'string') va = va.toLowerCase();
+    if (typeof vb === 'string') vb = vb.toLowerCase();
+    if (va < vb) return -1 * sortDir;
+    if (va > vb) return 1 * sortDir;
+    return 0;
+  });
+}
+
+const EXCHANGE_FLAGS = {
+  'NASDAQ': '\uD83C\uDDFA\uD83C\uDDF8',
+  'NYSE':   '\uD83C\uDDFA\uD83C\uDDF8',
+  'OTC':    '\uD83C\uDF10',
+  'Euronext':'\uD83C\uDDEA\uD83C\uDDFA',
+  'TWSE':   '\uD83C\uDDF9\uD83C\uDDFC',
+  'KRX':    '\uD83C\uDDF0\uD83C\uDDF7',
+  'TSE':    '\uD83C\uDDEF\uD83C\uDDF5',
+};
+function exchangeFlag(ex) { return EXCHANGE_FLAGS[ex] || ''; }
+
+function getGoogleSearchURL(companyName) {
+  return 'https://www.google.com/search?q=' + encodeURIComponent(companyName + ' stock');
+}
+
+function renderTable() {
+  const maxMentions = Math.max(...COMPANIES.map(c => c.mentions));
+  const tbody = document.getElementById('wlBody');
+  tbody.innerHTML = '';
+
+  filteredData.forEach((c, i) => {
+    const s = SENTIMENT_MAP[c.sentiment] || {cls:'badge-positive'};
+    const barW = Math.round((c.mentions / maxMentions) * 40);
+    const flag = exchangeFlag(c.exchange);
+
+    // Use Google Search for invalid Yahoo Finance tickers
+    let yfLink, yfIcon, yfTitle;
+    if (INVALID_YAHOO_TICKERS.has(c.ticker)) {
+      yfLink = getGoogleSearchURL(c.company);
+      yfIcon = '\uD83D\uDD0D';
+      yfTitle = 'Google Search: ' + esc(c.company);
+    } else {
+      yfLink = getYahooURL(c.ticker);
+      yfIcon = '\uD83D\uDCC8';
+      yfTitle = 'Yahoo Finance: ' + esc(c.ticker);
+    }
+
+    // Use Google Search for invalid TradingView tickers
+    let tvLink, tvIcon, tvTitle;
+    if (INVALID_TRADINGVIEW_TICKERS.has(c.ticker)) {
+      tvLink = getGoogleSearchURL(c.company);
+      tvIcon = '\uD83D\uDD0D';
+      tvTitle = 'Google Search: ' + esc(c.company);
+    } else {
+      tvLink = getTradingViewURL(c.ticker, c.exchange);
+      tvIcon = '\uD83D\uDCCA';
+      tvTitle = 'TradingView: ' + esc(c.ticker);
+    }
+
+    // Google Search link for ticker
+    const tickerSearchURL = getGoogleSearchURL(c.ticker + ' ' + c.company);
+
+    const tr = document.createElement('tr');
+    tr.innerHTML =
+      '<td class="col-num">' + (i+1) + '</td>' +
+      '<td class="col-company">' + esc(c.company) + '</td>' +
+      '<td class="col-ticker"><a class="ticker-link" href="' + tickerSearchURL + '" target="_blank" rel="noopener noreferrer" title="Google Search: ' + esc(c.ticker) + '">' + esc(c.ticker) + '</a></td>' +
+      '<td class="col-exchange">' + flag + ' ' + esc(c.exchange) + '</td>' +
+      '<td class="col-yf"><a class="ext-link" href="' + yfLink + '" target="_blank" rel="noopener noreferrer" title="' + yfTitle + '">' + yfIcon + '</a></td>' +
+      '<td class="col-tv"><a class="ext-link" href="' + tvLink + '" target="_blank" rel="noopener noreferrer" title="' + tvTitle + '">' + tvIcon + '</a></td>' +
+      '<td class="col-mcap">' + esc(c.mcap) + '</td>' +
+      '<td class="col-segment"><span class="seg-tag">' + esc(c.segment) + '</span></td>' +
+      '<td class="col-desc">' + esc(c.desc) + '</td>' +
+      '<td class="col-mentions"><span class="mention-bar" style="width:' + barW + 'px"></span><span class="mention-num">' + c.mentions + '</span></td>' +
+      '<td class="col-sentiment"><span class="badge ' + s.cls + '">' + esc(c.sentiment) + '</span></td>';
+    tbody.appendChild(tr);
+  });
+
+  document.getElementById('wlCount').textContent = filteredData.length + ' / ' + COMPANIES.length + ' companies';
+}
+
+function esc(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+// Sort click handlers
+document.querySelectorAll('table.wl th[data-col]').forEach(th => {
+  th.addEventListener('click', () => {
+    const col = th.dataset.col;
+    if (sortCol === col) { sortDir *= -1; }
+    else { sortCol = col; sortDir = col === 'company' || col === 'ticker' || col === 'exchange' || col === 'segment' || col === 'desc' ? 1 : -1; }
+    document.querySelectorAll('table.wl th').forEach(h => h.classList.remove('sorted'));
+    th.classList.add('sorted');
+    sortData();
+    renderTable();
+  });
+});
+
+// Filter/search handlers
+document.getElementById('wlSearch').addEventListener('input', applyFilters);
+document.getElementById('filterSegment').addEventListener('change', applyFilters);
+document.getElementById('filterSentiment').addEventListener('change', applyFilters);
+document.getElementById('filterExchange').addEventListener('change', applyFilters);
+
+// CSV export
+function exportCSV() {
+  const headers = ['Company','Ticker','Exchange','Yahoo Finance','TradingView','Market Cap','Segment','Description','Mentions','Sentiment'];
+  const rows = filteredData.map(c => [
+    c.company, c.ticker, c.exchange,
+    getYahooURL(c.ticker), getTradingViewURL(c.ticker, c.exchange),
+    c.mcap, c.segment,
+    '"' + c.desc.replace(/"/g,'""') + '"',
+    c.mentions, c.sentiment
+  ]);
+  const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+  const blob = new Blob([csv], {type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'dram_watchlist_2026.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+
+/* ════════════════════════════════════════════════════════════════
+   TAB 2: RESEARCH LINKS
+   ════════════════════════════════════════════════════════════════ */
+function renderLinks(filter) {
+  const panel = document.getElementById('linksPanel');
+  panel.innerHTML = '';
+  const fl = (filter || '').toLowerCase();
+  const cats = {};
+  RESEARCH_LINKS.forEach(l => {
+    if (fl && !(l.label + ' ' + l.desc + ' ' + l.url + ' ' + l.src + ' ' + l.cat).toLowerCase().includes(fl)) return;
+    if (!cats[l.cat]) cats[l.cat] = {icon: l.icon, items: []};
+    cats[l.cat].items.push(l);
+  });
+
+  Object.keys(cats).forEach(cat => {
+    const g = document.createElement('div');
+    g.className = 'link-group';
+    g.innerHTML = '<div class="link-group-title"><span class="icon">' + cats[cat].icon + '</span> ' + esc(cat) + '</div>';
+    cats[cat].items.forEach(l => {
+      const item = document.createElement('div');
+      item.className = 'link-item';
+      item.innerHTML =
+        '<a href="' + esc(l.url) + '" target="_blank" rel="noopener noreferrer">' + esc(l.label) + ' — ' + esc(l.url) + '</a>' +
+        '<div class="link-desc">' + esc(l.desc) + '</div>' +
+        '<div class="link-src">Sources: ' + esc(l.src) + '</div>';
+      g.appendChild(item);
+    });
+    panel.appendChild(g);
+  });
+
+  if (!panel.children.length) {
+    panel.innerHTML = '<p style="color:var(--text-dim);padding:20px;">No links match your filter.</p>';
+  }
+}
+
+document.getElementById('linksSearch').addEventListener('input', e => renderLinks(e.target.value));
+
+
+/* ════════════════════════════════════════════════════════════════
+   TAB 3: SUPPLY CHAIN
+   ════════════════════════════════════════════════════════════════ */
+function renderPipeline() {
+  const container = document.getElementById('pipeline');
+  container.innerHTML = '';
+
+  SUPPLY_CHAIN.forEach((seg, i) => {
+    if (i > 0) {
+      const arrow = document.createElement('div');
+      arrow.className = 'pipe-arrow';
+      arrow.innerHTML = '&#x25B6;';
+      container.appendChild(arrow);
+    }
+    const node = document.createElement('div');
+    node.className = 'pipe-node ' + seg.cls;
+    node.dataset.id = seg.id;
+    node.innerHTML =
+      '<div class="pipe-box">' +
+        '<div class="pipe-icon">' + seg.icon + '</div>' +
+        '<div class="pipe-label">' + seg.label.replace('\n','<br>') + '</div>' +
+      '</div>';
+    node.addEventListener('click', () => showSegmentDetail(seg, node));
+    container.appendChild(node);
+  });
+}
+
+function showSegmentDetail(seg, activeNode) {
+  // Highlight active
+  document.querySelectorAll('.pipe-node').forEach(n => n.classList.remove('active'));
+  if (activeNode) activeNode.classList.add('active');
+
+  const detail = document.getElementById('scDetail');
+  let html = '<h3>' + seg.icon + ' ' + esc(seg.title) + '</h3>';
+
+  html += '<div class="detail-section"><h4>What Happens Here</h4>';
+  html += '<p>' + seg.what + '</p></div>';
+
+  if (seg.stats && seg.stats.length) {
+    html += '<div class="detail-section"><h4>Key Numbers</h4><div class="stat-row">';
+    seg.stats.forEach(s => {
+      html += '<div class="stat-box"><div class="stat-val">' + esc(s.val) + '</div><div class="stat-label">' + esc(s.label) + '</div></div>';
+    });
+    html += '</div></div>';
+  }
+
+  html += '<div class="detail-section"><h4>Why It Matters in 2026</h4>';
+  html += '<p>' + seg.why + '</p></div>';
+
+  if (seg.companies && seg.companies.length) {
+    html += '<div class="detail-section"><h4>Key Companies</h4><ul>';
+    seg.companies.forEach(c => {
+      html += '<li><strong>' + esc(c.name) + ' (' + esc(c.ticker) + ')</strong> — ' + esc(c.role) + '</li>';
+    });
+    html += '</ul></div>';
+  }
+
+  detail.innerHTML = html;
+
+  // Scroll detail into view
+  detail.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+
+/* ════════════════════════════════════════════════════════════════
+   INITIALIZATION
+   ════════════════════════════════════════════════════════════════ */
+populateFilters();
+applyFilters();
+renderLinks('');
+renderPipeline();
+</script>
+</body>
+</html>

@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Projects Browser</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            padding: 15px;
+            color: #e4e4e7;
+            font-size: 14px;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 15px;
+            padding: 10px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: #a1a1aa;
+            font-size: 1rem;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+            align-items: center;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            background: rgba(0, 0, 0, 0.3);
+            color: #fff;
+            font-size: 14px;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .search-box input::placeholder {
+            color: #71717a;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        label {
+            font-weight: 500;
+            font-size: 14px;
+            color: #a1a1aa;
+        }
+
+        select {
+            padding: 10px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            background: rgba(0, 0, 0, 0.3);
+            color: #fff;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        select option {
+            background: #1a1a2e;
+            color: #fff;
+        }
+
+        .stats {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            background: rgba(102, 126, 234, 0.2);
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .stat-item strong {
+            color: #667eea;
+        }
+
+        .video-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+        }
+
+        .video-header {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem 1.5rem;
+            border-bottom: 2px solid #667eea;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .video-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .video-meta {
+            font-size: 0.95rem;
+            color: #a1a1aa;
+        }
+
+        .video-link {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .video-link:hover {
+            text-decoration: underline;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        thead {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        th {
+            padding: 12px 10px;
+            text-align: left;
+            font-weight: 600;
+            color: #a78bfa;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            vertical-align: top;
+        }
+
+        tbody tr {
+            transition: background 0.2s;
+        }
+
+        tbody tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Column specific styles */
+        .col-number {
+            width: 60px;
+            text-align: center;
+            font-weight: 600;
+            color: #667eea;
+            font-family: 'Courier New', monospace;
+        }
+
+        .col-name {
+            min-width: 200px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .col-timestamp {
+            width: 100px;
+            white-space: nowrap;
+            color: #a1a1aa;
+        }
+
+        .col-date {
+            width: 120px;
+            white-space: nowrap;
+            color: #a1a1aa;
+        }
+
+        .col-links {
+            width: 150px;
+            white-space: nowrap;
+        }
+
+        .col-sources {
+            width: 120px;
+        }
+
+        .col-synopsis, .col-transcript {
+            min-width: 300px;
+            max-width: 400px;
+        }
+
+        a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.3rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-right: 0.3rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .badge-readme {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+
+        .badge-transcript {
+            background: rgba(23, 162, 184, 0.2);
+            color: #17a2b8;
+        }
+
+        .github-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #667eea;
+            text-decoration: none;
+            font-size: 13px;
+            padding: 6px 10px;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 6px;
+            transition: all 0.2s;
+            margin-right: 6px;
+            margin-bottom: 4px;
+        }
+
+        .github-link:hover {
+            background: rgba(102, 126, 234, 0.2);
+            text-decoration: none;
+        }
+
+        .github-link svg {
+            flex-shrink: 0;
+            width: 14px;
+            height: 14px;
+        }
+
+        .readme-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #10b981;
+            text-decoration: none;
+            font-size: 13px;
+            padding: 6px 10px;
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .readme-link:hover {
+            background: rgba(16, 185, 129, 0.2);
+            text-decoration: none;
+        }
+
+        .readme-missing {
+            color: #71717a;
+            font-size: 13px;
+            font-style: italic;
+        }
+
+        .text-content {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-width: 400px;
+            line-height: 1.6;
+            color: #c4c4c9;
+            font-size: 13px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #71717a;
+        }
+
+        .spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid rgba(102, 126, 234, 0.3);
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 12px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            padding: 1rem;
+            border-radius: 6px;
+            margin: 1rem 0;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px 20px;
+            color: #71717a;
+        }
+
+        .no-results-icon {
+            font-size: 36px;
+            margin-bottom: 12px;
+            opacity: 0.5;
+        }
+
+        @media (max-width: 1200px) {
+            .col-synopsis, .col-transcript {
+                min-width: 200px;
+                max-width: 300px;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .table-wrapper {
+                overflow-x: auto;
+            }
+            table {
+                min-width: 900px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .search-box {
+                min-width: 100%;
+            }
+            .video-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📁 GitHub Projects Browser</h1>
+            <p class="subtitle">Browse projects from multiple videos</p>
+        </header>
+
+        <div class="controls">
+            <div class="search-box">
+                <input type="text" id="search" placeholder="Search products, descriptions, transcripts...">
+            </div>
+            <div class="control-group">
+                <label for="source-filter">Source:</label>
+                <select id="source-filter">
+                    <option value="">All Sources</option>
+                    <option value="readme">README</option>
+                    <option value="transcript">Transcript</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="has-readme">Has README:</label>
+                <select id="has-readme">
+                    <option value="">All</option>
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                </select>
+            </div>
+            <div class="stats">
+                <div class="stat-item">Videos: <strong id="total-videos">0</strong></div>
+                <div class="stat-item">Products: <strong id="total-products">0</strong></div>
+                <div class="stat-item">Showing: <strong id="filtered-products">0</strong></div>
+            </div>
+        </div>
+
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>Loading data...</p>
+        </div>
+        <div id="error" class="error" style="display: none;"></div>
+        <div id="content" style="display: none;">
+            <!-- Content will be rendered here -->
+        </div>
+        <div id="no-results" class="no-results" style="display: none;">
+            <div class="no-results-icon">🔍</div>
+            <h3>No products found</h3>
+            <p>Try adjusting your search terms</p>
+        </div>
+    </div>
+
+    <script>
+        let allData = [];
+        let filteredData = [];
+
+        const githubIcon = `<svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>`;
+
+        const fileIcon = `<svg viewBox="0 0 16 16" fill="currentColor"><path d="M3 0h10a2 2 0 012 2v12a2 2 0 01-2 2H3a2 2 0 01-2-2V2a2 2 0 012-2zm0 1a1 1 0 00-1 1v12a1 1 0 001 1h10a1 1 0 001-1V2a1 1 0 00-1-1H3zm1 3h8v1H4V4zm0 3h8v1H4V7zm0 3h5v1H4v-1z"/></svg>`;
+
+        async function loadData() {
+            try {
+                // const response = await fetch('listicle_001_updated.json');
+                const response = await fetch('listicle_003.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                
+                // Process data
+                const videos = data.videos || data;
+                document.getElementById('total-videos').textContent = videos.length;
+                
+                let productCount = 0;
+                
+                // Process videos and sort by publish date (newest first)
+                videos.forEach((video, videoIndex) => {
+                    const processedProducts = [];
+                    
+                    if (video.products) {
+                        video.products.forEach(product => {
+                            processedProducts.push({
+                                ...product,
+                                video_title: video.title,
+                                video_id: video.video_id,
+                                video_url: video.video_url,
+                                publish_date: video.publish_date,
+                                channel: video.channel_name,
+                                video_index: videoIndex
+                            });
+                            productCount++;
+                        });
+                    }
+                    
+                    allData.push({
+                        ...video,
+                        products: processedProducts
+                    });
+                });
+                
+                // Sort videos by publish date (newest first)
+                allData.sort((a, b) => {
+                    const dateA = new Date(a.publish_date || '1970-01-01');
+                    const dateB = new Date(b.publish_date || '1970-01-01');
+                    return dateB - dateA;
+                });
+                
+                document.getElementById('total-products').textContent = productCount;
+                
+                // Initial render
+                filterData();
+                
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('content').style.display = 'block';
+                
+            } catch (err) {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('error').style.display = 'block';
+                document.getElementById('error').textContent = 'Error loading data: ' + err.message;
+            }
+        }
+        
+        function filterData() {
+            const searchTerm = document.getElementById('search').value.toLowerCase();
+            const sourceFilter = document.getElementById('source-filter').value;
+            const hasReadmeFilter = document.getElementById('has-readme').value;
+            
+            // Filter products within each video
+            filteredData = allData.map(video => {
+                const filteredProducts = video.products.filter(product => {
+                    // Source filter
+                    if (sourceFilter) {
+                        const sources = product.synopsis_sources || [];
+                        if (!sources.includes(sourceFilter)) {
+                            return false;
+                        }
+                    }
+                    
+                    // README filter
+                    if (hasReadmeFilter) {
+                        const hasReadme = product.readme_file ? true : false;
+                        if (hasReadmeFilter === 'yes' && !hasReadme) {
+                            return false;
+                        }
+                        if (hasReadmeFilter === 'no' && hasReadme) {
+                            return false;
+                        }
+                    }
+                    
+                    // Search filter
+                    if (searchTerm) {
+                        const searchable = [
+                            product.name,
+                            video.title,
+                            product.synopsis,
+                            product.transcript_segment,
+                            product.transcript_text,
+                            product.url
+                        ].join(' ').toLowerCase();
+                        return searchable.includes(searchTerm);
+                    }
+                    
+                    return true;
+                });
+                
+                return {
+                    ...video,
+                    products: filteredProducts
+                };
+            }).filter(video => video.products.length > 0);
+            
+            const totalFiltered = filteredData.reduce((sum, v) => sum + v.products.length, 0);
+            document.getElementById('filtered-products').textContent = totalFiltered;
+            
+            if (totalFiltered === 0) {
+                document.getElementById('content').style.display = 'none';
+                document.getElementById('no-results').style.display = 'block';
+            } else {
+                document.getElementById('content').style.display = 'block';
+                document.getElementById('no-results').style.display = 'none';
+                renderContent();
+            }
+        }
+        
+        function renderContent() {
+            const container = document.getElementById('content');
+            container.innerHTML = '';
+            
+            filteredData.forEach(video => {
+                const videoSection = document.createElement('div');
+                videoSection.className = 'video-section';
+                
+                // Video header
+                const videoHeader = document.createElement('div');
+                videoHeader.className = 'video-header';
+                
+                const publishDate = video.publish_date ? 
+                    new Date(video.publish_date).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
+                    }) : 'Unknown Date';
+                
+                videoHeader.innerHTML = `
+                    <div>
+                        <div class="video-title">${escapeHtml(video.title)}</div>
+                        <div class="video-meta">
+                            📅 ${publishDate} | 
+                            👤 ${escapeHtml(video.channel_name || 'Unknown')} | 
+                            🎬 <a href="${video.video_url}" target="_blank" class="video-link">Watch Video</a> | 
+                            📦 ${video.products.length} products
+                        </div>
+                    </div>
+                `;
+                
+                videoSection.appendChild(videoHeader);
+                
+                // Products table
+                const tableWrapper = document.createElement('div');
+                tableWrapper.className = 'table-wrapper';
+                
+                const table = document.createElement('table');
+                table.innerHTML = `
+                    <thead>
+                        <tr>
+                            <th class="col-number">#</th>
+                            <th class="col-name">Product Name</th>
+                            <th class="col-timestamp">Timestamp</th>
+                            <th class="col-date">Publish Date</th>
+                            <th class="col-links">Links</th>
+                            <th class="col-sources">Sources</th>
+                            <th class="col-synopsis">Synopsis</th>
+                            <th class="col-transcript">Transcript Segment</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                `;
+                
+                const tbody = table.querySelector('tbody');
+                
+                video.products.forEach(product => {
+                    const row = document.createElement('tr');
+                    
+                    // GitHub URL
+                    let githubUrl = product.url || '';
+                    // Clean any remaining ?ref=manuagi
+                    githubUrl = githubUrl.replace('?ref=manuagi', '');
+                    
+                    // README link - opens in markdown viewer
+                    const readmePath = product.readme_file;
+                    
+                    // Sources badges
+                    const sources = product.synopsis_sources || [];
+                    const sourceBadges = sources.map(s => 
+                        `<span class="badge badge-${s}">${s}</span>`
+                    ).join('');
+                    
+                    // Full text content
+                    const synopsis = product.synopsis || '';
+                    const transcript = product.transcript_segment || product.transcript_text || '';
+                    const productDate = product.publish_date ? 
+                        new Date(product.publish_date).toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric'
+                        }) : (video.publish_date ? new Date(video.publish_date).toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric'
+                        }) : '-');
+                    
+                    row.innerHTML = `
+                        <td class="col-number">${product.product_number || '-'}</td>
+                        <td class="col-name">${escapeHtml(product.name)}</td>
+                        <td class="col-timestamp">${product.timestamp || '-'}</td>
+                        <td class="col-date">${productDate}</td>
+                        <td class="col-links">
+                            ${githubUrl ? `<a href="${githubUrl}" target="_blank" rel="noopener" class="github-link">${githubIcon} GitHub</a>` : ''}
+                            ${readmePath ? `<a href="main8-2.html?file=../../${readmePath}" target="_blank" class="readme-link">${fileIcon} README</a>` : '<span class="readme-missing">—</span>'}
+                        </td>
+                        <td class="col-sources">${sourceBadges}</td>
+                        <td class="col-synopsis"><div class="text-content">${escapeHtml(synopsis)}</div></td>
+                        <td class="col-transcript"><div class="text-content">${escapeHtml(transcript)}</div></td>
+                    `;
+                    
+                    tbody.appendChild(row);
+                });
+                
+                tableWrapper.appendChild(table);
+                videoSection.appendChild(tableWrapper);
+                container.appendChild(videoSection);
+            });
+        }
+        
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // Debounce function
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+        
+        // Event listeners
+        document.getElementById('search').addEventListener('input', debounce(filterData, 300));
+        document.getElementById('source-filter').addEventListener('change', filterData);
+        document.getElementById('has-readme').addEventListener('change', filterData);
+        
+        // Initialize
+        loadData();
+    </script>
+</body>
+</html>

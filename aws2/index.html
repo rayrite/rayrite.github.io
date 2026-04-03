@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS Study Resources - Catalog</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.15); }
+        .gradient-bg { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); }
+        .card-b { border-top: 4px solid #3b82f6; }
+        .card-k { border-top: 4px solid #8b5cf6; }
+        .card-z { border-top: 4px solid #14b8a6; }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+    <!-- Header -->
+    <header class="gradient-bg text-white">
+        <div class="max-w-6xl mx-auto px-6 py-12">
+            <div class="flex items-center gap-3 mb-4">
+                <i class="fas fa-book-open text-3xl text-blue-400"></i>
+                <h1 class="text-3xl font-bold">AWS Study Resources</h1>
+            </div>
+            <p class="text-slate-300 text-lg max-w-2xl">
+                A collection of interactive study guides and glossaries for AWS certification exams. 
+                Choose a resource below to start learning.
+            </p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-6 py-12">
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+            <!-- Card B - AWS Multi-Exam Glossary -->
+            <a href="b/index.html" class="block">
+                <div class="bg-white rounded-xl shadow-md card-hover card-b overflow-hidden h-full">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-layer-group text-blue-600 text-xl"></i>
+                            </div>
+                            <span class="text-xs font-medium text-slate-400">b/</span>
+                        </div>
+                        <h2 class="text-xl font-bold text-slate-800 mb-2">AWS Multi-Exam Glossary</h2>
+                        <p class="text-slate-600 text-sm mb-4">
+                            Comprehensive glossary covering multiple AWS certification exams with 
+                            detailed service definitions and comparison tables.
+                        </p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded-full font-medium">CLF-C02</span>
+                            <span class="px-2 py-1 bg-teal-50 text-teal-700 text-xs rounded-full font-medium">SAA-C03</span>
+                            <span class="px-2 py-1 bg-purple-50 text-purple-700 text-xs rounded-full font-medium">AIF-C01</span>
+                        </div>
+                    </div>
+                    <div class="px-6 py-4 bg-slate-50 border-t border-slate-100">
+                        <div class="flex items-center text-blue-600 font-medium text-sm">
+                            <span>Open Glossary</span>
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Card K - AWS Exam Study Guide Viewer -->
+            <a href="k/index.html" class="block">
+                <div class="bg-white rounded-xl shadow-md card-hover card-k overflow-hidden h-full">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-graduation-cap text-purple-600 text-xl"></i>
+                            </div>
+                            <span class="text-xs font-medium text-slate-400">k/viewer/</span>
+                        </div>
+                        <h2 class="text-xl font-bold text-slate-800 mb-2">AWS Exam Study Guide</h2>
+                        <p class="text-slate-600 text-sm mb-4">
+                            Interactive study guide viewer with card-based learning, comparison tables, 
+                            and filtering by exam, category, and difficulty level.
+                        </p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded-full font-medium">Cards View</span>
+                            <span class="px-2 py-1 bg-purple-50 text-purple-700 text-xs rounded-full font-medium">Compare</span>
+                            <span class="px-2 py-1 bg-orange-50 text-orange-700 text-xs rounded-full font-medium">Study List</span>
+                        </div>
+                    </div>
+                    <div class="px-6 py-4 bg-slate-50 border-t border-slate-100">
+                        <div class="flex items-center text-purple-600 font-medium text-sm">
+                            <span>Open Study Guide</span>
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Card Z - AWS Glossary Viewer -->
+            <a href="z/index.html" class="block">
+                <div class="bg-white rounded-xl shadow-md card-hover card-z overflow-hidden h-full">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 bg-teal-100 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-search text-teal-600 text-xl"></i>
+                            </div>
+                            <span class="text-xs font-medium text-slate-400">z/</span>
+                        </div>
+                        <h2 class="text-xl font-bold text-slate-800 mb-2">AWS Glossary Viewer</h2>
+                        <p class="text-slate-600 text-sm mb-4">
+                            Feature-rich glossary viewer with advanced search, filtering capabilities, 
+                            and detailed service information for exam preparation.
+                        </p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-2 py-1 bg-slate-100 text-slate-700 text-xs rounded-full font-medium">Search</span>
+                            <span class="px-2 py-1 bg-teal-50 text-teal-700 text-xs rounded-full font-medium">Filter</span>
+                            <span class="px-2 py-1 bg-indigo-50 text-indigo-700 text-xs rounded-full font-medium">Details</span>
+                        </div>
+                    </div>
+                    <div class="px-6 py-4 bg-slate-50 border-t border-slate-100">
+                        <div class="flex items-center text-teal-600 font-medium text-sm">
+                            <span>Open Viewer</span>
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+        </div>
+
+        <!-- Info Section -->
+        <div class="mt-12 bg-white rounded-xl shadow-sm p-8">
+            <div class="flex items-start gap-4">
+                <div class="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <i class="fas fa-lightbulb text-amber-600"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-slate-800 mb-2">Study Tips</h3>
+                    <ul class="text-slate-600 space-y-2">
+                        <li class="flex items-start gap-2">
+                            <i class="fas fa-check-circle text-green-500 mt-1 text-sm"></i>
+                            <span>Each resource covers different aspects of AWS services and exam topics</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fas fa-check-circle text-green-500 mt-1 text-sm"></i>
+                            <span>Use the comparison tables to understand differences between similar services</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fas fa-check-circle text-green-500 mt-1 text-sm"></i>
+                            <span>Filter by exam type (CLF-C02, SAA-C03, AIF-C01) to focus on relevant content</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-200 mt-12">
+        <div class="max-w-6xl mx-auto px-6 py-6">
+            <p class="text-center text-slate-500 text-sm">
+                AWS Study Resources Catalog &copy; 2026
+            </p>
+        </div>
+    </footer>
+</body>
+</html>

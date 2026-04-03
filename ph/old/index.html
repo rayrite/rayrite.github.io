@@ -1,0 +1,2382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Product Hunt - Compact Mobile Viewer</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --accent-color: #6366f1;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --text-muted: #9ca3af;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-tertiary: #f1f5f9;
+            --border-color: #e5e7eb;
+            --border-light: #f3f4f6;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 2px 4px -1px rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.05);
+            --radius-sm: 0.25rem;
+            --radius-md: 0.375rem;
+            --radius-lg: 0.5rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            color: var(--text-primary);
+            line-height: 1.4;
+            min-height: 100vh;
+            font-size: 14px;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 0.5rem;
+            overflow-x: hidden;
+        }
+
+        /* Top Row Layout */
+        .top-row {
+            display: grid;
+            grid-template-columns: 2fr 3fr 2fr 2fr;
+            gap: 0.5rem;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            min-height: 40px;
+        }
+
+        /* Header */
+        .header {
+            text-align: left;
+        }
+
+        .title {
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.125rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            line-height: 1.1;
+        }
+
+        .title i {
+            background: var(--secondary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 0.8em;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 0.6rem;
+            font-weight: 400;
+            line-height: 1.1;
+        }
+
+        /* File Selection */
+        .file-selection {
+            background: var(--bg-primary);
+            border-radius: var(--radius-sm);
+            padding: 0.25rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-light);
+        }
+
+        .file-controls {
+            display: flex;
+            gap: 0.125rem;
+            align-items: center;
+            margin-bottom: 0.25rem;
+        }
+
+        .file-select {
+            flex: 1;
+            padding: 0.25rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            font-size: 0.7rem;
+            background: var(--bg-secondary);
+            min-height: 28px;
+        }
+
+        .refresh-btn, .add-file-btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.25rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.7rem;
+            cursor: pointer;
+            min-width: 28px;
+            min-height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .refresh-btn:hover, .add-file-btn:hover {
+            background: #4f46e5;
+        }
+
+        .file-count {
+            font-size: 0.6rem;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        /* Error Container in Top Row */
+        .error-container-top {
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Stats in Top Row */
+        .stats-top {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.25rem;
+        }
+
+        .stat-item-top {
+            background: var(--bg-primary);
+            padding: 0.25rem;
+            border-radius: var(--radius-sm);
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-light);
+        }
+
+        .stat-number-top {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 700;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.0625rem;
+            line-height: 1.1;
+        }
+
+        .stat-label-top {
+            color: var(--text-secondary);
+            font-size: 0.5rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            line-height: 1.1;
+        }
+
+        /* Controls - Compact Single Row */
+        .controls {
+            background: var(--bg-primary);
+            border-radius: var(--radius-sm);
+            padding: 0.375rem;
+            margin-bottom: 0.5rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-light);
+        }
+
+        .controls-row {
+            display: grid;
+            grid-template-columns: 2fr 1.5fr 1.5fr auto;
+            gap: 0.375rem;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .search-container {
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.375rem 0.375rem 0.375rem 1.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            font-size: 0.7rem;
+            background: var(--bg-secondary);
+            transition: all 0.2s ease;
+            min-height: 28px;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
+            background: var(--bg-primary);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.375rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 0.7rem;
+        }
+
+        .clear-btn {
+            position: absolute;
+            right: 0.125rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0.125rem;
+            border-radius: var(--radius-sm);
+            min-width: 20px;
+            min-height: 20px;
+            display: none;
+            font-size: 0.7rem;
+        }
+
+        .clear-btn:hover {
+            color: var(--error-color);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .tag-select, .multi-tag-input {
+            width: 100%;
+            padding: 0.375rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            font-size: 0.7rem;
+            background: var(--bg-secondary);
+            min-height: 28px;
+        }
+
+        .tag-select:focus, .multi-tag-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
+            background: var(--bg-primary);
+        }
+
+        .clear-all-btn-inline {
+            background: var(--error-color);
+            color: white;
+            border: none;
+            padding: 0.375rem 0.5rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.65rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.25rem;
+            min-height: 28px;
+            white-space: nowrap;
+        }
+
+        .clear-all-btn-inline:hover {
+            background: #dc2626;
+        }
+
+        /* Simple Sort Section - Compact */
+        .sort-section {
+            margin-bottom: 0.5rem;
+        }
+
+        .sort-info {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            text-align: center;
+            padding: 0.25rem;
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-light);
+        }
+
+        /* Preset Section */
+        .preset-section {
+            background: var(--bg-primary);
+            border-radius: var(--radius-sm);
+            padding: 0.375rem;
+            margin-bottom: 0.5rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-light);
+        }
+
+        .preset-label {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.375rem;
+        }
+
+        .preset-row {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .preset-dropdown-container {
+            flex: 0 0 25%;
+            min-width: 120px;
+        }
+
+        .preset-dropdown {
+            width: 100%;
+            padding: 0.375rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            font-size: 0.7rem;
+            background: var(--bg-secondary);
+            min-height: 28px;
+        }
+
+        .preset-dropdown:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
+            background: var(--bg-primary);
+        }
+
+        .preset-cards-container {
+            flex: 1;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .preset-cards {
+            display: flex;
+            gap: 0.25rem;
+            padding: 0.125rem 0;
+            min-width: min-content;
+        }
+
+        .preset-card {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            padding: 0.375rem 0.5rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.65rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            flex-shrink: 0;
+            min-height: 28px;
+            display: flex;
+            align-items: center;
+        }
+
+        .preset-card:hover {
+            opacity: 0.8;
+            transform: translateY(-1px);
+        }
+
+        .preset-card.active {
+            background: var(--success-color) !important;
+            box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.3);
+        }
+
+        .preset-card:nth-child(even) {
+            background: var(--secondary-gradient);
+        }
+
+        .preset-card:nth-child(even).active {
+            background: var(--success-color) !important;
+        }
+
+        /* Preset cards scrollbar styling */
+        .preset-cards-container::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .preset-cards-container::-webkit-scrollbar-track {
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-sm);
+        }
+
+        .preset-cards-container::-webkit-scrollbar-thumb {
+            background: var(--accent-color);
+            border-radius: var(--radius-sm);
+        }
+
+        .preset-cards-container::-webkit-scrollbar-thumb:hover {
+            background: #4f46e5;
+        }
+
+        /* Active Filters - Compact */
+        .active-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.125rem;
+            margin-top: 0.375rem;
+        }
+
+        .active-filter {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--accent-color);
+            padding: 0.125rem 0.25rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.65rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.125rem;
+        }
+
+        .remove-filter {
+            background: none;
+            border: none;
+            color: var(--accent-color);
+            cursor: pointer;
+            padding: 0.0625rem;
+            border-radius: var(--radius-sm);
+            min-width: 14px;
+            min-height: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+        }
+
+        .remove-filter:hover {
+            background: rgba(99, 102, 241, 0.2);
+        }
+
+        /* Compact Table */
+        .table-container {
+            background: var(--bg-primary);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .products-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.75rem;
+        }
+
+        .products-table th {
+            background: var(--bg-tertiary);
+            padding: 0.375rem 0.25rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.7rem;
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--border-color);
+            white-space: nowrap;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        .sortable {
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s ease;
+        }
+
+        .sortable:hover {
+            background: var(--bg-secondary);
+        }
+
+        .sort-icon {
+            margin-left: 0.25rem;
+            color: var(--text-muted);
+            font-size: 0.6rem;
+        }
+
+        .products-table td {
+            padding: 0.375rem 0.25rem;
+            border-bottom: 1px solid var(--border-light);
+            vertical-align: top;
+            font-size: 0.75rem;
+        }
+
+        .products-table tr:hover {
+            background: var(--bg-secondary);
+        }
+
+        /* Table Columns */
+        .col-name {
+            min-width: 120px;
+            max-width: 150px;
+        }
+
+        .col-description {
+            min-width: 150px;
+            max-width: 200px;
+        }
+
+        .col-upvotes, .col-comments {
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .col-tags {
+            min-width: 100px;
+            max-width: 120px;
+        }
+
+        .col-actions {
+            min-width: 50px;
+            text-align: center;
+        }
+
+        .product-name {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+            display: block;
+            line-height: 1.3;
+        }
+
+        .product-name:hover {
+            color: #4f46e5;
+            text-decoration: underline;
+        }
+
+        .product-description {
+            color: var(--text-secondary);
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            word-break: break-word;
+        }
+
+        .metric-value {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.25rem;
+            font-weight: 500;
+        }
+
+        .metric-value.upvotes {
+            color: var(--success-color);
+        }
+
+        .metric-value.comments {
+            color: var(--accent-color);
+        }
+
+        .metric-value i {
+            font-size: 0.7rem;
+        }
+
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.125rem;
+        }
+
+        .tag {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--accent-color);
+            padding: 0.125rem 0.25rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.65rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            line-height: 1.2;
+        }
+
+        .tag:hover {
+            background: rgba(99, 102, 241, 0.2);
+        }
+
+        /* Promoted tag special styling */
+        .tag.promoted-tag {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: #78350f;
+            font-weight: 600;
+            border: 1px solid #f59e0b;
+            animation: pulse-promoted 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-promoted {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .tag.promoted-tag:hover {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            box-shadow: 0 0 8px rgba(245, 158, 11, 0.5);
+        }
+
+        /* Promoted product row styling */
+        tr.promoted-row {
+            background: linear-gradient(90deg, rgba(251, 191, 36, 0.05) 0%, rgba(251, 191, 36, 0.02) 100%);
+            border-left: 3px solid #fbbf24;
+        }
+
+        tr.promoted-row:hover {
+            background: linear-gradient(90deg, rgba(251, 191, 36, 0.08) 0%, rgba(251, 191, 36, 0.04) 100%);
+        }
+
+        .visit-btn {
+            background: var(--accent-color);
+            color: white;
+            text-decoration: none;
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.65rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            white-space: nowrap;
+        }
+
+        .visit-btn:hover {
+            background: #4f46e5;
+        }
+
+        .visit-btn i {
+            font-size: 0.6rem;
+        }
+
+        /* Loading and No Results */
+        .loading {
+            text-align: center;
+            padding: 2rem 0.5rem;
+        }
+
+        .loading-spinner {
+            width: 30px;
+            height: 30px;
+            border: 3px solid var(--border-color);
+            border-top: 3px solid var(--accent-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 0.5rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 2rem 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .no-results i {
+            font-size: 2rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .no-results h3 {
+            margin-bottom: 0.25rem;
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+
+        /* Error styling for top row */
+        .error-message-top {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--error-color);
+            padding: 0.25rem;
+            border-radius: var(--radius-sm);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            text-align: center;
+            font-size: 0.65rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.25rem;
+            min-height: 40px;
+        }
+
+        .success-message-top {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success-color);
+            padding: 0.25rem;
+            border-radius: var(--radius-sm);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            text-align: center;
+            font-size: 0.65rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.25rem;
+            min-height: 40px;
+        }
+
+        /* Modals */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 0.5rem;
+        }
+
+        .modal {
+            background: var(--bg-primary);
+            border-radius: var(--radius-md);
+            padding: 1rem;
+            max-width: 90%;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .modal h3 {
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+
+        .modal input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            font-size: 0.8rem;
+            margin-bottom: 0.25rem;
+            min-height: 32px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 0.5rem;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            min-height: 32px;
+            transition: all 0.2s ease;
+        }
+
+        .modal-btn.primary {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .modal-btn.primary:hover {
+            background: #4f46e5;
+        }
+
+        .modal-btn.secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .modal-btn.secondary:hover {
+            background: var(--bg-tertiary);
+        }
+
+        /* Accessibility */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .top-row {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto auto auto auto;
+                gap: 0.25rem;
+                text-align: center;
+            }
+
+            .header {
+                text-align: center;
+                order: 1;
+            }
+
+            .file-selection {
+                order: 2;
+            }
+
+            .error-container-top {
+                order: 3;
+            }
+
+            .stats-top {
+                order: 4;
+                grid-template-columns: 1fr 1fr;
+                justify-self: center;
+                max-width: 200px;
+            }
+
+            .controls-row {
+                grid-template-columns: 1fr;
+                gap: 0.25rem;
+            }
+
+            .clear-all-btn-inline span {
+                display: none;
+            }
+
+            .clear-all-btn-inline {
+                padding: 0.375rem;
+                min-width: 60px;
+            }
+
+            .preset-row {
+                flex-direction: column;
+                gap: 0.25rem;
+            }
+
+            .preset-dropdown-container {
+                flex: none;
+                width: 100%;
+            }
+
+            .preset-cards-container {
+                width: 100%;
+            }
+        }
+
+        @media (min-width: 480px) and (max-width: 768px) {
+            .top-row {
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: auto auto;
+            }
+
+            .header {
+                order: 1;
+                text-align: left;
+            }
+
+            .file-selection {
+                order: 2;
+            }
+
+            .error-container-top {
+                order: 3;
+                grid-column: 1 / -1;
+            }
+
+            .stats-top {
+                order: 4;
+                grid-column: 1 / -1;
+                justify-self: center;
+                max-width: 300px;
+            }
+
+            .controls-row {
+                grid-template-columns: 2fr 1fr 1fr auto;
+            }
+
+            .clear-all-btn-inline span {
+                display: inline;
+            }
+
+            .preset-row {
+                flex-direction: row;
+                gap: 0.375rem;
+            }
+
+            .preset-dropdown-container {
+                flex: 0 0 30%;
+                min-width: 120px;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .container {
+                max-width: 1200px;
+                padding: 0.75rem;
+            }
+
+            .title {
+                font-size: 1.25rem;
+            }
+
+            .subtitle {
+                font-size: 0.75rem;
+            }
+
+            .top-row {
+                grid-template-columns: 2fr 3fr 2fr 2fr;
+            }
+
+            .controls-row {
+                grid-template-columns: 3fr 2fr 2fr auto;
+            }
+
+            .sort-info {
+                font-size: 0.75rem;
+                padding: 0.5rem;
+            }
+
+            .preset-section {
+                padding: 0.5rem;
+            }
+
+            .preset-label {
+                font-size: 0.8rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .preset-row {
+                flex-direction: row;
+                gap: 0.75rem;
+            }
+
+            .preset-dropdown-container {
+                flex: 0 0 20%;
+                min-width: 150px;
+            }
+
+            .preset-dropdown {
+                font-size: 0.8rem;
+                padding: 0.5rem;
+                min-height: 32px;
+            }
+
+            .preset-card {
+                font-size: 0.75rem;
+                padding: 0.5rem 0.75rem;
+                min-height: 32px;
+            }
+
+            .products-table {
+                font-size: 0.875rem;
+            }
+
+            .products-table th {
+                padding: 0.75rem 0.5rem;
+                font-size: 0.8rem;
+            }
+
+            .products-table td {
+                padding: 0.75rem 0.5rem;
+                font-size: 0.875rem;
+            }
+
+            .col-name {
+                min-width: 150px;
+                max-width: 200px;
+            }
+
+            .col-description {
+                min-width: 200px;
+                max-width: 300px;
+            }
+
+            .col-tags {
+                min-width: 120px;
+                max-width: 150px;
+            }
+        }
+
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-primary: #f9fafb;
+                --text-secondary: #d1d5db;
+                --text-muted: #9ca3af;
+                --bg-primary: #1f2937;
+                --bg-secondary: #374151;
+                --bg-tertiary: #4b5563;
+                --border-color: #4b5563;
+                --border-light: #374151;
+            }
+
+            body {
+                background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+            }
+        }
+
+        /* Reduce motion for accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+
+            .loading-spinner {
+                animation: none;
+                border-top-color: var(--accent-color);
+            }
+        }
+
+        /* Scroll indicators for mobile table */
+        .table-container {
+            position: relative;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(99, 102, 241, 0.9);
+            color: white;
+            padding: 0.25rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.7rem;
+            z-index: 2;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .scroll-indicator.left {
+            left: 0;
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+        }
+
+        .scroll-indicator.right {
+            right: 0;
+            border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+        }
+
+        .table-container.scrolled .scroll-indicator.left {
+            opacity: 0.7;
+        }
+
+        .table-container.has-more .scroll-indicator.right {
+            opacity: 0.7;
+        }
+
+        /* Very compact mode for small screens */
+        @media (max-width: 480px) {
+            .container {
+                padding: 0.125rem;
+            }
+
+            .top-row {
+                gap: 0.125rem;
+                margin-bottom: 0.25rem;
+            }
+
+            .title {
+                font-size: 0.9rem;
+            }
+
+            .subtitle {
+                font-size: 0.55rem;
+            }
+
+            .file-select {
+                font-size: 0.65rem;
+                padding: 0.125rem;
+                min-height: 24px;
+            }
+
+            .refresh-btn, .add-file-btn {
+                min-width: 24px;
+                min-height: 24px;
+                padding: 0.125rem;
+            }
+
+            .file-count {
+                font-size: 0.55rem;
+            }
+
+            .stat-number-top {
+                font-size: 0.8rem;
+            }
+
+            .stat-label-top {
+                font-size: 0.45rem;
+            }
+
+            .controls {
+                padding: 0.25rem;
+                margin-bottom: 0.25rem;
+            }
+
+            .controls-row {
+                gap: 0.125rem;
+            }
+
+            .search-input, .tag-select, .multi-tag-input {
+                font-size: 0.65rem;
+                padding: 0.25rem;
+                min-height: 24px;
+            }
+
+            .search-input {
+                padding-left: 1.25rem;
+            }
+
+            .search-icon {
+                font-size: 0.65rem;
+                left: 0.25rem;
+            }
+
+            .clear-btn {
+                font-size: 0.65rem;
+                min-width: 18px;
+                min-height: 18px;
+            }
+
+            .clear-all-btn-inline {
+                font-size: 0.6rem;
+                padding: 0.25rem;
+                min-height: 24px;
+                min-width: 50px;
+            }
+
+            .sort-info {
+                font-size: 0.6rem;
+                padding: 0.125rem;
+            }
+
+            .preset-section {
+                padding: 0.25rem;
+                margin-bottom: 0.25rem;
+            }
+
+            .preset-label {
+                font-size: 0.65rem;
+                margin-bottom: 0.25rem;
+            }
+
+            .preset-row {
+                flex-direction: column;
+                gap: 0.25rem;
+            }
+
+            .preset-dropdown-container {
+                flex: none;
+                width: 100%;
+            }
+
+            .preset-dropdown {
+                font-size: 0.65rem;
+                padding: 0.25rem;
+                min-height: 24px;
+            }
+
+            .preset-cards-container {
+                width: 100%;
+            }
+
+            .preset-card {
+                font-size: 0.6rem;
+                padding: 0.25rem 0.375rem;
+                min-height: 24px;
+            }
+
+            .products-table th,
+            .products-table td {
+                padding: 0.125rem 0.0625rem;
+                font-size: 0.65rem;
+            }
+
+            .tag {
+                font-size: 0.55rem;
+                padding: 0.0625rem 0.125rem;
+            }
+
+            .visit-btn {
+                font-size: 0.55rem;
+                padding: 0.125rem 0.25rem;
+            }
+
+            .metric-value i {
+                font-size: 0.55rem;
+            }
+
+            .sort-icon {
+                font-size: 0.45rem;
+            }
+
+            .active-filter {
+                font-size: 0.6rem;
+                padding: 0.0625rem 0.125rem;
+            }
+
+            .remove-filter {
+                font-size: 0.55rem;
+                min-width: 12px;
+                min-height: 12px;
+            }
+
+            .error-message-top, .success-message-top {
+                font-size: 0.6rem;
+                padding: 0.125rem;
+                min-height: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Top Row: Header, File Selection, Error Container, Stats -->
+        <div class="top-row">
+            <!-- Header -->
+            <header class="header">
+                <h1 class="title">
+                    <i class="fas fa-rocket"></i>
+                    <span>Product Hunt</span>
+                </h1>
+                <p class="subtitle">Compact viewer</p>
+            </header>
+
+            <!-- File Selection -->
+            <div class="file-selection">
+                <div class="file-controls">
+                    <select id="fileSelect" class="file-select" title="Select a JSON file to load">
+                        <option value="">Scanning for files...</option>
+                        <option value="products.json">products.json (default)</option>
+                    </select>
+                    <button id="refreshFiles" class="refresh-btn" title="Refresh file list" aria-label="Refresh file list">
+                        <i class="fas fa-sync-alt" aria-hidden="true"></i>
+                    </button>
+                    <button id="addCustomFile" class="add-file-btn" title="Add custom filename" aria-label="Add custom filename">
+                        <i class="fas fa-plus" aria-hidden="true"></i>
+                    </button>
+                    <button id="helpBtn" class="refresh-btn" style="background: var(--text-muted);" title="Show help" aria-label="Show help">
+                        <i class="fas fa-question" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <div class="file-count" id="fileCount"></div>
+            </div>
+
+            <!-- Error Container -->
+            <div class="error-container-top" id="errorContainer" role="alert" aria-live="polite"></div>
+
+            <!-- Stats -->
+            <div class="stats-top" role="region" aria-label="Statistics">
+                <div class="stat-item-top">
+                    <span class="stat-number-top" id="totalProducts" aria-label="Total products">0</span>
+                    <span class="stat-label-top">Total</span>
+                </div>
+                <div class="stat-item-top">
+                    <span class="stat-number-top" id="filteredProducts" aria-label="Filtered products">0</span>
+                    <span class="stat-label-top">Showing</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <!-- Single Row: Search, Tag Filter, Multi-tag Search, Clear All Button -->
+            <div class="controls-row">
+                <!-- Search -->
+                <div class="search-container">
+                    <i class="fas fa-search search-icon" aria-hidden="true"></i>
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        placeholder="Search products..."
+                        class="search-input"
+                        aria-label="Search products"
+                    >
+                    <button id="clearSearch" class="clear-btn" title="Clear search" aria-label="Clear search" style="display: none;">
+                        <i class="fas fa-times" aria-hidden="true"></i>
+                    </button>
+                </div>
+
+                <!-- Tag Filter -->
+                <select id="tagFilter" class="tag-select" aria-label="Filter by tag">
+                    <option value="">All Tags</option>
+                </select>
+                
+                <!-- Multi-tag Search -->
+                <input 
+                    type="text" 
+                    id="multiTagSearch" 
+                    placeholder="AI, SaaS..."
+                    class="multi-tag-input"
+                    aria-label="Search multiple tags"
+                >
+
+                <!-- Clear All Button -->
+                <button id="clearAllFilters" class="clear-all-btn-inline" aria-label="Clear all filters">
+                    <i class="fas fa-broom" aria-hidden="true"></i>
+                    <span>Clear</span>
+                </button>
+            </div>
+
+            <!-- Preset Section -->
+            <div class="preset-section">
+                <div class="preset-row">
+                    <div class="preset-dropdown-container">
+                        <select id="presetDropdown" class="preset-dropdown" aria-label="Select preset">
+                            <option value="">NONE</option>
+                        </select>
+                    </div>
+                    <div class="preset-cards-container">
+                        <div class="preset-cards" id="presetCards">
+                            <!-- Preset cards will be generated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Active Filters -->
+            <div class="active-filters" id="activeFilters" role="region" aria-label="Active filters"></div>
+        </div>
+
+        <!-- Table Container -->
+        <main id="main-content">
+            <!-- Loading State -->
+            <div class="loading" id="loading" role="status" aria-live="polite">
+                <div class="loading-spinner" aria-hidden="true"></div>
+                <p>Loading products...</p>
+            </div>
+
+            <!-- No Results State -->
+            <div class="no-results" id="noResults" style="display: none;" role="status" aria-live="polite">
+                <i class="fas fa-search" aria-hidden="true"></i>
+                <h3>No products found</h3>
+                <p>Try adjusting your search or filter criteria</p>
+            </div>
+
+            <!-- Products Table -->
+            <div class="table-container" id="tableContainer" style="display: none;">
+                <div class="scroll-indicator left">
+                    <i class="fas fa-chevron-left"></i>
+                </div>
+                <div class="scroll-indicator right">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div class="table-wrapper" id="tableWrapper">
+                    <table class="products-table" id="productsTable" role="table" aria-label="Products data">
+                        <thead>
+                            <tr role="row">
+                                <th class="sortable col-name" data-sort="name" role="columnheader" aria-sort="none" tabindex="0" aria-label="Product Name, sortable">
+                                    Name
+                                    <i class="fas fa-sort sort-icon" aria-hidden="true"></i>
+                                </th>
+                                <th class="col-description" role="columnheader">Description</th>
+                                <th class="sortable col-upvotes" data-sort="upvotes" role="columnheader" aria-sort="none" tabindex="0" aria-label="Upvotes, sortable">
+                                    <i class="fas fa-arrow-up" aria-hidden="true"></i>
+                                    <i class="fas fa-sort sort-icon" aria-hidden="true"></i>
+                                </th>
+                                <th class="sortable col-comments" data-sort="comments" role="columnheader" aria-sort="none" tabindex="0" aria-label="Comments, sortable">
+                                    <i class="fas fa-comment" aria-hidden="true"></i>
+                                    <i class="fas fa-sort sort-icon" aria-hidden="true"></i>
+                                </th>
+                                <th class="col-tags" role="columnheader">Tags</th>
+                                <th class="col-actions" role="columnheader">Visit</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productsTableBody" role="rowgroup">
+                            <!-- Products will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+
+        <!-- Add Custom File Modal -->
+        <div class="modal-overlay" id="addFileModal" style="display: none;">
+            <div class="modal">
+                <h3>Add Custom JSON File</h3>
+                <input type="text" id="customFileName" placeholder="Enter filename (e.g., mydata.json)" />
+                <p style="font-size: 0.7rem; color: var(--text-secondary); margin: 0.25rem 0;">
+                    Enter just the filename. It will be loaded from the json/ folder.
+                </p>
+                <div class="modal-buttons">
+                    <button class="modal-btn secondary" onclick="closeAddFileModal()">Cancel</button>
+                    <button class="modal-btn primary" onclick="addCustomFile()">Add File</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Help Modal -->
+        <div class="modal-overlay" id="helpModal" style="display: none;">
+            <div class="modal" style="max-width: 500px;">
+                <h3>How File Detection Works</h3>
+                <div style="font-size: 0.75rem; line-height: 1.4; color: var(--text-primary);">
+                    <p><strong>📁 Local Testing:</strong></p>
+                    <ol style="margin: 0.25rem 0 0.5rem 1rem;">
+                        <li>Create a <code>json/</code> folder next to this HTML file</li>
+                        <li>Put your .json files in that folder</li>
+                        <li>Run <code>python -m http.server 8000</code></li>
+                        <li>The app will automatically detect files</li>
+                    </ol>
+                    
+                    <p><strong>🚀 GitHub Pages:</strong></p>
+                    <ul style="margin: 0.25rem 0 0.5rem 1rem;">
+                        <li>Create <code>json/index.json</code> to list your files</li>
+                        <li>Files will appear in the dropdown</li>
+                    </ul>
+                </div>
+                <div class="modal-buttons">
+                    <button class="modal-btn primary" onclick="closeHelpModal()">Got it!</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let allProducts = [];
+        let filteredProducts = [];
+        let allTags = [];
+        let availableFiles = [];
+        let activeFilters = {
+            search: '',
+            singleTag: '',
+            multiTags: []
+        };
+        let currentFileName = 'products.json (default)';
+        let currentSort = { field: 'upvotes', direction: 'desc' };
+
+        // PRESET MANAGEMENT
+        // To add a new preset: Add an object to the presets array below
+        // To remove a preset: Remove the object from the presets array
+        // To update a preset: Modify the existing object in the presets array
+        // Each preset should have: { id, name, searchTerm }
+        // Note: Cards appear in the order defined below, dropdown is sorted alphabetically
+        const presets = [
+            { id: 'ai', name: 'AI', searchTerm: 'Artificial Intelligence' },
+            { id: 'design', name: 'Design Tools', searchTerm: 'Design Tools' },
+            { id: 'developer', name: 'Developer Tools', searchTerm: 'Developer Tools' },
+            { id: 'no-code', name: 'No-Code', searchTerm: 'No-Code' },
+            { id: 'web', name: 'WebBuild', searchTerm: 'Website Builder' },
+            { id: 'icons', name: 'Icons', searchTerm: 'Icons' },
+            { id: 'health', name: 'Health', searchTerm: 'Health' },
+            { id: 'news', name: 'News', searchTerm: 'News' },
+            { id: 'newsl', name: 'Newsletters', searchTerm: 'Newsletters' },
+            { id: 'notes', name: 'Notes', searchTerm: 'Notes' },
+            { id: 'socm', name: 'Social Media', searchTerm: 'Social Media' },
+            { id: 'soci', name: 'Social Impact', searchTerm: 'Social Impact' },
+            { id: 'socn', name: 'Social Network', searchTerm: 'Social Network' },
+            { id: 'github', name: 'GitHub', searchTerm: 'GitHub' },
+            { id: 'chrome', name: 'Chrome Extensions', searchTerm: 'Chrome Extensions' },
+            { id: 'softe', name: 'Software Engineering', searchTerm: 'Software Engineering' },
+            { id: 'opensrc', name: 'Open Source', searchTerm: 'Open Source' },
+            { id: 'webd', name: 'Web Design', searchTerm: 'Web Design' },
+            { id: 'edu', name: 'Education', searchTerm: 'Education' },
+            { id: '3dm', name: '3D Modeling', searchTerm: '3D Modeling' },
+            { id: 'video', name: 'Video', searchTerm: 'Video' },
+            { id: 'api', name: 'API', searchTerm: 'API' },
+            { id: 'games', name: 'Games', searchTerm: 'Games' },
+            { id: 'tech', name: 'Tech', searchTerm: 'Tech' },
+            { id: 'prod', name: 'Productivity', searchTerm: 'Productivity' },
+            { id: 'date', name: 'Dating', searchTerm: 'Dating' },
+            { id: 'ux', name: 'User Experience', searchTerm: 'User Experience' }
+        ];
+
+        // DOM elements
+        const searchInput = document.getElementById('searchInput');
+        const clearSearchBtn = document.getElementById('clearSearch');
+        const tagFilter = document.getElementById('tagFilter');
+        const multiTagSearch = document.getElementById('multiTagSearch');
+        const clearAllFiltersBtn = document.getElementById('clearAllFilters');
+        const activeFiltersContainer = document.getElementById('activeFilters');
+        const productsTableBody = document.getElementById('productsTableBody');
+        const totalProductsSpan = document.getElementById('totalProducts');
+        const filteredProductsSpan = document.getElementById('filteredProducts');
+        const loading = document.getElementById('loading');
+        const noResults = document.getElementById('noResults');
+        const tableContainer = document.getElementById('tableContainer');
+        const tableWrapper = document.getElementById('tableWrapper');
+        const fileSelect = document.getElementById('fileSelect');
+        const refreshFilesBtn = document.getElementById('refreshFiles');
+        const addCustomFileBtn = document.getElementById('addCustomFile');
+        const helpBtn = document.getElementById('helpBtn');
+        const fileCountDiv = document.getElementById('fileCount');
+        const addFileModal = document.getElementById('addFileModal');
+        const helpModal = document.getElementById('helpModal');
+        const customFileNameInput = document.getElementById('customFileName');
+        const presetDropdown = document.getElementById('presetDropdown');
+        const presetCardsContainer = document.getElementById('presetCards');
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAvailableFiles();
+            loadProducts();
+            setupEventListeners();
+            setupTableScrollIndicators();
+            initializePresets();
+        });
+
+        // Initialize presets
+        function initializePresets() {
+            populatePresetDropdown();
+            createPresetCards();
+        }
+
+        // Populate preset dropdown
+        function populatePresetDropdown() {
+            presetDropdown.innerHTML = '<option value="">NONE</option>';
+            
+            // Sort presets alphabetically for dropdown only
+            const sortedPresets = [...presets].sort((a, b) => a.name.localeCompare(b.name));
+            
+            sortedPresets.forEach(preset => {
+                const option = document.createElement('option');
+                option.value = preset.id;
+                option.textContent = preset.name;
+                presetDropdown.appendChild(option);
+            });
+        }
+
+        // Create preset cards
+        function createPresetCards() {
+            presetCardsContainer.innerHTML = '';
+            presets.forEach(preset => {
+                const card = document.createElement('button');
+                card.className = 'preset-card';
+                card.dataset.presetId = preset.id;
+                card.textContent = preset.name;
+                card.onclick = () => applyPreset(preset.id);
+                presetCardsContainer.appendChild(card);
+            });
+        }
+
+        // Apply a preset
+        // Apply a preset by filtering on its tag instead of setting the search box
+        function applyPreset(presetId) {
+            if (!presetId) {
+                clearAllFilters();
+                return;
+            }
+        
+            const preset = presets.find(p => p.id === presetId);
+            if (!preset) return;
+        
+            // Clear any existing text‐search or multi‐tag filters
+            searchInput.value = '';
+            clearSearchBtn.style.display = 'none';
+            multiTagSearch.value = '';
+            
+            // Select the preset's tag in the tag‐filter dropdown
+            tagFilter.value = preset.searchTerm;
+        
+            // Reflect the selection in the dropdown and card UI
+            presetDropdown.value = presetId;
+            document.querySelectorAll('.preset-card').forEach(card => {
+                card.classList.toggle('active', card.dataset.presetId === presetId);
+            });
+        
+            // Finally, re‐apply all filters (including the new tagFilter value)
+            applyFilters();
+        }
+
+
+        // Handle preset dropdown change
+        function handlePresetDropdown() {
+            const selectedPresetId = presetDropdown.value;
+            applyPreset(selectedPresetId);
+        }
+
+        // Simple sorting functions
+        function applySorting() {
+            if (!currentSort.field) return;
+            
+            filteredProducts.sort((a, b) => {
+                let aValue = a[currentSort.field];
+                let bValue = b[currentSort.field];
+                
+                if (typeof aValue === 'string') {
+                    aValue = aValue.toLowerCase();
+                    bValue = bValue.toLowerCase();
+                }
+                
+                let comparison = 0;
+                
+                if (typeof aValue === 'number') {
+                    comparison = currentSort.direction === 'asc' ? aValue - bValue : bValue - aValue;
+                } else {
+                    if (currentSort.direction === 'asc') {
+                        comparison = aValue < bValue ? -1 : aValue > bValue ? 1 : 0;
+                    } else {
+                        comparison = aValue > bValue ? -1 : aValue < bValue ? 1 : 0;
+                    }
+                }
+                
+                return comparison;
+            });
+        }
+
+        // Setup table scroll indicators
+        function setupTableScrollIndicators() {
+            tableWrapper.addEventListener('scroll', updateScrollIndicators);
+            window.addEventListener('resize', updateScrollIndicators);
+        }
+
+        // Update scroll indicators
+        function updateScrollIndicators() {
+            const scrollLeft = tableWrapper.scrollLeft;
+            const maxScroll = tableWrapper.scrollWidth - tableWrapper.clientWidth;
+            
+            if (scrollLeft > 10) {
+                tableContainer.classList.add('scrolled');
+            } else {
+                tableContainer.classList.remove('scrolled');
+            }
+            
+            if (scrollLeft < maxScroll - 10) {
+                tableContainer.classList.add('has-more');
+            } else {
+                tableContainer.classList.remove('has-more');
+            }
+        }
+
+        // Load available files (simplified for mobile)
+        async function loadAvailableFiles() {
+            availableFiles = [];
+            
+            const foundViaListing = await tryDirectoryListing();
+            
+            if (!foundViaListing) {
+                await tryIndexJson();
+                await scanForJsonFiles();
+            }
+            
+            populateFileSelect();
+        }
+
+        async function tryDirectoryListing() {
+            try {
+                const response = await fetch('json/');
+                if (response.ok) {
+                    const html = await response.text();
+                    const jsonFiles = parseDirectoryListing(html);
+                    
+                    if (jsonFiles.length > 0) {
+                        jsonFiles.forEach(filename => {
+                            availableFiles.push({
+                                filename: filename,
+                                name: filename.replace('.json', '').replace(/[-_]/g, ' '),
+                                source: 'listing'
+                            });
+                        });
+                        return true;
+                    }
+                }
+            } catch (error) {
+                console.log('Directory listing not available');
+            }
+            return false;
+        }
+
+        async function tryIndexJson() {
+            try {
+                const response = await fetch('json/index.json');
+                if (response.ok) {
+                    const fileIndex = await response.json();
+                    const indexedFiles = fileIndex.files || [];
+                    
+                    for (const file of indexedFiles) {
+                        const testResponse = await fetch(`json/${file.filename}`, { method: 'HEAD' });
+                        if (testResponse.ok) {
+                            availableFiles.push({
+                                filename: file.filename,
+                                name: file.name || file.filename,
+                                source: 'index'
+                            });
+                        }
+                    }
+                }
+            } catch (error) {
+                console.log('No index.json found');
+            }
+        }
+
+        async function scanForJsonFiles() {
+            const commonPatterns = [
+                'data', 'products', 'items', 'list', 'export',
+                '2024', '2025', 'latest', 'current'
+            ];
+            
+            for (const pattern of commonPatterns) {
+                const filename = `${pattern}.json`;
+                if (await testFileExists(filename)) {
+                    availableFiles.push({
+                        filename: filename,
+                        name: pattern.charAt(0).toUpperCase() + pattern.slice(1),
+                        source: 'scan'
+                    });
+                }
+            }
+        }
+
+        function parseDirectoryListing(html) {
+            const jsonFiles = [];
+            const matches = html.match(/<a href="([^"]+\.json)"/gi);
+            if (matches) {
+                matches.forEach(match => {
+                    const filename = match.match(/href="([^"]+)"/i)[1];
+                    if (filename.endsWith('.json') && !filename.includes('/')) {
+                        jsonFiles.push(filename);
+                    }
+                });
+            }
+            return jsonFiles;
+        }
+
+        async function testFileExists(filename) {
+            try {
+                const response = await fetch(`json/${filename}`, { method: 'HEAD' });
+                return response.ok;
+            } catch (error) {
+                return false;
+            }
+        }
+
+        function populateFileSelect() {
+            fileSelect.innerHTML = `
+                <option value="">Select JSON file...</option>
+                <option value="products.json">products.json (default)</option>
+            `;
+            
+            availableFiles.forEach(file => {
+                const option = document.createElement('option');
+                option.value = `json/${file.filename}`;
+                option.textContent = file.name;
+                fileSelect.appendChild(option);
+            });
+            
+            updateFileCount();
+        }
+
+        function updateFileCount() {
+            const total = availableFiles.length;
+            fileCountDiv.textContent = total > 0 ? `${total} file${total !== 1 ? 's' : ''} found` : 'No files found';
+        }
+
+        async function loadProducts() {
+            try {
+                showLoading();
+                const response = await fetch('products.json');
+                if (!response.ok) {
+                    throw new Error('Failed to load products data');
+                }
+                
+                allProducts = await response.json();
+                filteredProducts = [...allProducts];
+                
+                // Initialize default sort
+                currentSort = { field: 'upvotes', direction: 'desc' };
+                updateSortIcons('upvotes', 'desc');
+                
+                populateTagFilter();
+                updateStats();
+                renderTable();
+                hideLoading();
+                
+            } catch (error) {
+                console.error('Error loading products:', error);
+                showError('Failed to load default products data.');
+                hideLoading();
+            }
+        }
+
+        async function handleFileSelection() {
+            const selectedFile = fileSelect.value;
+            if (!selectedFile) return;
+            
+            try {
+                showLoading();
+                hideError();
+                
+                const response = await fetch(selectedFile);
+                if (!response.ok) {
+                    throw new Error(`Failed to load ${selectedFile}`);
+                }
+                
+                const jsonData = await response.json();
+                
+                if (validateProductData(jsonData)) {
+                    allProducts = jsonData;
+                    filteredProducts = [...allProducts];
+                    currentFileName = selectedFile.split('/').pop();
+                    
+                    // Initialize default sort
+                    currentSort = { field: 'upvotes', direction: 'desc' };
+                    updateSortIcons('upvotes', 'desc');
+                    
+                    populateTagFilter();
+                    updateStats();
+                    renderTable();
+                    hideLoading();
+                    
+                } else {
+                    throw new Error('Invalid JSON format');
+                }
+                
+            } catch (error) {
+                console.error('Error loading selected file:', error);
+                showError(`Failed to load ${selectedFile}: ${error.message}`);
+                hideLoading();
+                fileSelect.value = '';
+            }
+        }
+
+        function validateProductData(data) {
+            if (!Array.isArray(data) || data.length === 0) return true;
+            
+            const sampleSize = Math.min(5, data.length);
+            for (let i = 0; i < sampleSize; i++) {
+                const item = data[i];
+                const requiredProps = ['name', 'description', 'upvotes', 'comments', 'tags', 'url'];
+                
+                for (let prop of requiredProps) {
+                    if (!(prop in item)) return false;
+                }
+                
+                if (typeof item.name !== 'string' ||
+                    typeof item.description !== 'string' ||
+                    typeof item.upvotes !== 'number' ||
+                    typeof item.comments !== 'number' ||
+                    !Array.isArray(item.tags) ||
+                    typeof item.url !== 'string') {
+                    return false;
+                }
+                
+                // Optional: promoted field (boolean, defaults to false if missing)
+                if ('promoted' in item && typeof item.promoted !== 'boolean') {
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+
+        function setupEventListeners() {
+            searchInput.addEventListener('input', debounce(handleSearch, 300));
+            clearSearchBtn.addEventListener('click', clearSearch);
+            multiTagSearch.addEventListener('input', debounce(handleMultiTagSearch, 300));
+            tagFilter.addEventListener('change', handleTagFilter);
+            fileSelect.addEventListener('change', handleFileSelection);
+            refreshFilesBtn.addEventListener('click', refreshFileList);
+            addCustomFileBtn.addEventListener('click', openAddFileModal);
+            helpBtn.addEventListener('click', openHelpModal);
+            clearAllFiltersBtn.addEventListener('click', clearAllFilters);
+            presetDropdown.addEventListener('change', handlePresetDropdown);
+            
+            // Table header sorting
+            document.querySelectorAll('.sortable').forEach(header => {
+                header.addEventListener('click', () => {
+                    const sortField = header.dataset.sort;
+                    handleTableSort(sortField);
+                });
+                
+                header.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        const sortField = header.dataset.sort;
+                        handleTableSort(sortField);
+                    }
+                });
+            });
+            
+            document.addEventListener('keydown', handleKeyboardShortcuts);
+        }
+
+        function handleTableSort(field) {
+            if (currentSort.field === field) {
+                // Toggle direction if same field
+                currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+            } else {
+                // New field, default to desc
+                currentSort.field = field;
+                currentSort.direction = 'desc';
+            }
+            
+            applyFilters();
+            updateSortIcons(field, currentSort.direction);
+        }
+
+        function updateSortIcons(activeField, direction) {
+            document.querySelectorAll('.sortable .sort-icon').forEach(icon => {
+                icon.className = 'fas fa-sort sort-icon';
+            });
+            
+            document.querySelectorAll('.sortable').forEach(header => {
+                header.setAttribute('aria-sort', 'none');
+            });
+            
+            const activeHeader = document.querySelector(`[data-sort="${activeField}"]`);
+            if (activeHeader) {
+                const icon = activeHeader.querySelector('.sort-icon');
+                if (icon) {
+                    icon.className = `fas fa-sort-${direction === 'asc' ? 'up' : 'down'} sort-icon`;
+                }
+                activeHeader.setAttribute('aria-sort', direction === 'asc' ? 'ascending' : 'descending');
+            }
+        }
+
+        function handleSearch() {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            clearSearchBtn.style.display = searchTerm === '' ? 'none' : 'block';
+            applyFilters();
+        }
+
+        function clearSearch() {
+            searchInput.value = '';
+            clearSearchBtn.style.display = 'none';
+            applyFilters();
+        }
+
+        function handleMultiTagSearch() {
+            applyFilters();
+        }
+
+        function handleTagFilter() {
+            applyFilters();
+        }
+
+        function applyFilters() {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            const selectedTag = tagFilter.value;
+            const multiTagsInput = multiTagSearch.value.toLowerCase().trim();
+            
+            const multiTags = multiTagsInput ? 
+                multiTagsInput.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0) : [];
+            
+            activeFilters.search = searchTerm;
+            activeFilters.singleTag = selectedTag;
+            activeFilters.multiTags = multiTags;
+            
+            filteredProducts = allProducts.filter(product => {
+                const matchesSearch = searchTerm === '' || 
+                    product.name.toLowerCase().includes(searchTerm) ||
+                    product.description.toLowerCase().includes(searchTerm);
+                
+                const matchesSingleTag = selectedTag === '' || 
+                    product.tags.some(tag => tag.toLowerCase() === selectedTag.toLowerCase());
+                
+                const matchesMultiTags = multiTags.length === 0 || 
+                    multiTags.every(searchTag => 
+                        product.tags.some(productTag => 
+                            productTag.toLowerCase().includes(searchTag)
+                        )
+                    );
+                
+                return matchesSearch && matchesSingleTag && matchesMultiTags;
+            });
+            
+            applySorting();
+            updateStats();
+            renderTable();
+            updateActiveFiltersDisplay();
+        }
+
+        function clearAllFilters() {
+            searchInput.value = '';
+            multiTagSearch.value = '';
+            tagFilter.value = '';
+            clearSearchBtn.style.display = 'none';
+            
+            // Reset preset selection
+            presetDropdown.value = '';
+            document.querySelectorAll('.preset-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            
+            activeFilters = {
+                search: '',
+                singleTag: '',
+                multiTags: []
+            };
+            
+            applyFilters();
+        }
+
+        function updateStats() {
+            totalProductsSpan.textContent = allProducts.length.toLocaleString();
+            filteredProductsSpan.textContent = filteredProducts.length.toLocaleString();
+        }
+
+        function renderTable() {
+            if (filteredProducts.length === 0) {
+                showNoResults();
+                return;
+            }
+            
+            hideNoResults();
+            showTable();
+            
+            productsTableBody.innerHTML = '';
+            
+            filteredProducts.forEach((product, index) => {
+                const row = createProductRow(product, index);
+                productsTableBody.appendChild(row);
+            });
+            
+            // Update scroll indicators after rendering
+            setTimeout(updateScrollIndicators, 100);
+        }
+
+        function createProductRow(product, index) {
+            const row = document.createElement('tr');
+            row.setAttribute('role', 'row');
+            
+            // Add promoted class if product is promoted
+            if (product.promoted) {
+                row.classList.add('promoted-row');
+            }
+            
+            row.innerHTML = `
+                <td role="cell" class="col-name">
+                    <a href="${product.url}" target="_blank" rel="noopener noreferrer" class="product-name" title="${escapeHtml(product.name)}">
+                        ${escapeHtml(product.name)}
+                    </a>
+                </td>
+                <td role="cell" class="col-description">
+                    <div class="product-description" title="${escapeHtml(product.description)}">
+                        ${escapeHtml(product.description) || 'No description'}
+                    </div>
+                </td>
+                <td role="cell" class="col-upvotes">
+                    <div class="metric-value upvotes">
+                        <i class="fas fa-arrow-up" aria-hidden="true"></i>
+                        <span>${product.upvotes.toLocaleString()}</span>
+                    </div>
+                </td>
+                <td role="cell" class="col-comments">
+                    <div class="metric-value comments">
+                        <i class="fas fa-comment" aria-hidden="true"></i>
+                        <span>${product.comments.toLocaleString()}</span>
+                    </div>
+                </td>
+                <td role="cell" class="col-tags">
+                    <div class="tags-container">
+                        ${product.tags.slice(0, 3).map(tag => {
+                            const isPromotedTag = tag.includes('🎯') || tag.toLowerCase().includes('promoted');
+                            const tagClass = isPromotedTag ? 'tag promoted-tag' : 'tag';
+                            return `<button type="button" class="${tagClass}" onclick="filterByTag('${escapeHtml(tag)}')" title="Filter by ${escapeHtml(tag)}">${escapeHtml(tag)}</button>`;
+                        }).join('')}
+                        ${product.tags.length > 3 ? `<span class="tag" style="background: var(--bg-tertiary); color: var(--text-muted); cursor: default;">+${product.tags.length - 3}</span>` : ''}
+                    </div>
+                </td>
+                <td role="cell" class="col-actions">
+                    <a href="${product.url}" target="_blank" rel="noopener noreferrer" class="visit-btn" title="Visit ${escapeHtml(product.name)}">
+                        <i class="fas fa-external-link-alt" aria-hidden="true"></i>
+                    </a>
+                </td>
+            `;
+            
+            return row;
+        }
+
+        function filterByTag(tag) {
+            tagFilter.value = tag;
+            applyFilters();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function populateTagFilter() {
+            const allTagsSet = new Set();
+            
+            allProducts.forEach(product => {
+                product.tags.forEach(tag => {
+                    if (tag.trim()) {
+                        allTagsSet.add(tag.trim());
+                    }
+                });
+            });
+            
+            allTags = Array.from(allTagsSet).sort();
+            
+            tagFilter.innerHTML = '<option value="">All Tags</option>';
+            
+            allTags.forEach(tag => {
+                const option = document.createElement('option');
+                option.value = tag;
+                option.textContent = tag;
+                tagFilter.appendChild(option);
+            });
+        }
+
+        function updateActiveFiltersDisplay() {
+            activeFiltersContainer.innerHTML = '';
+            
+            if (activeFilters.search) {
+                activeFiltersContainer.appendChild(createActiveFilterTag('Search', activeFilters.search, 'search'));
+            }
+            
+            if (activeFilters.singleTag) {
+                activeFiltersContainer.appendChild(createActiveFilterTag('Tag', activeFilters.singleTag, 'singleTag'));
+            }
+            
+            activeFilters.multiTags.forEach((tag, index) => {
+                activeFiltersContainer.appendChild(createActiveFilterTag('Multi-Tag', tag, 'multiTag', index));
+            });
+        }
+
+        function createActiveFilterTag(type, value, filterType, index = null) {
+            const tag = document.createElement('div');
+            tag.className = 'active-filter';
+            tag.innerHTML = `
+                <span>${type}: ${escapeHtml(value)}</span>
+                <button class="remove-filter" onclick="removeActiveFilter('${filterType}', ${index})" title="Remove filter">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            return tag;
+        }
+
+        function removeActiveFilter(filterType, index = null) {
+            switch (filterType) {
+                case 'search':
+                    clearSearch();
+                    break;
+                case 'singleTag':
+                    tagFilter.value = '';
+                    handleTagFilter();
+                    break;
+                case 'multiTag':
+                    const currentTags = multiTagSearch.value.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0);
+                    currentTags.splice(index, 1);
+                    multiTagSearch.value = currentTags.join(', ');
+                    if (currentTags.length > 0) {
+                        multiTagSearch.value += ', ';
+                    }
+                    handleMultiTagSearch();
+                    break;
+            }
+        }
+
+        // File management functions
+        async function refreshFileList() {
+            refreshFilesBtn.disabled = true;
+            refreshFilesBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            
+            try {
+                await loadAvailableFiles();
+                showSuccessMessage(`Found ${availableFiles.length} files`);
+            } catch (error) {
+                showError('Failed to refresh file list');
+            } finally {
+                refreshFilesBtn.disabled = false;
+                refreshFilesBtn.innerHTML = '<i class="fas fa-sync-alt"></i>';
+            }
+        }
+
+        function openAddFileModal() {
+            addFileModal.style.display = 'flex';
+            customFileNameInput.value = '';
+            customFileNameInput.focus();
+        }
+
+        function closeAddFileModal() {
+            addFileModal.style.display = 'none';
+        }
+
+        function openHelpModal() {
+            helpModal.style.display = 'flex';
+        }
+
+        function closeHelpModal() {
+            helpModal.style.display = 'none';
+        }
+
+        async function addCustomFile() {
+            const filename = customFileNameInput.value.trim();
+            if (!filename) return;
+            
+            const jsonFilename = filename.endsWith('.json') ? filename : filename + '.json';
+            
+            const exists = availableFiles.some(f => f.filename === jsonFilename);
+            if (exists) {
+                showError('File already in list');
+                return;
+            }
+            
+            const fileExists = await testFileExists(jsonFilename);
+            if (!fileExists) {
+                showError(`File json/${jsonFilename} not found`);
+                return;
+            }
+            
+            availableFiles.push({
+                filename: jsonFilename,
+                name: jsonFilename.replace('.json', ''),
+                source: 'custom'
+            });
+            
+            populateFileSelect();
+            closeAddFileModal();
+            showSuccessMessage(`Added ${jsonFilename}`);
+            
+            fileSelect.value = `json/${jsonFilename}`;
+            handleFileSelection();
+        }
+
+        function handleKeyboardShortcuts(event) {
+            if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA' || event.target.tagName === 'SELECT') {
+                if (event.key === 'Escape' && event.target === searchInput) {
+                    clearSearch();
+                    searchInput.blur();
+                }
+                return;
+            }
+            
+            if ((event.ctrlKey || event.metaKey) && event.key === 'k') {
+                event.preventDefault();
+                searchInput.focus();
+                searchInput.select();
+            }
+            
+            if (event.key === '/' && !event.ctrlKey && !event.metaKey && !event.altKey) {
+                event.preventDefault();
+                searchInput.focus();
+                searchInput.select();
+            }
+        }
+
+        // UI state management
+        function showLoading() {
+            loading.style.display = 'block';
+            tableContainer.style.display = 'none';
+            noResults.style.display = 'none';
+        }
+
+        function hideLoading() {
+            loading.style.display = 'none';
+        }
+
+        function showNoResults() {
+            noResults.style.display = 'block';
+            tableContainer.style.display = 'none';
+        }
+
+        function hideNoResults() {
+            noResults.style.display = 'none';
+        }
+
+        function showTable() {
+            tableContainer.style.display = 'block';
+        }
+
+        function showError(message) {
+            hideLoading();
+            const errorContainer = document.getElementById('errorContainer');
+            errorContainer.innerHTML = `
+                <div class="error-message-top">
+                    <i class="fas fa-exclamation-triangle" aria-hidden="true"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+        }
+
+        function hideError() {
+            document.getElementById('errorContainer').innerHTML = '';
+        }
+
+        function showSuccessMessage(message) {
+            const errorContainer = document.getElementById('errorContainer');
+            errorContainer.innerHTML = `
+                <div class="success-message-top">
+                    <i class="fas fa-check" aria-hidden="true"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            setTimeout(() => {
+                hideError();
+            }, 3000);
+        }
+
+        // Utility functions
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+        }
+
+        // Modal event handlers
+        document.addEventListener('keydown', function(e) {
+            if (addFileModal.style.display === 'flex') {
+                if (e.key === 'Enter') {
+                    addCustomFile();
+                } else if (e.key === 'Escape') {
+                    closeAddFileModal();
+                }
+            } else if (helpModal.style.display === 'flex') {
+                if (e.key === 'Escape') {
+                    closeHelpModal();
+                }
+            }
+        });
+
+        document.addEventListener('click', function(e) {
+            if (e.target === addFileModal) {
+                closeAddFileModal();
+            } else if (e.target === helpModal) {
+                closeHelpModal();
+            }
+        });
+    </script>
+</body>
+</html>

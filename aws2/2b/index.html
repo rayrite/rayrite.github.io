@@ -1,0 +1,1691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS SAA-C03 Solutions Architect Study Guide</title>
+    <style>
+        :root {
+            --aws-orange: #FF9900;
+            --aws-dark: #232F3E;
+            --aws-light: #F2F2F2;
+            --aws-blue: #146EB4;
+            --text-dark: #232F3E;
+            --text-light: #666;
+            --border-color: #ddd;
+            --shadow: 0 2px 8px rgba(0,0,0,0.1);
+            --sidebar-width: 320px;
+            --header-height: 60px;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: #f5f7fa;
+        }
+        
+        /* Progress Bar */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--aws-orange), #ffbb33);
+            z-index: 1001;
+            width: 0%;
+            transition: width 0.1s;
+        }
+        
+        /* Header */
+        .header {
+            background: var(--aws-dark);
+            color: white;
+            padding: 0 1.5rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--header-height);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow);
+        }
+        
+        .header h1 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .header-icon {
+            font-size: 1.5rem;
+        }
+        
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .header-btn {
+            background: var(--aws-orange);
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+        
+        .header-btn:hover {
+            background: #e68a00;
+        }
+        
+        /* Container */
+        .container {
+            display: flex;
+            margin-top: var(--header-height);
+            min-height: calc(100vh - var(--header-height));
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: white;
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            top: var(--header-height);
+            bottom: 0;
+            left: 0;
+            overflow-y: auto;
+            padding: 1.25rem;
+            transition: transform 0.3s ease;
+            z-index: 900;
+        }
+        
+        .sidebar.collapsed {
+            transform: translateX(-100%);
+        }
+        
+        /* Search */
+        .search-container {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        .search-box {
+            width: 100%;
+            padding: 0.75rem 2.5rem 0.75rem 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: border-color 0.2s;
+        }
+        
+        .search-box:focus {
+            outline: none;
+            border-color: var(--aws-orange);
+        }
+        
+        .search-icon {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+        
+        /* Sidebar Sections */
+        .sidebar h3 {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--text-light);
+            margin: 1.5rem 0 0.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--aws-orange);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 0.6rem 0.75rem;
+            text-decoration: none;
+            color: var(--text-dark);
+            border-radius: 6px;
+            transition: all 0.2s;
+            font-size: 0.85rem;
+            margin: 0.15rem 0;
+            line-height: 1.4;
+        }
+        
+        .nav-item:hover, .nav-item.active {
+            background: linear-gradient(135deg, #fff5e6 0%, #ffe4cc 100%);
+            color: var(--aws-blue);
+        }
+        
+        .nav-item .ch-num {
+            background: var(--aws-orange);
+            color: white;
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 0.7rem;
+            margin-right: 0.6rem;
+            min-width: 28px;
+            text-align: center;
+        }
+        
+        /* Domain Badges */
+        .domain-badges {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .domain-badge {
+            background: linear-gradient(135deg, var(--aws-dark) 0%, #3a4a5c 100%);
+            color: white;
+            padding: 0.75rem;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 0.75rem;
+        }
+        
+        .domain-badge .weight {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--aws-orange);
+            display: block;
+        }
+        
+        /* Keyword Tags */
+        .keyword-section {
+            margin-top: 1.5rem;
+        }
+        
+        .keyword-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+        }
+        
+        .keyword-tag {
+            display: inline-block;
+            padding: 0.3rem 0.6rem;
+            background: #f0f4f8;
+            border-radius: 4px;
+            cursor: pointer;
+            color: var(--text-dark);
+            text-decoration: none;
+            font-size: 0.75rem;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+        
+        .keyword-tag:hover {
+            background: var(--aws-orange);
+            color: white;
+            border-color: var(--aws-orange);
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+            max-width: calc(100% - var(--sidebar-width));
+            transition: margin-left 0.3s ease;
+        }
+        
+        .main-content.expanded {
+            margin-left: 0;
+            max-width: 100%;
+        }
+        
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, var(--aws-dark) 0%, #3a4a5c 100%);
+            color: white;
+            padding: 2.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+        }
+        
+        .hero-section h2 {
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .hero-section p {
+            opacity: 0.9;
+            margin-bottom: 1.5rem;
+        }
+        
+        .exam-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .exam-info-item {
+            background: rgba(255,255,255,0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .exam-info-item .value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--aws-orange);
+        }
+        
+        .exam-info-item .label {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+        
+        /* Chapter Cards */
+        .chapter-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--aws-orange);
+        }
+        
+        .chapter-header {
+            border-bottom: 2px solid var(--aws-light);
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .chapter-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--aws-orange) 0%, #ffbb33 100%);
+            color: white;
+            padding: 0.35rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .chapter-title {
+            font-size: 1.5rem;
+            color: var(--aws-dark);
+            margin-top: 0.5rem;
+            line-height: 1.3;
+        }
+        
+        .chapter-meta {
+            color: var(--text-light);
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+        }
+        
+        /* Tables */
+        .table-section {
+            margin: 1.5rem 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+        
+        .table-section h4 {
+            background: linear-gradient(135deg, var(--aws-dark) 0%, #3a4a5c 100%);
+            color: white;
+            padding: 1rem 1.25rem;
+            margin: 0;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .table-container { 
+            overflow-x: auto; 
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+        
+        th {
+            background: #f8f9fa;
+            color: var(--aws-dark);
+            padding: 0.875rem 1rem;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid var(--aws-orange);
+        }
+        
+        td {
+            padding: 0.875rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: top;
+        }
+        
+        tr:nth-child(even) { background: #fafbfc; }
+        tr:hover { background: #f0f4f8; }
+        
+        /* Collapsible Sections */
+        .collapsible {
+            background: linear-gradient(135deg, #f8f9fa 0%, #f0f4f8 100%);
+            cursor: pointer;
+            padding: 1rem 1.25rem;
+            width: 100%;
+            border: none;
+            text-align: left;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            margin: 0.75rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s;
+            color: var(--aws-dark);
+        }
+        
+        .collapsible:hover {
+            background: linear-gradient(135deg, #e8ecef 0%, #e0e6eb 100%);
+        }
+        
+        .collapsible::after {
+            content: '+';
+            font-size: 1.5rem;
+            color: var(--aws-orange);
+            font-weight: 400;
+        }
+        
+        .collapsible.active::after { content: '−'; }
+        
+        .collapsible-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        
+        .collapsible-content.active {
+            max-height: none;
+            padding: 0.5rem 0;
+        }
+        
+        /* Tips Section */
+        .tip-box {
+            background: linear-gradient(135deg, #fff8e6 0%, #fff3d6 100%);
+            border-left: 4px solid var(--aws-orange);
+            padding: 1.25rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .tip-box.mnemonic {
+            background: linear-gradient(135deg, #e6f3ff 0%, #d6ebff 100%);
+            border-left-color: var(--aws-blue);
+        }
+        
+        .tip-box.exam {
+            background: linear-gradient(135deg, #ffe6e6 0%, #ffd6d6 100%);
+            border-left-color: #dc3545;
+        }
+        
+        .tip-box-title {
+            font-weight: 700;
+            color: var(--aws-dark);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .tip-box.mnemonic .tip-box-title { color: var(--aws-blue); }
+        .tip-box.exam .tip-box-title { color: #dc3545; }
+        
+        /* Lists */
+        ul {
+            padding-left: 1.5rem;
+            margin: 0.75rem 0;
+        }
+        
+        li {
+            margin: 0.4rem 0;
+        }
+        
+        /* Code/Code Blocks */
+        code {
+            background: #f4f4f4;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9em;
+        }
+        
+        /* Section Dividers */
+        hr {
+            border: none;
+            height: 2px;
+            background: linear-gradient(90deg, var(--aws-orange), transparent);
+            margin: 2rem 0;
+        }
+        
+        /* Back to Top */
+        .scroll-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--aws-orange);
+            color: white;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.3s;
+            text-decoration: none;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(255,153,0,0.4);
+            border: none;
+            font-size: 1.25rem;
+        }
+        
+        .scroll-top.visible { opacity: 1; }
+        .scroll-top:hover { 
+            background: #e68a00;
+            transform: translateY(-2px);
+        }
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            :root {
+                --sidebar-width: 280px;
+            }
+            
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+                max-width: 100%;
+                padding: 1rem;
+            }
+            
+            .header h1 {
+                font-size: 1rem;
+            }
+            
+            .chapter-card {
+                padding: 1.25rem;
+            }
+            
+            .exam-info-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .domain-badges {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Print Styles */
+        @media print {
+            .sidebar, .header, .scroll-top {
+                display: none;
+            }
+            
+            .main-content {
+                margin-left: 0;
+                max-width: 100%;
+            }
+            
+            .chapter-card {
+                break-inside: avoid;
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Progress Bar -->
+    <div class="progress-bar" id="progressBar"></div>
+    
+    <!-- Header -->
+    <header class="header">
+        <h1><span class="header-icon">☁️</span> AWS SAA-C03 Study Guide</h1>
+        <div class="header-controls">
+            <button class="header-btn" onclick="toggleSidebar()">☰ Menu</button>
+        </div>
+    </header>
+    
+    <div class="container">
+        <!-- Sidebar -->
+        <nav class="sidebar" id="sidebar">
+            <div class="search-container">
+                <input type="text" class="search-box" id="searchBox" placeholder="Search topics..." onkeyup="searchContent()">
+                <span class="search-icon">🔍</span>
+            </div>
+            
+            <!-- Domain Weightings -->
+            <h3>📊 Exam Domains</h3>
+            <div class="domain-badges">
+                <div class="domain-badge">
+                    <span class="weight">30%</span>
+                    <span>Security</span>
+                </div>
+                <div class="domain-badge">
+                    <span class="weight">26%</span>
+                    <span>Resilience</span>
+                </div>
+                <div class="domain-badge">
+                    <span class="weight">24%</span>
+                    <span>Performance</span>
+                </div>
+                <div class="domain-badge">
+                    <span class="weight">20%</span>
+                    <span>Cost</span>
+                </div>
+            </div>
+            
+            <h3>📚 Chapters</h3>
+            <a href="#intro" class="nav-item active" onclick="handleNavClick()">
+                <span class="ch-num">📋</span>Introduction
+            </a>
+            <a href="#ch1" class="nav-item" onclick="handleNavClick()">
+                <span class="ch-num">01</span>Foundations of AWS
+            </a>
+            <a href="#ch2" class="nav-item" onclick="handleNavClick()">
+                <span class="ch-num">02</span>Well-Architected Framework
+            </a>
+            <a href="#ch3" class="nav-item" onclick="handleNavClick()">
+                <span class="ch-num">03</span>Secure Access (IAM)
+            </a>
+            <a href="#ch4" class="nav-item" onclick="handleNavClick()">
+                <span class="ch-num">04</span>Secure Workloads
+            </a>
+            <a href="#ch5" class="nav-item" onclick="handleNavClick()">
+                <span class="ch-num">05</span>Data Security
+            </a>
+            <a href="#ch6" class="nav-item" onclick="handleNavClick()">
+                <span class="ch-num">06</span>Resilient Architecture
+            </a>
+            <a href="#ch7" class="nav-item" onclick="handleNavClick()">
+                <span class="ch-num">07</span>High Availability
+            </a>
+            <a href="#ch8" class="nav-item" onclick="handleNavClick()">
+                <span class="ch-num">08</span>Scalable Storage
+            </a>
+            <a href="#ch9" class="nav-item" onclick="handleNavClick()">
+                <span class="ch-num">09</span>Elastic Compute
+            </a>
+            <a href="#ch10" class="nav-item" onclick="handleNavClick()">
+                <span class="ch-num">10</span>Database Solutions
+            </a>
+            <a href="#ch11" class="nav-item" onclick="handleNavClick()">
+                <span class="ch-num">11</span>Networking
+            </a>
+            <a href="#ch12" class="nav-item" onclick="handleNavClick()">
+                <span class="ch-num">12</span>Cost-Optimized Storage
+            </a>
+            <a href="#ch13" class="nav-item" onclick="handleNavClick()">
+                <span class="ch-num">13</span>Cost-Effective Compute
+            </a>
+            <a href="#ch14" class="nav-item" onclick="handleNavClick()">
+                <span class="ch-num">14</span>Cost-Effective Database
+            </a>
+            <a href="#ch15" class="nav-item" onclick="handleNavClick()">
+                <span class="ch-num">15</span>Cost-Effective Network
+            </a>
+            <a href="#ch16" class="nav-item" onclick="handleNavClick()">
+                <span class="ch-num">16</span>Final Preparation
+            </a>
+            
+            <h3>🏷️ Quick Keywords</h3>
+            <div class="keyword-list">
+                <span class="keyword-tag" onclick="scrollToSection('ch1')">S3</span>
+                <span class="keyword-tag" onclick="scrollToSection('ch1')">EC2</span>
+                <span class="keyword-tag" onclick="scrollToSection('ch3')">IAM</span>
+                <span class="keyword-tag" onclick="scrollToSection('ch4')">VPC</span>
+                <span class="keyword-tag" onclick="scrollToSection('ch5')">KMS</span>
+                <span class="keyword-tag" onclick="scrollToSection('ch6')">SQS</span>
+                <span class="keyword-tag" onclick="scrollToSection('ch6')">SNS</span>
+                <span class="keyword-tag" onclick="scrollToSection('ch7')">Multi-AZ</span>
+                <span class="keyword-tag" onclick="scrollToSection('ch8')">EBS</span>
+                <span class="keyword-tag" onclick="scrollToSection('ch8')">EFS</span>
+                <span class="keyword-tag" onclick="scrollToSection('ch9')">Lambda</span>
+                <span class="keyword-tag" onclick="scrollToSection('ch10')">RDS</span>
+                <span class="keyword-tag" onclick="scrollToSection('ch10')">Aurora</span>
+                <span class="keyword-tag" onclick="scrollToSection('ch10')">DynamoDB</span>
+                <span class="keyword-tag" onclick="scrollToSection('ch11')">ALB</span>
+                <span class="keyword-tag" onclick="scrollToSection('ch11')">NLB</span>
+                <span class="keyword-tag" onclick="scrollToSection('ch11')">CloudFront</span>
+                <span class="keyword-tag" onclick="scrollToSection('ch13')">Spot</span>
+                <span class="keyword-tag" onclick="scrollToSection('ch13')">RI</span>
+            </div>
+        </nav>
+        
+        <!-- Main Content -->
+        <main class="main-content" id="mainContent">
+            <!-- Hero Section -->
+            <section id="intro" class="hero-section">
+                <h2>AWS Certified Solutions Architect – Associate (SAA-C03)</h2>
+                <p>Comprehensive study guide covering all exam domains and chapters from the official Cert Guide by Mark Wilkins</p>
+                <div class="exam-info-grid">
+                    <div class="exam-info-item">
+                        <span class="value">65</span>
+                        <span class="label">Questions</span>
+                    </div>
+                    <div class="exam-info-item">
+                        <span class="value">130</span>
+                        <span class="label">Minutes</span>
+                    </div>
+                    <div class="exam-info-item">
+                        <span class="value">720</span>
+                        <span class="label">Passing Score</span>
+                    </div>
+                    <div class="exam-info-item">
+                        <span class="value">$150</span>
+                        <span class="label">Exam Fee</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Chapter 1 -->
+            <section id="ch1" class="chapter-card">
+                <div class="chapter-header">
+                    <span class="chapter-number">Chapter 1</span>
+                    <h2 class="chapter-title">Understanding the Foundations of AWS Architecture</h2>
+                    <div class="chapter-meta">Pages 3-38 | Cloud Computing, IaaS/PaaS/SaaS, AWS Global Infrastructure</div>
+                </div>
+                
+                <button class="collapsible active">Five Essential Characteristics (NIST)</button>
+                <div class="collapsible-content active">
+                    <div class="table-section">
+                        <h4>☁️ Cloud Computing Essentials</h4>
+                        <div class="table-container">
+                            <table>
+                                <tr><th>Characteristic</th><th>Description</th></tr>
+                                <tr><td><strong>On-Demand Self-Service</strong></td><td>Provision resources automatically without human interaction</td></tr>
+                                <tr><td><strong>Broad Network Access</strong></td><td>Access via standard mechanisms through heterogeneous clients</td></tr>
+                                <tr><td><strong>Resource Pooling</strong></td><td>Multi-tenant model with dynamic resource allocation</td></tr>
+                                <tr><td><strong>Rapid Elasticity</strong></td><td>Automatically scale resources up/down based on demand</td></tr>
+                                <tr><td><strong>Measured Service</strong></td><td>Pay only for what you use; metering and billing</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="collapsible active">Cloud Service Models (Pizza Analogy 🍕)</button>
+                <div class="collapsible-content active">
+                    <div class="table-section">
+                        <h4>📊 Service Model Comparison</h4>
+                        <div class="table-container">
+                            <table>
+                                <tr><th>Model</th><th>AWS Manages</th><th>You Manage</th><th>Analogy</th><th>Example</th></tr>
+                                <tr><td><strong>IaaS</strong></td><td>Physical, Network, Virtualization</td><td>OS, Middleware, Apps, Data</td><td>Rent kitchen</td><td>EC2, VPC, EBS</td></tr>
+                                <tr><td><strong>PaaS</strong></td><td>Infrastructure + Middleware</td><td>Apps, Data</td><td>Use commercial kitchen</td><td>Elastic Beanstalk, RDS</td></tr>
+                                <tr><td><strong>SaaS</strong></td><td>Everything</td><td>Nothing</td><td>Order delivery</td><td>AWS Console, WorkDocs</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="collapsible active">AWS Global Infrastructure</button>
+                <div class="collapsible-content active">
+                    <div class="table-section">
+                        <h4>🌍 Infrastructure Components</h4>
+                        <div class="table-container">
+                            <table>
+                                <tr><th>Component</th><th>Description</th><th>Key Points</th></tr>
+                                <tr><td><strong>Region</strong></td><td>Geographic area with 2+ AZs</td><td>Choose closest to users; independent</td></tr>
+                                <tr><td><strong>Availability Zone</strong></td><td>Isolated data centers</td><td>Connected by low-latency links</td></tr>
+                                <tr><td><strong>Edge Location</strong></td><td>CDN endpoint</td><td>400+ locations for CloudFront</td></tr>
+                                <tr><td><strong>Local Zone</strong></td><td>Metro area extension</td><td>For low-latency applications</td></tr>
+                                <tr><td><strong>Wavelength Zone</strong></td><td>5G telco edge</td><td>Ultra-low latency mobile apps</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tip-box mnemonic">
+                    <div class="tip-box-title">🧠 Mnemonic</div>
+                    <p><strong>"Region = Country; AZ = City; Edge Location = Neighborhood Store"</strong></p>
+                </div>
+
+                <button class="collapsible">Shared Responsibility Model</button>
+                <div class="collapsible-content">
+                    <div class="table-section">
+                        <h4>🔒 Security Responsibilities</h4>
+                        <div class="table-container">
+                            <table>
+                                <tr><th>Layer</th><th>AWS Responsibility</th><th>Customer Responsibility</th></tr>
+                                <tr><td><strong>Security OF the Cloud</strong></td><td>Physical, Network, Hypervisor, Facilities</td><td>-</td></tr>
+                                <tr><td><strong>Security IN the Cloud</strong></td><td>-</td><td>Data, IAM, OS, Network settings, Encryption, Applications</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tip-box exam">
+                    <div class="tip-box-title">💡 Exam Tip</div>
+                    <ul>
+                        <li><strong>Rapid elasticity</strong> is the KEY feature for hosted cloud applications</li>
+                        <li>Data is typically MORE secure in the cloud than on-premises (multiple physical copies)</li>
+                        <li>All AWS storage can be encrypted with AES</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Chapter 2 -->
+            <section id="ch2" class="chapter-card">
+                <div class="chapter-header">
+                    <span class="chapter-number">Chapter 2</span>
+                    <h2 class="chapter-title">The AWS Well-Architected Framework</h2>
+                    <div class="chapter-meta">Pages 39-74 | 6 Pillars, SLA Design, Disaster Recovery</div>
+                </div>
+
+                <button class="collapsible active">The 6 Pillars</button>
+                <div class="collapsible-content active">
+                    <div class="table-section">
+                        <h4>🏛️ Well-Architected Pillars</h4>
+                        <div class="table-container">
+                            <table>
+                                <tr><th>Pillar</th><th>Focus</th><th>Key Considerations</th></tr>
+                                <tr><td><strong>Operational Excellence</strong></td><td>Run and monitor systems</td><td>Automation, monitoring, incremental improvements</td></tr>
+                                <tr><td><strong>Security</strong></td><td>Protect information</td><td>Defense in depth, encryption, least privilege</td></tr>
+                                <tr><td><strong>Reliability</strong></td><td>Recover from failures</td><td>Multi-AZ, backups, automated recovery</td></tr>
+                                <tr><td><strong>Performance Efficiency</strong></td><td>Use IT resources efficiently</td><td>Right-sizing, caching, CDN</td></tr>
+                                <tr><td><strong>Cost Optimization</strong></td><td>Avoid unnecessary costs</td><td>Right-sizing, reserved capacity</td></tr>
+                                <tr><td><strong>Sustainability</strong></td><td>Minimize environmental impact</td><td>Efficient resource utilization</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tip-box mnemonic">
+                    <div class="tip-box-title">🧠 Mnemonic</div>
+                    <p><strong>"SCREPS"</strong> — Security, Cost, Reliability, Operational Excellence, Performance, Sustainability</p>
+                </div>
+
+                <button class="collapsible">Disaster Recovery Strategies</button>
+                <div class="collapsible-content">
+                    <div class="table-section">
+                        <h4>🔄 DR Strategy Comparison</h4>
+                        <div class="table-container">
+                            <table>
+                                <tr><th>Strategy</th><th>RTO</th><th>RPO</th><th>Cost</th><th>Description</th></tr>
+                                <tr><td><strong>Backup & Restore</strong></td><td>Hours-Days</td><td>24+ hrs</td><td>$</td><td>Backup to S3; restore when needed</td></tr>
+                                <tr><td><strong>Pilot Light</strong></td><td>10s of min</td><td>Minutes</td><td>$$</td><td>Core systems running; scale up on DR</td></tr>
+                                <tr><td><strong>Warm Standby</strong></td><td>Minutes</td><td>Minutes</td><td>$$$</td><td>Reduced capacity production running</td></tr>
+                                <tr><td><strong>Active-Active</strong></td><td>Near zero</td><td>Near zero</td><td>$$$$</td><td>Full production in multiple regions</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tip-box mnemonic">
+                    <div class="tip-box-title">🧠 Mnemonic</div>
+                    <p><strong>"B-P-W-A"</strong> — Backup, Pilot, Warm, Active (increasing cost, decreasing RTO/RPO)</p>
+                    <p><strong>RTO</strong> = How fast you recover | <strong>RPO</strong> = How much data you can afford to lose</p>
+                </div>
+
+                <button class="collapsible">SLA Availability Targets</button>
+                <div class="collapsible-content">
+                    <div class="table-section">
+                        <h4>⏱️ Availability Levels</h4>
+                        <div class="table-container">
+                            <table>
+                                <tr><th>Availability</th><th>Downtime/Year</th><th>Use Case</th></tr>
+                                <tr><td><strong>99.9%</strong> (3 nines)</td><td>8.76 hours</td><td>Internal tools</td></tr>
+                                <tr><td><strong>99.95%</strong></td><td>4.38 hours</td><td>SaaS applications</td></tr>
+                                <tr><td><strong>99.99%</strong> (4 nines)</td><td>52.6 minutes</td><td>Streaming video</td></tr>
+                                <tr><td><strong>99.999%</strong> (5 nines)</td><td>5.26 minutes</td><td>ATM transactions</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Chapter 3 -->
+            <section id="ch3" class="chapter-card">
+                <div class="chapter-header">
+                    <span class="chapter-number">Chapter 3</span>
+                    <h2 class="chapter-title">Designing Secure Access to AWS Resources</h2>
+                    <div class="chapter-meta">Pages 75-144 | IAM, IAM Policies, IAM Roles, AWS Organizations</div>
+                </div>
+
+                <button class="collapsible active">IAM Core Components</button>
+                <div class="collapsible-content active">
+                    <div class="table-section">
+                        <h4>🔑 IAM Components</h4>
+                        <div class="table-container">
+                            <table>
+                                <tr><th>Component</th><th>Purpose</th><th>Best Practice</th></tr>
+                                <tr><td><strong>Users</strong></td><td>Long-term credentials for individuals</td><td>Use for humans only; enable MFA</td></tr>
+                                <tr><td><strong>Groups</strong></td><td>Collection of users</td><td>Attach policies to groups</td></tr>
+                                <tr><td><strong>Roles</strong></td><td>Temporary credentials</td><td>Use for applications, cross-account</td></tr>
+                                <tr><td><strong>Policies</strong></td><td>JSON documents defining permissions</td><td>Least privilege principle</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tip-box mnemonic">
+                    <div class="tip-box-title">🧠 Mnemonic</div>
+                    <p><strong>"U=Unique person, G=Gather users, R=Relay pass, P=Permissions paper"</strong></p>
+                </div>
+
+                <button class="collapsible">IAM Policy Evaluation</button>
+                <div class="collapsible-content">
+                    <div class="tip-box exam">
+                        <div class="tip-box-title">💡 Policy Evaluation Logic</div>
+                        <ol>
+                            <li><strong>Explicit DENY</strong> → Always wins</li>
+                            <li><strong>Explicit ALLOW</strong> → Required for access</li>
+                            <li><strong>Implicit DENY</strong> → Default if no ALLOW</li>
+                        </ol>
+                        <p><strong>Key Rule:</strong> An explicit DENY always overrides an ALLOW</p>
+                    </div>
+                </div>
+
+                <button class="collapsible">VPC Connectivity Options</button>
+                <div class="collapsible-content">
+                    <div class="table-section">
+                        <h4>🔗 Connectivity Comparison</h4>
+                        <div class="table-container">
+                            <table>
+                                <tr><th>Option</th><th>Use Case</th><th>Characteristics</th></tr>
+                                <tr><td><strong>Site-to-Site VPN</strong></td><td>Encrypted connection over internet</td><td>1.25 Gbps max; Quick setup</td></tr>
+                                <tr><td><strong>Direct Connect</strong></td><td>Private dedicated connection</td><td>1-100 Gbps; High security</td></tr>
+                                <tr><td><strong>VPC Peering</strong></td><td>Connect two VPCs</td><td>Private; Same or different accounts</td></tr>
+                                <tr><td><strong>Transit Gateway</strong></td><td>Hub-and-spoke model</td><td>Centralize connectivity</td></tr>
+                                <tr><td><strong>PrivateLink</strong></td><td>Private AWS service access</td><td>No internet traversal</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tip-box mnemonic">
+                    <div class="tip-box-title">🧠 Mnemonic</div>
+                    <p><strong>"Peering = Pair; Transit Gateway = Hub; PrivateLink = Private Pipe; VPN = Public Tunnel; Direct Connect = Private Road"</strong></p>
+                </div>
+            </section>
+
+            <!-- Chapter 4 -->
+            <section id="ch4" class="chapter-card">
+                <div class="chapter-header">
+                    <span class="chapter-number">Chapter 4</span>
+                    <h2 class="chapter-title">Designing Secure Workloads and Applications</h2>
+                    <div class="chapter-meta">Pages 145-202 | Security Groups, NACLs, VPC Flow Logs, NAT Gateway</div>
+                </div>
+
+                <button class="collapsible active">Security Groups vs NACLs</button>
+                <div class="collapsible-content active">
+                    <div class="table-section">
+                        <h4>🛡️ Security Comparison</h4>
+                        <div class="table-container">
+                            <table>
+                                <tr><th>Component</th><th>Level</th><th>Stateful?</th><th>Rules</th><th>Default</th></tr>
+                                <tr><td><strong>Security Groups</strong></td><td>Instance</td><td>Yes (auto-allow return)</td><td>Allow only</td><td>Deny all inbound</td></tr>
+                                <tr><td><strong>Network ACLs</strong></td><td>Subnet</td><td>No (must allow return)</td><td>Allow + Deny</td><td>Allow all</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tip-box mnemonic">
+                    <div class="tip-box-title">🧠 Mnemonic</div>
+                    <p><strong>"SG = Stateful Bouncer (instance door); NACL = Stateless Checkpoint (neighborhood gate)"</strong></p>
+                </div>
+
+                <button class="collapsible">Common Ports</button>
+                <div class="collapsible-content">
+                    <div class="table-section">
+                        <h4>🔌 Standard Ports</h4>
+                        <div class="table-container">
+                            <table>
+                                <tr><th>Port</th><th>Service</th></tr>
+                                <tr><td>22</td><td>SSH (Linux)</td></tr>
+                                <tr><td>3389</td><td>RDP (Windows)</td></tr>
+                                <tr><td>80</td><td>HTTP</td></tr>
+                                <tr><td>443</td><td>HTTPS</td></tr>
+                                <tr><td>3306</td><td>MySQL</td></tr>
+                                <tr><td>5432</td><td>PostgreSQL</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="collapsible">Security Services</button>
+                <div class="collapsible-content">
+                    <div class="table-section">
+                        <h4>🔒 AWS Security Services</h4>
+                        <div class="table-container">
+                            <table>
+                                <tr><th>Service</th><th>Purpose</th></tr>
+                                <tr><td><strong>AWS Shield</strong></td><td>DDoS protection (Standard=free; Advanced=paid)</td></tr>
+                                <tr><td><strong>AWS WAF</strong></td><td>Block SQL injection, XSS</td></tr>
+                                <tr><td><strong>GuardDuty</strong></td><td>ML-powered threat detection</td></tr>
+                                <tr><td><strong>Macie</strong></td><td>Sensitive data discovery in S3</td></tr>
+                                <tr><td><strong>CloudTrail</strong></td><td>Audit API calls</td></tr>
+                                <tr><td><strong>Config</strong></td><td>Track resource configurations</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tip-box exam">
+                    <div class="tip-box-title">💡 Exam Tips</div>
+                    <ul>
+                        <li>Security Groups = Instance level (stateful)</li>
+                        <li>NACLs = Subnet level (stateless)</li>
+                        <li>For web exploits → AWS WAF</li>
+                        <li>For DDoS → AWS Shield</li>
+                        <li>For threat detection → GuardDuty</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Chapter 5 -->
+            <section id="ch5" class="chapter-card">
+                <div class="chapter-header">
+                    <span class="chapter-number">Chapter 5</span>
+                    <h2 class="chapter-title">Determining Appropriate Data Security Controls</h2>
+                    <div class="chapter-meta">Pages 203-232 | EBS Encryption, S3 Security, KMS, CloudHSM</div>
+                </div>
+
+                <button class="collapsible active">S3 Encryption Options</button>
+                <div class="collapsible-content active">
+                    <div class="table-section">
+                        <h4>🔐 S3 Encryption Types</h4>
+                        <div class="table-container">
+                            <table>
+                                <tr><th>Option</th><th>Key Management</th><th>Use Case</th></tr>
+                                <tr><td><strong>SSE-S3</strong></td><td>AWS managed</td><td>Default; no additional cost</td></tr>
+                                <tr><td><strong>SSE-KMS</strong></td><td>KMS</td><td>Audit trail; key rotation</td></tr>
+                                <tr><td><strong>SSE-C</strong></td><td>Customer provided</td><td>You manage keys entirely</td></tr>
+                                <tr><td><strong>DSSE-KMS</strong></td><td>Dual-layer KMS</td><td>Highly sensitive data</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="collapsible">AWS KMS</button>
+                <div class="collapsible-content">
+                    <div class="table-section">
+                        <h4>🗝️ KMS Features</h4>
+                        <div class="table-container">
+                            <table>
+                                <tr><th>Feature</th><th>Description</th></tr>
+                                <tr><td><strong>CMK</strong></td><td>Customer Master Key - never leaves KMS</td></tr>
+                                <tr><td><strong>Data Keys</strong></td><td>Encrypted by CMK; used for actual encryption</td></tr>
+                                <tr><td><strong>Envelope Encryption</strong></td><td>Encrypt data key with CMK</td></tr>
+                                <tr><td><strong>Key Rotation</strong></td><td>Automatic annual rotation (optional)</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tip-box exam">
+                    <div class="tip-box-title">💡 Key Points</div>
+                    <ul>
+                        <li><strong>Envelope Encryption:</strong> Data encrypted with data key; data key encrypted with CMK</li>
+                        <li>S3 <strong>Block Public Access</strong> should be enabled by default</li>
+                        <li>Use <strong>KMS</strong> for most encryption needs</li>
+                        <li>Use <strong>CloudHSM</strong> for strict compliance requirements</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Chapter 6 -->
+            <section id="ch6" class="chapter-card">
+                <div class="chapter-header">
+                    <span class="chapter-number">Chapter 6</span>
+                    <h2 class="chapter-title">Designing Resilient Architecture</h2>
+                    <div class="chapter-meta">Pages 233-286 | SNS, SQS, Step Functions, EventBridge, API Gateway</div>
+                </div>
+
+                <button class="collapsible active">Application Integration Services</button>
+                <div class="collapsible-content active">
+                    <div class="table-section">
+                        <h4>📨 Integration Patterns</h4>
+                        <div class="table-container">
+                            <table>
+                                <tr><th>Service</th><th>Pattern</th><th>Use Case</th></tr>
+                                <tr><td><strong>SNS</strong></td><td>Pub/Sub (Push)</td><td>Send notifications to multiple subscribers</td></tr>
+                                <tr><td><strong>SQS</strong></td><td>Message Queue (Pull)</td><td>Decouple components; buffer requests</td></tr>
+                                <tr><td><strong>EventBridge</strong></td><td>Event Bus</td><td>Route events between services</td></tr>
+                                <tr><td><strong>Step Functions</strong></td><td>Workflow Orchestration</td><td>Coordinate distributed applications</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tip-box mnemonic">
+                    <div class="tip-box-title">🧠 Mnemonic</div>
+                    <p><strong>"SQS = Queue (line up and wait - pull); SNS = Notify (push to subscribers)"</strong></p>
+                </div>
+
+                <button class="collapsible">SQS Queue Types</button>
+                <div class="collapsible-content">
+                    <div class="table-section">
+                        <h4>📮 SQS Comparison</h4>
+                        <div class="table-container">
+                            <table>
+                                <tr><th>Feature</th><th>Standard Queue</th><th>FIFO Queue</th></tr>
+                                <tr><td><strong>Ordering</strong></td><td>Best-effort</td><td>Guaranteed</td></tr>
+                                <tr><td><strong>Delivery</strong></td><td>At-least-once</td><td>Exactly-once</td></tr>
+                                <tr><td><strong>Throughput</strong></td><td>Nearly unlimited</td><td>300 TPS (3K with batching)</td></tr>
+                                <tr><td><strong>Use Case</strong></td><td>High throughput</td><td>Order critical (financial)</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Chapter 7 -->
+            <section id="ch7" class="chapter-card">
+                <div class="chapter-header">
+                    <span class="chapter-number">Chapter 7</span>
+                    <h2 class="chapter-title">Designing Highly Available and Fault-Tolerant Architecture</h2>
+                    <div class="chapter-meta">Pages 287-356 | Regions/AZs, DR Strategies, Route 53</div>
+                </div>
+
+                <button class="collapsible active">Route 53 Routing Policies</button>
+                <div class="collapsible-content active">
+                    <div class="table-section">
+                        <h4>🌐 Routing Policies</h4>
+                        <div class="table-container">
+                            <table>
+                                <tr><th>Policy</th><th>Use Case</th></tr>
+                                <tr><td><strong>Simple</strong></td><td>Single resource</td></tr>
+                                <tr><td><strong>Weighted</strong></td><td>Split traffic by percentage</td></tr>
+                                <tr><td><strong>Latency-Based</strong></td><td>Route to lowest latency region</td></tr>
+                                <tr><td><strong>Geolocation</strong></td><td>Route based on user location</td></tr>
+                                <tr><td><strong>Failover</strong></td><td>Primary/secondary failover</td></tr>
+                                <tr><td><strong>Multivalue Answer</strong></td><td>Multiple healthy resources</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tip-box exam">
+                    <div class="tip-box-title">💡 Key Principles</div>
+                    <ul>
+                        <li><strong>Always design for Multi-AZ</strong> — #1 HA principle</li>
+                        <li><strong>Route 53</strong> + health checks = DNS failover</li>
+                        <li><strong>Read replicas</strong> = read scaling; <strong>Multi-AZ</strong> = HA</li>
+                        <li><strong>Pilot Light</strong> = cheapest DR with reasonable RTO</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Chapter 8 -->
+            <section id="ch8" class="chapter-card">
+                <div class="chapter-header">
+                    <span class="chapter-number">Chapter 8</span>
+                    <h2 class="chapter-title">High-Performing and Scalable Storage Solutions</h2>
+                    <div class="chapter-meta">Pages 357-420 | EBS, EFS, FSx, S3, S3 Glacier</div>
+                </div>
+
+                <button class="collapsible active">Storage Options Summary</button>
+                <div class="collapsible-content active">
+                    <div class="table-section">
+                        <h4>💾 Storage Types</h4>
+                        <div class="table-container">
+                            <table>
+                                <tr><th>Type</th><th>Service</th><th>Best For</th><th>Access</th></tr>
+                                <tr><td><strong>Block</strong></td><td>EBS</td><td>Databases, VMs</td><td>Single EC2</td></tr>
+                                <tr><td><strong>File</strong></td><td>EFS, FSx</td><td>Shared file storage</td><td>Multiple instances</td></tr>
+                                <tr><td><strong>Object</strong></td><td>S3</td><td>Backups, archives</td><td>API/HTTP</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tip-box mnemonic">
+                    <div class="tip-box-title">🧠 Mnemonic</div>
+                    <p><strong>"Objects in buckets, Blocks for disks, Files for sharing"</strong></p>
+                </div>
+
+                <button class="collapsible">S3 Storage Classes</button>
+                <div class="collapsible-content">
+                    <div class="table-section">
+                        <h4>🪣 S3 Classes</h4>
+                        <div class="table-container">
+                            <table>
+                                <tr><th>Class</th><th>Access</th><th>Retrieval</th><th>Best For</th></tr>
+                                <tr><td><strong>Standard</strong></td><td>Frequent</td><td>Milliseconds</td><td>General purpose</td></tr>
+                                <tr><td><strong>Intelligent-Tiering</strong></td><td>Unknown</td><td>Milliseconds</td><td>Auto-optimization</td></tr>
+                                <tr><td><strong>Standard-IA</strong></td><td>Infrequent</td><td>Milliseconds</td><td>Backups</td></tr>
+                                <tr><td><strong>Glacier Instant</strong></td><td>Archive</td><td>Milliseconds</td><td>Long-term, occasional</td></tr>
+                                <tr><td><strong>Glacier Deep Archive</strong></td><td>Rare</td><td>12-48 hours</td><td>Cheapest, compliance</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tip-box mnemonic">
+                    <div class="tip-box-title">🧠 Mnemonic</div>
+                    <p><strong>"Standard = Speedy; IA = Inactive; Glacier = Frozen; Deep Archive = Deep Freeze"</strong></p>
+                </div>
+            </section>
+
+            <!-- Chapter 9 -->
+            <section id="ch9" class="chapter-card">
+                <div class="chapter-header">
+                    <span class="chapter-number">Chapter 9</span>
+                    <h2 class="chapter-title">Designing High-Performing and Elastic Compute Solutions</h2>
+                    <div class="chapter-meta">Pages 421-476 | EC2, AMIs, Lambda, ECS, EKS, Auto Scaling</div>
+                </div>
+
+                <button class="collapsible active">EC2 Instance Families</button>
+                <div class="collapsible-content active">
+                    <div class="table-section">
+                        <h4>⚡ Instance Types</h4>
+                        <div class="table-container">
+                            <table>
+                                <tr><th>Family</th><th>Optimized For</th><th>Use Cases</th></tr>
+                                <tr><td><strong>T</strong></td><td>Burstable</td><td>Variable workloads, dev/test</td></tr>
+                                <tr><td><strong>M</strong></td><td>General purpose</td><td>Balanced compute, memory</td></tr>
+                                <tr><td><strong>C</strong></td><td>Compute</td><td>Batch processing, HPC</td></tr>
+                                <tr><td><strong>R</strong></td><td>Memory</td><td>In-memory databases</td></tr>
+                                <tr><td><strong>P/G</strong></td><td>GPU/ML</td><td>ML training, graphics</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tip-box mnemonic">
+                    <div class="tip-box-title">🧠 Mnemonic</div>
+                    <p><strong>"C=Crunch numbers; M=Middle ground; R=RAM-hungry; T=Tiny bursts; P/G=Pictures & Graphics"</strong></p>
+                </div>
+
+                <button class="collapsible">EC2 Purchasing Options</button>
+                <div class="collapsible-content">
+                    <div class="table-section">
+                        <h4>💰 Pricing Options</h4>
+                        <div class="table-container">
+                            <table>
+                                <tr><th>Option</th><th>Discount</th><th>Best For</th><th>Risk</th></tr>
+                                <tr><td><strong>On-Demand</strong></td><td>None</td><td>Short-term, unpredictable</td><td>None</td></tr>
+                                <tr><td><strong>Reserved</strong></td><td>Up to 72%</td><td>Steady-state</td><td>Commitment</td></tr>
+                                <tr><td><strong>Savings Plans</strong></td><td>Up to 72%</td><td>Flexible commitment</td><td>Usage maintenance</td></tr>
+                                <tr><td><strong>Spot</strong></td><td>Up to 90%</td><td>Fault-tolerant</td><td>Interruptible</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tip-box mnemonic">
+                    <div class="tip-box-title">🧠 Mnemonic</div>
+                    <p><strong>"OD=On Demand; RI=Reserved; Spot=Spontaneous; Savings=Subscription"</strong></p>
+                </div>
+            </section>
+
+            <!-- Chapter 10 -->
+            <section id="ch10" class="chapter-card">
+                <div class="chapter-header">
+                    <span class="chapter-number">Chapter 10</span>
+                    <h2 class="chapter-title">Determining High-Performing Database Solutions</h2>
+                    <div class="chapter-meta">Pages 477-522 | RDS, Aurora, DynamoDB, ElastiCache</div>
+                </div>
+
+                <button class="collapsible active">RDS vs Aurora</button>
+                <div class="collapsible-content active">
+                    <div class="table-section">
+                        <h4>🗄️ Database Comparison</h4>
+                        <div class="table-container">
+                            <table>
+                                <tr><th>Feature</th><th>RDS</th><th>Aurora</th></tr>
+                                <tr><td><strong>Performance</strong></td><td>Standard</td><td>5x MySQL, 3x PostgreSQL</td></tr>
+                                <tr><td><strong>Storage</strong></td><td>Provisioned</td><td>Auto-scaling (10GB-128TB)</td></tr>
+                                <tr><td><strong>Replicas</strong></td><td>5 max</td><td>15 replicas</td></tr>
+                                <tr><td><strong>Serverless</strong></td><td>No</td><td>Yes (v1/v2)</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="collapsible">Multi-AZ vs Read Replicas</button>
+                <div class="collapsible-content">
+                    <div class="table-section">
+                        <h4>📊 Comparison</h4>
+                        <div class="table-container">
+                            <table>
+                                <tr><th>Feature</th><th>Multi-AZ</th><th>Read Replica</th></tr>
+                                <tr><td><strong>Purpose</strong></td><td>High availability</td><td>Scaling reads</td></tr>
+                                <tr><td><strong>Replication</strong></td><td>Synchronous</td><td>Asynchronous</td></tr>
+                                <tr><td><strong>Failover</strong></td><td>Automatic</td><td>Manual</td></tr>
+                                <tr><td><strong>Cross-Region</strong></td><td>No</td><td>Yes</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tip-box exam">
+                    <div class="tip-box-title">💡 Exam Tips</div>
+                    <ul>
+                        <li><strong>Aurora</strong> = default for high-performance relational</li>
+                        <li><strong>Multi-AZ</strong> = HA; <strong>Read Replicas</strong> = read scaling</li>
+                        <li><strong>DynamoDB</strong> = single-digit millisecond latency at any scale</li>
+                        <li><strong>ElastiCache</strong> sits in front of RDS to reduce database load</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Chapter 11 -->
+            <section id="ch11" class="chapter-card">
+                <div class="chapter-header">
+                    <span class="chapter-number">Chapter 11</span>
+                    <h2 class="chapter-title">High-Performing and Scalable Networking Architecture</h2>
+                    <div class="chapter-meta">Pages 523-592 | VPC, Load Balancers, CloudFront, Transit Gateway</div>
+                </div>
+
+                <button class="collapsible active">Load Balancer Types</button>
+                <div class="collapsible-content active">
+                    <div class="table-section">
+                        <h4>⚖️ Load Balancer Comparison</h4>
+                        <div class="table-container">
+                            <table>
+                                <tr><th>Type</th><th>Layer</th><th>Protocol</th><th>Best For</th></tr>
+                                <tr><td><strong>ALB</strong></td><td>7</td><td>HTTP/HTTPS</td><td>Path-based routing, containers</td></tr>
+                                <tr><td><strong>NLB</strong></td><td>4</td><td>TCP/UDP</td><td>Ultra-low latency, millions RPS</td></tr>
+                                <tr><td><strong>GWLB</strong></td><td>3</td><td>IP</td><td>Third-party appliances</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tip-box mnemonic">
+                    <div class="tip-box-title">🧠 Mnemonic</div>
+                    <p><strong>"ALB = Apps (L7); NLB = Networks (L4); GWLB = Gateways (L3)"</strong></p>
+                </div>
+
+                <button class="collapsible">CloudFront vs Global Accelerator</button>
+                <div class="collapsible-content">
+                    <div class="table-section">
+                        <h4>🌍 Global Services</h4>
+                        <div class="table-container">
+                            <table>
+                                <tr><th>Feature</th><th>CloudFront</th><th>Global Accelerator</th></tr>
+                                <tr><td><strong>Type</strong></td><td>CDN</td><td>Network acceleration</td></tr>
+                                <tr><td><strong>Caching</strong></td><td>Yes</td><td>No</td></tr>
+                                <tr><td><strong>Protocol</strong></td><td>HTTP/HTTPS</td><td>TCP/UDP</td></tr>
+                                <tr><td><strong>Best For</strong></td><td>Static and dynamic content</td><td>Non-HTTP applications</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tip-box mnemonic">
+                    <div class="tip-box-title">🧠 Mnemonic</div>
+                    <p><strong>"CloudFront = Local Store (caches content); Global Accelerator = Private Highway (fast TCP/UDP)"</strong></p>
+                </div>
+            </section>
+
+            <!-- Chapter 12 -->
+            <section id="ch12" class="chapter-card">
+                <div class="chapter-header">
+                    <span class="chapter-number">Chapter 12</span>
+                    <h2 class="chapter-title">Designing Cost-Optimized Storage Solutions</h2>
+                    <div class="chapter-meta">Pages 593-630 | S3 Storage Classes, Lifecycle Policies</div>
+                </div>
+
+                <button class="collapsible active">S3 Cost Optimization</button>
+                <div class="collapsible-content active">
+                    <div class="table-section">
+                        <h4>💰 Optimization Strategies</h4>
+                        <div class="table-container">
+                            <table>
+                                <tr><th>Strategy</th><th>Implementation</th></tr>
+                                <tr><td><strong>Right Storage Class</strong></td><td>Use Intelligent-Tiering for unknown access</td></tr>
+                                <tr><td><strong>Lifecycle Policies</strong></td><td>Auto-transition objects</td></tr>
+                                <tr><td><strong>Versioning + Lifecycle</strong></td><td>Auto-delete old versions</td></tr>
+                                <tr><td><strong>Compression</strong></td><td>Reduce storage size</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="collapsible">Data Transfer Costs</button>
+                <div class="collapsible-content">
+                    <div class="table-section">
+                        <h4>📤 Transfer Pricing</h4>
+                        <div class="table-container">
+                            <table>
+                                <tr><th>Direction</th><th>Cost</th></tr>
+                                <tr><td><strong>Inbound</strong></td><td>Free</td></tr>
+                                <tr><td><strong>Outbound to Internet</strong></td><td>Charged</td></tr>
+                                <tr><td><strong>Between Regions</strong></td><td>Charged</td></tr>
+                                <tr><td><strong>Within AZ</strong></td><td>Free</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Chapter 13 -->
+            <section id="ch13" class="chapter-card">
+                <div class="chapter-header">
+                    <span class="chapter-number">Chapter 13</span>
+                    <h2 class="chapter-title">Designing Cost-Effective Compute Solutions</h2>
+                    <div class="chapter-meta">Pages 631-664 | EC2 Purchasing Options, Spot, Reserved</div>
+                </div>
+
+                <button class="collapsible active">EC2 Cost Optimization</button>
+                <div class="collapsible-content active">
+                    <div class="table-section">
+                        <h4>💵 Cost Strategies</h4>
+                        <div class="table-container">
+                            <table>
+                                <tr><th>Strategy</th><th>Savings</th><th>Best For</th></tr>
+                                <tr><td><strong>Reserved Instances</strong></td><td>Up to 72%</td><td>Steady-state workloads</td></tr>
+                                <tr><td><strong>Savings Plans</strong></td><td>Up to 72%</td><td>Flexible commitment</td></tr>
+                                <tr><td><strong>Spot Instances</strong></td><td>Up to 90%</td><td>Fault-tolerant, flexible</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="collapsible">Savings Plans vs Reserved Instances</button>
+                <div class="collapsible-content">
+                    <div class="tip-box exam">
+                        <div class="tip-box-title">💡 Key Differences</div>
+                        <ul>
+                            <li><strong>Savings Plans</strong> = More flexibility; discount applies regardless of instance type/region</li>
+                            <li><strong>Reserved Instances</strong> = Zonal capacity reservation; specific to instance type</li>
+                            <li><strong>Spot Instances</strong> = Cheapest but interruptible (2-minute warning)</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Chapter 14 -->
+            <section id="ch14" class="chapter-card">
+                <div class="chapter-header">
+                    <span class="chapter-number">Chapter 14</span>
+                    <h2 class="chapter-title">Designing Cost-Effective Database Solutions</h2>
+                    <div class="chapter-meta">Pages 665-692 | RDS Pricing, Aurora Serverless, DynamoDB</div>
+                </div>
+
+                <button class="collapsible active">Aurora Serverless</button>
+                <div class="collapsible-content active">
+                    <div class="table-section">
+                        <h4>🔄 Serverless Features</h4>
+                        <div class="table-container">
+                            <table>
+                                <tr><th>Feature</th><th>Benefit</th></tr>
+                                <tr><td><strong>Auto-Scaling</strong></td><td>Matches demand automatically</td></tr>
+                                <tr><td><strong>Pay-per-use</strong></td><td>ACU (Aurora Capacity Units)</td></tr>
+                                <tr><td><strong>Sleep Mode</strong></td><td>Pause after inactivity</td></tr>
+                                <tr><td><strong>v2 Scaling</strong></td><td>Finer-grained, more responsive</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="collapsible">DynamoDB Capacity Modes</button>
+                <div class="collapsible-content">
+                    <div class="table-section">
+                        <h4>⚡ Capacity Options</h4>
+                        <div class="table-container">
+                            <table>
+                                <tr><th>Mode</th><th>Best For</th></tr>
+                                <tr><td><strong>On-Demand</strong></td><td>Unknown/unpredictable traffic</td></tr>
+                                <tr><td><strong>Provisioned</strong></td><td>Predictable traffic; use auto-scaling</td></tr>
+                                <tr><td><strong>Reserved Capacity</strong></td><td>Predictable workloads; 1-year commitment</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Chapter 15 -->
+            <section id="ch15" class="chapter-card">
+                <div class="chapter-header">
+                    <span class="chapter-number">Chapter 15</span>
+                    <h2 class="chapter-title">Designing Cost-Effective Network Architectures</h2>
+                    <div class="chapter-meta">Pages 693-720 | Data Transfer, NAT Gateway, VPC Endpoints</div>
+                </div>
+
+                <button class="collapsible active">Data Transfer Optimization</button>
+                <div class="collapsible-content active">
+                    <div class="table-section">
+                        <h4>📉 Cost Reduction Strategies</h4>
+                        <div class="table-container">
+                            <table>
+                                <tr><th>Optimization</th><th>Implementation</th></tr>
+                                <tr><td><strong>Use CloudFront</strong></td><td>Reduce origin data transfer</td></tr>
+                                <tr><td><strong>VPC Endpoints</strong></td><td>Avoid NAT Gateway charges for S3/DynamoDB</td></tr>
+                                <tr><td><strong>Same AZ</strong></td><td>Place resources in same AZ when possible</td></tr>
+                                <tr><td><strong>Direct Connect</strong></td><td>Reduce egress costs for high volume</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tip-box exam">
+                    <div class="tip-box-title">💡 Key Points</div>
+                    <ul>
+                        <li><strong>Data transfer OUT</strong> is the most expensive</li>
+                        <li><strong>VPC Endpoints</strong> eliminate NAT Gateway charges for S3/DynamoDB</li>
+                        <li><strong>CloudFront</strong> reduces both cost and latency</li>
+                        <li><strong>Same AZ</strong> = no data transfer charges</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Chapter 16 -->
+            <section id="ch16" class="chapter-card">
+                <div class="chapter-header">
+                    <span class="chapter-number">Chapter 16</span>
+                    <h2 class="chapter-title">Final Preparation</h2>
+                    <div class="chapter-meta">Pages 721-760 | Exam Strategy, Review, Practice</div>
+                </div>
+
+                <button class="collapsible active">Exam Details</button>
+                <div class="collapsible-content active">
+                    <div class="exam-info-grid" style="margin-top: 0;">
+                        <div class="exam-info-item" style="background: white; color: var(--aws-dark);">
+                            <span class="value" style="color: var(--aws-orange);">65</span>
+                            <span class="label">Questions (50 scored)</span>
+                        </div>
+                        <div class="exam-info-item" style="background: white; color: var(--aws-dark);">
+                            <span class="value" style="color: var(--aws-orange);">130</span>
+                            <span class="label">Minutes</span>
+                        </div>
+                        <div class="exam-info-item" style="background: white; color: var(--aws-dark);">
+                            <span class="value" style="color: var(--aws-orange);">720</span>
+                            <span class="label">Passing Score</span>
+                        </div>
+                        <div class="exam-info-item" style="background: white; color: var(--aws-dark);">
+                            <span class="value" style="color: var(--aws-orange);">$150</span>
+                            <span class="label">USD</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="collapsible">Exam Strategy</button>
+                <div class="collapsible-content">
+                    <div class="tip-box exam">
+                        <div class="tip-box-title">💡 Test-Taking Tips</div>
+                        <ul>
+                            <li><strong>Read twice</strong> — Watch for "NOT", "EXCEPT", "LEAST"</li>
+                            <li><strong>Eliminate</strong> — Rule out obviously wrong answers</li>
+                            <li><strong>No penalty</strong> — Answer every question</li>
+                            <li><strong>Flag and return</strong> — Mark difficult questions</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <button class="collapsible">Final Study Checklist</button>
+                <div class="collapsible-content">
+                    <ul style="columns: 2; column-gap: 2rem;">
+                        <li>Review all 6 Well-Architected pillars</li>
+                        <li>Know Multi-AZ vs Read Replicas</li>
+                        <li>Understand S3 storage classes</li>
+                        <li>Memorize EC2 purchasing options</li>
+                        <li>Know load balancer types</li>
+                        <li>Understand VPC networking</li>
+                        <li>Review disaster recovery strategies</li>
+                        <li>Practice with sample questions</li>
+                    </ul>
+                </div>
+
+                <div class="tip-box mnemonic">
+                    <div class="tip-box-title">🧠 Final Mnemonics Review</div>
+                    <ul>
+                        <li><strong>SCREPS</strong> — Well-Architected Pillars (Security, Cost, Reliability, Operational Excellence, Performance, Sustainability)</li>
+                        <li><strong>B-P-W-A</strong> — DR Strategies (Backup, Pilot, Warm, Active)</li>
+                        <li><strong>ALB/NLB/GWLB</strong> — Layers 7/4/3</li>
+                        <li><strong>Objects/Blocks/Files</strong> — S3/EBS/EFS</li>
+                    </ul>
+                </div>
+
+                <div style="text-align: center; margin-top: 2rem; padding: 2rem; background: linear-gradient(135deg, var(--aws-dark) 0%, #3a4a5c 100%); color: white; border-radius: 12px;">
+                    <h3 style="color: var(--aws-orange); margin-bottom: 1rem;">🚀 Good Luck on Your Exam!</h3>
+                    <p>You've got this! Review the mnemonics, practice with questions, and trust your preparation.</p>
+                </div>
+            </section>
+
+        </main>
+    </div>
+    
+    <!-- Scroll to Top Button -->
+    <button class="scroll-top" id="scrollTop" onclick="scrollToTop()">↑</button>
+
+    <script>
+        // Toggle Sidebar
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            sidebar.classList.toggle('collapsed');
+            mainContent.classList.toggle('expanded');
+        }
+
+        // Handle Navigation Click (close mobile sidebar)
+        function handleNavClick() {
+            if (window.innerWidth <= 768) {
+                document.getElementById('sidebar').classList.remove('open');
+            }
+        }
+
+        // Scroll to Section
+        function scrollToSection(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // Collapsible Sections
+        document.querySelectorAll('.collapsible').forEach(button => {
+            button.addEventListener('click', function() {
+                this.classList.toggle('active');
+                const content = this.nextElementSibling;
+                content.classList.toggle('active');
+            });
+        });
+
+        // Progress Bar
+        window.addEventListener('scroll', function() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressBar').style.width = scrolled + '%';
+            
+            // Scroll to Top Button
+            const scrollTop = document.getElementById('scrollTop');
+            if (winScroll > 300) {
+                scrollTop.classList.add('visible');
+            } else {
+                scrollTop.classList.remove('visible');
+            }
+            
+            // Update Active Nav Item
+            updateActiveNavItem();
+        });
+
+        // Scroll to Top
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Update Active Navigation Item
+        function updateActiveNavItem() {
+            const sections = document.querySelectorAll('section[id]');
+            const navItems = document.querySelectorAll('.nav-item');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (scrollY >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            navItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('href') === '#' + current) {
+                    item.classList.add('active');
+                }
+            });
+        }
+
+        // Search Functionality
+        function searchContent() {
+            const searchTerm = document.getElementById('searchBox').value.toLowerCase();
+            const chapters = document.querySelectorAll('.chapter-card');
+            
+            chapters.forEach(chapter => {
+                const text = chapter.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    chapter.style.display = 'block';
+                } else {
+                    chapter.style.display = searchTerm === '' ? 'block' : 'none';
+                }
+            });
+        }
+
+        // Mobile Sidebar Toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.innerWidth <= 768) {
+                document.getElementById('sidebar').classList.add('collapsed');
+                document.getElementById('mainContent').classList.add('expanded');
+            }
+        });
+    </script>
+</body>
+</html>

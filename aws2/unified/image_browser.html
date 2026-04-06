@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AWS Exam Image Browser</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --aif:#8b5cf6;--saa:#14b8a6;
+  --bg:#f1f5f9;--card:#fff;--border:#e2e8f0;--text:#1e293b;--muted:#64748b;
+  --accent:#4f46e5;--accent-hover:#4338ca;
+  --card-desc:#475569;--footer-border:#f1f5f9;--tag-cat-bg:#f1f5f9;
+  --tip-bg:#fffbeb;--tip-border:#fbbf24;--tip-color:#92400e;
+  --sources-color:#94a3b8;
+}
+[data-theme="dark"]{
+  --bg:#0f172a;--card:#1e293b;--border:#334155;--text:#e2e8f0;--muted:#94a3b8;
+  --card-desc:#cbd5e1;--footer-border:#334155;--tag-cat-bg:#334155;
+  --tip-bg:#422006;--tip-border:#92400e;--tip-color:#fcd34d;
+  --sources-color:#64748b;
+}
+[data-theme="dark"] .tag-aif{background:#2e1065;color:#c4b5fd}
+[data-theme="dark"] .tag-saa{background:#134e4a;color:#5eead4}
+[data-theme="dark"] .tag-src{background:#1e3a5f;color:#93c5fd}
+[data-theme="dark"] ::-webkit-scrollbar-thumb{background:#475569}
+html{font-size:var(--font-size,14px)}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .3s,color .3s}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:10px}
+::-webkit-scrollbar-thumb:hover{background:#94a3b8}
+
+/* ── Sticky header ── */
+.header{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);box-shadow:0 1px 3px rgba(0,0,0,.06);padding:8px 12px;transition:background .3s}
+[data-theme="dark"] .header{background:rgba(15,23,42,.92)}
+.header-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+
+/* ── Controls ── */
+select,input[type=text]{height:32px;padding:0 8px;border:1px solid var(--border);border-radius:6px;font-size:.8rem;font-family:inherit;background:var(--card);color:var(--text);outline:none;transition:border .15s}
+select:focus,input[type=text]:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(79,70,229,.15)}
+input[type=text]{flex:1 1 120px;min-width:100px}
+select{max-width:180px;cursor:pointer}
+.search-wrap{position:relative;display:flex;flex:1 1 160px;min-width:120px}
+.search-wrap input{width:100%;padding-right:28px}
+.search-clear{position:absolute;right:6px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);cursor:pointer;font-size:1rem;line-height:1;display:none}
+.search-clear.show{display:block}
+
+.count{font-size:.7rem;color:var(--muted);white-space:nowrap}
+.sort-btn,.grid-btn{height:32px;padding:0 10px;border:1px solid var(--border);border-radius:6px;font-size:.72rem;font-family:inherit;cursor:pointer;background:var(--card);color:var(--muted);transition:all .15s;white-space:nowrap}
+.sort-btn.active,.grid-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.grid-btns{display:flex;gap:2px}
+.grid-btn{padding:0 7px;font-size:.8rem}
+
+.font-ctrl{display:flex;align-items:center;gap:4px;font-size:.7rem;color:var(--muted)}
+.font-slider{-webkit-appearance:none;appearance:none;width:56px;height:4px;border-radius:2px;background:var(--border);outline:none;cursor:pointer}
+.font-slider::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--accent);cursor:pointer}
+.font-slider::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--accent);border:none;cursor:pointer}
+
+/* ── Icon buttons ── */
+.icon-btn{width:32px;height:32px;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--muted);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:1rem;transition:all .15s}
+.icon-btn:hover{background:rgba(79,70,229,.08);color:var(--accent);border-color:var(--accent)}
+.icon-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+/* ── Stats bar ── */
+.stats-bar{display:flex;flex-wrap:wrap;gap:6px;padding:4px 0 0;font-size:.7rem;color:var(--muted)}
+.stats-bar .chip{background:var(--border);padding:2px 8px;border-radius:10px}
+.chip-bm{background:rgba(245,158,11,.12);color:#d97706;cursor:pointer;transition:all .15s}
+.chip-bm:hover{background:rgba(245,158,11,.22)}
+.chip-bm.active{outline:2px solid #f59e0b;outline-offset:-1px}
+
+/* ── Grid ── */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(var(--grid-min,320px),1fr));gap:10px;padding:10px 12px}
+@media(max-width:640px){.grid{grid-template-columns:1fr;padding:8px}}
+
+/* ── Card ── */
+.card{background:var(--card);border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.06);display:flex;flex-direction:column;border-left:4px solid var(--border);transition:box-shadow .2s,transform .15s;cursor:default;content-visibility:auto;contain-intrinsic-size:0 350px;position:relative;overflow:hidden}
+.card:hover{box-shadow:0 4px 12px rgba(0,0,0,.1);transform:translateY(-1px)}
+.card.bookmarked{background:linear-gradient(135deg,rgba(245,158,11,.06),transparent 60%)}
+.card.exam-aif{border-left-color:var(--aif);background:linear-gradient(90deg,rgba(139,92,246,.03) 0%,transparent 40%)}
+.card.exam-saa{border-left-color:var(--saa);background:linear-gradient(90deg,rgba(20,184,166,.03) 0%,transparent 40%)}
+
+.bm-btn{position:absolute;top:8px;right:8px;background:rgba(0,0,0,.4);border:none;cursor:pointer;font-size:1rem;color:#fff;opacity:.7;transition:all .15s;padding:4px 6px;z-index:2;border-radius:4px}
+.bm-btn:hover{opacity:1;transform:scale(1.15);background:rgba(0,0,0,.6)}
+.bm-btn.active{color:#f59e0b;opacity:1}
+
+/* Thumbnail */
+.card-thumb{position:relative;overflow:hidden;cursor:pointer;background:#e2e8f0;min-height:120px}
+[data-theme="dark"] .card-thumb{background:#334155}
+.card-thumb img{width:100%;height:auto;display:block;transition:transform .3s}
+.card:hover .card-thumb img{transform:scale(1.03)}
+.card-thumb .enlarge-hint{position:absolute;bottom:6px;right:6px;background:rgba(0,0,0,.5);color:#fff;font-size:.6rem;padding:2px 6px;border-radius:3px;opacity:0;transition:opacity .2s}
+.card:hover .card-thumb .enlarge-hint{opacity:1}
+
+/* Card body */
+.card-body{padding:10px 12px;flex:1;display:flex;flex-direction:column}
+.card-title{font-size:.85rem;font-weight:700;line-height:1.25;word-break:break-word;margin-bottom:4px}
+.card-tags{display:flex;flex-wrap:wrap;gap:3px;margin-bottom:6px}
+
+.tag{font-size:.6rem;font-weight:600;padding:1px 6px;border-radius:3px;white-space:nowrap}
+.tag-aif{background:#ede9fe;color:#6d28d9}
+.tag-saa{background:#ccfbf1;color:#0f766e}
+.tag-ch{font-size:.6rem;font-weight:500;padding:1px 6px;border-radius:10px;background:var(--tag-cat-bg);color:var(--muted)}
+.tag-src{font-size:.58rem;font-weight:600;padding:1px 5px;border-radius:3px;background:#dbeafe;color:#1e40af}
+
+.card-desc{font-size:.78rem;color:var(--card-desc);line-height:1.5;flex:1;margin-bottom:4px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}
+.card-desc.expanded{-webkit-line-clamp:unset;display:block}
+
+/* Exam focus tip callout */
+.exam-tip{font-size:.72rem;line-height:1.4;padding:6px 8px;margin:4px 0;border-left:3px solid var(--tip-border);background:var(--tip-bg);color:var(--tip-color);border-radius:0 4px 4px 0;display:none}
+.exam-tip.show{display:block}
+.exam-tip.expanded{display:block}
+
+.card-footer{display:flex;justify-content:space-between;align-items:center;padding-top:6px;border-top:1px solid var(--footer-border)}
+.card-page{font-size:.7rem;color:var(--muted)}
+.expand-btn{font-size:.65rem;color:var(--muted);cursor:pointer;border:none;background:none;padding:2px 4px}
+.expand-btn:hover{color:var(--accent)}
+
+/* ── Modal / Lightbox ── */
+.modal{display:none;position:fixed;z-index:100;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,.95)}
+.modal.active{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
+.modal-wrap{position:relative;max-width:95vw;max-height:90vh;display:flex;flex-direction:column;align-items:center}
+.modal-wrap img{max-width:95vw;max-height:70vh;border-radius:8px;box-shadow:0 10px 40px rgba(0,0,0,.5);background:#fff;object-fit:contain}
+.modal-close{position:fixed;top:15px;right:25px;color:#fff;font-size:2.2rem;cursor:pointer;background:rgba(0,0,0,.5);border:none;width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:110;transition:background .2s}
+.modal-close:hover{background:#f59e0b;color:#232f3e}
+.modal-nav{position:fixed;top:50%;transform:translateY(-50%);color:#fff;font-size:2rem;cursor:pointer;background:rgba(0,0,0,.4);border:none;width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:110;transition:background .2s}
+.modal-nav:hover{background:rgba(255,255,255,.2)}
+.modal-prev{left:15px}
+.modal-next{right:15px}
+.modal-info{margin-top:16px;color:#fff;text-align:center;max-width:800px}
+.modal-info h3{color:#f59e0b;font-size:1rem;margin-bottom:4px}
+.modal-info p{color:#ccc;font-size:.9rem;line-height:1.5;margin:2px 0}
+.modal-counter{font-size:.75rem;color:#94a3b8;margin-top:8px}
+
+/* ── Scroll sentinel ── */
+.sentinel{height:1px}
+
+/* ── No results ── */
+.no-results{text-align:center;padding:60px 20px;color:var(--muted)}
+.no-results h2{font-size:1.2rem;font-weight:700;margin-bottom:4px}
+.no-results p{font-size:.85rem}
+
+/* ── Loading spinner ── */
+.loading{text-align:center;padding:20px;color:var(--muted);font-size:.8rem}
+.loading::before{content:"";display:inline-block;width:16px;height:16px;border:2px solid #e2e8f0;border-top-color:var(--accent);border-radius:50%;animation:spin .6s linear infinite;margin-right:6px;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── Back to top ── */
+.btt{position:fixed;bottom:20px;right:20px;width:40px;height:40px;border-radius:50%;background:var(--accent);color:#fff;border:none;cursor:pointer;font-size:1.1rem;box-shadow:0 2px 8px rgba(0,0,0,.2);opacity:0;transform:translateY(10px);transition:opacity .2s,transform .2s;z-index:20}
+.btt.show{opacity:1;transform:translateY(0)}
+.btt:hover{background:var(--accent-hover)}
+</style>
+</head>
+<body>
+
+<!-- ── Modal ── -->
+<div class="modal" id="modal">
+  <button class="modal-close" id="modalClose" title="Close (Esc)">&times;</button>
+  <button class="modal-nav modal-prev" id="modalPrev" title="Previous (←)">‹</button>
+  <button class="modal-nav modal-next" id="modalNext" title="Next (→)">›</button>
+  <div class="modal-wrap">
+    <img id="modalImg" src="" alt="">
+    <div class="modal-info">
+      <h3 id="modalTitle"></h3>
+      <p id="modalCaption"></p>
+      <p id="modalTip" style="color:#fcd34d;font-style:italic"></p>
+      <div class="modal-counter" id="modalCounter"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Header ── -->
+<div class="header">
+  <div class="header-row">
+    <select id="fExam" aria-label="Filter by exam">
+      <option value="all">All Exams</option>
+      <option value="AIF-C01">AIF-C01</option>
+      <option value="SAA-C03">SAA-C03</option>
+    </select>
+    <select id="fChapter" aria-label="Filter by chapter"></select>
+    <select id="fSource" aria-label="Filter by source">
+      <option value="all">All Sources</option>
+      <option value="1">Study Guide (1)</option>
+      <option value="1b">Exam Focus (1b)</option>
+      <option value="2">SAA Guide (2)</option>
+    </select>
+    <div class="search-wrap">
+      <input type="text" id="fSearch" placeholder="Search title, caption, chapter…" aria-label="Search">
+      <button class="search-clear" id="searchClear" title="Clear search">&times;</button>
+    </div>
+    <button class="sort-btn active" id="sortBtn" title="Toggle sort mode">By Chapter ▲</button>
+    <div class="grid-btns" title="Grid size">
+      <button class="grid-btn" data-size="small" title="Small thumbnails">▪</button>
+      <button class="grid-btn active" data-size="medium" title="Medium thumbnails">▪▪</button>
+      <button class="grid-btn" data-size="large" title="Large thumbnails">▪▪▪</button>
+    </div>
+    <div class="font-ctrl" title="Adjust font size">
+     <span style="font-size:.6rem">A</span>
+     <input type="range" class="font-slider" id="fontSlider" min="11" max="18" step="1" value="14">
+     <span style="font-size:.85rem">A</span>
+    </div>
+    <button class="icon-btn" id="themeToggle" title="Toggle dark mode">🌙</button>
+    <span class="count" id="countLabel">0 images</span>
+  </div>
+  <div class="stats-bar" id="statsBar"></div>
+</div>
+
+<!-- ── Grid ── -->
+<div class="grid" id="grid"></div>
+<div class="no-results" id="noResults" style="display:none">
+  <h2>No matching images</h2>
+  <p>Try adjusting your filters or search query.</p>
+</div>
+<div class="loading" id="loadingIndicator" style="display:none">Loading more…</div>
+<div class="sentinel" id="sentinel"></div>
+<button class="btt" id="bttBtn" title="Back to top">↑</button>
+
+<script>
+// ══════════════════════════════════════════════════════
+// DATA (embedded at build time)
+// ══════════════════════════════════════════════════════
+const IMAGES = [{"id":"aif-1-figure_1_1_ai_history_1940s_50s","title":"Figure 1.1: AI History 1940s-50s","caption":"Timeline: McCulloch-Pitts Neuron (1943), Turing Test (1950), Perceptron (1957)","examFocusTip":null,"alt":"AI History","exam":"AIF-C01","chapter":"Basic AI Concepts and Terminology","chapterNumber":1,"page":43,"figureNumber":"1.1","imagePath":"images/aif_page43_img1.jpeg","source":"1","sourceFile":"1/index.html"},{"id":"aif-1-figure_1_2_ai_history_1960s_70s","title":"Figure 1.2: AI History 1960s-70s","caption":"Symbolic AI, Machine Learning term coined, Perceptrons book limitations","examFocusTip":null,"alt":"AI History","exam":"AIF-C01","chapter":"Basic AI Concepts and Terminology","chapterNumber":1,"page":44,"figureNumber":"1.2","imagePath":"images/aif_page44_img1.jpeg","source":"1","sourceFile":"1/index.html"},{"id":"aif-1-figure_1_3_ai_history_1980s_present","title":"Figure 1.3: AI History 1980s-Present","caption":"CNNs, Backpropagation, Transformers (2017), Era of LLMs (2022-Present)","examFocusTip":null,"alt":"AI History","exam":"AIF-C01","chapter":"Basic AI Concepts and Terminology","chapterNumber":1,"page":45,"figureNumber":"1.3","imagePath":"images/aif_page45_img1.jpeg","source":"1","sourceFile":"1/index.html"},{"id":"aif-1-figure_1_4_neural_network_training","title":"Figure 1.4: Neural Network Training","caption":"Training process with forward propagation and backpropagation","examFocusTip":"Exam Focus: Understand basic structure: Input layer → Hidden layer(s) → Output layer. Deep learning = neural networks with multiple hidden layers. Used for complex pattern recognition.","alt":"Neural Network","exam":"AIF-C01","chapter":"Basic AI Concepts and Terminology","chapterNumber":1,"page":64,"figureNumber":"1.4","imagePath":"images/aif_page64_img1.jpeg","source":"1","sourceFile":"1/index.html"},{"id":"aif-1-figure_1_5_ml_lifecycle","title":"Figure 1.5: ML Lifecycle","caption":"Complete ML lifecycle from problem definition to deployment","examFocusTip":null,"alt":"ML Lifecycle","exam":"AIF-C01","chapter":"Basic AI Concepts and Terminology","chapterNumber":1,"page":75,"figureNumber":"1.5","imagePath":"images/aif_page75_img1.jpeg","source":"1","sourceFile":"1/index.html"},{"id":"aif-1-figure_1_6_data_types_in_ml","title":"Figure 1.6: Data Types in ML","caption":"Structured, unstructured, semi-structured, and time-series data","examFocusTip":null,"alt":"Data Types","exam":"AIF-C01","chapter":"Basic AI Concepts and Terminology","chapterNumber":1,"page":76,"figureNumber":"1.6","imagePath":"images/aif_page76_img1.jpeg","source":"1","sourceFile":"1/index.html"},{"id":"aif-1-figure_1_7_inference_types","title":"Figure 1.7: Inference Types","caption":"Batch, real-time, and asynchronous inference patterns","examFocusTip":null,"alt":"Inference Types","exam":"AIF-C01","chapter":"Basic AI Concepts and Terminology","chapterNumber":1,"page":77,"figureNumber":"1.7","imagePath":"images/aif_page77_img1.jpeg","source":"1","sourceFile":"1/index.html"},{"id":"aif-1b-aws_global_infrastructure","title":"AWS Global Infrastructure","caption":"Exam Focus: Know the 3 levels: Regions (geographic areas), Availability Zones (isolated data centers within regions), and Edge Locations (CDN endpoints). Regions are independent; AZs within a region are connected by low-latency links.","examFocusTip":null,"alt":"AWS Global Infrastructure","exam":"AIF-C01","chapter":"Why Certify? An Introduction to the AWS AI Practitioner Exam","chapterNumber":1,"page":null,"figureNumber":null,"imagePath":"images/aif_1b_aws_global_infrastructure.png","source":"1b","sourceFile":"1b/index.html"},{"id":"aif-1b-aws_management_console","title":"AWS Management Console","caption":"Exam Focus: The web-based GUI for accessing AWS services. Know that IAM users sign in here. Root account should NOT be used for daily operations - create IAM users instead.","examFocusTip":null,"alt":"AWS Management Console","exam":"AIF-C01","chapter":"Why Certify? An Introduction to the AWS AI Practitioner Exam","chapterNumber":1,"page":null,"figureNumber":null,"imagePath":"images/aif_1b_aws_management_console.png","source":"1b","sourceFile":"1b/index.html"},{"id":"aif-1b-aws_shared_responsibility_model","title":"AWS Shared Responsibility Model","caption":"Exam Focus: CRITICAL: AWS is responsible for security OF the cloud (hardware, global infrastructure). Customer is responsible for security IN the cloud (data, applications, OS configuration, network settings, identity management).","examFocusTip":null,"alt":"AWS Shared Responsibility Model","exam":"AIF-C01","chapter":"Why Certify? An Introduction to the AWS AI Practitioner Exam","chapterNumber":1,"page":null,"figureNumber":null,"imagePath":"images/aif_1b_aws_shared_responsibility_model.png","source":"1b","sourceFile":"1b/index.html"},{"id":"aif-1-figure_2_1_text_to_embeddings","title":"Figure 2.1: Text to Embeddings","caption":"Converting raw text through tokenization to embedding vectors","examFocusTip":null,"alt":"Tokenization","exam":"AIF-C01","chapter":"Basic Concepts of Generative AI","chapterNumber":2,"page":87,"figureNumber":"2.1","imagePath":"images/aif_page87_img1.jpeg","source":"1","sourceFile":"1/index.html"},{"id":"aif-1-figure_2_2_transformer_architecture","title":"Figure 2.2: Transformer Architecture","caption":"Encoder/decoder blocks with multi-head self-attention","examFocusTip":"Exam Focus: CRITICAL for exam: Transformers use Attention Mechanism to process entire sequences in parallel (vs RNNs sequentially). Powers LLMs like GPT, Claude. Key innovation: self-attention.","alt":"Transformer","exam":"AIF-C01","chapter":"Basic Concepts of Generative AI","chapterNumber":2,"page":90,"figureNumber":"2.2","imagePath":"images/aif_page90_img1.jpeg","source":"1","sourceFile":"1/index.html"},{"id":"aif-1b-gan_architecture","title":"GAN Architecture","caption":"Exam Focus: Generative Adversarial Networks: Two networks compete - Generator (creates fake data) and Discriminator (detects fakes). Used for generating realistic images, data augmentation.","examFocusTip":null,"alt":"GAN Architecture","exam":"AIF-C01","chapter":"AWS Fundamentals for the AI Practitioner","chapterNumber":2,"page":null,"figureNumber":null,"imagePath":"images/aif_1b_gan_architecture.png","source":"1b","sourceFile":"1b/index.html"},{"id":"aif-1b-ml_model_training_process","title":"ML Model Training Process","caption":"Exam Focus: Understand the iterative process: 1) Data collection/preparation, 2) Feature engineering, 3) Model selection, 4) Training, 5) Evaluation, 6) Deployment, 7) Monitoring.","examFocusTip":null,"alt":"ML Model Training Process","exam":"AIF-C01","chapter":"AWS Fundamentals for the AI Practitioner","chapterNumber":2,"page":null,"figureNumber":null,"imagePath":"images/aif_1b_ml_model_training_process.png","source":"1b","sourceFile":"1b/index.html"},{"id":"aif-1b-reinforcement_learning_diagram","title":"Reinforcement Learning Diagram","caption":"Exam Focus: Agent takes actions in an environment → receives rewards/penalties → learns optimal policy. Use case: AWS DeepRacer (autonomous driving). Contrast with supervised/unsupervised.","examFocusTip":null,"alt":"Reinforcement Learning Diagram","exam":"AIF-C01","chapter":"AWS Fundamentals for the AI Practitioner","chapterNumber":2,"page":null,"figureNumber":null,"imagePath":"images/aif_1b_reinforcement_learning_diagram.png","source":"1b","sourceFile":"1b/index.html"},{"id":"aif-1b-supervised_learning_workflow","title":"Supervised Learning Workflow","caption":"Exam Focus: Supervised learning requires LABELED data (input-output pairs). Use cases: classification (predicting categories) and regression (predicting continuous values). Contrast with unsupervised learning (no labels).","examFocusTip":null,"alt":"Supervised Learning Workflow","exam":"AIF-C01","chapter":"AWS Fundamentals for the AI Practitioner","chapterNumber":2,"page":null,"figureNumber":null,"imagePath":"images/aif_1b_supervised_learning_workflow.png","source":"1b","sourceFile":"1b/index.html"},{"id":"aif-1-figure_3_1_ai_by_industry","title":"Figure 3.1: AI by Industry","caption":"AI and ML applications across healthcare, finance, retail, manufacturing","examFocusTip":null,"alt":"AI Applications","exam":"AIF-C01","chapter":"Applications of AI and ML in Real-World Use Cases","chapterNumber":3,"page":109,"figureNumber":"3.1","imagePath":"images/aif_page109_img1.jpeg","source":"1","sourceFile":"1/index.html"},{"id":"aif-1-figure_3_2_healthcare_ai","title":"Figure 3.2: Healthcare AI","caption":"Medical imaging, drug discovery, clinical documentation","examFocusTip":null,"alt":"Healthcare AI","exam":"AIF-C01","chapter":"Applications of AI and ML in Real-World Use Cases","chapterNumber":3,"page":115,"figureNumber":"3.2","imagePath":"images/aif_page115_img1.jpeg","source":"1","sourceFile":"1/index.html"},{"id":"aif-1-figure_3_3_financial_services_ai","title":"Figure 3.3: Financial Services AI","caption":"Fraud detection, risk assessment, algorithmic trading","examFocusTip":null,"alt":"Finance AI","exam":"AIF-C01","chapter":"Applications of AI and ML in Real-World Use Cases","chapterNumber":3,"page":117,"figureNumber":"3.3","imagePath":"images/aif_page117_img1.jpeg","source":"1","sourceFile":"1/index.html"},{"id":"aif-1-figure_3_4_retail_ai","title":"Figure 3.4: Retail AI","caption":"Recommendations, demand forecasting, visual search","examFocusTip":null,"alt":"Retail AI","exam":"AIF-C01","chapter":"Applications of AI and ML in Real-World Use Cases","chapterNumber":3,"page":122,"figureNumber":"3.4","imagePath":"images/aif_page122_img1.jpeg","source":"1","sourceFile":"1/index.html"},{"id":"aif-1b-amazon_comprehend_output","title":"Amazon Comprehend Output","caption":"Exam Focus: NLP service extracts: entities (people, places), key phrases, sentiment (positive/negative/neutral), language detection. Use cases: social media analysis, document processing.","examFocusTip":null,"alt":"Amazon Comprehend Output","exam":"AIF-C01","chapter":"AI and Machine Learning","chapterNumber":3,"page":null,"figureNumber":null,"imagePath":"images/aif_1b_amazon_comprehend_output.png","source":"1b","sourceFile":"1b/index.html"},{"id":"aif-1b-amazon_rekognition_demo","title":"Amazon Rekognition Demo","caption":"Exam Focus: Computer vision service: Object detection, facial analysis, text extraction. Can detect faces, emotions, inappropriate content. Fully managed - no ML expertise needed.","examFocusTip":null,"alt":"Amazon Rekognition Demo","exam":"AIF-C01","chapter":"AI and Machine Learning","chapterNumber":3,"page":null,"figureNumber":null,"imagePath":"images/aif_1b_amazon_rekognition_demo.png","source":"1b","sourceFile":"1b/index.html"},{"id":"aif-1b-amazon_textract_results","title":"Amazon Textract Results","caption":"Exam Focus: Extracts text AND structured data from documents (forms, tables). Preserves document structure. Use cases: invoice processing, form automation, document digitization.","examFocusTip":null,"alt":"Amazon Textract Results","exam":"AIF-C01","chapter":"AI and Machine Learning","chapterNumber":3,"page":null,"figureNumber":null,"imagePath":"images/aif_1b_amazon_textract_results.png","source":"1b","sourceFile":"1b/index.html"},{"id":"aif-1b-fine_tuning_process","title":"Fine-tuning Process","caption":"Exam Focus: Fine-tuning adapts pre-trained FM to specific tasks with domain-specific data. Alternative to RAG. Trade-off: more effort but better performance for specialized tasks.","examFocusTip":null,"alt":"Fine-tuning Process","exam":"AIF-C01","chapter":"AI and Machine Learning","chapterNumber":3,"page":null,"figureNumber":null,"imagePath":"images/aif_1b_fine_tuning_process.png","source":"1b","sourceFile":"1b/index.html"},{"id":"aif-1b-rag_architecture","title":"RAG Architecture","caption":"Exam Focus: Retrieval Augmented Generation: Model retrieves relevant context from external knowledge base before generating response. Reduces hallucinations, keeps model current without retraining.","examFocusTip":null,"alt":"RAG Architecture","exam":"AIF-C01","chapter":"AI and Machine Learning","chapterNumber":3,"page":null,"figureNumber":null,"imagePath":"images/aif_1b_rag_architecture.png","source":"1b","sourceFile":"1b/index.html"},{"id":"aif-1b-rekognition_face_analysis","title":"Rekognition Face Analysis","caption":"Exam Focus: Returns: face location, age range, gender, emotions, facial features, accessories (glasses). Use cases: security, user verification, photo organization.","examFocusTip":null,"alt":"Rekognition Face Analysis","exam":"AIF-C01","chapter":"AI and Machine Learning","chapterNumber":3,"page":null,"figureNumber":null,"imagePath":"images/aif_1b_rekognition_face_analysis.png","source":"1b","sourceFile":"1b/index.html"},{"id":"aif-1-figure_4_1_aws_ai_ml_service_stack","title":"Figure 4.1: AWS AI/ML Service Stack","caption":"Three-layer architecture: Bedrock/Q (Gen AI), AI Services (APIs), SageMaker (ML)","examFocusTip":null,"alt":"AWS AI Stack","exam":"AIF-C01","chapter":"AWS AI and ML Services","chapterNumber":4,"page":134,"figureNumber":"4.1","imagePath":"images/aif_page134_img1.jpeg","source":"1","sourceFile":"1/index.html"},{"id":"aif-1-figure_4_2_bedrock_console","title":"Figure 4.2: Bedrock Console","caption":"Amazon Bedrock console with foundation model selection","examFocusTip":"Exam Focus: CRITICAL: Bedrock is AWS's FM platform. Provides access to multiple FMs (Claude, Llama, etc.) via single API. Serverless - no infrastructure management.","alt":"Bedrock Console","exam":"AIF-C01","chapter":"AWS AI and ML Services","chapterNumber":4,"page":137,"figureNumber":"4.2","imagePath":"images/aif_page137_img1.jpeg","source":"1","sourceFile":"1/index.html"},{"id":"aif-1-figure_4_3_bedrock_knowledge_bases","title":"Figure 4.3: Bedrock Knowledge Bases","caption":"RAG architecture with data ingestion and retrieval workflow","examFocusTip":"Exam Focus: CRITICAL: Knowledge Bases implement RAG. Connects FM to your data sources (S3, databases). Uses vector embeddings for semantic search.","alt":"Knowledge Bases","exam":"AIF-C01","chapter":"AWS AI and ML Services","chapterNumber":4,"page":149,"figureNumber":"4.3","imagePath":"images/aif_page149_img1.jpeg","source":"1","sourceFile":"1/index.html"},{"id":"aif-1-figure_4_4_comprehend_entity_extraction","title":"Figure 4.4: Comprehend Entity Extraction","caption":"Amazon Comprehend output showing entities with confidence scores","examFocusTip":null,"alt":"Comprehend Results","exam":"AIF-C01","chapter":"AWS AI and ML Services","chapterNumber":4,"page":150,"figureNumber":"4.4","imagePath":"images/aif_page150_img1.jpeg","source":"1","sourceFile":"1/index.html"},{"id":"aif-1-figure_4_5_sagemaker_studio_ide","title":"Figure 4.5: SageMaker Studio IDE","caption":"Amazon SageMaker Studio integrated development environment","examFocusTip":"Exam Focus: Amazon SageMaker is the primary AWS service for ML. Know that Studio provides an integrated IDE for the entire ML lifecycle: data prep, model building, training, and deployment.","alt":"SageMaker Studio","exam":"AIF-C01","chapter":"AWS AI and ML Services","chapterNumber":4,"page":160,"figureNumber":"4.5","imagePath":"images/aif_page160_img1.jpeg","source":"1","sourceFile":"1/index.html"},{"id":"aif-1b-amazon_rekognition_console","title":"Amazon Rekognition Console","caption":"Exam Focus: Shows confidence scores for each detected attribute. Remember: higher confidence = more reliable. Can set thresholds for what to include in results.","examFocusTip":null,"alt":"Amazon Rekognition Console","exam":"AIF-C01","chapter":"Understanding Generative AI","chapterNumber":4,"page":null,"figureNumber":null,"imagePath":"images/aif_1b_amazon_rekognition_console.png","source":"1b","sourceFile":"1b/index.html"},{"id":"aif-1b-bedrock_playground_interface","title":"Bedrock Playground Interface","caption":"Exam Focus: Playground lets you test models interactively. Can adjust temperature (creativity vs determinism) and max tokens. Good for prompt engineering experiments.","examFocusTip":null,"alt":"Bedrock Playground Interface","exam":"AIF-C01","chapter":"Understanding Generative AI","chapterNumber":4,"page":null,"figureNumber":null,"imagePath":"images/aif_1b_bedrock_playground_interface.png","source":"1b","sourceFile":"1b/index.html"},{"id":"aif-1-figure_5_1_model_selection_criteria","title":"Figure 5.1: Model Selection Criteria","caption":"Decision framework for selecting foundation models","examFocusTip":"Exam Focus: Consider: Task type (text gen, embeddings, image), Model size (affects quality/cost), Context window (token limit), Latency requirements, Cost per token","alt":"Model Selection","exam":"AIF-C01","chapter":"Model Selection and Prompt Engineering","chapterNumber":5,"page":177,"figureNumber":"5.1","imagePath":"images/aif_page177_img1.jpeg","source":"1","sourceFile":"1/index.html"},{"id":"aif-1-figure_5_2_bedrock_model_comparison","title":"Figure 5.2: Bedrock Model Comparison","caption":"Comparison of foundation models and their capabilities","examFocusTip":"Exam Focus: Bedrock provides automatic evaluation metrics. Can also do human evaluation. Important for comparing models before production deployment.","alt":"Model Comparison","exam":"AIF-C01","chapter":"Model Selection and Prompt Engineering","chapterNumber":5,"page":179,"figureNumber":"5.2","imagePath":"images/aif_page179_img1.jpeg","source":"1","sourceFile":"1/index.html"},{"id":"aif-1-figure_5_3_claude_3_haiku_details","title":"Figure 5.3: Claude 3 Haiku Details","caption":"Model information showing capabilities: Agents, Code Gen, RAG","examFocusTip":null,"alt":"Claude 3 Details","exam":"AIF-C01","chapter":"Model Selection and Prompt Engineering","chapterNumber":5,"page":181,"figureNumber":"5.3","imagePath":"images/aif_page181_img1.jpeg","source":"1","sourceFile":"1/index.html"},{"id":"aif-1-figure_5_4_prompt_components","title":"Figure 5.4: Prompt Components","caption":"Key components: Instruction, Context, Examples, Constraints, Format","examFocusTip":"Exam Focus: CRITICAL: 4 components - 1) Instruction (what to do), 2) Context (background info), 3) Input Data (what to process), 4) Output Indicator (format expected).","alt":"Prompt Engineering","exam":"AIF-C01","chapter":"Model Selection and Prompt Engineering","chapterNumber":5,"page":185,"figureNumber":"5.4","imagePath":"images/aif_page185_img1.jpeg","source":"1","sourceFile":"1/index.html"},{"id":"aif-1b-agent_action_groups","title":"Agent Action Groups","caption":"Exam Focus: Action groups define what APIs/tools the agent can invoke. Agent uses reasoning to determine which actions to take based on user input.","examFocusTip":null,"alt":"Agent Action Groups","exam":"AIF-C01","chapter":"Real-World AI Applications with AWS Tools","chapterNumber":5,"page":null,"figureNumber":null,"imagePath":"images/aif_1b_agent_action_groups.png","source":"1b","sourceFile":"1b/index.html"},{"id":"aif-1b-amazon_q_business","title":"Amazon Q Business","caption":"Exam Focus: Amazon Q = Generative AI assistant for BUSINESS users (not developers). Connects to enterprise data (SharePoint, S3, etc.). Answers questions, generates content, summarizes documents.","examFocusTip":null,"alt":"Amazon Q Business","exam":"AIF-C01","chapter":"Real-World AI Applications with AWS Tools","chapterNumber":5,"page":null,"figureNumber":null,"imagePath":"images/aif_1b_amazon_q_business.png","source":"1b","sourceFile":"1b/index.html"},{"id":"aif-1b-amazon_q_developer","title":"Amazon Q Developer","caption":"Exam Focus: Q Developer helps DEVELOPERS: code suggestions, debugging, security scanning, infrastructure as code generation. Integrated into IDE and AWS Console.","examFocusTip":null,"alt":"Amazon Q Developer","exam":"AIF-C01","chapter":"Real-World AI Applications with AWS Tools","chapterNumber":5,"page":null,"figureNumber":null,"imagePath":"images/aif_1b_amazon_q_developer.png","source":"1b","sourceFile":"1b/index.html"},{"id":"aif-1b-chain_of_thought_prompting","title":"Chain-of-Thought Prompting","caption":"Exam Focus: CRITICAL: Prompt model to show its reasoning step-by-step. Improves accuracy on complex problems (math, logic). Keywords: 'Let's think step by step'","examFocusTip":null,"alt":"Chain-of-Thought Prompting","exam":"AIF-C01","chapter":"Real-World AI Applications with AWS Tools","chapterNumber":5,"page":null,"figureNumber":null,"imagePath":"images/aif_1b_chain_of_thought_prompting.png","source":"1b","sourceFile":"1b/index.html"},{"id":"aif-1b-few_shot_prompting","title":"Few-Shot Prompting","caption":"Exam Focus: Few-shot: Provide 2-5 examples of desired input/output. Teaches model the pattern. Improves accuracy significantly over zero-shot.","examFocusTip":null,"alt":"Few-Shot Prompting","exam":"AIF-C01","chapter":"Real-World AI Applications with AWS Tools","chapterNumber":5,"page":null,"figureNumber":null,"imagePath":"images/aif_1b_few_shot_prompting.png","source":"1b","sourceFile":"1b/index.html"},{"id":"aif-1b-jailbreaking_attempts","title":"Jailbreaking Attempts","caption":"Exam Focus: Jailbreaking = trying to bypass safety constraints. Techniques: role-playing, hypothetical scenarios, encoding requests. Guardrails help detect and block.","examFocusTip":null,"alt":"Jailbreaking Attempts","exam":"AIF-C01","chapter":"Real-World AI Applications with AWS Tools","chapterNumber":5,"page":null,"figureNumber":null,"imagePath":"images/aif_1b_jailbreaking_attempts.png","source":"1b","sourceFile":"1b/index.html"},{"id":"aif-1b-prompt_injection_attack","title":"Prompt Injection Attack","caption":"Exam Focus: SECURITY RISK: Malicious user inserts instructions to override system prompts. Can leak system prompts or cause harmful outputs. Use input validation and guardrails.","examFocusTip":null,"alt":"Prompt Injection Attack","exam":"AIF-C01","chapter":"Real-World AI Applications with AWS Tools","chapterNumber":5,"page":null,"figureNumber":null,"imagePath":"images/aif_1b_prompt_injection_attack.png","source":"1b","sourceFile":"1b/index.html"},{"id":"aif-1b-zero_shot_prompting","title":"Zero-Shot Prompting","caption":"Exam Focus: Zero-shot: No examples given. Model uses pre-trained knowledge. Fastest approach but may be less accurate for complex/nuanced tasks.","examFocusTip":null,"alt":"Zero-Shot Prompting","exam":"AIF-C01","chapter":"Real-World AI Applications with AWS Tools","chapterNumber":5,"page":null,"figureNumber":null,"imagePath":"images/aif_1b_zero_shot_prompting.png","source":"1b","sourceFile":"1b/index.html"},{"id":"aif-1-figure_6_1_bedrock_data_automation","title":"Figure 6.1: Bedrock Data Automation","caption":"Extracting information from documents with configurable output","examFocusTip":null,"alt":"Data Automation","exam":"AIF-C01","chapter":"Generative AI Applications with RAG and Agents","chapterNumber":6,"page":227,"figureNumber":"6.1","imagePath":"images/aif_page227_img1.jpeg","source":"1","sourceFile":"1/index.html"},{"id":"aif-1-figure_6_2_rag_with_bedrock","title":"Figure 6.2: RAG with Bedrock","caption":"Complete RAG: Data ingestion → OpenSearch → Retrieve & Generate API","examFocusTip":null,"alt":"RAG Architecture","exam":"AIF-C01","chapter":"Generative AI Applications with RAG and Agents","chapterNumber":6,"page":229,"figureNumber":"6.2","imagePath":"images/aif_page229_img1.jpeg","source":"1","sourceFile":"1/index.html"},{"id":"aif-1-figure_6_3_bedrock_agents_architecture","title":"Figure 6.3: Bedrock Agents Architecture","caption":"Agents with action groups, knowledge bases, and API integrations","examFocusTip":"Exam Focus: Agents = autonomous AI that can: 1) Understand user requests, 2) Break down into steps, 3) Call APIs/tools, 4) Maintain conversation context. Enables complex task automation.","alt":"Agents Architecture","exam":"AIF-C01","chapter":"Generative AI Applications with RAG and Agents","chapterNumber":6,"page":239,"figureNumber":"6.3","imagePath":"images/aif_page239_img1.jpeg","source":"1","sourceFile":"1/index.html"},{"id":"aif-1-figure_6_4_agent_orchestration","title":"Figure 6.4: Agent Orchestration","caption":"How agents break down requests into actionable steps","examFocusTip":null,"alt":"Agent Flow","exam":"AIF-C01","chapter":"Generative AI Applications with RAG and Agents","chapterNumber":6,"page":240,"figureNumber":"6.4","imagePath":"images/aif_page240_img1.jpeg","source":"1","sourceFile":"1/index.html"},{"id":"aif-1-figure_6_5_multi_modal_rag","title":"Figure 6.5: Multi-modal RAG","caption":"RAG supporting documents, images, audio, and video inputs","examFocusTip":null,"alt":"Multi-modal RAG","exam":"AIF-C01","chapter":"Generative AI Applications with RAG and Agents","chapterNumber":6,"page":245,"figureNumber":"6.5","imagePath":"images/aif_page245_img1.jpeg","source":"1","sourceFile":"1/index.html"},{"id":"aif-1-figure_7_1_fine_tuning_vs_continued_pre_training","title":"Figure 7.1: Fine-tuning vs Continued Pre-training","caption":"Comparison: supervised small data vs self-supervised large corpus","examFocusTip":null,"alt":"Fine-tuning vs Pre-training","exam":"AIF-C01","chapter":"Model Customization and Evaluation","chapterNumber":7,"page":253,"figureNumber":"7.1","imagePath":"images/aif_page253_img1.jpeg","source":"1","sourceFile":"1/index.html"},{"id":"aif-1-figure_7_2_model_customization_options","title":"Figure 7.2: Model Customization Options","caption":"Fine-tuning, continued pre-training, and model distillation","examFocusTip":null,"alt":"Customization Options","exam":"AIF-C01","chapter":"Model Customization and Evaluation","chapterNumber":7,"page":259,"figureNumber":"7.2","imagePath":"images/aif_page259_img1.jpeg","source":"1","sourceFile":"1/index.html"},{"id":"aif-1-figure_7_3_fine_tuning_workflow","title":"Figure 7.3: Fine-tuning Workflow","caption":"Prepare datasets, configure training, evaluate model","examFocusTip":null,"alt":"Fine-tuning Process","exam":"AIF-C01","chapter":"Model Customization and Evaluation","chapterNumber":7,"page":260,"figureNumber":"7.3","imagePath":"images/aif_page260_img1.jpeg","source":"1","sourceFile":"1/index.html"},{"id":"aif-1-figure_7_4_fine_tuning_vs_domain_adaptation","title":"Figure 7.4: Fine-tuning vs Domain Adaptation","caption":"Side-by-side comparison of the two approaches","examFocusTip":null,"alt":"Fine-tuning Comparison","exam":"AIF-C01","chapter":"Model Customization and Evaluation","chapterNumber":7,"page":263,"figureNumber":"7.4","imagePath":"images/aif_page263_img1.jpeg","source":"1","sourceFile":"1/index.html"},{"id":"aif-1-figure_7_5_model_distillation","title":"Figure 7.5: Model Distillation","caption":"Transferring knowledge from large teacher to small student model","examFocusTip":null,"alt":"Model Distillation","exam":"AIF-C01","chapter":"Model Customization and Evaluation","chapterNumber":7,"page":268,"figureNumber":"7.5","imagePath":"images/aif_page268_img1.jpeg","source":"1","sourceFile":"1/index.html"},{"id":"aif-1-figure_7_6_model_evaluation_dashboard","title":"Figure 7.6: Model Evaluation Dashboard","caption":"Automated metrics and human evaluation options","examFocusTip":"Exam Focus: Know these metrics: Accuracy, Precision, Recall, F1 Score, AUC-ROC. Confusion matrix shows TP, FP, TN, FN. Critical for understanding model performance.","alt":"Evaluation Dashboard","exam":"AIF-C01","chapter":"Model Customization and Evaluation","chapterNumber":7,"page":269,"figureNumber":"7.6","imagePath":"images/aif_page269_img1.jpeg","source":"1","sourceFile":"1/index.html"},{"id":"aif-1-figure_7_7_llm_as_a_judge","title":"Figure 7.7: LLM-as-a-Judge","caption":"Using foundation models to evaluate other model outputs","examFocusTip":null,"alt":"LLM-as-Judge","exam":"AIF-C01","chapter":"Model Customization and Evaluation","chapterNumber":7,"page":270,"figureNumber":"7.7","imagePath":"images/aif_page270_img1.jpeg","source":"1","sourceFile":"1/index.html"},{"id":"aif-1-figure_7_8_evaluation_results","title":"Figure 7.8: Evaluation Results","caption":"Comparing accuracy, robustness, toxicity metrics","examFocusTip":null,"alt":"Evaluation Results","exam":"AIF-C01","chapter":"Model Customization and Evaluation","chapterNumber":7,"page":273,"figureNumber":"7.8","imagePath":"images/aif_page273_img1.jpeg","source":"1","sourceFile":"1/index.html"},{"id":"aif-1-figure_7_9_human_evaluation_setup","title":"Figure 7.9: Human Evaluation Setup","caption":"Configuring custom metrics, rating scales, workforce","examFocusTip":null,"alt":"Human Evaluation","exam":"AIF-C01","chapter":"Model Customization and Evaluation","chapterNumber":7,"page":276,"figureNumber":"7.9","imagePath":"images/aif_page276_img1.jpeg","source":"1","sourceFile":"1/index.html"},{"id":"aif-1-figure_7_10_evaluation_best_practices","title":"Figure 7.10: Evaluation Best Practices","caption":"Combining automated metrics and human judgment","examFocusTip":null,"alt":"Best Practices","exam":"AIF-C01","chapter":"Model Customization and Evaluation","chapterNumber":7,"page":279,"figureNumber":"7.10","imagePath":"images/aif_page279_img1.jpeg","source":"1","sourceFile":"1/index.html"},{"id":"aif-1-figure_8_1_mlops_lifecycle","title":"Figure 8.1: MLOps Lifecycle","caption":"CI/CD for ML: integration, deployment, monitoring","examFocusTip":null,"alt":"MLOps Lifecycle","exam":"AIF-C01","chapter":"MLOps","chapterNumber":8,"page":288,"figureNumber":"8.1","imagePath":"images/aif_page288_img1.jpeg","source":"1","sourceFile":"1/index.html"},{"id":"aif-1-figure_8_2_sagemaker_pipelines","title":"Figure 8.2: SageMaker Pipelines","caption":"Workflow orchestration for data prep, training, deployment","examFocusTip":null,"alt":"SageMaker Pipelines","exam":"AIF-C01","chapter":"MLOps","chapterNumber":8,"page":292,"figureNumber":"8.2","imagePath":"images/aif_page292_img1.jpeg","source":"1","sourceFile":"1/index.html"},{"id":"aif-1-figure_8_3_model_registry_workflow","title":"Figure 8.3: Model Registry Workflow","caption":"Versioning, approval workflows, deployment management","examFocusTip":null,"alt":"Model Registry","exam":"AIF-C01","chapter":"MLOps","chapterNumber":8,"page":297,"figureNumber":"8.3","imagePath":"images/aif_page297_img1.jpeg","source":"1","sourceFile":"1/index.html"},{"id":"aif-1-figure_8_4_model_monitor_setup","title":"Figure 8.4: Model Monitor Setup","caption":"Data quality, model quality, bias drift detection","examFocusTip":null,"alt":"Model Monitor","exam":"AIF-C01","chapter":"MLOps","chapterNumber":8,"page":301,"figureNumber":"8.4","imagePath":"images/aif_page301_img1.jpeg","source":"1","sourceFile":"1/index.html"},{"id":"aif-1-figure_8_5_blue_green_deployment","title":"Figure 8.5: Blue/Green Deployment","caption":"Zero-downtime model updates with instant switching","examFocusTip":null,"alt":"Blue/Green Deployment","exam":"AIF-C01","chapter":"MLOps","chapterNumber":8,"page":306,"figureNumber":"8.5","imagePath":"images/aif_page306_img1.jpeg","source":"1","sourceFile":"1/index.html"},{"id":"aif-1b-aws_security_services","title":"AWS Security Services","caption":"Exam Focus: Defense in depth: Shield (DDoS), WAF (web attacks), GuardDuty (threat detection), Macie (data protection), Security Hub (centralized findings).","examFocusTip":null,"alt":"AWS Security Services","exam":"AIF-C01","chapter":"A Framework for Responsible AI","chapterNumber":8,"page":null,"figureNumber":null,"imagePath":"images/aif_1b_aws_security_services.png","source":"1b","sourceFile":"1b/index.html"},{"id":"aif-1b-compliance_frameworks","title":"Compliance Frameworks","caption":"Exam Focus: Know: HIPAA (healthcare), GDPR (EU data privacy), PCI DSS (payments), SOC (financial reporting), ISO (international standards). AWS Artifact provides compliance reports.","examFocusTip":null,"alt":"Compliance Frameworks","exam":"AIF-C01","chapter":"A Framework for Responsible AI","chapterNumber":8,"page":null,"figureNumber":null,"imagePath":"images/aif_1b_compliance_frameworks.png","source":"1b","sourceFile":"1b/index.html"},{"id":"aif-1-figure_9_1_responsible_ai_workflow","title":"Figure 9.1: Responsible AI Workflow","caption":"End-to-end: Pipelines, Registry, Clarify for governance","examFocusTip":null,"alt":"Responsible AI Workflow","exam":"AIF-C01","chapter":"Implementing Responsible AI with AWS Services","chapterNumber":9,"page":322,"figureNumber":"9.1","imagePath":"images/aif_page322_img1.jpeg","source":"1","sourceFile":"1/index.html"},{"id":"aif-1-figure_9_2_sagemaker_clarify","title":"Figure 9.2: SageMaker Clarify","caption":"Data quality, bias detection, model quality assessments","examFocusTip":"Exam Focus: Detects bias in data and models. Measures metrics like disparate impact. Generates explainability reports. Required for responsible AI compliance.","alt":"SageMaker Clarify","exam":"AIF-C01","chapter":"Implementing Responsible AI with AWS Services","chapterNumber":9,"page":326,"figureNumber":"9.2","imagePath":"images/aif_page326_img1.jpeg","source":"1","sourceFile":"1/index.html"},{"id":"aif-1-figure_9_3_bias_detection_report","title":"Figure 9.3: Bias Detection Report","caption":"Pre/post-training bias metrics across facets","examFocusTip":"Exam Focus: Know these: Disparate Impact (ratio of outcomes), Statistical Parity Difference, Equal Opportunity Difference. Important for fairness in AI systems.","alt":"Bias Detection","exam":"AIF-C01","chapter":"Implementing Responsible AI with AWS Services","chapterNumber":9,"page":328,"figureNumber":"9.3","imagePath":"images/aif_page328_img1.jpeg","source":"1","sourceFile":"1/index.html"},{"id":"aif-1-figure_9_4_bedrock_guardrails","title":"Figure 9.4: Bedrock Guardrails","caption":"Content filters, denied topics, PII redaction","examFocusTip":"Exam Focus: CRITICAL: Guardrails filter harmful content. Can block: hate speech, violence, PII, profanity. Also prevents prompt injection. Essential for production GenAI apps.","alt":"Bedrock Guardrails","exam":"AIF-C01","chapter":"Implementing Responsible AI with AWS Services","chapterNumber":9,"page":340,"figureNumber":"9.4","imagePath":"images/aif_page340_img1.jpeg","source":"1","sourceFile":"1/index.html"},{"id":"aif-1-figure_9_5_guardrails_testing","title":"Figure 9.5: Guardrails Testing","caption":"Testing guardrails with sample prompts","examFocusTip":null,"alt":"Guardrails Evaluation","exam":"AIF-C01","chapter":"Implementing Responsible AI with AWS Services","chapterNumber":9,"page":341,"figureNumber":"9.5","imagePath":"images/aif_page341_img1.jpeg","source":"1","sourceFile":"1/index.html"},{"id":"aif-1-figure_10_1_ai_security_threats","title":"Figure 10.1: AI Security Threats","caption":"Prompt injection, data poisoning, model extraction attacks","examFocusTip":"Exam Focus: Understand scope: Consumer apps (highest risk), Enterprise apps, Internal tools. Higher scope = more security controls needed.","alt":"Security Threats","exam":"AIF-C01","chapter":"AI Security, Governance, and Compliance","chapterNumber":10,"page":368,"figureNumber":"10.1","imagePath":"images/aif_page368_img1.jpeg","source":"1","sourceFile":"1/index.html"},{"id":"saa-2-figure_1_1_the_development_model_buffet","title":"Figure 1.1: The Development Model Buffet","caption":"Visual comparison of IaaS, PaaS, and SaaS cloud service models showing levels of control and management responsibility.","examFocusTip":null,"alt":"Development Model Buffet","exam":"SAA-C03","chapter":"Introduction to Cloud Computing & AWS","chapterNumber":1,"page":5,"figureNumber":"1.1","imagePath":"images/saa_page5_img1.jpg","source":"2","sourceFile":"2/index.html"},{"id":"saa-2-figure_1_2_the_four_key_domains","title":"Figure 1.2: The Four Key Domains","caption":"The four key domains of the AWS SAA-C03 exam: Design Secure, High-Performing, Cost-Optimized, and Resilient Architectures.","examFocusTip":null,"alt":"Four Key Domains","exam":"SAA-C03","chapter":"Introduction to Cloud Computing & AWS","chapterNumber":1,"page":15,"figureNumber":"1.2","imagePath":"images/saa_page15_img1.jpg","source":"2","sourceFile":"2/index.html"},{"id":"saa-2-figure_1_3_aws_global_infrastructure","title":"Figure 1.3: AWS Global Infrastructure","caption":"AWS Regions, Availability Zones, and Edge Locations providing global coverage and high availability.","examFocusTip":null,"alt":"AWS Global Infrastructure","exam":"SAA-C03","chapter":"Introduction to Cloud Computing & AWS","chapterNumber":1,"page":16,"figureNumber":"1.3","imagePath":"images/saa_page16_img1.jpg","source":"2","sourceFile":"2/index.html"},{"id":"saa-2-figure_2_1_security_must_haves","title":"Figure 2.1: Security Must-Haves","caption":"Essential AWS security components including IAM users, groups, roles, policies, MFA, and the principle of least privilege.","examFocusTip":null,"alt":"Security Must-Haves","exam":"SAA-C03","chapter":"Identity and Access Management (IAM)","chapterNumber":2,"page":44,"figureNumber":"2.1","imagePath":"images/saa_page44_img1.png","source":"2","sourceFile":"2/index.html"},{"id":"saa-2-figure_2_2_sharing_aws_resources_across_accounts","title":"Figure 2.2: Sharing AWS Resources Across Accounts","caption":"Methods for sharing AWS resources across accounts using resource-based policies and cross-account IAM roles.","examFocusTip":null,"alt":"Sharing AWS Resources","exam":"SAA-C03","chapter":"Identity and Access Management (IAM)","chapterNumber":2,"page":57,"figureNumber":"2.2","imagePath":"images/saa_page57_img1.png","source":"2","sourceFile":"2/index.html"},{"id":"saa-2-figure_3_1_osi_model_vs_tcp_ip_model","title":"Figure 3.1: OSI Model vs TCP/IP Model","caption":"Comparison of the 7-layer OSI model and 4-layer TCP/IP model showing protocol mappings.","examFocusTip":null,"alt":"OSI Model","exam":"SAA-C03","chapter":"Networking in AWS","chapterNumber":3,"page":59,"figureNumber":"3.1","imagePath":"images/saa_page59_img1.png","source":"2","sourceFile":"2/index.html"},{"id":"saa-2-figure_3_2_how_https_works","title":"Figure 3.2: How HTTPS Works","caption":"SSL/TLS handshake process and encryption flow for secure HTTPS connections.","examFocusTip":null,"alt":"HTTPS Works","exam":"SAA-C03","chapter":"Networking in AWS","chapterNumber":3,"page":75,"figureNumber":"3.2","imagePath":"images/saa_page75_img1.png","source":"2","sourceFile":"2/index.html"},{"id":"saa-2-figure_3_3_octet_mapping","title":"Figure 3.3: Octet Mapping","caption":"How binary octets map to IP addresses in IPv4 addressing.","examFocusTip":null,"alt":"Octet Mapping","exam":"SAA-C03","chapter":"Networking in AWS","chapterNumber":3,"page":93,"figureNumber":"3.3","imagePath":"images/saa_page93_img1.png","source":"2","sourceFile":"2/index.html"},{"id":"saa-2-figure_3_4_build_your_vpc","title":"Figure 3.4: Build Your VPC","caption":"VPC architecture with public and private subnets, route tables, and gateways.","examFocusTip":null,"alt":"Build VPC","exam":"SAA-C03","chapter":"Networking in AWS","chapterNumber":3,"page":105,"figureNumber":"3.4","imagePath":"images/saa_page105_img1.png","source":"2","sourceFile":"2/index.html"},{"id":"saa-2-figure_3_5_elastic_load_balancing","title":"Figure 3.5: Elastic Load Balancing","caption":"How ELB distributes incoming traffic across multiple targets for high availability.","examFocusTip":null,"alt":"Elastic Load Balancing","exam":"SAA-C03","chapter":"Networking in AWS","chapterNumber":3,"page":113,"figureNumber":"3.5","imagePath":"images/saa_page113_img1.png","source":"2","sourceFile":"2/index.html"},{"id":"saa-2-figure_3_6_domain_name_system","title":"Figure 3.6: Domain Name System","caption":"DNS hierarchy showing root domains, TLDs, and authoritative name servers.","examFocusTip":null,"alt":"Domain Name System","exam":"SAA-C03","chapter":"Networking in AWS","chapterNumber":3,"page":114,"figureNumber":"3.6","imagePath":"images/saa_page114_img1.png","source":"2","sourceFile":"2/index.html"},{"id":"saa-2-figure_4_1_cloud_storage_comparison","title":"Figure 4.1: Cloud Storage Comparison","caption":"Comparison of block storage (EBS), file storage (EFS), and object storage (S3) use cases.","examFocusTip":null,"alt":"Cloud Storage Comparison","exam":"SAA-C03","chapter":"Cloud Storage","chapterNumber":4,"page":121,"figureNumber":"4.1","imagePath":"images/saa_page121_img1.png","source":"2","sourceFile":"2/index.html"},{"id":"saa-2-figure_5_1_ec2_instance_types","title":"Figure 5.1: EC2 Instance Types","caption":"EC2 instance families: General Purpose, Compute Optimized, Memory Optimized, and Storage Optimized.","examFocusTip":null,"alt":"EC2 Instance Types","exam":"SAA-C03","chapter":"AWS Compute","chapterNumber":5,"page":133,"figureNumber":"5.1","imagePath":"images/saa_page133_img1.png","source":"2","sourceFile":"2/index.html"},{"id":"saa-2-figure_5_2_auto_scaling","title":"Figure 5.2: Auto Scaling","caption":"Auto Scaling Groups with Launch Templates scaling EC2 instances based on CloudWatch metrics.","examFocusTip":null,"alt":"Auto Scaling","exam":"SAA-C03","chapter":"AWS Compute","chapterNumber":5,"page":139,"figureNumber":"5.2","imagePath":"images/saa_page139_img1.png","source":"2","sourceFile":"2/index.html"},{"id":"saa-2-figure_6_1_amazon_aurora","title":"Figure 6.1: Amazon Aurora","caption":"Aurora architecture with distributed storage and automatic replication across 3 AZs.","examFocusTip":null,"alt":"Amazon Aurora","exam":"SAA-C03","chapter":"AWS Databases","chapterNumber":6,"page":202,"figureNumber":"6.1","imagePath":"images/saa_page202_img1.png","source":"2","sourceFile":"2/index.html"},{"id":"saa-2-figure_6_2_amazon_kinesis","title":"Figure 6.2: Amazon Kinesis","caption":"Real-time data streaming with Kinesis Data Streams, Firehose, and Analytics.","examFocusTip":null,"alt":"Amazon Kinesis","exam":"SAA-C03","chapter":"AWS Databases","chapterNumber":6,"page":213,"figureNumber":"6.2","imagePath":"images/saa_page213_img1.png","source":"2","sourceFile":"2/index.html"},{"id":"saa-2-figure_7_1_step_functions_workflow","title":"Figure 7.1: Step Functions Workflow","caption":"Visual workflow showing state machine transitions between different states.","examFocusTip":null,"alt":"Step Functions Workflow","exam":"SAA-C03","chapter":"Application Services","chapterNumber":7,"page":256,"figureNumber":"7.1","imagePath":"images/saa_page256_img1.png","source":"2","sourceFile":"2/index.html"},{"id":"saa-2-figure_7_2_migration_services","title":"Figure 7.2: Migration Services","caption":"AWS migration services including DMS, Application Migration Service, and Migration Hub.","examFocusTip":null,"alt":"Migration Services","exam":"SAA-C03","chapter":"Application Services","chapterNumber":7,"page":275,"figureNumber":"7.2","imagePath":"images/saa_page275_img1.png","source":"2","sourceFile":"2/index.html"},{"id":"saa-2-figure_8_1_cloudformation_template","title":"Figure 8.1: CloudFormation Template","caption":"CloudFormation template structure showing Resources, Parameters, and Outputs sections.","examFocusTip":null,"alt":"CloudFormation Template","exam":"SAA-C03","chapter":"Management and Governance","chapterNumber":8,"page":313,"figureNumber":"8.1","imagePath":"images/saa_page313_img1.png","source":"2","sourceFile":"2/index.html"},{"id":"saa-2-figure_8_2_codepipeline","title":"Figure 8.2: CodePipeline","caption":"CI/CD pipeline stages: Source, Build, Test, and Deploy with integrated AWS services.","examFocusTip":null,"alt":"CodePipeline","exam":"SAA-C03","chapter":"Management and Governance","chapterNumber":8,"page":315,"figureNumber":"8.2","imagePath":"images/saa_page315_img1.png","source":"2","sourceFile":"2/index.html"},{"id":"saa-2-figure_8_3_cloudwatch","title":"Figure 8.3: CloudWatch","caption":"CloudWatch monitoring dashboard showing metrics, alarms, logs, and dashboards.","examFocusTip":null,"alt":"CloudWatch","exam":"SAA-C03","chapter":"Management and Governance","chapterNumber":8,"page":324,"figureNumber":"8.3","imagePath":"images/saa_page324_img1.png","source":"2","sourceFile":"2/index.html"},{"id":"saa-2-figure_8_4_cloudtrail","title":"Figure 8.4: CloudTrail","caption":"CloudTrail event logging showing API calls and user activity tracking.","examFocusTip":null,"alt":"CloudTrail","exam":"SAA-C03","chapter":"Management and Governance","chapterNumber":8,"page":345,"figureNumber":"8.4","imagePath":"images/saa_page345_img1.png","source":"2","sourceFile":"2/index.html"},{"id":"saa-2-figure_8_5_devops_automation","title":"Figure 8.5: DevOps Automation","caption":"DevOps automation deploying Lambda APIs across multiple AWS accounts.","examFocusTip":null,"alt":"DevOps Automation","exam":"SAA-C03","chapter":"Management and Governance","chapterNumber":8,"page":347,"figureNumber":"8.5","imagePath":"images/saa_page347_img1.png","source":"2","sourceFile":"2/index.html"},{"id":"saa-2-figure_8_6_monitoring_with_cloudwatch","title":"Figure 8.6: Monitoring with CloudWatch","caption":"Comprehensive monitoring setup with CloudWatch, CloudTrail, and automated alerts.","examFocusTip":null,"alt":"CloudWatch Monitoring","exam":"SAA-C03","chapter":"Management and Governance","chapterNumber":8,"page":353,"figureNumber":"8.6","imagePath":"images/saa_page353_img1.png","source":"2","sourceFile":"2/index.html"},{"id":"saa-2-figure_8_7_management_and_governance","title":"Figure 8.7: Management and Governance","caption":"AWS management services overview including CloudFormation, Systems Manager, and Trusted Advisor.","examFocusTip":null,"alt":"Management and Governance","exam":"SAA-C03","chapter":"Management and Governance","chapterNumber":8,"page":354,"figureNumber":"8.7","imagePath":"images/saa_page354_img1.png","source":"2","sourceFile":"2/index.html"},{"id":"saa-2-figure_9_1_shared_responsibility_model","title":"Figure 9.1: Shared Responsibility Model","caption":"Division of security responsibilities between AWS and the customer across different service models.","examFocusTip":null,"alt":"Shared Responsibility Model","exam":"SAA-C03","chapter":"AWS Security","chapterNumber":9,"page":368,"figureNumber":"9.1","imagePath":"images/saa_page368_img1.png","source":"2","sourceFile":"2/index.html"},{"id":"saa-2-figure_9_2_aws_artifacts","title":"Figure 9.2: AWS Artifacts","caption":"AWS Artifact portal for accessing compliance reports and security certifications.","examFocusTip":null,"alt":"AWS Artifacts","exam":"SAA-C03","chapter":"AWS Security","chapterNumber":9,"page":369,"figureNumber":"9.2","imagePath":"images/saa_page369_img1.png","source":"2","sourceFile":"2/index.html"},{"id":"saa-2-figure_9_3_audit_manager","title":"Figure 9.3: Audit Manager","caption":"AWS Audit Manager workflow for continuous compliance monitoring and evidence collection.","examFocusTip":null,"alt":"Audit Manager","exam":"SAA-C03","chapter":"AWS Security","chapterNumber":9,"page":371,"figureNumber":"9.3","imagePath":"images/saa_page371_img1.png","source":"2","sourceFile":"2/index.html"},{"id":"saa-2-figure_9_4_certificate_manager","title":"Figure 9.4: Certificate Manager","caption":"AWS Certificate Manager provisioning and managing SSL/TLS certificates.","examFocusTip":null,"alt":"Certificate Manager","exam":"SAA-C03","chapter":"AWS Security","chapterNumber":9,"page":379,"figureNumber":"9.4","imagePath":"images/saa_page379_img1.png","source":"2","sourceFile":"2/index.html"},{"id":"saa-2-figure_9_5_amazon_detective","title":"Figure 9.5: Amazon Detective","caption":"Security investigation workflow using Amazon Detective to analyze GuardDuty findings.","examFocusTip":null,"alt":"Amazon Detective","exam":"SAA-C03","chapter":"AWS Security","chapterNumber":9,"page":396,"figureNumber":"9.5","imagePath":"images/saa_page396_img1.png","source":"2","sourceFile":"2/index.html"},{"id":"saa-2-figure_9_6_network_firewall","title":"Figure 9.6: Network Firewall","caption":"AWS Network Firewall deployment for VPC traffic inspection and protection.","examFocusTip":null,"alt":"Network Firewall","exam":"SAA-C03","chapter":"AWS Security","chapterNumber":9,"page":398,"figureNumber":"9.6","imagePath":"images/saa_page398_img1.png","source":"2","sourceFile":"2/index.html"},{"id":"saa-2-figure_9_7_firewall_manager","title":"Figure 9.7: Firewall Manager","caption":"Centralized firewall rule management across multiple AWS accounts and VPCs.","examFocusTip":null,"alt":"Firewall Manager","exam":"SAA-C03","chapter":"AWS Security","chapterNumber":9,"page":400,"figureNumber":"9.7","imagePath":"images/saa_page400_img1.png","source":"2","sourceFile":"2/index.html"},{"id":"saa-2-figure_9_8_aws_ram","title":"Figure 9.8: AWS RAM","caption":"Resource Access Manager for sharing AWS resources across accounts.","examFocusTip":null,"alt":"AWS RAM","exam":"SAA-C03","chapter":"AWS Security","chapterNumber":9,"page":401,"figureNumber":"9.8","imagePath":"images/saa_page401_img1.png","source":"2","sourceFile":"2/index.html"},{"id":"saa-2-figure_9_9_shield_and_waf_integration","title":"Figure 9.9: Shield and WAF Integration","caption":"Combined DDoS protection with AWS Shield and application security with AWS WAF.","examFocusTip":null,"alt":"Shield and WAF","exam":"SAA-C03","chapter":"AWS Security","chapterNumber":9,"page":403,"figureNumber":"9.9","imagePath":"images/saa_page403_img1.png","source":"2","sourceFile":"2/index.html"},{"id":"saa-2-figure_9_10_aws_organizations","title":"Figure 9.10: AWS Organizations","caption":"Multi-account security management with Organizations, SCPs, and Control Tower.","examFocusTip":null,"alt":"AWS Organizations","exam":"SAA-C03","chapter":"AWS Security","chapterNumber":9,"page":405,"figureNumber":"9.10","imagePath":"images/saa_page405_img1.png","source":"2","sourceFile":"2/index.html"},{"id":"saa-2-figure_9_11_security_architecture","title":"Figure 9.11: Security Architecture","caption":"Comprehensive security architecture for e-commerce application with multiple defense layers.","examFocusTip":null,"alt":"Security Architecture","exam":"SAA-C03","chapter":"AWS Security","chapterNumber":9,"page":407,"figureNumber":"9.11","imagePath":"images/saa_page407_img1.png","source":"2","sourceFile":"2/index.html"},{"id":"saa-2-figure_10_1_well_architected_framework","title":"Figure 10.1: Well-Architected Framework","caption":"The six pillars of the AWS Well-Architected Framework with best practices.","examFocusTip":null,"alt":"Well-Architected Framework","exam":"SAA-C03","chapter":"Cloud Architecture & Well-Architected Framework","chapterNumber":10,"page":410,"figureNumber":"10.1","imagePath":"images/saa_page410_img1.png","source":"2","sourceFile":"2/index.html"},{"id":"saa-2-figure_10_2_high_availability","title":"Figure 10.2: High Availability","caption":"Multi-AZ and Multi-Region architecture patterns for high availability.","examFocusTip":null,"alt":"High Availability","exam":"SAA-C03","chapter":"Cloud Architecture & Well-Architected Framework","chapterNumber":10,"page":411,"figureNumber":"10.2","imagePath":"images/saa_page411_img1.png","source":"2","sourceFile":"2/index.html"},{"id":"saa-2-figure_10_3_disaster_recovery","title":"Figure 10.3: Disaster Recovery","caption":"DR patterns: Backup/Restore, Pilot Light, Warm Standby, and Multi-Site Active-Active.","examFocusTip":null,"alt":"Disaster Recovery","exam":"SAA-C03","chapter":"Cloud Architecture & Well-Architected Framework","chapterNumber":10,"page":413,"figureNumber":"10.3","imagePath":"images/saa_page413_img1.png","source":"2","sourceFile":"2/index.html"},{"id":"saa-2-figure_10_4_architecture_patterns","title":"Figure 10.4: Architecture Patterns","caption":"Common architecture patterns for scalable and resilient applications.","examFocusTip":null,"alt":"Architecture Patterns","exam":"SAA-C03","chapter":"Cloud Architecture & Well-Architected Framework","chapterNumber":10,"page":423,"figureNumber":"10.4","imagePath":"images/saa_page423_img1.png","source":"2","sourceFile":"2/index.html"},{"id":"saa-2-figure_10_5_scalability_patterns","title":"Figure 10.5: Scalability Patterns","caption":"Patterns for scaling applications: Scale Up, Scale Out, Read Replicas, Caching.","examFocusTip":null,"alt":"Scalability Patterns","exam":"SAA-C03","chapter":"Cloud Architecture & Well-Architected Framework","chapterNumber":10,"page":429,"figureNumber":"10.5","imagePath":"images/saa_page429_img1.png","source":"2","sourceFile":"2/index.html"},{"id":"saa-2-figure_10_6_security_patterns","title":"Figure 10.6: Security Patterns","caption":"Security architecture patterns for defense in depth.","examFocusTip":null,"alt":"Security Patterns","exam":"SAA-C03","chapter":"Cloud Architecture & Well-Architected Framework","chapterNumber":10,"page":430,"figureNumber":"10.6","imagePath":"images/saa_page430_img1.png","source":"2","sourceFile":"2/index.html"},{"id":"saa-2-figure_11_1_exam_structure","title":"Figure 11.1: Exam Structure","caption":"SAA-C03 exam format, question types, and time management.","examFocusTip":null,"alt":"Exam Structure","exam":"SAA-C03","chapter":"Exam Preparation","chapterNumber":11,"page":434,"figureNumber":"11.1","imagePath":"images/saa_page434_img1.png","source":"2","sourceFile":"2/index.html"},{"id":"saa-2-figure_11_2_domain_breakdown","title":"Figure 11.2: Domain Breakdown","caption":"Exam domain weightings: Secure (30%), Resilient (26%), High-Performing (24%), Cost-Optimized (20%).","examFocusTip":null,"alt":"Domain Breakdown","exam":"SAA-C03","chapter":"Exam Preparation","chapterNumber":11,"page":436,"figureNumber":"11.2","imagePath":"images/saa_page436_img1.png","source":"2","sourceFile":"2/index.html"},{"id":"saa-2-figure_11_3_sample_questions","title":"Figure 11.3: Sample Questions","caption":"Example exam questions with analysis and answer explanations.","examFocusTip":null,"alt":"Sample Questions","exam":"SAA-C03","chapter":"Exam Preparation","chapterNumber":11,"page":437,"figureNumber":"11.3","imagePath":"images/saa_page437_img1.png","source":"2","sourceFile":"2/index.html"},{"id":"saa-2-figure_11_4_study_path","title":"Figure 11.4: Study Path","caption":"Recommended study path and resources for exam preparation.","examFocusTip":null,"alt":"Study Path","exam":"SAA-C03","chapter":"Exam Preparation","chapterNumber":11,"page":443,"figureNumber":"11.4","imagePath":"images/saa_page443_img1.png","source":"2","sourceFile":"2/index.html"},{"id":"saa-2-figure_11_5_practice_exam","title":"Figure 11.5: Practice Exam","caption":"Practice exam setup and simulation environment.","examFocusTip":null,"alt":"Practice Exam","exam":"SAA-C03","chapter":"Exam Preparation","chapterNumber":11,"page":444,"figureNumber":"11.5","imagePath":"images/saa_page444_img1.png","source":"2","sourceFile":"2/index.html"},{"id":"saa-2-figure_11_6_certification_benefits","title":"Figure 11.6: Certification Benefits","caption":"Career benefits and opportunities with AWS certification.","examFocusTip":null,"alt":"Certification Benefits","exam":"SAA-C03","chapter":"Exam Preparation","chapterNumber":11,"page":447,"figureNumber":"11.6","imagePath":"images/saa_page447_img1.png","source":"2","sourceFile":"2/index.html"},{"id":"saa-2-figure_11_7_career_path","title":"Figure 11.7: Career Path","caption":"AWS certification pathway and career progression.","examFocusTip":null,"alt":"Career Path","exam":"SAA-C03","chapter":"Exam Preparation","chapterNumber":11,"page":450,"figureNumber":"11.7","imagePath":"images/saa_page450_img1.png","source":"2","sourceFile":"2/index.html"}];
+
+let bookmarks = JSON.parse(localStorage.getItem('aws_img_bookmarks') || '[]');
+let filtered = [];
+let rendered = 0;
+const BATCH = 20;
+let sortByChapter = true;
+let showBookmarked = false;
+let observer;
+let modalIndex = -1;
+
+const $grid      = document.getElementById('grid');
+const $noRes     = document.getElementById('noResults');
+const $loading   = document.getElementById('loadingIndicator');
+const $sentinel  = document.getElementById('sentinel');
+const $count     = document.getElementById('countLabel');
+const $fExam     = document.getElementById('fExam');
+const $fChapter  = document.getElementById('fChapter');
+const $fSource   = document.getElementById('fSource');
+const $fSearch   = document.getElementById('fSearch');
+const $searchClr = document.getElementById('searchClear');
+const $sortBtn   = document.getElementById('sortBtn');
+const $statsBar  = document.getElementById('statsBar');
+const $bttBtn    = document.getElementById('bttBtn');
+const $fontSlider = document.getElementById('fontSlider');
+const $themeToggle = document.getElementById('themeToggle');
+const $modal     = document.getElementById('modal');
+const $modalImg  = document.getElementById('modalImg');
+const $modalTitle = document.getElementById('modalTitle');
+const $modalCaption = document.getElementById('modalCaption');
+const $modalTip  = document.getElementById('modalTip');
+const $modalCounter = document.getElementById('modalCounter');
+
+// ── Font size ──
+(function initFontSize() {
+  const saved = localStorage.getItem('aws_img_fontsize');
+  if (saved) { $fontSlider.value = saved; document.documentElement.style.setProperty('--font-size', saved + 'px'); }
+  $fontSlider.addEventListener('input', function() {
+    document.documentElement.style.setProperty('--font-size', this.value + 'px');
+    localStorage.setItem('aws_img_fontsize', this.value);
+  });
+})();
+
+// ── Dark mode ──
+(function initTheme() {
+  const saved = localStorage.getItem('aws_img_theme') || 'light';
+  document.documentElement.setAttribute('data-theme', saved);
+  $themeToggle.textContent = saved === 'dark' ? '☀️' : '🌙';
+  $themeToggle.addEventListener('click', function() {
+    const cur = document.documentElement.getAttribute('data-theme');
+    const next = cur === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('aws_img_theme', next);
+    this.textContent = next === 'dark' ? '☀️' : '🌙';
+  });
+})();
+
+// ── Grid size ──
+(function initGridSize() {
+  const sizes = { small: '200px', medium: '320px', large: '480px' };
+  const saved = localStorage.getItem('aws_img_gridsize') || 'medium';
+  document.documentElement.style.setProperty('--grid-min', sizes[saved] || '320px');
+  document.querySelectorAll('.grid-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.size === saved);
+    b.addEventListener('click', function() {
+      document.querySelectorAll('.grid-btn').forEach(x => x.classList.remove('active'));
+      this.classList.add('active');
+      const s = this.dataset.size;
+      document.documentElement.style.setProperty('--grid-min', sizes[s]);
+      localStorage.setItem('aws_img_gridsize', s);
+    });
+  });
+})();
+
+// ── Bookmarks ──
+function isBookmarked(id) { return bookmarks.includes(id); }
+function toggleBookmark(id) {
+  const i = bookmarks.indexOf(id);
+  if (i >= 0) bookmarks.splice(i, 1); else bookmarks.push(id);
+  localStorage.setItem('aws_img_bookmarks', JSON.stringify(bookmarks));
+}
+
+// ══════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════
+(function init() {
+  populateChapters();
+  buildStats();
+  applyFilters();
+  setupIO();
+  setupListeners();
+})();
+
+function populateChapters() {
+  const chapters = [];
+  const seen = new Set();
+  IMAGES.forEach(e => {
+    const key = (e.exam || '') + '|' + (e.chapter || '');
+    if (!seen.has(key) && e.chapter) {
+      seen.add(key);
+      chapters.push({ exam: e.exam, ch: e.chapterNumber || 99, title: e.chapter });
+    }
+  });
+  chapters.sort((a, b) => a.exam.localeCompare(b.exam) || a.ch - b.ch);
+  $fChapter.innerHTML = '<option value="all">All Chapters (' + chapters.length + ')</option>';
+  chapters.forEach(c => {
+    const o = document.createElement('option');
+    o.value = c.exam + '|' + c.title;
+    o.textContent = c.exam.replace('AIF-C01','AIF').replace('SAA-C03','SAA') + ' Ch' + c.ch + ': ' + c.title.substring(0, 40) + (c.title.length > 40 ? '…' : '');
+    $fChapter.appendChild(o);
+  });
+}
+
+function buildStats() {
+  const total = IMAGES.length;
+  const exams = {};
+  IMAGES.forEach(e => { exams[e.exam] = (exams[e.exam] || 0) + 1; });
+  const withTips = IMAGES.filter(e => e.examFocusTip).length;
+  let html = '<span class="chip">' + total + ' total images</span>';
+  Object.keys(exams).sort().forEach(x => { html += '<span class="chip">' + x + ': ' + exams[x] + '</span>'; });
+  if (withTips) html += '<span class="chip">💡 ' + withTips + ' with exam tips</span>';
+  if (bookmarks.length) html += '<span class="chip chip-bm' + (showBookmarked ? ' active' : '') + '" id="bmChip" title="Click to filter bookmarked">★ ' + bookmarks.length + ' bookmarked</span>';
+  $statsBar.innerHTML = html;
+}
+
+// ══════════════════════════════════════════════════════
+// FILTERING & SORTING
+// ══════════════════════════════════════════════════════
+function applyFilters() {
+  const exam    = $fExam.value;
+  const chapter = $fChapter.value;
+  const source  = $fSource.value;
+  const search  = $fSearch.value.toLowerCase().trim();
+
+  $searchClr.classList.toggle('show', search.length > 0);
+
+  let list = IMAGES;
+  if (showBookmarked) list = list.filter(e => isBookmarked(e.id));
+  if (exam !== 'all')    list = list.filter(e => e.exam === exam);
+  if (chapter !== 'all') {
+    const [cExam, cTitle] = chapter.split('|');
+    list = list.filter(e => e.exam === cExam && e.chapter === cTitle);
+  }
+  if (source !== 'all')  list = list.filter(e => e.source === source);
+  if (search) {
+    const terms = search.split(/\s+/);
+    list = list.filter(e => {
+      const hay = (e.title + ' ' + e.caption + ' ' + (e.examFocusTip || '') + ' ' + (e.alt || '') + ' ' + (e.chapter || '')).toLowerCase();
+      return terms.every(t => hay.includes(t));
+    });
+  }
+
+  if (sortByChapter) {
+    list = [...list].sort((a, b) => {
+      const ea = a.exam === 'AIF-C01' ? 0 : 1;
+      const eb = b.exam === 'AIF-C01' ? 0 : 1;
+      if (ea !== eb) return ea - eb;
+      const ca = a.chapterNumber || 99;
+      const cb = b.chapterNumber || 99;
+      if (ca !== cb) return ca - cb;
+      const pa = a.page || 999;
+      const pb = b.page || 999;
+      return pa - pb || a.title.localeCompare(b.title);
+    });
+  } else {
+    list = [...list].sort((a, b) => (a.page || 999) - (b.page || 999) || a.title.localeCompare(b.title));
+  }
+
+  filtered = list;
+  rendered = 0;
+  $grid.innerHTML = '';
+  $noRes.style.display = list.length === 0 ? '' : 'none';
+  $count.textContent = list.length + ' images';
+  buildStats();
+  renderBatch();
+}
+
+// ══════════════════════════════════════════════════════
+// RENDERING
+// ══════════════════════════════════════════════════════
+function escHtml(s) {
+  return s ? s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') : '';
+}
+
+function examBadge(exam) {
+  const cls = exam === 'AIF-C01' ? 'tag-aif' : 'tag-saa';
+  return '<span class="tag ' + cls + '">' + exam + '</span>';
+}
+
+function sourceBadge(src) {
+  const labels = { '1': 'Study Guide', '1b': 'Exam Focus', '2': 'SAA Guide' };
+  return '<span class="tag tag-src">' + (labels[src] || src) + '</span>';
+}
+
+function renderCard(entry, globalIdx) {
+  const eClass = entry.exam === 'AIF-C01' ? 'exam-aif' : 'exam-saa';
+  const bmCls  = isBookmarked(entry.id) ? ' bookmarked' : '';
+  const bmActive = isBookmarked(entry.id) ? ' active' : '';
+
+  let tipHtml = '';
+  if (entry.examFocusTip) {
+    tipHtml = '<div class="exam-tip show">💡 ' + escHtml(entry.examFocusTip) + '</div>';
+  }
+
+  const pageText = entry.page ? 'Page ' + entry.page : '';
+  const figText = entry.figureNumber ? 'Fig ' + entry.figureNumber : '';
+  const metaParts = [figText, pageText].filter(Boolean).join(' · ');
+
+  const div = document.createElement('div');
+  div.className = 'card ' + eClass + bmCls;
+  div.innerHTML =
+    '<button class="bm-btn' + bmActive + '" data-bm="' + escHtml(entry.id) + '" title="Bookmark">' + (isBookmarked(entry.id) ? '★' : '☆') + '</button>' +
+    '<div class="card-thumb" data-idx="' + globalIdx + '">' +
+      '<img src="' + escHtml(entry.imagePath) + '" alt="' + escHtml(entry.alt || entry.title) + '" loading="lazy">' +
+      '<span class="enlarge-hint">Click to enlarge</span>' +
+    '</div>' +
+    '<div class="card-body">' +
+      '<div class="card-title">' + escHtml(entry.title) + '</div>' +
+      '<div class="card-tags">' +
+        examBadge(entry.exam) + ' ' +
+        (entry.chapter ? '<span class="tag-ch">' + escHtml(entry.chapter) + '</span> ' : '') +
+        sourceBadge(entry.source) +
+      '</div>' +
+      '<div class="card-desc" id="desc-' + globalIdx + '">' + escHtml(entry.caption) + '</div>' +
+      tipHtml +
+      '<div class="card-footer">' +
+        '<span class="card-page">' + metaParts + '</span>' +
+        '<button class="expand-btn" data-desc="desc-' + globalIdx + '">more ▾</button>' +
+      '</div>' +
+    '</div>';
+
+  return div;
+}
+
+function renderBatch() {
+  if (rendered >= filtered.length) {
+    $loading.style.display = 'none';
+    return;
+  }
+  const end = Math.min(rendered + BATCH, filtered.length);
+  const frag = document.createDocumentFragment();
+  for (let i = rendered; i < end; i++) {
+    frag.appendChild(renderCard(filtered[i], i));
+  }
+  $grid.appendChild(frag);
+  rendered = end;
+  $loading.style.display = rendered < filtered.length ? '' : 'none';
+}
+
+// ══════════════════════════════════════════════════════
+// INTERSECTION OBSERVER
+// ══════════════════════════════════════════════════════
+function setupIO() {
+  observer = new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting && rendered < filtered.length) {
+      renderBatch();
+    }
+  }, { rootMargin: '400px' });
+  observer.observe($sentinel);
+}
+
+// ══════════════════════════════════════════════════════
+// MODAL / LIGHTBOX
+// ══════════════════════════════════════════════════════
+function openModal(idx) {
+  if (idx < 0 || idx >= filtered.length) return;
+  modalIndex = idx;
+  const entry = filtered[idx];
+  $modalImg.src = entry.imagePath;
+  $modalImg.alt = entry.alt || entry.title;
+  $modalTitle.textContent = entry.title;
+  $modalCaption.textContent = entry.caption;
+  $modalTip.textContent = entry.examFocusTip || '';
+  $modalTip.style.display = entry.examFocusTip ? '' : 'none';
+  $modalCounter.textContent = (idx + 1) + ' of ' + filtered.length;
+  $modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  $modal.classList.remove('active');
+  document.body.style.overflow = '';
+  modalIndex = -1;
+}
+
+function modalNav(dir) {
+  if (modalIndex < 0) return;
+  let next = modalIndex + dir;
+  if (next < 0) next = filtered.length - 1;
+  if (next >= filtered.length) next = 0;
+  openModal(next);
+}
+
+// ══════════════════════════════════════════════════════
+// EVENT LISTENERS
+// ══════════════════════════════════════════════════════
+function setupListeners() {
+  $fExam.addEventListener('change', applyFilters);
+  $fChapter.addEventListener('change', applyFilters);
+  $fSource.addEventListener('change', applyFilters);
+
+  let debounce;
+  $fSearch.addEventListener('input', () => {
+    clearTimeout(debounce);
+    debounce = setTimeout(applyFilters, 200);
+  });
+  $searchClr.addEventListener('click', () => {
+    $fSearch.value = '';
+    applyFilters();
+    $fSearch.focus();
+  });
+
+  $sortBtn.addEventListener('click', () => {
+    sortByChapter = !sortByChapter;
+    $sortBtn.textContent = sortByChapter ? 'By Chapter ▲' : 'By Page ▲';
+    $sortBtn.classList.toggle('active', sortByChapter);
+    applyFilters();
+  });
+
+  // Delegated clicks on grid
+  $grid.addEventListener('click', e => {
+    // Bookmark
+    const bmBtn = e.target.closest('.bm-btn');
+    if (bmBtn) {
+      const id = bmBtn.dataset.bm;
+      toggleBookmark(id);
+      const active = isBookmarked(id);
+      bmBtn.classList.toggle('active', active);
+      bmBtn.textContent = active ? '★' : '☆';
+      bmBtn.closest('.card').classList.toggle('bookmarked', active);
+      buildStats();
+      return;
+    }
+    // Expand description
+    const expBtn = e.target.closest('.expand-btn');
+    if (expBtn) {
+      const descEl = document.getElementById(expBtn.dataset.desc);
+      if (descEl) {
+        const isExpanded = descEl.classList.toggle('expanded');
+        expBtn.textContent = isExpanded ? 'less ▴' : 'more ▾';
+      }
+      return;
+    }
+    // Thumbnail click → open modal
+    const thumb = e.target.closest('.card-thumb');
+    if (thumb) {
+      const idx = parseInt(thumb.dataset.idx, 10);
+      if (!isNaN(idx)) openModal(idx);
+      return;
+    }
+  });
+
+  // Modal controls
+  document.getElementById('modalClose').addEventListener('click', closeModal);
+  document.getElementById('modalPrev').addEventListener('click', () => modalNav(-1));
+  document.getElementById('modalNext').addEventListener('click', () => modalNav(1));
+  $modal.addEventListener('click', e => {
+    if (e.target === $modal) closeModal();
+  });
+
+  // Keyboard
+  document.addEventListener('keydown', e => {
+    if ($modal.classList.contains('active')) {
+      if (e.key === 'Escape') closeModal();
+      else if (e.key === 'ArrowLeft') modalNav(-1);
+      else if (e.key === 'ArrowRight') modalNav(1);
+    } else {
+      if (e.key === 'Escape' && document.activeElement === $fSearch) {
+        $fSearch.value = '';
+        applyFilters();
+      }
+    }
+  });
+
+  // Back to top
+  window.addEventListener('scroll', () => {
+    $bttBtn.classList.toggle('show', window.scrollY > 600);
+  }, { passive: true });
+  $bttBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // Bookmark chip
+  $statsBar.addEventListener('click', e => {
+    const chip = e.target.closest('#bmChip');
+    if (chip) {
+      showBookmarked = !showBookmarked;
+      applyFilters();
+    }
+  });
+}
+</script>
+</body>
+</html>

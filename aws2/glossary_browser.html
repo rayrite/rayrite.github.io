@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,21 +11,38 @@
   --clf:#3b82f6;--aif:#8b5cf6;--saa:#14b8a6;
   --bg:#f1f5f9;--card:#fff;--border:#e2e8f0;--text:#1e293b;--muted:#64748b;
   --accent:#4f46e5;--accent-hover:#4338ca;
+  --card-desc:#475569;--footer-border:#f1f5f9;--tag-cat-bg:#f1f5f9;
+  --coll-border:#e2e8f0;--coll-item-border:#f8fafc;--domain-bg:#f0fdf4;--domain-color:#166534;--domain-border:#bbf7d0;
+  --sources-color:#94a3b8;
 }
-html{font-size:14px}
-body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+[data-theme="dark"]{
+  --bg:#0f172a;--card:#1e293b;--border:#334155;--text:#e2e8f0;--muted:#94a3b8;
+  --card-desc:#cbd5e1;--footer-border:#334155;--tag-cat-bg:#334155;
+  --coll-border:#475569;--coll-item-border:#1e293b;--domain-bg:#064e3b;--domain-color:#6ee7b7;--domain-border:#065f46;
+  --sources-color:#64748b;
+}
+[data-theme="dark"] .tag-clf{background:#1e3a5f;color:#93c5fd}
+[data-theme="dark"] .tag-aif{background:#2e1065;color:#c4b5fd}
+[data-theme="dark"] .tag-saa{background:#134e4a;color:#5eead4}
+[data-theme="dark"] .tag-type.service{background:#064e3b;color:#6ee7b7}
+[data-theme="dark"] .tag-type.concept{background:#422006;color:#fcd34d}
+[data-theme="dark"] .tag-type.collection{background:#831843;color:#f9a8d4}
+[data-theme="dark"] ::-webkit-scrollbar-thumb{background:#475569}
+html{font-size:var(--font-size,14px)}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .3s,color .3s}
 ::-webkit-scrollbar{width:6px}
 ::-webkit-scrollbar-track{background:var(--bg)}
 ::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:10px}
 ::-webkit-scrollbar-thumb:hover{background:#94a3b8}
 
 /* ── Sticky header ── */
-.header{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);box-shadow:0 1px 3px rgba(0,0,0,.06);padding:8px 12px}
+.header{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);box-shadow:0 1px 3px rgba(0,0,0,.06);padding:8px 12px;transition:background .3s}
+[data-theme="dark"] .header{background:rgba(15,23,42,.92)}
 .header-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
 .ctrl{display:flex;flex-wrap:wrap;align-items:center;gap:6px;flex:1 1 auto}
 
 /* ── Controls ── */
-select,input[type=text]{height:32px;padding:0 8px;border:1px solid var(--border);border-radius:6px;font-size:.8rem;font-family:inherit;background:#fff;color:var(--text);outline:none;transition:border .15s}
+select,input[type=text]{height:32px;padding:0 8px;border:1px solid var(--border);border-radius:6px;font-size:.8rem;font-family:inherit;background:var(--card);color:var(--text);outline:none;transition:border .15s}
 select:focus,input[type=text]:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(79,70,229,.15)}
 input[type=text]{flex:1 1 120px;min-width:100px}
 select{max-width:180px;cursor:pointer}
@@ -35,26 +52,42 @@ select{max-width:180px;cursor:pointer}
 .search-clear.show{display:block}
 
 .count{font-size:.7rem;color:var(--muted);white-space:nowrap}
-.sort-btn{height:32px;padding:0 10px;border:1px solid var(--border);border-radius:6px;font-size:.72rem;font-family:inherit;cursor:pointer;background:#fff;color:var(--muted);transition:all .15s;white-space:nowrap}
+.sort-btn{height:32px;padding:0 10px;border:1px solid var(--border);border-radius:6px;font-size:.72rem;font-family:inherit;cursor:pointer;background:var(--card);color:var(--muted);transition:all .15s;white-space:nowrap}
 .sort-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.font-ctrl{display:flex;align-items:center;gap:4px;font-size:.7rem;color:var(--muted)}
+.font-slider{-webkit-appearance:none;appearance:none;width:56px;height:4px;border-radius:2px;background:var(--border);outline:none;cursor:pointer}
+.font-slider::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--accent);cursor:pointer}
+.font-slider::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--accent);border:none;cursor:pointer}
+
+/* ── Icon buttons (dark mode / bookmark filter) ── */
+.icon-btn{width:32px;height:32px;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--muted);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:1rem;transition:all .15s}
+.icon-btn:hover{background:rgba(79,70,229,.08);color:var(--accent);border-color:var(--accent)}
+.icon-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
 
 /* ── Stats bar ── */
-.stats-bar{display:flex;flex-wrap:wrap;gap:6px;padding:6px 12px;font-size:.7rem;color:var(--muted)}
-.stats-bar .chip{background:#e2e8f0;padding:2px 8px;border-radius:10px}
+.stats-bar{display:flex;flex-wrap:wrap;gap:6px;padding:4px 0 0;font-size:.7rem;color:var(--muted)}
+.stats-bar .chip{background:var(--border);padding:2px 8px;border-radius:10px}
+.chip-bm{background:rgba(245,158,11,.12);color:#d97706;cursor:pointer;transition:all .15s}
+.chip-bm:hover{background:rgba(245,158,11,.22)}
+.chip-bm.active{outline:2px solid #f59e0b;outline-offset:-1px}
 
 /* ── Grid ── */
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:10px;padding:10px 12px}
 @media(max-width:640px){.grid{grid-template-columns:1fr;padding:8px}}
 
 /* ── Card ── */
-.card{background:var(--card);border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.06);padding:12px;display:flex;flex-direction:column;border-left:4px solid var(--border);transition:box-shadow .2s,transform .15s;cursor:default;content-visibility:auto;contain-intrinsic-size:0 200px}
+.card{background:var(--card);border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.06);padding:12px;display:flex;flex-direction:column;border-left:4px solid var(--border);transition:box-shadow .2s,transform .15s;cursor:default;content-visibility:auto;contain-intrinsic-size:0 200px;position:relative}
 .card:hover{box-shadow:0 4px 12px rgba(0,0,0,.1);transform:translateY(-1px)}
+.card.bookmarked{background:linear-gradient(135deg,rgba(245,158,11,.06),transparent 60%)}
+.bm-btn{position:absolute;top:8px;right:8px;background:none;border:none;cursor:pointer;font-size:1rem;color:var(--muted);opacity:.5;transition:all .15s;padding:2px;z-index:2}
+.bm-btn:hover{opacity:1;transform:scale(1.2)}
+.bm-btn.active{color:#f59e0b;opacity:1}
 .card.exam-aif{border-left-color:var(--aif);background:linear-gradient(90deg,rgba(139,92,246,.03) 0%,transparent 40%)}
 .card.exam-saa{border-left-color:var(--saa);background:linear-gradient(90deg,rgba(20,184,166,.03) 0%,transparent 40%)}
 .card.exam-clf{border-left-color:var(--clf);background:linear-gradient(90deg,rgba(59,130,246,.03) 0%,transparent 40%)}
 .card.exam-multi{border-left-color:var(--accent);background:linear-gradient(90deg,rgba(79,70,229,.03) 0%,transparent 40%)}
 .card.is-collection{border-left-width:5px;position:relative}
-.card.is-collection::after{content:"📚";position:absolute;top:8px;right:8px;font-size:.85rem;opacity:.5}
+.card.is-collection::after{content:"📚";position:absolute;top:8px;right:28px;font-size:.85rem;opacity:.5}
 
 .card-head{display:flex;align-items:flex-start;gap:8px;margin-bottom:6px}
 .avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:.8rem;flex-shrink:0}
@@ -65,25 +98,25 @@ select{max-width:180px;cursor:pointer}
 .tag-clf{background:#dbeafe;color:#1e40af}
 .tag-aif{background:#ede9fe;color:#6d28d9}
 .tag-saa{background:#ccfbf1;color:#0f766e}
-.tag-cat{font-size:.6rem;font-weight:500;padding:1px 6px;border-radius:10px;background:#f1f5f9;color:var(--muted)}
+.tag-cat{font-size:.6rem;font-weight:500;padding:1px 6px;border-radius:10px;background:var(--tag-cat-bg);color:var(--muted)}
 .tag-type{font-size:.58rem;font-weight:600;padding:1px 5px;border-radius:3px;text-transform:uppercase}
 .tag-type.service{background:#dcfce7;color:#166534}
 .tag-type.concept{background:#fef9c3;color:#854d0e}
 .tag-type.collection{background:#fce7f3;color:#9d174d}
 
-.card-desc{font-size:.78rem;color:#475569;line-height:1.5;flex:1;margin-bottom:6px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical}
+.card-desc{font-size:.78rem;color:var(--card-desc);line-height:1.5;flex:1;margin-bottom:6px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical}
 .card-desc.expanded{-webkit-line-clamp:unset;display:block}
 
-.card-footer{display:flex;justify-content:space-between;align-items:center;padding-top:6px;border-top:1px solid #f1f5f9}
+.card-footer{display:flex;justify-content:space-between;align-items:center;padding-top:6px;border-top:1px solid var(--footer-border)}
 .card-link{font-size:.72rem;font-weight:600;color:var(--accent);text-decoration:none}
 .card-link:hover{color:var(--accent-hover);text-decoration:underline}
 .expand-btn{font-size:.65rem;color:var(--muted);cursor:pointer;border:none;background:none;padding:2px 4px}
 .expand-btn:hover{color:var(--accent)}
 
 /* ── Collection items ── */
-.coll-items{margin-top:8px;padding-top:8px;border-top:1px dashed #e2e8f0;display:none}
+.coll-items{margin-top:8px;padding-top:8px;border-top:1px dashed var(--coll-border);display:none}
 .coll-items.open{display:block}
-.coll-item{padding:5px 0;border-bottom:1px solid #f8fafc}
+.coll-item{padding:5px 0;border-bottom:1px solid var(--coll-item-border)}
 .coll-item:last-child{border-bottom:none}
 .coll-item-name{font-size:.75rem;font-weight:600;color:var(--text)}
 .coll-item-desc{font-size:.7rem;color:var(--muted);line-height:1.4;margin-top:1px}
@@ -92,10 +125,10 @@ select{max-width:180px;cursor:pointer}
 
 /* ── Domains chips ── */
 .domains{display:flex;flex-wrap:wrap;gap:3px;margin-top:4px}
-.domain-chip{font-size:.58rem;padding:1px 5px;border-radius:8px;background:#f0fdf4;color:#166534;border:1px solid #bbf7d0}
+.domain-chip{font-size:.58rem;padding:1px 5px;border-radius:8px;background:var(--domain-bg);color:var(--domain-color);border:1px solid var(--domain-border)}
 
 /* ── Sources ── */
-.sources-line{font-size:.58rem;color:#94a3b8;margin-top:4px;font-style:italic}
+.sources-line{font-size:.58rem;color:var(--sources-color);margin-top:4px;font-style:italic}
 
 /* ── Scroll sentinel ── */
 .sentinel{height:1px}
@@ -152,12 +185,16 @@ select{max-width:180px;cursor:pointer}
       <button class="search-clear" id="searchClear" title="Clear search">&times;</button>
     </div>
     <button class="sort-btn active" id="sortBtn" title="Toggle sort mode">Core Name ▲</button>
+    <div class="font-ctrl" title="Adjust font size">
+     <span style="font-size:.6rem">A</span>
+     <input type="range" class="font-slider" id="fontSlider" min="11" max="20" step="1" value="14">
+     <span style="font-size:.85rem">A</span>
+    </div>
+    <button class="icon-btn" id="themeToggle" title="Toggle dark mode">🌙</button>
     <span class="count" id="countLabel">0 terms</span>
   </div>
+  <div class="stats-bar" id="statsBar"></div>
 </div>
-
-<!-- ── Stats bar ── -->
-<div class="stats-bar" id="statsBar"></div>
 
 <!-- ── Grid ── -->
 <div class="grid" id="grid"></div>
@@ -185,6 +222,8 @@ let rendered = 0;
 const BATCH = 40;
 let sortCoreName = true;
 let observer = null;
+let bookmarks = JSON.parse(localStorage.getItem('aws_glossary_bookmarks') || '[]');
+let showBookmarked = false;
 
 // ══════════════════════════════════════════════════════
 // DOM
@@ -202,6 +241,39 @@ const $searchClr = document.getElementById('searchClear');
 const $sortBtn   = document.getElementById('sortBtn');
 const $statsBar  = document.getElementById('statsBar');
 const $bttBtn    = document.getElementById('bttBtn');
+const $fontSlider = document.getElementById('fontSlider');
+const $themeToggle = document.getElementById('themeToggle');
+
+// Font size persistence
+(function initFontSize() {
+  const saved = localStorage.getItem('aws_glossary_fontsize');
+  if (saved) { $fontSlider.value = saved; document.documentElement.style.setProperty('--font-size', saved + 'px'); }
+  $fontSlider.addEventListener('input', function() {
+    document.documentElement.style.setProperty('--font-size', this.value + 'px');
+    localStorage.setItem('aws_glossary_fontsize', this.value);
+  });
+})();
+
+// Dark mode
+(function initTheme() {
+  const saved = localStorage.getItem('aws_glossary_theme') || 'light';
+  document.documentElement.setAttribute('data-theme', saved);
+  $themeToggle.textContent = saved === 'dark' ? '☀️' : '🌙';
+  $themeToggle.addEventListener('click', function() {
+    const cur = document.documentElement.getAttribute('data-theme');
+    const next = cur === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('aws_glossary_theme', next);
+    this.textContent = next === 'dark' ? '☀️' : '🌙';
+  });
+})();
+
+function isBookmarked(name) { return bookmarks.includes(name); }
+function toggleBookmark(name) {
+  const i = bookmarks.indexOf(name);
+  if (i >= 0) bookmarks.splice(i, 1); else bookmarks.push(name);
+  localStorage.setItem('aws_glossary_bookmarks', JSON.stringify(bookmarks));
+}
 
 // ══════════════════════════════════════════════════════
 // INIT
@@ -232,6 +304,7 @@ function buildStats() {
     let html = `<span class="chip">${total} total terms</span>`;
     Object.keys(exams).sort().forEach(x => { html += `<span class="chip">${x}: ${exams[x]}</span>`; });
     html += `<span class="chip">${colls} collections</span>`;
+    if (bookmarks.length) html += `<span class="chip chip-bm${showBookmarked?' active':''}" id="bmChip" title="Click to filter bookmarked">★ ${bookmarks.length} bookmarked</span>`;
     $statsBar.innerHTML = html;
 }
 
@@ -254,6 +327,7 @@ function applyFilters() {
     $searchClr.classList.toggle('show', search.length > 0);
 
     let list = GLOSSARY;
+    if (showBookmarked) list = list.filter(e => isBookmarked(e.name));
     if (exam !== 'all')  list = list.filter(e => (e.exams||[]).includes(exam));
     if (cat  !== 'all')  list = list.filter(e => e.category === cat);
     if (etype !== 'all') {
@@ -279,6 +353,7 @@ function applyFilters() {
     $grid.innerHTML = '';
     $noRes.style.display = list.length === 0 ? '' : 'none';
     $count.textContent = list.length + ' terms';
+    buildStats();
     renderBatch();
 }
 
@@ -321,8 +396,10 @@ function renderCard(entry, idx) {
     const initial = entry.name.charAt(0).toUpperCase();
     const eClass  = examClass(entry.exams);
     const collCls = entry.is_collection ? ' is-collection' : '';
+    const bmCls   = isBookmarked(entry.name) ? ' bookmarked' : '';
     const typeBadge = entry.entryType
         ? '<span class="tag tag-type ' + entry.entryType + '">' + entry.entryType + '</span>' : '';
+    const bmActive = isBookmarked(entry.name) ? ' active' : '';
 
     let collHtml = '';
     if (entry.is_collection && entry.collection_items && entry.collection_items.length) {
@@ -346,8 +423,9 @@ function renderCard(entry, idx) {
     const sourcesHtml = sourcesCount ? '<div class="sources-line">' + sourcesCount + ' source' + (sourcesCount > 1 ? 's' : '') + '</div>' : '';
 
     const div = document.createElement('div');
-    div.className = 'card ' + eClass + collCls;
+    div.className = 'card ' + eClass + collCls + bmCls;
     div.innerHTML =
+        '<button class="bm-btn' + bmActive + '" data-bm="' + escHtml(entry.name) + '" title="Bookmark">' + (isBookmarked(entry.name) ? '★' : '☆') + '</button>' +
         '<div class="card-head">' +
             '<div class="avatar ' + avatarClass(initial) + '">' + initial + '</div>' +
             '<div style="flex:1;min-width:0">' +
@@ -423,8 +501,19 @@ function setupListeners() {
         applyFilters();
     });
 
-    // Delegated click: expand description & toggle collections
+    // Delegated click: expand description & toggle collections & bookmarks
     $grid.addEventListener('click', e => {
+        const bmBtn = e.target.closest('.bm-btn');
+        if (bmBtn) {
+            const name = bmBtn.dataset.bm;
+            toggleBookmark(name);
+            const active = isBookmarked(name);
+            bmBtn.classList.toggle('active', active);
+            bmBtn.textContent = active ? '★' : '☆';
+            bmBtn.closest('.card').classList.toggle('bookmarked', active);
+            buildStats();
+            return;
+        }
         const expBtn = e.target.closest('.expand-btn');
         if (expBtn) {
             const descEl = document.getElementById(expBtn.dataset.desc);
@@ -452,6 +541,15 @@ function setupListeners() {
     }, { passive: true });
     $bttBtn.addEventListener('click', () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Bookmark chip filter toggle
+    $statsBar.addEventListener('click', e => {
+        const chip = e.target.closest('#bmChip');
+        if (chip) {
+            showBookmarked = !showBookmarked;
+            applyFilters();
+        }
     });
 
     // Keyboard: Escape clears search

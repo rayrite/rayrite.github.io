@@ -86,7 +86,7 @@ select{cursor:pointer;max-width:200px;padding-right:24px;-webkit-appearance:none
 /* ═══════════════════════════════════════════════
    STATS BAR
    ═══════════════════════════════════════════════ */
-.stats{max-width:1600px;margin:0 auto;padding:8px 16px;display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:.72rem;color:var(--muted)}
+.stats{max-width:1600px;margin:0 auto;padding:4px 0 0;display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:.72rem;color:var(--muted)}
 .chip{padding:3px 10px;border-radius:20px;font-weight:600;display:inline-flex;align-items:center;gap:4px}
 .chip-default{background:var(--bg2);color:var(--text2)}
 .chip-aif{background:rgba(139,92,246,.12);color:var(--aif)}
@@ -263,7 +263,7 @@ select{cursor:pointer;max-width:200px;padding-right:24px;-webkit-appearance:none
    <div class="header-actions">
     <div class="font-ctrl" title="Adjust font size">
      <span style="font-size:.65rem">A</span>
-     <input type="range" class="font-slider" id="fontSlider" min="11" max="18" step="1" value="14">
+     <input type="range" class="font-slider" id="fontSlider" min="11" max="20" step="1" value="14">
      <span style="font-size:.85rem">A</span>
     </div>
     <button class="icon-btn" id="viewToggle" title="Toggle Card/Table View">
@@ -291,11 +291,9 @@ select{cursor:pointer;max-width:200px;padding-right:24px;-webkit-appearance:none
    </select>
    <span class="count-label" id="countLabel"></span>
   </div>
+  <div class="stats" id="statsBar"></div>
  </div>
 </header>
-
-<!-- ══════════ STATS ══════════ -->
-<div class="stats" id="statsBar"></div>
 
 <!-- ══════════ MAIN ══════════ -->
 <main class="main" id="mainContent"></main>

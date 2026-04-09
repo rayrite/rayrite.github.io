@@ -1,4 +1,4 @@
-# 📚 Chapter-by-Chapter Exam Summary
+# [BOOKS] Chapter-by-Chapter Exam Summary
 
 > Based on the ebooks in the workspace:
 > 
@@ -7,9 +7,9 @@
 
 ---
 
-# Part I — AIF-C01: AWS Certified AI Practitioner
+# Part I -- AIF-C01: AWS Certified AI Practitioner
 
-## Chapter 1 — Why Certify? An Introduction to the AIF-C01 Exam
+## Chapter 1 -- Why Certify? An Introduction to the AIF-C01 Exam
 
 ### What to Remember
 
@@ -24,8 +24,8 @@
 | --------------------- | ------------------------------------------------ |
 | **Multiple choice**   | One correct answer out of four                   |
 | **Multiple response** | Two or more correct answers (must get all right) |
-| **Ordering**          | Arrange 3–5 steps in the correct sequence        |
-| **Matching**          | Match 3–7 prompts to responses                   |
+| **Ordering**          | Arrange 3-5 steps in the correct sequence        |
+| **Matching**          | Match 3-7 prompts to responses                   |
 | **Case study**        | One scenario with 2+ related questions           |
 
 ### Domain Weights
@@ -38,18 +38,18 @@
 | 4. Guidelines for Responsible AI        | 14%    |
 | 5. Security, Compliance, and Governance | 14%    |
 
-### 🧠 Mnemonic
+### [BRAIN] Mnemonic
 
-> **"GMARS has 2-4-2-1-1"** — Gen-AI (domain 2) and Foundation Models (domain 3) together make up **52%** of the exam. Prioritize them!
+> **"GMARS has 2-4-2-1-1"** -- Gen-AI (domain 2) and Foundation Models (domain 3) together make up **52%** of the exam. Prioritize them!
 
-### 💡 Study Tip
+### [IDEA] Study Tip
 
-- No penalty for guessing — **answer every question**.
+- No penalty for guessing -- **answer every question**.
 - The unscored questions are not identified; treat every question as if it counts.
 
 ---
 
-## Chapter 2 — AWS Fundamentals for the AI Practitioner
+## Chapter 2 -- AWS Fundamentals for the AI Practitioner
 
 ### Core Cloud Concepts
 
@@ -79,22 +79,22 @@
 - **S3:** Object storage.
 - **Shared Responsibility Model:** AWS secures the **cloud**; you secure **what's in the cloud**.
 
-### 🧠 Mnemonic
+### [BRAIN] Mnemonic
 
-> **"Pizza as a Service"** — IaaS = make pizza at home with rented tools; PaaS = use a commercial kitchen; SaaS = order delivery.
+> **"Pizza as a Service"** -- IaaS = make pizza at home with rented tools; PaaS = use a commercial kitchen; SaaS = order delivery.
 
-### 💡 Study Tip
+### [IDEA] Study Tip
 
 - Expect definition-based questions. Know the difference between public, private, and hybrid clouds, and who manages what in each service type.
 
 ---
 
-## Chapter 3 — AI and Machine Learning
+## Chapter 3 -- AI and Machine Learning
 
 ### The AI Hierarchy
 
 ```
-AI ⊃ ML ⊃ Deep Learning ⊃ Generative AI
+AI  ML  Deep Learning  Generative AI
 ```
 
 - **AI:** Human-like problem-solving capabilities.
@@ -155,27 +155,27 @@ AI ⊃ ML ⊃ Deep Learning ⊃ Generative AI
 | **Amazon Kendra**         | Intelligent enterprise search     |
 | **Amazon Textract**       | Extract text from documents       |
 
-### 🧠 Mnemonics
+### [BRAIN] Mnemonics
 
-> **"SURF"** — Supervised uses labeled data; Unsupervised finds patterns; Reinforcement gets Rewards; Foundation models do it all.
+> **"SURF"** -- Supervised uses labeled data; Unsupervised finds patterns; Reinforcement gets Rewards; Foundation models do it all.
 
 > **Pipeline:** **"Can Every Person Find The Treasure Every Day, Mate?"**  
-> (Collection → EDA → Pre-processing → Feature engineering → Training → Tuning → Evaluation → Deployment → Monitoring)
+> (Collection -> EDA -> Pre-processing -> Feature engineering -> Training -> Tuning -> Evaluation -> Deployment -> Monitoring)
 
-### 💡 Study Tip
+### [IDEA] Study Tip
 
-- The exam tests **use case → technique → AWS service** matching. Practice mapping scenarios to the right service.
+- The exam tests **use case -> technique -> AWS service** matching. Practice mapping scenarios to the right service.
 
 ---
 
-## Chapter 4 — Understanding Generative AI
+## Chapter 4 -- Understanding Generative AI
 
 ### Generative AI Model Types
 
 | Model           | How It Works                                    | Key Use                                             |
 | --------------- | ----------------------------------------------- | --------------------------------------------------- |
 | **GAN**         | Generator + Discriminator compete               | Realistic images                                    |
-| **VAE**         | Encoder → Latent space → Decoder                | Image generation, anomaly detection, drug discovery |
+| **VAE**         | Encoder -> Latent space -> Decoder                | Image generation, anomaly detection, drug discovery |
 | **Transformer** | Attention mechanism; processes text in parallel | LLMs (most important for the exam)                  |
 | **Diffusion**   | Reverses noise to generate images/audio         | Image/audio generation                              |
 
@@ -212,19 +212,19 @@ AI ⊃ ML ⊃ Deep Learning ⊃ Generative AI
 6. Deployment
 7. Feedback
 
-### 🧠 Mnemonic
+### [BRAIN] Mnemonic
 
 > **"Don't Make Predictions For Every Deployment Failure"**  
-> (Data → Model → Pre-train → Fine-tune → Evaluate → Deploy → Feedback)
+> (Data -> Model -> Pre-train -> Fine-tune -> Evaluate -> Deploy -> Feedback)
 
-### 💡 Study Tip
+### [IDEA] Study Tip
 
 - **Transformers are the most important model type** for this exam. Know why they outperform RNNs (parallel processing, attention mechanism).
 - Understand the trade-offs: pre-training is extremely expensive; fine-tuning is moderate; RAG/in-context learning are cheaper alternatives.
 
 ---
 
-## Chapter 5 — Real-World AI Applications with AWS Tools
+## Chapter 5 -- Real-World AI Applications with AWS Tools
 
 ### Computer Vision: Amazon Rekognition
 
@@ -241,7 +241,7 @@ AI ⊃ ML ⊃ Deep Learning ⊃ Generative AI
 
 **Key text-processing techniques:**
 
-- **Lemmatization:** Reduces words to their root form (running → run).
+- **Lemmatization:** Reduces words to their root form (running -> run).
 - **Stemming:** Chops off word endings without context.
 - **Lowercasing:** Standardizes text.
 - **Stopword Removal:** Removes low-meaning words (the, is).
@@ -268,19 +268,19 @@ AI ⊃ ML ⊃ Deep Learning ⊃ Generative AI
 - Simple, rule-based tasks where traditional software or RPA is cheaper and more reliable.
 - Situations requiring **deterministic outcomes** (e.g., financial calculations, medical dosing) where generative AI's variability is risky.
 
-### 🧠 Mnemonic
+### [BRAIN] Mnemonic
 
 > **"Rekognition Recognizes Faces, Labels, and Celebrities"**
 
 > **"Textract = Text Extractor; Kendra = Knowledge Finder"**
 
-### 💡 Study Tip
+### [IDEA] Study Tip
 
 - The exam loves scenario questions: "A company wants to search internal docs using natural language queries." Answer: **Amazon Kendra**.
 
 ---
 
-## Chapter 6 — Building with Amazon Bedrock and Amazon Q
+## Chapter 6 -- Building with Amazon Bedrock and Amazon Q
 
 ### Amazon Bedrock
 
@@ -319,19 +319,19 @@ AI ⊃ ML ⊃ Deep Learning ⊃ Generative AI
 - Can be customized with your proprietary data for more relevant responses.
 - **Amazon Q Developer:** Helps with coding, debugging, and explaining code.
 
-### 🧠 Mnemonic
+### [BRAIN] Mnemonic
 
 > **"Bedrock = Bed of Rocks (solid foundation for GenAI apps); Q = Questions Answered"**
 
-> **"Temperature = Creativity Thermostat"** — Turn it down for facts, up for imagination.
+> **"Temperature = Creativity Thermostat"** -- Turn it down for facts, up for imagination.
 
-### 💡 Study Tip
+### [IDEA] Study Tip
 
 - Bedrock vs. SageMaker is a classic exam distinction: **Bedrock = consume FMs via API**; **SageMaker = build, train, and deploy custom models**.
 
 ---
 
-## Chapter 7 — A Guide to Prompt Engineering
+## Chapter 7 -- A Guide to Prompt Engineering
 
 ### Anatomy of a Prompt
 
@@ -368,19 +368,19 @@ AI ⊃ ML ⊃ Deep Learning ⊃ Generative AI
 - Assign a **persona/role** for better contextual responses.
 - Experiment and iterate.
 
-### 🧠 Mnemonic
+### [BRAIN] Mnemonic
 
-> **"ICIO"** — Instruction, Context, Input, Output (the four parts of a prompt).
+> **"ICIO"** -- Instruction, Context, Input, Output (the four parts of a prompt).
 
 > **"Zero = None; Few = Some; Chain = Step-by-Step"**
 
-### 💡 Study Tip
+### [IDEA] Study Tip
 
 - The exam will present a prompt scenario and ask which technique is being used. Look for the number of examples (zero/one/few) or the presence of reasoning steps (CoT).
 
 ---
 
-## Chapter 8 — A Framework for Responsible AI
+## Chapter 8 -- A Framework for Responsible AI
 
 ### Risks of Generative AI
 
@@ -431,21 +431,21 @@ AI ⊃ ML ⊃ Deep Learning ⊃ Generative AI
 | **Amazon Augmented AI (A2I)**     | Human-in-the-loop review                               |
 | **SageMaker Model Cards**         | Document model details, intended uses, and limitations |
 
-### 🧠 Mnemonic
+### [BRAIN] Mnemonic
 
-> **"BIRDS-V"** — Bias, Inclusivity, Robustness, Diversity, Safety, Veracity ( Responsible AI pillars).
+> **"BIRDS-V"** -- Bias, Inclusivity, Robustness, Diversity, Safety, Veracity ( Responsible AI pillars).
 
-> **"BOVU"** — Bias = Bullseye-miss; Overfitting = "Oops, memorized!"; Underfitting = "U-simplified"; Variance = Very spread out.
+> **"BOVU"** -- Bias = Bullseye-miss; Overfitting = "Oops, memorized!"; Underfitting = "U-simplified"; Variance = Very spread out.
 
-### 💡 Study Tip
+### [IDEA] Study Tip
 
 - Know the difference between **transparency** (can inspect the system) and **explainability** (can explain specific decisions). There is often a trade-off between model performance and interpretability.
 
 ---
 
-## Chapter 9 — Security, Compliance, and Governance for AI Solutions
+## Chapter 9 -- Security, Compliance, and Governance for AI Solutions
 
-### Security, Governance, Compliance — The Distinctions
+### Security, Governance, Compliance -- The Distinctions
 
 | Function       | Focus                                                                           |
 | -------------- | ------------------------------------------------------------------------------- |
@@ -493,29 +493,29 @@ AI ⊃ ML ⊃ Deep Learning ⊃ Generative AI
 
 ### Data Governance Strategies
 
-- Define **data lifecycles** (create → use → archive → delete)
+- Define **data lifecycles** (create -> use -> archive -> delete)
 - Implement **logging** and **monitoring**
 - Respect **data residency** requirements
 - Set **retention policies**
 - Establish **review cadences**
 
-### 🧠 Mnemonic
+### [BRAIN] Mnemonic
 
-> **"LIMR"** — Log, Inspect, Monitor, Retain (the four pillars of data governance).
+> **"LIMR"** -- Log, Inspect, Monitor, Retain (the four pillars of data governance).
 
 > **"Shield = DDoS Bodyguard; WAF = Web Wall; Macie = Finds Secrets"**
 
-### 💡 Study Tip
+### [IDEA] Study Tip
 
 - The shared responsibility model is heavily tested: **AWS secures the cloud; you secure what is in the cloud**.
 
 ---
 
-## Chapter 10 — Strategies and Techniques for Successfully Taking the AIF-C01 Exam
+## Chapter 10 -- Strategies and Techniques for Successfully Taking the AIF-C01 Exam
 
 ### Time Management
 
-- **65 questions in 90 minutes** ≈ 1 minute per question.
+- **65 questions in 90 minutes**  1 minute per question.
 - Answer easy questions first; mark hard ones for review.
 
 ### Key Crash-Course Reminders
@@ -529,19 +529,19 @@ AI ⊃ ML ⊃ Deep Learning ⊃ Generative AI
 - **Vector stores for embeddings:** OpenSearch, Aurora (pgvector), RDS PostgreSQL, Neptune.
 - **FM evaluation metrics:** ROUGE (summarization), BLEU (translation), BERTScore (semantic similarity).
 
-### 🧠 Mnemonic
+### [BRAIN] Mnemonic
 
 > **"Bedrock is Ready-Made; SageMaker is DIY"**
 
-### 💡 Study Tip
+### [IDEA] Study Tip
 
-- Read carefully for words like **not, except, only, least** — they completely change what the question is asking.
+- Read carefully for words like **not, except, only, least** -- they completely change what the question is asking.
 
 ---
 
-# Part II — SAA-C03: AWS Certified Solutions Architect – Associate
+# Part II -- SAA-C03: AWS Certified Solutions Architect - Associate
 
-## Chapter 1 — Introduction to Cloud Computing, AWS, and AWS SAA-C03
+## Chapter 1 -- Introduction to Cloud Computing, AWS, and AWS SAA-C03
 
 ### Cloud Computing Essentials
 
@@ -572,17 +572,17 @@ AI ⊃ ML ⊃ Deep Learning ⊃ Generative AI
 | **Availability Zone (AZ)** | One or more isolated data centers                |
 | **Edge Location**          | CDN endpoint for caching content closer to users |
 
-### 🧠 Mnemonic
+### [BRAIN] Mnemonic
 
 > **"Region = Country; AZ = City; Edge Location = Neighborhood Store"**
 
-### 💡 Study Tip
+### [IDEA] Study Tip
 
 - Choose the **Region** closest to your users for lower latency. Use multiple AZs for high availability.
 
 ---
 
-## Chapter 2 — Identity and Access Management in AWS
+## Chapter 2 -- Identity and Access Management in AWS
 
 ### IAM Core Components
 
@@ -613,17 +613,17 @@ AI ⊃ ML ⊃ Deep Learning ⊃ Generative AI
 - **AWS IAM Identity Center** (successor to AWS SSO): Centralized access to multiple AWS accounts and business applications.
 - **Federation with IAM Roles:** Let corporate identities access AWS without creating IAM users.
 
-### 🧠 Mnemonic
+### [BRAIN] Mnemonic
 
 > **"Organizations use SCPs to Control the Tower"**
 
-### 💡 Study Tip
+### [IDEA] Study Tip
 
 - **All requests are denied by default.** An explicit `Allow` is required. An explicit `Deny` always overrides an `Allow`.
 
 ---
 
-## Chapter 3 — Networking in AWS
+## Chapter 3 -- Networking in AWS
 
 ### OSI Model Layers
 
@@ -687,7 +687,7 @@ AI ⊃ ML ⊃ Deep Learning ⊃ Generative AI
 | **Geolocation**   | Route based on user location             |
 | **Failover**      | High availability with primary/secondary |
 
-### 🧠 Mnemonics
+### [BRAIN] Mnemonics
 
 > **"SG = Stateful Bouncer (instance door); NACL = Stateless Checkpoint (neighborhood gate)"**
 
@@ -695,13 +695,13 @@ AI ⊃ ML ⊃ Deep Learning ⊃ Generative AI
 
 > **"CloudFront = Local Store (caches content); Global Accelerator = Private Highway (fast TCP/UDP)"**
 
-### 💡 Study Tip
+### [IDEA] Study Tip
 
-- **Security Groups are stateful** — return traffic is automatically allowed. **NACLs are stateless** — you must explicitly allow return traffic.
+- **Security Groups are stateful** -- return traffic is automatically allowed. **NACLs are stateless** -- you must explicitly allow return traffic.
 
 ---
 
-## Chapter 4 — Cloud Storage
+## Chapter 4 -- Cloud Storage
 
 ### The Three Pillars of Cloud Storage
 
@@ -726,8 +726,8 @@ AI ⊃ ML ⊃ Deep Learning ⊃ Generative AI
 | **S3 Standard-IA**                | Infrequent               | Milliseconds  | Backups, disaster recovery               |
 | **S3 One Zone-IA**                | Infrequent, reproducible | Milliseconds  | Secondary copies                         |
 | **S3 Glacier Instant Retrieval**  | Archive, rare access     | Milliseconds  | Long-term archive with occasional access |
-| **S3 Glacier Flexible Retrieval** | Archive                  | Minutes–hours | Backups, media archives                  |
-| **S3 Glacier Deep Archive**       | Long-term archive        | 12–48 hours   | Cheapest storage, compliance             |
+| **S3 Glacier Flexible Retrieval** | Archive                  | Minutes-hours | Backups, media archives                  |
+| **S3 Glacier Deep Archive**       | Long-term archive        | 12-48 hours   | Cheapest storage, compliance             |
 
 ### S3 Key Features
 
@@ -745,19 +745,19 @@ AI ⊃ ML ⊃ Deep Learning ⊃ Generative AI
 | **AWS DataSync**                         | Online data transfer to AWS                       |
 | **AWS Backup**                           | Centralized backup management across AWS services |
 
-### 🧠 Mnemonic
+### [BRAIN] Mnemonic
 
 > **"Objects in buckets, Blocks for disks, Files for sharing"**
 
 > **"Standard = Speedy; IA = Inactive; Glacier = Frozen; Deep Archive = Deep Freeze"**
 
-### 💡 Study Tip
+### [IDEA] Study Tip
 
 - **EBS is AZ-locked** (must be in the same AZ as the EC2 instance). **EFS can span multiple AZs** within a Region.
 
 ---
 
-## Chapter 5 — Deep-Dive into AWS Compute
+## Chapter 5 -- Deep-Dive into AWS Compute
 
 ### Amazon EC2
 
@@ -795,19 +795,19 @@ AI ⊃ ML ⊃ Deep Learning ⊃ Generative AI
 | **Amazon API Gateway** | Manage, secure, and scale APIs            |
 | **AWS Step Functions** | Orchestrate workflows across services     |
 
-### 🧠 Mnemonic
+### [BRAIN] Mnemonic
 
 > **"OD = On Demand (no deal); RI = Reserved (plan ahead); Spot = Spontaneous (cheap but kicked out); Savings = Subscription"**
 
 > **"C = Crunch numbers; M = Middle ground; R = RAM-hungry; T = Tiny bursts; P/G = Pictures & Graphics"**
 
-### 💡 Study Tip
+### [IDEA] Study Tip
 
 - **Spot Instances are NOT suitable for workloads that cannot tolerate interruption** (e.g., databases, real-time bidding). Use them for batch jobs, image processing, and CI/CD.
 
 ---
 
-## Chapter 6 — Deep Dive Into AWS Databases
+## Chapter 6 -- Deep Dive Into AWS Databases
 
 ### OLTP vs. OLAP
 
@@ -857,19 +857,19 @@ AI ⊃ ML ⊃ Deep Learning ⊃ Generative AI
 - **ElastiCache:** Reduce database load by caching frequent queries.
 - **DynamoDB DAX:** In-memory cache for DynamoDB (sub-millisecond latency).
 
-### 🧠 Mnemonic
+### [BRAIN] Mnemonic
 
 > **"Aurora = AWS's Super-Car built on MySQL/Postgres roads"**
 
 > **"RDS = Reliable Database Service; DynamoDB = Dynamic, Fast NoSQL"**
 
-### 💡 Study Tip
+### [IDEA] Study Tip
 
 - **Aurora is the default best answer for high-performance relational workloads on AWS.** It offers 5x the throughput of standard MySQL and 3x that of PostgreSQL.
 
 ---
 
-## Chapter 7 — AWS Application Services
+## Chapter 7 -- AWS Application Services
 
 ### Front-End Web & Mobile
 
@@ -918,19 +918,19 @@ AI ⊃ ML ⊃ Deep Learning ⊃ Generative AI
 | **AWS Snow Family**                         | Physical data transfer                             |
 | **AWS Transfer Family**                     | Managed file transfers (SFTP, FTPS, FTP)           |
 
-### 🧠 Mnemonic
+### [BRAIN] Mnemonic
 
 > **"SQS = Queue = Line up and wait (pull); SNS = Notify = Push to subscribers"**
 
 > **"Amplify = App Builder; API Gateway = Front Door; Step Functions = Workflow Boss"**
 
-### 💡 Study Tip
+### [IDEA] Study Tip
 
 - When you see "decouple components" in a question, think **SQS**. When you see "notify multiple subscribers," think **SNS**.
 
 ---
 
-## Chapter 8 — AWS Management and Governance Services
+## Chapter 8 -- AWS Management and Governance Services
 
 ### Infrastructure as Code (IaC)
 
@@ -967,17 +967,17 @@ AI ⊃ ML ⊃ Deep Learning ⊃ Generative AI
 | **AWS Organizations**    | Central billing and policy management across accounts  |
 | **AWS Control Tower**    | Automated multi-account setup with guardrails          |
 
-### 🧠 Mnemonic
+### [BRAIN] Mnemonic
 
 > **"CloudFormation = Blueprints; CloudTrail = Security Camera; CloudWatch = Vital Signs Monitor"**
 
-### 💡 Study Tip
+### [IDEA] Study Tip
 
 - **CloudTrail = "who did what and when"** (audit). **CloudWatch = "how is it performing"** (metrics and logs).
 
 ---
 
-## Chapter 9 — AWS Cloud Security
+## Chapter 9 -- AWS Cloud Security
 
 ### Shared Responsibility Model
 
@@ -1018,18 +1018,18 @@ AI ⊃ ML ⊃ Deep Learning ⊃ Generative AI
 - **At rest:** AWS KMS, S3 SSE, EBS encryption
 - **In transit:** TLS/SSL certificates from ACM
 
-### 🧠 Mnemonic
+### [BRAIN] Mnemonic
 
 > **"Shield = DDoS Bodyguard; WAF = Web Wall; GuardDuty = Night Watchman; Macie = Secret Finder"**
 
-### 💡 Study Tip
+### [IDEA] Study Tip
 
 - For any question about protecting a web application from common exploits, the answer is usually **AWS WAF**.
 - For DDoS protection, the answer is **AWS Shield** (Standard is automatic; Advanced is for enhanced protection).
 
 ---
 
-## Chapter 10 — Cloud Architecture and AWS Framework
+## Chapter 10 -- Cloud Architecture and AWS Framework
 
 ### Key Architectural Considerations
 
@@ -1045,25 +1045,25 @@ AI ⊃ ML ⊃ Deep Learning ⊃ Generative AI
 
 | Strategy             | RTO        | RPO       | Cost |
 | -------------------- | ---------- | --------- | ---- |
-| **Backup & Restore** | Hours–Days | 24 hrs+   | $    |
+| **Backup & Restore** | Hours-Days | 24 hrs+   | $    |
 | **Pilot Light**      | 10s of min | Minutes   | $$   |
 | **Warm Standby**     | Minutes    | Minutes   | $$$  |
 | **Active-Active**    | Near zero  | Near zero | $$$$ |
 
 ### The 12-Factor Methodology
 
-1. **Codebase** — Version control (AWS CodeCommit)
-2. **Dependencies** — Explicitly declare and isolate
-3. **Config** — Store config in environment variables
-4. **Backing Services** — Treat databases as attached resources
-5. **Build, Release, Run** — Strict separation of stages
-6. **Processes** — Execute the app as stateless processes
-7. **Port Binding** — Export services via port binding
-8. **Concurrency** — Scale out via the process model
-9. **Disposability** — Fast startup and graceful shutdown
-10. **Dev/Prod Parity** — Keep environments as similar as possible
-11. **Logs** — Treat logs as event streams (CloudWatch)
-12. **Admin Processes** — Run admin/management tasks as one-off processes
+1. **Codebase** -- Version control (AWS CodeCommit)
+2. **Dependencies** -- Explicitly declare and isolate
+3. **Config** -- Store config in environment variables
+4. **Backing Services** -- Treat databases as attached resources
+5. **Build, Release, Run** -- Strict separation of stages
+6. **Processes** -- Execute the app as stateless processes
+7. **Port Binding** -- Export services via port binding
+8. **Concurrency** -- Scale out via the process model
+9. **Disposability** -- Fast startup and graceful shutdown
+10. **Dev/Prod Parity** -- Keep environments as similar as possible
+11. **Logs** -- Treat logs as event streams (CloudWatch)
+12. **Admin Processes** -- Run admin/management tasks as one-off processes
 
 ### AWS Well-Architected Framework (6 Pillars)
 
@@ -1076,19 +1076,19 @@ AI ⊃ ML ⊃ Deep Learning ⊃ Generative AI
 | **Cost Optimization**      | Avoid unnecessary costs                           |
 | **Sustainability**         | Minimize environmental impacts                    |
 
-### 🧠 Mnemonic
+### [BRAIN] Mnemonic
 
-> **"B-P-W-A"** — Backup, Pilot, Warm, Active (DR strategies in order of increasing cost and decreasing RTO/RPO).
+> **"B-P-W-A"** -- Backup, Pilot, Warm, Active (DR strategies in order of increasing cost and decreasing RTO/RPO).
 
-> **"Well-Architected = SCREPS"** — Security, Cost Optimization, Reliability, Operational Excellence, Performance Efficiency, Sustainability.
+> **"Well-Architected = SCREPS"** -- Security, Cost Optimization, Reliability, Operational Excellence, Performance Efficiency, Sustainability.
 
-### 💡 Study Tip
+### [IDEA] Study Tip
 
 - **RTO** = how fast you recover. **RPO** = how much data you can afford to lose. Lower RTO/RPO = higher cost.
 
 ---
 
-## Chapter 11 — AWS SAA-C03 Certification Preparation
+## Chapter 11 -- AWS SAA-C03 Certification Preparation
 
 ### Exam Details
 
@@ -1114,32 +1114,32 @@ AI ⊃ ML ⊃ Deep Learning ⊃ Generative AI
 4. **No penalty for guessing.** Answer every question.
 5. **Mentally sketch architectures.** For VPC/network questions, visualize subnets, load balancers, and databases.
 
-### 🧠 Mnemonic
+### [BRAIN] Mnemonic
 
-> **"Secure = 3, Resilient = 2, High-Perform = 2, Cost = 2"** — Security is the heaviest domain (30%).
+> **"Secure = 3, Resilient = 2, High-Perform = 2, Cost = 2"** -- Security is the heaviest domain (30%).
 
-### 💡 Study Tip
+### [IDEA] Study Tip
 
 - The SAA-C03 exam tests **trade-offs**. The "right" answer is often the one that best balances cost, performance, security, and operational overhead for the given scenario.
 
 ---
 
-# 🧠 Mega Mnemonic & Memory Aid Reference
+# [BRAIN] Mega Mnemonic & Memory Aid Reference
 
 ## AIF-C01 Mnemonics
 
 1. **Domain Weights:** GMARS = 2-4-2-1-1
 2. **ML Pipeline:** "Can Every Person Find The Treasure Every Day, Mate?"
-3. **Learning Types:** SURF — Supervised (labeled), Unsupervised (patterns), Reinforcement (rewards), Foundation (all)
+3. **Learning Types:** SURF -- Supervised (labeled), Unsupervised (patterns), Reinforcement (rewards), Foundation (all)
 4. **FM Lifecycle:** "Don't Make Predictions For Every Deployment Failure"
-5. **Prompt Anatomy:** ICIO — Instruction, Context, Input, Output
-6. **Responsible AI:** BIRDS-V — Bias, Inclusivity, Robustness, Diversity, Safety, Veracity
+5. **Prompt Anatomy:** ICIO -- Instruction, Context, Input, Output
+6. **Responsible AI:** BIRDS-V -- Bias, Inclusivity, Robustness, Diversity, Safety, Veracity
 7. **Vector Stores:** "Aurora Operates Documents Properly, Neptune Navigates"
 
 ## SAA-C03 Mnemonics
 
-1. **Well-Architected Pillars:** SCREPS — Security, Cost, Reliability, Operational Excellence, Performance, Sustainability
-2. **DR Strategies:** B-P-W-A — Backup, Pilot, Warm, Active
+1. **Well-Architected Pillars:** SCREPS -- Security, Cost, Reliability, Operational Excellence, Performance, Sustainability
+2. **DR Strategies:** B-P-W-A -- Backup, Pilot, Warm, Active
 3. **Load Balancers:** ALB = Apps (L7); NLB = Networks (L4); GWLB = Gateways (L3)
 4. **Security vs. NACL:** SG = Stateful Bouncer; NACL = Stateless Checkpoint
 5. **Storage Types:** Objects in buckets, Blocks for disks, Files for sharing
@@ -1149,12 +1149,12 @@ AI ⊃ ML ⊃ Deep Learning ⊃ Generative AI
 
 ---
 
-# 📝 Final Study Tips
+# [MEMO] Final Study Tips
 
 ## For Both Exams
 
 - **No penalty for guessing.** Never leave a question blank.
-- **Compensatory scoring** means you don't need to ace every domain — but don't ignore any completely.
+- **Compensatory scoring** means you don't need to ace every domain -- but don't ignore any completely.
 - Focus on **matching the scenario to the best AWS service**.
 - Watch for **negatives** (not, except, least) and **superlatives** (most cost-effective, most secure).
 
@@ -1175,4 +1175,4 @@ AI ⊃ ML ⊃ Deep Learning ⊃ Generative AI
 
 ---
 
-*Good luck on your exams! 🚀*
+*Good luck on your exams! [ROCKET]*

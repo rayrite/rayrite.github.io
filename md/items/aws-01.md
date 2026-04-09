@@ -1,5 +1,5 @@
 # AWS Certification Study Guide
-## AIF-C01 (AI Practitioner) & SAA-C03 (Solutions Architect – Associate)
+## AIF-C01 (AI Practitioner) & SAA-C03 (Solutions Architect - Associate)
 
 > **Exam Quick Facts**
 > | Exam | Questions (scored) | Unscored | Passing Score | Duration | Format |
@@ -9,14 +9,14 @@
 
 ---
 
-# Part I: AIF-C01 — AWS Certified AI Practitioner
+# Part I: AIF-C01 -- AWS Certified AI Practitioner
 
 **Target candidate:** Up to 6 months of exposure to AI/ML on AWS. You *use* AI/ML but do not necessarily build models from scratch.  
 **Key theme:** Broad conceptual understanding of AI/ML, generative AI, and the AWS services that support them.
 
 ---
 
-## Chapter 1 — Domain 1: Fundamentals of AI and ML *(20%)*
+## Chapter 1 -- Domain 1: Fundamentals of AI and ML *(20%)*
 
 ### Core Concepts
 
@@ -28,7 +28,7 @@
 | **Neural Networks** | Biologically inspired computing systems | Foundation of LLMs and computer vision |
 | **Computer Vision (CV)** | Interpreting images/video | Amazon Rekognition |
 | **NLP** | Understanding/processing human language | Amazon Comprehend, Amazon Lex, Amazon Transcribe |
-| **LLM** | Large Language Model — massive NLP model trained on broad text | Amazon Bedrock, SageMaker JumpStart |
+| **LLM** | Large Language Model -- massive NLP model trained on broad text | Amazon Bedrock, SageMaker JumpStart |
 | **Model** | Trained mathematical representation of patterns | Deployed for inference |
 | **Algorithm** | Procedure/rules used to train the model | E.g., gradient descent, transformers |
 | **Training vs. Inferencing** | Training = building the model; Inferencing = using the model | Batch inference (large jobs) vs. Real-time inference (APIs) |
@@ -36,17 +36,17 @@
 
 ### Learning Types
 
-- **Supervised Learning** — Uses *labeled* data (input + correct output).  
+- **Supervised Learning** -- Uses *labeled* data (input + correct output).  
   *Use cases:* Regression (predicting numbers), Classification (predicting categories).  
   *Mnemonic:* **S**upervised = **S**omeone shows the answers (labels).
 
-- **Unsupervised Learning** — Uses *unlabeled* data to find hidden patterns.  
+- **Unsupervised Learning** -- Uses *unlabeled* data to find hidden patterns.  
   *Use cases:* Clustering (grouping similar customers), Dimensionality reduction.  
-  *Mnemonic:* **U**nsupervised = **U**ncovered patterns — no answers given.
+  *Mnemonic:* **U**nsupervised = **U**ncovered patterns -- no answers given.
 
-- **Reinforcement Learning** — Agent learns by interacting with environment and receiving rewards/penalties.  
+- **Reinforcement Learning** -- Agent learns by interacting with environment and receiving rewards/penalties.  
   *Use cases:* Game playing, robotics, recommendation tuning.  
-  *Mnemonic:* **R**einforcement = **R**ewards — like training a dog with treats.
+  *Mnemonic:* **R**einforcement = **R**ewards -- like training a dog with treats.
 
 ### Data Types
 
@@ -60,44 +60,44 @@
 
 ### ML Development Lifecycle (The Pipeline)
 
-1. **Data Collection** → Gather raw data
-2. **Exploratory Data Analysis (EDA)** → Understand data distributions
-3. **Data Pre-processing** → Clean, normalize, handle missing values
-4. **Feature Engineering** → Create meaningful input variables
-5. **Model Training** → Feed data into algorithm
-6. **Hyperparameter Tuning** → Optimize model settings
-7. **Evaluation** → Test against validation data
-8. **Deployment** → Put into production
-9. **Monitoring** → Watch for drift and degradation
+1. **Data Collection** -> Gather raw data
+2. **Exploratory Data Analysis (EDA)** -> Understand data distributions
+3. **Data Pre-processing** -> Clean, normalize, handle missing values
+4. **Feature Engineering** -> Create meaningful input variables
+5. **Model Training** -> Feed data into algorithm
+6. **Hyperparameter Tuning** -> Optimize model settings
+7. **Evaluation** -> Test against validation data
+8. **Deployment** -> Put into production
+9. **Monitoring** -> Watch for drift and degradation
 
 *Mnemonic for the pipeline:*  
-**"C-E-P-F-T-T-E-D-M"** → *"Can Every Person Find The Treasure Every Day, Mate?"*  
-(Collection → EDA → Pre-processing → Feature engineering → Training → Tuning → Evaluation → Deployment → Monitoring)
+**"C-E-P-F-T-T-E-D-M"** -> *"Can Every Person Find The Treasure Every Day, Mate?"*  
+(Collection -> EDA -> Pre-processing -> Feature engineering -> Training -> Tuning -> Evaluation -> Deployment -> Monitoring)
 
 ### Key AWS Services for This Domain
 
-- **Amazon SageMaker** — End-to-end ML platform
-- **SageMaker Data Wrangler** — Data prep and EDA
-- **SageMaker Feature Store** — Store and share ML features
-- **SageMaker Model Monitor** — Monitor models in production
-- **Amazon Transcribe** — Speech-to-text
-- **Amazon Translate** — Language translation
-- **Amazon Comprehend** — NLP insights from text
-- **Amazon Lex** — Build conversational interfaces (chatbots)
-- **Amazon Polly** — Text-to-speech
-- **Amazon Rekognition** — Image/video analysis
-- **Amazon Personalize** — Real-time recommendation engine
-- **Amazon Fraud Detector** — Detect online fraud
+- **Amazon SageMaker** -- End-to-end ML platform
+- **SageMaker Data Wrangler** -- Data prep and EDA
+- **SageMaker Feature Store** -- Store and share ML features
+- **SageMaker Model Monitor** -- Monitor models in production
+- **Amazon Transcribe** -- Speech-to-text
+- **Amazon Translate** -- Language translation
+- **Amazon Comprehend** -- NLP insights from text
+- **Amazon Lex** -- Build conversational interfaces (chatbots)
+- **Amazon Polly** -- Text-to-speech
+- **Amazon Rekognition** -- Image/video analysis
+- **Amazon Personalize** -- Real-time recommendation engine
+- **Amazon Fraud Detector** -- Detect online fraud
 
 ### Study Tips
 
 - **When to use ML:** Assist human decisions, automation, scalability.  
 - **When NOT to use ML:** When a specific deterministic outcome is required (use traditional programming instead), or when a simple cost-benefit analysis shows rules are cheaper and more accurate.
-- Focus on matching **use case → technique → AWS service**.
+- Focus on matching **use case -> technique -> AWS service**.
 
 ---
 
-## Chapter 2 — Domain 2: Fundamentals of Generative AI *(24%)*
+## Chapter 2 -- Domain 2: Fundamentals of Generative AI *(24%)*
 
 ### Core Generative AI Vocabulary
 
@@ -115,20 +115,20 @@
 
 ### Foundation Model Lifecycle
 
-1. **Data Selection** → Choose high-quality, diverse datasets
-2. **Model Selection** → Pick architecture (transformer, diffusion, etc.)
-3. **Pre-training** → Train on massive corpus (expensive, time-consuming)
-4. **Fine-tuning** → Adapt to specific domain/task
-5. **Evaluation** → Benchmark and human review
-6. **Deployment** → Host for inference
-7. **Feedback** → Collect usage data to improve
+1. **Data Selection** -> Choose high-quality, diverse datasets
+2. **Model Selection** -> Pick architecture (transformer, diffusion, etc.)
+3. **Pre-training** -> Train on massive corpus (expensive, time-consuming)
+4. **Fine-tuning** -> Adapt to specific domain/task
+5. **Evaluation** -> Benchmark and human review
+6. **Deployment** -> Host for inference
+7. **Feedback** -> Collect usage data to improve
 
-*Mnemonic:* **D-M-P-F-E-D-F** → *"Don't Make Predictions For Every Deployment Failure"*
+*Mnemonic:* **D-M-P-F-E-D-F** -> *"Don't Make Predictions For Every Deployment Failure"*
 
 ### Generative AI Use Cases
 
 - **Content generation:** Text, images, video, audio, code
-- **Summarization:** Long documents → short summaries
+- **Summarization:** Long documents -> short summaries
 - **Chatbots / Virtual agents:** Customer service, Q&A
 - **Translation:** Real-time multilingual communication
 - **Search & recommendations:** Semantic search, product suggestions
@@ -144,10 +144,10 @@
 
 ### AWS Generative AI Services
 
-- **Amazon Bedrock** — Fully managed service offering foundation models from leading providers (e.g., Anthropic, AI21, Stability AI, Amazon Titan) via a single API
-- **Amazon SageMaker JumpStart** — Pre-built solutions, pre-trained models, and one-click deployment
-- **PartyRock (Amazon Bedrock Playground)** — No-code generative AI app builder for learning and prototyping
-- **Amazon Q** — Generative AI-powered assistant for AWS and business applications
+- **Amazon Bedrock** -- Fully managed service offering foundation models from leading providers (e.g., Anthropic, AI21, Stability AI, Amazon Titan) via a single API
+- **Amazon SageMaker JumpStart** -- Pre-built solutions, pre-trained models, and one-click deployment
+- **PartyRock (Amazon Bedrock Playground)** -- No-code generative AI app builder for learning and prototyping
+- **Amazon Q** -- Generative AI-powered assistant for AWS and business applications
 
 ### Cost Tradeoffs
 
@@ -159,11 +159,11 @@
 | **Managed API (Bedrock)** | Pay per token | Variable workloads |
 | **Provisioned Throughput** | Fixed cost | Steady, predictable workloads |
 
-*Mnemonic for cost thinking:* **"Token = Ticker"** — every token ticks the meter on pay-per-use APIs.
+*Mnemonic for cost thinking:* **"Token = Ticker"** -- every token ticks the meter on pay-per-use APIs.
 
 ---
 
-## Chapter 3 — Domain 3: Applications of Foundation Models *(28%)* — HIGHEST WEIGHT
+## Chapter 3 -- Domain 3: Applications of Foundation Models *(28%)* -- HIGHEST WEIGHT
 
 ### Design Considerations for FM Applications
 
@@ -215,7 +215,7 @@
 
 ### FM Training & Fine-tuning
 
-- **Pre-training:** Massive general dataset → general capabilities
+- **Pre-training:** Massive general dataset -> general capabilities
 - **Continuous Pre-training:** Additional general data to expand knowledge
 - **Fine-tuning:** Task-specific or domain-specific data to specialize behavior
   - *Instruction tuning:* Fine-tune on instruction-response pairs
@@ -242,22 +242,22 @@
 
 ### Agents
 
-- **Agents for Amazon Bedrock** — Enable FMs to execute multi-step tasks by invoking APIs, querying databases, and orchestrating actions.
+- **Agents for Amazon Bedrock** -- Enable FMs to execute multi-step tasks by invoking APIs, querying databases, and orchestrating actions.
 - Think of agents as the "hands and feet" of the model, allowing it to interact with the real world.
 
 ---
 
-## Chapter 4 — Domain 4: Guidelines for Responsible AI *(14%)*
+## Chapter 4 -- Domain 4: Guidelines for Responsible AI *(14%)*
 
 ### Pillars of Responsible AI
 
-- **Bias & Fairness** — Ensure equitable outcomes across groups
-- **Inclusivity** — Reflect diverse populations in data and design
-- **Robustness** — Perform reliably across conditions
-- **Safety** — Prevent harm to users and society
-- **Veracity** — Truthfulness and accuracy of outputs
+- **Bias & Fairness** -- Ensure equitable outcomes across groups
+- **Inclusivity** -- Reflect diverse populations in data and design
+- **Robustness** -- Perform reliably across conditions
+- **Safety** -- Prevent harm to users and society
+- **Veracity** -- Truthfulness and accuracy of outputs
 
-*Mnemonic:* **"BIRDS Fly Safely"** → Bias, Inclusivity, Robustness, Diversity, Safety, Veracity (adapted: B-I-R-S-V)
+*Mnemonic:* **"BIRDS Fly Safely"** -> Bias, Inclusivity, Robustness, Diversity, Safety, Veracity (adapted: B-I-R-S-V)
 
 ### Bias, Variance, Overfitting, Underfitting
 
@@ -270,11 +270,11 @@
 
 ### Tools for Responsible AI on AWS
 
-- **Guardrails for Amazon Bedrock** — Implement safety controls, content filters, and topic restrictions
-- **Amazon SageMaker Clarify** — Detect bias and explain model predictions
-- **SageMaker Model Monitor** — Detect data drift in production
-- **Amazon Augmented AI (Amazon A2I)** — Human-in-the-loop review for model outputs
-- **SageMaker Model Cards** — Document model details, intended uses, and limitations
+- **Guardrails for Amazon Bedrock** -- Implement safety controls, content filters, and topic restrictions
+- **Amazon SageMaker Clarify** -- Detect bias and explain model predictions
+- **SageMaker Model Monitor** -- Detect data drift in production
+- **Amazon Augmented AI (Amazon A2I)** -- Human-in-the-loop review for model outputs
+- **SageMaker Model Cards** -- Document model details, intended uses, and limitations
 
 ### Transparency & Explainability
 
@@ -292,13 +292,13 @@
 
 ### Dataset Characteristics
 
-- **Inclusive & diverse** — Represents all relevant populations
-- **Curated** — High-quality, vetted sources
-- **Balanced** — No group is disproportionately under- or over-represented
+- **Inclusive & diverse** -- Represents all relevant populations
+- **Curated** -- High-quality, vetted sources
+- **Balanced** -- No group is disproportionately under- or over-represented
 
 ---
 
-## Chapter 5 — Domain 5: Security, Compliance, and Governance for AI Solutions *(14%)*
+## Chapter 5 -- Domain 5: Security, Compliance, and Governance for AI Solutions *(14%)*
 
 ### Securing AI Systems
 
@@ -319,9 +319,9 @@
 
 ### Governance & Compliance Standards
 
-- **ISO** — International standards for quality and security
-- **SOC** — Service Organization Controls (audits for SaaS providers)
-- **Algorithm Accountability Laws** — Emerging regulations on AI transparency
+- **ISO** -- International standards for quality and security
+- **SOC** -- Service Organization Controls (audits for SaaS providers)
+- **Algorithm Accountability Laws** -- Emerging regulations on AI transparency
 
 ### AWS Governance & Compliance Services
 
@@ -332,35 +332,35 @@
 | **Amazon Inspector** | Automated vulnerability assessments |
 | **AWS Audit Manager** | Continuously collect evidence for audits |
 | **AWS Artifact** | Access compliance reports and agreements |
-| **AWS Trusted Advisor** — Not in AIF in-scope list for governance specifically, but useful for best-practice checks | |
+| **AWS Trusted Advisor** -- Not in AIF in-scope list for governance specifically, but useful for best-practice checks | |
 
 ### Data Governance Strategies
 
-- Define **data lifecycles** (create → use → archive → delete)
+- Define **data lifecycles** (create -> use -> archive -> delete)
 - Implement **logging** and **monitoring**
 - Respect **data residency** requirements
 - Set **retention policies**
 - Establish **review cadences** and **transparency standards**
 
-*Mnemonic for governance:* **"LIMR"** — *Log, Inspect, Monitor, Retain* (the four pillars of data governance)
+*Mnemonic for governance:* **"LIMR"** -- *Log, Inspect, Monitor, Retain* (the four pillars of data governance)
 
 ---
 
-# Part II: SAA-C03 — AWS Certified Solutions Architect – Associate
+# Part II: SAA-C03 -- AWS Certified Solutions Architect - Associate
 
 **Target candidate:** At least 1 year of hands-on experience designing AWS solutions.  
 **Key theme:** Design secure, resilient, high-performing, and cost-optimized architectures using the AWS Well-Architected Framework.
 
 ---
 
-## Chapter 6 — Domain 1: Design Secure Architectures *(30%)* — HIGHEST WEIGHT
+## Chapter 6 -- Domain 1: Design Secure Architectures *(30%)* -- HIGHEST WEIGHT
 
 ### Secure Access to AWS Resources
 
 **Core Principles:**
-- **Principle of Least Privilege** — Give only the permissions needed, nothing more
-- **Shared Responsibility Model** — AWS secures the *cloud*; you secure *what's in the cloud*
-- **MFA (Multi-Factor Authentication)** — Required for root users and highly privileged IAM users
+- **Principle of Least Privilege** -- Give only the permissions needed, nothing more
+- **Shared Responsibility Model** -- AWS secures the *cloud*; you secure *what's in the cloud*
+- **MFA (Multi-Factor Authentication)** -- Required for root users and highly privileged IAM users
 
 **IAM Components:**
 
@@ -368,22 +368,22 @@
 |-----------|--------------|----------------------|
 | **IAM Users** | Long-term credentials for individuals | Think "U = Unique person" |
 | **IAM Groups** | Collection of users sharing permissions | "G = Gather users" |
-| **IAM Roles** | Temporary credentials; assumed by users/services/apps | "R = Relay" — pass permissions temporarily |
+| **IAM Roles** | Temporary credentials; assumed by users/services/apps | "R = Relay" -- pass permissions temporarily |
 | **IAM Policies** | JSON documents defining permissions | "P = Permissions paper" |
 | **AWS STS** | Issues temporary security credentials | "STS = Short-Term Security" |
 
 **Multi-Account Security Strategy:**
 
-- **AWS Organizations** — Central management of multiple AWS accounts
-- **Service Control Policies (SCPs)** — Guardrails that limit maximum permissions across accounts
-- **AWS Control Tower** — Automates multi-account setup with guardrails and landing zones
+- **AWS Organizations** -- Central management of multiple AWS accounts
+- **Service Control Policies (SCPs)** -- Guardrails that limit maximum permissions across accounts
+- **AWS Control Tower** -- Automates multi-account setup with guardrails and landing zones
 
 *Mnemonic:* **"Organizations use SCPs to Control the Tower"**
 
 **Federation & SSO:**
 
-- **AWS IAM Identity Center (successor to AWS SSO)** — Centralized access to multiple AWS accounts and business apps
-- **Federation with IAM Roles** — Let corporate identities access AWS without creating IAM users
+- **AWS IAM Identity Center (successor to AWS SSO)** -- Centralized access to multiple AWS accounts and business apps
+- **Federation with IAM Roles** -- Let corporate identities access AWS without creating IAM users
 
 ### Secure Workloads & Applications
 
@@ -400,39 +400,39 @@
 **"SGs are like a bouncer at the door (instance level, only allows, remembers you). NACLs are like a security checkpoint at the neighborhood gate (subnet level, can deny, forgets you)."**
 
 **Network Segmentation:**
-- **Public subnets** — Have route to Internet Gateway; host web servers, load balancers
-- **Private subnets** — No direct internet route; host databases, application servers
-- **DMZ / Edge subnets** — Buffer zone between internet and internal resources
+- **Public subnets** -- Have route to Internet Gateway; host web servers, load balancers
+- **Private subnets** -- No direct internet route; host databases, application servers
+- **DMZ / Edge subnets** -- Buffer zone between internet and internal resources
 
 **Application Security Services:**
 
 | Service | Use Case |
 |---------|----------|
-| **AWS WAF** — Web Application Firewall | Block SQL injection, XSS, bad bots at Layer 7 |
-| **AWS Shield** — DDoS protection | Standard (free) and Advanced (premium) |
-| **Amazon GuardDuty** — Threat detection | ML-powered anomaly detection across accounts |
-| **Amazon Macie** — Data privacy | Discovers and protects sensitive data in S3 |
-| **AWS Secrets Manager** — Credential management | Rotate and manage secrets (passwords, API keys) |
-| **Amazon Cognito** — User authentication | Sign-up/sign-in for mobile and web apps |
+| **AWS WAF** -- Web Application Firewall | Block SQL injection, XSS, bad bots at Layer 7 |
+| **AWS Shield** -- DDoS protection | Standard (free) and Advanced (premium) |
+| **Amazon GuardDuty** -- Threat detection | ML-powered anomaly detection across accounts |
+| **Amazon Macie** -- Data privacy | Discovers and protects sensitive data in S3 |
+| **AWS Secrets Manager** -- Credential management | Rotate and manage secrets (passwords, API keys) |
+| **Amazon Cognito** -- User authentication | Sign-up/sign-in for mobile and web apps |
 
 **External Network Connections:**
 
-- **AWS Site-to-Site VPN** — Encrypted connection over internet between on-premises and AWS
-- **AWS Direct Connect** — Private, dedicated physical connection (lower latency, more consistent, higher bandwidth)
-- **AWS PrivateLink** — Private connectivity to AWS services without traversing the public internet
+- **AWS Site-to-Site VPN** -- Encrypted connection over internet between on-premises and AWS
+- **AWS Direct Connect** -- Private, dedicated physical connection (lower latency, more consistent, higher bandwidth)
+- **AWS PrivateLink** -- Private connectivity to AWS services without traversing the public internet
 
 *Mnemonic:* **"VPN = Virtual Public Network (over internet); Direct Connect = Dedicated Private Line"**
 
 ### Data Security Controls
 
 **Encryption:**
-- **At rest** — Encrypt stored data (S3, EBS, RDS) using **AWS KMS**
-- **In transit** — Encrypt data moving across networks using **TLS/SSL certificates from AWS Certificate Manager (ACM)**
+- **At rest** -- Encrypt stored data (S3, EBS, RDS) using **AWS KMS**
+- **In transit** -- Encrypt data moving across networks using **TLS/SSL certificates from AWS Certificate Manager (ACM)**
 
 **Key Management with AWS KMS:**
-- **Customer Managed Keys (CMKs)** — Full control, auditing, rotation
-- **AWS Managed Keys** — Automatic, no granular control
-- **Key policies** — Define who can use and administer keys
+- **Customer Managed Keys (CMKs)** -- Full control, auditing, rotation
+- **AWS Managed Keys** -- Automatic, no granular control
+- **Key policies** -- Define who can use and administer keys
 
 **Backup & Recovery:**
 - Implement backups, snapshots, and cross-region replication
@@ -440,7 +440,7 @@
 
 ---
 
-## Chapter 7 — Domain 2: Design Resilient Architectures *(26%)*
+## Chapter 7 -- Domain 2: Design Resilient Architectures *(26%)*
 
 ### Scalable & Loosely Coupled Architectures
 
@@ -455,20 +455,20 @@
 
 **Decoupling Patterns:**
 
-- **SQS (Simple Queue Service)** — Message queue for decoupling components; pull-based
-- **SNS (Simple Notification Service)** — Pub/sub messaging; push-based notifications
-- **EventBridge** — Serverless event bus for routing events between services
-- **API Gateway** — Front door for APIs; throttling, caching, security
-- **Step Functions** — Orchestrate workflows across multiple Lambda functions/services
+- **SQS (Simple Queue Service)** -- Message queue for decoupling components; pull-based
+- **SNS (Simple Notification Service)** -- Pub/sub messaging; push-based notifications
+- **EventBridge** -- Serverless event bus for routing events between services
+- **API Gateway** -- Front door for APIs; throttling, caching, security
+- **Step Functions** -- Orchestrate workflows across multiple Lambda functions/services
 
 *Mnemonic for SQS vs SNS:* **"SQS = Queue = Line up and wait (pull); SNS = Notify = Push to subscribers"**
 
 **Serverless & Containers:**
 
-- **AWS Lambda** — Event-driven compute; pay per invocation and duration
-- **AWS Fargate** — Serverless containers (no EC2 management)
-- **Amazon ECS** — AWS-native container orchestration
-- **Amazon EKS** — Managed Kubernetes on AWS
+- **AWS Lambda** -- Event-driven compute; pay per invocation and duration
+- **AWS Fargate** -- Serverless containers (no EC2 management)
+- **Amazon ECS** -- AWS-native container orchestration
+- **Amazon EKS** -- Managed Kubernetes on AWS
 
 **When to Use What:**
 
@@ -485,9 +485,9 @@
 
 **AWS Global Infrastructure:**
 
-- **Regions** — Geographic areas with multiple isolated Availability Zones
-- **Availability Zones (AZs)** — One or more discrete data centers with redundant power, networking, and connectivity
-- **Edge Locations** — CDN endpoints for caching content closer to users
+- **Regions** -- Geographic areas with multiple isolated Availability Zones
+- **Availability Zones (AZs)** -- One or more discrete data centers with redundant power, networking, and connectivity
+- **Edge Locations** -- CDN endpoints for caching content closer to users
 
 *Mnemonic:* **"Region = Country; AZ = City; Edge Location = Neighborhood store"**
 
@@ -495,16 +495,16 @@
 
 | Strategy | RTO | RPO | Cost | Description |
 |----------|-----|-----|------|-------------|
-| **Backup & Restore** | Hours–Days | 24 hrs+ | $ | Periodic backups; restore when needed |
+| **Backup & Restore** | Hours-Days | 24 hrs+ | $ | Periodic backups; restore when needed |
 | **Pilot Light** | 10s of min | Minutes | $$ | Core systems always running; scale out on disaster |
 | **Warm Standby** | Minutes | Minutes | $$$ | Scaled-down duplicate running; scale up on disaster |
 | **Active-Active** | Near zero | Near zero | $$$$ | Full duplicate running actively serving traffic |
 
-*Mnemonic for DR strategies:* **"B-P-W-A"** → *"Backup first, then Pilot the light, then Warm up, then Always active"*
+*Mnemonic for DR strategies:* **"B-P-W-A"** -> *"Backup first, then Pilot the light, then Warm up, then Always active"*
 
 **Key DR Metrics:**
-- **RTO (Recovery Time Objective)** — How long to recover after outage
-- **RPO (Recovery Point Objective)** — How much data loss is acceptable
+- **RTO (Recovery Time Objective)** -- How long to recover after outage
+- **RPO (Recovery Point Objective)** -- How much data loss is acceptable
 
 **Resilience Tactics:**
 - Multi-AZ deployments for databases (RDS Multi-AZ)
@@ -514,11 +514,11 @@
 - Immutable infrastructure (replace rather than repair)
 
 **Proxy Concepts:**
-- **Amazon RDS Proxy** — Connection pooling for RDS databases; improves scalability and resilience
+- **Amazon RDS Proxy** -- Connection pooling for RDS databases; improves scalability and resilience
 
 ---
 
-## Chapter 8 — Domain 3: Design High-Performing Architectures *(24%)*
+## Chapter 8 -- Domain 3: Design High-Performing Architectures *(24%)*
 
 ### High-Performing & Scalable Storage Solutions
 
@@ -547,10 +547,10 @@
 
 **Scaling & Compute Services:**
 
-- **EC2 Auto Scaling** — Scale EC2 instances horizontally
-- **AWS Auto Scaling** — Scale multiple resources (EC2, DynamoDB, Aurora, etc.)
-- **AWS Batch** — Run batch computing jobs at any scale
-- **Amazon EMR** — Big data processing (Hadoop, Spark)
+- **EC2 Auto Scaling** -- Scale EC2 instances horizontally
+- **AWS Auto Scaling** -- Scale multiple resources (EC2, DynamoDB, Aurora, etc.)
+- **AWS Batch** -- Run batch computing jobs at any scale
+- **Amazon EMR** -- Big data processing (Hadoop, Spark)
 
 **Serverless & Decoupling:**
 - Use Lambda for event-driven, short-lived tasks
@@ -572,9 +572,9 @@
 *Mnemonic for RDS vs Aurora:* **"Aurora = AWS's own super-car built on the same roads as MySQL/Postgres"**
 
 **Read Replicas & Caching:**
-- **Read Replicas** — Offload read traffic; improve performance; can promote to standalone
-- **ElastiCache** — Reduce database load by caching frequent queries
-- **DynamoDB DAX** — In-memory cache for DynamoDB (sub-millisecond latency)
+- **Read Replicas** -- Offload read traffic; improve performance; can promote to standalone
+- **ElastiCache** -- Reduce database load by caching frequent queries
+- **DynamoDB DAX** -- In-memory cache for DynamoDB (sub-millisecond latency)
 
 ### High-Performing Network Architectures
 
@@ -590,11 +590,11 @@
 
 **Edge & Networking Services:**
 
-- **Amazon CloudFront** — Global CDN; caches content at edge locations
-- **AWS Global Accelerator** — Improves availability and performance using AWS's global network; provides static anycast IPs
-- **AWS PrivateLink** — Private access to AWS services and VPC endpoints
-- **AWS Transit Gateway** — Central hub for connecting multiple VPCs and on-premises networks
-- **VPC Peering** — Direct private connection between two VPCs
+- **Amazon CloudFront** -- Global CDN; caches content at edge locations
+- **AWS Global Accelerator** -- Improves availability and performance using AWS's global network; provides static anycast IPs
+- **AWS PrivateLink** -- Private access to AWS services and VPC endpoints
+- **AWS Transit Gateway** -- Central hub for connecting multiple VPCs and on-premises networks
+- **VPC Peering** -- Direct private connection between two VPCs
 
 *Mnemonic for CloudFront vs Global Accelerator:*  
 **"CloudFront = Caching content at the edge (like a local store); Global Accelerator = Fast lane on AWS's private highway (better for TCP/UDP, not just HTTP)"**
@@ -616,7 +616,7 @@
 
 ---
 
-## Chapter 9 — Domain 4: Design Cost-Optimized Architectures *(20%)*
+## Chapter 9 -- Domain 4: Design Cost-Optimized Architectures *(20%)*
 
 ### Cost-Optimized Storage
 
@@ -629,8 +629,8 @@
 | **S3 Standard-IA** | Infrequently accessed | Milliseconds | $ (lower storage, higher retrieval) |
 | **S3 One Zone-IA** | Infrequently accessed, reproducible | Milliseconds | $ (single AZ) |
 | **S3 Glacier Instant Retrieval** | Archive, rare access, but fast when needed | Milliseconds | $ |
-| **S3 Glacier Flexible Retrieval** | Archive | Minutes–hours | $ |
-| **S3 Glacier Deep Archive** | Long-term archive | 12–48 hours | $ |
+| **S3 Glacier Flexible Retrieval** | Archive | Minutes-hours | $ |
+| **S3 Glacier Deep Archive** | Long-term archive | 12-48 hours | $ |
 
 *Mnemonic for S3 tiers:* **"Standard = Speedy; IA = Inactive; Glacier = Frozen; Deep Archive = Deep Freeze"**
 
@@ -651,7 +651,7 @@
 | **Spot Instances** | Up to ~90% | Fault-tolerant, flexible workloads | Can be interrupted with 2-min notice |
 | **Dedicated Hosts** | Varies | Software license compliance (BYOL) | Physical server dedication |
 
-*Mnemonic for purchasing options:* **"OD = On Demand (no deal); RI = Reserved (restaurant reservation — plan ahead); Spot = Spontaneous (cheap but might get kicked out); Savings Plans = Subscription (commit to spend)"**
+*Mnemonic for purchasing options:* **"OD = On Demand (no deal); RI = Reserved (restaurant reservation -- plan ahead); Spot = Spontaneous (cheap but might get kicked out); Savings Plans = Subscription (commit to spend)"**
 
 **Compute Optimization Strategies:**
 - Right-size instances (match workload to instance family/size)
@@ -728,36 +728,36 @@
 
 ## AIF-C01 Mnemonics
 
-1. **ML Pipeline** — *"Can Every Person Find The Treasure Every Day, Mate?"*  
-   (Collection → EDA → Pre-processing → Feature → Training → Tuning → Evaluation → Deployment → Monitoring)
+1. **ML Pipeline** -- *"Can Every Person Find The Treasure Every Day, Mate?"*  
+   (Collection -> EDA -> Pre-processing -> Feature -> Training -> Tuning -> Evaluation -> Deployment -> Monitoring)
 
-2. **Learning Types** — *"Supervised = Someone shows answers; Unsupervised = Uncovered patterns; Reinforcement = Rewards"*
+2. **Learning Types** -- *"Supervised = Someone shows answers; Unsupervised = Uncovered patterns; Reinforcement = Rewards"*
 
-3. **Vector Stores** — *"Aurora Operates Documents Properly, Neptune Navigates"*  
+3. **Vector Stores** -- *"Aurora Operates Documents Properly, Neptune Navigates"*  
    (Aurora, OpenSearch, DocumentDB, RDS PostgreSQL, Neptune)
 
-4. **Foundation Model Lifecycle** — *"Don't Make Predictions For Every Deployment Failure"*  
-   (Data → Model → Pre-train → Fine-tune → Evaluate → Deploy → Feedback)
+4. **Foundation Model Lifecycle** -- *"Don't Make Predictions For Every Deployment Failure"*  
+   (Data -> Model -> Pre-train -> Fine-tune -> Evaluate -> Deploy -> Feedback)
 
-5. **Responsible AI** — *"BIRDS"* (Bias, Inclusivity, Robustness, Diversity, Safety — adapt as needed)
+5. **Responsible AI** -- *"BIRDS"* (Bias, Inclusivity, Robustness, Diversity, Safety -- adapt as needed)
 
 ## SAA-C03 Mnemonics
 
-1. **Well-Architected Pillars** — *"SRC-CO"*  
+1. **Well-Architected Pillars** -- *"SRC-CO"*  
    (Security, Reliability, Cost Optimization, Operational Excellence, Performance Efficiency, Sustainability)
 
-2. **Disaster Recovery Strategies** — *"Backup, Pilot, Warm, Active"* (B-P-W-A)  
+2. **Disaster Recovery Strategies** -- *"Backup, Pilot, Warm, Active"* (B-P-W-A)  
    Increasing cost and decreasing RTO/RPO as you move right.
 
-3. **Load Balancers** — *"ALB = Apps; NLB = Networks; GWLB = Gateways"* (Layer 7, 4, 3)
+3. **Load Balancers** -- *"ALB = Apps; NLB = Networks; GWLB = Gateways"* (Layer 7, 4, 3)
 
-4. **Security Groups vs NACLs** — *"SG = Stateful, instance-level bouncer; NACL = Stateless, subnet-level checkpoint"*
+4. **Security Groups vs NACLs** -- *"SG = Stateful, instance-level bouncer; NACL = Stateless, subnet-level checkpoint"*
 
-5. **Storage Types** — *"Objects in buckets, Blocks for disks, Files for sharing"* (S3, EBS, EFS)
+5. **Storage Types** -- *"Objects in buckets, Blocks for disks, Files for sharing"* (S3, EBS, EFS)
 
-6. **VPC Connectivity** — *"Peering = Pair; Transit Gateway = Hub; PrivateLink = Private pipe; VPN = Public tunnel; Direct Connect = Private road"*
+6. **VPC Connectivity** -- *"Peering = Pair; Transit Gateway = Hub; PrivateLink = Private pipe; VPN = Public tunnel; Direct Connect = Private road"*
 
-7. **EC2 Purchasing** — *"OD = On Demand; RI = Reserved; Spot = Spontaneous; Savings = Subscription"*
+7. **EC2 Purchasing** -- *"OD = On Demand; RI = Reserved; Spot = Spontaneous; Savings = Subscription"*
 
 ---
 
@@ -765,7 +765,7 @@
 
 ## General Tips (Both Exams)
 
-1. **Read the question twice.** Many distractors are plausible because they are real AWS services — but not the *best* answer for the scenario.
+1. **Read the question twice.** Many distractors are plausible because they are real AWS services -- but not the *best* answer for the scenario.
 2. **Eliminate wrong answers first.** If you can rule out two choices, your odds improve dramatically.
 3. **Watch for "most cost-effective," "most secure," "least operational overhead."** The exam often asks for the *best* tradeoff, not just a working solution.
 4. **Compensatory scoring means you don't need to ace every domain.** Play to your strengths, but don't completely ignore any section.
@@ -776,8 +776,8 @@
 - **Focus on concepts, not code.** You do NOT need to write Python, tune hyperparameters, or build pipelines from scratch.
 - **Know the difference between Bedrock and SageMaker.** Bedrock = consume FMs via API; SageMaker = build, train, and deploy custom models.
 - **Memorize prompt engineering techniques** (zero-shot, few-shot, chain-of-thought) and when each is appropriate.
-- **Understand RAG deeply** — it's a high-yield topic for this exam.
-- **Be ready for case studies** — read the scenario carefully, identify the business problem, then match it to the correct service/approach.
+- **Understand RAG deeply** -- it's a high-yield topic for this exam.
+- **Be ready for case studies** -- read the scenario carefully, identify the business problem, then match it to the correct service/approach.
 
 ## SAA-C03 Specific Tips
 
@@ -795,4 +795,4 @@
 
 ---
 
-> **Good luck on your exams!** 🚀
+> **Good luck on your exams!** [ROCKET]

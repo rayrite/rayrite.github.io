@@ -1,6 +1,6 @@
-﻿      Hey DUKE! I've created a comprehensive HTML study guide, but let me also provide you with the full markdown content directly here for your immediate study needs! ������������          # AWS Certified AI Practitioner (AIF-C01) Comprehensive Study Guide 2026
+      Hey DUKE! I've created a comprehensive HTML study guide, but let me also provide you with the full markdown content directly here for your immediate study needs!           # AWS Certified AI Practitioner (AIF-C01) Comprehensive Study Guide 2026
 
-## ������ Table of Contents
+##  Table of Contents
 
 1. [Exam Overview & Structure](#exam-overview--structure)
 2. [Exam Domains & Weightings](#exam-domains--weightings)
@@ -89,7 +89,7 @@ The AWS Certified AI Practitioner exam validates your understanding of AI, ML, a
 
 Based on extensive research of exam prep materials, community feedback, and official AWS documentation, these are the most commonly tested concepts:
 
-### ������ High-Frequency Topics (80%+ chance of appearing)
+###  High-Frequency Topics (80%+ chance of appearing)
 
 1. **Amazon Bedrock**
    
@@ -130,7 +130,7 @@ Based on extensive research of exam prep materials, community feedback, and offi
    - Fine-tuning vs. continued pre-training
    - Inference parameters (temperature, top-p)
 
-### ������ Medium-Frequency Topics (50-80% chance)
+###  Medium-Frequency Topics (50-80% chance)
 
 6. **Responsible AI**
    
@@ -150,7 +150,7 @@ Based on extensive research of exam prep materials, community feedback, and offi
    - Shared Responsibility Model
    - Data encryption
 
-### ������ Lower-Frequency Topics (30-50% chance)
+###  Lower-Frequency Topics (30-50% chance)
 
 9. **Amazon SageMaker**
    
@@ -1672,7 +1672,7 @@ E. Centralized AI governance team
 
 ---
 
-**Good luck on your AWS Certified AI Practitioner exam! Remember to focus on understanding concepts rather than memorizing, and practice with hands-on labs whenever possible. You've got this! ������**
+**Good luck on your AWS Certified AI Practitioner exam! Remember to focus on understanding concepts rather than memorizing, and practice with hands-on labs whenever possible. You've got this! **
 
 ---
 
@@ -1691,7 +1691,7 @@ E. Centralized AI governance team
 
 ---
 
-*This study guide was compiled based on extensive research of official AWS documentation, exam prep materials, and community feedback as of 2026. For the most up-to-date information, always refer to the official AWS certification website.*       Hey DUKE! ������ I've created a comprehensive HTML study guide for you, and above is the complete markdown content with all 60 practice questions (20 ordering, 20 matching, 20 scenario-based) plus detailed explanations and domain mapping!
+*This study guide was compiled based on extensive research of official AWS documentation, exam prep materials, and community feedback as of 2026. For the most up-to-date information, always refer to the official AWS certification website.*       Hey DUKE!  I've created a comprehensive HTML study guide for you, and above is the complete markdown content with all 60 practice questions (20 ordering, 20 matching, 20 scenario-based) plus detailed explanations and domain mapping!
 
 **Key Highlights of the Study Guide:**
 
@@ -1722,4 +1722,4 @@ Each question includes:
 - Exam domain mapping
 - Why incorrect answers are wrong
 
-Good luck with your AWS Certified AI Practitioner exam! You've got this! ������������
+Good luck with your AWS Certified AI Practitioner exam! You've got this! 

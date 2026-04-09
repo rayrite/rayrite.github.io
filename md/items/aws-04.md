@@ -51,7 +51,7 @@
 
 ### Matching Questions
 
-- List of 3–6 prompts matched with a list of responses
+- List of 3-6 prompts matched with a list of responses
 - Use drop-down mechanism to select appropriate matches
 - All pairs must be matched correctly to receive credit
 
@@ -76,7 +76,7 @@
 5. Data collection and exploration
 6. Model deployment and monitoring
 
-**Correct Order:** 3 → 5 → 1 → 2 → 4 → 6
+**Correct Order:** 3 -> 5 -> 1 -> 2 -> 4 -> 6
 
 **Explanation:** The ML lifecycle begins with understanding the business problem, followed by exploring and collecting data, then preparing features. Next comes training the model, evaluating its performance, and finally deploying it to production with ongoing monitoring.
 
@@ -93,7 +93,7 @@
 5. Index the embeddings in a vector store
 6. Generate response using the foundation model
 
-**Correct Order:** 3 → 1 → 5 → 2 → 4 → 6
+**Correct Order:** 3 -> 1 -> 5 -> 2 -> 4 -> 6
 
 **Explanation:** RAG implementation starts by chunking documents, then creating embeddings, and storing them in a vector database. When a query arrives, relevant documents are retrieved, the prompt is augmented with context, and the model generates a grounded response.
 
@@ -110,7 +110,7 @@
 5. Agent evaluates the results and decides on next steps
 6. Agent formulates and returns the final response
 
-**Correct Order:** 1 → 3 → 2 → 4 → 5 → 6
+**Correct Order:** 1 -> 3 -> 2 -> 4 -> 5 -> 6
 
 **Explanation:** The agent workflow starts when a user submits a request. The foundation model processes it, determines what actions are needed, invokes the appropriate tools, evaluates results, and formulates a final response.
 
@@ -127,7 +127,7 @@
 5. Few-shot prompting
 6. Pre-training a foundation model
 
-**Correct Order:** 2 → 4 → 5 → 1 → 3 → 6
+**Correct Order:** 2 -> 4 -> 5 -> 1 -> 3 -> 6
 
 **Explanation:** Complexity increases from basic zero-shot prompts through one-shot and few-shot techniques. Chain-of-thought adds reasoning complexity. Fine-tuning requires model modification, while pre-training represents the highest complexity level.
 
@@ -144,7 +144,7 @@
 5. RAG with vector database
 6. Prompt engineering only
 
-**Correct Order:** 6 → 2 → 5 → 1 → 4 → 3
+**Correct Order:** 6 -> 2 -> 5 -> 1 -> 4 -> 3
 
 **Explanation:** The cost ladder starts with basic prompt engineering, moves to in-context learning, then RAG which requires additional infrastructure. Fine-tuning needs labeled data and compute. Full retraining and pre-training from scratch are the most resource-intensive.
 
@@ -161,7 +161,7 @@
 5. Scale numerical features
 6. Perform initial data cleaning
 
-**Correct Order:** 6 → 3 → 4 → 5 → 1 → 2
+**Correct Order:** 6 -> 3 -> 4 -> 5 -> 1 -> 2
 
 **Explanation:** Data processing begins with cleaning, then handling missing values. Categorical encoding and scaling follow, then feature transformations. Finally, data is split into the required sets for training, validation, and testing.
 
@@ -178,7 +178,7 @@
 5. Assess latency and performance requirements
 6. Verify security and access control needs
 
-**Correct Order:** 3 → 6 → 1 → 5 → 2 → 4
+**Correct Order:** 3 -> 6 -> 1 -> 5 -> 2 -> 4
 
 **Explanation:** Service selection starts by identifying the use case, then evaluating security needs. Compliance requirements follow, then performance characteristics. Cost is considered next, and finally the specific service is selected based on all criteria.
 
@@ -195,7 +195,7 @@
 5. Investigate and diagnose detected drift
 6. Trigger retraining if necessary
 
-**Correct Order:** 2 → 3 → 4 → 5 → 1 → 6
+**Correct Order:** 2 -> 3 -> 4 -> 5 -> 1 -> 6
 
 **Explanation:** Monitoring begins by establishing baselines. Production data is collected and compared against baselines. When drift is detected, investigation occurs, alerts are configured, and retraining may be triggered if needed.
 
@@ -212,7 +212,7 @@
 5. Implement bias mitigation strategies
 6. Train stakeholders on responsible AI practices
 
-**Correct Order:** 1 → 3 → 5 → 4 → 6 → 2
+**Correct Order:** 1 -> 3 -> 5 -> 4 -> 6 -> 2
 
 **Explanation:** Responsible AI starts with defining fairness metrics. Bias sources are identified, then mitigated. Governance policies are established, stakeholders trained, and the model is deployed with ongoing monitoring.
 
@@ -229,7 +229,7 @@
 5. Scalability and data volume
 6. Deployment model (cloud vs on-premises)
 
-**Correct Order:** 5 → 1 → 3 → 6 → 2 → 4
+**Correct Order:** 5 -> 1 -> 3 -> 6 -> 2 -> 4
 
 **Explanation:** Data volume and scalability are primary concerns, followed by latency requirements. Vector dimension support is critical for specific use cases. Deployment model follows, then ecosystem integration, with cost considered last.
 
@@ -246,9 +246,9 @@
 5. Hypervisor and virtualization layer
 6. Application-level access controls
 
-**Correct Order:** 1 → 5 → 3 → 2 → 4 → 6
+**Correct Order:** 1 -> 5 -> 3 -> 2 -> 4 -> 6
 
-**Explanation:** AWS manages底层 infrastructure (physical, hypervisor, network). Encryption is shared responsibility. IAM policies and application-level controls are customer-managed.
+**Explanation:** AWS manages infrastructure (physical, hypervisor, network). Encryption is shared responsibility. IAM policies and application-level controls are customer-managed.
 
 ---
 
@@ -263,7 +263,7 @@
 5. Backpropagate gradients
 6. Feed batch of training data
 
-**Correct Order:** 2 → 6 → 3 → 1 → 5 → 4
+**Correct Order:** 2 -> 6 -> 3 -> 1 -> 5 -> 4
 
 **Explanation:** Training starts with weight initialization. A batch is fed through the network (forward pass), loss is calculated, gradients are backpropagated, and weights are updated by the optimizer.
 
@@ -279,7 +279,7 @@
 4. Real-time inference
 5. SageMaker Edge Manager
 
-**Correct Order:** 1 → 2 → 3 → 4 → 5
+**Correct Order:** 1 -> 2 -> 3 -> 4 -> 5
 
 **Explanation:** Batch transform has highest latency (offline processing). Asynchronous inference handles large payloads with moderate latency. Serverless adds cold start latency. Real-time offers lowest latency. Edge deployment is optimized for lowest possible latency.
 
@@ -296,7 +296,7 @@
 5. Output projection to vocabulary
 6. Multi-head attention layers
 
-**Correct Order:** 3 → 1 → 6 → 2 → 4 → 5
+**Correct Order:** 3 -> 1 -> 6 -> 2 -> 4 -> 5
 
 **Explanation:** Text is tokenized first, then embedded with positional encoding. Multi-head attention processes the embeddings, self-attention is calculated, feed-forward networks process the result, and finally output is projected to vocabulary probabilities.
 
@@ -313,7 +313,7 @@
 5. Deploy guardrails to production
 6. Configure input/output content filtering
 
-**Correct Order:** 1 → 6 → 4 → 2 → 3 → 5
+**Correct Order:** 1 -> 6 -> 4 -> 2 -> 3 -> 5
 
 **Explanation:** Guardrails implementation starts with defining content policies. Input/output filtering is configured, then PII detection and topic boundaries. After testing, guardrails are deployed to production.
 
@@ -330,7 +330,7 @@
 5. Identify regulatory and compliance requirements
 6. Review available skill sets and expertise
 
-**Correct Order:** 4 → 1 → 2 → 5 → 6 → 3
+**Correct Order:** 4 -> 1 -> 2 -> 5 -> 6 -> 3
 
 **Explanation:** Assessment begins with business impact analysis. Data availability is evaluated, then technical feasibility. Regulatory requirements are identified, skill sets reviewed, and finally timeline and resources estimated.
 
@@ -347,7 +347,7 @@
 5. Amazon Bedrock
 6. AWS AI Services general category
 
-**Correct Order:** 6 → 5 → 4 → 1 → 3 → 2
+**Correct Order:** 6 -> 5 -> 4 -> 1 -> 3 -> 2
 
 **Explanation:** AWS AI Services is the general category. Bedrock provides general foundation model access. SageMaker is a comprehensive ML platform. Textract, Rekognition, and Comprehend are highly specialized services for specific tasks.
 
@@ -364,7 +364,7 @@
 5. Review expected accuracy levels
 6. Analyze feature characteristics
 
-**Correct Order:** 3 → 2 → 6 → 5 → 1 → 4
+**Correct Order:** 3 -> 2 -> 6 -> 5 -> 1 -> 4
 
 **Explanation:** Algorithm selection starts with the problem type. Data size and feature characteristics follow. Expected accuracy and interpretability requirements are considered next. Computational constraints are evaluated last.
 
@@ -381,7 +381,7 @@
 5. Define the use case and requirements
 6. Deploy to production with monitoring
 
-**Correct Order:** 5 → 2 → 1 → 3 → 4 → 6
+**Correct Order:** 5 -> 2 -> 1 -> 3 -> 4 -> 6
 
 **Explanation:** Development begins with defining requirements. Data sources are prepared, then prototyping with prompts occurs. RAG is implemented if needed, followed by user testing and production deployment.
 
@@ -398,7 +398,7 @@
 5. Identify statistically significant disparities
 6. Document findings and recommend mitigations
 
-**Correct Order:** 1 → 2 → 3 → 4 → 5 → 6
+**Correct Order:** 1 -> 2 -> 3 -> 4 -> 5 -> 6
 
 **Explanation:** Bias detection starts with defining sensitive attributes. Appropriate metrics are selected, training data distribution analyzed. Bias metrics are calculated across subgroups, disparities identified statistically, and findings documented with mitigation recommendations.
 

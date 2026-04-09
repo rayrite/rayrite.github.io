@@ -56,7 +56,7 @@
 | #   | Concept                          | Frequency | Description                                                                                                            | Key AWS Services                        |
 | --- | -------------------------------- | --------- | ---------------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
 | 1   | **Types of ML Learning**         | Very High | Supervised (labeled data), Unsupervised (unlabeled), Reinforcement (rewards)                                           | SageMaker                               |
-| 2   | **ML Development Lifecycle**     | Very High | Data collection → EDA → Preprocessing → Feature Engineering → Training → Tuning → Evaluation → Deployment → Monitoring | SageMaker, Data Wrangler, Model Monitor |
+| 2   | **ML Development Lifecycle**     | Very High | Data collection -> EDA -> Preprocessing -> Feature Engineering -> Training -> Tuning -> Evaluation -> Deployment -> Monitoring | SageMaker, Data Wrangler, Model Monitor |
 | 3   | **Overfitting vs Underfitting**  | High      | Overfitting (model memorizes training data), Underfitting (model too simple)                                           | SageMaker                               |
 | 4   | **Feature Engineering**          | High      | Feature selection, PCA, encoding, normalization, handling missing data                                                 | SageMaker Data Wrangler                 |
 | 5   | **Transfer Learning**            | High      | Using pre-trained models for new related tasks without training from scratch                                           | SageMaker JumpStart, Bedrock            |
@@ -74,7 +74,7 @@
 | 2   | **Prompt Engineering Techniques**                      | Very High | Zero-shot, Few-shot, Chain-of-Thought, Role-based prompting                      | Amazon Bedrock               |
 | 3   | **Tokens and Embeddings**                              | Very High | Tokens (text units), Embeddings (vector representations), Vectors                | Bedrock, Titan Embeddings    |
 | 4   | **Model Parameters (Temperature, Top P, Top K)**       | Very High | Temperature (creativity), Top P (nucleus sampling), Top K (token limit)          | Bedrock                      |
-| 5   | **LLM Lifecycle**                                      | High      | Data selection → Pre-training → Fine-tuning → Evaluation → Deployment → Feedback | Bedrock, SageMaker           |
+| 5   | **LLM Lifecycle**                                      | High      | Data selection -> Pre-training -> Fine-tuning -> Evaluation -> Deployment -> Feedback | Bedrock, SageMaker           |
 | 6   | **Transformer Architecture**                           | High      | Self-attention mechanism, encoder-decoder structure powering modern LLMs         | Bedrock                      |
 | 7   | **Generative AI Use Cases**                            | High      | Text generation, code generation, image generation, summarization, chatbots      | Bedrock, Partyrock, Amazon Q |
 | 8   | **Hallucinations**                                     | High      | False/confident outputs that appear accurate but are incorrect                   | Bedrock Guardrails           |
@@ -222,7 +222,7 @@
 
 | Aspect        | Amazon Transcribe                  | Amazon Polly                      |
 | ------------- | ---------------------------------- | --------------------------------- |
-| **Direction** | Speech → Text (ASR)                | Text → Speech (TTS)               |
+| **Direction** | Speech -> Text (ASR)                | Text -> Speech (TTS)               |
 | **Use Case**  | Caption generation, call analytics | Voice applications, accessibility |
 | **Features**  | PII redaction, custom vocabularies | SSML, multiple voices, lexicons   |
 | **Input**     | Audio/video files                  | Text strings                      |
@@ -637,14 +637,14 @@ C. Analyze images and videos for objects, faces, and content
 D. Create real-time personalized recommendations for users
 
 **Correct Matches:**
-1 → A, 2 → B, 3 → C, 4 → D
+1 -> A, 2 -> B, 3 -> C, 4 -> D
 
 **Explanations:**
 
-- **1 → A:** Amazon SageMaker provides the ability to build, train, and deploy ML models with complete control over the ML lifecycle.
-- **2 → B:** Amazon Bedrock offers access to high-performing foundation models from leading AI companies through a single API.
-- **3 → C:** Amazon Rekognition uses deep learning to analyze images and videos, identifying objects, people, text, scenes, and activities.
-- **4 → D:** Amazon Personalize creates individualized recommendations for customers based on their behavior and preferences.
+- **1 -> A:** Amazon SageMaker provides the ability to build, train, and deploy ML models with complete control over the ML lifecycle.
+- **2 -> B:** Amazon Bedrock offers access to high-performing foundation models from leading AI companies through a single API.
+- **3 -> C:** Amazon Rekognition uses deep learning to analyze images and videos, identifying objects, people, text, scenes, and activities.
+- **4 -> D:** Amazon Personalize creates individualized recommendations for customers based on their behavior and preferences.
 
 ---
 
@@ -666,14 +666,14 @@ C. Learning through trial and error with rewards and penalties
 D. Applying knowledge from one task to improve learning on a related task
 
 **Correct Matches:**
-1 → A, 2 → B, 3 → C, 4 → D
+1 -> A, 2 -> B, 3 -> C, 4 -> D
 
 **Explanations:**
 
-- **1 → A:** Supervised learning uses labeled training data where the correct answer is known.
-- **2 → B:** Unsupervised learning works with unlabeled data to discover hidden patterns.
-- **3 → C:** Reinforcement learning involves an agent learning to make decisions by maximizing cumulative rewards.
-- **4 → D:** Transfer learning leverages pre-trained models and adapts them to new but related tasks.
+- **1 -> A:** Supervised learning uses labeled training data where the correct answer is known.
+- **2 -> B:** Unsupervised learning works with unlabeled data to discover hidden patterns.
+- **3 -> C:** Reinforcement learning involves an agent learning to make decisions by maximizing cumulative rewards.
+- **4 -> D:** Transfer learning leverages pre-trained models and adapts them to new but related tasks.
 
 ---
 
@@ -695,14 +695,14 @@ C. Audio files and speech-to-text conversion
 D. Text-to-speech synthesis and voice generation
 
 **Correct Matches:**
-1 → A, 2 → B, 3 → C, 4 → D
+1 -> A, 2 -> B, 3 -> C, 4 -> D
 
 **Explanations:**
 
-- **1 → A:** Amazon Comprehend is an NLP service that finds insights and relationships in text.
-- **2 → B:** Amazon Textract extracts text, handwriting, and data from scanned documents.
-- **3 → C:** Amazon Transcribe converts speech to text using automatic speech recognition.
-- **4 → D:** Amazon Polly turns text into lifelike speech using deep learning.
+- **1 -> A:** Amazon Comprehend is an NLP service that finds insights and relationships in text.
+- **2 -> B:** Amazon Textract extracts text, handwriting, and data from scanned documents.
+- **3 -> C:** Amazon Transcribe converts speech to text using automatic speech recognition.
+- **4 -> D:** Amazon Polly turns text into lifelike speech using deep learning.
 
 ---
 
@@ -724,14 +724,14 @@ C. Measuring model performance using metrics like accuracy and F1 score
 D. Making the model available for inference in production environments
 
 **Correct Matches:**
-1 → A, 2 → B, 3 → C, 4 → D
+1 -> A, 2 -> B, 3 -> C, 4 -> D
 
 **Explanations:**
 
-- **1 → A:** Data preparation involves collecting, cleaning, normalizing, and transforming raw data.
-- **2 → B:** Model training is where algorithms learn from prepared data.
-- **3 → C:** Model evaluation uses validation datasets and metrics to assess generalization.
-- **4 → D:** Model deployment integrates the trained model into production systems.
+- **1 -> A:** Data preparation involves collecting, cleaning, normalizing, and transforming raw data.
+- **2 -> B:** Model training is where algorithms learn from prepared data.
+- **3 -> C:** Model evaluation uses validation datasets and metrics to assess generalization.
+- **4 -> D:** Model deployment integrates the trained model into production systems.
 
 ---
 
@@ -753,14 +753,14 @@ C. Complex reasoning, long document analysis, and conversational AI
 D. Cost-effective text generation and general-purpose tasks with open weights
 
 **Correct Matches:**
-1 → C, 2 → A, 3 → B, 4 → D
+1 -> C, 2 -> A, 3 -> B, 4 -> D
 
 **Explanations:**
 
-- **1 → C:** Claude excels at complex reasoning and maintaining context across very long documents.
-- **2 → A:** Stable Diffusion creates high-quality, detailed images from text prompts.
-- **3 → B:** Amazon Titan Embeddings converts text into numerical vectors for semantic search.
-- **4 → D:** Llama 3 offers strong performance at lower cost for general text generation tasks.
+- **1 -> C:** Claude excels at complex reasoning and maintaining context across very long documents.
+- **2 -> A:** Stable Diffusion creates high-quality, detailed images from text prompts.
+- **3 -> B:** Amazon Titan Embeddings converts text into numerical vectors for semantic search.
+- **4 -> D:** Llama 3 offers strong performance at lower cost for general text generation tasks.
 
 ---
 
@@ -782,14 +782,14 @@ C. Giving instructions without any examples and expecting the model to perform t
 D. Setting context, persona, or constraints that guide the model's behavior throughout
 
 **Correct Matches:**
-1 → C, 2 → A, 3 → B, 4 → D
+1 -> C, 2 -> A, 3 -> B, 4 -> D
 
 **Explanations:**
 
-- **1 → C:** Zero-shot prompting provides only instructions without examples.
-- **2 → A:** Few-shot prompting includes several examples of the task within the prompt.
-- **3 → B:** Chain-of-thought prompting asks the model to reason step-by-step.
-- **4 → D:** System prompts establish the model's role, constraints, and context.
+- **1 -> C:** Zero-shot prompting provides only instructions without examples.
+- **2 -> A:** Few-shot prompting includes several examples of the task within the prompt.
+- **3 -> B:** Chain-of-thought prompting asks the model to reason step-by-step.
+- **4 -> D:** System prompts establish the model's role, constraints, and context.
 
 ---
 
@@ -811,14 +811,14 @@ C. Specifies tokens that will halt generation when encountered
 D. Limits token selection to a cumulative probability threshold
 
 **Correct Matches:**
-1 → B, 2 → D, 3 → A, 4 → C
+1 -> B, 2 -> D, 3 -> A, 4 -> C
 
 **Explanations:**
 
-- **1 → B:** Temperature controls randomness; lower values produce focused outputs.
-- **2 → D:** Top-p sampling selects from tokens whose cumulative probability exceeds p.
-- **3 → A:** Max tokens sets a hard limit on response length.
-- **4 → C:** Stop sequences immediately terminate generation when generated.
+- **1 -> B:** Temperature controls randomness; lower values produce focused outputs.
+- **2 -> D:** Top-p sampling selects from tokens whose cumulative probability exceeds p.
+- **3 -> A:** Max tokens sets a hard limit on response length.
+- **4 -> C:** Stop sequences immediately terminate generation when generated.
 
 ---
 
@@ -840,14 +840,14 @@ C. Model generating plausible but incorrect or nonsensical information
 D. Enhancing responses by retrieving relevant information from external sources
 
 **Correct Matches:**
-1 → C, 2 → A, 3 → B, 4 → D
+1 -> C, 2 -> A, 3 -> B, 4 -> D
 
 **Explanations:**
 
-- **1 → C:** Hallucination occurs when a model generates confident-sounding but factually incorrect information.
-- **2 → A:** The context window defines the maximum combined length of input and output.
-- **3 → B:** Fine-tuning adapts a pre-trained model to specific domains or tasks.
-- **4 → D:** RAG retrieves relevant documents and includes them in the prompt.
+- **1 -> C:** Hallucination occurs when a model generates confident-sounding but factually incorrect information.
+- **2 -> A:** The context window defines the maximum combined length of input and output.
+- **3 -> B:** Fine-tuning adapts a pre-trained model to specific domains or tasks.
+- **4 -> D:** RAG retrieves relevant documents and includes them in the prompt.
 
 ---
 
@@ -869,14 +869,14 @@ C. Orchestrate multi-step tasks and API calls to complete complex workflows
 D. Import and use your own custom-trained models within Bedrock
 
 **Correct Matches:**
-1 → B, 2 → C, 3 → A, 4 → D
+1 -> B, 2 -> C, 3 -> A, 4 -> D
 
 **Explanations:**
 
-- **1 → B:** Knowledge Bases handle the entire RAG workflow including embedding generation and retrieval.
-- **2 → C:** Agents can break down complex requests and call APIs to complete multi-turn tasks.
-- **3 → A:** Guardrails provide configurable safety controls including content filters and PII redaction.
-- **4 → D:** Custom Model Import allows organizations to bring their own fine-tuned models to Bedrock.
+- **1 -> B:** Knowledge Bases handle the entire RAG workflow including embedding generation and retrieval.
+- **2 -> C:** Agents can break down complex requests and call APIs to complete multi-turn tasks.
+- **3 -> A:** Guardrails provide configurable safety controls including content filters and PII redaction.
+- **4 -> D:** Custom Model Import allows organizations to bring their own fine-tuned models to Bedrock.
 
 ---
 
@@ -898,14 +898,14 @@ C. Claude 3 Sonnet
 D. Amazon Titan Text G1 - Express
 
 **Correct Matches:**
-1 → A, 2 → B, 3 → D, 4 → C
+1 -> A, 2 -> B, 3 -> D, 4 -> C
 
 **Explanations:**
 
-- **1 → A:** Titan Embeddings G1 converts text into high-quality vector representations.
-- **2 → B:** Stable Diffusion XL is a state-of-the-art text-to-image model.
-- **3 → D:** Titan Text G1 - Express supports multiple languages and is optimized for conversational applications.
-- **4 → C:** Claude 3 Sonnet offers a 200K token context window for processing long documents.
+- **1 -> A:** Titan Embeddings G1 converts text into high-quality vector representations.
+- **2 -> B:** Stable Diffusion XL is a state-of-the-art text-to-image model.
+- **3 -> D:** Titan Text G1 - Express supports multiple languages and is optimized for conversational applications.
+- **4 -> C:** Claude 3 Sonnet offers a 200K token context window for processing long documents.
 
 ### Question 11
 
@@ -925,14 +925,14 @@ C. NLP service for entity recognition, sentiment, and document classification
 D. Open-source search and analytics engine with vector search capabilities
 
 **Correct Matches:**
-1 → B, 2 → C, 3 → A, 4 → D
+1 -> B, 2 -> C, 3 -> A, 4 -> D
 
 **Explanations:**
 
-- **1 → B:** Textract uses ML to understand document layouts and extract structured data.
-- **2 → C:** Comprehend analyzes text for entities, key phrases, sentiment, and syntax.
-- **3 → A:** Kendra provides intelligent search that understands natural language queries.
-- **4 → D:** OpenSearch includes k-NN for vector search, used for semantic search.
+- **1 -> B:** Textract uses ML to understand document layouts and extract structured data.
+- **2 -> C:** Comprehend analyzes text for entities, key phrases, sentiment, and syntax.
+- **3 -> A:** Kendra provides intelligent search that understands natural language queries.
+- **4 -> D:** OpenSearch includes k-NN for vector search, used for semantic search.
 
 ---
 
@@ -954,14 +954,14 @@ C. Neural machine translation between 75+ language pairs
 D. Transform text into natural-sounding speech in multiple voices
 
 **Correct Matches:**
-1 → B, 2 → D, 3 → A, 4 → C
+1 -> B, 2 -> D, 3 -> A, 4 -> C
 
 **Explanations:**
 
-- **1 → B:** Amazon Transcribe provides fast, accurate speech-to-text conversion.
-- **2 → D:** Amazon Polly synthesizes natural-sounding human speech from text.
-- **3 → A:** Amazon Lex is for building conversational interfaces using the same technology as Alexa.
-- **4 → C:** Amazon Translate delivers fast, high-quality language translation.
+- **1 -> B:** Amazon Transcribe provides fast, accurate speech-to-text conversion.
+- **2 -> D:** Amazon Polly synthesizes natural-sounding human speech from text.
+- **3 -> A:** Amazon Lex is for building conversational interfaces using the same technology as Alexa.
+- **4 -> C:** Amazon Translate delivers fast, high-quality language translation.
 
 ---
 
@@ -983,14 +983,14 @@ C. Real-time and batch prediction endpoints with auto-scaling
 D. Detect data drift in production models and trigger alerts
 
 **Correct Matches:**
-1 → A, 2 → B, 3 → C, 4 → D
+1 -> A, 2 -> B, 3 -> C, 4 -> D
 
 **Explanations:**
 
-- **1 → A:** SageMaker Studio is a web-based IDE for data preparation, model building, training, and deployment.
-- **2 → B:** SageMaker Training provides managed infrastructure for distributed training.
-- **3 → C:** SageMaker Inference offers real-time endpoints, serverless inference, and batch transform.
-- **4 → D:** SageMaker Model Monitor continuously monitors production models for data drift.
+- **1 -> A:** SageMaker Studio is a web-based IDE for data preparation, model building, training, and deployment.
+- **2 -> B:** SageMaker Training provides managed infrastructure for distributed training.
+- **3 -> C:** SageMaker Inference offers real-time endpoints, serverless inference, and batch transform.
+- **4 -> D:** SageMaker Model Monitor continuously monitors production models for data drift.
 
 ---
 
@@ -1012,14 +1012,14 @@ C. In-memory vector storage with microsecond latency
 D. PostgreSQL extension for vector similarity search
 
 **Correct Matches:**
-1 → B, 2 → D, 3 → C, 4 → A
+1 -> B, 2 -> D, 3 -> C, 4 -> A
 
 **Explanations:**
 
-- **1 → B:** OpenSearch k-NN enables efficient approximate nearest neighbor search on vectors.
-- **2 → D:** pgvector adds vector similarity search capabilities to PostgreSQL.
-- **3 → C:** MemoryDB offers microsecond read latencies for real-time vector retrieval.
-- **4 → A:** Kendra abstracts vector complexity and provides intelligent Q&A search.
+- **1 -> B:** OpenSearch k-NN enables efficient approximate nearest neighbor search on vectors.
+- **2 -> D:** pgvector adds vector similarity search capabilities to PostgreSQL.
+- **3 -> C:** MemoryDB offers microsecond read latencies for real-time vector retrieval.
+- **4 -> A:** Kendra abstracts vector complexity and provides intelligent Q&A search.
 
 ---
 
@@ -1041,14 +1041,14 @@ C. Distortion in how features are measured or labeled
 D. Model amplifies or creates unfair outcomes during prediction
 
 **Correct Matches:**
-1 → B, 2 → C, 3 → D, 4 → A
+1 -> B, 2 -> C, 3 -> D, 4 -> A
 
 **Explanations:**
 
-- **1 → B:** Selection bias occurs when training data is not representative of the population.
-- **2 → C:** Measurement bias arises when features are measured inaccurately across groups.
-- **3 → D:** Algorithmic bias refers to unfair outcomes produced by model predictions.
-- **4 → A:** Historical bias exists when training data reflects past discrimination.
+- **1 -> B:** Selection bias occurs when training data is not representative of the population.
+- **2 -> C:** Measurement bias arises when features are measured inaccurately across groups.
+- **3 -> D:** Algorithmic bias refers to unfair outcomes produced by model predictions.
+- **4 -> A:** Historical bias exists when training data reflects past discrimination.
 
 ---
 
@@ -1070,14 +1070,14 @@ C. Ensure models perform equitably across different demographic groups
 D. Clearly communicate model capabilities, limitations, and use cases
 
 **Correct Matches:**
-1 → C, 2 → B, 3 → D, 4 → A
+1 -> C, 2 -> B, 3 -> D, 4 -> A
 
 **Explanations:**
 
-- **1 → C:** Fairness requires evaluating model performance across demographic groups.
-- **2 → B:** Explainability uses SHAP or LIME to understand feature importance.
-- **3 → D:** Transparency means documenting what the model can and cannot do.
-- **4 → A:** Accountability requires maintaining comprehensive audit trails.
+- **1 -> C:** Fairness requires evaluating model performance across demographic groups.
+- **2 -> B:** Explainability uses SHAP or LIME to understand feature importance.
+- **3 -> D:** Transparency means documenting what the model can and cannot do.
+- **4 -> A:** Accountability requires maintaining comprehensive audit trails.
 
 ---
 
@@ -1099,14 +1099,14 @@ C. Control the presence of harmful content categories like hate speech
 D. Block or mask specific custom words, phrases, or patterns
 
 **Correct Matches:**
-1 → A, 2 → C, 3 → B, 4 → D
+1 -> A, 2 -> C, 3 -> B, 4 -> D
 
 **Explanations:**
 
-- **1 → A:** Denied topics block specific subjects the model should not discuss.
-- **2 → C:** Content filters provide configurable thresholds for hate, insults, sexual, and violence.
-- **3 → B:** PII redaction detects and masks personally identifiable information.
-- **4 → D:** Word filters define custom lists of words or patterns to block.
+- **1 -> A:** Denied topics block specific subjects the model should not discuss.
+- **2 -> C:** Content filters provide configurable thresholds for hate, insults, sexual, and violence.
+- **3 -> B:** PII redaction detects and masks personally identifiable information.
+- **4 -> D:** Word filters define custom lists of words or patterns to block.
 
 ---
 
@@ -1128,14 +1128,14 @@ C. Manage access permissions to AWS AI services and resources
 D. Monitor and record AWS resource configurations and changes
 
 **Correct Matches:**
-1 → C, 2 → B, 3 → A, 4 → D
+1 -> C, 2 -> B, 3 -> A, 4 -> D
 
 **Explanations:**
 
-- **1 → C:** AWS IAM controls who can access AWS AI services and what actions they can perform.
-- **2 → B:** AWS CloudTrail logs all API calls for compliance investigations.
-- **3 → A:** Amazon Macie uses ML to discover and protect sensitive data in S3.
-- **4 → D:** AWS Config monitors and records AWS resource configurations.
+- **1 -> C:** AWS IAM controls who can access AWS AI services and what actions they can perform.
+- **2 -> B:** AWS CloudTrail logs all API calls for compliance investigations.
+- **3 -> A:** Amazon Macie uses ML to discover and protect sensitive data in S3.
+- **4 -> D:** AWS Config monitors and records AWS resource configurations.
 
 ---
 
@@ -1157,14 +1157,14 @@ C. Private connectivity to AWS services without internet exposure
 D. Secure, scalable connectivity between VPCs and AWS services
 
 **Correct Matches:**
-1 → B, 2 → A, 3 → D, 4 → C
+1 -> B, 2 -> A, 3 -> D, 4 -> C
 
 **Explanations:**
 
-- **1 → B:** Encryption at rest uses AWS KMS to encrypt stored data.
-- **2 → A:** Encryption in transit uses TLS 1.2+ to secure data in motion.
-- **3 → D:** VPC endpoints create private connections between VPC and AWS services.
-- **4 → C:** AWS PrivateLink provides private connectivity without traversing the public internet.
+- **1 -> B:** Encryption at rest uses AWS KMS to encrypt stored data.
+- **2 -> A:** Encryption in transit uses TLS 1.2+ to secure data in motion.
+- **3 -> D:** VPC endpoints create private connections between VPC and AWS services.
+- **4 -> C:** AWS PrivateLink provides private connectivity without traversing the public internet.
 
 ---
 
@@ -1186,14 +1186,14 @@ C. Ensuring customer data remains within specified geographic regions
 D. Recording all model invocations and decisions for regulatory review
 
 **Correct Matches:**
-1 → C, 2 → B, 3 → D, 4 → A
+1 -> C, 2 -> B, 3 -> D, 4 -> A
 
 **Explanations:**
 
-- **1 → C:** Data residency ensures data remains within specified AWS regions.
-- **2 → B:** Model governance involves versioning, approval workflows, and lifecycle management.
-- **3 → D:** Audit logging captures all model invocations for regulatory review.
-- **4 → A:** Least privilege access grants only minimum permissions needed for tasks.
+- **1 -> C:** Data residency ensures data remains within specified AWS regions.
+- **2 -> B:** Model governance involves versioning, approval workflows, and lifecycle management.
+- **3 -> D:** Audit logging captures all model invocations for regulatory review.
+- **4 -> A:** Least privilege access grants only minimum permissions needed for tasks.
 
 ---
 
@@ -1723,11 +1723,11 @@ D. Only connect Q Business to public, non-sensitive documents
 
 ```
 STUDY TIME ALLOCATION:
-├── Domain 3: Applications of Foundation Models (28%) → 30% of study time
-├── Domain 2: Fundamentals of Generative AI (24%) → 25% of study time
-├── Domain 1: Fundamentals of AI and ML (20%) → 25% of study time
-├── Domain 4: Guidelines for Responsible AI (14%) → 10% of study time
-└── Domain 5: Security, Compliance, Governance (14%) → 10% of study time
+|---- Domain 3: Applications of Foundation Models (28%) -> 30% of study time
+|---- Domain 2: Fundamentals of Generative AI (24%) -> 25% of study time
+|---- Domain 1: Fundamentals of AI and ML (20%) -> 25% of study time
+|---- Domain 4: Guidelines for Responsible AI (14%) -> 10% of study time
+\---- Domain 5: Security, Compliance, Governance (14%) -> 10% of study time
 ```
 
 ### Key Terminology to Memorize

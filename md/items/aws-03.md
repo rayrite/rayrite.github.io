@@ -1,4 +1,4 @@
-# AWS Certified AI Practitioner (AIF-C01) — Deep Study Guide
+# AWS Certified AI Practitioner (AIF-C01) -- Deep Study Guide
 
 > **Exam Code:** AIF-C01 | **Questions:** 65 (50 scored + 15 unscored) | **Time:** 120 min | **Passing Score:** 700/1000 | **Cost:** ~$150 USD
 > 
@@ -10,9 +10,9 @@
 
 1. [Exam Domain Breakdown](#1-exam-domain-breakdown)
 2. [Most Prevalent Topics & Concepts](#2-most-prevalent-topics--concepts)
-3. [Section A — Ordering Questions (20)](#3-section-a--ordering-questions)
-4. [Section B — Matching Questions (20)](#4-section-b--matching-questions)
-5. [Section C — Scenario-Based Questions (20)](#5-section-c--scenario-based-questions)
+3. [Section A -- Ordering Questions (20)](#3-section-a--ordering-questions)
+4. [Section B -- Matching Questions (20)](#4-section-b--matching-questions)
+5. [Section C -- Scenario-Based Questions (20)](#5-section-c--scenario-based-questions)
 6. [Rapid-Review Cheat Sheet](#6-rapid-review-cheat-sheet)
 
 ---
@@ -33,28 +33,28 @@
 
 ## 2. Most Prevalent Topics & Concepts
 
-### Tier 1 — Highest Frequency (test-defining)
+### Tier 1 -- Highest Frequency (test-defining)
 
 | Topic                                                                                                       | Why It Matters                                                           |
 | ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
 | **Amazon Bedrock** (Knowledge Bases, Agents, Guardrails, Custom Models, Provisioned Throughput)             | The single most-tested service. Know every sub-feature.                  |
 | **Prompt Engineering** (zero-shot, few-shot, chain-of-thought, negative prompts, temperature, top-p, top-k) | Heavily tested across Domains 2 and 3. Know when each technique applies. |
-| **RAG vs Fine-Tuning vs Prompt Engineering** decision framework                                             | Classic scenario question — know the trade-offs cold.                    |
-| **Foundation Model selection** (which model for which task — text, image, embeddings, code)                 | Tested via matching and scenario questions.                              |
+| **RAG vs Fine-Tuning vs Prompt Engineering** decision framework                                             | Classic scenario question -- know the trade-offs cold.                    |
+| **Foundation Model selection** (which model for which task -- text, image, embeddings, code)                 | Tested via matching and scenario questions.                              |
 | **Responsible AI** (bias, fairness, transparency, explainability, toxicity)                                 | Cross-cuts Domains 4 and 5. SageMaker Clarify is the key service.        |
 
-### Tier 2 — High Frequency
+### Tier 2 -- High Frequency
 
 | Topic                                                                                                | Why It Matters                                 |
 | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
-| **ML Pipeline** (data prep → train → evaluate → deploy → monitor)                                    | Ordering questions love this.                  |
+| **ML Pipeline** (data prep -> train -> evaluate -> deploy -> monitor)                                    | Ordering questions love this.                  |
 | **Evaluation Metrics** (BLEU, ROUGE, BERTScore, F1, RMSE, accuracy, AUC-ROC)                         | Matching questions pair metrics to task types. |
 | **Amazon SageMaker** (Canvas, JumpStart, Clarify, Model Monitor)                                     | Know the no-code/low-code capabilities.        |
 | **Amazon Q** (Business vs Developer editions, plugins, data source connectors)                       | Growing exam presence.                         |
 | **Security & Governance** (IAM for Bedrock, VPC endpoints, KMS encryption, CloudTrail, data privacy) | Domain 5 staple.                               |
 | **Prompt injection / jailbreak risks**                                                               | Domain 4 and 5 cross-over.                     |
 
-### Tier 3 — Moderate Frequency
+### Tier 3 -- Moderate Frequency
 
 | Topic                                                                                             | Why It Matters                                        |
 | ------------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
@@ -67,7 +67,7 @@
 
 ---
 
-## 3. Section A — Ordering Questions
+## 3. Section A -- Ordering Questions
 
 > **Format:** Arrange the items in the correct sequence. Drag and drop or select in order.
 
@@ -84,7 +84,7 @@
 5. Deploy the model to production
 6. Monitor the model for data drift and degradation
 
-**Answer:** 1 → 2 → 3 → 4 → 5 → 6
+**Answer:** 1 -> 2 -> 3 -> 4 -> 5 -> 6
 
 ---
 
@@ -99,7 +99,7 @@
 5. Sync the data source to ingest and vectorize documents
 6. Query the Knowledge Base through a foundation model
 
-**Answer:** 1 → 2 → 3 → 4 → 5 → 6
+**Answer:** 1 -> 2 -> 3 -> 4 -> 5 -> 6
 
 ---
 
@@ -114,7 +114,7 @@
 5. Configure hyperparameters (epochs, learning rate, batch size)
 6. Review the training metrics and deploy the custom model
 
-**Answer:** 1 → 2 → 4 → 3 → 5 → 6
+**Answer:** 1 -> 2 -> 4 -> 3 -> 5 -> 6
 
 ---
 
@@ -128,7 +128,7 @@
 4. Foundation Models
 5. Large Language Models
 
-**Answer:** 1 → 2 → 3 → 4 → 5
+**Answer:** 1 -> 2 -> 3 -> 4 -> 5
 
 ---
 
@@ -143,7 +143,7 @@
 5. Associate the guardrail with a foundation model or agent
 6. Test the guardrail with sample prompts and review blocked outputs
 
-**Answer:** 1 → 2 → 3 → 4 → 5 → 6
+**Answer:** 1 -> 2 -> 3 -> 4 -> 5 -> 6
 
 ---
 
@@ -158,7 +158,7 @@
 5. Review SHAP values for feature attribution explainability
 6. Document findings and implement mitigations
 
-**Answer:** 1 → 2 → 3 → 4 → 5 → 6
+**Answer:** 1 -> 2 -> 3 -> 4 -> 5 -> 6
 
 ---
 
@@ -173,7 +173,7 @@
 5. Configure the agent's orchestration and Lambda function for tool execution
 6. Test the agent in the console, then create an alias for production deployment
 
-**Answer:** 1 → 2 → 3 → 4 → 5 → 6
+**Answer:** 1 -> 2 -> 3 -> 4 -> 5 -> 6
 
 ---
 
@@ -188,7 +188,7 @@
 5. Pre-trained foundation models (BERT, GPT)
 6. Instruction-tuned and RLHF-aligned models
 
-**Answer:** 1 → 2 → 3 → 4 → 5 → 6
+**Answer:** 1 -> 2 -> 3 -> 4 -> 5 -> 6
 
 ---
 
@@ -203,7 +203,7 @@
 5. Configure whether to use human evaluators, automatic metrics, or both
 6. Review evaluation results and select the best-performing model
 
-**Answer:** 1 → 2 → 3 → 4 → 5 → 6
+**Answer:** 1 -> 2 -> 3 -> 4 -> 5 -> 6
 
 ---
 
@@ -218,7 +218,7 @@
 5. Enable AWS CloudTrail logging for all Bedrock API calls
 6. Set up Amazon CloudWatch alarms for anomalous usage patterns
 
-**Answer:** 1 → 2 → 3 → 4 → 5 → 6
+**Answer:** 1 -> 2 -> 3 -> 4 -> 5 -> 6
 
 ---
 
@@ -233,7 +233,7 @@
 5. Split data into training, validation, and test sets
 6. Normalize/standardize features and encode categorical variables
 
-**Answer:** 1 → 2 → 3 → 6 → 4 → 5
+**Answer:** 1 -> 2 -> 3 -> 6 -> 4 -> 5
 
 ---
 
@@ -248,7 +248,7 @@
 5. Self-consistency (multiple reasoning paths)
 6. Tree-of-thought (branching exploration)
 
-**Answer:** 1 → 2 → 3 → 4 → 5 → 6
+**Answer:** 1 -> 2 -> 3 -> 4 -> 5 -> 6
 
 ---
 
@@ -263,7 +263,7 @@
 5. Evaluate against responsible AI guidelines (bias, fairness, transparency)
 6. Deploy to production with monitoring, guardrails, and governance controls
 
-**Answer:** 1 → 2 → 3 → 4 → 5 → 6
+**Answer:** 1 -> 2 -> 3 -> 4 -> 5 -> 6
 
 ---
 
@@ -278,7 +278,7 @@
 5. Apply layer normalization and residual connections
 6. Output probability distribution over the vocabulary for next-token prediction
 
-**Answer:** 1 → 2 → 3 → 4 → 5 → 6
+**Answer:** 1 -> 2 -> 3 -> 4 -> 5 -> 6
 
 ---
 
@@ -293,7 +293,7 @@
 5. Create and deploy a customizable web experience
 6. Monitor usage, relevance feedback, and content quality
 
-**Answer:** 1 → 2 → 3 → 4 → 5 → 6
+**Answer:** 1 -> 2 -> 3 -> 4 -> 5 -> 6
 
 ---
 
@@ -308,7 +308,7 @@
 5. Trigger an alert when statistical drift exceeds the defined threshold
 6. Initiate model retraining or data pipeline review
 
-**Answer:** 1 → 2 → 3 → 4 → 5 → 6
+**Answer:** 1 -> 2 -> 3 -> 4 -> 5 -> 6
 
 ---
 
@@ -323,7 +323,7 @@
 5. Review model performance metrics and feature importance
 6. Generate predictions via point-and-click interface or batch export
 
-**Answer:** 1 → 2 → 3 → 4 → 5 → 6
+**Answer:** 1 -> 2 -> 3 -> 4 -> 5 -> 6
 
 ---
 
@@ -338,7 +338,7 @@
 5. Embed the user's query using the same embedding model
 6. Perform similarity search (cosine similarity) and return top-k results
 
-**Answer:** 1 → 2 → 3 → 4 → 5 → 6
+**Answer:** 1 -> 2 -> 3 -> 4 -> 5 -> 6
 
 ---
 
@@ -351,7 +351,7 @@
 3. Human-on-the-loop (AI acts, human supervises and can intervene)
 4. Fully autonomous AI (AI acts independently within defined guardrails)
 
-**Answer:** 1 → 2 → 3 → 4
+**Answer:** 1 -> 2 -> 3 -> 4
 
 ---
 
@@ -366,17 +366,17 @@
 5. Set up continuous monitoring for bias drift and performance degradation
 6. Publish transparency reports and maintain audit trails
 
-**Answer:** 1 → 2 → 3 → 4 → 5 → 6
+**Answer:** 1 -> 2 -> 3 -> 4 -> 5 -> 6
 
 ---
 
-## 4. Section B — Matching Questions
+## 4. Section B -- Matching Questions
 
 > **Format:** Match each item in Column A with the correct item in Column B.
 
 ---
 
-### Matching Q1 — AWS AI Services to Use Cases
+### Matching Q1 -- AWS AI Services to Use Cases
 
 | Column A (Service)    | Column B (Use Case)                         |
 | --------------------- | ------------------------------------------- |
@@ -386,11 +386,11 @@
 | 4. Amazon Polly       | D. Generate personalized recommendations    |
 | 5. Amazon Personalize | E. Convert text to lifelike speech          |
 
-**Answer:** 1→B, 2→C, 3→A, 4→E, 5→D
+**Answer:** 1->B, 2->C, 3->A, 4->E, 5->D
 
 ---
 
-### Matching Q2 — Prompt Engineering Techniques
+### Matching Q2 -- Prompt Engineering Techniques
 
 | Column A (Technique)   | Column B (Description)                            |
 | ---------------------- | ------------------------------------------------- |
@@ -400,25 +400,25 @@
 | 4. Chain-of-thought    | D. Give no examples, just the instruction         |
 | 5. Negative prompting  | E. Specify what the model should NOT do or output |
 
-**Answer:** 1→D, 2→C, 3→A, 4→B, 5→E
+**Answer:** 1->D, 2->C, 3->A, 4->B, 5->E
 
 ---
 
-### Matching Q3 — Evaluation Metrics to Task Types
+### Matching Q3 -- Evaluation Metrics to Task Types
 
 | Column A (Metric) | Column B (Task Type)                                             |
 | ----------------- | ---------------------------------------------------------------- |
-| 1. BLEU           | A. Regression — measures prediction error magnitude              |
-| 2. ROUGE          | B. Classification — harmonic mean of precision and recall        |
-| 3. F1 Score       | C. Text generation — measures n-gram precision against reference |
-| 4. RMSE           | D. Text summarization — measures recall of reference content     |
-| 5. BERTScore      | E. Semantic similarity — uses contextual embeddings              |
+| 1. BLEU           | A. Regression -- measures prediction error magnitude              |
+| 2. ROUGE          | B. Classification -- harmonic mean of precision and recall        |
+| 3. F1 Score       | C. Text generation -- measures n-gram precision against reference |
+| 4. RMSE           | D. Text summarization -- measures recall of reference content     |
+| 5. BERTScore      | E. Semantic similarity -- uses contextual embeddings              |
 
-**Answer:** 1→C, 2→D, 3→B, 4→A, 5→E
+**Answer:** 1->C, 2->D, 3->B, 4->A, 5->E
 
 ---
 
-### Matching Q4 — ML Types to Definitions
+### Matching Q4 -- ML Types to Definitions
 
 | Column A (Type)             | Column B (Definition)                                           |
 | --------------------------- | --------------------------------------------------------------- |
@@ -428,25 +428,25 @@
 | 4. Semi-supervised learning | D. Model finds patterns in data without labels                  |
 | 5. Self-supervised learning | E. Model generates its own labels from the input data structure |
 
-**Answer:** 1→B, 2→D, 3→A, 4→C, 5→E
+**Answer:** 1->B, 2->D, 3->A, 4->C, 5->E
 
 ---
 
-### Matching Q5 — Bedrock Features to Descriptions
+### Matching Q5 -- Bedrock Features to Descriptions
 
 | Column A (Feature)        | Column B (Description)                               |
 | ------------------------- | ---------------------------------------------------- |
 | 1. Knowledge Bases        | A. Multi-step task orchestration with tool/API calls |
 | 2. Agents                 | B. Content filtering, denied topics, PII redaction   |
-| 3. Guardrails             | C. RAG — connect FMs to proprietary data sources     |
+| 3. Guardrails             | C. RAG -- connect FMs to proprietary data sources     |
 | 4. Custom Models          | D. Dedicated capacity for predictable workloads      |
 | 5. Provisioned Throughput | E. Fine-tune or continue pre-training a base model   |
 
-**Answer:** 1→C, 2→A, 3→B, 4→E, 5→D
+**Answer:** 1->C, 2->A, 3->B, 4->E, 5->D
 
 ---
 
-### Matching Q6 — LLM Parameters to Effects
+### Matching Q6 -- LLM Parameters to Effects
 
 | Column A (Parameter)        | Column B (Effect)                                                          |
 | --------------------------- | -------------------------------------------------------------------------- |
@@ -456,11 +456,11 @@
 | 4. Max tokens               | D. Samples from tokens whose cumulative probability is below threshold     |
 | 5. Stop sequences           | E. Defines strings that cause the model to stop generating                 |
 
-**Answer:** 1→C, 2→D, 3→A, 4→B, 5→E
+**Answer:** 1->C, 2->D, 3->A, 4->B, 5->E
 
 ---
 
-### Matching Q7 — Vector Stores to Characteristics
+### Matching Q7 -- Vector Stores to Characteristics
 
 | Column A (Vector Store)         | Column B (Characteristic)                                                    |
 | ------------------------------- | ---------------------------------------------------------------------------- |
@@ -470,11 +470,11 @@
 | 4. pgvector (RDS PostgreSQL)    | D. In-memory store with vector similarity search extension                   |
 | 5. Weaviate                     | E. Extension for PostgreSQL, good if you already use RDS                     |
 
-**Answer:** 1→A, 2→C, 3→D, 4→E, 5→B
+**Answer:** 1->A, 2->C, 3->D, 4->E, 5->B
 
 ---
 
-### Matching Q8 — Security Controls to Purposes
+### Matching Q8 -- Security Controls to Purposes
 
 | Column A (Control)                 | Column B (Purpose)                                           |
 | ---------------------------------- | ------------------------------------------------------------ |
@@ -484,11 +484,11 @@
 | 4. AWS CloudTrail                  | D. Define least-privilege access to AI services              |
 | 5. Amazon Macie                    | E. Discover and protect sensitive data (PII) in S3           |
 
-**Answer:** 1→C, 2→D, 3→B, 4→A, 5→E
+**Answer:** 1->C, 2->D, 3->B, 4->A, 5->E
 
 ---
 
-### Matching Q9 — SageMaker Components to Functions
+### Matching Q9 -- SageMaker Components to Functions
 
 | Column A (Component)       | Column B (Function)                                             |
 | -------------------------- | --------------------------------------------------------------- |
@@ -498,25 +498,25 @@
 | 4. SageMaker Model Monitor | D. Track data drift and model quality degradation in production |
 | 5. SageMaker Ground Truth  | E. Label training data with human annotators or auto-labeling   |
 
-**Answer:** 1→B, 2→A, 3→C, 4→D, 5→E
+**Answer:** 1->B, 2->A, 3->C, 4->D, 5->E
 
 ---
 
-### Matching Q10 — Foundation Model Families to Specializations
+### Matching Q10 -- Foundation Model Families to Specializations
 
 | Column A (Model Family)           | Column B (Specialization / Origin)                     |
 | --------------------------------- | ------------------------------------------------------ |
-| 1. Amazon Titan                   | A. Anthropic — known for safety and helpfulness        |
-| 2. Claude (via Bedrock)           | B. Meta — open-weight, strong general performance      |
-| 3. Llama (via Bedrock)            | C. AI21 Labs — enterprise text generation and analysis |
-| 4. Jurassic (via Bedrock)         | D. AWS proprietary — text, image, and embedding models |
-| 5. Stable Diffusion (via Bedrock) | E. Stability AI — image generation from text prompts   |
+| 1. Amazon Titan                   | A. Anthropic -- known for safety and helpfulness        |
+| 2. Claude (via Bedrock)           | B. Meta -- open-weight, strong general performance      |
+| 3. Llama (via Bedrock)            | C. AI21 Labs -- enterprise text generation and analysis |
+| 4. Jurassic (via Bedrock)         | D. AWS proprietary -- text, image, and embedding models |
+| 5. Stable Diffusion (via Bedrock) | E. Stability AI -- image generation from text prompts   |
 
-**Answer:** 1→D, 2→A, 3→B, 4→C, 5→E
+**Answer:** 1->D, 2->A, 3->B, 4->C, 5->E
 
 ---
 
-### Matching Q11 — Responsible AI Principles to Definitions
+### Matching Q11 -- Responsible AI Principles to Definitions
 
 | Column A (Principle) | Column B (Definition)                                                |
 | -------------------- | -------------------------------------------------------------------- |
@@ -526,25 +526,25 @@
 | 4. Privacy           | D. Protecting personal data and respecting data subject rights       |
 | 5. Robustness        | E. System performs reliably and safely under varied conditions       |
 
-**Answer:** 1→B, 2→A, 3→C, 4→D, 5→E
+**Answer:** 1->B, 2->A, 3->C, 4->D, 5->E
 
 ---
 
-### Matching Q12 — Data Splitting Terms to Purposes
+### Matching Q12 -- Data Splitting Terms to Purposes
 
 | Column A (Term)      | Column B (Purpose)                                                       |
 | -------------------- | ------------------------------------------------------------------------ |
 | 1. Training set      | A. Final unbiased evaluation of model performance                        |
-| 2. Validation set    | B. Data the model learns from directly — adjusts weights                 |
+| 2. Validation set    | B. Data the model learns from directly -- adjusts weights                 |
 | 3. Test set          | C. Tuning hyperparameters and preventing overfitting                     |
 | 4. Cross-validation  | D. Rotating through multiple train/validate splits for robust evaluation |
 | 5. Pre-training data | E. Large unlabeled corpora used to train a foundation model              |
 
-**Answer:** 1→B, 2→C, 3→A, 4→D, 5→E
+**Answer:** 1->B, 2->C, 3->A, 4->D, 5->E
 
 ---
 
-### Matching Q13 — Types of Bias to Descriptions
+### Matching Q13 -- Types of Bias to Descriptions
 
 | Column A (Bias Type) | Column B (Description)                                                     |
 | -------------------- | -------------------------------------------------------------------------- |
@@ -554,11 +554,11 @@
 | 4. Recall bias       | D. Inaccurate or inconsistent data labels due to subjective human judgment |
 | 5. Algorithmic bias  | E. Favoring information that confirms pre-existing beliefs in outputs      |
 
-**Answer:** 1→C, 2→E, 3→A, 4→D, 5→B
+**Answer:** 1->C, 2->E, 3->A, 4->D, 5->B
 
 ---
 
-### Matching Q14 — RAG Components to Functions
+### Matching Q14 -- RAG Components to Functions
 
 | Column A (Component) | Column B (Function)                                                            |
 | -------------------- | ------------------------------------------------------------------------------ |
@@ -568,11 +568,11 @@
 | 4. Retriever         | D. Find the most relevant chunks given a query embedding                       |
 | 5. Augmented prompt  | E. Combine retrieved context with the user's question before passing to the FM |
 
-**Answer:** 1→A, 2→B, 3→C, 4→D, 5→E
+**Answer:** 1->A, 2->B, 3->C, 4->D, 5->E
 
 ---
 
-### Matching Q15 — Amazon Q Editions to Capabilities
+### Matching Q15 -- Amazon Q Editions to Capabilities
 
 | Column A (Edition)          | Column B (Primary Capability)                                               |
 | --------------------------- | --------------------------------------------------------------------------- |
@@ -582,11 +582,11 @@
 | 4. Amazon Q in Connect      | D. Real-time agent assistance and recommended responses for contact centers |
 | 5. Amazon Q in Supply Chain | E. Supply chain insights, risk analysis, and demand forecasting             |
 
-**Answer:** 1→A, 2→B, 3→C, 4→D, 5→E
+**Answer:** 1->A, 2->B, 3->C, 4->D, 5->E
 
 ---
 
-### Matching Q16 — Tokenization Concepts to Definitions
+### Matching Q16 -- Tokenization Concepts to Definitions
 
 | Column A (Concept)              | Column B (Definition)                                               |
 | ------------------------------- | ------------------------------------------------------------------- |
@@ -596,11 +596,11 @@
 | 4. Padding                      | D. Adding tokens to equalize sequence lengths in a batch            |
 | 5. Special tokens               | E. Tokens like [CLS], [SEP], [PAD] that serve structural purposes   |
 
-**Answer:** 1→A, 2→B, 3→C, 4→D, 5→E
+**Answer:** 1->A, 2->B, 3->C, 4->D, 5->E
 
 ---
 
-### Matching Q17 — ML Problem Types to Examples
+### Matching Q17 -- ML Problem Types to Examples
 
 | Column A (Problem Type)       | Column B (Example)                                              |
 | ----------------------------- | --------------------------------------------------------------- |
@@ -610,11 +610,11 @@
 | 4. Clustering                 | D. Categorize support tickets as billing, technical, or general |
 | 5. Anomaly detection          | E. Flag unusual credit card transactions                        |
 
-**Answer:** 1→B, 2→D, 3→A, 4→C, 5→E
+**Answer:** 1->B, 2->D, 3->A, 4->C, 5->E
 
 ---
 
-### Matching Q18 — AWS Compliance Resources to Uses
+### Matching Q18 -- AWS Compliance Resources to Uses
 
 | Column A (Resource)  | Column B (Use)                                                     |
 | -------------------- | ------------------------------------------------------------------ |
@@ -624,11 +624,11 @@
 | 4. AWS CloudTrail    | D. Record API call history for governance and forensic analysis    |
 | 5. Amazon Inspector  | E. Automated vulnerability scanning for workloads                  |
 
-**Answer:** 1→A, 2→B, 3→C, 4→D, 5→E
+**Answer:** 1->A, 2->B, 3->C, 4->D, 5->E
 
 ---
 
-### Matching Q19 — Generative AI Concepts to Definitions
+### Matching Q19 -- Generative AI Concepts to Definitions
 
 | Column A (Concept)   | Column B (Definition)                                                               |
 | -------------------- | ----------------------------------------------------------------------------------- |
@@ -638,11 +638,11 @@
 | 4. Transfer learning | D. Applying knowledge from one task to a related task                               |
 | 5. RLHF              | E. Training technique using human feedback to align model behavior with preferences |
 
-**Answer:** 1→A, 2→B, 3→C, 4→D, 5→E
+**Answer:** 1->A, 2->B, 3->C, 4->D, 5->E
 
 ---
 
-### Matching Q20 — Bedrock Model Operations to Descriptions
+### Matching Q20 -- Bedrock Model Operations to Descriptions
 
 | Column A (Operation)      | Column B (Description)                                            |
 | ------------------------- | ----------------------------------------------------------------- |
@@ -652,11 +652,11 @@
 | 4. Continued pre-training | D. Train a model on large unlabeled domain-specific data          |
 | 5. Model evaluation       | E. Compare model performance using automatic and/or human metrics |
 
-**Answer:** 1→A, 2→B, 3→C, 4→D, 5→E
+**Answer:** 1->A, 2->B, 3->C, 4->D, 5->E
 
 ---
 
-## 5. Section C — Scenario-Based Questions
+## 5. Section C -- Scenario-Based Questions
 
 > **Format:** Read the scenario and select the best answer (or answers for multi-response).
 
@@ -723,7 +723,7 @@ Which AWS service should they use?
 - D) Amazon Bedrock Guardrails
 
 **Answer: B**
-**Why:** SageMaker Clarify provides model explainability through SHAP values, showing which features contributed to each prediction. GuardDuty is for threat detection, CloudTrail is for API auditing, and Bedrock Guardrails are for content filtering — not model explainability.
+**Why:** SageMaker Clarify provides model explainability through SHAP values, showing which features contributed to each prediction. GuardDuty is for threat detection, CloudTrail is for API auditing, and Bedrock Guardrails are for content filtering -- not model explainability.
 
 ---
 
@@ -750,8 +750,8 @@ Which approach is BEST?
 Which TWO Bedrock features should they configure?
 
 - A) Provisioned Throughput
-- B) Guardrails — denied topics
-- C) Guardrails — content filters
+- B) Guardrails -- denied topics
+- C) Guardrails -- content filters
 - D) Knowledge Bases
 - E) Agents
 
@@ -820,7 +820,7 @@ Which metric is MOST appropriate?
 - D) BLEU
 
 **Answer: C**
-**Why:** ROUGE (Recall-Oriented Understudy for Gisting Evaluation) measures how much of the reference content appears in the generated summary — it is recall-focused, which is ideal for summarization tasks. BLEU is precision-focused and better for translation. F1 is for classification. RMSE is for regression.
+**Why:** ROUGE (Recall-Oriented Understudy for Gisting Evaluation) measures how much of the reference content appears in the generated summary -- it is recall-focused, which is ideal for summarization tasks. BLEU is precision-focused and better for translation. F1 is for classification. RMSE is for regression.
 
 ---
 
@@ -864,12 +864,12 @@ Which combination of AWS AI services should they use?
 What is the MOST likely cause?
 
 - A) The model was overfit during training
-- B) Data drift — the operational conditions have changed since the training period
+- B) Data drift -- the operational conditions have changed since the training period
 - C) The SageMaker endpoint is misconfigured
 - D) The evaluation metrics were calculated incorrectly
 
 **Answer: B**
-**Why:** Gradual performance decline in production is the hallmark of data drift — the statistical properties of the live data have diverged from the training data. This is why SageMaker Model Monitor exists: to detect drift and trigger alerts.
+**Why:** Gradual performance decline in production is the hallmark of data drift -- the statistical properties of the live data have diverged from the training data. This is why SageMaker Model Monitor exists: to detect drift and trigger alerts.
 
 ---
 
@@ -900,13 +900,13 @@ What should they configure?
 
 Which approach should they choose?
 
-- A) Fine-tuning — to embed the policies into the model
-- B) RAG with Amazon Bedrock Knowledge Bases — to retrieve from the policy documents
-- C) Prompt engineering — by including all policies in the system prompt
+- A) Fine-tuning -- to embed the policies into the model
+- B) RAG with Amazon Bedrock Knowledge Bases -- to retrieve from the policy documents
+- C) Prompt engineering -- by including all policies in the system prompt
 - D) Build a custom NLP model in SageMaker
 
 **Answer: B**
-**Why:** RAG is ideal here because: (1) policies change monthly — RAG doesn't require retraining, just re-syncing the data source; (2) citations are a natural byproduct of RAG; (3) Bedrock Knowledge Bases provide a managed, low-expertise path.
+**Why:** RAG is ideal here because: (1) policies change monthly -- RAG doesn't require retraining, just re-syncing the data source; (2) citations are a natural byproduct of RAG; (3) Bedrock Knowledge Bases provide a managed, low-expertise path.
 
 ---
 
@@ -928,7 +928,7 @@ Which Amazon Bedrock features should they combine?
 
 ### Scenario Q17
 
-**A company is using an LLM and wants to ensure the output is deterministic — the same input should always produce the same output for their automated report generation pipeline.**
+**A company is using an LLM and wants to ensure the output is deterministic -- the same input should always produce the same output for their automated report generation pipeline.**
 
 What parameter setting should they use?
 
@@ -964,11 +964,11 @@ Which service should they use?
 
 Which TWO capabilities should they enable?
 
-- A) SageMaker Model Monitor — Bias Drift Monitor
-- B) Amazon GuardDuty — threat detection
-- C) SageMaker Clarify — ongoing bias monitoring on the endpoint
-- D) AWS Config — configuration compliance rules
-- E) Amazon Inspector — vulnerability scanning
+- A) SageMaker Model Monitor -- Bias Drift Monitor
+- B) Amazon GuardDuty -- threat detection
+- C) SageMaker Clarify -- ongoing bias monitoring on the endpoint
+- D) AWS Config -- configuration compliance rules
+- E) Amazon Inspector -- vulnerability scanning
 
 **Answer: A, C**
 **Why:** SageMaker Model Monitor's Bias Drift Monitor continuously checks for changes in bias metrics over time. SageMaker Clarify provides the underlying bias detection capabilities that Model Monitor uses. Together they provide continuous bias monitoring in production.
@@ -997,26 +997,26 @@ Which combination of approaches is MOST cost-effective?
 
 | Criterion                 | Prompt Engineering             | RAG                 | Fine-Tuning                               |
 | ------------------------- | ------------------------------ | ------------------- | ----------------------------------------- |
-| **Speed to implement**    | Minutes                        | Hours–Days          | Days–Weeks                                |
-| **Cost**                  | Lowest                         | Low–Medium          | High                                      |
+| **Speed to implement**    | Minutes                        | Hours-Days          | Days-Weeks                                |
+| **Cost**                  | Lowest                         | Low-Medium          | High                                      |
 | **Private/current data**  | No (limited by context window) | Yes                 | Only at training time                     |
 | **Custom style/tone**     | Moderate                       | Low                 | High                                      |
 | **Citations/sources**     | No                             | Yes                 | No                                        |
 | **Data freshness**        | N/A                            | Real-time (re-sync) | Requires retraining                       |
 | **Data volume needed**    | A few examples                 | Any                 | Hundreds to thousands of labeled examples |
-| **ML expertise required** | None                           | Low                 | Medium–High                               |
+| **ML expertise required** | None                           | Low                 | Medium-High                               |
 
 ### Key AWS Services Quick Reference
 
 | Service                    | Purpose                                                                                                       |
 | -------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| **Amazon Bedrock**         | Access foundation models via API — Knowledge Bases, Agents, Guardrails, Custom Models                         |
-| **Amazon SageMaker**       | Build, train, and deploy ML models — Canvas (no-code), JumpStart (pre-trained), Clarify (bias), Model Monitor |
-| **Amazon Q Business**      | Enterprise AI assistant — search, summarize, and act on company data                                          |
-| **Amazon Q Developer**     | AI coding assistant — code generation, security scanning, AWS guidance                                        |
-| **Amazon Titan**           | AWS's own foundation models — text, image, and embeddings                                                     |
-| **Amazon Comprehend**      | NLP — sentiment, key phrases, entities, language detection                                                    |
-| **Amazon Rekognition**     | Image and video analysis — objects, faces, text, content moderation                                           |
+| **Amazon Bedrock**         | Access foundation models via API -- Knowledge Bases, Agents, Guardrails, Custom Models                         |
+| **Amazon SageMaker**       | Build, train, and deploy ML models -- Canvas (no-code), JumpStart (pre-trained), Clarify (bias), Model Monitor |
+| **Amazon Q Business**      | Enterprise AI assistant -- search, summarize, and act on company data                                          |
+| **Amazon Q Developer**     | AI coding assistant -- code generation, security scanning, AWS guidance                                        |
+| **Amazon Titan**           | AWS's own foundation models -- text, image, and embeddings                                                     |
+| **Amazon Comprehend**      | NLP -- sentiment, key phrases, entities, language detection                                                    |
+| **Amazon Rekognition**     | Image and video analysis -- objects, faces, text, content moderation                                           |
 | **Amazon Transcribe**      | Speech-to-text                                                                                                |
 | **Amazon Polly**           | Text-to-speech                                                                                                |
 | **Amazon Translate**       | Language translation                                                                                          |
@@ -1052,9 +1052,9 @@ Which combination of approaches is MOST cost-effective?
 
 > **Sources & Further Reading:**
 > 
-> - [AWS Certified AI Practitioner — Official Exam Page](https://aws.amazon.com/certification/certified-ai-practitioner/)
+> - [AWS Certified AI Practitioner -- Official Exam Page](https://aws.amazon.com/certification/certified-ai-practitioner/)
 > - [Amazon Bedrock Documentation](https://docs.aws.amazon.com/bedrock/)
 > - [Amazon SageMaker Documentation](https://docs.aws.amazon.com/sagemaker/)
 > - [AWS Responsible AI](https://aws.amazon.com/ai/responsible-ai/)
-> - [AWS Skill Builder — AIF-C01 Learning Plan](https://skillbuilder.aws/)
+> - [AWS Skill Builder -- AIF-C01 Learning Plan](https://skillbuilder.aws/)
 > - [AIF-C01 Official Exam Guide (PDF)](https://d1.awsstatic.com/training-and-certification/docs-ai-practitioner/AIF-C01_exam-guide.pdf)

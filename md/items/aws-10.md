@@ -181,7 +181,7 @@ C. Model training
 D. Problem definition
 E. Model evaluation
 
-**Correct Order:** D → B → C → E → A
+**Correct Order:** D -> B -> C -> E -> A
 
 **Explanation:** The ML pipeline follows a logical sequence: First, you must define the problem (D), then prepare the data (B), train the model (C), evaluate its performance (E), and finally deploy it to production (A). This order ensures you have clear objectives, quality data, a trained model, validated performance, and a deployment plan.
 
@@ -199,7 +199,7 @@ C. Ingest documents into the knowledge base
 D. Query the knowledge base with user questions
 E. Retrieve relevant context and generate response
 
-**Correct Order:** B → C → A → D → E
+**Correct Order:** B -> C -> A -> D -> E
 
 **Explanation:** RAG implementation requires: First, set up the knowledge base with a vector store like OpenSearch Serverless (B). Then, ingest your documents which will be chunked and embedded (C). Configure the foundation model you'll use for generation (A). When users ask questions, the system queries the knowledge base (D), retrieves relevant context, and generates a grounded response (E).
 
@@ -217,7 +217,7 @@ C. Test the prompt with sample inputs
 D. Refine the prompt based on analysis
 E. Define the task and desired output format
 
-**Correct Order:** E → C → A → D → B
+**Correct Order:** E -> C -> A -> D -> B
 
 **Explanation:** Prompt engineering is iterative: Start by defining the task and desired output (E). Test with sample inputs to see how the model responds (C). Analyze outputs for errors, hallucinations, or gaps (A). Refine the prompt based on this analysis, adjusting instructions or adding examples (D). Once satisfied with performance, deploy to production (B).
 
@@ -235,7 +235,7 @@ C. Evaluate the fine-tuned model
 D. Configure training hyperparameters
 E. Deploy the fine-tuned model
 
-**Correct Order:** B → A → D → C → E
+**Correct Order:** B -> A -> D -> C -> E
 
 **Explanation:** Fine-tuning workflow: First, select the base foundation model that matches your use case (B). Prepare your domain-specific training data in the required format (A). Configure hyperparameters like learning rate, epochs, and batch size (D). After training, evaluate the model's performance on test data (C). If performance is acceptable, deploy the model for inference (E).
 
@@ -253,7 +253,7 @@ C. Review pricing and cost considerations
 D. Assess AWS AI services documentation
 E. Implement proof of concept
 
-**Correct Order:** B → D → A → C → E
+**Correct Order:** B -> D -> A -> C -> E
 
 **Explanation:** Service selection process: First, clearly define the business problem and requirements (B). Review AWS AI services documentation to understand capabilities (D). Evaluate which services match your requirements (A). Consider pricing and cost implications (C). Finally, implement a proof of concept to validate the choice (E).
 
@@ -271,7 +271,7 @@ C. Run inference on test dataset
 D. Calculate metric scores
 E. Analyze results and compare against benchmarks
 
-**Correct Order:** A → B → C → D → E
+**Correct Order:** A -> B -> C -> D -> E
 
 **Explanation:** Model evaluation workflow: First, select appropriate metrics based on your task (A) - BLEU/ROUGE for text generation, accuracy for classification. Prepare a test dataset with ground truth answers (B). Run the model inference on this dataset (C). Calculate the metric scores comparing predictions to ground truth (D). Analyze results against benchmarks or other models (E).
 
@@ -289,7 +289,7 @@ C. Implement bias mitigation techniques
 D. Document model limitations and risks
 E. Establish monitoring for ongoing fairness
 
-**Correct Order:** B → A → C → D → E
+**Correct Order:** B -> A -> C -> D -> E
 
 **Explanation:** Responsible AI lifecycle: First, define what fairness means for your specific use case (B). Identify potential biases in training data through analysis (A). Implement techniques to mitigate identified biases (C). Document model limitations, intended use, and risks (D). Establish ongoing monitoring to detect bias drift (E).
 
@@ -307,7 +307,7 @@ C. Analyze extracted text with Amazon Comprehend
 D. Define document processing requirements
 E. Extract insights and entities
 
-**Correct Order:** D → B → A → C → E
+**Correct Order:** D -> B -> A -> C -> E
 
 **Explanation:** Document processing workflow: First, define requirements (what data to extract, what insights needed) (D). Store documents in S3 as the source (B). Use Textract to extract text, tables, and forms (A). Send extracted text to Comprehend for NLP analysis (C). Extract final insights, entities, and sentiments (E).
 
@@ -325,7 +325,7 @@ C. Build conversational flow with prompts
 D. Test the bot with sample interactions
 E. Deploy and integrate with messaging channels
 
-**Correct Order:** B → A → C → D → E
+**Correct Order:** B -> A -> C -> D -> E
 
 **Explanation:** Lex bot development: Create the bot and configure basic settings (B). Define intents (what users want to do) and sample utterances (how they might say it) (A). Build the conversational flow with prompts and responses (C). Test with various interactions to ensure it handles different inputs (D). Deploy and integrate with channels like Facebook Messenger, Slack, etc. (E).
 
@@ -343,7 +343,7 @@ C. Configure CloudWatch alarms for thresholds
 D. Collect production inference data
 E. Set up SageMaker Model Monitor
 
-**Correct Order:** B → D → A → E → C
+**Correct Order:** B -> D -> A -> E -> C
 
 **Explanation:** Model monitoring setup: First, deploy the model to a production endpoint (B). Collect production inference data over time (D). Define what metrics to monitor based on use case (A). Configure SageMaker Model Monitor with baseline and schedule (E). Set up CloudWatch alarms to alert when thresholds are breached (C).
 
@@ -361,7 +361,7 @@ C. Ingest and chunk documents
 D. Generate embeddings for chunks
 E. Index vectors in the store
 
-**Correct Order:** A → B → C → D → E
+**Correct Order:** A -> B -> C -> D -> E
 
 **Explanation:** Vector store setup: Select appropriate vector database based on scale and requirements (A). Configure the embedding model that will convert text to vectors (B). Ingest documents and split them into chunks (C). Generate embeddings for each chunk using the embedding model (D). Index these vectors in the store for similarity search (E).
 
@@ -379,7 +379,7 @@ C. Set up VPC and network isolation
 D. Implement API authentication
 E. Configure CloudTrail for auditing
 
-**Correct Order:** A → C → B → D → E
+**Correct Order:** A -> C -> B -> D -> E
 
 **Explanation:** AI security implementation: Start with IAM to control who can access AI resources (A). Set up VPC and network isolation for network security (B). Enable encryption for data protection (C). Implement API authentication for application access (D). Configure CloudTrail for audit logging (E).
 
@@ -397,7 +397,7 @@ C. Perform feature engineering
 D. Split data into train/validation/test sets
 E. Normalize or standardize features
 
-**Correct Order:** A → B → C → E → D
+**Correct Order:** A -> B -> C -> E -> D
 
 **Explanation:** Data preparation workflow: First, collect raw data from various sources (A). Handle data quality issues like missing values and outliers (B). Perform feature engineering to create relevant features (C). Normalize or standardize features as needed (E). Split data into train, validation, and test sets for modeling (D).
 
@@ -415,7 +415,7 @@ C. Feed-forward neural network
 D. Layer normalization
 E. Output layer
 
-**Correct Order:** A → B → D → C → E
+**Correct Order:** A -> B -> D -> C -> E
 
 **Explanation:** Transformer data flow: Input tokens are converted to embeddings (A). Self-attention mechanism processes relationships between tokens (B). Layer normalization stabilizes training (D). Feed-forward network applies non-linear transformations (C). Output layer produces final predictions (E).
 
@@ -433,7 +433,7 @@ C. Index faces or objects for recognition
 D. Submit images for analysis
 E. Process and store recognition results
 
-**Correct Order:** B → A → C → D → E
+**Correct Order:** B -> A -> C -> D -> E
 
 **Explanation:** Rekognition workflow: Configure a collection to store face/object indexes (B). Upload images to S3 as source (A). Index faces or objects you want to recognize (C). Submit new images for analysis (D). Process results and take actions based on matches (E).
 
@@ -451,7 +451,7 @@ C. Design prompt engineering strategy
 D. Implement RAG if needed
 E. Test and iterate on outputs
 
-**Correct Order:** A → B → C → D → E
+**Correct Order:** A -> B -> C -> D -> E
 
 **Explanation:** GenAI app development: Define the specific use case and requirements (A). Select appropriate foundation model (B). Design prompt engineering approach (C). Implement RAG for grounding if domain knowledge is needed (D). Test outputs and iterate to improve quality (E).
 
@@ -469,7 +469,7 @@ C. Assess compliance requirements
 D. Establish review and approval processes
 E. Implement monitoring and reporting
 
-**Correct Order:** C → A → B → D → E
+**Correct Order:** C -> A -> B -> D -> E
 
 **Explanation:** AI governance implementation: First, understand compliance requirements (C). Define policies based on these requirements (A). Inventory existing AI systems to assess gaps (B). Establish review processes for new AI systems (D). Implement monitoring and reporting mechanisms (E).
 
@@ -487,7 +487,7 @@ C. Call Amazon Transcribe API
 D. Configure custom vocabulary if needed
 E. Process and store transcription results
 
-**Correct Order:** A → B → D → C → E
+**Correct Order:** A -> B -> D -> C -> E
 
 **Explanation:** Speech-to-text pipeline: Capture audio from source (A). Upload to S3 for processing (B). Configure custom vocabulary for domain-specific terms (D). Call Transcribe API to process (C). Store and process transcription results (E).
 
@@ -505,7 +505,7 @@ C. Test shortlisted models with sample data
 D. Compare performance and cost metrics
 E. Finalize model selection and procurement
 
-**Correct Order:** A → B → C → D → E
+**Correct Order:** A -> B -> C -> D -> E
 
 **Explanation:** Model selection process: Define requirements including latency, quality, and cost constraints (A). Evaluate models on relevant benchmarks (B). Test top candidates with your specific data (C). Compare actual performance and cost metrics (D). Make final selection based on evaluation (E).
 
@@ -523,7 +523,7 @@ C. Apply bias mitigation techniques
 D. Retrain or adjust the model
 E. Validate bias reduction in new version
 
-**Correct Order:** B → A → C → D → E
+**Correct Order:** B -> A -> C -> D -> E
 
 **Explanation:** Bias mitigation workflow: Identify protected attributes (e.g., gender, age, race) (B). Measure bias using metrics like disparate impact (A). Apply mitigation techniques like reweighting or adversarial debiasing (C). Retrain or adjust the model (D). Validate that bias has been reduced in the new version (E).
 
@@ -1695,12 +1695,12 @@ E. Centralized AI governance team
 
 **Key Highlights of the Study Guide:**
 
-✅ **Exam Structure & Domains** - Complete breakdown of all 5 domains with weightings  
-✅ **Most Prevalent Topics** - Identified high-frequency topics based on research  
-✅ **20 Ordering Questions** - ML pipeline, RAG implementation, prompt engineering, etc.  
-✅ **20 Matching Questions** - AWS services to use cases, ML types, evaluation metrics  
-✅ **20 Scenario-Based Questions** - Real-world scenarios with detailed explanations  
-✅ **Exam-Taking Strategies** - Time management, elimination strategies, key tips  
+[OK] **Exam Structure & Domains** - Complete breakdown of all 5 domains with weightings  
+[OK] **Most Prevalent Topics** - Identified high-frequency topics based on research  
+[OK] **20 Ordering Questions** - ML pipeline, RAG implementation, prompt engineering, etc.  
+[OK] **20 Matching Questions** - AWS services to use cases, ML types, evaluation metrics  
+[OK] **20 Scenario-Based Questions** - Real-world scenarios with detailed explanations  
+[OK] **Exam-Taking Strategies** - Time management, elimination strategies, key tips  
 
 **The Study Guide Covers:**
 

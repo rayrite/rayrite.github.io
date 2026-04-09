@@ -111,7 +111,7 @@ Options:
 5. Problem formulation
 6. Model evaluation
 
-**Correct Order:** 5 → 3 → 1 → 4 → 6 → 2
+**Correct Order:** 5 -> 3 -> 1 -> 4 -> 6 -> 2
 
 **Explanation:** The standard ML pipeline follows this sequence: First, define the problem (5). Then collect relevant data (3). Next, engineer features from raw data (1). Train the model on prepared data (4). Evaluate model performance (6). Finally, deploy to production (2).
 
@@ -132,7 +132,7 @@ Options:
 5. Generate embeddings
 6. Store embeddings
 
-**Correct Order:** 2 → 5 → 6 → 1 → 4 → 3
+**Correct Order:** 2 -> 5 -> 6 -> 1 -> 4 -> 3
 
 **Explanation:** RAG workflow: First load documents (2), then generate embeddings (5), store them in vector store (6), create the vector store (1), retrieve relevant chunks during query (4), and finally query the foundation model with context (3).
 
@@ -152,9 +152,9 @@ Options:
 4. Layer normalization
 5. Positional encoding
 
-**Correct Order:** 3 → 5 → 1 → 4 → 2 → 4
+**Correct Order:** 3 -> 5 -> 1 -> 4 -> 2 -> 4
 
-**Explanation:** Data flows: Input embeddings (3) → Positional encoding (5) → Multi-head attention (1) → Layer normalization (4) → Feed-forward network (2) → Final layer normalization (4).
+**Explanation:** Data flows: Input embeddings (3) -> Positional encoding (5) -> Multi-head attention (1) -> Layer normalization (4) -> Feed-forward network (2) -> Final layer normalization (4).
 
 **Domain:** Domain 2: Fundamentals of Generative AI
 
@@ -173,7 +173,7 @@ Options:
 5. Deploy custom model
 6. Configure hyperparameters
 
-**Correct Order:** 2 → 1 → 6 → 4 → 3 → 5
+**Correct Order:** 2 -> 1 -> 6 -> 4 -> 3 -> 5
 
 **Explanation:** Fine-tuning workflow: Select base model (2), prepare training data (1), configure hyperparameters (6), create custom model (4), evaluate performance (3), then deploy (5).
 
@@ -194,7 +194,7 @@ Options:
 5. Document model cards
 6. Establish governance policies
 
-**Correct Order:** 3 → 6 → 1 → 4 → 5 → 2
+**Correct Order:** 3 -> 6 -> 1 -> 4 -> 5 -> 2
 
 **Explanation:** Responsible AI lifecycle: Identify stakeholders (3), establish governance (6), define fairness metrics (1), conduct bias testing (4), document model cards (5), deploy with monitoring (2).
 
@@ -215,7 +215,7 @@ Options:
 5. Refine based on results
 6. Evaluate against criteria
 
-**Correct Order:** 3 → 4 → 1 → 6 → 5 → 2
+**Correct Order:** 3 -> 4 -> 1 -> 6 -> 5 -> 2
 
 **Explanation:** Prompt engineering iteration: Design initial prompt (3), test with samples (4), analyze outputs (1), evaluate against criteria (6), refine based on results (5), deploy to production (2).
 
@@ -236,7 +236,7 @@ Options:
 5. VPC isolation
 6. Data masking
 
-**Correct Order:** 2 → 5 → 4 → 1 → 6 → 3
+**Correct Order:** 2 -> 5 -> 4 -> 1 -> 6 -> 3
 
 **Explanation:** Security layers (external to internal): Network security groups (2), VPC isolation (5), IAM permissions (4), application authentication (1), data masking (6), encryption at rest (3).
 
@@ -257,7 +257,7 @@ Options:
 5. Trigger investigation
 6. Define monitoring scope
 
-**Correct Order:** 6 → 2 → 1 → 3 → 5 → 4
+**Correct Order:** 6 -> 2 -> 1 -> 3 -> 5 -> 4
 
 **Explanation:** Monitoring lifecycle: Define scope (6), collect baselines (2), set up alerts (1), detect drift (3), trigger investigation (5), schedule retraining (4).
 
@@ -278,7 +278,7 @@ Options:
 5. Outlier treatment
 6. Feature encoding
 
-**Correct Order:** 4 → 3 → 1 → 5 → 6 → 2
+**Correct Order:** 4 -> 3 -> 1 -> 5 -> 6 -> 2
 
 **Explanation:** Data preparation: Ingest data (4), validate quality (3), handle missing values (1), treat outliers (5), encode categorical features (6), scale numerical features (2).
 
@@ -298,7 +298,7 @@ Options:
 4. Top-k
 5. Stop sequences
 
-**Correct Order:** 3 → 1 → 2 → 4 → 5
+**Correct Order:** 3 -> 1 -> 2 -> 4 -> 5
 
 **Explanation:** Priority order: Max tokens (3) defines output length first, Temperature (1) controls randomness, Top-p (2) refines sampling, Top-k (4) limits token choices, Stop sequences (5) are last.
 
@@ -319,7 +319,7 @@ Options:
 5. Test endpoint
 6. Configure auto-scaling
 
-**Correct Order:** 2 → 3 → 1 → 4 → 5 → 6
+**Correct Order:** 2 -> 3 -> 1 -> 4 -> 5 -> 6
 
 **Explanation:** Deployment workflow: Upload model artifacts (2), create SageMaker model (3), create endpoint config (1), deploy endpoint (4), test endpoint (5), configure auto-scaling (6).
 
@@ -340,7 +340,7 @@ Options:
 5. Sync data source
 6. Test retrieval
 
-**Correct Order:** 1 → 3 → 2 → 4 → 5 → 6
+**Correct Order:** 1 -> 3 -> 2 -> 4 -> 5 -> 6
 
 **Explanation:** Knowledge base creation: Choose vector store (1), set embedding model (3), configure data source (2), create knowledge base (4), sync data (5), test retrieval (6).
 
@@ -361,7 +361,7 @@ Options:
 5. Define fairness metrics
 6. Take remediation actions
 
-**Correct Order:** 1 → 5 → 2 → 3 → 4 → 6
+**Correct Order:** 1 -> 5 -> 2 -> 3 -> 4 -> 6
 
 **Explanation:** Bias detection: Define sensitive attributes (1), define fairness metrics (5), configure analysis job (2), run processing (3), review report (4), take remediation actions (6).
 
@@ -382,7 +382,7 @@ Options:
 5. Extract key-value pairs
 6. Store processed results
 
-**Correct Order:** 1 → 2 → 3 → 4 → 5 → 6
+**Correct Order:** 1 -> 2 -> 3 -> 4 -> 5 -> 6
 
 **Explanation:** Textract workflow: Upload to S3 (1), call API (2), receive response (3), parse data (4), extract key-values (5), store results (6).
 
@@ -403,7 +403,7 @@ Options:
 5. Fine-tune selected layers
 6. Evaluate on test set
 
-**Correct Order:** 1 → 2 → 3 → 4 → 5 → 6
+**Correct Order:** 1 -> 2 -> 3 -> 4 -> 5 -> 6
 
 **Explanation:** Transfer learning: Select pre-trained model (1), freeze base layers (2), add custom layers (3), train on new data (4), fine-tune selected layers (5), evaluate (6).
 
@@ -424,7 +424,7 @@ Options:
 5. Feature fusion
 6. Multi-modal alignment
 
-**Correct Order:** 2 → 4 → 1 → 3 → 6 → 5
+**Correct Order:** 2 -> 4 -> 1 -> 3 -> 6 -> 5
 
 **Explanation:** Multi-modal processing: Image resizing (2), image normalization (4), text tokenization (1), text embedding (3), multi-modal alignment (6), feature fusion (5).
 
@@ -445,7 +445,7 @@ Options:
 5. Prompt engineering
 6. Performance optimization
 
-**Correct Order:** 3 → 4 → 1 → 5 → 6 → 2
+**Correct Order:** 3 -> 4 -> 1 -> 5 -> 6 -> 2
 
 **Explanation:** Project lifecycle: Requirements gathering (3), model selection (4), proof of concept (1), prompt engineering (5), performance optimization (6), production deployment (2).
 
@@ -466,7 +466,7 @@ Options:
 5. Post-incident analysis
 6. Notify stakeholders
 
-**Correct Order:** 1 → 2 → 3 → 4 → 6 → 5
+**Correct Order:** 1 -> 2 -> 3 -> 4 -> 6 -> 5
 
 **Explanation:** Incident response: Identify (1), contain (2), eradicate (3), recover (4), notify stakeholders (6), post-incident analysis (5).
 
@@ -487,7 +487,7 @@ Options:
 5. Calculate similarity
 6. Return top-k results
 
-**Correct Order:** 3 → 1 → 2 → 4 → 5 → 6
+**Correct Order:** 3 -> 1 -> 2 -> 4 -> 5 -> 6
 
 **Explanation:** Vector DB operations: Define schema (3), create index (1), insert vectors (2), query with vector (4), calculate similarity (5), return top-k (6).
 
@@ -508,7 +508,7 @@ Options:
 5. Time-series split
 6. Nested cross-validation
 
-**Correct Order:** 4 → 1 → 2 → 5 → 3 → 6
+**Correct Order:** 4 -> 1 -> 2 -> 5 -> 3 -> 6
 
 **Explanation:** Evaluation hierarchy: Train-test split (4), holdout validation (1), cross-validation (2), time-series split (5), bootstrap sampling (3), nested cross-validation (6).
 
@@ -1735,10 +1735,10 @@ D. Amazon Athena + Amazon QuickSight + Amazon Redshift
    - Look for "most appropriate" or "best fit" language
 
 3. **Watch for Keywords**
-   - "Cost-effective" → Consider managed services over custom solutions
-   - "Real-time" → Look for low-latency services
-   - "Fully managed" → AWS managed service over self-managed
-   - "Compliance" → Security, encryption, audit features
+   - "Cost-effective" -> Consider managed services over custom solutions
+   - "Real-time" -> Look for low-latency services
+   - "Fully managed" -> AWS managed service over self-managed
+   - "Compliance" -> Security, encryption, audit features
 
 4. **Answer Patterns**
    - If unsure, look for the most specific answer
@@ -1809,6 +1809,6 @@ D. Amazon Athena + Amazon QuickSight + Amazon Redshift
 
 ---
 
-**Good luck on your AWS Certified AI Practitioner exam!** 🚀
+**Good luck on your AWS Certified AI Practitioner exam!** [ROCKET]
 
 *This study guide was created based on the latest exam content as of 2026. Always refer to the official AWS documentation for the most current information.*

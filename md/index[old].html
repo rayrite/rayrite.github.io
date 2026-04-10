@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Markdown Viewer • Refactored</title>
+
+  <!-- Marked.js for Markdown -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <!-- Prism.js for code highlighting -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script>
+    // Load common Prism languages (safe, with fallback on error)
+    function loadPrismComponent(src) {
+      return new Promise((resolve) => {
+        const s = document.createElement('script');
+        s.src = src;
+        s.onload = resolve;
+        s.onerror = () => { console.warn('Failed to load Prism component:', src); resolve(); };
+        document.head.appendChild(s);
+      });
+    }
+    document.addEventListener('DOMContentLoaded', async () => {
+      const langs = [
+        'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-csharp.min.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js'
+      ];
+      for (const l of langs) await loadPrismComponent(l);
+      if (typeof Prism !== 'undefined' && Prism.languages) {
+        if (Prism.languages.sql) Prism.languages.plsql = Prism.languages.sql;
+        if (Prism.languages.csharp) { Prism.languages.vbnet = Prism.languages.csharp; Prism.languages.vb = Prism.languages.csharp; }
+      }
+    });
+  </script>
+
+  <style>
+    body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f4f4f4; color:#333; }
+    /* Fixed header */
+    .header { position:fixed; top:0; left:0; width:100%; z-index:999; background:#fff; border-bottom:1px solid #ddd; padding:6px 10px; }
+    .header-top, .header-middle, .header-bottom { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:6px; }
+    .header-top h1 { margin:0; font-size:1.1rem; }
+    #filenameDisplay { color:navy; font-weight:bold; }
+    .dark-mode #filenameDisplay { color:gold; }
+
+    .print-controls { display:flex; align-items:center; gap:10px; font-size:12px; }
+    .print-controls button { padding:5px 10px; cursor:pointer; border:1px solid #ccc; background:#fff; border-radius:4px; font-size:12px; }
+    .print-controls button:hover { background:#f0f0f0; }
+    .theme-switch { font-size:14px; margin-left:auto; } /* push to right */
+
+    /* File chooser row */
+    .file-row { display:flex; align-items:center; gap:8px; flex:1; }
+    #fileSelect { min-width: 180px; max-width: 60vw; padding:5px; font-size:12px; }
+    #refreshBtn { padding:5px 10px; font-size:12px; border:1px solid #ccc; background:#fff; border-radius:4px; cursor:pointer; }
+    #refreshBtn:hover { background:#f0f0f0; }
+    .status { font-size:12px; color:#666; }
+
+    /* Drop zone */
+    #dropZone { flex:1; border:2px dashed #bbb; border-radius:5px; text-align:center; padding:6px; color:#666; min-width:160px; }
+    #dropZone.dragover { border-color:#666; background:#fafafa; }
+
+    /* Content area */
+    .body-content { margin-top: 118px; padding:10px; }
+    .container { max-width:100%; margin:0 auto; background:#fff; }
+    #content { padding:10px; }
+    pre { padding:5px; border-radius:5px; overflow-x:auto; font-size:14px; margin:0; }
+    .code-block-container { margin:10px 0; border:1px solid #ddd; border-radius:5px; }
+    .code-control-panel { display:flex; justify-content:space-between; align-items:center; background:#eaeaea; padding:5px; font-size:12px; }
+    .code-controls { display:flex; gap:5px; align-items:center; }
+    .code-control-panel button, .code-control-panel select { font-size:12px; padding:3px 6px; cursor:pointer; }
+
+    /* Print mode */
+    .print-mode .header { display:none !important; }
+    .print-mode .body-content { margin-top:0 !important; padding:0 !important; }
+    .print-mode .container { background:#fff !important; box-shadow:none !important; border:none !important; }
+    .print-mode .code-control-panel { display:none !important; }
+    .print-mode .code-block-container { border:1px solid #ddd !important; break-inside:avoid; }
+    .print-mode pre { white-space:pre-wrap !important; word-wrap:break-word !important; }
+
+    /* Dark mode */
+    .dark-mode { background:#222; color:#ddd; }
+    .dark-mode .header { background:#333; border-bottom:1px solid #222; color:#ddd; }
+    .dark-mode .container { background:#333; color:#fff; }
+    .dark-mode .print-controls button, .dark-mode #refreshBtn { background:#444; border-color:#666; color:#ddd; }
+    .dark-mode .print-controls button:hover, .dark-mode #refreshBtn:hover { background:#555; }
+
+    /* Mobile tightening */
+    @media (max-width: 768px) {
+      .body-content { margin-top: 132px; }
+      .header-top h1 { font-size:1rem; }
+      #filenameDisplay { font-size:12px; }
+      #fileSelect { max-width: 55vw; }
+    }
+
+    @media print {
+      .header { display:none !important; }
+      .body-content { margin-top:0 !important; padding:0 !important; }
+      .container { background:#fff !important; color:#000 !important; box-shadow:none !important; border:none !important; }
+      .code-control-panel { display:none !important; }
+      .code-block-container { border:1px solid #ddd !important; break-inside:avoid; page-break-inside:avoid; }
+      pre { white-space:pre-wrap !important; word-wrap:break-word !important; font-size:10pt !important; overflow:visible !important; }
+      body { font-size:12pt !important; line-height:1.4 !important; color:#000 !important; background:#fff !important; }
+      h1,h2,h3,h4,h5,h6 { page-break-after: avoid; break-after: avoid; }
+      img { max-width:100% !important; height:auto !important; }
+      .page-break { page-break-before: always; }
+      .no-break { page-break-inside: avoid; }
+    }
+  
+    /* === Mobile compact header overrides (single-file) === */
+    @media (max-width: 768px) {
+      /* Hide drag & drop and file input row on mobile */
+      .header-bottom { display: none !important; }
+      /* Hide print controls on mobile */
+      .print-controls { display: none !important; }
+      /* Reduce top spacing since header is shorter */
+      .body-content { margin-top: 92px !important; }
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <!-- Top -->
+    <div class="header-top">
+      <h1>Markdown Viewer</h1>
+      <span id="filenameDisplay">No file loaded</span>
+
+      <!-- Right-aligned theme toggle -->
+      <label class="theme-switch">
+        <input type="checkbox" id="themeToggle"> Dark Mode
+      </label>
+    </div>
+
+    <!-- Middle: print + file list -->
+    <div class="header-middle">
+      <div class="print-controls">
+        <button id="printBtn" title="Print Document">🖨️ Print</button>
+        <label class="print-mode-toggle"><input type="checkbox" id="printModeToggle"> Print Preview Mode</label>
+        <button id="addPageBreak" title="Add Page Break at Cursor">Add Page Break</button>
+      </div>
+
+      <div class="file-row">
+        <select id="fileSelect" title="Markdown files in /items"></select>
+        <button id="refreshBtn" title="Rescan items">Refresh</button>
+        <span class="status" id="statusMsg"></span>
+      </div>
+    </div>
+
+    <!-- Bottom: dropzone + local file input -->
+    <div class="header-bottom">
+      <div id="dropZone">Drag &amp; Drop .md files</div>
+      <input type="file" id="fileInput" accept=".md">
+    </div>
+  </div>
+
+  <div class="body-content">
+    <div class="container">
+      <div id="content">
+        <div style="text-align:center; color:#666; padding:40px;">
+          <h2>Welcome</h2>
+          <p>Select a file from the list above (auto-scanned from <code>/items</code>), or drop a local <code>.md</code> file.</p>
+          <p><strong>Print tools:</strong> Print Preview Mode, page-break insertion, code blocks that avoid page splits.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    //======================
+    // CONFIG
+    //======================
+    const CONFIG = {
+      ACCEPTED_EXTENSIONS: ['.md'],
+      MARKED_OPTIONS: { breaks:true, gfm:true },
+
+      // Auto-scan strategy for /items:
+      // 1) Try items/manifest.json (array of filenames or {files:[]})
+      // 2) If on GitHub Pages, try GitHub API to list /items contents
+      // 3) Optional fallback: explicit owner/repo/branch
+      GITHUB_FALLBACK: {
+        owner: '',    // e.g., 'yourname' (leave blank to auto-detect on *.github.io)
+        repo: '',     // e.g., 'yourname.github.io' or 'project-repo'
+        branch: 'main'
+      },
+      DEFAULT_FILE: '' // e.g., 'README.md'
+    };
+
+    //======================
+    // ELEMENTS
+    //======================
+    const dropZone         = document.getElementById('dropZone');
+    const fileInput        = document.getElementById('fileInput');
+    const fileNameDisplay  = document.getElementById('filenameDisplay');
+    const contentContainer = document.getElementById('content');
+    const themeToggle      = document.getElementById('themeToggle');
+    const printBtn         = document.getElementById('printBtn');
+    const printModeToggle  = document.getElementById('printModeToggle');
+    const addPageBreakBtn  = document.getElementById('addPageBreak');
+    const fileSelect       = document.getElementById('fileSelect');
+    const refreshBtn       = document.getElementById('refreshBtn');
+    const statusMsg        = document.getElementById('statusMsg');
+
+    //======================
+    // UTIL
+    //======================
+    function setStatus(msg, timeout=3000) {
+      statusMsg.textContent = msg || '';
+      if (timeout) {
+        setTimeout(() => { if (statusMsg.textContent === msg) statusMsg.textContent=''; }, timeout);
+      }
+    }
+    function isMarkdown(name) {
+      const lower = name.toLowerCase();
+      return CONFIG.ACCEPTED_EXTENSIONS.some(ext => lower.endsWith(ext));
+    }
+    function sanitizePath(name) {
+      // Prevent path traversal; only allow simple names
+      return name.replace(/[^a-zA-Z0-9._\-\/]/g, '').replace(/^\/*/, '');
+    }
+
+    //======================
+    // LOADING & RENDERING
+    //======================
+    function renderMarkdown(name, mdText) {
+      fileNameDisplay.textContent = name;
+      marked.setOptions(CONFIG.MARKED_OPTIONS);
+      contentContainer.innerHTML = '<h2>' + name + '</h2>' + marked.parse(mdText);
+      Prism.highlightAll();
+      wrapCodeBlocks();
+      // Scroll to top
+      window.scrollTo({ top: 0 });
+    }
+
+    async function loadMarkdownFile(url, nameForHeader) {
+      try {
+        const res = await fetch(url, { cache: 'no-store' });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const text = await res.text();
+        renderMarkdown(nameForHeader || url, text);
+      } catch (err) {
+        console.error('Markdown loading error:', err);
+        contentContainer.innerHTML = '<p style="color:#b00">Failed to load: ' + url + '</p>';
+      }
+    }
+
+    //======================
+    // CODE BLOCK CONTROLS
+    //======================
+    const CODE_CONF = {
+      DEFAULT_CODE_FONT_SIZE: 14,
+      MIN_CODE_FONT_SIZE: 8,
+      CODE_FONTS: ['Consolas','Courier New','Lucida Console','Monaco'],
+      DEFAULT_LINE_HEIGHT: 1.5,
+      MIN_LINE_HEIGHT: 0.1,
+      LINE_HEIGHT_STEP: 0.1,
+      COPY_FEEDBACK_DURATION: 2000
+    };
+
+    function createControlPanel(codeElement) {
+      const panel = document.createElement('div');
+      panel.className = 'code-control-panel';
+
+      const copyLeft = document.createElement('button');
+      copyLeft.textContent = 'Copy';
+      copyLeft.addEventListener('click', () => {
+        navigator.clipboard.writeText(codeElement.innerText).then(() => {
+          copyLeft.textContent = 'Copied!';
+          setTimeout(() => copyLeft.textContent = 'Copy', CODE_CONF.COPY_FEEDBACK_DURATION);
+        });
+      });
+
+      const copyRight = document.createElement('button');
+      copyRight.textContent = 'Copy';
+      copyRight.addEventListener('click', () => {
+        navigator.clipboard.writeText(codeElement.innerText).then(() => {
+          copyRight.textContent = 'Copied!';
+          setTimeout(() => copyRight.textContent = 'Copy', CODE_CONF.COPY_FEEDBACK_DURATION);
+        });
+      });
+
+      const controls = document.createElement('div');
+      controls.className = 'code-controls';
+
+      const decFont = document.createElement('button'); decFont.textContent = 'A-';
+      const incFont = document.createElement('button'); incFont.textContent = 'A+';
+      const fontSel = document.createElement('select');
+      CODE_CONF.CODE_FONTS.forEach(f => { const o=document.createElement('option'); o.value=f; o.textContent=f; fontSel.appendChild(o); });
+      const decLine = document.createElement('button'); decLine.textContent='Line -';
+      const incLine = document.createElement('button'); incLine.textContent='Line +';
+
+      let currentFontSize = parseFloat(getComputedStyle(codeElement).fontSize) || CODE_CONF.DEFAULT_CODE_FONT_SIZE;
+      const cs = getComputedStyle(codeElement);
+      const lh = cs.lineHeight;
+      const fs = cs.fontSize;
+      let currentLineHeight;
+      if (lh === 'normal') currentLineHeight = CODE_CONF.DEFAULT_LINE_HEIGHT;
+      else if (lh.endsWith('px')) currentLineHeight = parseFloat(lh) / parseFloat(fs);
+      else currentLineHeight = parseFloat(lh) || CODE_CONF.DEFAULT_LINE_HEIGHT;
+
+      decFont.addEventListener('click', () => { currentFontSize = Math.max(CODE_CONF.MIN_CODE_FONT_SIZE, currentFontSize-1); codeElement.style.fontSize = currentFontSize + 'px'; });
+      incFont.addEventListener('click', () => { currentFontSize += 1; codeElement.style.fontSize = currentFontSize + 'px'; });
+      fontSel.addEventListener('change', () => { codeElement.style.fontFamily = fontSel.value; });
+      decLine.addEventListener('click', () => { currentLineHeight = Math.max(CODE_CONF.MIN_LINE_HEIGHT, currentLineHeight - CODE_CONF.LINE_HEIGHT_STEP); codeElement.style.lineHeight = currentLineHeight; });
+      incLine.addEventListener('click', () => { currentLineHeight += CODE_CONF.LINE_HEIGHT_STEP; codeElement.style.lineHeight = currentLineHeight; });
+
+      controls.appendChild(decFont); controls.appendChild(incFont); controls.appendChild(fontSel); controls.appendChild(decLine); controls.appendChild(incLine);
+
+      panel.appendChild(copyLeft);
+      panel.appendChild(controls);
+      panel.appendChild(copyRight);
+      return panel;
+    }
+
+    function wrapCodeBlocks() {
+      const preEls = document.querySelectorAll('pre');
+      preEls.forEach(pre => {
+        if (pre.parentElement.classList.contains('code-block-container')) return;
+        const code = pre.querySelector('code'); if (!code) return;
+        const container = document.createElement('div'); container.className = 'code-block-container';
+        const top = createControlPanel(code); const bottom = createControlPanel(code);
+        pre.parentElement.insertBefore(container, pre); container.appendChild(top); container.appendChild(pre); container.appendChild(bottom);
+      });
+    }
+
+    //======================
+    // PRINT & THEME
+    //======================
+    function togglePrintMode() {
+      document.body.classList.toggle('print-mode');
+      const isPM = document.body.classList.contains('print-mode');
+      if (isPM) {
+        const y = window.pageYOffset; window.scrollTo(0,0); document.body.dataset.scrollY = y;
+      } else {
+        const y = parseInt(document.body.dataset.scrollY || '0', 10); window.scrollTo(0, y);
+      }
+    }
+    function printDocument() {
+      const was = document.body.classList.contains('print-mode');
+      if (!was) document.body.classList.add('print-mode');
+      window.print();
+      if (!was) document.body.classList.remove('print-mode');
+    }
+
+    themeToggle.addEventListener('change', () => document.body.classList.toggle('dark-mode'));
+    printBtn.addEventListener('click', printDocument);
+    printModeToggle.addEventListener('change', togglePrintMode);
+    addPageBreakBtn.addEventListener('click', () => {
+      const sel = window.getSelection();
+      if (sel.rangeCount > 0) {
+        const range = sel.getRangeAt(0);
+        const pb = document.createElement('div');
+        pb.className = 'page-break';
+        pb.innerHTML = '<hr style="border:1px dashed #ccc; margin:20px 0;"><p style="text-align:center; color:#999; font-size:12px;">--- Page Break ---</p>';
+        range.insertNode(pb);
+      } else {
+        alert('Place your cursor where you want to add a page break.');
+      }
+    });
+
+    //======================
+    // DRAG/DROP + LOCAL FILE
+    //======================
+    dropZone.addEventListener('dragover', (e) => { e.preventDefault(); e.stopPropagation(); dropZone.classList.add('dragover'); });
+    dropZone.addEventListener('dragleave', (e) => { e.preventDefault(); e.stopPropagation(); dropZone.classList.remove('dragover'); });
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault(); e.stopPropagation(); dropZone.classList.remove('dragover');
+      const file = e.dataTransfer.files[0];
+      if (file && isMarkdown(file.name)) {
+        const r = new FileReader(); r.onload = ev => renderMarkdown(file.name, ev.target.result); r.readAsText(file);
+      } else { alert('Please drop a .md file.'); }
+    });
+    fileInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file && isMarkdown(file.name)) {
+        const r = new FileReader(); r.onload = ev => renderMarkdown(file.name, ev.target.result); r.readAsText(file);
+      }
+    });
+
+    //======================
+    // AUTO-SCAN /items
+    //======================
+    function tryAutoDetectGithub() {
+      const host = location.hostname.toLowerCase(); // e.g., user.github.io
+      const path = location.pathname;               // e.g., / or /project/
+      const out = { owner:'', repo:'', branch: CONFIG.GITHUB_FALLBACK.branch || 'main' };
+
+      if (host.endsWith('.github.io')) {
+        const owner = host.split('.github.io')[0];
+        out.owner = owner;
+        // If root path or 1st path seg empty => user/organization site
+        const segs = path.split('/').filter(Boolean); // ['', 'project'] -> ['project']
+        if (segs.length === 0) {
+          out.repo = owner + '.github.io';
+        } else {
+          out.repo = segs[0];
+        }
+      }
+      // Allow override if fallback is provided
+      if (CONFIG.GITHUB_FALLBACK.owner) out.owner = CONFIG.GITHUB_FALLBACK.owner;
+      if (CONFIG.GITHUB_FALLBACK.repo) out.repo  = CONFIG.GITHUB_FALLBACK.repo;
+      return (out.owner && out.repo) ? out : null;
+    }
+
+    async function listViaManifest() {
+      try {
+        const res = await fetch('items/manifest.json', { cache:'no-store' });
+        if (!res.ok) return null;
+        const data = await res.json();
+        if (Array.isArray(data)) return data.filter(isMarkdown);
+        if (Array.isArray(data.files)) return data.files.filter(isMarkdown);
+        return null;
+      } catch { return null; }
+    }
+
+    async function listViaGithubAPI() {
+      const gh = tryAutoDetectGithub();
+      if (!gh) return null;
+      try {
+        const url = `https://api.github.com/repos/${gh.owner}/${gh.repo}/contents/items?ref=${encodeURIComponent(gh.branch)}`;
+        const res = await fetch(url, { headers: { 'Accept': 'application/vnd.github.v3+json' } });
+        if (!res.ok) throw new Error('GitHub API HTTP '+res.status);
+        const data = await res.json();
+        if (!Array.isArray(data)) return null;
+        // Map to filenames (ignore subfolders; GH API returns objects with 'type': 'file'/'dir')
+        return data.filter(entry => entry.type === 'file' && isMarkdown(entry.name)).map(entry => entry.name);
+      } catch (e) {
+        console.warn('GitHub API listing failed:', e);
+        return null;
+      }
+    }
+
+    async function scanItems() {
+      setStatus('Scanning /items…');
+      let files = await listViaManifest();
+      if (!files) files = await listViaGithubAPI();
+      if (!files) {
+        setStatus('No manifest found; create items/manifest.json or enable GitHub Pages.', 4000);
+        files = [];
+      }
+      files.sort((a,b) => a.localeCompare(b, undefined, {numeric:true, sensitivity:'base'}));
+      fileSelect.innerHTML = '';
+      if (files.length === 0) {
+        const op = document.createElement('option'); op.textContent = 'No files found in /items'; op.disabled = true; op.selected = true;
+        fileSelect.appendChild(op);
+      } else {
+        const prompt = document.createElement('option'); prompt.textContent = 'Select a file…'; prompt.disabled = true; prompt.selected = true;
+        fileSelect.appendChild(prompt);
+        for (const name of files) {
+          const op = document.createElement('option'); op.value = name; op.textContent = name; fileSelect.appendChild(op);
+        }
+        setStatus(`Found ${files.length} file(s).`, 2500);
+      }
+      return files;
+    }
+
+    fileSelect.addEventListener('change', async () => {
+      const name = fileSelect.value;
+      if (!name) return;
+      const safe = sanitizePath(name);
+      await loadMarkdownFile('items/' + safe, name);
+      // On mobile, scroll content into view
+      if (window.innerWidth <= 768) window.scrollTo({ top: document.querySelector('.body-content').offsetTop, behavior: 'smooth' });
+    });
+
+    refreshBtn.addEventListener('click', scanItems);
+
+    //======================
+    // INIT
+    //======================
+    document.addEventListener('DOMContentLoaded', async () => {
+      await scanItems();
+      if (CONFIG.DEFAULT_FILE) {
+        const safe = sanitizePath(CONFIG.DEFAULT_FILE);
+        loadMarkdownFile('items/' + safe, CONFIG.DEFAULT_FILE);
+      }
+    });
+
+    //======================
+    // KEYBOARD SHORTCUTS
+    //======================
+    document.addEventListener('keydown', function(e) {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+      if (e.ctrlKey && e.key === 'p') { e.preventDefault(); printDocument(); }
+      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'p') { e.preventDefault(); printModeToggle.checked = !printModeToggle.checked; togglePrintMode(); }
+      if (e.altKey && e.key.toLowerCase() === 'r') { e.preventDefault(); scanItems(); }
+    });
+  </script>
+
+</body>
+</html>

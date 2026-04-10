@@ -133,9 +133,9 @@ These phrases appeared in hundreds of questions. They are **instructions**, not 
 | Family | Optimized For | Mnemonic |
 |--------|--------------|---------|
 | **M** – General Purpose | Balanced CPU/RAM | **M**oderate everything |
-| **R/X** – Memory Optimized | In-memory databases, big data | **R**AM-heavy |
 | **C** – Compute Optimized | High CPU, scientific work | **C**runching numbers |
 | **G/P** – GPU Instances | ML training, graphics | **G**raphics/GPU |
+| **R/X** – Memory Optimized | In-memory databases, big data | **R**AM-heavy |
 | **I/D** – Storage Optimized | Fast local NVMe disk, data warehousing | **I**O intensive |
 
 ### EC2 Pricing Models

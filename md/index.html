@@ -75,18 +75,18 @@
     /* === Anchor Pill Navigation (Row 2) === */
     .header-nav {
       display: flex;
-      overflow-x: auto;
+      flex-wrap: wrap;
       gap: 4px;
       padding: 3px 10px;
       border-top: 1px solid #eee;
-      scrollbar-width: thin;
+      max-height: 70px;
+      overflow-y: auto;
       min-height: 28px;
       align-items: center;
     }
-    .header-nav::-webkit-scrollbar { height: 4px; }
+    .header-nav::-webkit-scrollbar { width: 3px; }
     .header-nav::-webkit-scrollbar-thumb { background: #ccc; border-radius: 2px; }
     .anchor-pill {
-      flex-shrink: 0;
       padding: 2px 10px;
       border-radius: 12px;
       font-size: 11px;
@@ -110,7 +110,7 @@
 
     /* === Headings — scroll offset for sticky header === */
     #content h1, #content h2, #content h3, #content h4, #content h5, #content h6 {
-      scroll-margin-top: 72px;
+      scroll-margin-top: 80px;
     }
     .anchor-highlight {
       outline: 2px solid #f59e0b;
@@ -206,7 +206,7 @@
 
     /* === Mobile === */
     @media (max-width: 768px) {
-      .body-content { margin-top: 80px !important; }
+      .body-content { margin-top: 90px !important; }
       .header-main h1 { font-size:0.95rem; }
       #filenameDisplay { font-size:11px; }
       #fileSelect { max-width:40vw; }
@@ -496,51 +496,80 @@
         .catch(function() { return null; });
     }
 
-    function listViaGithubAPI() {
-      var gh = tryAutoDetectGithub();
-      if (!gh) return Promise.resolve(null);
-      var url = 'https://api.github.com/repos/' + gh.owner + '/' + gh.repo + '/contents/items?ref=' + encodeURIComponent(gh.branch);
+    function fetchGithubContents(gh, branch) {
+      var url = 'https://api.github.com/repos/' + gh.owner + '/' + gh.repo + '/contents/items?ref=' + encodeURIComponent(branch);
       return fetch(url, { headers: { 'Accept': 'application/vnd.github.v3+json' } })
         .then(function(res) {
-          if (!res.ok) throw new Error('GitHub API HTTP ' + res.status);
+          if (!res.ok) throw new Error('HTTP ' + res.status);
           return res.json();
         })
         .then(function(data) {
           if (!Array.isArray(data)) return null;
           return data.filter(function(entry) { return entry.type === 'file' && isMarkdown(entry.name); })
                      .map(function(entry) { return entry.name; });
-        })
-        .catch(function(e) {
-          console.warn('GitHub API listing failed:', e);
-          return null;
         });
+    }
+
+    function listViaGithubAPI() {
+      var gh = tryAutoDetectGithub();
+      if (!gh) return Promise.resolve(null);
+
+      // Try configured branch first, then fallback branches
+      var branches = [];
+      var configured = CONFIG.GITHUB_FALLBACK.branch || 'main';
+      if (configured) branches.push(configured);
+      if (branches.indexOf('main') === -1) branches.push('main');
+      if (branches.indexOf('master') === -1) branches.push('master');
+
+      var lastError = null;
+      function tryBranch(idx) {
+        if (idx >= branches.length) {
+          console.warn('GitHub API listing failed on all branches:', lastError);
+          return null;
+        }
+        return fetchGithubContents(gh, branches[idx])
+          .then(function(files) {
+            if (files && files.length > 0) return files;
+            // Empty or null on this branch — try next
+            return tryBranch(idx + 1);
+          })
+          .catch(function(e) {
+            lastError = e;
+            return tryBranch(idx + 1);
+          });
+      }
+      return tryBranch(0);
     }
 
     function scanItems() {
       setStatus('Scanning /items\u2026');
+      var ghInfo = tryAutoDetectGithub();
       return listViaManifest()
         .then(function(files) {
           if (files && files.length > 0) {
             setStatus('Loaded ' + files.length + ' file(s) from manifest.', 2500);
             return { files: files, source: 'manifest' };
           }
-          setStatus('No manifest found, trying GitHub API\u2026');
+          if (!ghInfo) {
+            setStatus('No manifest found and not on GitHub Pages. Create items/manifest.json.', 5000);
+            return { files: [], source: null };
+          }
+          setStatus('Trying GitHub API (' + ghInfo.owner + '/' + ghInfo.repo + ')\u2026');
           return listViaGithubAPI().then(function(gf) {
             if (gf && gf.length > 0) {
-              setStatus('Loaded ' + gf.length + ' file(s) from GitHub API.', 2500);
+              setStatus('Loaded ' + gf.length + ' file(s) from GitHub.', 2500);
               return { files: gf, source: 'github-api' };
             }
-            return { files: null, source: null };
+            return { files: null, source: null, ghInfo: ghInfo };
           });
         })
         .then(function(result) {
           var files = result.files;
-          if (!files) {
-            var ghInfo = tryAutoDetectGithub();
-            if (ghInfo) {
-              setStatus('No .md files found in /items. Add markdown files and refresh.', 5000);
-            } else {
-              setStatus('Cannot scan /items. Use GitHub Pages or create items/manifest.json.', 5000);
+          if (!files || files.length === 0) {
+            if (result.ghInfo) {
+              setStatus('No .md files found in /items. Ensure files exist and repo is public.', 5000);
+            } else if (!result.source) {
+              // Already set status above for non-GitHub case
             }
             files = [];
           }

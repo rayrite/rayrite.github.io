@@ -1,0 +1,3413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comprehensive Resource Guide — Intelligent Discussion &amp; Debate</title>
+<style>
+  :root {
+    --primary: #1B2A4A;
+    --primary-light: #D6E4F0;
+    --neutral-900: #37352F;
+    --neutral-600: #8C8A84;
+    --neutral-200: #E9E9E8;
+    --neutral-100: #F7F7F5;
+    --neutral-0: #FFFFFF;
+    --accent-purple: #7C3AED;
+    --accent-green: #059669;
+    --accent-red: #DC2626;
+    --accent-blue: #2563EB;
+    --accent-orange: #EA580C;
+    --radius: 10px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+    --shadow-lg: 0 10px 25px rgba(0,0,0,0.1), 0 6px 10px rgba(0,0,0,0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: var(--neutral-100);
+    color: var(--neutral-900);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Header */
+  .header {
+    background: var(--primary);
+    color: white;
+    padding: 28px 24px 24px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow-lg);
+  }
+  .header-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .header h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 4px;
+  }
+  .header p {
+    font-size: 0.9rem;
+    opacity: 0.75;
+  }
+
+  /* Search bar */
+  .search-container {
+    max-width: 1400px;
+    margin: 16px auto 0;
+    padding: 0 24px;
+  }
+  .search-box {
+    position: relative;
+    max-width: 420px;
+  }
+  .search-box input {
+    width: 100%;
+    padding: 10px 16px 10px 42px;
+    border: 1.5px solid var(--neutral-200);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    background: white;
+    color: var(--neutral-900);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .search-box input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(27,42,74,0.1);
+  }
+  .search-box svg {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--neutral-600);
+  }
+
+  /* Tab navigation */
+  .tabs-container {
+    max-width: 1400px;
+    margin: 20px auto 0;
+    padding: 0 24px;
+  }
+  .tabs {
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 2px;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab {
+    flex-shrink: 0;
+    padding: 9px 18px;
+    border-radius: 8px 8px 0 0;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--neutral-600);
+    cursor: pointer;
+    border: 1.5px solid transparent;
+    border-bottom: none;
+    background: transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+    user-select: none;
+  }
+  .tab:hover {
+    color: var(--primary);
+    background: rgba(27,42,74,0.04);
+  }
+  .tab.active {
+    color: var(--primary);
+    background: white;
+    border-color: var(--neutral-200);
+    border-bottom-color: white;
+    position: relative;
+    z-index: 2;
+  }
+  .tab .count {
+    display: inline-block;
+    margin-left: 6px;
+    background: var(--primary-light);
+    color: var(--primary);
+    padding: 1px 7px;
+    border-radius: 10px;
+    font-size: 0.72rem;
+    font-weight: 700;
+  }
+  .tab.active .count {
+    background: var(--primary);
+    color: white;
+  }
+
+  /* Content area */
+  .content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 24px 40px;
+  }
+  .tab-panel {
+    display: none;
+    background: white;
+    border: 1.5px solid var(--neutral-200);
+    border-top: none;
+    border-radius: 0 0 var(--radius) var(--radius);
+    overflow: hidden;
+    animation: fadeIn 0.25s ease;
+  }
+  .tab-panel.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Overview panel */
+  .overview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+    padding: 24px;
+  }
+  .overview-card {
+    background: var(--neutral-100);
+    border-radius: 10px;
+    padding: 18px;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .overview-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+  }
+  .overview-card .num {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--primary);
+    line-height: 1;
+  }
+  .overview-card .label {
+    font-size: 0.85rem;
+    color: var(--neutral-900);
+    font-weight: 600;
+    margin-top: 6px;
+  }
+  .overview-card .detail {
+    font-size: 0.78rem;
+    color: var(--neutral-600);
+    margin-top: 4px;
+  }
+  .overview-card .detail strong {
+    color: var(--neutral-900);
+  }
+
+  /* Table styles */
+  .table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    min-width: 900px;
+  }
+  thead th {
+    background: var(--primary);
+    color: white;
+    padding: 12px 14px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+  thead th:first-child { width: 40px; text-align: center; }
+  
+  tbody tr {
+    border-bottom: 1px solid var(--neutral-200);
+    transition: background 0.15s;
+  }
+  tbody tr:nth-child(even) { background: var(--neutral-100); }
+  tbody tr:hover { background: var(--primary-light); }
+  tbody tr:last-child { border-bottom: none; }
+
+  td {
+    padding: 11px 14px;
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  td:first-child {
+    text-align: center;
+    color: var(--neutral-600);
+    font-weight: 600;
+    font-size: 0.8rem;
+    width: 40px;
+  }
+
+  /* Resource name */
+  .resource-name {
+    font-weight: 700;
+    color: var(--primary);
+    white-space: nowrap;
+  }
+
+  /* Platform badge */
+  .platform-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: white;
+    white-space: nowrap;
+  }
+
+  /* URL */
+  .url-cell a {
+    color: var(--accent-blue);
+    text-decoration: none;
+    word-break: break-all;
+    font-size: 0.8rem;
+    transition: color 0.15s;
+  }
+  .url-cell a:hover {
+    color: var(--primary);
+    text-decoration: underline;
+  }
+
+  /* Synopsis */
+  .synopsis {
+    max-width: 420px;
+    min-width: 250px;
+  }
+
+  /* Metrics */
+  .metrics {
+    max-width: 280px;
+    min-width: 180px;
+    font-size: 0.82rem;
+  }
+
+  /* Reach badge */
+  .reach {
+    white-space: nowrap;
+    font-weight: 600;
+    font-size: 0.82rem;
+  }
+
+  /* Footer */
+  .footer {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 16px 24px 32px;
+    text-align: center;
+  }
+  .footer p {
+    font-size: 0.78rem;
+    color: var(--neutral-600);
+  }
+
+  /* No results */
+  .no-results {
+    text-align: center;
+    padding: 48px 24px;
+    color: var(--neutral-600);
+  }
+  .no-results svg {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 12px;
+    opacity: 0.4;
+  }
+  .no-results p {
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+
+  /* Stats bar */
+  .stats-bar {
+    display: flex;
+    gap: 16px;
+    padding: 14px 20px;
+    background: var(--neutral-100);
+    border-bottom: 1px solid var(--neutral-200);
+    flex-wrap: wrap;
+  }
+  .stat-item {
+    font-size: 0.8rem;
+    color: var(--neutral-600);
+  }
+  .stat-item strong {
+    color: var(--primary);
+    font-weight: 700;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .header { padding: 20px 16px 18px; }
+    .header h1 { font-size: 1.2rem; }
+    .search-container, .tabs-container, .content, .footer { padding-left: 12px; padding-right: 12px; }
+    .tab { padding: 8px 14px; font-size: 0.8rem; }
+    .overview-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; padding: 16px; }
+    .overview-card { padding: 14px; }
+    .overview-card .num { font-size: 1.6rem; }
+    td, th { padding: 9px 10px; }
+    .synopsis { max-width: 300px; min-width: 200px; }
+    .metrics { max-width: 200px; min-width: 140px; }
+  }
+
+  @media (max-width: 480px) {
+    .overview-grid { grid-template-columns: 1fr 1fr; }
+    .stats-bar { gap: 8px; }
+    .stat-item { font-size: 0.75rem; }
+  }
+
+  /* Print */
+  @media print {
+    .header { position: relative; box-shadow: none; }
+    .search-container { display: none; }
+    .tabs-container { display: none; }
+    .tab-panel { display: block !important; border: 1px solid #ddd; page-break-inside: avoid; margin-bottom: 20px; }
+    body { background: white; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <h1>Comprehensive Resource Guide</h1>
+    <p>Intelligent Discussion &amp; Debate — Websites, Podcasts, Blogs, Forums, YouTube, TikTok &amp; Facebook</p>
+  </div>
+</div>
+
+<div class="search-container">
+  <div class="search-box">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="text" id="searchInput" placeholder="Search resources, platforms, topics..." autocomplete="off">
+  </div>
+</div>
+
+<div class="tabs-container">
+  <div class="tabs" id="tabNav">
+
+    <button class="tab active" data-tab="Overview">Overview<span class="count">144</span></button>
+
+    <button class="tab" data-tab="Politics & Government">Politics & Government<span class="count">34</span></button>
+
+    <button class="tab" data-tab="U.S. Tax Law">U.S. Tax Law<span class="count">22</span></button>
+
+    <button class="tab" data-tab="Education">Education<span class="count">22</span></button>
+
+    <button class="tab" data-tab="Sports">Sports<span class="count">23</span></button>
+
+    <button class="tab" data-tab="Relationships">Relationships<span class="count">22</span></button>
+
+    <button class="tab" data-tab="Health & Nutrition">Health & Nutrition<span class="count">21</span></button>
+
+  </div>
+</div>
+
+<div class="content">
+
+  <div class="tab-panel active" id="panel-Overview">
+
+    <div class="overview-grid">
+
+      <div class="overview-card">
+        <div class="num">34</div>
+        <div class="label">Politics / U.S. Government &amp; Policy</div>
+        <div class="detail">Top: <strong>Websites / Podcasts</strong><br>Reach: <strong>Hundreds of millions monthly</strong></div>
+      </div>
+
+      <div class="overview-card">
+        <div class="num">22</div>
+        <div class="label">U.S. Tax Law</div>
+        <div class="detail">Top: <strong>YouTube / Podcasts</strong><br>Reach: <strong>Tens of millions monthly</strong></div>
+      </div>
+
+      <div class="overview-card">
+        <div class="num">29</div>
+        <div class="label">Education</div>
+        <div class="detail">Top: <strong>Websites / Podcasts</strong><br>Reach: <strong>Tens of millions monthly</strong></div>
+      </div>
+
+      <div class="overview-card">
+        <div class="num">24</div>
+        <div class="label">Sports</div>
+        <div class="detail">Top: <strong>Podcasts / YouTube</strong><br>Reach: <strong>Hundreds of millions monthly</strong></div>
+      </div>
+
+      <div class="overview-card">
+        <div class="num">24</div>
+        <div class="label">Interpersonal Relationships</div>
+        <div class="detail">Top: <strong>YouTube / Reddit</strong><br>Reach: <strong>Tens of millions monthly</strong></div>
+      </div>
+
+      <div class="overview-card">
+        <div class="num">23</div>
+        <div class="label">Health &amp; Nutrition</div>
+        <div class="detail">Top: <strong>Podcasts / YouTube</strong><br>Reach: <strong>Hundreds of millions monthly</strong></div>
+      </div>
+
+      <div class="overview-card">
+        <div class="num"></div>
+        <div class="label"></div>
+        <div class="detail">Top: <strong></strong><br>Reach: <strong></strong></div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="tab-panel" id="panel-Politics & Government">
+
+    <div class="stats-bar">
+
+      <div class="stat-item"><strong>34</strong> resources</div>
+
+      <div class="stat-item"><strong>1</strong> The Daily (NYT)s</div>
+
+      <div class="stat-item"><strong>1</strong> NPR Politics Podcasts</div>
+
+      <div class="stat-item"><strong>1</strong> Pod Save Americas</div>
+
+      <div class="stat-item"><strong>1</strong> Up First (NPR)s</div>
+
+      <div class="stat-item"><strong>1</strong> The Joe Rogan Experiences</div>
+
+    </div>
+
+    <div class="table-wrapper">
+
+      <table>
+        <thead>
+          <tr>
+
+            <th>#</th>
+
+            <th>Resource</th>
+
+            <th>Platform</th>
+
+            <th>URL</th>
+
+            <th>Synopsis</th>
+
+            <th>Engagement Metrics</th>
+
+            <th>Est. Reach</th>
+
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr class="data-row">
+
+            <td>1</td>
+
+            <td class="resource-name">The Daily (NYT)</td>
+
+            <td><span class="platform-badge" style="background:#7C3AED"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zM5 10a1 1 0 0 0-2 0 9 9 0 0 0 8 8.94V21h-2a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-2v-2.06A9 9 0 0 0 21 10a1 1 0 1 0-2 0 7 7 0 0 1-14 0z"/></svg> Podcast</span></td>
+
+            <td class="url-cell"><a href="https://www.nytimes.com/the-daily" target="_blank" rel="noopener noreferrer">https://www.nytimes.com/the-daily</a></td>
+
+            <td class="synopsis">Flagship daily news podcast from NYT. Deep-dive storytelling with NYT reporters on U.S. and world politics, policy, and lawmaking. Hosted by Michael Barbaro and team.</td>
+
+            <td class="metrics">Ranked #3 in Edison Top 50 Podcasts (Q4 2025); millions of daily listeners</td>
+
+            <td class="reach">5–10M monthly listeners</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>2</td>
+
+            <td class="resource-name">NPR Politics Podcast</td>
+
+            <td><span class="platform-badge" style="background:#7C3AED"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zM5 10a1 1 0 0 0-2 0 9 9 0 0 0 8 8.94V21h-2a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-2v-2.06A9 9 0 0 0 21 10a1 1 0 1 0-2 0 7 7 0 0 1-14 0z"/></svg> Podcast</span></td>
+
+            <td class="url-cell"><a href="https://www.npr.org/podcasts/510310/npr-politics-podcast" target="_blank" rel="noopener noreferrer">https://www.npr.org/podcasts/510310/npr-politics-pod...</a></td>
+
+            <td class="synopsis">Every weekday, NPR&#x27;s best political reporters explain big news from Washington and the campaign trail. Accessible, fact-based, non-partisan analysis.</td>
+
+            <td class="metrics">Consistently top-ranked news/politics podcast on Apple and Spotify</td>
+
+            <td class="reach">3–5M monthly listeners</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>3</td>
+
+            <td class="resource-name">Pod Save America</td>
+
+            <td><span class="platform-badge" style="background:#7C3AED"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zM5 10a1 1 0 0 0-2 0 9 9 0 0 0 8 8.94V21h-2a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-2v-2.06A9 9 0 0 0 21 10a1 1 0 1 0-2 0 7 7 0 0 1-14 0z"/></svg> Podcast</span></td>
+
+            <td class="url-cell"><a href="https://podcasts.apple.com/us/podcast/pod-save-america/id1192761536" target="_blank" rel="noopener noreferrer">https://podcasts.apple.com/us/podcast/pod-save-ameri...</a></td>
+
+            <td class="synopsis">Candid conversation about politics hosted by four former Obama White House aides. Flagship of Crooked Media. Ranked #24 in Triton&#x27;s Top US Podcasts (July 2025).</td>
+
+            <td class="metrics">84,000+ Apple ratings (4.5★); ranked #24 nationally by Triton Digital</td>
+
+            <td class="reach">2–4M monthly listeners</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>4</td>
+
+            <td class="resource-name">Up First (NPR)</td>
+
+            <td><span class="platform-badge" style="background:#7C3AED"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zM5 10a1 1 0 0 0-2 0 9 9 0 0 0 8 8.94V21h-2a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-2v-2.06A9 9 0 0 0 21 10a1 1 0 1 0-2 0 7 7 0 0 1-14 0z"/></svg> Podcast</span></td>
+
+            <td class="url-cell"><a href="https://www.npr.org/podcasts/510313/up-first" target="_blank" rel="noopener noreferrer">https://www.npr.org/podcasts/510313/up-first</a></td>
+
+            <td class="synopsis">NPR&#x27;s daily 10-minute news podcast with the three biggest stories of the day. Quick, concise format for staying current on breaking political developments.</td>
+
+            <td class="metrics">Ranked #26 in Triton&#x27;s Top US Podcasts (July 2025)</td>
+
+            <td class="reach">3–5M monthly listeners</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>5</td>
+
+            <td class="resource-name">The Joe Rogan Experience</td>
+
+            <td><span class="platform-badge" style="background:#7C3AED"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zM5 10a1 1 0 0 0-2 0 9 9 0 0 0 8 8.94V21h-2a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-2v-2.06A9 9 0 0 0 21 10a1 1 0 1 0-2 0 7 7 0 0 1-14 0z"/></svg> Podcast</span></td>
+
+            <td class="url-cell"><a href="https://open.spotify.com/show/4rOoJ6Egrf8K2IrywzwOMk" target="_blank" rel="noopener noreferrer">https://open.spotify.com/show/4rOoJ6Egrf8K2IrywzwOMk</a></td>
+
+            <td class="synopsis">Long-form, unscripted conversations spanning politics, policy, science, and culture. Frequently hosts politicians, journalists, and policy commentators.</td>
+
+            <td class="metrics">Consistently #1 most-listened-to podcast in the U.S. since 2020; ranked #1 Edison Top 50</td>
+
+            <td class="reach">14–17M monthly listeners</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>6</td>
+
+            <td class="resource-name">The Jon Stewart Podcast</td>
+
+            <td><span class="platform-badge" style="background:#7C3AED"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zM5 10a1 1 0 0 0-2 0 9 9 0 0 0 8 8.94V21h-2a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-2v-2.06A9 9 0 0 0 21 10a1 1 0 1 0-2 0 7 7 0 0 1-14 0z"/></svg> Podcast</span></td>
+
+            <td class="url-cell">Available on Apple/Spotify</td>
+
+            <td class="synopsis">Comedian and satirist Jon Stewart brings deep political analysis, interviewing lawmakers, journalists, and policy experts. Focuses on government accountability.</td>
+
+            <td class="metrics">Listed among Audible&#x27;s best news podcasts</td>
+
+            <td class="reach">1–3M monthly listeners</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>7</td>
+
+            <td class="resource-name">Meet the Press (NBC)</td>
+
+            <td><span class="platform-badge" style="background:#7C3AED"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zM5 10a1 1 0 0 0-2 0 9 9 0 0 0 8 8.94V21h-2a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-2v-2.06A9 9 0 0 0 21 10a1 1 0 1 0-2 0 7 7 0 0 1-14 0z"/></svg> Podcast</span></td>
+
+            <td class="url-cell">Available on all major platforms</td>
+
+            <td class="synopsis">Audio version of NBC&#x27;s longest-running Sunday public affairs show. In-depth interviews with political leaders and policy makers. Known for civil debate.</td>
+
+            <td class="metrics">Long-running flagship news program</td>
+
+            <td class="reach">2–3M monthly listeners</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>8</td>
+
+            <td class="resource-name">Vox</td>
+
+            <td><span class="platform-badge" style="background:#DC2626"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg> YouTube</span></td>
+
+            <td class="url-cell"><a href="https://www.youtube.com/@vox" target="_blank" rel="noopener noreferrer">https://www.youtube.com/@vox</a></td>
+
+            <td class="synopsis">Deeply researched explainer videos on policy, politics, economics, and social issues. Breaking down complex topics like voting rights, Supreme Court decisions, and legislative processes.</td>
+
+            <td class="metrics">12.7M YouTube subscribers; 3.79B total views; ~2M views per video avg</td>
+
+            <td class="reach">Tens of millions of monthly views</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>9</td>
+
+            <td class="resource-name">Fox News</td>
+
+            <td><span class="platform-badge" style="background:#DC2626"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg> YouTube</span></td>
+
+            <td class="url-cell"><a href="https://www.youtube.com/@FoxNews" target="_blank" rel="noopener noreferrer">https://www.youtube.com/@FoxNews</a></td>
+
+            <td class="synopsis">Conservative-leaning coverage of U.S. politics, policy debates, and breaking news. Led all news brands on YouTube for six straight months in 2025.</td>
+
+            <td class="metrics">~2.3B YouTube views in H1 2025; 377–408M video views/month</td>
+
+            <td class="reach">Hundreds of millions of monthly views</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>10</td>
+
+            <td class="resource-name">MSNBC</td>
+
+            <td><span class="platform-badge" style="background:#DC2626"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg> YouTube</span></td>
+
+            <td class="url-cell"><a href="https://www.youtube.com/@msnbc" target="_blank" rel="noopener noreferrer">https://www.youtube.com/@msnbc</a></td>
+
+            <td class="synopsis">Progressive/liberal cable news YouTube presence featuring political analysis, interviews with lawmakers, and breaking government news.</td>
+
+            <td class="metrics">~254–329M YouTube video views per month</td>
+
+            <td class="reach">Hundreds of millions of monthly views</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>11</td>
+
+            <td class="resource-name">CNN</td>
+
+            <td><span class="platform-badge" style="background:#DC2626"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg> YouTube</span></td>
+
+            <td class="url-cell"><a href="https://www.youtube.com/@CNN" target="_blank" rel="noopener noreferrer">https://www.youtube.com/@CNN</a></td>
+
+            <td class="synopsis">Global and U.S. political news coverage, town halls, candidate interviews, and policy analysis. CNN reached avg 154M people monthly worldwide in 2025.</td>
+
+            <td class="metrics">~186–232M YouTube video views/month; 154M monthly multiplatform reach</td>
+
+            <td class="reach">Hundreds of millions of monthly views</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>12</td>
+
+            <td class="resource-name">Intelligence Squared (IQ2)</td>
+
+            <td><span class="platform-badge" style="background:#7C3AED"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg> YouTube/Podcast</span></td>
+
+            <td class="url-cell"><a href="https://www.youtube.com/@Intelligence-Squared" target="_blank" rel="noopener noreferrer">https://www.youtube.com/@Intelligence-Squared</a></td>
+
+            <td class="synopsis">World&#x27;s premier debate forum. Oxford-style debates on pressing political, economic, and social issues. Features top experts and politicians arguing both sides.</td>
+
+            <td class="metrics">796K YouTube subscribers; 1,200+ debate videos</td>
+
+            <td class="reach">1–3M monthly cross-platform</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>13</td>
+
+            <td class="resource-name">Real Time with Bill Maher</td>
+
+            <td><span class="platform-badge" style="background:#DC2626"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg> YouTube/HBO</span></td>
+
+            <td class="url-cell"><a href="https://www.youtube.com/@RealTime" target="_blank" rel="noopener noreferrer">https://www.youtube.com/@RealTime</a></td>
+
+            <td class="synopsis">Bill Maher&#x27;s HBO talk show with panel discussions featuring politicians, journalists, and policy experts from across the spectrum. Sharp political commentary.</td>
+
+            <td class="metrics">2.96M YouTube subscribers; 2,400+ videos; 100M+ views/year on YouTube</td>
+
+            <td class="reach">5–10M weekly TV viewers + millions online</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>14</td>
+
+            <td class="resource-name">The New York Times (Politics)</td>
+
+            <td><span class="platform-badge" style="background:#2563EB"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg> Website</span></td>
+
+            <td class="url-cell"><a href="https://www.nytimes.com" target="_blank" rel="noopener noreferrer">https://www.nytimes.com</a></td>
+
+            <td class="synopsis">America&#x27;s newspaper of record. Deep political, policy, and government coverage including investigative pieces, election analysis, and Supreme Court reporting.</td>
+
+            <td class="metrics">577M monthly visits (Mar 2026); ~11M digital subscribers</td>
+
+            <td class="reach">Hundreds of millions of monthly visitors</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>15</td>
+
+            <td class="resource-name">Politico</td>
+
+            <td><span class="platform-badge" style="background:#2563EB"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg> Website</span></td>
+
+            <td class="url-cell"><a href="https://www.politico.com" target="_blank" rel="noopener noreferrer">https://www.politico.com</a></td>
+
+            <td class="synopsis">Dominant insider publication covering U.S. politics, Congress, the White House, and policy-making. Known for influential &#x27;Playbook&#x27; newsletter.</td>
+
+            <td class="metrics">56.41M monthly visits; ranked #243 website in the U.S.</td>
+
+            <td class="reach">50–60M monthly visitors</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>16</td>
+
+            <td class="resource-name">The Washington Post</td>
+
+            <td><span class="platform-badge" style="background:#2563EB"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg> Website</span></td>
+
+            <td class="url-cell"><a href="https://www.washingtonpost.com" target="_blank" rel="noopener noreferrer">https://www.washingtonpost.com</a></td>
+
+            <td class="synopsis">Deep coverage of federal government, Congress, White House, national security, and domestic/foreign policy. Known for Watergate-era investigative legacy.</td>
+
+            <td class="metrics">~100M+ monthly visits; top 20 U.S. news website</td>
+
+            <td class="reach">100M+ monthly visitors</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>17</td>
+
+            <td class="resource-name">The Atlantic</td>
+
+            <td><span class="platform-badge" style="background:#2563EB"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg> Website</span></td>
+
+            <td class="url-cell"><a href="https://www.theatlantic.com" target="_blank" rel="noopener noreferrer">https://www.theatlantic.com</a></td>
+
+            <td class="synopsis">Prestigious magazine with long-form political analysis, essays on democracy and governance, and deep policy reporting. Intellectually rigorous commentary.</td>
+
+            <td class="metrics">Ranked #35 in News &amp; Media Publishers, #2,130 globally</td>
+
+            <td class="reach">30–50M monthly visitors</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>18</td>
+
+            <td class="resource-name">Axios</td>
+
+            <td><span class="platform-badge" style="background:#2563EB"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg> Website</span></td>
+
+            <td class="url-cell"><a href="https://www.axios.com" target="_blank" rel="noopener noreferrer">https://www.axios.com</a></td>
+
+            <td class="synopsis">&#x27;Smart Brevity&#x27; format — concise, bullet-pointed news coverage of politics and policy. Founded by former Politico journalists. Quick-read analysis.</td>
+
+            <td class="metrics">Significant growth since 2017 launch</td>
+
+            <td class="reach">15–25M monthly visitors</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>19</td>
+
+            <td class="resource-name">Brookings Institution</td>
+
+            <td><span class="platform-badge" style="background:#059669"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M4 19h6v-2H4v2zM20 5H4v2h16V5zm-3 6H4v2h13.25c1.1 0 2 .9 2 2s-.9 2-2 2H15v-2l-3 3 3 3v-2h2c2.21 0 4-1.79 4-4s-1.79-4-4-4z"/></svg> Think Tank</span></td>
+
+            <td class="url-cell"><a href="https://www.brookings.edu" target="_blank" rel="noopener noreferrer">https://www.brookings.edu</a></td>
+
+            <td class="synopsis">Washington, D.C. nonprofit public policy research organization. In-depth research on economic, governance, foreign policy, and domestic policy. Centrist-leaning.</td>
+
+            <td class="metrics">Ranked #1 think tank worldwide (multiple years)</td>
+
+            <td class="reach">5–10M monthly website visitors</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>20</td>
+
+            <td class="resource-name">Cato Institute</td>
+
+            <td><span class="platform-badge" style="background:#059669"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M4 19h6v-2H4v2zM20 5H4v2h16V5zm-3 6H4v2h13.25c1.1 0 2 .9 2 2s-.9 2-2 2H15v-2l-3 3 3 3v-2h2c2.21 0 4-1.79 4-4s-1.79-4-4-4z"/></svg> Think Tank</span></td>
+
+            <td class="url-cell"><a href="https://www.cato.org" target="_blank" rel="noopener noreferrer">https://www.cato.org</a></td>
+
+            <td class="synopsis">Libertarian think tank advocating individual liberty, free markets, and limited government. Research on constitutional law, drug policy, trade, and civil liberties.</td>
+
+            <td class="metrics">Major free-market think tank with significant web presence</td>
+
+            <td class="reach">1–3M monthly website visitors</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>21</td>
+
+            <td class="resource-name">Heritage Foundation</td>
+
+            <td><span class="platform-badge" style="background:#059669"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M4 19h6v-2H4v2zM20 5H4v2h16V5zm-3 6H4v2h13.25c1.1 0 2 .9 2 2s-.9 2-2 2H15v-2l-3 3 3 3v-2h2c2.21 0 4-1.79 4-4s-1.79-4-4-4z"/></svg> Think Tank</span></td>
+
+            <td class="url-cell"><a href="https://www.heritage.org" target="_blank" rel="noopener noreferrer">https://www.heritage.org</a></td>
+
+            <td class="synopsis">Conservative think tank producing policy research on U.S. domestic and foreign policy. Influential in shaping conservative legislative agendas.</td>
+
+            <td class="metrics">Ranked #1 free-market think tank by monthly visitors: 1.9M</td>
+
+            <td class="reach">2–5M monthly website visitors</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>22</td>
+
+            <td class="resource-name">Daily Wire</td>
+
+            <td><span class="platform-badge" style="background:#2563EB"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg> Website</span></td>
+
+            <td class="url-cell"><a href="https://www.dailywire.com" target="_blank" rel="noopener noreferrer">https://www.dailywire.com</a></td>
+
+            <td class="synopsis">Leading conservative media company by Ben Shapiro. News, opinion, podcasts, and video commentary on politics and government policy.</td>
+
+            <td class="metrics">200+ million monthly page views across its network</td>
+
+            <td class="reach">30–50M monthly visitors</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>23</td>
+
+            <td class="resource-name">Breitbart</td>
+
+            <td><span class="platform-badge" style="background:#2563EB"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg> Website</span></td>
+
+            <td class="url-cell"><a href="https://www.breitbart.com" target="_blank" rel="noopener noreferrer">https://www.breitbart.com</a></td>
+
+            <td class="synopsis">Right-wing news and opinion website covering U.S. politics, immigration, and national security with a populist-conservative perspective.</td>
+
+            <td class="metrics">66.37M total visits in tracked month (~41% YoY decline reported)</td>
+
+            <td class="reach">40–70M monthly visitors</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>24</td>
+
+            <td class="resource-name">r/politics</td>
+
+            <td><span class="platform-badge" style="background:#EA580C"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg> Reddit Forum</span></td>
+
+            <td class="url-cell"><a href="https://www.reddit.com/r/politics" target="_blank" rel="noopener noreferrer">https://www.reddit.com/r/politics</a></td>
+
+            <td class="synopsis">Largest and most active political discussion forum on the internet. User-submitted articles, policy analysis, and vigorous debate. Leans liberal/progressive.</td>
+
+            <td class="metrics">~13M+ members; one of the largest subreddits</td>
+
+            <td class="reach">10–15M members; millions daily active</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>25</td>
+
+            <td class="resource-name">r/PoliticalDiscussion</td>
+
+            <td><span class="platform-badge" style="background:#EA580C"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg> Reddit Forum</span></td>
+
+            <td class="url-cell"><a href="https://www.reddit.com/r/PoliticalDiscussion" target="_blank" rel="noopener noreferrer">https://www.reddit.com/r/PoliticalDiscussion</a></td>
+
+            <td class="synopsis">Designed for substantive and civil political discussion. Encourages thoughtful debate, policy analysis, and reasoned argumentation. Moderated for quality.</td>
+
+            <td class="metrics">~1–3M members; highly active daily threads</td>
+
+            <td class="reach">1–3M members</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>26</td>
+
+            <td class="resource-name">r/NeutralPolitics</td>
+
+            <td><span class="platform-badge" style="background:#EA580C"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg> Reddit Forum</span></td>
+
+            <td class="url-cell"><a href="https://www.reddit.com/r/NeutralPolitics" target="_blank" rel="noopener noreferrer">https://www.reddit.com/r/NeutralPolitics</a></td>
+
+            <td class="synopsis">Rigorously moderated subreddit requiring well-sourced, substantive discussion. Comments must cite reliable sources. Evidence-based policy debate.</td>
+
+            <td class="metrics">~500K–1M members</td>
+
+            <td class="reach">500K–1M members</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>27</td>
+
+            <td class="resource-name">Political Discussion (FB Groups)</td>
+
+            <td><span class="platform-badge" style="background:#1877F2"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg> Facebook</span></td>
+
+            <td class="url-cell">Various Facebook Groups</td>
+
+            <td class="synopsis">Numerous political discussion groups of varying sizes and leanings. Range from non-partisan to ideologically aligned groups.</td>
+
+            <td class="metrics">Largest groups have 1M+ members; thousands exist</td>
+
+            <td class="reach">Tens of millions collective members</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>28</td>
+
+            <td class="resource-name">Harry Sisson (@harryjsisson)</td>
+
+            <td><span class="platform-badge" style="background:#000000"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg> TikTok</span></td>
+
+            <td class="url-cell"><a href="https://www.tiktok.com/@harryjsisson" target="_blank" rel="noopener noreferrer">https://www.tiktok.com/@harryjsisson</a></td>
+
+            <td class="synopsis">Prominent political TikTok creator expressing support for Democratic policies. Has had high-profile meetings with Barack Obama and Joe Biden.</td>
+
+            <td class="metrics">~1.8M+ TikTok followers; Wikipedia page; significant media coverage</td>
+
+            <td class="reach">1–2M followers; millions of video views</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>29</td>
+
+            <td class="resource-name">The Brookings Podcast Network</td>
+
+            <td><span class="platform-badge" style="background:#7C3AED"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zM5 10a1 1 0 0 0-2 0 9 9 0 0 0 8 8.94V21h-2a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-2v-2.06A9 9 0 0 0 21 10a1 1 0 1 0-2 0 7 7 0 0 1-14 0z"/></svg> Podcast</span></td>
+
+            <td class="url-cell"><a href="https://www.brookings.edu/podcasts" target="_blank" rel="noopener noreferrer">https://www.brookings.edu/podcasts</a></td>
+
+            <td class="synopsis">High-quality, expert-driven public policy analysis from Brookings scholars. &#x27;The Current&#x27; offers smart analysis on breaking policy news.</td>
+
+            <td class="metrics">Multiple shows in network; prominent think tank brand</td>
+
+            <td class="reach">500K–1M monthly listeners</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>30</td>
+
+            <td class="resource-name">FiveThirtyEight / 538</td>
+
+            <td><span class="platform-badge" style="background:#2563EB"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg> Website</span></td>
+
+            <td class="url-cell"><a href="https://fivethirtyeight.com" target="_blank" rel="noopener noreferrer">https://fivethirtyeight.com</a></td>
+
+            <td class="synopsis">Pioneered data-driven political analysis and forecasting. Gold standard for polling analysis and election forecasting. Nate Silver now runs natesilver.net.</td>
+
+            <td class="metrics">At peak: 32.18M page views, 20.57M site visits/month</td>
+
+            <td class="reach">5–10M monthly (declining)</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>31</td>
+
+            <td class="resource-name">Vox (Website)</td>
+
+            <td><span class="platform-badge" style="background:#2563EB"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg> Website</span></td>
+
+            <td class="url-cell"><a href="https://www.vox.com" target="_blank" rel="noopener noreferrer">https://www.vox.com</a></td>
+
+            <td class="synopsis">Explanatory journalism breaking down complex policy and government issues. Deep-dive explainers on healthcare, voting rights, immigration, and economic policy.</td>
+
+            <td class="metrics">12.3M monthly visits (SimilarWeb)</td>
+
+            <td class="reach">12M monthly visitors</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>32</td>
+
+            <td class="resource-name">NPR (YouTube)</td>
+
+            <td><span class="platform-badge" style="background:#DC2626"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg> YouTube</span></td>
+
+            <td class="url-cell"><a href="https://www.youtube.com/@npr" target="_blank" rel="noopener noreferrer">https://www.youtube.com/@npr</a></td>
+
+            <td class="synopsis">Political reporting, policy analysis, and documentary-style journalism. Covers Congress, White House, Supreme Court, and domestic/foreign policy.</td>
+
+            <td class="metrics">Large subscriber base; part of NPR&#x27;s multi-platform reach</td>
+
+            <td class="reach">Millions of monthly views</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>33</td>
+
+            <td class="resource-name">The Athletic Football/FC Podcasts</td>
+
+            <td><span class="platform-badge" style="background:#7C3AED"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zM5 10a1 1 0 0 0-2 0 9 9 0 0 0 8 8.94V21h-2a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-2v-2.06A9 9 0 0 0 21 10a1 1 0 1 0-2 0 7 7 0 0 1-14 0z"/></svg> Podcast</span></td>
+
+            <td class="url-cell"><a href="https://theathletic.com" target="_blank" rel="noopener noreferrer">https://theathletic.com</a></td>
+
+            <td class="synopsis">Extensive podcast network covering NFL, NBA, soccer, MLB, and college sports. High-quality, journalist-driven analysis with beat writers and analysts.</td>
+
+            <td class="metrics">10M+ newsletter subscribers; profitable with $54M Q2 2025 revenue</td>
+
+            <td class="reach">Multi-million reach</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>34</td>
+
+            <td class="resource-name">The Rest Is Football</td>
+
+            <td><span class="platform-badge" style="background:#7C3AED"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zM5 10a1 1 0 0 0-2 0 9 9 0 0 0 8 8.94V21h-2a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-2v-2.06A9 9 0 0 0 21 10a1 1 0 1 0-2 0 7 7 0 0 1-14 0z"/></svg> Podcast</span></td>
+
+            <td class="url-cell">Available on all platforms</td>
+
+            <td class="synopsis">Hosted by Gary Lineker, Alan Shearer, and Micah Richards. UK&#x27;s premier football/soccer debate podcast. Intelligent, humorous discussion.</td>
+
+            <td class="metrics">Ranked #1 on Feedspot&#x27;s 90 Best Sports Podcasts (2026)</td>
+
+            <td class="reach">3–5M weekly listeners globally</td>
+
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <div class="tab-panel" id="panel-U.S. Tax Law">
+
+    <div class="stats-bar">
+
+      <div class="stat-item"><strong>22</strong> resources</div>
+
+      <div class="stat-item"><strong>1</strong> The Deduction (Tax Foundation)s</div>
+
+      <div class="stat-item"><strong>1</strong> Talking Tax (Bloomberg)s</div>
+
+      <div class="stat-item"><strong>1</strong> Federal Tax Updatess</div>
+
+      <div class="stat-item"><strong>1</strong> Anderson Business Advisors Podcasts</div>
+
+      <div class="stat-item"><strong>1</strong> The Accounting Podcasts</div>
+
+    </div>
+
+    <div class="table-wrapper">
+
+      <table>
+        <thead>
+          <tr>
+
+            <th>#</th>
+
+            <th>Resource</th>
+
+            <th>Platform</th>
+
+            <th>URL</th>
+
+            <th>Synopsis</th>
+
+            <th>Engagement Metrics</th>
+
+            <th>Est. Reach</th>
+
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr class="data-row">
+
+            <td>1</td>
+
+            <td class="resource-name">The Deduction (Tax Foundation)</td>
+
+            <td><span class="platform-badge" style="background:#7C3AED"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zM5 10a1 1 0 0 0-2 0 9 9 0 0 0 8 8.94V21h-2a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-2v-2.06A9 9 0 0 0 21 10a1 1 0 1 0-2 0 7 7 0 0 1-14 0z"/></svg> Podcast</span></td>
+
+            <td class="url-cell"><a href="https://taxfoundation.org/podcast" target="_blank" rel="noopener noreferrer">https://taxfoundation.org/podcast</a></td>
+
+            <td class="synopsis">#1 independent tax policy podcast in the U.S. Explores federal and state tax policy through interviews with economists, policymakers, and tax professionals.</td>
+
+            <td class="metrics">Tax Foundation ~1.5M+ monthly visitors; #1 on FeedSpot&#x27;s 100 Best Tax Podcasts</td>
+
+            <td class="reach">High — top tax policy podcast</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>2</td>
+
+            <td class="resource-name">Talking Tax (Bloomberg)</td>
+
+            <td><span class="platform-badge" style="background:#7C3AED"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zM5 10a1 1 0 0 0-2 0 9 9 0 0 0 8 8.94V21h-2a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-2v-2.06A9 9 0 0 0 21 10a1 1 0 1 0-2 0 7 7 0 0 1-14 0z"/></svg> Podcast</span></td>
+
+            <td class="url-cell"><a href="https://podcasts.apple.com/us/podcast/talking-tax/id1247619396" target="_blank" rel="noopener noreferrer">https://podcasts.apple.com/us/podcast/talking-tax/id...</a></td>
+
+            <td class="synopsis">Weekly Bloomberg Tax podcast on pressing issues facing tax professionals. Federal tax legislation, IRS enforcement, corporate tax planning, and international tax.</td>
+
+            <td class="metrics">Bloomberg&#x27;s large professional subscriber base; top tax podcast lists</td>
+
+            <td class="reach">High — Bloomberg professional audience</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>3</td>
+
+            <td class="resource-name">Federal Tax Updates</td>
+
+            <td><span class="platform-badge" style="background:#7C3AED"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zM5 10a1 1 0 0 0-2 0 9 9 0 0 0 8 8.94V21h-2a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-2v-2.06A9 9 0 0 0 21 10a1 1 0 1 0-2 0 7 7 0 0 1-14 0z"/></svg> Podcast</span></td>
+
+            <td class="url-cell"><a href="https://podcasts.apple.com/us/podcast/federal-tax-updates/id1664948418" target="_blank" rel="noopener noreferrer">https://podcasts.apple.com/us/podcast/federal-tax-up...</a></td>
+
+            <td class="synopsis">Bi-weekly podcast by Roger Harris and Annie Schwab (75+ years combined experience). IRS guidance, tax code changes, court rulings, and practical implications.</td>
+
+            <td class="metrics">Bi-weekly release; FeedSpot&#x27;s top 100 tax podcasts</td>
+
+            <td class="reach">Medium-High — tax professionals</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>4</td>
+
+            <td class="resource-name">Anderson Business Advisors Podcast</td>
+
+            <td><span class="platform-badge" style="background:#7C3AED"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zM5 10a1 1 0 0 0-2 0 9 9 0 0 0 8 8.94V21h-2a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-2v-2.06A9 9 0 0 0 21 10a1 1 0 1 0-2 0 7 7 0 0 1-14 0z"/></svg> Podcast</span></td>
+
+            <td class="url-cell"><a href="https://open.spotify.com/show/3ZDauJt6uLCBlp3bzFirfh" target="_blank" rel="noopener noreferrer">https://open.spotify.com/show/3ZDauJt6uLCBlp3bzFirfh</a></td>
+
+            <td class="synopsis">Tax attorney Toby Mathis covers tax planning, entity structuring (LLCs, S-Corps), real estate tax advantages, and asset protection.</td>
+
+            <td class="metrics">Cross-promoted with 604K+ YouTube subscribers</td>
+
+            <td class="reach">High — strong YouTube crossover</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>5</td>
+
+            <td class="resource-name">The Accounting Podcast</td>
+
+            <td><span class="platform-badge" style="background:#7C3AED"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zM5 10a1 1 0 0 0-2 0 9 9 0 0 0 8 8.94V21h-2a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-2v-2.06A9 9 0 0 0 21 10a1 1 0 1 0-2 0 7 7 0 0 1-14 0z"/></svg> Podcast</span></td>
+
+            <td class="url-cell"><a href="https://open.spotify.com/show/01g5nqTsXLtb2YTgX9HLvc" target="_blank" rel="noopener noreferrer">https://open.spotify.com/show/01g5nqTsXLtb2YTgX9HLvc</a></td>
+
+            <td class="synopsis">Self-described &#x27;world&#x27;s #1 accounting, bookkeeping, and tax podcast.&#x27; Weekly roundups of accounting and tax news, analysis, and interviews.</td>
+
+            <td class="metrics">Claims #1 accounting/tax podcast globally; top podcast charts</td>
+
+            <td class="reach">High — broad professional appeal</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>6</td>
+
+            <td class="resource-name">Cross-border Tax Talks (PwC)</td>
+
+            <td><span class="platform-badge" style="background:#7C3AED"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zM5 10a1 1 0 0 0-2 0 9 9 0 0 0 8 8.94V21h-2a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-2v-2.06A9 9 0 0 0 21 10a1 1 0 1 0-2 0 7 7 0 0 1-14 0z"/></svg> Podcast</span></td>
+
+            <td class="url-cell"><a href="https://www.pwc.com/us/en/services/tax/podcasts.html" target="_blank" rel="noopener noreferrer">https://www.pwc.com/us/en/services/tax/podcasts.html</a></td>
+
+            <td class="synopsis">PwC&#x27;s Doug McHoney analyzes international tax trends, cross-border policy changes, OECD developments, and transfer pricing issues.</td>
+
+            <td class="metrics">PwC Big 4 firm backing with massive global reach</td>
+
+            <td class="reach">High — enterprise tax professionals</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>7</td>
+
+            <td class="resource-name">Mark J. Kohler</td>
+
+            <td><span class="platform-badge" style="background:#DC2626"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg> YouTube</span></td>
+
+            <td class="url-cell"><a href="https://www.youtube.com/c/markjkohler" target="_blank" rel="noopener noreferrer">https://www.youtube.com/c/markjkohler</a></td>
+
+            <td class="synopsis">Self-branded &#x27;America&#x27;s #1 Tax &amp; Legal Expert.&#x27; CPA, attorney, and author with weekly live Q&amp;A on tax planning for small businesses and real estate investors.</td>
+
+            <td class="metrics">609K subscribers; 1,400+ videos</td>
+
+            <td class="reach">Very High — largest tax YouTube</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>8</td>
+
+            <td class="resource-name">Toby Mathis Esq.</td>
+
+            <td><span class="platform-badge" style="background:#DC2626"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg> YouTube</span></td>
+
+            <td class="url-cell"><a href="https://www.youtube.com/@TobyMathis" target="_blank" rel="noopener noreferrer">https://www.youtube.com/@TobyMathis</a></td>
+
+            <td class="synopsis">Tax attorney shares content on tax strategies, entity structuring, real estate taxation, and asset protection. Regular &#x27;Tax Tuesday&#x27; live streams.</td>
+
+            <td class="metrics">604K subscribers; 1,200+ videos</td>
+
+            <td class="reach">Very High — strong business following</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>9</td>
+
+            <td class="resource-name">Karlton Dennis</td>
+
+            <td><span class="platform-badge" style="background:#DC2626"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg> YouTube</span></td>
+
+            <td class="url-cell"><a href="https://www.youtube.com/channel/UCEc3bAbOtPEUIgpNkViF_PQ" target="_blank" rel="noopener noreferrer">https://www.youtube.com/channel/UCEc3bAbOtPEUIgpNkVi...</a></td>
+
+            <td class="synopsis">Licensed Enrolled Agent helping small business owners reduce tax bills. Content on write-offs, deductions, business expenses, and entity selection.</td>
+
+            <td class="metrics">Top-10 tax YouTuber; FeedSpot &#x27;70 Tax YouTubers&#x27;</td>
+
+            <td class="reach">High — entrepreneurs and side-hustlers</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>10</td>
+
+            <td class="resource-name">ClearValue Tax</td>
+
+            <td><span class="platform-badge" style="background:#DC2626"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg> YouTube</span></td>
+
+            <td class="url-cell"><a href="https://www.youtube.com" target="_blank" rel="noopener noreferrer">https://www.youtube.com</a></td>
+
+            <td class="synopsis">IRS enforcement, tax compliance, and complex tax topic explanations. Content on side hustle taxation, LLC benefits, and IRS audit preparation.</td>
+
+            <td class="metrics">Featured on FeedSpot&#x27;s &#x27;70 Tax YouTubers&#x27;</td>
+
+            <td class="reach">Medium-High — tax education niche</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>11</td>
+
+            <td class="resource-name">IRSvideos (Official IRS)</td>
+
+            <td><span class="platform-badge" style="background:#DC2626"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg> YouTube</span></td>
+
+            <td class="url-cell"><a href="https://www.youtube.com/irsvideos" target="_blank" rel="noopener noreferrer">https://www.youtube.com/irsvideos</a></td>
+
+            <td class="synopsis">IRS&#x27;s official channel. How-to filing guides, scam alerts, and explanations of tax credits and deductions. Available in English, Spanish, ASL.</td>
+
+            <td class="metrics">Official government channel; primary taxpayer education resource</td>
+
+            <td class="reach">Very High — authoritative official source</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>12</td>
+
+            <td class="resource-name">Tax Foundation</td>
+
+            <td><span class="platform-badge" style="background:#DC2626"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg> YouTube</span></td>
+
+            <td class="url-cell"><a href="https://www.youtube.com/user/TaxFoundation" target="_blank" rel="noopener noreferrer">https://www.youtube.com/user/TaxFoundation</a></td>
+
+            <td class="synopsis">World&#x27;s leading independent tax policy nonprofit. Explainer videos on tax policy, state comparisons, and economic analysis.</td>
+
+            <td class="metrics">Cross-promoted with large website audience and podcast</td>
+
+            <td class="reach">High — widely cited by journalists</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>13</td>
+
+            <td class="resource-name">TaxProf Blog</td>
+
+            <td><span class="platform-badge" style="background:#0D9488"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg> Blog</span></td>
+
+            <td class="url-cell"><a href="https://taxprofblog.aals.org" target="_blank" rel="noopener noreferrer">https://taxprofblog.aals.org</a></td>
+
+            <td class="synopsis">Most influential tax law blog, affiliated with AALS. Run by Prof. Paul Caron. Daily curated links to tax news, academic papers, and court decisions.</td>
+
+            <td class="metrics">5,700+ posts; key resource per Tax Notes</td>
+
+            <td class="reach">High — tax law academics standard</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>14</td>
+
+            <td class="resource-name">Tax Notes (Tax Analysts)</td>
+
+            <td><span class="platform-badge" style="background:#2563EB"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg> Website</span></td>
+
+            <td class="url-cell"><a href="https://www.taxnotes.com" target="_blank" rel="noopener noreferrer">https://www.taxnotes.com</a></td>
+
+            <td class="synopsis">Premier professional publication for tax practitioners. Daily federal and state tax news, analysis, commentary, and research tools. Subscription-based.</td>
+
+            <td class="metrics">Industry standard; serves majority of U.S. tax law firms</td>
+
+            <td class="reach">Very High — gold standard publication</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>15</td>
+
+            <td class="resource-name">Thomson Reuters Tax Blog</td>
+
+            <td><span class="platform-badge" style="background:#0D9488"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg> Blog</span></td>
+
+            <td class="url-cell"><a href="https://tax.thomsonreuters.com/blog" target="_blank" rel="noopener noreferrer">https://tax.thomsonreuters.com/blog</a></td>
+
+            <td class="synopsis">Expert analysis from Thomson Reuters&#x27; tax team. Tax law changes, compliance updates, technology in tax (AI), and practice management.</td>
+
+            <td class="metrics">Serves massive global professional subscriber base</td>
+
+            <td class="reach">High — professional subscribers</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>16</td>
+
+            <td class="resource-name">Tax Law Center Blog</td>
+
+            <td><span class="platform-badge" style="background:#0D9488"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg> Blog</span></td>
+
+            <td class="url-cell"><a href="https://taxlawcenter.org/blog" target="_blank" rel="noopener noreferrer">https://taxlawcenter.org/blog</a></td>
+
+            <td class="synopsis">Tax policy analysis, equity in taxation, and legal interpretations. Research-backed commentary on legislative proposals and IRS regulatory actions.</td>
+
+            <td class="metrics">Academic-backed; cited in policy discussions</td>
+
+            <td class="reach">Medium — policy researchers</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>17</td>
+
+            <td class="resource-name">r/tax</td>
+
+            <td><span class="platform-badge" style="background:#EA580C"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg> Reddit Forum</span></td>
+
+            <td class="url-cell"><a href="https://www.reddit.com/r/tax" target="_blank" rel="noopener noreferrer">https://www.reddit.com/r/tax</a></td>
+
+            <td class="synopsis">Reddit&#x27;s primary tax discussion community. Covers U.S. and international tax news, discussion, policy, and law — federal, state, and local.</td>
+
+            <td class="metrics">Largest tax subreddit; very high tax season activity</td>
+
+            <td class="reach">Very High — peak during tax season</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>18</td>
+
+            <td class="resource-name">r/taxpros</td>
+
+            <td><span class="platform-badge" style="background:#EA580C"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg> Reddit Forum</span></td>
+
+            <td class="url-cell"><a href="https://www.reddit.com/r/taxpros" target="_blank" rel="noopener noreferrer">https://www.reddit.com/r/taxpros</a></td>
+
+            <td class="synopsis">Exclusive community for tax professionals (CPAs, EAs, attorneys). Professional development, firm procedures, and complex tax scenario discussions.</td>
+
+            <td class="metrics">Smaller but highly engaged verified professionals</td>
+
+            <td class="reach">Medium — niche professional audience</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>19</td>
+
+            <td class="resource-name">IRS AND TAX INFO</td>
+
+            <td><span class="platform-badge" style="background:#1877F2"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg> Facebook</span></td>
+
+            <td class="url-cell"><a href="https://www.facebook.com/groups/1332262893636652" target="_blank" rel="noopener noreferrer">https://www.facebook.com/groups/1332262893636652</a></td>
+
+            <td class="synopsis">Large Facebook group helping members with tax refunds, IRS updates, and general tax info. Community-driven Q&amp;A format.</td>
+
+            <td class="metrics">Active group with regular posting activity</td>
+
+            <td class="reach">Medium — general taxpayer community</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>20</td>
+
+            <td class="resource-name">Krystal Todd, CPA</td>
+
+            <td><span class="platform-badge" style="background:#000000"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg> TikTok</span></td>
+
+            <td class="url-cell"><a href="https://www.tiktok.com/@krystaltoddcpa" target="_blank" rel="noopener noreferrer">https://www.tiktok.com/@krystaltoddcpa</a></td>
+
+            <td class="synopsis">Licensed CPA creating short-form tax education content. Tax filing tips, deduction explanations, and tax season guides. Multiple viral videos.</td>
+
+            <td class="metrics">~240K+ TikTok followers; 50K+ likes per video</td>
+
+            <td class="reach">High — top CPA on TikTok</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>21</td>
+
+            <td class="resource-name">Nick Krop, CPA</td>
+
+            <td><span class="platform-badge" style="background:#000000"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg> TikTok</span></td>
+
+            <td class="url-cell"><a href="https://www.tiktok.com/@nickthecpa" target="_blank" rel="noopener noreferrer">https://www.tiktok.com/@nickthecpa</a></td>
+
+            <td class="synopsis">CPA explaining tax obligations and general financial literacy. Bridges professional tax knowledge and taxpayer understanding.</td>
+
+            <td class="metrics">2,000+ likes per video; growing audience</td>
+
+            <td class="reach">Medium — growing TikTok presence</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>22</td>
+
+            <td class="resource-name">Ahad the CPA</td>
+
+            <td><span class="platform-badge" style="background:#000000"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg> TikTok</span></td>
+
+            <td class="url-cell"><a href="https://www.tiktok.com/@ahadthecpa" target="_blank" rel="noopener noreferrer">https://www.tiktok.com/@ahadthecpa</a></td>
+
+            <td class="synopsis">Self-branded &#x27;Tax Expert&#x27; with essential tax filing tips, pre-filing checklists, and tax strategy explanations. Practical and action-oriented.</td>
+
+            <td class="metrics">10K+ likes per video; strong engagement</td>
+
+            <td class="reach">Medium — emerging TikTax educator</td>
+
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <div class="tab-panel" id="panel-Education">
+
+    <div class="stats-bar">
+
+      <div class="stat-item"><strong>22</strong> resources</div>
+
+      <div class="stat-item"><strong>1</strong> Cult of Pedagogys</div>
+
+      <div class="stat-item"><strong>1</strong> MindShift (KQED)s</div>
+
+      <div class="stat-item"><strong>1</strong> Teachers Off Duty Podcasts</div>
+
+      <div class="stat-item"><strong>1</strong> Top Class: OECD Education Policys</div>
+
+      <div class="stat-item"><strong>1</strong> Khan Academys</div>
+
+    </div>
+
+    <div class="table-wrapper">
+
+      <table>
+        <thead>
+          <tr>
+
+            <th>#</th>
+
+            <th>Resource</th>
+
+            <th>Platform</th>
+
+            <th>URL</th>
+
+            <th>Synopsis</th>
+
+            <th>Engagement Metrics</th>
+
+            <th>Est. Reach</th>
+
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr class="data-row">
+
+            <td>1</td>
+
+            <td class="resource-name">Cult of Pedagogy</td>
+
+            <td><span class="platform-badge" style="background:#7C3AED"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zM5 10a1 1 0 0 0-2 0 9 9 0 0 0 8 8.94V21h-2a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-2v-2.06A9 9 0 0 0 21 10a1 1 0 1 0-2 0 7 7 0 0 1-14 0z"/></svg> Podcast</span></td>
+
+            <td class="url-cell"><a href="https://www.cultofpedagogy.com/pod" target="_blank" rel="noopener noreferrer">https://www.cultofpedagogy.com/pod</a></td>
+
+            <td class="synopsis">Most popular education podcast in English. Covers teaching strategies, classroom management, education reform, and ed-tech with evidence-based insights.</td>
+
+            <td class="metrics">10M+ total downloads; 4.8★ Apple Podcasts rating</td>
+
+            <td class="reach">500K+ regular listeners per episode</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>2</td>
+
+            <td class="resource-name">MindShift (KQED)</td>
+
+            <td><span class="platform-badge" style="background:#7C3AED"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zM5 10a1 1 0 0 0-2 0 9 9 0 0 0 8 8.94V21h-2a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-2v-2.06A9 9 0 0 0 21 10a1 1 0 1 0-2 0 7 7 0 0 1-14 0z"/></svg> Podcast</span></td>
+
+            <td class="url-cell"><a href="https://www.kqed.org/podcasts/mindshift" target="_blank" rel="noopener noreferrer">https://www.kqed.org/podcasts/mindshift</a></td>
+
+            <td class="synopsis">Explores the future of learning. Science of learning, innovative teaching, equity in education, and student well-being with researchers and educators.</td>
+
+            <td class="metrics">Regularly featured in top education podcast lists; KQED network</td>
+
+            <td class="reach">200K+ monthly listeners</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>3</td>
+
+            <td class="resource-name">Teachers Off Duty Podcast</td>
+
+            <td><span class="platform-badge" style="background:#7C3AED"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zM5 10a1 1 0 0 0-2 0 9 9 0 0 0 8 8.94V21h-2a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-2v-2.06A9 9 0 0 0 21 10a1 1 0 1 0-2 0 7 7 0 0 1-14 0z"/></svg> Podcast</span></td>
+
+            <td class="url-cell">Available on Apple/Spotify</td>
+
+            <td class="synopsis">Substantive but lighter take on education. Teachers discuss classroom experiences, policy frustrations, and news with candor and humor.</td>
+
+            <td class="metrics">Featured on multiple top 10 teacher podcast lists for 2025</td>
+
+            <td class="reach">100K+ monthly listeners</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>4</td>
+
+            <td class="resource-name">Top Class: OECD Education Policy</td>
+
+            <td><span class="platform-badge" style="background:#7C3AED"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zM5 10a1 1 0 0 0-2 0 9 9 0 0 0 8 8.94V21h-2a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-2v-2.06A9 9 0 0 0 21 10a1 1 0 1 0-2 0 7 7 0 0 1-14 0z"/></svg> Podcast</span></td>
+
+            <td class="url-cell">Available on Apple Podcasts</td>
+
+            <td class="synopsis">OECD&#x27;s official education podcast. Global education trends, PISA results, teacher policy, and international reform from a data-driven perspective.</td>
+
+            <td class="metrics">Backed by OECD&#x27;s global research network across 38+ countries</td>
+
+            <td class="reach">100K+ monthly listeners</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>5</td>
+
+            <td class="resource-name">Khan Academy</td>
+
+            <td><span class="platform-badge" style="background:#DC2626"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg> YouTube</span></td>
+
+            <td class="url-cell"><a href="https://www.youtube.com/@khanacademy" target="_blank" rel="noopener noreferrer">https://www.youtube.com/@khanacademy</a></td>
+
+            <td class="synopsis">Largest educational YouTube channel in the world. Content on education policy debates (AI in education, mastery-based learning, equity).</td>
+
+            <td class="metrics">9.5M+ subscribers; billions of total views</td>
+
+            <td class="reach">Tens of millions globally</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>6</td>
+
+            <td class="resource-name">Veritasium</td>
+
+            <td><span class="platform-badge" style="background:#DC2626"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg> YouTube</span></td>
+
+            <td class="url-cell"><a href="https://www.youtube.com/@veritasium" target="_blank" rel="noopener noreferrer">https://www.youtube.com/@veritasium</a></td>
+
+            <td class="synopsis">Science and engineering content by Derek Muller. Frequently addresses how we learn, education methodology, and cognitive science.</td>
+
+            <td class="metrics">16M+ subscribers; videos regularly 10M+ views</td>
+
+            <td class="reach">Hundreds of millions cumulative views</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>7</td>
+
+            <td class="resource-name">Harvard Graduate School of Education</td>
+
+            <td><span class="platform-badge" style="background:#DC2626"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg> YouTube</span></td>
+
+            <td class="url-cell"><a href="https://www.youtube.com/@HarvardEducation" target="_blank" rel="noopener noreferrer">https://www.youtube.com/@HarvardEducation</a></td>
+
+            <td class="synopsis">Lectures, forums, and debates from Harvard&#x27;s Ed School. Askwith Forum series brings leading thinkers for substantive education policy debates.</td>
+
+            <td class="metrics">Part of Harvard&#x27;s YouTube network with substantial academic viewership</td>
+
+            <td class="reach">500K+ total video views</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>8</td>
+
+            <td class="resource-name">Intelligence Squared (Education)</td>
+
+            <td><span class="platform-badge" style="background:#DC2626"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg> YouTube</span></td>
+
+            <td class="url-cell"><a href="https://www.youtube.com/@IntelligenceSquared" target="_blank" rel="noopener noreferrer">https://www.youtube.com/@IntelligenceSquared</a></td>
+
+            <td class="synopsis">High-profile Oxford-style debates on education policy (charter schools, standardized testing, higher ed reform). Top experts and politicians.</td>
+
+            <td class="metrics">1.5M+ subscribers; debate videos 500K–2M views</td>
+
+            <td class="reach">Millions per major debate</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>9</td>
+
+            <td class="resource-name">Education Week (EdWeek)</td>
+
+            <td><span class="platform-badge" style="background:#2563EB"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg> Website</span></td>
+
+            <td class="url-cell"><a href="https://www.edweek.org" target="_blank" rel="noopener noreferrer">https://www.edweek.org</a></td>
+
+            <td class="synopsis">Leading independent news source for K-12 education. In-depth reporting, analysis, and data on policy, reform, teacher workforce, and ed-tech.</td>
+
+            <td class="metrics">~2M monthly visitors; premium newsletter subscriber base</td>
+
+            <td class="reach">2M+ monthly visitors</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>10</td>
+
+            <td class="resource-name">The 74</td>
+
+            <td><span class="platform-badge" style="background:#2563EB"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg> Website</span></td>
+
+            <td class="url-cell"><a href="https://www.the74million.org" target="_blank" rel="noopener noreferrer">https://www.the74million.org</a></td>
+
+            <td class="synopsis">Nonprofit, nonpartisan news covering U.S. education from early childhood through college. Data-driven journalism on policy, equity, and innovation.</td>
+
+            <td class="metrics">Regularly cited by major media; significant newsletter following</td>
+
+            <td class="reach">500K+ monthly visitors</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>11</td>
+
+            <td class="resource-name">Edutopia</td>
+
+            <td><span class="platform-badge" style="background:#2563EB"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg> Website</span></td>
+
+            <td class="url-cell"><a href="https://www.edutopia.org" target="_blank" rel="noopener noreferrer">https://www.edutopia.org</a></td>
+
+            <td class="synopsis">Founded by George Lucas. Evidence-based strategies, videos, and articles on project-based learning, SEL, technology integration, and teacher development.</td>
+
+            <td class="metrics">514.9K monthly visitors; ranks #17,359 in US web traffic</td>
+
+            <td class="reach">500K+ monthly visitors</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>12</td>
+
+            <td class="resource-name">Inside Higher Ed</td>
+
+            <td><span class="platform-badge" style="background:#2563EB"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg> Website</span></td>
+
+            <td class="url-cell"><a href="https://www.insidehighered.com" target="_blank" rel="noopener noreferrer">https://www.insidehighered.com</a></td>
+
+            <td class="synopsis">Leading source for higher education news, analysis, and opinion. College policy, faculty, admissions, student affairs, and university governance.</td>
+
+            <td class="metrics">Top 5 education news site globally; large newsletter base</td>
+
+            <td class="reach">1M+ monthly visitors</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>13</td>
+
+            <td class="resource-name">The Chronicle of Higher Education</td>
+
+            <td><span class="platform-badge" style="background:#2563EB"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg> Website</span></td>
+
+            <td class="url-cell"><a href="https://www.chronicle.com" target="_blank" rel="noopener noreferrer">https://www.chronicle.com</a></td>
+
+            <td class="synopsis">Most prestigious higher education publication. Investigative reporting, data analysis, academic freedom, tenure, student debt, and college futures.</td>
+
+            <td class="metrics">Oldest and largest higher ed news outlet; large institutional subs</td>
+
+            <td class="reach">1M+ monthly visitors</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>14</td>
+
+            <td class="resource-name">EdSurge</td>
+
+            <td><span class="platform-badge" style="background:#2563EB"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg> Website</span></td>
+
+            <td class="url-cell"><a href="https://www.edsurge.com" target="_blank" rel="noopener noreferrer">https://www.edsurge.com</a></td>
+
+            <td class="synopsis">Focuses on intersection of education and technology. Ed-tech startups, AI in education, digital learning tools, and technology policy debates.</td>
+
+            <td class="metrics">Major player in ed-tech journalism; industry influence</td>
+
+            <td class="reach">300K+ monthly visitors</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>15</td>
+
+            <td class="resource-name">r/Teachers</td>
+
+            <td><span class="platform-badge" style="background:#EA580C"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg> Reddit Forum</span></td>
+
+            <td class="url-cell"><a href="https://www.reddit.com/r/Teachers" target="_blank" rel="noopener noreferrer">https://www.reddit.com/r/Teachers</a></td>
+
+            <td class="synopsis">Largest Reddit community for teaching discussion. Teachers share experiences, debate education policy, discuss strategies, and seek advice.</td>
+
+            <td class="metrics">Largest education community on Reddit; thousands of posts/week</td>
+
+            <td class="reach">Hundreds of thousands of members</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>16</td>
+
+            <td class="resource-name">r/education</td>
+
+            <td><span class="platform-badge" style="background:#EA580C"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg> Reddit Forum</span></td>
+
+            <td class="url-cell"><a href="https://www.reddit.com/r/education" target="_blank" rel="noopener noreferrer">https://www.reddit.com/r/education</a></td>
+
+            <td class="synopsis">Focuses on news and politics of education. Policy debates (funding, testing, curriculum wars) and structural critiques of education systems.</td>
+
+            <td class="metrics">Central hub in Reddit Education Network</td>
+
+            <td class="reach">Hundreds of thousands of members</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>17</td>
+
+            <td class="resource-name">r/teaching</td>
+
+            <td><span class="platform-badge" style="background:#EA580C"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg> Reddit Forum</span></td>
+
+            <td class="url-cell"><a href="https://www.reddit.com/r/teaching" target="_blank" rel="noopener noreferrer">https://www.reddit.com/r/teaching</a></td>
+
+            <td class="synopsis">Practical teaching discussions — lesson planning, classroom management, professional development. Inclusive moderation, especially for LGBTQ+ educators.</td>
+
+            <td class="metrics">Highly active with strong civil discourse norms</td>
+
+            <td class="reach">Tens of thousands of active members</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>18</td>
+
+            <td class="resource-name">For Teachers By Teachers</td>
+
+            <td><span class="platform-badge" style="background:#1877F2"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg> Facebook</span></td>
+
+            <td class="url-cell"><a href="https://www.facebook.com/groups/fotbt" target="_blank" rel="noopener noreferrer">https://www.facebook.com/groups/fotbt</a></td>
+
+            <td class="synopsis">One of largest FB groups for teacher peer support. Teachers share resources, discuss challenges, and debate education policy. Spam-free professional exchange.</td>
+
+            <td class="metrics">Top teacher Facebook group per Bored Teachers</td>
+
+            <td class="reach">Hundreds of thousands of members</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>19</td>
+
+            <td class="resource-name">Teachers Supporting Teachers</td>
+
+            <td><span class="platform-badge" style="background:#1877F2"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg> Facebook</span></td>
+
+            <td class="url-cell"><a href="https://www.facebook.com/groups/191456711062026" target="_blank" rel="noopener noreferrer">https://www.facebook.com/groups/191456711062026</a></td>
+
+            <td class="synopsis">Virtual professional learning community. Teachers share ideas, resources, and advice on everything from lesson plans to mental health.</td>
+
+            <td class="metrics">Large, active membership</td>
+
+            <td class="reach">Tens of thousands of members</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>20</td>
+
+            <td class="resource-name">Amazing Educational Resources</td>
+
+            <td><span class="platform-badge" style="background:#1877F2"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg> Facebook</span></td>
+
+            <td class="url-cell">Listed on Classplus top groups</td>
+
+            <td class="synopsis">Educators share and discover free resources, tools, and materials. Debates about resource quality, curriculum, and effective pedagogy.</td>
+
+            <td class="metrics">Top educational Facebook group per multiple sources</td>
+
+            <td class="reach">Hundreds of thousands of members</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>21</td>
+
+            <td class="resource-name">#TeacherTok (hashtag/community)</td>
+
+            <td><span class="platform-badge" style="background:#000000"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg> TikTok</span></td>
+
+            <td class="url-cell"><a href="https://www.tiktok.com/discover/teacher-tiktok-accounts" target="_blank" rel="noopener noreferrer">https://www.tiktok.com/discover/teacher-tiktok-accounts</a></td>
+
+            <td class="synopsis">Dominant TikTok subculture for educators with billions of views. Classroom tips, curriculum debates, policy commentary, and day-in-the-life vlogs.</td>
+
+            <td class="metrics">Billions of cumulative views; 34% of teachers follow edu TikTokers daily</td>
+
+            <td class="reach">Tens of millions cumulative viewers</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>22</td>
+
+            <td class="resource-name">@iteachalgebra</td>
+
+            <td><span class="platform-badge" style="background:#000000"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg> TikTok</span></td>
+
+            <td class="url-cell"><a href="https://www.tiktok.com/@iteachalgebra" target="_blank" rel="noopener noreferrer">https://www.tiktok.com/@iteachalgebra</a></td>
+
+            <td class="synopsis">NJ algebra teacher creating fun videos and memes about teaching math. Mixes subject-specific content with broader education humor.</td>
+
+            <td class="metrics">Listed among top educational TikTok accounts (EduBirdie 2026)</td>
+
+            <td class="reach">Hundreds of thousands of followers</td>
+
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <div class="tab-panel" id="panel-Sports">
+
+    <div class="stats-bar">
+
+      <div class="stat-item"><strong>23</strong> resources</div>
+
+      <div class="stat-item"><strong>2</strong> ESPNs</div>
+
+      <div class="stat-item"><strong>2</strong> Barstool Sportss</div>
+
+      <div class="stat-item"><strong>1</strong> Pardon My Takes</div>
+
+      <div class="stat-item"><strong>1</strong> The Bill Simmons Podcasts</div>
+
+      <div class="stat-item"><strong>1</strong> New Heights (Kelce Bros)s</div>
+
+    </div>
+
+    <div class="table-wrapper">
+
+      <table>
+        <thead>
+          <tr>
+
+            <th>#</th>
+
+            <th>Resource</th>
+
+            <th>Platform</th>
+
+            <th>URL</th>
+
+            <th>Synopsis</th>
+
+            <th>Engagement Metrics</th>
+
+            <th>Est. Reach</th>
+
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr class="data-row">
+
+            <td>1</td>
+
+            <td class="resource-name">Pardon My Take</td>
+
+            <td><span class="platform-badge" style="background:#7C3AED"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zM5 10a1 1 0 0 0-2 0 9 9 0 0 0 8 8.94V21h-2a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-2v-2.06A9 9 0 0 0 21 10a1 1 0 1 0-2 0 7 7 0 0 1-14 0z"/></svg> Podcast</span></td>
+
+            <td class="url-cell"><a href="https://www.barstoolsports.com/shows/11/pardon-my-take" target="_blank" rel="noopener noreferrer">https://www.barstoolsports.com/shows/11/pardon-my-take</a></td>
+
+            <td class="synopsis">#1 most-downloaded sports podcast in America. Big Cat and PFT Commenter deliver humorous, insightful commentary across NFL, NBA, MLB. Netflix partnership (Dec 2025).</td>
+
+            <td class="metrics">143,511+ Apple ratings (4.8★); #1 on iTunes charts</td>
+
+            <td class="reach">10–15M downloads per month</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>2</td>
+
+            <td class="resource-name">The Bill Simmons Podcast</td>
+
+            <td><span class="platform-badge" style="background:#7C3AED"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zM5 10a1 1 0 0 0-2 0 9 9 0 0 0 8 8.94V21h-2a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-2v-2.06A9 9 0 0 0 21 10a1 1 0 1 0-2 0 7 7 0 0 1-14 0z"/></svg> Podcast</span></td>
+
+            <td class="url-cell"><a href="https://www.theringer.com/podcasts/the-bill-simmons-podcast" target="_blank" rel="noopener noreferrer">https://www.theringer.com/podcasts/the-bill-simmons-...</a></td>
+
+            <td class="synopsis">Deep-dive conversations with celebrities, athletes, and media figures. NFL, NBA, and pop culture crossover. The Ringer network includes 30+ podcasts.</td>
+
+            <td class="metrics">The Ringer ~9M monthly visitors; 46M page views/month</td>
+
+            <td class="reach">5–10M listeners per month</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>3</td>
+
+            <td class="resource-name">New Heights (Kelce Bros)</td>
+
+            <td><span class="platform-badge" style="background:#7C3AED"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zM5 10a1 1 0 0 0-2 0 9 9 0 0 0 8 8.94V21h-2a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-2v-2.06A9 9 0 0 0 21 10a1 1 0 1 0-2 0 7 7 0 0 1-14 0z"/></svg> Podcast</span></td>
+
+            <td class="url-cell"><a href="https://www.youtube.com/@newheightshow" target="_blank" rel="noopener noreferrer">https://www.youtube.com/@newheightshow</a></td>
+
+            <td class="synopsis">Jason and Travis Kelce. Weekly NFL insights, game analysis, and insider perspectives. Authentic brotherly banter. One episode drew 1.3M concurrent viewers (podcast record).</td>
+
+            <td class="metrics">3.16M YouTube subs; 16,884+ Apple ratings (4.8★)</td>
+
+            <td class="reach">3–5M weekly during NFL season</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>4</td>
+
+            <td class="resource-name">The Old Man and The Three</td>
+
+            <td><span class="platform-badge" style="background:#7C3AED"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zM5 10a1 1 0 0 0-2 0 9 9 0 0 0 8 8.94V21h-2a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-2v-2.06A9 9 0 0 0 21 10a1 1 0 1 0-2 0 7 7 0 0 1-14 0z"/></svg> Podcast</span></td>
+
+            <td class="url-cell"><a href="https://podcasts.apple.com/us/podcast/the-old-man-and-the-three/id1525281746" target="_blank" rel="noopener noreferrer">https://podcasts.apple.com/us/podcast/the-old-man-an...</a></td>
+
+            <td class="synopsis">Intelligent, technical NBA discussion with detailed film analysis and player interviews. Known for sophisticated basketball debate and tactical breakdowns.</td>
+
+            <td class="metrics">2,942+ Apple ratings (4.8★); featured guests include Kevin Durant</td>
+
+            <td class="reach">500K–1M listeners per week</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>5</td>
+
+            <td class="resource-name">The Athletic Football/FC Podcasts</td>
+
+            <td><span class="platform-badge" style="background:#7C3AED"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zM5 10a1 1 0 0 0-2 0 9 9 0 0 0 8 8.94V21h-2a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-2v-2.06A9 9 0 0 0 21 10a1 1 0 1 0-2 0 7 7 0 0 1-14 0z"/></svg> Podcast</span></td>
+
+            <td class="url-cell"><a href="https://theathletic.com" target="_blank" rel="noopener noreferrer">https://theathletic.com</a></td>
+
+            <td class="synopsis">Extensive podcast network. High-quality, journalist-driven analysis featuring beat writers and analysts. NFL, NBA, soccer, MLB, and college sports.</td>
+
+            <td class="metrics">10M+ newsletter subscribers; $54M Q2 2025 revenue</td>
+
+            <td class="reach">Multi-million reach</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>6</td>
+
+            <td class="resource-name">Bleacher Report</td>
+
+            <td><span class="platform-badge" style="background:#DC2626"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg> YouTube</span></td>
+
+            <td class="url-cell"><a href="https://www.youtube.com/channel/UC9-OpMMVoNP5o10_Iyq7Ndw" target="_blank" rel="noopener noreferrer">https://www.youtube.com/channel/UC9-OpMMVoNP5o10_Iyq...</a></td>
+
+            <td class="synopsis">Sports highlights, news features, analysis, and animated content. &#x27;GameTime&#x27; series and creative video essays. Growing focus on women&#x27;s sports.</td>
+
+            <td class="metrics">4.88M subscribers; 35M+ views for single highlight in 2025</td>
+
+            <td class="reach">50–100M monthly views</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>7</td>
+
+            <td class="resource-name">ESPN</td>
+
+            <td><span class="platform-badge" style="background:#DC2626"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg> YouTube</span></td>
+
+            <td class="url-cell"><a href="https://www.youtube.com/@ESPN" target="_blank" rel="noopener noreferrer">https://www.youtube.com/@ESPN</a></td>
+
+            <td class="synopsis">One of the largest sports YouTube channels. Highlights, analysis, interviews, and debate shows (First Take, SportsCenter). All major sports.</td>
+
+            <td class="metrics">15M+ YouTube subscribers; videos regularly 1M+ views</td>
+
+            <td class="reach">200M+ monthly YouTube views</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>8</td>
+
+            <td class="resource-name">Barstool Sports</td>
+
+            <td><span class="platform-badge" style="background:#DC2626"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg> YouTube</span></td>
+
+            <td class="url-cell"><a href="https://www.youtube.com/@BarstoolSports" target="_blank" rel="noopener noreferrer">https://www.youtube.com/@BarstoolSports</a></td>
+
+            <td class="synopsis">Digital media giant&#x27;s YouTube presence. Clips, full podcast episodes, and original sports content. Fan-driven, irreverent coverage.</td>
+
+            <td class="metrics">~1.96M YouTube subs; 48.8M TikTok followers</td>
+
+            <td class="reach">10–20M monthly YouTube views</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>9</td>
+
+            <td class="resource-name">Thinking Basketball (Ben Taylor)</td>
+
+            <td><span class="platform-badge" style="background:#DC2626"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg> YouTube</span></td>
+
+            <td class="url-cell"><a href="https://www.youtube.com/@ThinkingBasketball" target="_blank" rel="noopener noreferrer">https://www.youtube.com/@ThinkingBasketball</a></td>
+
+            <td class="synopsis">Most analytical basketball channel on YouTube. Deep-dive video essays on NBA strategy, player evaluation, and historical analysis. Cited by analysts.</td>
+
+            <td class="metrics">~500K+ subscribers; videos 200K–1M views</td>
+
+            <td class="reach">2–5M monthly views</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>10</td>
+
+            <td class="resource-name">Brett Kollmann</td>
+
+            <td><span class="platform-badge" style="background:#DC2626"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg> YouTube</span></td>
+
+            <td class="url-cell"><a href="https://www.youtube.com/@BrettKollmann" target="_blank" rel="noopener noreferrer">https://www.youtube.com/@BrettKollmann</a></td>
+
+            <td class="synopsis">&#x27;Film Room&#x27; series providing detailed NFL film analysis and draft scouting. Cinematic style. Most respected independent NFL analyst.</td>
+
+            <td class="metrics">~600K+ YouTube subs; videos 500K+ views</td>
+
+            <td class="reach">3–5M monthly views</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>11</td>
+
+            <td class="resource-name">The Athletic (Website)</td>
+
+            <td><span class="platform-badge" style="background:#2563EB"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg> Website</span></td>
+
+            <td class="url-cell"><a href="https://theathletic.com" target="_blank" rel="noopener noreferrer">https://theathletic.com</a></td>
+
+            <td class="synopsis">Gold standard for long-form sports journalism. 600+ professional journalists. In-depth reporting and insider access rather than hot takes.</td>
+
+            <td class="metrics">10M+ newsletter subs; $54M Q2 2025 revenue; profitable</td>
+
+            <td class="reach">10–15M monthly visitors</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>12</td>
+
+            <td class="resource-name">FiveThirtyEight / 538 (Sports)</td>
+
+            <td><span class="platform-badge" style="background:#2563EB"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg> Website</span></td>
+
+            <td class="url-cell"><a href="https://fivethirtyeight.com/tag/sports" target="_blank" rel="noopener noreferrer">https://fivethirtyeight.com/tag/sports</a></td>
+
+            <td class="synopsis">Statistical analysis and predictive models for all major sports. Famous for Elo ratings and data-driven analysis. Evidence-based sports discussion.</td>
+
+            <td class="metrics">Historically 20M+ monthly unique visitors</td>
+
+            <td class="reach">10–20M monthly visitors (sports)</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>13</td>
+
+            <td class="resource-name">The Ringer</td>
+
+            <td><span class="platform-badge" style="background:#2563EB"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg> Website</span></td>
+
+            <td class="url-cell"><a href="https://www.theringer.com" target="_blank" rel="noopener noreferrer">https://www.theringer.com</a></td>
+
+            <td class="synopsis">Long-form sports analysis and cultural commentary by Bill Simmons (Spotify). Distinctive voice, deep NBA/NFL coverage, and 30+ podcasts.</td>
+
+            <td class="metrics">~9M monthly visitors; 46M+ monthly page views</td>
+
+            <td class="reach">10–15M monthly visitors</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>14</td>
+
+            <td class="resource-name">FanGraphs</td>
+
+            <td><span class="platform-badge" style="background:#2563EB"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg> Website</span></td>
+
+            <td class="url-cell"><a href="https://www.fangraphs.com" target="_blank" rel="noopener noreferrer">https://www.fangraphs.com</a></td>
+
+            <td class="synopsis">Premier baseball analytics destination. Advanced statistics, player projections, trade value analysis, and expert community blogs.</td>
+
+            <td class="metrics">~5–8M monthly visitors; top-ranked sports analytics blog</td>
+
+            <td class="reach">5–8M monthly visitors</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>15</td>
+
+            <td class="resource-name">r/sports</td>
+
+            <td><span class="platform-badge" style="background:#EA580C"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg> Reddit Forum</span></td>
+
+            <td class="url-cell"><a href="https://www.reddit.com/r/sports" target="_blank" rel="noopener noreferrer">https://www.reddit.com/r/sports</a></td>
+
+            <td class="synopsis">Largest general sports subreddit. News, highlights, and discussion across all leagues. Gateway to sport-specific subreddits.</td>
+
+            <td class="metrics">31M+ members; very active daily posting</td>
+
+            <td class="reach">5–10M daily active users</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>16</td>
+
+            <td class="resource-name">r/nfl</td>
+
+            <td><span class="platform-badge" style="background:#EA580C"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg> Reddit Forum</span></td>
+
+            <td class="url-cell"><a href="https://www.reddit.com/r/nfl" target="_blank" rel="noopener noreferrer">https://www.reddit.com/r/nfl</a></td>
+
+            <td class="synopsis">Definitive NFL discussion community. Game threads, draft analysis, team discussions, and spirited debates. Organized megathreads.</td>
+
+            <td class="metrics">4M+ members; 10K+ concurrent users on game days</td>
+
+            <td class="reach">2–4M daily active users during season</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>17</td>
+
+            <td class="resource-name">r/NBATalk</td>
+
+            <td><span class="platform-badge" style="background:#EA580C"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg> Reddit Forum</span></td>
+
+            <td class="url-cell"><a href="https://www.reddit.com/r/NBATalk" target="_blank" rel="noopener noreferrer">https://www.reddit.com/r/NBATalk</a></td>
+
+            <td class="synopsis">Higher-quality basketball discussion and debate. Requires substantive posts; discourages low-effort content. Best for serious NBA discussion.</td>
+
+            <td class="metrics">Growing community recommended for serious NBA discourse</td>
+
+            <td class="reach">100K–500K active monthly users</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>18</td>
+
+            <td class="resource-name">Barstool Sports</td>
+
+            <td><span class="platform-badge" style="background:#000000"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg> TikTok</span></td>
+
+            <td class="url-cell"><a href="https://www.tiktok.com/@barstoolsports" target="_blank" rel="noopener noreferrer">https://www.tiktok.com/@barstoolsports</a></td>
+
+            <td class="synopsis">Largest sports media brand on TikTok. Highlights, hot takes, betting, fan reactions, and humorous commentary.</td>
+
+            <td class="metrics">48.8M followers; 9.6B total likes; #19 US TikTok influencer</td>
+
+            <td class="reach">50–100M monthly video views</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>19</td>
+
+            <td class="resource-name">House of Highlights</td>
+
+            <td><span class="platform-badge" style="background:#000000"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg> TikTok</span></td>
+
+            <td class="url-cell"><a href="https://www.tiktok.com/@houseofhighlights" target="_blank" rel="noopener noreferrer">https://www.tiktok.com/@houseofhighlights</a></td>
+
+            <td class="synopsis">Founded by Omar Raja (now Bleacher Report/WBD). Premium sports highlights and viral plays. Go-to for trending sports clips.</td>
+
+            <td class="metrics">31.1M followers; 1.5B+ total likes</td>
+
+            <td class="reach">100M+ monthly video views</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>20</td>
+
+            <td class="resource-name">ESPN</td>
+
+            <td><span class="platform-badge" style="background:#000000"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg> TikTok</span></td>
+
+            <td class="url-cell"><a href="https://www.tiktok.com/@espn" target="_blank" rel="noopener noreferrer">https://www.tiktok.com/@espn</a></td>
+
+            <td class="synopsis">Short-form highlights, breaking news, and analysis clips. Professional production quality covering all major sports.</td>
+
+            <td class="metrics">10M+ followers; videos regularly go viral</td>
+
+            <td class="reach">50–100M monthly video views</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>21</td>
+
+            <td class="resource-name">Top Sports Debate</td>
+
+            <td><span class="platform-badge" style="background:#1877F2"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg> Facebook</span></td>
+
+            <td class="url-cell"><a href="https://www.facebook.com/groups/sportdebate" target="_blank" rel="noopener noreferrer">https://www.facebook.com/groups/sportdebate</a></td>
+
+            <td class="synopsis">Community for sports fans to debate, break down games, and discuss picks. Active on game days with spirited discussion.</td>
+
+            <td class="metrics">Active member base; regular posting on game days</td>
+
+            <td class="reach">10K–50K members</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>22</td>
+
+            <td class="resource-name">NBA Legendary Debate Room</td>
+
+            <td><span class="platform-badge" style="background:#1877F2"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg> Facebook</span></td>
+
+            <td class="url-cell"><a href="https://www.facebook.com/groups/1755569031222596" target="_blank" rel="noopener noreferrer">https://www.facebook.com/groups/1755569031222596</a></td>
+
+            <td class="synopsis">Exclusively basketball discussion and debate. Strictly basketball-only posts. Player comparisons, team strategy, and historical discussions.</td>
+
+            <td class="metrics">Active moderation with basketball-only rule enforcement</td>
+
+            <td class="reach">10K–100K members</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>23</td>
+
+            <td class="resource-name">FOOTBALL IS IN OUR BLOOD</td>
+
+            <td><span class="platform-badge" style="background:#1877F2"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg> Facebook</span></td>
+
+            <td class="url-cell"><a href="https://www.facebook.com/groups/FIIOB" target="_blank" rel="noopener noreferrer">https://www.facebook.com/groups/FIIOB</a></td>
+
+            <td class="synopsis">Passionate soccer fans group. Debates about clubs, leagues, transfers, and match analysis. Highly active international community.</td>
+
+            <td class="metrics">Highly active international community</td>
+
+            <td class="reach">50K–500K members</td>
+
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <div class="tab-panel" id="panel-Relationships">
+
+    <div class="stats-bar">
+
+      <div class="stat-item"><strong>22</strong> resources</div>
+
+      <div class="stat-item"><strong>1</strong> Where Should We Begin (Esther Perel)s</div>
+
+      <div class="stat-item"><strong>1</strong> Savage Lovecasts</div>
+
+      <div class="stat-item"><strong>1</strong> Modern Love (NYT)s</div>
+
+      <div class="stat-item"><strong>1</strong> Love Life with Matthew Husseys</div>
+
+      <div class="stat-item"><strong>1</strong> Multiamorys</div>
+
+    </div>
+
+    <div class="table-wrapper">
+
+      <table>
+        <thead>
+          <tr>
+
+            <th>#</th>
+
+            <th>Resource</th>
+
+            <th>Platform</th>
+
+            <th>URL</th>
+
+            <th>Synopsis</th>
+
+            <th>Engagement Metrics</th>
+
+            <th>Est. Reach</th>
+
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr class="data-row">
+
+            <td>1</td>
+
+            <td class="resource-name">Where Should We Begin (Esther Perel)</td>
+
+            <td><span class="platform-badge" style="background:#7C3AED"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zM5 10a1 1 0 0 0-2 0 9 9 0 0 0 8 8.94V21h-2a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-2v-2.06A9 9 0 0 0 21 10a1 1 0 1 0-2 0 7 7 0 0 1-14 0z"/></svg> Podcast</span></td>
+
+            <td class="url-cell"><a href="https://www.estherperel.com/podcast" target="_blank" rel="noopener noreferrer">https://www.estherperel.com/podcast</a></td>
+
+            <td class="synopsis">World-renowned psychotherapist invites real couples to share intimate stories. Covers infidelity, trust, desire, communication, and family conflicts. Gold standard.</td>
+
+            <td class="metrics">4.7/5 Apple Podcasts; 14,378+ ratings; Substack newsletter</td>
+
+            <td class="reach">500K+ weekly listeners</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>2</td>
+
+            <td class="resource-name">Savage Lovecast</td>
+
+            <td><span class="platform-badge" style="background:#7C3AED"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zM5 10a1 1 0 0 0-2 0 9 9 0 0 0 8 8.94V21h-2a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-2v-2.06A9 9 0 0 0 21 10a1 1 0 1 0-2 0 7 7 0 0 1-14 0z"/></svg> Podcast</span></td>
+
+            <td class="url-cell"><a href="https://podcasts.apple.com/au/podcast/savage-lovecast/id201376301" target="_blank" rel="noopener noreferrer">https://podcasts.apple.com/au/podcast/savage-lovecas...</a></td>
+
+            <td class="synopsis">Dan Savage answers listener questions on sex, love, and relationships with candor and humor. Running since 2006. Blends advice with political commentary.</td>
+
+            <td class="metrics">300K monthly listeners (per Slate); running since 2006</td>
+
+            <td class="reach">300K+ monthly listeners</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>3</td>
+
+            <td class="resource-name">Modern Love (NYT)</td>
+
+            <td><span class="platform-badge" style="background:#7C3AED"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zM5 10a1 1 0 0 0-2 0 9 9 0 0 0 8 8.94V21h-2a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-2v-2.06A9 9 0 0 0 21 10a1 1 0 1 0-2 0 7 7 0 0 1-14 0z"/></svg> Podcast</span></td>
+
+            <td class="url-cell"><a href="https://www.nytimes.com/column/modern-love-podcast" target="_blank" rel="noopener noreferrer">https://www.nytimes.com/column/modern-love-podcast</a></td>
+
+            <td class="synopsis">Based on the iconic 20+ year NYT column. Actors read personal essays about love, loss, and connection. Hosted by Anna Martin with author interviews.</td>
+
+            <td class="metrics">20+ year column legacy; NYT-branded</td>
+
+            <td class="reach">Hundreds of thousands weekly</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>4</td>
+
+            <td class="resource-name">Love Life with Matthew Hussey</td>
+
+            <td><span class="platform-badge" style="background:#7C3AED"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zM5 10a1 1 0 0 0-2 0 9 9 0 0 0 8 8.94V21h-2a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-2v-2.06A9 9 0 0 0 21 10a1 1 0 1 0-2 0 7 7 0 0 1-14 0z"/></svg> Podcast</span></td>
+
+            <td class="url-cell"><a href="https://podcasts.apple.com/us/podcast/love-life-with-matthew-hussey/id1464256739" target="_blank" rel="noopener noreferrer">https://podcasts.apple.com/us/podcast/love-life-with...</a></td>
+
+            <td class="synopsis">NY Times bestselling author and dating coach. Practical advice on finding love, building confidence, and navigating modern dating. Live coaching sessions.</td>
+
+            <td class="metrics">NY Times bestselling author; millions of YouTube subscribers</td>
+
+            <td class="reach">200K+ monthly listeners</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>5</td>
+
+            <td class="resource-name">Multiamory</td>
+
+            <td><span class="platform-badge" style="background:#7C3AED"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zM5 10a1 1 0 0 0-2 0 9 9 0 0 0 8 8.94V21h-2a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-2v-2.06A9 9 0 0 0 21 10a1 1 0 1 0-2 0 7 7 0 0 1-14 0z"/></svg> Podcast</span></td>
+
+            <td class="url-cell">Listed on Lifehacker top 10</td>
+
+            <td class="synopsis">Dedicated to ethical non-monogamy and polyamory. Covers communication tools, jealousy management, and relationship design. Inclusive and evidence-based.</td>
+
+            <td class="metrics">Featured in Lifehacker, Vogue, and multiple best-of lists</td>
+
+            <td class="reach">50K+ monthly listeners</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>6</td>
+
+            <td class="resource-name">The School of Life</td>
+
+            <td><span class="platform-badge" style="background:#DC2626"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg> YouTube</span></td>
+
+            <td class="url-cell"><a href="https://www.youtube.com/@theschooloflifetv" target="_blank" rel="noopener noreferrer">https://www.youtube.com/@theschooloflifetv</a></td>
+
+            <td class="synopsis">Global educational org by Alain de Botton. Beautifully animated videos about psychology, relationships, and emotional maturity. Attachment styles, compatibility, conflict resolution.</td>
+
+            <td class="metrics">9.64M subscribers; 1,100+ videos; 1–5M+ views per video</td>
+
+            <td class="reach">50M+ monthly views</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>7</td>
+
+            <td class="resource-name">Esther Perel</td>
+
+            <td><span class="platform-badge" style="background:#DC2626"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg> YouTube</span></td>
+
+            <td class="url-cell"><a href="https://www.youtube.com/channel/UC4eN7PS9mi8__4EYxy6VpFw" target="_blank" rel="noopener noreferrer">https://www.youtube.com/channel/UC4eN7PS9mi8__4EYxy6...</a></td>
+
+            <td class="synopsis">Full-length therapy sessions and relationship advice. Covers romantic, friendship, family, and workplace dynamics. &#x27;The Village&#x27; playlist for all connections.</td>
+
+            <td class="metrics">Hundreds of thousands of subscribers; 500K–5M views per video</td>
+
+            <td class="reach">5M+ monthly views</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>8</td>
+
+            <td class="resource-name">The Gottman Institute</td>
+
+            <td><span class="platform-badge" style="background:#DC2626"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg> YouTube</span></td>
+
+            <td class="url-cell"><a href="https://www.youtube.com/user/TheGottmanInstitute" target="_blank" rel="noopener noreferrer">https://www.youtube.com/user/TheGottmanInstitute</a></td>
+
+            <td class="synopsis">Based on 40+ years of research by Drs. John and Julie Gottman. Science-backed advice on the &#x27;Sound Relationship House,&#x27; conflict management, and intimacy.</td>
+
+            <td class="metrics">Hundreds of thousands of subscribers; research authority</td>
+
+            <td class="reach">1M+ monthly views</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>9</td>
+
+            <td class="resource-name">Matthew Hussey</td>
+
+            <td><span class="platform-badge" style="background:#DC2626"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg> YouTube</span></td>
+
+            <td class="url-cell"><a href="https://www.youtube.com/@thematthewhussey" target="_blank" rel="noopener noreferrer">https://www.youtube.com/@thematthewhussey</a></td>
+
+            <td class="synopsis">British dating coach and NYT bestselling author. Content on confidence building, attraction psychology, relationship standards, and self-worth.</td>
+
+            <td class="metrics">Multiple channels; NYT bestseller</td>
+
+            <td class="reach">10M+ monthly views</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>10</td>
+
+            <td class="resource-name">Susan Winter</td>
+
+            <td><span class="platform-badge" style="background:#DC2626"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg> YouTube</span></td>
+
+            <td class="url-cell"><a href="https://www.youtube.com/c/SusanWinter" target="_blank" rel="noopener noreferrer">https://www.youtube.com/c/SusanWinter</a></td>
+
+            <td class="synopsis">Relationship expert and love coach who has helped 6,500+ people. Content on age-gap relationships, dating after divorce, and modern love challenges.</td>
+
+            <td class="metrics">257K subscribers; 1,400+ videos; 35M+ total views</td>
+
+            <td class="reach">500K+ monthly views</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>11</td>
+
+            <td class="resource-name">The Gottman Institute (Blog)</td>
+
+            <td><span class="platform-badge" style="background:#2563EB"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg> Website</span></td>
+
+            <td class="url-cell"><a href="https://www.gottman.com/blog" target="_blank" rel="noopener noreferrer">https://www.gottman.com/blog</a></td>
+
+            <td class="synopsis">Premier research-based relationship resource. Expert insights, research summaries, and practical tools. Offers Relationship Coach app, workshops, and therapist directory.</td>
+
+            <td class="metrics">Millions of monthly visitors; 40+ years of research</td>
+
+            <td class="reach">3–5M+ monthly visitors</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>12</td>
+
+            <td class="resource-name">Psychology Today — Relationships</td>
+
+            <td><span class="platform-badge" style="background:#2563EB"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg> Website</span></td>
+
+            <td class="url-cell"><a href="https://www.psychologytoday.com/us/basics/relationships" target="_blank" rel="noopener noreferrer">https://www.psychologytoday.com/us/basics/relationships</a></td>
+
+            <td class="synopsis">Largest online therapist directory. Articles from licensed therapists on dating, marriage, friendships, family, communication, and emotional intimacy.</td>
+
+            <td class="metrics">11.6M–17.26M monthly visitors (Semrush)</td>
+
+            <td class="reach">15M+ monthly visitors</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>13</td>
+
+            <td class="resource-name">Mark Manson Blog</td>
+
+            <td><span class="platform-badge" style="background:#0D9488"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg> Blog</span></td>
+
+            <td class="url-cell"><a href="https://markmanson.net" target="_blank" rel="noopener noreferrer">https://markmanson.net</a></td>
+
+            <td class="synopsis">Bestselling author of &#x27;The Subtle Art.&#x27; Long-form articles on relationships, dating psychology, and personal development. Counterintuitive, research-backed takes.</td>
+
+            <td class="metrics">$2.5M+ creator business; 3M+ email subscribers</td>
+
+            <td class="reach">5M+ monthly visitors</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>14</td>
+
+            <td class="resource-name">r/relationship_advice</td>
+
+            <td><span class="platform-badge" style="background:#EA580C"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg> Reddit Forum</span></td>
+
+            <td class="url-cell"><a href="https://www.reddit.com/r/relationship_advice" target="_blank" rel="noopener noreferrer">https://www.reddit.com/r/relationship_advice</a></td>
+
+            <td class="synopsis">High-volume community for relationship advice across all types — romantic, friendship, family, coworkers. Broad scope, more casual than r/relationships.</td>
+
+            <td class="metrics">~4M+ members; one of largest advice subreddits</td>
+
+            <td class="reach">4M+ members</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>15</td>
+
+            <td class="resource-name">r/relationships</td>
+
+            <td><span class="platform-badge" style="background:#EA580C"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg> Reddit Forum</span></td>
+
+            <td class="url-cell"><a href="https://www.reddit.com/r/relationships" target="_blank" rel="noopener noreferrer">https://www.reddit.com/r/relationships</a></td>
+
+            <td class="synopsis">Reddit&#x27;s largest community for interpersonal relationship advice. Detailed situation posts with community feedback. Strict rules wiki and moderation.</td>
+
+            <td class="metrics">~3.5M+ members; top 200 Reddit communities</td>
+
+            <td class="reach">3.5M+ members</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>16</td>
+
+            <td class="resource-name">LoveShack.org</td>
+
+            <td><span class="platform-badge" style="background:#D97706"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg> Web Forum</span></td>
+
+            <td class="url-cell"><a href="https://www.loveshack.org/forums" target="_blank" rel="noopener noreferrer">https://www.loveshack.org/forums</a></td>
+
+            <td class="synopsis">One of the oldest dedicated relationship forums. Structured for personal conflicts, self-discovery, and peer advice. Sub-forums for dating, marriage, breakups.</td>
+
+            <td class="metrics">24,987+ topics in General Discussion; 20+ years of history</td>
+
+            <td class="reach">50K–100K monthly visitors</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>17</td>
+
+            <td class="resource-name">7 Cups — Relationship Forum</td>
+
+            <td><span class="platform-badge" style="background:#D97706"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg> Web Forum</span></td>
+
+            <td class="url-cell"><a href="https://www.7cups.com/forum/relationships" target="_blank" rel="noopener noreferrer">https://www.7cups.com/forum/relationships</a></td>
+
+            <td class="synopsis">Peer-support community integrated with online therapy platform. Free emotional support from trained listeners. Dating anxiety, breakup recovery, communication.</td>
+
+            <td class="metrics">Part of 7 Cups serving millions; 500K+ trained listeners</td>
+
+            <td class="reach">500K+ monthly visitors</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>18</td>
+
+            <td class="resource-name">TherapyJeff</td>
+
+            <td><span class="platform-badge" style="background:#000000"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg> TikTok</span></td>
+
+            <td class="url-cell"><a href="https://www.tiktok.com/@therapyjeff" target="_blank" rel="noopener noreferrer">https://www.tiktok.com/@therapyjeff</a></td>
+
+            <td class="synopsis">Licensed therapist (20+ years couples counseling). Bite-sized tips on communication, attachment styles, dating red flags. Author of &#x27;Big Dating Energy.&#x27;</td>
+
+            <td class="metrics">3M followers; 100.3M likes; 39K+ likes per video</td>
+
+            <td class="reach">10M+ weekly views</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>19</td>
+
+            <td class="resource-name">Dr. Julie Smith</td>
+
+            <td><span class="platform-badge" style="background:#000000"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg> TikTok</span></td>
+
+            <td class="url-cell"><a href="https://www.tiktok.com/@drjuliesmith" target="_blank" rel="noopener noreferrer">https://www.tiktok.com/@drjuliesmith</a></td>
+
+            <td class="synopsis">Clinical psychologist breaking down mental health and relationship concepts. Known for &#x27;Why Has Nobody Told Me This Before?&#x27; book and colorful backdrop.</td>
+
+            <td class="metrics">4.9M TikTok followers; 2.2M Instagram; bestselling author</td>
+
+            <td class="reach">15M+ weekly views across platforms</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>20</td>
+
+            <td class="resource-name">Dates &amp; Mates</td>
+
+            <td><span class="platform-badge" style="background:#7C3AED"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zM5 10a1 1 0 0 0-2 0 9 9 0 0 0 8 8.94V21h-2a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-2v-2.06A9 9 0 0 0 21 10a1 1 0 1 0-2 0 7 7 0 0 1-14 0z"/></svg> Podcast</span></td>
+
+            <td class="url-cell">Available on Apple Podcasts</td>
+
+            <td class="synopsis">Certified dating coach Damona Hoffman focuses on modern dating with practical advice. Online dating strategy, communication skills, and relationship readiness.</td>
+
+            <td class="metrics">Featured in Lifehacker&#x27;s 2025 top 10; TV guest appearances</td>
+
+            <td class="reach">30K+ monthly listeners</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>21</td>
+
+            <td class="resource-name">RELATIONSHIP ADVICE</td>
+
+            <td><span class="platform-badge" style="background:#1877F2"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg> Facebook</span></td>
+
+            <td class="url-cell"><a href="https://www.facebook.com/groups/RELATIONSHIPADVICE2K7" target="_blank" rel="noopener noreferrer">https://www.facebook.com/groups/RELATIONSHIPADVICE2K7</a></td>
+
+            <td class="synopsis">Large public community discussing all aspects of relationships. Members post questions and receive peer support and varied perspectives.</td>
+
+            <td class="metrics">Large public group with regular posting</td>
+
+            <td class="reach">100K+ members</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>22</td>
+
+            <td class="resource-name">All About Relationships</td>
+
+            <td><span class="platform-badge" style="background:#1877F2"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg> Facebook</span></td>
+
+            <td class="url-cell"><a href="https://www.facebook.com/groups/2201876856733796" target="_blank" rel="noopener noreferrer">https://www.facebook.com/groups/2201876856733796</a></td>
+
+            <td class="synopsis">Supportive community for relationship questions and peer support. Judgment-free space for discussing problems and receiving advice.</td>
+
+            <td class="metrics">Active private community</td>
+
+            <td class="reach">50K+ members</td>
+
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <div class="tab-panel" id="panel-Health & Nutrition">
+
+    <div class="stats-bar">
+
+      <div class="stat-item"><strong>21</strong> resources</div>
+
+      <div class="stat-item"><strong>1</strong> The Peter Attia Drives</div>
+
+      <div class="stat-item"><strong>1</strong> Huberman Labs</div>
+
+      <div class="stat-item"><strong>1</strong> ZOE Science &amp; Nutritions</div>
+
+      <div class="stat-item"><strong>1</strong> The Proof with Simon Hills</div>
+
+      <div class="stat-item"><strong>1</strong> Dr. Layne Norton Podcasts</div>
+
+    </div>
+
+    <div class="table-wrapper">
+
+      <table>
+        <thead>
+          <tr>
+
+            <th>#</th>
+
+            <th>Resource</th>
+
+            <th>Platform</th>
+
+            <th>URL</th>
+
+            <th>Synopsis</th>
+
+            <th>Engagement Metrics</th>
+
+            <th>Est. Reach</th>
+
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr class="data-row">
+
+            <td>1</td>
+
+            <td class="resource-name">The Peter Attia Drive</td>
+
+            <td><span class="platform-badge" style="background:#7C3AED"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zM5 10a1 1 0 0 0-2 0 9 9 0 0 0 8 8.94V21h-2a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-2v-2.06A9 9 0 0 0 21 10a1 1 0 1 0-2 0 7 7 0 0 1-14 0z"/></svg> Podcast</span></td>
+
+            <td class="url-cell"><a href="https://peterattiamd.com/podcast" target="_blank" rel="noopener noreferrer">https://peterattiamd.com/podcast</a></td>
+
+            <td class="synopsis">Deep-dive by Stanford/Hopkins-trained MD exploring the science of longevity. Covers exercise, nutritional biochemistry, cardiovascular health, cancer, and cognition.</td>
+
+            <td class="metrics">100M+ downloads; #1 NYT bestselling author &#x27;Outlive&#x27;</td>
+
+            <td class="reach">100M+ total downloads</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>2</td>
+
+            <td class="resource-name">Huberman Lab</td>
+
+            <td><span class="platform-badge" style="background:#7C3AED"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg> Podcast/YouTube</span></td>
+
+            <td class="url-cell"><a href="https://www.hubermanlab.com" target="_blank" rel="noopener noreferrer">https://www.hubermanlab.com</a></td>
+
+            <td class="synopsis">Stanford neuroscientist Dr. Andrew Huberman. Neuroscience-driven health tools: nutrition, sleep, focus, exercise, and performance optimization.</td>
+
+            <td class="metrics">7.46M YouTube subscribers; &#x27;world&#x27;s #1 health podcast&#x27;</td>
+
+            <td class="reach">7M+ YouTube subscribers</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>3</td>
+
+            <td class="resource-name">ZOE Science &amp; Nutrition</td>
+
+            <td><span class="platform-badge" style="background:#7C3AED"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg> Podcast/YouTube</span></td>
+
+            <td class="url-cell"><a href="https://www.youtube.com/@joinZOE" target="_blank" rel="noopener noreferrer">https://www.youtube.com/@joinZOE</a></td>
+
+            <td class="synopsis">World-leading scientists explain latest health, nutrition, and gut microbiome research. Translates complex science into practical dietary advice.</td>
+
+            <td class="metrics">873K YouTube subs; 1.4M Spotify; 1.1M Apple followers</td>
+
+            <td class="reach">2.5M+ followers/listeners</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>4</td>
+
+            <td class="resource-name">The Proof with Simon Hill</td>
+
+            <td><span class="platform-badge" style="background:#7C3AED"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg> Podcast/YouTube</span></td>
+
+            <td class="url-cell"><a href="https://theproof.com" target="_blank" rel="noopener noreferrer">https://theproof.com</a></td>
+
+            <td class="synopsis">MSc Nutrition Science host separates fact from fiction using peer-reviewed science. In-depth debates on protein, longevity, gut health, and dietary myths.</td>
+
+            <td class="metrics">Highly recommended on r/nutrition and r/ScientificNutrition</td>
+
+            <td class="reach">100K–300K+ listeners per episode</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>5</td>
+
+            <td class="resource-name">Dr. Layne Norton Podcast</td>
+
+            <td><span class="platform-badge" style="background:#7C3AED"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3zM5 10a1 1 0 0 0-2 0 9 9 0 0 0 8 8.94V21h-2a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-2v-2.06A9 9 0 0 0 21 10a1 1 0 1 0-2 0 7 7 0 0 1-14 0z"/></svg> Podcast</span></td>
+
+            <td class="url-cell"><a href="https://podcasts.apple.com/us/podcast/the-dr-layne-norton-podcast/id1826123551" target="_blank" rel="noopener noreferrer">https://podcasts.apple.com/us/podcast/the-dr-layne-n...</a></td>
+
+            <td class="synopsis">PhD in Nutritional Sciences cuts through health misinformation with evidence-based analysis. Direct, science-backed myth-busting.</td>
+
+            <td class="metrics">4.9/5 Apple Podcasts (333 ratings); 436K YouTube subs</td>
+
+            <td class="reach">50K–100K+ regular listeners</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>6</td>
+
+            <td class="resource-name">FoundMyFitness (Dr. Rhonda Patrick)</td>
+
+            <td><span class="platform-badge" style="background:#7C3AED"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg> Podcast/YouTube</span></td>
+
+            <td class="url-cell"><a href="https://www.foundmyfitness.com/episodes" target="_blank" rel="noopener noreferrer">https://www.foundmyfitness.com/episodes</a></td>
+
+            <td class="synopsis">Biomedical research on micronutrients, sauna, cold exposure, fasting, omega-3, vitamin D, and child nutrition. Deep scientific analysis and health protocols.</td>
+
+            <td class="metrics">661K YouTube subscribers</td>
+
+            <td class="reach">600K–1M+ followers</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>7</td>
+
+            <td class="resource-name">NutritionFacts.org (Dr. Greger)</td>
+
+            <td><span class="platform-badge" style="background:#DC2626"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg> YouTube/Website</span></td>
+
+            <td class="url-cell"><a href="https://www.youtube.com/user/NutritionFactsOrg" target="_blank" rel="noopener noreferrer">https://www.youtube.com/user/NutritionFactsOrg</a></td>
+
+            <td class="synopsis">Science-based nonprofit. Free daily updates on latest nutrition research. Breaks down peer-reviewed studies into accessible short videos. &#x27;Daily Dozen&#x27; checklist.</td>
+
+            <td class="metrics">1.43M YouTube subs; 3,000+ videos; 294.6M total views</td>
+
+            <td class="reach">1.5M+ subscribers</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>8</td>
+
+            <td class="resource-name">Pick Up Limes (Sadia Badiei)</td>
+
+            <td><span class="platform-badge" style="background:#DC2626"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg> YouTube</span></td>
+
+            <td class="url-cell"><a href="https://www.youtube.com/@PickUpLimes" target="_blank" rel="noopener noreferrer">https://www.youtube.com/@PickUpLimes</a></td>
+
+            <td class="synopsis">BSc Dietetics with science-based nutrition education and plant-based recipes. Accessible, gentle, evidence-based content on healthy food relationships.</td>
+
+            <td class="metrics">4.37M YouTube subs; 1.1M Instagram</td>
+
+            <td class="reach">5.5M+ total followers</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>9</td>
+
+            <td class="resource-name">Thomas DeLauer</td>
+
+            <td><span class="platform-badge" style="background:#DC2626"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg> YouTube</span></td>
+
+            <td class="url-cell"><a href="https://www.youtube.com/@ThomasDeLauerOfficial" target="_blank" rel="noopener noreferrer">https://www.youtube.com/@ThomasDeLauerOfficial</a></td>
+
+            <td class="synopsis">One of largest health YouTube channels. Intermittent fasting, ketogenic diets, inflammation, and nutritional science. Complex biochemistry made digestible.</td>
+
+            <td class="metrics">3.96M YouTube subs; 643M+ total views</td>
+
+            <td class="reach">4M subscribers</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>10</td>
+
+            <td class="resource-name">Harvard Nutrition Source</td>
+
+            <td><span class="platform-badge" style="background:#2563EB"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg> Website</span></td>
+
+            <td class="url-cell"><a href="https://nutritionsource.hsph.harvard.edu" target="_blank" rel="noopener noreferrer">https://nutritionsource.hsph.harvard.edu</a></td>
+
+            <td class="synopsis">Harvard&#x27;s authoritative nutrition education. Science-based guides on healthy eating, nutrients, diets, and disease prevention. &#x27;Healthy Eating Plate.&#x27;</td>
+
+            <td class="metrics">Most cited nutrition resource by media worldwide</td>
+
+            <td class="reach">Millions of annual visitors</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>11</td>
+
+            <td class="resource-name">Examine.com</td>
+
+            <td><span class="platform-badge" style="background:#2563EB"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg> Website</span></td>
+
+            <td class="url-cell"><a href="https://examine.com" target="_blank" rel="noopener noreferrer">https://examine.com</a></td>
+
+            <td class="synopsis">Largest independent nutrition and supplement research database. 30+ researchers analyze scientific studies. 100% subscriber-funded (no industry sponsorship).</td>
+
+            <td class="metrics">30+ full-time researchers; 400+ supplements; 1,000+ health topics</td>
+
+            <td class="reach">Hundreds of thousands of subscribers</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>12</td>
+
+            <td class="resource-name">Healthline Nutrition</td>
+
+            <td><span class="platform-badge" style="background:#2563EB"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg> Website</span></td>
+
+            <td class="url-cell"><a href="https://www.healthline.com/nutrition" target="_blank" rel="noopener noreferrer">https://www.healthline.com/nutrition</a></td>
+
+            <td class="synopsis">One of largest health/nutrition sites. Evidence-based articles written and reviewed by registered dietitians and medical professionals.</td>
+
+            <td class="metrics">100M+ monthly visitors (Healthline total)</td>
+
+            <td class="reach">Tens of millions monthly (nutrition section)</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>13</td>
+
+            <td class="resource-name">NutritionFacts.org (Blog)</td>
+
+            <td><span class="platform-badge" style="background:#2563EB"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg> Website</span></td>
+
+            <td class="url-cell"><a href="https://nutritionfacts.org" target="_blank" rel="noopener noreferrer">https://nutritionfacts.org</a></td>
+
+            <td class="synopsis">Comprehensive blog/database with thousands of articles, videos, and Q&amp;As by topic. Dr. Greger reviews ~5,000 scientific papers daily from peer-reviewed journals.</td>
+
+            <td class="metrics">Daily content; monthly live Q&amp;A; extensive database</td>
+
+            <td class="reach">Millions of annual visitors</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>14</td>
+
+            <td class="resource-name">r/nutrition</td>
+
+            <td><span class="platform-badge" style="background:#EA580C"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg> Reddit Forum</span></td>
+
+            <td class="url-cell"><a href="https://www.reddit.com/r/nutrition" target="_blank" rel="noopener noreferrer">https://www.reddit.com/r/nutrition</a></td>
+
+            <td class="synopsis">Largest subreddit for nutrition science discussion. Macronutrients, micronutrients, diets, and nutrition news. Weekly personal nutrition threads.</td>
+
+            <td class="metrics">One of largest nutrition communities; thousands of comments daily</td>
+
+            <td class="reach">~500K+ members</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>15</td>
+
+            <td class="resource-name">r/ScientificNutrition</td>
+
+            <td><span class="platform-badge" style="background:#EA580C"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg> Reddit Forum</span></td>
+
+            <td class="url-cell"><a href="https://www.reddit.com/r/ScientificNutrition" target="_blank" rel="noopener noreferrer">https://www.reddit.com/r/ScientificNutrition</a></td>
+
+            <td class="synopsis">&#x27;Neutral ground for exchanging scientific evidence relating to human nutrition.&#x27; Stricter evidence quality moderation than r/nutrition.</td>
+
+            <td class="metrics">20K+ members (reached milestone April 2026)</td>
+
+            <td class="reach">20K+ members</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>16</td>
+
+            <td class="resource-name">r/HealthyFood</td>
+
+            <td><span class="platform-badge" style="background:#EA580C"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg> Reddit Forum</span></td>
+
+            <td class="url-cell"><a href="https://www.reddit.com/r/HealthyFood" target="_blank" rel="noopener noreferrer">https://www.reddit.com/r/HealthyFood</a></td>
+
+            <td class="synopsis">Community for sharing healthful food — recipes, nutritional info, and healthy eating strategies. Like r/food but with a healthful focus.</td>
+
+            <td class="metrics">Active since 2010</td>
+
+            <td class="reach">~100K–200K+ members</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>17</td>
+
+            <td class="resource-name">Dr. Greger Support Group</td>
+
+            <td><span class="platform-badge" style="background:#1877F2"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg> Facebook</span></td>
+
+            <td class="url-cell"><a href="https://www.facebook.com/groups/874450206005170" target="_blank" rel="noopener noreferrer">https://www.facebook.com/groups/874450206005170</a></td>
+
+            <td class="synopsis">Discusses science-based findings from Dr. Greger&#x27;s books and NutritionFacts.org. Members share Daily Dozen implementation strategies.</td>
+
+            <td class="metrics">Active moderation; aligned with 1.43M YouTube sub ecosystem</td>
+
+            <td class="reach">10K–50K+ members</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>18</td>
+
+            <td class="resource-name">Nutrition &amp; Food Science Depot</td>
+
+            <td><span class="platform-badge" style="background:#1877F2"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg> Facebook</span></td>
+
+            <td class="url-cell"><a href="https://www.facebook.com/groups/1570078269928198" target="_blank" rel="noopener noreferrer">https://www.facebook.com/groups/1570078269928198</a></td>
+
+            <td class="synopsis">Global community sharing nutrition and food science research, news, and evidence-based discussions from around the world.</td>
+
+            <td class="metrics">Open community; international membership</td>
+
+            <td class="reach">5K–20K+ members</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>19</td>
+
+            <td class="resource-name">Abbey Sharp (@abbeyskitchen)</td>
+
+            <td><span class="platform-badge" style="background:#000000"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg> TikTok</span></td>
+
+            <td class="url-cell"><a href="https://www.tiktok.com/@abbeyskitchen" target="_blank" rel="noopener noreferrer">https://www.tiktok.com/@abbeyskitchen</a></td>
+
+            <td class="synopsis">Registered dietitian debunks wellness culture BS with &#x27;Science &amp; Sass.&#x27; Reviews popular diets and trends with evidence-based analysis. Anti-toxic diet culture.</td>
+
+            <td class="metrics">1.1M TikTok followers; 48.2M total likes</td>
+
+            <td class="reach">1.1M+ followers</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>20</td>
+
+            <td class="resource-name">Steph Grasso, MS, RD</td>
+
+            <td><span class="platform-badge" style="background:#000000"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg> TikTok</span></td>
+
+            <td class="url-cell">Search &#x27;Steph Grasso dietitian&#x27;</td>
+
+            <td class="synopsis">Registered dietitian with pediatric nutrition experience. Evidence-based tips, meal ideas, and responses to nutrition misinformation. Top health influencer 2025.</td>
+
+            <td class="metrics">2.2M TikTok followers</td>
+
+            <td class="reach">2.2M+ followers</td>
+
+          </tr>
+
+          <tr class="data-row">
+
+            <td>21</td>
+
+            <td class="resource-name">Dalia (@dsbnutrition)</td>
+
+            <td><span class="platform-badge" style="background:#000000"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg> TikTok</span></td>
+
+            <td class="url-cell"><a href="https://www.tiktok.com/@dsbnutrition" target="_blank" rel="noopener noreferrer">https://www.tiktok.com/@dsbnutrition</a></td>
+
+            <td class="synopsis">Registered dietitian with evidence-based nutrition content. Free 7-day meal plans and science-backed dietary guidance.</td>
+
+            <td class="metrics">Growing account in RD community</td>
+
+            <td class="reach">50K–200K+ followers</td>
+
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+</div>
+
+<div class="footer">
+  <p>All metrics based on publicly available data as of early 2026. Engagement figures are estimates and may fluctuate.</p>
+</div>
+
+<script>
+(function() {
+  // Tab switching
+  const tabs = document.querySelectorAll('.tab');
+  const panels = document.querySelectorAll('.tab-panel');
+  const searchInput = document.getElementById('searchInput');
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const target = tab.dataset.tab;
+      tabs.forEach(t => t.classList.remove('active'));
+      panels.forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('panel-' + target).classList.add('active');
+      // Clear search on tab switch
+      searchInput.value = '';
+      filterRows('');
+    });
+  });
+
+  // Search
+  searchInput.addEventListener('input', (e) => {
+    filterRows(e.target.value);
+  });
+
+  function filterRows(query) {
+    const q = query.toLowerCase().trim();
+    document.querySelectorAll('.data-row').forEach(row => {
+      const text = row.textContent.toLowerCase();
+      row.style.display = (!q || text.includes(q)) ? '' : 'none';
+    });
+
+    // Show no-results message
+    document.querySelectorAll('.tab-panel').forEach(panel => {
+      let visible = panel.querySelectorAll('.data-row:not([style*="display: none"])');
+      let existing = panel.querySelector('.no-results');
+      if (existing) existing.remove();
+      
+      if (q && visible.length === 0 && panel.querySelector('table')) {
+        let msg = document.createElement('div');
+        msg.className = 'no-results';
+        msg.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><p>No resources match your search</p>';
+        panel.querySelector('.table-wrapper').after(msg);
+      }
+    });
+  }
+})();
+</script>
+
+</body>
+</html>

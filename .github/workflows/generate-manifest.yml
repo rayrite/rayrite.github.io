@@ -1,7 +1,7 @@
 name: Auto-generate items manifest
 
-# This workflow runs whenever Markdown files in the /items folder are added,
-# removed, or renamed. It regenerates items/manifest.json and commits it back
+# This workflow runs whenever Markdown files in /cvx/advertising/2/items are added,
+# removed, or renamed. It regenerates cvx/advertising/2/items/manifest.json and commits it back
 # to the repository. Your markdown reader then picks up the updated list on
 # its next page load without you ever editing manifest.json by hand.
 
@@ -10,10 +10,11 @@ on:
     branches:
       - main
     paths:
-      # Trigger when any .md file inside /items changes in any way
-      - 'items/**.md'
+      # Trigger when any .md file inside /cvx/advertising/2/items changes
+      - 'cvx/advertising/2/items/*.md'
+      - 'cvx/advertising/2/items/**/*.md'
       # Also trigger when the manifest itself is deleted, so it gets rebuilt
-      - 'items/manifest.json'
+      - 'cvx/advertising/2/items/manifest.json'
   # Allow manual runs from the Actions tab as a safety valve
   workflow_dispatch:
 
@@ -30,31 +31,31 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      # Scan /items for .md files and build a sorted JSON array of filenames.
+      # Scan /cvx/advertising/2/items for .md files and build a sorted JSON array of filenames.
       # We use a small shell + jq script rather than pulling in Node to keep
       # the workflow fast and dependency-free.
       - name: Generate manifest.json
         run: |
-          # Create items/ if someone accidentally deletes it, so the workflow
+          # Create target folder if someone accidentally deletes it, so workflow
           # never fails for a trivially recoverable reason.
-          mkdir -p items
+          mkdir -p cvx/advertising/2/items
 
-          # Find all .md files directly inside /items (not recursive), sort
+          # Find all .md files directly inside /cvx/advertising/2/items (not recursive), sort
           # them naturally, and emit them as a JSON array.
           # -maxdepth 1 keeps this non-recursive — change to a higher number
           # if you ever want to include subfolders.
-          files=$(find items -maxdepth 1 -type f -name '*.md' -printf '%f\n' | sort)
+          files=$(find cvx/advertising/2/items -maxdepth 1 -type f -name '*.md' -printf '%f\n' | sort)
 
           # Build the JSON manifest. The format matches what listViaManifest()
           # in your index.html already accepts: a plain array of filenames.
           if [ -z "$files" ]; then
-            echo "[]" > items/manifest.json
+            echo "[]" > cvx/advertising/2/items/manifest.json
           else
-            echo "$files" | jq -R -s -c 'split("\n") | map(select(length > 0))' > items/manifest.json
+            echo "$files" | jq -R -s -c 'split("\n") | map(select(length > 0))' > cvx/advertising/2/items/manifest.json
           fi
 
           echo "Generated manifest:"
-          cat items/manifest.json
+          cat cvx/advertising/2/items/manifest.json
 
       # Only commit if the manifest actually changed — avoids noisy empty commits
       - name: Commit manifest if changed
@@ -63,10 +64,10 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           # Stage the manifest and check whether there's a real diff
-          git add items/manifest.json
+          git add cvx/advertising/2/items/manifest.json
           if git diff --cached --quiet; then
             echo "No manifest changes to commit."
           else
-            git commit -m "chore: regenerate items/manifest.json [skip ci]"
+            git commit -m "chore: regenerate cvx/advertising/2/items/manifest.json [skip ci]"
             git push
           fi

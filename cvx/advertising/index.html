@@ -328,12 +328,13 @@
   .table-wrapper {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+    max-width: 100%;
   }
   table {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.95rem;
-    min-width: 900px;
+    table-layout: fixed;
   }
   thead th {
     background: var(--bg-table-head);
@@ -348,8 +349,16 @@
     position: sticky;
     top: 0;
     z-index: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
-  thead th:first-child { width: 40px; text-align: center; }
+  thead th:nth-child(1) { width: 4%; }
+  thead th:nth-child(2) { width: 18%; }
+  thead th:nth-child(3) { width: 12%; }
+  thead th:nth-child(4) { width: 16%; }
+  thead th:nth-child(5) { width: 28%; }
+  thead th:nth-child(6) { width: 13%; }
+  thead th:nth-child(7) { width: 9%; }
   
   tbody tr {
     border-bottom: 1px solid var(--border-color);
@@ -363,6 +372,9 @@
     padding: 11px 14px;
     vertical-align: top;
     line-height: 1.5;
+    overflow: hidden;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
   td:first-child {
     text-align: center;
@@ -376,7 +388,11 @@
   .resource-name {
     font-weight: 700;
     color: var(--primary);
-    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
   }
 
   /* Platform badge */
@@ -396,9 +412,13 @@
   .url-cell a {
     color: var(--text-link);
     text-decoration: none;
-    word-break: break-all;
     font-size: 0.8rem;
     transition: color 0.15s;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
+    max-width: 100%;
   }
   .url-cell a:hover {
     color: var(--primary);
@@ -407,14 +427,16 @@
 
   /* Synopsis */
   .synopsis {
-    max-width: none;
-    min-width: 250px;
+    overflow: hidden;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 
   /* Metrics */
   .metrics {
-    max-width: 280px;
-    min-width: 180px;
+    overflow: hidden;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
     font-size: 0.82rem;
   }
 
@@ -484,12 +506,21 @@
     .tab { padding: 6px 10px; font-size: 0.75rem; }
     .tab .count { font-size: 0.65rem; padding: 1px 5px; }
     .overview-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; padding: 16px; }
-    .overview-card { padding: 14px; }
+    .overview-card { padding: 14px; overflow: hidden; }
     .overview-card .num { font-size: 1.6rem; }
+    .overview-card .label { word-wrap: break-word; overflow-wrap: break-word; }
+    .overview-card .detail { word-wrap: break-word; overflow-wrap: break-word; }
     .stats-bar { padding: 10px 12px; gap: 10px; }
     .stat-item { font-size: 0.75rem; }
     .footer { padding: 12px 16px 24px; }
     .footer p { font-size: 0.72rem; }
+    thead th:nth-child(1) { width: 6%; }
+    thead th:nth-child(2) { width: 20%; }
+    thead th:nth-child(3) { width: 14%; }
+    thead th:nth-child(4) { width: 16%; }
+    thead th:nth-child(5) { width: 24%; }
+    thead th:nth-child(6) { width: 12%; }
+    thead th:nth-child(7) { width: 8%; }
   }
 
   @media (max-width: 480px) {
@@ -504,10 +535,10 @@
     .tab { padding: 5px 8px; font-size: 0.72rem; }
     .tab .count { font-size: 0.6rem; padding: 0 4px; }
     .overview-grid { grid-template-columns: 1fr 1fr; gap: 8px; padding: 12px; }
-    .overview-card { padding: 12px; border-radius: 8px; }
+    .overview-card { padding: 12px; border-radius: 8px; overflow: hidden; }
     .overview-card .num { font-size: 1.4rem; }
-    .overview-card .label { font-size: 0.78rem; }
-    .overview-card .detail { font-size: 0.7rem; }
+    .overview-card .label { font-size: 0.78rem; word-wrap: break-word; overflow-wrap: break-word; }
+    .overview-card .detail { font-size: 0.7rem; word-wrap: break-word; overflow-wrap: break-word; }
     .stats-bar { gap: 6px; padding: 8px 10px; flex-wrap: wrap; }
     .stat-item { font-size: 0.68rem; }
     #font-size-label { display: none; }
@@ -516,23 +547,30 @@
     .table-wrapper { overflow-x: visible; }
     table, thead, tbody, th, td, tr {
       display: block;
+      width: 100% !important;
+      min-width: 0 !important;
+      max-width: 100% !important;
     }
     thead { display: none; }
     tr {
       border-bottom: 1px solid var(--border-color) !important;
-      padding: 12px 10px;
+      padding: 12px;
       margin: 0;
       background: transparent !important;
     }
-    tr:hover { background: transparent !important; }
+    tr:nth-child(odd) { background: var(--bg-row-even) !important; }
+    tr:hover { background: var(--bg-row-hover) !important; }
     td {
       padding: 2px 0;
       width: 100% !important;
       min-width: 0 !important;
-      max-width: none !important;
+      max-width: 100% !important;
       text-align: left !important;
       border: none;
       line-height: 1.45;
+      overflow: hidden;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
     }
     td:first-child {
       font-size: 0.72rem;
@@ -541,15 +579,24 @@
       margin-bottom: 2px;
       border-bottom: 1px solid var(--border-color);
     }
-    td::before {
-      display: none;
+    td::before { display: none; }
+    .resource-name {
+      white-space: normal;
+      font-size: 0.95rem;
+      -webkit-line-clamp: 3;
     }
-    .resource-name { white-space: normal; font-size: 0.95rem; }
-    .platform-badge { margin-top: 2px; }
-    .url-cell { margin-top: 2px; }
-    .url-cell a { font-size: 0.75rem; word-break: break-all; }
-    .synopsis { margin-top: 6px; font-size: 0.82rem; }
-    .metrics { margin-top: 6px; font-size: 0.78rem; }
+    .platform-badge { margin-top: 4px; }
+    .url-cell { margin-top: 4px; overflow: hidden; }
+    .url-cell a {
+      font-size: 0.72rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: block;
+      word-break: normal;
+    }
+    .synopsis { margin-top: 6px; font-size: 0.82rem; line-height: 1.4; }
+    .metrics { margin-top: 6px; font-size: 0.78rem; line-height: 1.4; }
     .reach { margin-top: 4px; font-size: 0.78rem; }
 
     .content { padding: 0 0 24px; }

@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Markdown Viewer</title>
+
+  <!-- Marked.js for Markdown -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <!-- DOMPurify for safe HTML rendering -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
+
+  <!-- Prism.js for code highlighting -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script>
+    function loadPrismComponent(src) {
+      return new Promise(function(resolve) {
+        var s = document.createElement('script');
+        s.src = src;
+        s.onload = resolve;
+        s.onerror = function() { console.warn('Failed to load Prism component:', src); resolve(); };
+        document.head.appendChild(s);
+      });
+    }
+    document.addEventListener('DOMContentLoaded', async function() {
+      var langs = [
+        'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-csharp.min.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js'
+      ];
+      for (var i = 0; i < langs.length; i++) await loadPrismComponent(langs[i]);
+      if (typeof Prism !== 'undefined' && Prism.languages) {
+        if (Prism.languages.sql) Prism.languages.plsql = Prism.languages.sql;
+        if (Prism.languages.csharp) { Prism.languages.vbnet = Prism.languages.csharp; Prism.languages.vb = Prism.languages.csharp; }
+      }
+    });
+  </script>
+
+  <style>
+    /* === Base Reset & Light Mode === */
+    body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f4f4f4; color:#333; }
+    a { color: #0066cc; }
+    a:hover { color: #004499; }
+
+    /* === Fixed Header — 2 rows === */
+    .header { position:fixed; top:0; left:0; width:100%; z-index:999; background:#fff; border-bottom:1px solid #ddd; }
+    .header-main { display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding:5px 10px; }
+    .header-main h1 { margin:0; font-size:1.05rem; white-space:nowrap; }
+    #filenameDisplay { color:navy; font-weight:bold; font-size:0.9rem; }
+
+    /* File row */
+    .file-row { display:flex; align-items:center; gap:6px; }
+    #fileSelect { min-width:160px; max-width:50vw; padding:4px 6px; font-size:12px; border:1px solid #ccc; border-radius:4px; }
+    #refreshBtn { padding:4px 8px; font-size:12px; border:1px solid #ccc; background:#fff; border-radius:4px; cursor:pointer; }
+    #refreshBtn:hover { background:#f0f0f0; }
+
+    /* Font size controls */
+    .font-controls { display:flex; align-items:center; gap:3px; }
+    .font-controls button { padding:3px 6px; font-size:12px; border:1px solid #ccc; background:#fff; border-radius:4px; cursor:pointer; }
+    .font-controls button:hover { background:#f0f0f0; }
+    .font-controls select { padding:3px 4px; font-size:12px; border:1px solid #ccc; border-radius:4px; }
+
+    /* Theme toggle */
+    .theme-switch { font-size:13px; margin-left:auto; }
+
+    /* Status */
+    .status { font-size:11px; color:#666; }
+
+    /* === Anchor Pill Navigation (fallback for ≤5 headings) === */
+    .header-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      padding: 3px 10px;
+      border-top: 1px solid #eee;
+      max-height: 70px;
+      overflow-y: auto;
+      min-height: 28px;
+      align-items: center;
+    }
+    .header-nav.hidden { display: none; }
+    .header-nav::-webkit-scrollbar { width: 3px; }
+    .header-nav::-webkit-scrollbar-thumb { background: #ccc; border-radius: 2px; }
+    .anchor-pill {
+      padding: 2px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      text-decoration: none;
+      white-space: nowrap;
+      background: #e0e0e0;
+      color: #333;
+      transition: background 0.2s;
+      cursor: pointer;
+    }
+    .anchor-pill:hover { background: #ccc; }
+    .anchor-pill.level-h1 { font-weight: bold; font-size: 12px; }
+    .anchor-pill.level-h2 { font-weight: 600; }
+    .anchor-pill.level-h3, .anchor-pill.level-h4, .anchor-pill.level-h5, .anchor-pill.level-h6 { font-size: 10px; opacity: 0.8; }
+    .nav-placeholder { color: #999; font-size: 11px; font-style: italic; }
+
+    /* === Sidebar Toggle Button === */
+    .sidebar-toggle {
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #fff;
+      background: #4a90d9;
+      border: none;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s;
+      display: none;
+    }
+    .sidebar-toggle:hover { background: #3a7bc8; }
+    .sidebar-toggle.visible { display: inline-flex; align-items: center; gap: 4px; }
+
+    /* === Sidebar === */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 240px;
+      height: 100%;
+      background: #fafafa;
+      border-right: 1px solid #eee;
+      overflow-y: auto;
+      z-index: 1001;
+      transform: translateX(-100%);
+      transition: transform 0.25s ease;
+      padding: 48px 0 16px 0;
+    }
+    .sidebar.open { transform: translateX(0); }
+    .sidebar-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.3);
+      z-index: 1000;
+      display: none;
+    }
+    .sidebar-backdrop.visible { display: block; }
+
+    .sidebar-header {
+      font-weight: bold;
+      font-size: 10px;
+      text-transform: uppercase;
+      color: #888;
+      padding: 8px 14px 6px;
+      border-bottom: 1px solid #eee;
+      margin-bottom: 4px;
+    }
+
+    .toc-item {
+      display: block;
+      padding: 4px 12px;
+      text-decoration: none;
+      color: #666;
+      cursor: pointer;
+      border-left: 3px solid transparent;
+      transition: background 0.15s, border-color 0.15s;
+      font-size: 12px;
+      line-height: 1.4;
+    }
+    .toc-item:hover { background: #f0f0f0; }
+    .toc-item.level-h1 { font-weight: bold; font-size: 12px; color: #333; }
+    .toc-item.level-h2 { font-size: 11px; padding-left: 24px; }
+    .toc-item.level-h3 { font-size: 11px; padding-left: 36px; color: #888; }
+    .toc-item.level-h4 { font-size: 10px; padding-left: 48px; color: #999; }
+    .toc-item.level-h5, .toc-item.level-h6 { font-size: 10px; padding-left: 56px; color: #aaa; }
+    .toc-item.active {
+      background: #fff3cd;
+      border-left-color: #f0c040;
+      color: #333;
+      font-weight: 600;
+    }
+    .toc-item.past { color: #bbb; }
+    .toc-item.future { color: #ccc; }
+
+    /* === Content Area === */
+    .body-content { margin-top: 68px; padding:10px; }
+    .container { max-width:100%; margin:0 auto; background:#fff; }
+    #content { padding:16px; line-height:1.6; }
+
+    /* === Headings — scroll offset for sticky header === */
+    #content h1, #content h2, #content h3, #content h4, #content h5, #content h6 {
+      scroll-margin-top: 80px;
+    }
+    .anchor-highlight {
+      outline: 2px solid #f59e0b;
+      outline-offset: 4px;
+      border-radius: 4px;
+    }
+
+    /* === Code Blocks (clean, no controls) === */
+    pre {
+      padding: 12px 16px;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-size: 14px;
+      margin: 12px 0;
+      background: #f8f8f8;
+      border: 1px solid #e0e0e0;
+      font-family: Consolas, 'Courier New', monospace;
+      line-height: 1.5;
+    }
+    code {
+      font-family: Consolas, 'Courier New', monospace;
+    }
+    #content :not(pre) > code {
+      background: #f0f0f0;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 0.9em;
+      border: 1px solid #e0e0e0;
+    }
+
+    /* === Tables === */
+    #content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      font-size: inherit;
+    }
+    #content thead {
+      background: #f0f0f0;
+      border-bottom: 2px solid #ccc;
+    }
+    #content th {
+      padding: 8px 12px;
+      text-align: left;
+      font-weight: bold;
+      border: 1px solid #ddd;
+    }
+    #content td {
+      padding: 6px 12px;
+      border: 1px solid #e0e0e0;
+    }
+    #content tbody tr:nth-child(even) {
+      background: #f9f9f9;
+    }
+    #content tbody tr:hover {
+      background: #f0f4f8;
+    }
+
+    /* === Print Mode === */
+    .print-mode .header { display:none !important; }
+    .print-mode .body-content { margin-top:0 !important; padding:0 !important; }
+    .print-mode .container { background:#fff !important; box-shadow:none !important; border:none !important; }
+    .print-mode pre { white-space:pre-wrap !important; word-wrap:break-word !important; }
+
+    /* === Dark Mode (Navy + Maize) === */
+    .dark-mode { background:#0a1628; color:#f0d060; }
+    .dark-mode .header { background:#0d1b30; border-bottom-color:#1e3a5f; color:#f0d060; }
+    .dark-mode .header-nav { border-top-color:#1e3a5f; }
+    .dark-mode .container { background:#111d35; color:#f0d060; }
+    .dark-mode #filenameDisplay { color:#fbbf24; }
+    .dark-mode a { color:#93c5fd; }
+    .dark-mode a:hover { color:#bfdbfe; }
+    .dark-mode #fileSelect,
+    .dark-mode #refreshBtn,
+    .dark-mode .font-controls button,
+    .dark-mode .font-controls select { background:#1e3a5f; border-color:#2a4a6f; color:#f0d060; }
+    .dark-mode #refreshBtn:hover,
+    .dark-mode .font-controls button:hover { background:#2a4a6f; }
+    .dark-mode .theme-switch { color:#f0d060; }
+    .dark-mode .anchor-pill { background:#1e3a5f; color:#f0d060; }
+    .dark-mode .anchor-pill:hover { background:#2a4a6f; }
+    .dark-mode .nav-placeholder { color:#5a7a9f; }
+    .dark-mode .sidebar { background:#0d1b30; border-right-color:#1e3a5f; }
+    .dark-mode .sidebar-header { color:#5a7a9f; border-bottom-color:#1e3a5f; }
+    .dark-mode .sidebar-toggle { background:#1e3a5f; color:#f0d060; }
+    .dark-mode .sidebar-toggle:hover { background:#2a4a6f; }
+    .dark-mode .toc-item { color:#7aaacf; }
+    .dark-mode .toc-item:hover { background:#162d45; }
+    .dark-mode .toc-item.level-h1 { color:#f0d060; }
+    .dark-mode .toc-item.level-h3 { color:#4a7a9f; }
+    .dark-mode .toc-item.level-h4 { color:#3a6a8f; }
+    .dark-mode .toc-item.level-h5, .dark-mode .toc-item.level-h6 { color:#2a5a7f; }
+    .dark-mode .toc-item.active { background:#2a3a20; border-left-color:#fbbf24; color:#f0d060; }
+    .dark-mode .toc-item.past { color:#3a5a7f; }
+    .dark-mode .toc-item.future { color:#2a4a6f; }
+    .dark-mode pre { background:#0a1628; border-color:#1e3a5f; }
+    .dark-mode #content :not(pre) > code { background:#1e3a5f; border-color:#2a4a6f; }
+    .dark-mode #content thead { background:#1e3a5f; border-bottom-color:#2a4a6f; }
+    .dark-mode #content th { border-color:#2a4a6f; color:#fbbf24; }
+    .dark-mode #content td { border-color:#1e3a5f; }
+    .dark-mode #content tbody tr:nth-child(even) { background:#0f2035; }
+    .dark-mode #content tbody tr:hover { background:#162d45; }
+    .dark-mode #content h1, .dark-mode #content h2, .dark-mode #content h3,
+    .dark-mode #content h4, .dark-mode #content h5, .dark-mode #content h6 { color:#fbbf24; }
+    .dark-mode .anchor-highlight { outline-color:#fbbf24; }
+
+    /* === Mobile === */
+    @media (max-width: 768px) {
+      .body-content { margin-top: 90px !important; }
+      .header-main h1 { font-size:0.95rem; }
+      #filenameDisplay { font-size:11px; }
+      #fileSelect { max-width:40vw; }
+      .font-controls select { display: none; }
+      .header-nav { font-size: 10px; padding: 2px 8px; }
+      .anchor-pill { padding: 2px 7px; font-size: 10px; }
+      .sidebar { width: 200px; }
+    }
+
+    @media print {
+      .header { display:none !important; }
+      .sidebar, .sidebar-backdrop { display:none !important; }
+      .body-content { margin-top:0 !important; padding:0 !important; }
+      .container { background:#fff !important; color:#000 !important; box-shadow:none !important; border:none !important; }
+      pre { white-space:pre-wrap !important; word-wrap:break-word !important; font-size:10pt !important; overflow:visible !important; }
+      body { font-size:12pt !important; line-height:1.4 !important; color:#000 !important; background:#fff !important; }
+      h1,h2,h3,h4,h5,h6 { page-break-after: avoid; break-after: avoid; }
+      img { max-width:100% !important; height:auto !important; }
+      .page-break { page-break-before: always; }
+      .no-break { page-break-inside: avoid; }
+      #content table { page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body class="dark-mode">
+
+  <div class="header">
+    <!-- Row 1: Title, filename, file selector, font size, theme -->
+    <div class="header-main">
+      <button class="sidebar-toggle" id="sidebarToggle" title="Toggle table of contents"></button>
+      <h1>Markdown Viewer</h1>
+      <span id="filenameDisplay">No file loaded</span>
+
+      <div class="file-row">
+        <select id="fileSelect" title="Markdown files in /items"></select>
+        <button id="refreshBtn" title="Rescan items">&#x21bb;</button>
+        <span class="status" id="statusMsg"></span>
+      </div>
+
+      <div class="font-controls">
+        <button id="fontDec" title="Decrease font size">A&minus;</button>
+        <select id="fontSizeSelect" title="Font size">
+          <option value="12">12px</option>
+          <option value="14">14px</option>
+          <option value="16" selected>16px</option>
+          <option value="18">18px</option>
+          <option value="20">20px</option>
+          <option value="24">24px</option>
+        </select>
+        <button id="fontInc" title="Increase font size">A+</button>
+      </div>
+
+      <label class="theme-switch">
+        <input type="checkbox" id="themeToggle" checked> Dark Mode
+      </label>
+    </div>
+
+    <!-- Row 2: Scrollable anchor pill navigation -->
+    <div class="header-nav" id="anchorNav">
+      <span class="nav-placeholder">Load a file to see headings</span>
+    </div>
+  </div>
+
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">Contents</div>
+    <div id="tocContainer"></div>
+  </div>
+
+  <div class="body-content">
+    <div class="container">
+      <div id="content">
+        <div style="text-align:center; color:#666; padding:40px;">
+          <h2>Welcome</h2>
+          <p>Select a file from the list above (auto-scanned from <code>/items</code>).</p>
+          <p><strong>Shortcuts:</strong> Ctrl+P to print, Ctrl+Shift+P for print preview, Alt+R to rescan.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    //======================
+    // CONFIG
+    //======================
+    var CONFIG = {
+      ACCEPTED_EXTENSIONS: ['.md'],
+      MARKED_OPTIONS: { breaks:true, gfm:true },
+      GITHUB_FALLBACK: {
+        owner: '',
+        repo: '',
+        branch: 'main'
+      },
+      DEFAULT_FILE: ''
+    };
+
+    //======================
+    // ELEMENTS
+    //======================
+    var fileNameDisplay  = document.getElementById('filenameDisplay');
+    var contentContainer = document.getElementById('content');
+    var themeToggle      = document.getElementById('themeToggle');
+    var fileSelect       = document.getElementById('fileSelect');
+    var refreshBtn       = document.getElementById('refreshBtn');
+    var statusMsg        = document.getElementById('statusMsg');
+    var anchorNav        = document.getElementById('anchorNav');
+    var sidebar          = document.getElementById('sidebar');
+    var sidebarToggle    = document.getElementById('sidebarToggle');
+    var sidebarBackdrop  = document.getElementById('sidebarBackdrop');
+    var tocContainer     = document.getElementById('tocContainer');
+    var fontSizeSelect   = document.getElementById('fontSizeSelect');
+    var fontDec          = document.getElementById('fontDec');
+    var fontInc          = document.getElementById('fontInc');
+    var scrollObserver   = null;
+
+    //======================
+    // UTIL
+    //======================
+    function setStatus(msg, timeout) {
+      if (timeout === undefined) timeout = 3000;
+      statusMsg.textContent = msg || '';
+      if (timeout) {
+        setTimeout(function() { if (statusMsg.textContent === msg) statusMsg.textContent = ''; }, timeout);
+      }
+    }
+    function isMarkdown(name) {
+      var lower = name.toLowerCase();
+      return CONFIG.ACCEPTED_EXTENSIONS.some(function(ext) { return lower.endsWith(ext); });
+    }
+    function sanitizePath(name) {
+      return name.replace(/[^a-zA-Z0-9._\-\/]/g, '').replace(/^\/*/, '');
+    }
+
+    //======================
+    // LOADING & RENDERING
+    //======================
+    function renderMarkdown(name, mdText) {
+      fileNameDisplay.textContent = name;
+      marked.setOptions(CONFIG.MARKED_OPTIONS);
+
+      // Sanitize markdown HTML output through DOMPurify
+      var rawHtml = marked.parse(mdText);
+      var safeHtml = DOMPurify.sanitize(rawHtml, {
+        ADD_TAGS: ['table', 'thead', 'tbody', 'tr', 'th', 'td'],
+        ADD_ATTR: ['href', 'src', 'alt', 'id', 'class']
+      });
+
+      // Clear and populate content
+      contentContainer.textContent = '';
+      var heading = document.createElement('h2');
+      heading.textContent = name;
+      heading.dataset.autoTitle = 'true';
+      contentContainer.appendChild(heading);
+
+      // Use a temporary div to parse safe HTML, then move children
+      var tmp = document.createElement('div');
+      tmp.textContent = '';  // safety
+      tmp.innerHTML = safeHtml;
+      while (tmp.firstChild) contentContainer.appendChild(tmp.firstChild);
+
+      Prism.highlightAll();
+      buildToc();
+      window.scrollTo({ top: 0 });
+    }
+
+    function loadMarkdownFile(url, nameForHeader) {
+      fetch(url, { cache: 'no-store' })
+        .then(function(res) {
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          return res.text();
+        })
+        .then(function(text) {
+          renderMarkdown(nameForHeader || url, text);
+        })
+        .catch(function(err) {
+          console.error('Markdown loading error:', err);
+          contentContainer.textContent = '';
+          var p = document.createElement('p');
+          p.style.color = '#b00';
+          p.textContent = 'Failed to load: ' + url;
+          contentContainer.appendChild(p);
+        });
+    }
+
+    //======================
+    // ANCHOR NAVIGATION & SIDEBAR
+    //======================
+    var HEADING_THRESHOLD = 5;
+
+    function buildToc() {
+      // Clear both containers
+      while (anchorNav.firstChild) anchorNav.removeChild(anchorNav.firstChild);
+      while (tocContainer.firstChild) tocContainer.removeChild(tocContainer.firstChild);
+
+      // Disconnect old observer
+      if (scrollObserver) { scrollObserver.disconnect(); scrollObserver = null; }
+
+      var headings = contentContainer.querySelectorAll('h1, h2, h3, h4, h5, h6');
+      // Exclude auto-generated filename heading from threshold count
+      var userHeadings = [];
+      for (var i = 0; i < headings.length; i++) {
+        if (!headings[i].dataset.autoTitle) userHeadings.push(headings[i]);
+      }
+
+      if (headings.length === 0) {
+        anchorNav.classList.remove('hidden');
+        sidebarToggle.classList.remove('visible');
+        var placeholder = document.createElement('span');
+        placeholder.className = 'nav-placeholder';
+        placeholder.textContent = 'No headings found';
+        anchorNav.appendChild(placeholder);
+        return;
+      }
+
+      // Assign IDs
+      for (var i = 0; i < headings.length; i++) {
+        if (!headings[i].id) headings[i].id = 'heading-' + i;
+      }
+
+      if (userHeadings.length <= HEADING_THRESHOLD) {
+        // Few headings: show pills in header, hide sidebar toggle
+        anchorNav.classList.remove('hidden');
+        sidebarToggle.classList.remove('visible');
+        for (var j = 0; j < headings.length; j++) {
+          var h = headings[j];
+          var pill = document.createElement('a');
+          pill.href = '#' + h.id;
+          pill.textContent = h.textContent;
+          pill.className = 'anchor-pill level-' + h.tagName.toLowerCase();
+          anchorNav.appendChild(pill);
+        }
+      } else {
+        // Many headings: hide pill row, show sidebar toggle
+        anchorNav.classList.add('hidden');
+        sidebarToggle.classList.add('visible');
+        sidebarToggle.textContent = '\u2630 Contents ' + userHeadings.length;
+
+        for (var k = 0; k < headings.length; k++) {
+          var heading = headings[k];
+          var item = document.createElement('a');
+          item.href = '#' + heading.id;
+          item.textContent = heading.textContent;
+          item.className = 'toc-item level-' + heading.tagName.toLowerCase();
+          item.dataset.headingId = heading.id;
+          tocContainer.appendChild(item);
+        }
+
+        // Set up scroll tracking
+        setupScrollTracking(headings);
+      }
+    }
+
+    function setupScrollTracking(headings) {
+      var headerEl = document.querySelector('.header');
+      var headerH = headerEl ? headerEl.offsetHeight : 60;
+      var tocItems = tocContainer.querySelectorAll('.toc-item');
+
+      scrollObserver = new IntersectionObserver(function(entries) {
+        // Find the topmost visible heading
+        var activeId = null;
+        for (var i = 0; i < entries.length; i++) {
+          if (entries[i].isIntersecting) {
+            activeId = entries[i].target.id;
+          }
+        }
+        if (!activeId) return;
+
+        // Update classes on all toc items
+        var found = false;
+        for (var j = 0; j < tocItems.length; j++) {
+          var item = tocItems[j];
+          if (item.dataset.headingId === activeId) {
+            item.classList.add('active');
+            item.classList.remove('past', 'future');
+            found = true;
+          } else if (!found) {
+            item.classList.add('past');
+            item.classList.remove('active', 'future');
+          } else {
+            item.classList.add('future');
+            item.classList.remove('active', 'past');
+          }
+        }
+
+        // Scroll active item into view in sidebar
+        var activeItem = tocContainer.querySelector('.toc-item.active');
+        if (activeItem) {
+          var st = activeItem.offsetTop - sidebar.clientHeight / 2 + activeItem.offsetHeight / 2;
+          sidebar.scrollTo({ top: Math.max(0, st), behavior: 'smooth' });
+        }
+      }, {
+        rootMargin: '-' + (headerH + 10) + 'px 0px -60% 0px',
+        threshold: 1.0
+      });
+
+      for (var i = 0; i < headings.length; i++) {
+        scrollObserver.observe(headings[i]);
+      }
+    }
+
+    // Toggle sidebar open/close
+    function toggleSidebar() {
+      var isOpen = sidebar.classList.contains('open');
+      if (isOpen) {
+        sidebar.classList.remove('open');
+        sidebarBackdrop.classList.remove('visible');
+        sidebarToggle.textContent = '\u2630 Contents ' + (tocContainer.children.length || '');
+      } else {
+        sidebar.classList.add('open');
+        sidebarBackdrop.classList.add('visible');
+        sidebarToggle.textContent = '\u2715 Contents ' + (tocContainer.children.length || '');
+      }
+    }
+
+    sidebarToggle.addEventListener('click', toggleSidebar);
+    sidebarBackdrop.addEventListener('click', toggleSidebar);
+
+    // Intercept anchor clicks for smooth scroll with header offset
+    document.addEventListener('click', function(e) {
+      var link = e.target.closest('a[href^="#"]');
+      if (!link) return;
+      var href = link.getAttribute('href');
+      if (!href || href.length < 2) return;
+      e.preventDefault();
+      var target = document.querySelector(href);
+      if (target) {
+        var headerEl = document.querySelector('.header');
+        var offset = headerEl ? headerEl.offsetHeight + 8 : 80;
+        window.scrollTo({ top: target.offsetTop - offset, behavior: 'smooth' });
+        target.classList.add('anchor-highlight');
+        setTimeout(function() { target.classList.remove('anchor-highlight'); }, 2000);
+
+        // Close sidebar on mobile after click
+        if (window.innerWidth <= 768 && sidebar.classList.contains('open')) {
+          toggleSidebar();
+        }
+      }
+    });
+
+    //======================
+    // FONT SIZE CONTROLS
+    //======================
+    function setFontSize(size) {
+      document.getElementById('content').style.fontSize = size + 'px';
+      fontSizeSelect.value = size;
+    }
+    fontDec.addEventListener('click', function() {
+      var idx = fontSizeSelect.selectedIndex;
+      if (idx > 0) setFontSize(parseInt(fontSizeSelect.options[idx - 1].value));
+    });
+    fontInc.addEventListener('click', function() {
+      var idx = fontSizeSelect.selectedIndex;
+      if (idx < fontSizeSelect.options.length - 1) setFontSize(parseInt(fontSizeSelect.options[idx + 1].value));
+    });
+    fontSizeSelect.addEventListener('change', function() {
+      setFontSize(parseInt(fontSizeSelect.value));
+    });
+
+    //======================
+    // PRINT & THEME
+    //======================
+    function togglePrintMode() {
+      document.body.classList.toggle('print-mode');
+      var isPM = document.body.classList.contains('print-mode');
+      if (isPM) {
+        var y = window.pageYOffset; window.scrollTo(0,0); document.body.dataset.scrollY = y;
+      } else {
+        var y2 = parseInt(document.body.dataset.scrollY || '0', 10); window.scrollTo(0, y2);
+      }
+    }
+    function printDocument() {
+      var was = document.body.classList.contains('print-mode');
+      if (!was) document.body.classList.add('print-mode');
+      window.print();
+      if (!was) document.body.classList.remove('print-mode');
+    }
+
+    themeToggle.addEventListener('change', function() { document.body.classList.toggle('dark-mode'); });
+
+    //======================
+    // AUTO-SCAN /items
+    //======================
+    function tryAutoDetectGithub() {
+      var host = location.hostname.toLowerCase();
+      var path = location.pathname;
+      var out = { owner:'', repo:'', branch: CONFIG.GITHUB_FALLBACK.branch || 'main' };
+
+      if (host.endsWith('.github.io')) {
+        var owner = host.split('.github.io')[0];
+        out.owner = owner;
+        var segs = path.split('/').filter(Boolean);
+        if (segs.length === 0) {
+          out.repo = owner + '.github.io';
+        } else {
+          out.repo = segs[0];
+        }
+      }
+      if (CONFIG.GITHUB_FALLBACK.owner) out.owner = CONFIG.GITHUB_FALLBACK.owner;
+      if (CONFIG.GITHUB_FALLBACK.repo) out.repo  = CONFIG.GITHUB_FALLBACK.repo;
+      return (out.owner && out.repo) ? out : null;
+    }
+
+    // Returns { found:true, files:[...] } when manifest exists,
+    // or { found:false, files:null } when it doesn't.
+    function listViaManifest() {
+      return fetch('items/manifest.json', { cache:'no-store' })
+        .then(function(res) {
+          if (!res.ok) {
+            console.log('[scan] manifest.json not found (HTTP ' + res.status + ')');
+            return null;
+          }
+          return res.json();
+        })
+        .then(function(data) {
+          if (!data) return { found: false, files: null };
+          var files = null;
+          if (Array.isArray(data)) files = data.filter(isMarkdown);
+          else if (data && Array.isArray(data.files)) files = data.files.filter(isMarkdown);
+          if (files !== null) {
+            console.log('[scan] manifest.json loaded, ' + files.length + ' file(s)');
+            return { found: true, files: files };
+          }
+          console.warn('[scan] manifest.json has unexpected format:', data);
+          return { found: false, files: null };
+        })
+        .catch(function(err) {
+          console.warn('[scan] Failed to load manifest.json:', err);
+          return { found: false, files: null };
+        });
+    }
+
+    function fetchGithubContents(gh, branch) {
+      var url = 'https://api.github.com/repos/' + gh.owner + '/' + gh.repo + '/contents/items?ref=' + encodeURIComponent(branch);
+      return fetch(url, { headers: { 'Accept': 'application/vnd.github.v3+json' } })
+        .then(function(res) {
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          return res.json();
+        })
+        .then(function(data) {
+          if (!Array.isArray(data)) return null;
+          return data.filter(function(entry) { return entry.type === 'file' && isMarkdown(entry.name); })
+                     .map(function(entry) { return entry.name; });
+        });
+    }
+
+    function listViaGithubAPI(gh) {
+      if (!gh) return Promise.resolve(null);
+      console.log('[scan] Trying GitHub API for ' + gh.owner + '/' + gh.repo);
+
+      // Try configured branch first, then fallback branches
+      var branches = [];
+      var configured = CONFIG.GITHUB_FALLBACK.branch || 'main';
+      if (configured) branches.push(configured);
+      if (branches.indexOf('main') === -1) branches.push('main');
+      if (branches.indexOf('master') === -1) branches.push('master');
+      if (branches.indexOf('gh-pages') === -1) branches.push('gh-pages');
+
+      var lastError = null;
+      function tryBranch(idx) {
+        if (idx >= branches.length) {
+          console.warn('GitHub API listing failed on all branches:', lastError);
+          return null;
+        }
+        console.log('[scan] Trying branch: ' + branches[idx]);
+        return fetchGithubContents(gh, branches[idx])
+          .then(function(files) {
+            if (files && files.length > 0) {
+              console.log('[scan] Found ' + files.length + ' file(s) on branch ' + branches[idx]);
+              gh.branch = branches[idx]; // record which branch worked
+              return files;
+            }
+            return tryBranch(idx + 1);
+          })
+          .catch(function(e) {
+            lastError = e;
+            return tryBranch(idx + 1);
+          });
+      }
+      return tryBranch(0);
+    }
+
+    // Track how files were discovered so the file loader uses the right URL
+    var currentScanSource = null;  // 'manifest' or 'github-api'
+    var currentGhInfo = null;      // { owner, repo, branch } when github-api
+
+    function scanItems() {
+      setStatus('Scanning /items\u2026');
+      var ghInfo = tryAutoDetectGithub();
+      console.log('[scan] GitHub detection:', ghInfo ? (ghInfo.owner + '/' + ghInfo.repo) : 'not on GitHub Pages');
+      return listViaManifest()
+        .then(function(manifest) {
+          if (manifest.found) {
+            // Manifest exists — use it even if empty (empty = intentionally no files)
+            if (manifest.files.length > 0) {
+              setStatus('Loaded ' + manifest.files.length + ' file(s) from manifest.', 2500);
+            } else {
+              setStatus('Manifest loaded but contains no .md files.', 3000);
+            }
+            return { files: manifest.files, source: 'manifest', ghInfo: ghInfo };
+          }
+          // No manifest — try GitHub API fallback
+          if (!ghInfo) {
+            setStatus('No manifest found and not on GitHub Pages. Create items/manifest.json.', 5000);
+            return { files: [], source: null, ghInfo: null };
+          }
+          setStatus('Trying GitHub API (' + ghInfo.owner + '/' + ghInfo.repo + ')\u2026');
+          return listViaGithubAPI(ghInfo).then(function(gf) {
+            if (gf && gf.length > 0) {
+              setStatus('Loaded ' + gf.length + ' file(s) from GitHub.', 2500);
+              return { files: gf, source: 'github-api', ghInfo: ghInfo };
+            }
+            return { files: [], source: null, ghInfo: ghInfo };
+          });
+        })
+        .then(function(result) {
+          var files = result.files || [];
+          currentScanSource = result.source;
+          currentGhInfo = result.ghInfo;
+
+          if (files.length === 0 && result.ghInfo && !result.source) {
+            setStatus('No .md files found in /items. Ensure files exist and repo is public.', 5000);
+          }
+          files.sort(function(a,b) { return a.localeCompare(b, undefined, {numeric:true, sensitivity:'base'}); });
+
+          // Clear select safely
+          fileSelect.textContent = '';
+          if (files.length === 0) {
+            var op = document.createElement('option');
+            op.textContent = 'No files found in /items';
+            op.disabled = true;
+            op.selected = true;
+            fileSelect.appendChild(op);
+          } else {
+            var prompt = document.createElement('option');
+            prompt.textContent = 'Select a file\u2026';
+            prompt.disabled = true;
+            prompt.selected = true;
+            fileSelect.appendChild(prompt);
+            for (var i = 0; i < files.length; i++) {
+              var opt = document.createElement('option');
+              opt.value = files[i];
+              opt.textContent = files[i];
+              fileSelect.appendChild(opt);
+            }
+          }
+          console.log('[scan] Done. Source=' + currentScanSource + ', files=' + files.length);
+          return files;
+        })
+        .catch(function(err) {
+          console.error('[scan] Unexpected error in scanItems:', err);
+          setStatus('Scan failed. Check console for details.', 5000);
+          return [];
+        });
+    }
+
+    function getFileUrl(filename) {
+      var safe = sanitizePath(filename);
+      if (currentScanSource === 'github-api' && currentGhInfo) {
+        // When files were discovered via GitHub API, load from raw.githubusercontent.com
+        return 'https://raw.githubusercontent.com/' +
+          encodeURIComponent(currentGhInfo.owner) + '/' +
+          encodeURIComponent(currentGhInfo.repo) + '/' +
+          encodeURIComponent(currentGhInfo.branch) + '/items/' + safe;
+      }
+      return 'items/' + safe;
+    }
+
+    fileSelect.addEventListener('change', function() {
+      var name = fileSelect.value;
+      if (!name) return;
+      loadMarkdownFile(getFileUrl(name), name);
+      if (window.innerWidth <= 768) {
+        var bc = document.querySelector('.body-content');
+        if (bc) window.scrollTo({ top: bc.offsetTop, behavior: 'smooth' });
+      }
+    });
+
+    refreshBtn.addEventListener('click', function() { scanItems(); });
+
+    //======================
+    // INIT
+    //======================
+    document.addEventListener('DOMContentLoaded', function() {
+      scanItems().then(function() {
+        if (CONFIG.DEFAULT_FILE) {
+          loadMarkdownFile(getFileUrl(CONFIG.DEFAULT_FILE), CONFIG.DEFAULT_FILE);
+        }
+      });
+    });
+
+    //======================
+    // KEYBOARD SHORTCUTS
+    //======================
+    document.addEventListener('keydown', function(e) {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+      if (e.ctrlKey && e.key === 'p') { e.preventDefault(); printDocument(); }
+      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'p') { e.preventDefault(); togglePrintMode(); }
+      if (e.altKey && e.key.toLowerCase() === 'r') { e.preventDefault(); scanItems(); }
+    });
+  </script>
+
+</body>
+</html>

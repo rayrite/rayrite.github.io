@@ -65,21 +65,21 @@ Here's the complete markdown file with **302 resources** organized across all fo
 | ---------------------------- | ------------------------------------------------------------- | -------- | ----------------------------------------------------------------------------- | --------------------------------- | ----------------- |
 | Dude Perfect                 | [YouTube](https://www.youtube.com/c/DudePerfect)              | YouTube  | Five best friends doing sports stunts and trick shots with celebrity athletes | 61.9M subscribers, 20.4B views    | 61.9M subscribers |
 | House of Highlights          | [YouTube](https://www.youtube.com/c/HouseofHighlights)        | YouTube  | Sports highlights and influencer-driven content with athlete challenges       | 17.5M subscribers, 11.7B views    | 17.5M subscribers |
-| Jomboy Media                 | [YouTube](https://www.youtube.com/c/JomboyMedia)              | YouTube  | Sports breakdown videos, podcasts, and baseball content                       | 2.21M subscribers, 956K Instagram | 2.2M subscribers  |
+| Jomboy Media                 | [YouTube](https://www.youtube.com/@JomboyMedia)              | YouTube  | Sports breakdown videos, podcasts, and baseball content                       | 2.21M subscribers, 956K Instagram | 2.2M subscribers  |
 | Skip and Shannon: UNDISPUTED | [YouTube](https://www.youtube.com/c/SkipandShannonUNDISPUTED) | YouTube  | Fox Sports debate show discussing sports headlines                            | 2.6M subscribers, 567K Facebook   | 2.6M subscribers  |
 | Brodie Smith                 | [YouTube](https://www.youtube.com/c/BrodieSmith)              | YouTube  | Ultimate Frisbee champion doing trick shots with athlete collaborations       | 2.2M subscribers, 525K Facebook   | 2.2M subscribers  |
-| Rick Shiels Golf             | [YouTube](https://www.youtube.com/c/RickShielsGolf)           | YouTube  | Professional golf YouTuber with course vlogs and PGA player challenges        | 3M subscribers, 1.6M Facebook     | 3M subscribers    |
-| IAAF Athletics               | [YouTube](https://www.youtube.com/c/IAAFAthletics)            | YouTube  | World Athletics official channel featuring track and field athletes           | 2.4M subscribers, 901K Facebook   | 2.4M subscribers  |
-| ABS-CBN Sports               | [YouTube](https://www.youtube.com/c/ABSCBNSports)             | YouTube  | Philippines-based sports channel covering UAAP, NCAA, NBA                     | 1.6M subscribers, 2.1M Facebook   | 1.6M subscribers  |
+| Rick Shiels Golf             | [YouTube](https://www.youtube.com/@RickShielsPGA)           | YouTube  | Professional golf YouTuber with course vlogs and PGA player challenges        | 3M subscribers, 1.6M Facebook     | 3M subscribers    |
+| IAAF Athletics               | [YouTube](https://www.youtube.com/@WorldAthletics)            | YouTube  | World Athletics official channel featuring track and field athletes           | 2.4M subscribers, 901K Facebook   | 2.4M subscribers  |
+| ABS-CBN Sports               | [YouTube](https://www.youtube.com/@ABSCBNSports)             | YouTube  | Philippines-based sports channel covering UAAP, NCAA, NBA                     | 1.6M subscribers, 2.1M Facebook   | 1.6M subscribers  |
 | VICE Sports                  | [YouTube](https://www.youtube.com/c/VICESports)               | YouTube  | VICE's sports channel covering culture beyond the game                        | 1.1M subscribers, 266K Facebook   | 1.1M subscribers  |
 | TMZSports                    | [YouTube](https://www.youtube.com/c/TMZSports)                | YouTube  | TMZ's sports channel covering athlete news and scandals                       | 875K subscribers, 203K Facebook   | 875K subscribers  |
 | Sports Illustrated           | [YouTube](https://www.youtube.com/c/SportsIllustrated)        | YouTube  | Official Sports Illustrated channel with athlete interviews                   | 602K subscribers, 3.5M Facebook   | 602K subscribers  |
 | GiraffeNeckMarc              | [YouTube](https://www.youtube.com/c/GiraffeNeckMarc)          | YouTube  | Baseball-focused channel covering MLB with rankings and grades                | Popular baseball influencer       | 500K+ subscribers |
-| Stephen "Wonderboy" Thompson | [YouTube](https://www.youtube.com/c/StephenWonderboyThompson) | YouTube  | UFC fighter's channel covering MMA and martial arts training                  | UFC fighter following             | 400K+ subscribers |
+| Stephen "Wonderboy" Thompson | [YouTube](https://www.youtube.com/@WonderboyMMA) | YouTube  | UFC fighter's channel covering MMA and martial arts training                  | UFC fighter following             | 400K+ subscribers |
 | Michael Bisping              | [YouTube](https://www.youtube.com/c/MichaelBisping)           | YouTube  | Former UFC Champion's channel with MMA analysis                               | UFC champion's platform           | 400K+ subscribers |
-| Nick Symmonds                | [YouTube](https://www.youtube.com/c/NickSymmonds)             | YouTube  | Two-time Olympian's fitness challenges and track content                      | Olympian influencer               | 400K+ subscribers |
+| Nick Symmonds                | [YouTube](https://www.youtube.com/@NickSymmonds)             | YouTube  | Two-time Olympian's fitness challenges and track content                      | Olympian influencer               | 400K+ subscribers |
 | ScooterMagruder              | [YouTube](https://www.youtube.com/c/ScooterMagruder)          | YouTube  | Comedian creating sports skits featured by ESPN and NBA TV                    | Strong sports comedy following    | 300K+ subscribers |
-| Eric Sim                     | [YouTube](https://www.youtube.com/c/EricSim)                  | YouTube  | Former pro baseball player doing extreme baseball challenges                  | Growing channel                   | 300K+ subscribers |
+| Eric Sim                     | [YouTube](https://www.youtube.com/@EricSimBaseball)                  | YouTube  | Former pro baseball player doing extreme baseball challenges                  | Growing channel                   | 300K+ subscribers |
 | BBallbreakdown               | [YouTube](https://www.youtube.com/c/BBallbreakdown)           | YouTube  | Coach Nick's basketball analysis with 20+ years experience                    | Strong basketball following       | 250K+ subscribers |
 | Foolish Baseball             | [YouTube](https://www.youtube.com/c/FoolishBaseball)          | YouTube  | Deep-dive baseball video essays with historical analysis                      | Popular baseball analysis         | 200K+ subscribers |
 | MisterFilOfficial            | [YouTube](https://www.youtube.com/c/MisterFilOfficial)        | YouTube  | Track and field athletics channel                                             | 280K subscribers                  | 280K subscribers  |
@@ -157,7 +157,7 @@ Here's the complete markdown file with **302 resources** organized across all fo
 
 | Resource              | URL                                                     | Platform | Synopsis                                                  | Engagement Metrics               | Est. Reach |
 | --------------------- | ------------------------------------------------------- | -------- | --------------------------------------------------------- | -------------------------------- | ---------- |
-| Zoom - Bollywood News | [YouTube](https://www.youtube.com/channel/UCotI-SqRX)   | YouTube  | Largest online destination for Bollywood-related content  | 9.8M subscribers, 15.6M Facebook | 50M+       |
+| Zoom - Bollywood News | [YouTube](https://www.youtube.com/@zoomtv)   | YouTube  | Largest online destination for Bollywood-related content  | 9.8M subscribers, 15.6M Facebook | 50M+       |
 | Entertainment Tonight | [YouTube](https://www.youtube.com/entertainmenttonight) | YouTube  | Most watched entertainment news program in the world      | 7.5M subscribers, 13M Facebook   | 40M+       |
 | TMZ                   | [YouTube](https://www.youtube.com/tmz)                  | YouTube  | Latest celebrity gossip and entertainment news            | 5M subscribers, 9.9M Facebook    | 35M+       |
 | Clevver News          | [YouTube](https://www.youtube.com/clevvernews)          | YouTube  | #1 source for pop culture and celebrity news              | 4.8M subscribers, 1.5M Facebook  | 15M+       |
@@ -227,7 +227,7 @@ Here's the complete markdown file with **302 resources** organized across all fo
 | Reddit r/popculturechat  | [reddit.com](https://www.reddit.com/r/popculturechat/)                                 | Forum    | Active community for celebrity gossip and pop culture       | Highly active daily posts       | 5M+         |
 | Reddit r/CelebrityGossip | [reddit.com](https://www.reddit.com/r/CelebrityGossip/)                                | Forum    | Subreddit for discussing celebrity kids, spouses, affairs   | 2M Facebook, 1.1M Twitter       | 10M+        |
 | Purse Blog Forums        | [purseblog.com](https://forum.purseblog.com/forums/celebrity-news-gossip-and-style.7/) | Forum    | World's largest designer fashion community                  | Long-running active forum       | 1M+         |
-| Netmums Forum            | [netmums.com](https://www.netmums.com/coffeehouse/other-chat-threads/celebrity-gossip) | Forum    | UK's biggest parenting website with celebrity gossip        | 1.6M Facebook, 134K Twitter     | 5M+         |
+| Netmums Forum            | [netmums.com](https://www.netmums.com/coffeehouse) | Forum    | UK's biggest parenting website with celebrity gossip        | 1.6M Facebook, 134K Twitter     | 5M+         |
 
 ---
 
@@ -262,10 +262,10 @@ Here's the complete markdown file with **302 resources** organized across all fo
 | Abe Lincoln's Top Hat         | [SoundCloud](https://soundcloud.com/top-hat)                       | Podcast  | Politics and social issues with comedic takes                          | 3.9K Apple reviews, 4.7/5 rating | 100K-200K downloads |
 | Dumb Gay Podcast              | [PodcastOne](https://podcastone.com/dumb-gay-podcast)              | Podcast  | Bravo stars talk politics like reality TV                              | 3.5K Apple reviews, 4.8/5 rating | 100K-200K downloads |
 | The Skepticrat                | [AudioBoom](https://audioboom.com/channel/the-skepticrat)          | Podcast  | Covering politics from the far center with skepticism                  | 2.4K Apple reviews, 4.8/5 rating | 75K-150K downloads  |
-| The Al Franken Podcast        | [alfranken.com](https://alfranken.com/podcast)                     | Podcast  | Former SNL writer and US Senator on public policy and comedy           | 8.4K Apple reviews, 4.6/5 rating | 300K-600K downloads |
+| The Al Franken Podcast        | [alfranken.com](https://www.alfranken.com/listen)                     | Podcast  | Former SNL writer and US Senator on public policy and comedy           | 8.4K Apple reviews, 4.6/5 rating | 300K-600K downloads |
 | The Bob Cesca Show            | [bobcescashow.com](https://bobcescashow.com)                       | Podcast  | Funny liberal political talk                                           | 1.9K Apple reviews, 4.8/5 rating | 100K-200K downloads |
 | Stephanie Miller's Happy Hour | [stephaniemiller.com](https://stephaniemiller.com)                 | Podcast  | America's original "Sexy Liberal" with celebrity friends               | 2.7K Apple reviews, 4.8/5 rating | 150K-300K downloads |
-| Lovett or Leave It            | [Crooked](https://crooked.com/podcast/lovett-or-leave-it)          | Podcast  | Former Obama speechwriter Jon Lovett's comedic takes                   | Part of Crooked Media            | 200K-400K downloads |
+| Lovett or Leave It            | [Crooked](https://crooked.com/podcast-series/lovett-or-leave-it/)          | Podcast  | Former Obama speechwriter Jon Lovett's comedic takes                   | Part of Crooked Media            | 200K-400K downloads |
 | The Daily Show: Ears Edition  | [The Daily Show](https://www.thedailyshow.com)                     | Podcast  | Jon Stewart and team covering today's headlines in audio               | Multiple hosts                   | 500K-1M downloads   |
 
 ### YouTube Channels
@@ -275,13 +275,13 @@ Here's the complete markdown file with **302 resources** organized across all fo
 | The Daily Show                     | [YouTube](https://www.youtube.com/thedailyshow)         | YouTube  | Emmy and Peabody Award-winning program through satire        | 13M subscribers                 | 5-10M views/video     |
 | LastWeekTonight                    | [YouTube](https://www.youtube.com/lastweektonight)      | YouTube  | John Oliver's weekly satirical news program                  | 10M subscribers                 | 5-8M views/video      |
 | The Late Show with Stephen Colbert | [YouTube](https://www.youtube.com/colbertlateshow)      | YouTube  | Late-night comedy with political satire                      | 10M subscribers                 | 3-6M views/video      |
-| Comedy Central Stand-Up            | [YouTube](https://www.youtube.com/comedycentralstandup) | YouTube  | Best stand-up comedy clips including political comedians     | 2.8M subscribers, 7.3M Facebook | 500K-1M views/video   |
+| Comedy Central Stand-Up            | [YouTube](https://www.youtube.com/@ComedyCentral) | YouTube  | Best stand-up comedy clips including political comedians     | 2.8M subscribers, 7.3M Facebook | 500K-1M views/video   |
 | The Babylon Bee                    | [YouTube](https://www.youtube.com/thebabylonbee)        | YouTube  | Conservative satirical news and commentary videos            | 1.88M subscribers, 400M+ views  | 100K-500K views/video |
 | Mark Mack Comedy                   | [YouTube](https://www.youtube.com/markmackcomedy)       | YouTube  | Actor, comedian, host with iconic voices in political comedy | 537K subscribers                | 50K-150K views/video  |
 | The United Spot                    | [YouTube](https://www.youtube.com/theunitedspot)        | YouTube  | Brings memes to life with political satire                   | 336K subscribers                | 50K-200K views/video  |
 | Parody Project                     | [YouTube](https://www.youtube.com/parodyproject)        | YouTube  | Political satire helping manage insanity of current politics | 138K subscribers                | 20K-50K views/video   |
 | Jonathan Pie                       | [YouTube](https://www.youtube.com/jonathanpie)          | YouTube  | British comedy sensation satirizing politics and media       | 995K subscribers, 1.9M Facebook | 500K-2M views/video   |
-| The Salty Voter                    | [YouTube](https://www.youtube.com/thesaltyvoter)        | YouTube  | Political news and clips with humor and sarcasm              | 45.3K subscribers               | 5K-20K views/video    |
+| The Salty Voter                    | [YouTube](https://www.youtube.com/@TheSaltyVoter)        | YouTube  | Political news and clips with humor and sarcasm              | 45.3K subscribers               | 5K-20K views/video    |
 
 ### TikTok Channels
 
@@ -297,7 +297,7 @@ Here's the complete markdown file with **302 resources** organized across all fo
 
 | Resource                     | URL                                                         | Platform | Synopsis                                                 | Engagement Metrics        | Est. Reach      |
 | ---------------------------- | ----------------------------------------------------------- | -------- | -------------------------------------------------------- | ------------------------- | --------------- |
-| The Satirist                 | [thesatirist.com](https://thesatirist.com/satires/politics) | Blog     | Original works of satire, parody, political commentary   | 561 Facebook, 810 Twitter | 10K-25K monthly |
+| The Satirist                 | [thesatirist.com](https://www.thesatirist.com/satires) | Blog     | Original works of satire, parody, political commentary   | 561 Facebook, 810 Twitter | 10K-25K monthly |
 | Mad Kane's Political Madness | [madkane.com](https://madkane.com/madness)                  | Blog     | Political humor, limericks, satirical poetry mocking GOP | 1.5K Twitter, DA 70       | 15K-30K monthly |
 | Joe Gallina Blogs            | [joe-gallina.com](https://joe-gallina.com/blogs)            | Blog     | Biting and witty platform on current affairs             | 2M Facebook, 1.2M Twitter | 500K-1M monthly |
 | Martha Skewermann Blog       | [marthaskewermann.com](https://marthaskewermann.com/blog)   | Blog     | Political journalism satire overturning conventions      | 17K Twitter               | 10K-20K monthly |
@@ -354,7 +354,7 @@ Here's the complete markdown file with **302 resources** organized across all fo
 | Caglecast              | [YouTube](https://www.youtube.com/@caglecast)                      | YouTube  | Weekly video podcast with cartoon slideshows and interviews | Available on YouTube/Spotify  | Thousands weekly      |
 | UniTOON States         | [YouTube](https://www.youtube.com/@UniTOONStatesPoliticalCartoons) | YouTube  | Daily political cartoons with Trump satire                  | 8,110 subscribers, 188K views | 8K+ subscribers       |
 | So Sorry (India Today) | [YouTube](https://www.youtube.com/@SoSorrypolitoons)               | YouTube  | India's first politoons series with animated cartoons       | Major media outlet            | Large Indian audience |
-| Daily Kos Comics       | [dailykos.com](https://www.dailykos.com/groups/Comics)             | Website  | Progressive news site featuring political comics            | Part of major platform        | Large progressive     |
+| Daily Kos Comics       | [dailykos.com](https://www.dailykos.com)             | Website  | Progressive news site featuring political comics            | Part of major platform        | Large progressive     |
 
 ### Instagram Accounts
 

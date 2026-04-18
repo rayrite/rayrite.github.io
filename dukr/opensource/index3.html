@@ -231,6 +231,8 @@
             white-space: nowrap;
             color: #a1a1aa;
         }
+        .col-timestamp a { color: #a1a1aa; text-decoration: none; font-family: 'Courier New', monospace; }
+        .col-timestamp a:hover { color: #667eea; text-decoration: underline; }
 
         .col-date {
             width: 120px;
@@ -685,7 +687,7 @@
                     row.innerHTML = `
                         <td class="col-number">${product.product_number || '-'}</td>
                         <td class="col-name">${escapeHtml(product.name)}</td>
-                        <td class="col-timestamp">${product.timestamp || '-'}</td>
+                        <td class="col-timestamp">${product.timestamp ? (() => { const p = product.timestamp.split(':').map(Number); const s = p.length === 3 ? p[0]*3600+p[1]*60+p[2] : p.length === 2 ? p[0]*60+p[1] : p[0]||0; const sep = video.video_url.includes('?') ? '&amp;' : '?'; return `<a href="${video.video_url}${sep}t=${s}" target="_blank" title="Jump to ${product.timestamp}">${product.timestamp}</a>`; })() : '-'}</td>
                         <td class="col-date">${productDate}</td>
                         <td class="col-links">
                             ${githubUrl ? `<a href="${githubUrl}" target="_blank" rel="noopener" class="github-link">${githubIcon} GitHub</a>` : ''}

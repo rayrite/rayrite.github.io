@@ -40,6 +40,8 @@ tbody tr:hover{background:rgba(255,255,255,0.05)}
 .col-number{width:60px;text-align:center;font-weight:600;color:#667eea;font-family:'Courier New',monospace}
 .col-name{min-width:200px;font-weight:600;color:#fff}
 .col-timestamp{width:100px;white-space:nowrap;color:#a1a1aa}
+.col-timestamp a{color:#a1a1aa;text-decoration:none;font-family:'Courier New',monospace}
+.col-timestamp a:hover{color:#667eea;text-decoration:underline}
 .col-links{width:150px;white-space:nowrap}
 .col-synopsis,.col-transcript{min-width:300px;max-width:400px}
 a{color:#667eea;text-decoration:none}
@@ -93,6 +95,8 @@ document.getElementById('filtered-products').textContent=tot;
 if(!tot){document.getElementById('content').style.display='none';document.getElementById('no-results').style.display='block';return}
 document.getElementById('content').style.display='block';document.getElementById('no-results').style.display='none';
 render(filtered)}
+function tsToSec(t){if(!t)return 0;const p=t.split(':').map(Number);if(p.length===3)return p[0]*3600+p[1]*60+p[2];if(p.length===2)return p[0]*60+p[1];return p[0]||0}
+function ytTsLink(videoUrl,timestamp){if(!timestamp||!videoUrl)return timestamp;const s=tsToSec(timestamp);const sep=videoUrl.includes('?')?'&':'?';return`<a href="${videoUrl}${sep}t=${s}" target="_blank" title="Jump to ${timestamp}">${timestamp}</a>`}
 function render(data){
 const c=document.getElementById('content');c.innerHTML='';
 data.forEach(v=>{
@@ -106,7 +110,7 @@ const link=url?`<a class="github-link" href="${url}" target="_blank">${GH} Repo<
 const web=p.website?`<a class="github-link" href="${p.website}" target="_blank">Web</a>`:'';
 const syn=esc(p.synopsis||'');
 const txt=esc((p.transcript_text||'').substring(0,300));
-tbl+=`<tr><td class="col-number">${i+1}</td><td class="col-name">${esc(p.name)}</td><td class="col-timestamp">${p.timestamp||''}</td><td class="col-links">${link}${web}</td><td><div class="text-content">${syn}</div></td><td><div class="text-content">${txt}</div></td></tr>`;
+tbl+=`<tr><td class="col-number">${i+1}</td><td class="col-name">${esc(p.name)}</td><td class="col-timestamp">${ytTsLink(v.video_url,p.timestamp)}</td><td class="col-links">${link}${web}</td><td><div class="text-content">${syn}</div></td><td><div class="text-content">${txt}</div></td></tr>`;
 });
 tbl+='</tbody></table></div>';
 sec.innerHTML+=tbl;c.appendChild(sec)})}

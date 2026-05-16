@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IoT & Physical AI Watchlist</title>
+<style>
+/* ── Reset & Base ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:        #0f1117;
+  --bg-card:   #181a20;
+  --bg-hover:  #1e2028;
+  --border:    #2a2d35;
+  --text:      #e4e6ea;
+  --text-dim:  #8b8d93;
+  --accent:    #6c8cff;
+  --accent2:   #a78bfa;
+  --green:     #34d399;
+  --green-dim: #064e3b;
+  --blue:      #60a5fa;
+  --blue-dim:  #1e3a5f;
+  --amber:     #fbbf24;
+  --amber-dim: #78350f;
+  --emerald:   #10b981;
+  --emerald-dim:#064e3b;
+  --red:       #f87171;
+  --red-dim:   #7f1d1d;
+  --radius:    6px;
+  --font:      -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;
+  --mono:      'SF Mono','Cascadia Code','Fira Code',Consolas,monospace;
+}
+html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--text);font-size:13px;line-height:1.4;overflow:hidden}
+
+/* ── Shell Layout ── */
+.shell{display:flex;flex-direction:column;height:100vh;height:100dvh;overflow:hidden}
+.header{display:flex;align-items:center;justify-content:space-between;padding:8px 16px;background:var(--bg-card);border-bottom:1px solid var(--border);flex-shrink:0;gap:12px}
+.header h1{font-size:15px;font-weight:700;white-space:nowrap;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
+.header .subtitle{font-size:11px;color:var(--text-dim);white-space:nowrap}
+.header-right{display:flex;align-items:center;gap:10px}
+
+/* Theme toggle */
+.theme-btn{background:none;border:1px solid var(--border);color:var(--text-dim);padding:4px 10px;border-radius:var(--radius);cursor:pointer;font-size:12px;transition:.15s}
+.theme-btn:hover{border-color:var(--accent);color:var(--text)}
+
+/* ── Tabs ── */
+.tab-bar{display:flex;background:var(--bg-card);border-bottom:1px solid var(--border);flex-shrink:0;padding:0 12px;gap:4px}
+.tab-btn{padding:8px 18px;font-size:12px;font-weight:600;color:var(--text-dim);background:none;border:none;border-bottom:2px solid transparent;border-radius:6px 6px 0 0;cursor:pointer;transition:all .2s;white-space:nowrap;position:relative}
+.tab-btn:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.tab-btn[data-tab="watchlist"]{--tab-color:#6c8cff;--tab-glow:rgba(108,140,255,.55);--tab-glow-strong:rgba(108,140,255,.8)}
+.tab-btn[data-tab="links"]{--tab-color:#34d399;--tab-glow:rgba(52,211,153,.55);--tab-glow-strong:rgba(52,211,153,.8)}
+.tab-btn.active{color:var(--tab-color);border-bottom:3px solid var(--tab-color);background:var(--tab-glow);animation:tabPulse 3s ease-in-out infinite}
+@keyframes tabPulse{0%,100%{box-shadow:0 0 8px 2px var(--tab-glow),0 0 20px 4px var(--tab-glow)}50%{box-shadow:0 0 16px 6px var(--tab-glow-strong),0 0 36px 10px var(--tab-glow)}}
+.tab-content{display:none;flex:1;overflow:auto;flex-direction:column;-webkit-overflow-scrolling:touch}
+.tab-content.active{display:flex}
+
+/* ── Tab 1: Watchlist ── */
+.wl-toolbar{background:var(--bg-card);border-bottom:1px solid var(--border);flex-shrink:0}
+.wl-toolbar-row{display:flex;align-items:center;gap:8px;padding:6px 12px}
+.wl-toolbar label{font-size:11px;color:var(--text-dim);font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.wl-search{flex:1 1 160px;min-width:100px;padding:5px 10px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:12px;outline:none;transition:.15s}
+.wl-search:focus{border-color:var(--accent)}
+.wl-select{padding:4px 8px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:12px;outline:none;cursor:pointer;min-width:100px}
+.wl-count{font-size:11px;color:var(--text-dim);white-space:nowrap}
+.wl-export{background:var(--bg);border:1px solid var(--border);color:var(--text-dim);padding:4px 10px;border-radius:var(--radius);cursor:pointer;font-size:11px;font-weight:600;transition:.15s}
+.wl-export:hover{border-color:var(--accent);color:var(--text)}
+.wl-filters{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:4px 12px 6px}
+.wl-hamburger{display:none;background:none;border:1px solid var(--border);color:var(--text-dim);width:32px;height:28px;border-radius:var(--radius);cursor:pointer;font-size:16px;line-height:1;transition:.15s;flex-shrink:0}
+.wl-hamburger:hover{border-color:var(--accent);color:var(--text)}
+.wl-hamburger.open{border-color:var(--accent);color:var(--accent)}
+
+/* Table */
+.table-wrap{flex:1;overflow:auto;position:relative;-webkit-overflow-scrolling:touch;padding-bottom:40px}
+table.wl{width:100%;border-collapse:collapse;table-layout:fixed}
+table.wl thead{position:sticky;top:0;z-index:2}
+table.wl th{background:var(--bg-card);border-bottom:2px solid var(--border);padding:6px 8px;text-align:left;font-size:11px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:.4px;cursor:pointer;user-select:none;white-space:nowrap;position:relative}
+table.wl th:hover{color:var(--text)}
+table.wl th .sort-arrow{margin-left:3px;font-size:9px;opacity:.4}
+table.wl th.sorted .sort-arrow{opacity:1;color:var(--accent)}
+table.wl td{padding:5px 8px;border-bottom:1px solid var(--border);font-size:12px;vertical-align:middle}
+table.wl tbody tr:hover{background:var(--bg-hover)}
+table.wl tbody tr:nth-child(even){background:rgba(255,255,255,.01)}
+table.wl tbody tr:nth-child(even):hover{background:var(--bg-hover)}
+
+/* Column widths */
+.col-num{width:32px;text-align:center;color:var(--text-dim)}
+.col-company{width:150px;font-weight:600}
+.col-ticker{width:80px;font-family:var(--mono);font-size:11px}
+.col-exchange{width:72px;font-size:11px}
+.col-mcap{width:80px;text-align:right;font-family:var(--mono);font-size:11px}
+.col-segment{width:160px}
+.col-desc{min-width:180px}
+.col-mentions{width:58px;text-align:center}
+.col-sentiment{width:120px}
+.col-yf{width:28px;text-align:center}
+.col-tv{width:28px;text-align:center}
+
+/* Sentiment badges */
+.badge{display:inline-block;padding:2px 7px;border-radius:10px;font-size:10px;font-weight:700;letter-spacing:.3px;white-space:nowrap}
+.badge-extreme{background:var(--emerald-dim);color:var(--emerald)}
+.badge-very{background:var(--green-dim);color:var(--green)}
+.badge-positive{background:var(--blue-dim);color:var(--blue)}
+.badge-cautious{background:var(--amber-dim);color:var(--amber)}
+.badge-mixed{background:var(--red-dim);color:var(--red)}
+
+/* Mention bar */
+.mention-bar{display:inline-block;height:14px;border-radius:2px;background:var(--accent);opacity:.7;vertical-align:middle;min-width:4px}
+.mention-num{font-family:var(--mono);font-size:11px;margin-left:4px}
+
+/* Links */
+.ext-link{color:var(--accent);text-decoration:none;transition:.15s}
+.ext-link:hover{color:var(--accent2)}
+
+/* Ticker links */
+.ticker-wrap{display:inline-flex;align-items:center;gap:4px}
+.ticker-link{color:var(--accent);text-decoration:none;opacity:.8;transition:.15s}
+.ticker-link:hover{opacity:1;color:var(--accent2)}
+
+/* Segment tags */
+.seg-tag{display:inline-block;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:600;border:1px solid var(--border);color:var(--text-dim)}
+
+/* ── Tab 2: Research Links ── */
+.links-panel{flex:1;overflow:auto;padding:16px 20px;padding-bottom:60px;-webkit-overflow-scrolling:touch}
+.links-search-bar{padding:8px 12px;background:var(--bg-card);border-bottom:1px solid var(--border);flex-shrink:0}
+.links-search{width:100%;max-width:400px;padding:5px 10px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:12px;outline:none}
+.links-search:focus{border-color:var(--accent)}
+.link-group{margin-bottom:20px}
+.link-group-title{font-size:13px;font-weight:700;color:var(--accent);margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px}
+.link-group-title .icon{font-size:14px}
+.link-item{padding:5px 0 5px 16px;border-left:2px solid var(--border);margin-left:8px;margin-bottom:4px}
+.link-item a{color:var(--accent);text-decoration:none;font-size:12px;word-break:break-all}
+.link-item a:hover{text-decoration:underline;color:var(--accent2)}
+.link-item .link-desc{color:var(--text);font-size:12px;margin-top:1px}
+.link-item .link-src{color:var(--text-dim);font-size:10px;margin-top:2px}
+
+/* ── Pagination ── */
+.pagination{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding:0 8px;flex-wrap:wrap;gap:8px;flex-shrink:0}
+.page-info{color:var(--text-dim);font-size:11px}
+.page-buttons{display:flex;gap:4px}
+.page-btn{padding:5px 10px;background:var(--bg);border:1px solid var(--border);border-radius:4px;color:var(--text);cursor:pointer;font-size:11px;transition:.15s}
+.page-btn:hover{border-color:var(--accent)}
+.page-btn.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.page-btn:disabled{opacity:.4;cursor:not-allowed}
+
+/* ── Light theme ── */
+body.light{--bg:#f5f6f8;--bg-card:#ffffff;--bg-hover:#eef0f4;--border:#dde0e6;--text:#1a1c21;--text-dim:#6b6e76;--accent:#4f6ef7;--accent2:#7c3aed;--green:#059669;--green-dim:#d1fae5;--blue:#2563eb;--blue-dim:#dbeafe;--amber:#d97706;--amber-dim:#fef3c7;--emerald:#059669;--emerald-dim:#d1fae5;--red:#dc2626;--red-dim:#fef2f2}
+body.light .badge-extreme{background:#d1fae5;color:#059669}
+body.light .badge-very{background:#d1fae5;color:#047857}
+body.light .badge-positive{background:#dbeafe;color:#2563eb}
+body.light .badge-cautious{background:#fef3c7;color:#d97706}
+body.light .badge-mixed{background:#fef2f2;color:#dc2626}
+body.light .tab-btn[data-tab="watchlist"]{--tab-color:#4f6ef7;--tab-glow:rgba(79,110,247,.3);--tab-glow-strong:rgba(79,110,247,.55)}
+body.light .tab-btn[data-tab="links"]{--tab-color:#059669;--tab-glow:rgba(5,150,105,.3);--tab-glow-strong:rgba(5,150,105,.55)}
+body.light .tab-btn:hover{background:rgba(0,0,0,.04)}
+
+/* ── Responsive ── */
+@media(max-width:900px){
+  .col-desc{display:none}
+  .wl-hamburger{display:flex;align-items:center;justify-content:center}
+  .wl-filters{display:none;flex-direction:column;align-items:stretch;gap:6px;padding:6px 12px 8px;border-top:1px solid var(--border)}
+  .wl-filters.open{display:flex}
+  .wl-filters label{margin-top:2px}
+}
+@media(max-width:600px){
+  .header h1{font-size:13px}
+  .header .subtitle{display:none}
+  .tab-btn{padding:6px 10px;font-size:11px}
+  @keyframes tabPulse{0%,100%{box-shadow:0 0 6px 1px var(--tab-glow),0 0 14px 3px var(--tab-glow)}50%{box-shadow:0 0 12px 4px var(--tab-glow-strong),0 0 24px 6px var(--tab-glow)}}
+  .col-exchange,.col-mcap,.col-segment{display:none}
+  table.wl th,table.wl td{padding:4px 5px}
+  .wl-toolbar-row{padding:5px 8px;gap:6px}
+  .wl-search{font-size:13px;padding:6px 8px}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <!-- Header -->
+  <div class="header">
+    <div>
+      <h1>&#x1F4CA; IoT & Physical AI Watchlist</h1>
+      <div class="subtitle">Comprehensive IoT, robotics, AI, and smart infrastructure investment tracker</div>
+    </div>
+    <div class="header-right">
+      <button class="theme-btn" onclick="toggleTheme()" title="Toggle light/dark theme">&#x1F319; Theme</button>
+    </div>
+  </div>
+
+  <!-- Tab Bar -->
+  <div class="tab-bar">
+    <button class="tab-btn active" data-tab="watchlist">&#x1F4CB; Watchlist</button>
+    <button class="tab-btn" data-tab="links">&#x1F517; Research Links</button>
+  </div>
+
+  <!-- ═══════════════════ TAB 1: WATCHLIST ═══════════════════ -->
+  <div class="tab-content active" id="tab-watchlist">
+    <div class="wl-toolbar">
+      <div class="wl-toolbar-row">
+        <input type="text" class="wl-search" id="wlSearch" placeholder="&#x1F50D; Search companies, tickers, segments...">
+        <button class="wl-hamburger" id="wlHamburger" onclick="toggleFilters()" title="Toggle filters">&#x2630;</button>
+        <span class="wl-count" id="wlCount">0 companies</span>
+        <button class="wl-export" onclick="exportCSV()" title="Export as CSV">&#x1F4CB; CSV</button>
+      </div>
+      <div class="wl-filters" id="wlFilters">
+        <label>Segment</label>
+        <select class="wl-select" id="filterSegment"><option value="">All Segments</option></select>
+        <label>Sentiment</label>
+        <select class="wl-select" id="filterSentiment"><option value="">All Sentiments</option></select>
+        <label>Exchange</label>
+        <select class="wl-select" id="filterExchange"><option value="">All Exchanges</option></select>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table class="wl" id="wlTable">
+        <thead><tr>
+          <th class="col-num">#</th>
+          <th class="col-company" data-col="company">Company <span class="sort-arrow">&#x25B2;&#x25BC;</span></th>
+          <th class="col-ticker" data-col="ticker">Ticker <span class="sort-arrow">&#x25B2;&#x25BC;</span></th>
+          <th class="col-exchange" data-col="exchange">Exchange <span class="sort-arrow">&#x25B2;&#x25BC;</span></th>
+          <th class="col-yf">YF</th>
+          <th class="col-tv">TV</th>
+          <th class="col-mcap" data-col="mcapSort">Mkt Cap <span class="sort-arrow">&#x25B2;&#x25BC;</span></th>
+          <th class="col-segment" data-col="segment">Segment <span class="sort-arrow">&#x25B2;&#x25BC;</span></th>
+          <th class="col-desc" data-col="desc">Description <span class="sort-arrow">&#x25B2;&#x25BC;</span></th>
+          <th class="col-mentions" data-col="mentions">Mentions <span class="sort-arrow">&#x25B2;&#x25BC;</span></th>
+          <th class="col-sentiment" data-col="sentimentRank">Sentiment <span class="sort-arrow">&#x25B2;&#x25BC;</span></th>
+        </tr></thead>
+        <tbody id="wlBody"></tbody>
+      </table>
+    </div>
+    <div class="pagination" id="paginationContainer" style="display:none"></div>
+    <div class="scroll-loader" id="scrollLoader" style="display:none;text-align:center;padding:16px;color:var(--text-dim)">Loading more...</div>
+  </div>
+
+  <!-- ═══════════════════ TAB 2: RESEARCH LINKS ═══════════════════ -->
+  <div class="tab-content" id="tab-links">
+    <div class="links-search-bar">
+      <input type="text" class="links-search" id="linksSearch" placeholder="Filter links...">
+    </div>
+    <div class="links-panel" id="linksPanel"></div>
+  </div>
+</div>
+
+<script>
+/* ════════════════════════════════════════════════════════════════
+   DATA — 78 companies compiled from 11 input files
+   ════════════════════════════════════════════════════════════════ */
+const COMPANIES = [
+  // ── Sensors & Semiconductors ──────────────────────────────────
+  {company:"NVIDIA",ticker:"NVDA",exchange:"NASDAQ",mcap:"$3.0T",mcapSort:3000000,segment:"Sensors & Semiconductors",desc:"Leading AI GPU, datacenter GPU, DRIVE platform, Jetson edge AI modules.",mentions:10,sentiment:"Extremely Positive",sentimentRank:4},
+  {company:"Texas Instruments",ticker:"TXN",exchange:"NASDAQ",mcap:"$160B",mcapSort:160000,segment:"Sensors & Semiconductors",desc:"Analog chips, embedded processors, and sensors for IIoT.",mentions:6,sentiment:"Positive",sentimentRank:2},
+  {company:"Analog Devices",ticker:"ADI",exchange:"NASDAQ",mcap:"$95B",mcapSort:95000,segment:"Sensors & Semiconductors",desc:"Data converters, amplifiers, MEMS, and industrial sensors.",mentions:5,sentiment:"Positive",sentimentRank:2},
+  {company:"STMicroelectronics",ticker:"STM",exchange:"NYSE",mcap:"$28B",mcapSort:28000,segment:"Sensors & Semiconductors",desc:"MEMS accelerometers, gyros, ToF sensors, microcontrollers.",mentions:6,sentiment:"Positive",sentimentRank:2},
+  {company:"ON Semiconductor",ticker:"ON",exchange:"NASDAQ",mcap:"$35B",mcapSort:35000,segment:"Sensors & Semiconductors",desc:"Image sensors, power management, and SiC devices.",mentions:4,sentiment:"Positive",sentimentRank:2},
+  {company:"TE Connectivity",ticker:"TEL",exchange:"NYSE",mcap:"$40B",mcapSort:40000,segment:"Sensors & Semiconductors",desc:"Sensors, connectors, and HMI solutions for harsh-environment IIoT.",mentions:5,sentiment:"Positive",sentimentRank:2},
+  {company:"Sensata Technologies",ticker:"ST",exchange:"NYSE",mcap:"$10B",mcapSort:10000,segment:"Sensors & Semiconductors",desc:"Pressure, position, and temperature sensors for EV and industrial.",mentions:4,sentiment:"Positive",sentimentRank:2},
+  {company:"TDK Corporation",ticker:"TDKYY",exchange:"OTCMKTS",mcap:"$20B",mcapSort:20000,segment:"Sensors & Semiconductors",desc:"InvenSense MEMS, TMR sensors, actuators, wireless charging.",mentions:4,sentiment:"Positive",sentimentRank:2},
+  {company:"NXP Semiconductors",ticker:"NXPI",exchange:"NASDAQ",mcap:"$55B",mcapSort:55000,segment:"Sensors & Semiconductors",desc:"Automotive radar, secure IoT MCUs, edge AI processors.",mentions:4,sentiment:"Positive",sentimentRank:2},
+  {company:"Microchip Technology",ticker:"MCHP",exchange:"NASDAQ",mcap:"$40B",mcapSort:40000,segment:"Sensors & Semiconductors",desc:"Microcontrollers, analog, and flash-IP for embedded IoT.",mentions:3,sentiment:"Positive",sentimentRank:2},
+  {company:"Infineon Technologies",ticker:"IFNNY",exchange:"OTCMKTS",mcap:"$30B",mcapSort:30000,segment:"Sensors & Semiconductors",desc:"Power and radar sensors for ADAS, industrial, and IoT.",mentions:3,sentiment:"Positive",sentimentRank:2},
+  {company:"Amphenol",ticker:"APH",exchange:"NYSE",mcap:"$80B",mcapSort:80000,segment:"Sensors & Semiconductors",desc:"Connectors and sensor assemblies for IoT and industrial.",mentions:3,sentiment:"Positive",sentimentRank:2},
+  {company:"Broadcom",ticker:"AVGO",exchange:"NASDAQ",mcap:"$500B",mcapSort:500000,segment:"Sensors & Semiconductors",desc:"Networking chips, 5G, automotive Ethernet, VMware IoT platform.",mentions:3,sentiment:"Positive",sentimentRank:2},
+  {company:"SiTime Corporation",ticker:"SITM",exchange:"NASDAQ",mcap:"$6B",mcapSort:6000,segment:"Sensors & Semiconductors",desc:"Pure-play MEMS timing devices; 66-83% revenue growth.",mentions:3,sentiment:"Positive",sentimentRank:2},
+  {company:"QuickLogic",ticker:"QUIK",exchange:"NASDAQ",mcap:"$500M",mcapSort:500,segment:"Sensors & Semiconductors",desc:"Edge AI FPGAs and low-power wake-on radio chips.",mentions:2,sentiment:"Cautious",sentimentRank:1},
+  {company:"Allegro MicroSystems",ticker:"ALGM",exchange:"NASDAQ",mcap:"$8B",mcapSort:8000,segment:"Sensors & Semiconductors",desc:"Magnetic sensors and GaN power devices for EV and industrial.",mentions:2,sentiment:"Positive",sentimentRank:2},
+  {company:"Lattice Semiconductor",ticker:"LSCC",exchange:"NASDAQ",mcap:"$8B",mcapSort:8000,segment:"Sensors & Semiconductors",desc:"Low-power FPGAs for sensor fusion and edge AI.",mentions:3,sentiment:"Positive",sentimentRank:2},
+  {company:"Ambarella",ticker:"AMBA",exchange:"NASDAQ",mcap:"$3B",mcapSort:3000,segment:"Sensors & Semiconductors",desc:"Edge AI vision processors for automotive, drones, and IoT.",mentions:4,sentiment:"Cautious",sentimentRank:1},
+
+  // ── Industrial Automation & IIoT ──────────────────────────────
+  {company:"Rockwell Automation",ticker:"ROK",exchange:"NYSE",mcap:"$35B",mcapSort:35000,segment:"Industrial Automation",desc:"FactoryTalk IIoT platform, MES, smart factory automation.",mentions:6,sentiment:"Positive",sentimentRank:2},
+  {company:"Siemens",ticker:"SIEGY",exchange:"OTCMKTS",mcap:"$180B",mcapSort:180000,segment:"Industrial Automation",desc:"MindSphere, Xcelerator, digital twins, building automation.",mentions:6,sentiment:"Positive",sentimentRank:2},
+  {company:"Honeywell International",ticker:"HON",exchange:"NASDAQ",mcap:"$130B",mcapSort:130000,segment:"Industrial Automation",desc:"Forge IoT platform, building automation, aerospace sensors.",mentions:6,sentiment:"Positive",sentimentRank:2},
+  {company:"Schneider Electric",ticker:"SBGSY",exchange:"OTCMKTS",mcap:"$100B",mcapSort:100000,segment:"Industrial Automation",desc:"EcoStruxure IoT platform and power management.",mentions:5,sentiment:"Positive",sentimentRank:2},
+  {company:"Emerson Electric",ticker:"EMR",exchange:"NYSE",mcap:"$55B",mcapSort:55000,segment:"Industrial Automation",desc:"Plantweb digital ecosystem, DeltaV, industrial sensors.",mentions:5,sentiment:"Positive",sentimentRank:2},
+  {company:"PTC Inc.",ticker:"PTC",exchange:"NASDAQ",mcap:"$22B",mcapSort:22000,segment:"Industrial Automation",desc:"ThingWorx IIoT, Vuforia AR, Windchill PLM.",mentions:5,sentiment:"Positive",sentimentRank:2},
+  {company:"ABB Ltd",ticker:"ABB",exchange:"NYSE",mcap:"$100B",mcapSort:100000,segment:"Industrial Automation",desc:"Industrial robots, ABB Ability platform, electrification.",mentions:5,sentiment:"Positive",sentimentRank:2},
+  {company:"General Electric",ticker:"GE",exchange:"NYSE",mcap:"$180B",mcapSort:180000,segment:"Industrial Automation",desc:"Industrial IoT, aviation sensors, power grid monitoring, Predix platform.",mentions:4,sentiment:"Positive",sentimentRank:2},
+  {company:"Carrier Global",ticker:"CARR",exchange:"NYSE",mcap:"$55B",mcapSort:55000,segment:"Industrial Automation",desc:"HVAC, refrigeration, fire safety, and building IoT.",mentions:4,sentiment:"Positive",sentimentRank:2},
+  {company:"Trane Technologies",ticker:"TT",exchange:"NYSE",mcap:"$70B",mcapSort:70000,segment:"Industrial Automation",desc:"HVAC systems and building automation with IoT sensors.",mentions:4,sentiment:"Positive",sentimentRank:2},
+  {company:"Eaton Corporation",ticker:"ETN",exchange:"NYSE",mcap:"$70B",mcapSort:70000,segment:"Industrial Automation",desc:"Electrical IoT, industrial sensing, and power management.",mentions:3,sentiment:"Positive",sentimentRank:2},
+  {company:"Fortive",ticker:"FTV",exchange:"NYSE",mcap:"$30B",mcapSort:30000,segment:"Industrial Automation",desc:"Fluke, Tektronix sensing and instrumentation portfolio.",mentions:3,sentiment:"Positive",sentimentRank:2},
+  {company:"AMETEK",ticker:"AME",exchange:"NYSE",mcap:"$40B",mcapSort:40000,segment:"Industrial Automation",desc:"Precision instruments and sensors for industrial markets.",mentions:3,sentiment:"Positive",sentimentRank:2},
+  {company:"Caterpillar",ticker:"CAT",exchange:"NYSE",mcap:"$160B",mcapSort:160000,segment:"Industrial Automation",desc:"Autonomous and semi-autonomous mining and construction equipment.",mentions:3,sentiment:"Positive",sentimentRank:2},
+  {company:"Otis Worldwide",ticker:"OTIS",exchange:"NYSE",mcap:"$40B",mcapSort:40000,segment:"Industrial Automation",desc:"Connected elevators and escalators with remote monitoring.",mentions:2,sentiment:"Positive",sentimentRank:2},
+
+  // ── Robotics & Autonomous Systems ──────────────────────────────
+  {company:"Tesla",ticker:"TSLA",exchange:"NASDAQ",mcap:"$900B",mcapSort:900000,segment:"Robotics & Autonomous",desc:"FSD data flywheel, Optimus humanoid robot, Dojo supercomputer.",mentions:10,sentiment:"Cautious",sentimentRank:1},
+  {company:"Fanuc",ticker:"FANUY",exchange:"OTCMKTS",mcap:"$35B",mcapSort:35000,segment:"Robotics & Autonomous",desc:"Industrial robots and factory automation.",mentions:4,sentiment:"Positive",sentimentRank:2},
+  {company:"Teradyne",ticker:"TER",exchange:"NASDAQ",mcap:"$20B",mcapSort:20000,segment:"Robotics & Autonomous",desc:"Universal Robots cobots, MiR AMRs, and test systems.",mentions:4,sentiment:"Positive",sentimentRank:2},
+  {company:"Symbotic",ticker:"SYM",exchange:"NASDAQ",mcap:"$12B",mcapSort:12000,segment:"Robotics & Autonomous",desc:"AI-powered warehouse robotics for Walmart and Target.",mentions:5,sentiment:"Positive",sentimentRank:2},
+  {company:"Intuitive Surgical",ticker:"ISRG",exchange:"NASDAQ",mcap:"$160B",mcapSort:160000,segment:"Robotics & Autonomous",desc:"Da Vinci surgical systems and robotic surgery.",mentions:4,sentiment:"Positive",sentimentRank:2},
+  {company:"Deere & Company",ticker:"DE",exchange:"NYSE",mcap:"$130B",mcapSort:130000,segment:"Robotics & Autonomous",desc:"Autonomous tractors, See & Spray AI, precision agriculture.",mentions:6,sentiment:"Positive",sentimentRank:2},
+  {company:"Aurora Innovation",ticker:"AUR",exchange:"NASDAQ",mcap:"$10B",mcapSort:10000,segment:"Robotics & Autonomous",desc:"Autonomous trucking with driverless commercial freight.",mentions:2,sentiment:"Cautious",sentimentRank:1},
+  {company:"Mobileye Global",ticker:"MBLY",exchange:"NASDAQ",mcap:"$18B",mcapSort:18000,segment:"Robotics & Autonomous",desc:"EyeQ chips, REM mapping, driver assist, autonomous vehicle tech.",mentions:5,sentiment:"Positive",sentimentRank:2},
+
+  // ── Edge AI & Compute ────────────────────────────────────────
+  {company:"Qualcomm",ticker:"QCOM",exchange:"NASDAQ",mcap:"$180B",mcapSort:180000,segment:"Edge AI & Compute",desc:"Snapdragon, AI engines, IoT modems, 5G connectivity.",mentions:6,sentiment:"Positive",sentimentRank:2},
+  {company:"AMD",ticker:"AMD",exchange:"NASDAQ",mcap:"$250B",mcapSort:250000,segment:"Edge AI & Compute",desc:"EPYC processors, Ryzen AI, and data center GPUs.",mentions:4,sentiment:"Positive",sentimentRank:2},
+  {company:"Intel",ticker:"INTC",exchange:"NASDAQ",mcap:"$100B",mcapSort:100000,segment:"Edge AI & Compute",desc:"IoT products, edge compute, and industrial PCs.",mentions:4,sentiment:"Negative",sentimentRank:0},
+  {company:"ARM Holdings",ticker:"ARM",exchange:"NASDAQ",mcap:"$150B",mcapSort:150000,segment:"Edge AI & Compute",desc:"Processor IP licensing for virtually all edge IoT MCUs/SoCs.",mentions:3,sentiment:"Positive",sentimentRank:2},
+
+  // ── Connectivity & Networking ─────────────────────────────────
+  {company:"Cisco Systems",ticker:"CSCO",exchange:"NASDAQ",mcap:"$200B",mcapSort:200000,segment:"Connectivity & Networking",desc:"IoT networking, Meraki, industrial routers, smart city backbone.",mentions:6,sentiment:"Positive",sentimentRank:2},
+  {company:"Arista Networks",ticker:"ANET",exchange:"NYSE",mcap:"$90B",mcapSort:90000,segment:"Connectivity & Networking",desc:"Cloud networking and data center switches for AI workloads.",mentions:4,sentiment:"Positive",sentimentRank:2},
+  {company:"Samsara",ticker:"IOT",exchange:"NYSE",mcap:"$20B",mcapSort:20000,segment:"Connectivity & Networking",desc:"Connected operations cloud, fleet telematics, AI safety cameras.",mentions:6,sentiment:"Positive",sentimentRank:2},
+  {company:"Semtech",ticker:"SMTC",exchange:"NASDAQ",mcap:"$5B",mcapSort:5000,segment:"Connectivity & Networking",desc:"LoRa wireless (via Sierra Wireless), fiber optic communications.",mentions:4,sentiment:"Cautious",sentimentRank:1},
+  {company:"Digi International",ticker:"DGII",exchange:"NASDAQ",mcap:"$1B",mcapSort:1000,segment:"Connectivity & Networking",desc:"IoT routers, embedded modules, and industrial connectivity.",mentions:3,sentiment:"Positive",sentimentRank:2},
+  {company:"Skyworks Solutions",ticker:"SWKS",exchange:"NASDAQ",mcap:"$15B",mcapSort:15000,segment:"Connectivity & Networking",desc:"RF front-end modules for IoT and connected vehicles.",mentions:3,sentiment:"Positive",sentimentRank:2},
+  {company:"Qorvo",ticker:"QRVO",exchange:"NASDAQ",mcap:"$8B",mcapSort:8000,segment:"Connectivity & Networking",desc:"RF and connectivity solutions for IoT sensors and gateways.",mentions:3,sentiment:"Positive",sentimentRank:2},
+  {company:"Nokia",ticker:"NOK",exchange:"NYSE",mcap:"$20B",mcapSort:20000,segment:"Connectivity & Networking",desc:"5G network infrastructure and private 5G for industrial IoT.",mentions:3,sentiment:"Positive",sentimentRank:2},
+  {company:"Ericsson",ticker:"ERIC",exchange:"NASDAQ",mcap:"$18B",mcapSort:18000,segment:"Connectivity & Networking",desc:"Global 5G infrastructure and IoT connectivity platforms.",mentions:3,sentiment:"Positive",sentimentRank:2},
+  {company:"Corning",ticker:"GLW",exchange:"NYSE",mcap:"$30B",mcapSort:30000,segment:"Connectivity & Networking",desc:"Fiber optic cable and Gorilla Glass for IoT devices.",mentions:3,sentiment:"Positive",sentimentRank:2},
+
+  // ── Smart Infrastructure ──────────────────────────────────────
+  {company:"Johnson Controls",ticker:"JCI",exchange:"NYSE",mcap:"$50B",mcapSort:50000,segment:"Smart Infrastructure",desc:"OpenBlue platform, building management, HVAC, smart cities.",mentions:6,sentiment:"Positive",sentimentRank:2},
+  {company:"Itron",ticker:"ITRI",exchange:"NASDAQ",mcap:"$5B",mcapSort:5000,segment:"Smart Infrastructure",desc:"Smart meters, grid sensors, utility IoT for cities.",mentions:5,sentiment:"Positive",sentimentRank:2},
+  {company:"Trimble",ticker:"TRMB",exchange:"NASDAQ",mcap:"$15B",mcapSort:15000,segment:"Smart Infrastructure",desc:"GPS, mapping, construction site IoT, geospatial systems.",mentions:5,sentiment:"Positive",sentimentRank:2},
+  {company:"Palantir",ticker:"PLTR",exchange:"NYSE",mcap:"$50B",mcapSort:50000,segment:"Smart Infrastructure",desc:"Foundry/AIP for defense, healthcare, and industrial sensor fusion.",mentions:6,sentiment:"Positive",sentimentRank:2},
+  {company:"Verra Mobility",ticker:"VRRM",exchange:"NASDAQ",mcap:"$3B",mcapSort:3000,segment:"Smart Infrastructure",desc:"Smart city traffic enforcement cameras and tolling systems.",mentions:2,sentiment:"Positive",sentimentRank:2},
+  {company:"Alarm.com Holdings",ticker:"ALRM",exchange:"NASDAQ",mcap:"$2B",mcapSort:2000,segment:"Smart Infrastructure",desc:"Cloud-based IoT platforms for smart home and business security, energy management.",mentions:2,sentiment:"Positive",sentimentRank:2},
+
+  // ── Healthcare & Wearables ───────────────────────────────────
+  {company:"DexCom",ticker:"DXCM",exchange:"NASDAQ",mcap:"$45B",mcapSort:45000,segment:"Healthcare & Wearables",desc:"Continuous glucose monitoring systems for diabetes management.",mentions:6,sentiment:"Positive",sentimentRank:2},
+  {company:"Medtronic",ticker:"MDT",exchange:"NYSE",mcap:"$110B",mcapSort:110000,segment:"Healthcare & Wearables",desc:"Insulin pumps, pacemakers, surgical robotics, CGM.",mentions:5,sentiment:"Cautious",sentimentRank:1},
+  {company:"Apple",ticker:"AAPL",exchange:"NASDAQ",mcap:"$2.9T",mcapSort:2900000,segment:"Healthcare & Wearables",desc:"Apple Watch health monitoring, AirPods, wearable sensors.",mentions:6,sentiment:"Positive",sentimentRank:2},
+  {company:"Abbott Laboratories",ticker:"ABT",exchange:"NYSE",mcap:"$180B",mcapSort:180000,segment:"Healthcare & Wearables",desc:"FreeStyle Libre CGM, wearable sensors, cardiac devices.",mentions:6,sentiment:"Positive",sentimentRank:2},
+  {company:"Philips",ticker:"PHG",exchange:"NYSE",mcap:"$20B",mcapSort:20000,segment:"Healthcare & Wearables",desc:"Patient monitoring, imaging, connected care, telehealth.",mentions:5,sentiment:"Cautious",sentimentRank:1},
+  {company:"Garmin",ticker:"GRMN",exchange:"NASDAQ",mcap:"$30B",mcapSort:30000,segment:"Healthcare & Wearables",desc:"Fitness wearables, aviation/marine electronics, health API.",mentions:5,sentiment:"Positive",sentimentRank:2},
+  {company:"iRhythm Technologies",ticker:"IRTC",exchange:"NASDAQ",mcap:"$8B",mcapSort:8000,segment:"Healthcare & Wearables",desc:"Zio ECG patch, continuous cardiac monitoring, AI diagnostics.",mentions:4,sentiment:"Cautious",sentimentRank:1},
+  {company:"Masimo",ticker:"MASI",exchange:"NASDAQ",mcap:"$10B",mcapSort:10000,segment:"Healthcare & Wearables",desc:"Hospital-grade pulse oximetry, patient monitoring, W1 watch.",mentions:4,sentiment:"Cautious",sentimentRank:1},
+  {company:"Insulet",ticker:"PODD",exchange:"NASDAQ",mcap:"$20B",mcapSort:20000,segment:"Healthcare & Wearables",desc:"OmniPod tubeless insulin pump with CGM integration.",mentions:4,sentiment:"Positive",sentimentRank:2},
+
+  // ── LiDAR & Vision ────────────────────────────────────────────
+  {company:"Hesai Group",ticker:"HSAI",exchange:"NASDAQ",mcap:"$3B",mcapSort:3000,segment:"LiDAR & Vision",desc:"LiDAR sensors for autonomous vehicles and robotics.",mentions:5,sentiment:"Cautious",sentimentRank:1},
+  {company:"Luminar Technologies",ticker:"LAZR",exchange:"NASDAQ",mcap:"$1B",mcapSort:1000,segment:"LiDAR & Vision",desc:"Long-range LiDAR for automotive autonomy and ADAS.",mentions:4,sentiment:"Negative",sentimentRank:0},
+  {company:"Ouster",ticker:"OUST",exchange:"NYSE",mcap:"$800M",mcapSort:800,segment:"LiDAR & Vision",desc:"Digital LiDAR for industrial, robotics, and smart infrastructure.",mentions:4,sentiment:"Cautious",sentimentRank:1},
+  {company:"Innoviz Technologies",ticker:"INVZ",exchange:"NASDAQ",mcap:"$400M",mcapSort:400,segment:"LiDAR & Vision",desc:"Solid-state LiDAR for automotive and robotics.",mentions:3,sentiment:"Cautious",sentimentRank:1},
+  {company:"Aeva Technologies",ticker:"AEVA",exchange:"NASDAQ",mcap:"$500M",mcapSort:500,segment:"LiDAR & Vision",desc:"FMCW 4D LiDAR with on-chip sensing, NVIDIA DRIVE partner.",mentions:4,sentiment:"Cautious",sentimentRank:1},
+  {company:"Cognex",ticker:"CGNX",exchange:"NASDAQ",mcap:"$8B",mcapSort:8000,segment:"LiDAR & Vision",desc:"Machine vision and industrial AI inspection systems.",mentions:5,sentiment:"Positive",sentimentRank:2},
+  {company:"Keyence",ticker:"KYCCF",exchange:"OTCMKTS",mcap:"$110B",mcapSort:110000,segment:"LiDAR & Vision",desc:"Industrial automation, vision systems, sensors, 50%+ operating margins.",mentions:4,sentiment:"Positive",sentimentRank:2},
+  {company:"Teledyne Technologies",ticker:"TDY",exchange:"NYSE",mcap:"$22B",mcapSort:22000,segment:"LiDAR & Vision",desc:"FLIR thermal imaging, scientific cameras, environmental sensors.",mentions:3,sentiment:"Positive",sentimentRank:2},
+  {company:"Zebra Technologies",ticker:"ZBRA",exchange:"NASDAQ",mcap:"$18B",mcapSort:18000,segment:"LiDAR & Vision",desc:"Barcode scanners, RFID, machine vision for enterprise.",mentions:3,sentiment:"Positive",sentimentRank:2},
+  {company:"Impinj",ticker:"PI",exchange:"NASDAQ",mcap:"$6B",mcapSort:6000,segment:"LiDAR & Vision",desc:"RAIN RFID endpoint ICs for retail, logistics, supply chain.",mentions:3,sentiment:"Positive",sentimentRank:2},
+
+  // ── Cloud & Data ───────────────────────────────────────────────
+  {company:"Microsoft",ticker:"MSFT",exchange:"NASDAQ",mcap:"$3.1T",mcapSort:3100000,segment:"Cloud & Data",desc:"Azure IoT Hub, Digital Twins, AI infrastructure, enterprise IoT.",mentions:8,sentiment:"Positive",sentimentRank:2},
+  {company:"Amazon",ticker:"AMZN",exchange:"NASDAQ",mcap:"$1.9T",mcapSort:1900000,segment:"Cloud & Data",desc:"AWS IoT Core, edge computing, Kiva warehouse robotics, logistics.",mentions:7,sentiment:"Positive",sentimentRank:2},
+  {company:"Alphabet",ticker:"GOOGL",exchange:"NASDAQ",mcap:"$2.1T",mcapSort:2100000,segment:"Cloud & Data",desc:"Google Cloud IoT, Waymo robotaxi, Fitbit, DeepMind.",mentions:7,sentiment:"Positive",sentimentRank:2},
+  {company:"Snowflake",ticker:"SNOW",exchange:"NYSE",mcap:"$45B",mcapSort:45000,segment:"Cloud & Data",desc:"Data cloud platform for IoT analytics and AI training data.",mentions:5,sentiment:"Positive",sentimentRank:2},
+  {company:"IBM",ticker:"IBM",exchange:"NYSE",mcap:"$170B",mcapSort:170000,segment:"Cloud & Data",desc:"Watson IoT, Maximo asset monitoring, hybrid cloud.",mentions:5,sentiment:"Positive",sentimentRank:2},
+  {company:"Oracle",ticker:"ORCL",exchange:"NYSE",mcap:"$350B",mcapSort:350000,segment:"Cloud & Data",desc:"Cloud infrastructure and IoT for smart cities and utilities.",mentions:4,sentiment:"Positive",sentimentRank:2},
+  {company:"Cloudflare",ticker:"NET",exchange:"NYSE",mcap:"$50B",mcapSort:50000,segment:"Cloud & Data",desc:"Global edge network for low-latency IoT data processing.",mentions:3,sentiment:"Positive",sentimentRank:2},
+
+  // ── Data & Annotation ─────────────────────────────────────────
+  {company:"Innodata",ticker:"INOD",exchange:"NASDAQ",mcap:"$2B",mcapSort:2000,segment:"Data & Annotation",desc:"Training data services for AI; serves Magnificent Seven.",mentions:3,sentiment:"Cautious",sentimentRank:1},
+  {company:"Appen Limited",ticker:"APPEF",exchange:"OTCMKTS",mcap:"$200M",mcapSort:200,segment:"Data & Annotation",desc:"Data labeling and annotation for AI/ML models.",mentions:2,sentiment:"Cautious",sentimentRank:1},
+
+  // ── ETFs ─────────────────────────────────────────────────────
+  {company:"Global X IoT ETF",ticker:"SNSR",exchange:"NYSE",mcap:"$200M",mcapSort:200,segment:"ETFs",desc:"ETF covering IoT, robotics, and AI companies.",mentions:4,sentiment:"Positive",sentimentRank:2},
+  {company:"ARK Autonomous Tech ETF",ticker:"ARKQ",exchange:"NYSE",mcap:"$300M",mcapSort:300,segment:"ETFs",desc:"Active ETF focused on automation and robotics.",mentions:3,sentiment:"Positive",sentimentRank:2},
+  {company:"Global X Robotics & AI ETF",ticker:"BOTZ",exchange:"NASDAQ",mcap:"$2B",mcapSort:2000,segment:"ETFs",desc:"ETF focused on robotics and AI companies.",mentions:3,sentiment:"Positive",sentimentRank:2},
+  {company:"ROBO Global Robotics ETF",ticker:"ROBO",exchange:"NASDAQ",mcap:"$1B",mcapSort:1000,segment:"ETFs",desc:"Global robotics and automation index ETF.",mentions:3,sentiment:"Positive",sentimentRank:2},
+  {company:"iShares Robotics & AI ETF",ticker:"IRBO",exchange:"NYSE",mcap:"$150M",mcapSort:150,segment:"ETFs",desc:"Global exposure to robotics and AI companies.",mentions:2,sentiment:"Positive",sentimentRank:2},
+];
+
+const SENTIMENT_MAP = {
+  "Extremely Positive": {cls:"badge-extreme", rank:4},
+  "Very Positive":      {cls:"badge-very",    rank:3},
+  "Positive":           {cls:"badge-positive", rank:2},
+  "Cautiously Positive":{cls:"badge-cautious", rank:1},
+  "Cautious":           {cls:"badge-cautious", rank:1},
+  "Mixed":              {cls:"badge-mixed",    rank:0},
+  "Negative":           {cls:"badge-mixed",    rank:0},
+};
+
+const INVALID_YAHOO_TICKERS = new Set(["TDKYY","SIEGY","SBGSY","FANUY","KYCCF","IFNNY","SITM","APH","AVGO","ETN","FTV","AME","CAT","OTIS","AUR","VRRM","APPEF","IRBO","LSCC","SWKS","QRVO","NOK","ERIC","GLW","TDY","ZBRA","PI","SITM","QUIK","ALGM","SITM","NET","ORCL","INOD","SITM","QUIK","IRBO","APH","AVGO","ETN","FTV","AME","CAT","OTIS","AUR","VRRM","APPEF","IRBO"]);
+
+const INVALID_TRADINGVIEW_TICKERS = new Set(["TDKYY","SIEGY","SBGSY","FANUY","KYCCF","IFNNY","SITM","APH","AVGO","ETN","FTV","AME","CAT","OTIS","AUR","VRRM","APPEF","IRBO","LSCC","SWKS","QRVO","NOK","ERIC","GLW","TDY","ZBRA","PI","SITM","QUIK","ALGM","SITM","NET","ORCL","INOD","SITM","QUIK","IRBO","APH","AVGO","ETN","FTV","AME","CAT","OTIS","AUR","VRRM","APPEF","IRBO"]);
+
+/* ════════════════════════════════════════════════════════════════
+   STATE
+   ════════════════════════════════════════════════════════════════ */
+let sortCol = "mentions";
+let sortAsc = false;
+let filtered = [];
+let sorted = [];
+let displayedCount = 0;
+const batchSize = 30;
+let isLoading = false;
+
+/* ════════════════════════════════════════════════════════════════
+   INIT
+   ════════════════════════════════════════════════════════════════ */
+document.addEventListener("DOMContentLoaded", () => {
+  populateFilters();
+  filtered = COMPANIES.slice();
+  setupInfiniteScroll();
+  renderWatchlist(true);
+  setupTabBar();
+  document.getElementById("wlSearch").addEventListener("input", onSearch);
+  document.getElementById("filterSegment").addEventListener("change", onFilter);
+  document.getElementById("filterSentiment").addEventListener("change", onFilter);
+  document.getElementById("filterExchange").addEventListener("change", onFilter);
+  document.getElementById("linksSearch").addEventListener("input", onLinksSearch);
+  document.querySelectorAll("table.wl th[data-col]").forEach(th => {
+    th.addEventListener("click", () => setSort(th.dataset.col));
+  });
+});
+
+function populateFilters() {
+  const segments = [...new Set(COMPANIES.map(c => c.segment))].sort();
+  const exchanges = [...new Set(COMPANIES.map(c => c.exchange))].sort();
+  const sentiments = ["Extremely Positive","Very Positive","Positive","Cautiously Positive","Cautious","Mixed","Negative"];
+
+  const segSel = document.getElementById("filterSegment");
+  segments.forEach(s => { const o = document.createElement("option"); o.value = s; o.textContent = s; segSel.appendChild(o); });
+
+  const sentSel = document.getElementById("filterSentiment");
+  sentiments.forEach(s => { const o = document.createElement("option"); o.value = s; o.textContent = s; sentSel.appendChild(o); });
+
+  const exSel = document.getElementById("filterExchange");
+  exchanges.forEach(e => { const o = document.createElement("option"); o.value = e; o.textContent = e; exSel.appendChild(o); });
+}
+
+/* ════════════════════════════════════════════════════════════════
+   TABS
+   ════════════════════════════════════════════════════════════════ */
+function setupTabBar() {
+  document.querySelectorAll(".tab-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+      document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+      btn.classList.add("active");
+      const tab = document.getElementById("tab-" + btn.dataset.tab);
+      if (tab) tab.classList.add("active");
+      if (btn.dataset.tab === "links") renderResearch();
+    });
+  });
+}
+
+/* ════════════════════════════════════════════════════════════════
+   FILTER & SEARCH
+   ════════════════════════════════════════════════════════════════ */
+function onSearch() { applyFilters(); renderWatchlist(true); }
+function onFilter() { applyFilters(); renderWatchlist(true); }
+
+function applyFilters() {
+  const q = document.getElementById("wlSearch").value.toLowerCase();
+  const seg = document.getElementById("filterSegment").value;
+  const sent = document.getElementById("filterSentiment").value;
+  const exc = document.getElementById("filterExchange").value;
+
+  filtered = COMPANIES.filter(c => {
+    if (q && !c.company.toLowerCase().includes(q) && !c.ticker.toLowerCase().includes(q) && !c.segment.toLowerCase().includes(q) && !c.desc.toLowerCase().includes(q)) return false;
+    if (seg && c.segment !== seg) return false;
+    if (sent && c.sentiment !== sent) return false;
+    if (exc && c.exchange !== exc) return false;
+    return true;
+  });
+}
+
+function toggleFilters() {
+  const f = document.getElementById("wlFilters");
+  const h = document.getElementById("wlHamburger");
+  f.classList.toggle("open");
+  h.classList.toggle("open");
+}
+
+/* ════════════════════════════════════════════════════════════════
+   SORT & INFINITE SCROLL
+   ════════════════════════════════════════════════════════════════ */
+function setSort(col) {
+  if (sortCol === col) sortAsc = !sortAsc;
+  else { sortCol = col; sortAsc = false; }
+  renderWatchlist(true);
+}
+
+function getBadge(sentiment) {
+  const map = SENTIMENT_MAP[sentiment] || SENTIMENT_MAP["Positive"];
+  return `<span class="badge ${map.cls}">${sentiment}</span>`;
+}
+
+function getMentionBar(n) {
+  const maxM = Math.max(...COMPANIES.map(c => c.mentions));
+  const w = Math.round((n / maxM) * 60) + 4;
+  return `<span class="mention-bar" style="width:${w}px"></span><span class="mention-num">${n}</span>`;
+}
+
+function getYFLink(ticker) {
+  if (INVALID_YAHOO_TICKERS.has(ticker)) {
+    return `<a href="https://www.google.com/search?q=${encodeURIComponent(ticker.replace(/YY|YF/g,'').replace(/OTCMKTS/,''))}+stock" target="_blank" class="ext-link" title="Yahoo Finance (Google search)"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg></a>`;
+  }
+  return `<a href="https://finance.yahoo.com/quote/${ticker}" target="_blank" class="ext-link" title="Yahoo Finance"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg></a>`;
+}
+
+function getTVLink(ticker, exchange) {
+  if (INVALID_TRADINGVIEW_TICKERS.has(ticker)) {
+    return `<a href="https://www.google.com/search?q=${encodeURIComponent(ticker.replace(/YY|YF/g,'').replace(/OTCMKTS/,''))}+tradingview" target="_blank" class="ext-link" title="TradingView (Google search)"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg></a>`;
+  }
+  const ex = exchange === "OTCMKTS" ? "OTC" : exchange;
+  return `<a href="https://www.tradingview.com/symbols/${ex}-${ticker}/" target="_blank" class="ext-link" title="TradingView"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg></a>`;
+}
+
+function getGLink(company, ticker) {
+  const name = encodeURIComponent(company + " stock");
+  return `<a href="https://www.google.com/search?q=${name}" target="_blank" class="ext-link" title="Google search for ${company}"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg></a>`;
+}
+
+function getTickerLink(company, ticker) {
+  const name = encodeURIComponent(company + " stock");
+  return `<a href="https://www.google.com/search?q=${name}" target="_blank" class="ticker-link" title="Google search for ${company}"><span class="ticker-wrap">${ticker} <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg></span></a>`;
+}
+
+function setupInfiniteScroll() {
+  const tableWrap = document.querySelector('.table-wrap');
+  tableWrap.addEventListener('scroll', () => {
+    const { scrollTop, scrollHeight, clientHeight } = tableWrap;
+    if (scrollHeight - scrollTop - clientHeight < 200 && !isLoading) {
+      loadMore();
+    }
+  });
+}
+
+function renderWatchlist(reset = false) {
+  if (reset) {
+    displayedCount = 0;
+    sorted = filtered.slice().sort((a, b) => {
+      let av, bv;
+      if (sortCol === "mcapSort") { av = a.mcapSort; bv = b.mcapSort; }
+      else if (sortCol === "sentimentRank") { av = a.sentimentRank; bv = b.sentimentRank; }
+      else if (sortCol === "mentions") { av = a.mentions; bv = b.mentions; }
+      else { av = a[sortCol]; bv = b[sortCol]; }
+      if (typeof av === "string") return sortAsc ? av.localeCompare(bv) : bv.localeCompare(av);
+      return sortAsc ? av - bv : bv - av;
+    });
+    document.getElementById('wlBody').innerHTML = '';
+  }
+  document.getElementById('wlCount').textContent = filtered.length === COMPANIES.length ? `${filtered.length} companies` : `${filtered.length} / ${COMPANIES.length} total`;
+
+  document.querySelectorAll("table.wl th[data-col]").forEach(th => {
+    th.classList.toggle("sorted", th.dataset.col === sortCol);
+  });
+
+  if (displayedCount >= sorted.length) return;
+
+  const loader = document.getElementById('scrollLoader');
+  loader.style.display = 'block';
+  isLoading = true;
+
+  const batch = sorted.slice(displayedCount, displayedCount + batchSize);
+  let html = '';
+  batch.forEach((c, i) => {
+    const rank = displayedCount + i + 1;
+    html += `<tr>
+      <td class="col-num">${rank}</td>
+      <td class="col-company">${c.company}</td>
+      <td class="col-ticker">${getTickerLink(c.company, c.ticker)}</td>
+      <td class="col-exchange">${c.exchange}</td>
+      <td class="col-yf">${getYFLink(c.ticker)}</td>
+      <td class="col-tv">${getTVLink(c.ticker, c.exchange)}</td>
+      <td class="col-mcap">${c.mcap}</td>
+      <td class="col-segment"><span class="seg-tag">${c.segment}</span></td>
+      <td class="col-desc">${c.desc}</td>
+      <td class="col-mentions">${getMentionBar(c.mentions)}</td>
+      <td class="col-sentiment">${getBadge(c.sentiment)}</td>
+    </tr>`;
+  });
+
+  document.getElementById('wlBody').innerHTML += html;
+  displayedCount += batch.length;
+  isLoading = false;
+  loader.style.display = displayedCount >= sorted.length ? 'none' : 'block';
+  document.getElementById('wlCount').textContent = filtered.length === COMPANIES.length ? `${filtered.length} companies` : `${filtered.length} / ${COMPANIES.length} total`;
+}
+
+function loadMore() {
+  if (displayedCount >= sorted.length) return;
+  renderWatchlist(false);
+}
+
+function onLinksSearch() {
+  renderResearch();
+}
+
+/* ════════════════════════════════════════════════════════════════
+   RESEARCH LINKS
+   ════════════════════════════════════════════════════════════════ */
+function renderResearch() {
+  const q = document.getElementById("linksSearch") ? document.getElementById("linksSearch").value.toLowerCase() : "";
+
+  const bySegment = {};
+  COMPANIES.forEach(c => {
+    if (!bySegment[c.segment]) bySegment[c.segment] = [];
+    bySegment[c.segment].push(c);
+  });
+
+  const segs = Object.keys(bySegment).sort();
+  let html = "";
+
+  segs.forEach(seg => {
+    const cos = bySegment[seg].filter(c =>
+      !q || c.company.toLowerCase().includes(q) || c.ticker.toLowerCase().includes(q)
+    );
+    if (!cos.length) return;
+
+    html += `<div class="link-group">
+      <div class="link-group-title"><span class="icon">&#x1F4C1;</span> ${seg}</div>`;
+
+    cos.forEach(co => {
+      const yfLink = getYFLink(co.ticker);
+      const tvLink = getTVLink(co.ticker, co.exchange);
+      const gLink = getGLink(co.company, co.ticker);
+      html += `<div class="link-item">
+        <a href="https://www.google.com/search?q=${encodeURIComponent(co.company + ' stock')}" target="_blank">${co.company} (${co.ticker})</a>
+        ${yfLink} ${tvLink} ${gLink}
+        <div class="link-desc">${co.desc}</div>
+      </div>`;
+    });
+    html += `</div>`;
+  });
+
+  document.getElementById("linksPanel").innerHTML = html || "<p style='padding:20px;color:var(--text-dim)'>No results found.</p>";
+}
+
+function onLinksSearch() {
+  renderResearch();
+}
+
+/* ════════════════════════════════════════════════════════════════
+   CSV EXPORT
+   ════════════════════════════════════════════════════════════════ */
+function exportCSV() {
+  const headers = ["Company","Ticker","Exchange","Market Cap","Segment","Description","Mentions","Sentiment"];
+  const rows = COMPANIES.map(c => [c.company, c.ticker, c.exchange, c.mcap, c.segment, c.desc, c.mentions, c.sentiment]);
+  const csv = [headers.join(","), ...rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(","))].join("\n");
+  const blob = new Blob([csv], { type: "text/csv" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "IoT_Physical_AI_Watchlist.csv";
+  a.click();
+}
+
+/* ════════════════════════════════════════════════════════════════
+   THEME
+   ════════════════════════════════════════════════════════════════ */
+function toggleTheme() {
+  document.body.classList.toggle("light");
+}
+</script>
+</body>
+</html>

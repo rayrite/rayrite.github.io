@@ -72,7 +72,7 @@
     /* Status */
     .status { font-size:11px; color:#666; }
 
-    /* === Anchor Pill Navigation (fallback for ≤5 headings) === */
+    /* === Anchor Pill Navigation (Row 2) === */
     .header-nav {
       display: flex;
       flex-wrap: wrap;
@@ -84,7 +84,6 @@
       min-height: 28px;
       align-items: center;
     }
-    .header-nav.hidden { display: none; }
     .header-nav::-webkit-scrollbar { width: 3px; }
     .header-nav::-webkit-scrollbar-thumb { background: #ccc; border-radius: 2px; }
     .anchor-pill {
@@ -103,87 +102,6 @@
     .anchor-pill.level-h2 { font-weight: 600; }
     .anchor-pill.level-h3, .anchor-pill.level-h4, .anchor-pill.level-h5, .anchor-pill.level-h6 { font-size: 10px; opacity: 0.8; }
     .nav-placeholder { color: #999; font-size: 11px; font-style: italic; }
-
-    /* === Sidebar Toggle Button === */
-    .sidebar-toggle {
-      padding: 4px 12px;
-      border-radius: 12px;
-      font-size: 11px;
-      font-weight: 600;
-      color: #fff;
-      background: #4a90d9;
-      border: none;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: background 0.2s;
-      display: none;
-    }
-    .sidebar-toggle:hover { background: #3a7bc8; }
-    .sidebar-toggle.visible { display: inline-flex; align-items: center; gap: 4px; }
-
-    /* === Sidebar === */
-    .sidebar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 240px;
-      height: 100%;
-      background: #fafafa;
-      border-right: 1px solid #eee;
-      overflow-y: auto;
-      z-index: 1001;
-      transform: translateX(-100%);
-      transition: transform 0.25s ease;
-      padding: 48px 0 16px 0;
-    }
-    .sidebar.open { transform: translateX(0); }
-    .sidebar-backdrop {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.3);
-      z-index: 1000;
-      display: none;
-    }
-    .sidebar-backdrop.visible { display: block; }
-
-    .sidebar-header {
-      font-weight: bold;
-      font-size: 10px;
-      text-transform: uppercase;
-      color: #888;
-      padding: 8px 14px 6px;
-      border-bottom: 1px solid #eee;
-      margin-bottom: 4px;
-    }
-
-    .toc-item {
-      display: block;
-      padding: 4px 12px;
-      text-decoration: none;
-      color: #666;
-      cursor: pointer;
-      border-left: 3px solid transparent;
-      transition: background 0.15s, border-color 0.15s;
-      font-size: 12px;
-      line-height: 1.4;
-    }
-    .toc-item:hover { background: #f0f0f0; }
-    .toc-item.level-h1 { font-weight: bold; font-size: 12px; color: #333; }
-    .toc-item.level-h2 { font-size: 11px; padding-left: 24px; }
-    .toc-item.level-h3 { font-size: 11px; padding-left: 36px; color: #888; }
-    .toc-item.level-h4 { font-size: 10px; padding-left: 48px; color: #999; }
-    .toc-item.level-h5, .toc-item.level-h6 { font-size: 10px; padding-left: 56px; color: #aaa; }
-    .toc-item.active {
-      background: #fff3cd;
-      border-left-color: #f0c040;
-      color: #333;
-      font-weight: 600;
-    }
-    .toc-item.past { color: #bbb; }
-    .toc-item.future { color: #ccc; }
 
     /* === Content Area === */
     .body-content { margin-top: 68px; padding:10px; }
@@ -275,19 +193,6 @@
     .dark-mode .anchor-pill { background:#1e3a5f; color:#f0d060; }
     .dark-mode .anchor-pill:hover { background:#2a4a6f; }
     .dark-mode .nav-placeholder { color:#5a7a9f; }
-    .dark-mode .sidebar { background:#0d1b30; border-right-color:#1e3a5f; }
-    .dark-mode .sidebar-header { color:#5a7a9f; border-bottom-color:#1e3a5f; }
-    .dark-mode .sidebar-toggle { background:#1e3a5f; color:#f0d060; }
-    .dark-mode .sidebar-toggle:hover { background:#2a4a6f; }
-    .dark-mode .toc-item { color:#7aaacf; }
-    .dark-mode .toc-item:hover { background:#162d45; }
-    .dark-mode .toc-item.level-h1 { color:#f0d060; }
-    .dark-mode .toc-item.level-h3 { color:#4a7a9f; }
-    .dark-mode .toc-item.level-h4 { color:#3a6a8f; }
-    .dark-mode .toc-item.level-h5, .dark-mode .toc-item.level-h6 { color:#2a5a7f; }
-    .dark-mode .toc-item.active { background:#2a3a20; border-left-color:#fbbf24; color:#f0d060; }
-    .dark-mode .toc-item.past { color:#3a5a7f; }
-    .dark-mode .toc-item.future { color:#2a4a6f; }
     .dark-mode pre { background:#0a1628; border-color:#1e3a5f; }
     .dark-mode #content :not(pre) > code { background:#1e3a5f; border-color:#2a4a6f; }
     .dark-mode #content thead { background:#1e3a5f; border-bottom-color:#2a4a6f; }
@@ -299,13 +204,6 @@
     .dark-mode #content h4, .dark-mode #content h5, .dark-mode #content h6 { color:#fbbf24; }
     .dark-mode .anchor-highlight { outline-color:#fbbf24; }
 
-    /* === Grouped file dropdown: optgroup & disabled path spacer === */
-    #fileSelect optgroup { font-style: normal; font-weight: bold; }
-    #fileSelect option:disabled { font-style: italic; color: #999; }
-    .dark-mode #fileSelect optgroup { background:#0d1b30; color:#fbbf24; }
-    .dark-mode #fileSelect option { background:#1e3a5f; color:#f0d060; }
-    .dark-mode #fileSelect option:disabled { background:#0d1b30; color:#5a7a9f; }
-
     /* === Mobile === */
     @media (max-width: 768px) {
       .body-content { margin-top: 90px !important; }
@@ -315,12 +213,10 @@
       .font-controls select { display: none; }
       .header-nav { font-size: 10px; padding: 2px 8px; }
       .anchor-pill { padding: 2px 7px; font-size: 10px; }
-      .sidebar { width: 200px; }
     }
 
     @media print {
       .header { display:none !important; }
-      .sidebar, .sidebar-backdrop { display:none !important; }
       .body-content { margin-top:0 !important; padding:0 !important; }
       .container { background:#fff !important; color:#000 !important; box-shadow:none !important; border:none !important; }
       pre { white-space:pre-wrap !important; word-wrap:break-word !important; font-size:10pt !important; overflow:visible !important; }
@@ -333,12 +229,11 @@
     }
   </style>
 </head>
-<body class="dark-mode">
+<body>
 
   <div class="header">
     <!-- Row 1: Title, filename, file selector, font size, theme -->
     <div class="header-main">
-      <button class="sidebar-toggle" id="sidebarToggle" title="Toggle table of contents"></button>
       <h1>Markdown Viewer</h1>
       <span id="filenameDisplay">No file loaded</span>
 
@@ -362,7 +257,7 @@
       </div>
 
       <label class="theme-switch">
-        <input type="checkbox" id="themeToggle" checked> Dark Mode
+        <input type="checkbox" id="themeToggle"> Dark Mode
       </label>
     </div>
 
@@ -370,12 +265,6 @@
     <div class="header-nav" id="anchorNav">
       <span class="nav-placeholder">Load a file to see headings</span>
     </div>
-  </div>
-
-  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
-  <div class="sidebar" id="sidebar">
-    <div class="sidebar-header">Contents</div>
-    <div id="tocContainer"></div>
   </div>
 
   <div class="body-content">
@@ -415,17 +304,9 @@
     var refreshBtn       = document.getElementById('refreshBtn');
     var statusMsg        = document.getElementById('statusMsg');
     var anchorNav        = document.getElementById('anchorNav');
-    var sidebar          = document.getElementById('sidebar');
-    var sidebarToggle    = document.getElementById('sidebarToggle');
-    var sidebarBackdrop  = document.getElementById('sidebarBackdrop');
-    var tocContainer     = document.getElementById('tocContainer');
     var fontSizeSelect   = document.getElementById('fontSizeSelect');
     var fontDec          = document.getElementById('fontDec');
     var fontInc          = document.getElementById('fontInc');
-    var scrollObserver   = null;
-
-    // Tracks file objects loaded from manifest: [{ filename, originalPath }]
-    var currentFileObjects = [];
 
     //======================
     // UTIL
@@ -438,7 +319,7 @@
       }
     }
     function isMarkdown(name) {
-      var lower = (name || '').toLowerCase();
+      var lower = name.toLowerCase();
       return CONFIG.ACCEPTED_EXTENSIONS.some(function(ext) { return lower.endsWith(ext); });
     }
     function sanitizePath(name) {
@@ -463,7 +344,6 @@
       contentContainer.textContent = '';
       var heading = document.createElement('h2');
       heading.textContent = name;
-      heading.dataset.autoTitle = 'true';
       contentContainer.appendChild(heading);
 
       // Use a temporary div to parse safe HTML, then move children
@@ -473,7 +353,7 @@
       while (tmp.firstChild) contentContainer.appendChild(tmp.firstChild);
 
       Prism.highlightAll();
-      buildToc();
+      buildAnchorNav();
       window.scrollTo({ top: 0 });
     }
 
@@ -497,28 +377,13 @@
     }
 
     //======================
-    // ANCHOR NAVIGATION & SIDEBAR
+    // ANCHOR NAVIGATION
     //======================
-    var HEADING_THRESHOLD = 5;
-
-    function buildToc() {
-      // Clear both containers
+    function buildAnchorNav() {
       while (anchorNav.firstChild) anchorNav.removeChild(anchorNav.firstChild);
-      while (tocContainer.firstChild) tocContainer.removeChild(tocContainer.firstChild);
-
-      // Disconnect old observer
-      if (scrollObserver) { scrollObserver.disconnect(); scrollObserver = null; }
 
       var headings = contentContainer.querySelectorAll('h1, h2, h3, h4, h5, h6');
-      // Exclude auto-generated filename heading from threshold count
-      var userHeadings = [];
-      for (var i = 0; i < headings.length; i++) {
-        if (!headings[i].dataset.autoTitle) userHeadings.push(headings[i]);
-      }
-
       if (headings.length === 0) {
-        anchorNav.classList.remove('hidden');
-        sidebarToggle.classList.remove('visible');
         var placeholder = document.createElement('span');
         placeholder.className = 'nav-placeholder';
         placeholder.textContent = 'No headings found';
@@ -526,108 +391,16 @@
         return;
       }
 
-      // Assign IDs
       for (var i = 0; i < headings.length; i++) {
-        if (!headings[i].id) headings[i].id = 'heading-' + i;
-      }
-
-      if (userHeadings.length <= HEADING_THRESHOLD) {
-        // Few headings: show pills in header, hide sidebar toggle
-        anchorNav.classList.remove('hidden');
-        sidebarToggle.classList.remove('visible');
-        for (var j = 0; j < headings.length; j++) {
-          var h = headings[j];
-          var pill = document.createElement('a');
-          pill.href = '#' + h.id;
-          pill.textContent = h.textContent;
-          pill.className = 'anchor-pill level-' + h.tagName.toLowerCase();
-          anchorNav.appendChild(pill);
-        }
-      } else {
-        // Many headings: hide pill row, show sidebar toggle
-        anchorNav.classList.add('hidden');
-        sidebarToggle.classList.add('visible');
-        sidebarToggle.textContent = '\u2630 Contents ' + userHeadings.length;
-
-        for (var k = 0; k < headings.length; k++) {
-          var heading = headings[k];
-          var item = document.createElement('a');
-          item.href = '#' + heading.id;
-          item.textContent = heading.textContent;
-          item.className = 'toc-item level-' + heading.tagName.toLowerCase();
-          item.dataset.headingId = heading.id;
-          tocContainer.appendChild(item);
-        }
-
-        // Set up scroll tracking
-        setupScrollTracking(headings);
+        var h = headings[i];
+        if (!h.id) h.id = 'heading-' + i;
+        var pill = document.createElement('a');
+        pill.href = '#' + h.id;
+        pill.textContent = h.textContent;
+        pill.className = 'anchor-pill level-' + h.tagName.toLowerCase();
+        anchorNav.appendChild(pill);
       }
     }
-
-    function setupScrollTracking(headings) {
-      var headerEl = document.querySelector('.header');
-      var headerH = headerEl ? headerEl.offsetHeight : 60;
-      var tocItems = tocContainer.querySelectorAll('.toc-item');
-
-      scrollObserver = new IntersectionObserver(function(entries) {
-        // Find the topmost visible heading
-        var activeId = null;
-        for (var i = 0; i < entries.length; i++) {
-          if (entries[i].isIntersecting) {
-            activeId = entries[i].target.id;
-          }
-        }
-        if (!activeId) return;
-
-        // Update classes on all toc items
-        var found = false;
-        for (var j = 0; j < tocItems.length; j++) {
-          var item = tocItems[j];
-          if (item.dataset.headingId === activeId) {
-            item.classList.add('active');
-            item.classList.remove('past', 'future');
-            found = true;
-          } else if (!found) {
-            item.classList.add('past');
-            item.classList.remove('active', 'future');
-          } else {
-            item.classList.add('future');
-            item.classList.remove('active', 'past');
-          }
-        }
-
-        // Scroll active item into view in sidebar
-        var activeItem = tocContainer.querySelector('.toc-item.active');
-        if (activeItem) {
-          var st = activeItem.offsetTop - sidebar.clientHeight / 2 + activeItem.offsetHeight / 2;
-          sidebar.scrollTo({ top: Math.max(0, st), behavior: 'smooth' });
-        }
-      }, {
-        rootMargin: '-' + (headerH + 10) + 'px 0px -60% 0px',
-        threshold: 1.0
-      });
-
-      for (var i = 0; i < headings.length; i++) {
-        scrollObserver.observe(headings[i]);
-      }
-    }
-
-    // Toggle sidebar open/close
-    function toggleSidebar() {
-      var isOpen = sidebar.classList.contains('open');
-      if (isOpen) {
-        sidebar.classList.remove('open');
-        sidebarBackdrop.classList.remove('visible');
-        sidebarToggle.textContent = '\u2630 Contents ' + (tocContainer.children.length || '');
-      } else {
-        sidebar.classList.add('open');
-        sidebarBackdrop.classList.add('visible');
-        sidebarToggle.textContent = '\u2715 Contents ' + (tocContainer.children.length || '');
-      }
-    }
-
-    sidebarToggle.addEventListener('click', toggleSidebar);
-    sidebarBackdrop.addEventListener('click', toggleSidebar);
 
     // Intercept anchor clicks for smooth scroll with header offset
     document.addEventListener('click', function(e) {
@@ -643,11 +416,6 @@
         window.scrollTo({ top: target.offsetTop - offset, behavior: 'smooth' });
         target.classList.add('anchor-highlight');
         setTimeout(function() { target.classList.remove('anchor-highlight'); }, 2000);
-
-        // Close sidebar on mobile after click
-        if (window.innerWidth <= 768 && sidebar.classList.contains('open')) {
-          toggleSidebar();
-        }
       }
     });
 
@@ -714,14 +482,7 @@
       return (out.owner && out.repo) ? out : null;
     }
 
-    // Normalize a raw manifest entry to { filename, originalPath }.
-    // Handles both plain strings (legacy) and extended objects.
-    function normalizeEntry(f) {
-      if (typeof f === 'string') return { filename: f, originalPath: f };
-      return { filename: f.filename || '', originalPath: f.originalPath || f.filename || '' };
-    }
-
-    // Returns { found:true, files:[{filename,originalPath},...] } when manifest exists,
+    // Returns { found:true, files:[...] } when manifest exists,
     // or { found:false, files:null } when it doesn't.
     function listViaManifest() {
       return fetch('items/manifest.json', { cache:'no-store' })
@@ -734,13 +495,10 @@
         })
         .then(function(data) {
           if (!data) return { found: false, files: null };
-          var rawFiles = null;
-          if (Array.isArray(data)) rawFiles = data;
-          else if (data && Array.isArray(data.files)) rawFiles = data.files;
-          if (rawFiles !== null) {
-            var files = rawFiles
-              .filter(function(f) { return isMarkdown(typeof f === 'string' ? f : (f.filename || '')); })
-              .map(normalizeEntry);
+          var files = null;
+          if (Array.isArray(data)) files = data.filter(isMarkdown);
+          else if (data && Array.isArray(data.files)) files = data.files.filter(isMarkdown);
+          if (files !== null) {
             console.log('[scan] manifest.json loaded, ' + files.length + ' file(s)');
             return { found: true, files: files };
           }
@@ -762,9 +520,8 @@
         })
         .then(function(data) {
           if (!Array.isArray(data)) return null;
-          return data
-            .filter(function(entry) { return entry.type === 'file' && isMarkdown(entry.name); })
-            .map(function(entry) { return { filename: entry.name, originalPath: entry.name }; });
+          return data.filter(function(entry) { return entry.type === 'file' && isMarkdown(entry.name); })
+                     .map(function(entry) { return entry.name; });
         });
     }
 
@@ -808,68 +565,6 @@
     var currentScanSource = null;  // 'manifest' or 'github-api'
     var currentGhInfo = null;      // { owner, repo, branch } when github-api
 
-    // Build the grouped file dropdown from an array of {filename, originalPath} objects.
-    // Groups files by the parent directory portion of originalPath.
-    // Each group gets an <optgroup label="📁 dir/path"> with a disabled <option> spacer
-    // inside, followed by selectable <option> elements showing just the base filename.
-    function populateFileSelect(files) {
-      fileSelect.textContent = '';
-
-      if (files.length === 0) {
-        var op = document.createElement('option');
-        op.textContent = 'No files found in /items';
-        op.disabled = true;
-        op.selected = true;
-        fileSelect.appendChild(op);
-        return;
-      }
-
-      var prompt = document.createElement('option');
-      prompt.textContent = 'Select a file\u2026';
-      prompt.disabled = true;
-      prompt.selected = true;
-      fileSelect.appendChild(prompt);
-
-      // Group by parent directory of originalPath, preserving manifest order
-      var groups = {};
-      var groupOrder = [];
-      for (var i = 0; i < files.length; i++) {
-        var f = files[i];
-        var parts = (f.originalPath || f.filename).split('/');
-        var dirPath = parts.slice(0, -1).join('/') || '.';
-        if (!groups[dirPath]) {
-          groups[dirPath] = [];
-          groupOrder.push(dirPath);
-        }
-        groups[dirPath].push(f);
-      }
-
-      for (var g = 0; g < groupOrder.length; g++) {
-        var dir = groupOrder[g];
-        var grp = document.createElement('optgroup');
-        grp.label = '\uD83D\uDCC1 ' + dir;  // 📁 dir/path
-
-        // Disabled spacer inside the group showing the folder path
-        var spacer = document.createElement('option');
-        spacer.disabled = true;
-        spacer.textContent = '\u2500\u2500 ' + dir + ' \u2500\u2500';  // ── dir ──
-        grp.appendChild(spacer);
-
-        var groupFiles = groups[dir];
-        for (var h = 0; h < groupFiles.length; h++) {
-          var fo = groupFiles[h];
-          var opt = document.createElement('option');
-          opt.value = fo.filename;
-          // Display only the base filename for readability; path is shown by the group header
-          var baseName = (fo.originalPath || fo.filename).split('/').pop();
-          opt.textContent = baseName;
-          grp.appendChild(opt);
-        }
-
-        fileSelect.appendChild(grp);
-      }
-    }
-
     function scanItems() {
       setStatus('Scanning /items\u2026');
       var ghInfo = tryAutoDetectGithub();
@@ -883,20 +578,20 @@
             } else {
               setStatus('Manifest loaded but contains no .md files.', 3000);
             }
-            return { files: manifest.files, source: 'manifest', ghInfo: ghInfo, preserveOrder: true };
+            return { files: manifest.files, source: 'manifest', ghInfo: ghInfo };
           }
           // No manifest — try GitHub API fallback
           if (!ghInfo) {
             setStatus('No manifest found and not on GitHub Pages. Create items/manifest.json.', 5000);
-            return { files: [], source: null, ghInfo: null, preserveOrder: false };
+            return { files: [], source: null, ghInfo: null };
           }
           setStatus('Trying GitHub API (' + ghInfo.owner + '/' + ghInfo.repo + ')\u2026');
           return listViaGithubAPI(ghInfo).then(function(gf) {
             if (gf && gf.length > 0) {
               setStatus('Loaded ' + gf.length + ' file(s) from GitHub.', 2500);
-              return { files: gf, source: 'github-api', ghInfo: ghInfo, preserveOrder: false };
+              return { files: gf, source: 'github-api', ghInfo: ghInfo };
             }
-            return { files: [], source: null, ghInfo: ghInfo, preserveOrder: false };
+            return { files: [], source: null, ghInfo: ghInfo };
           });
         })
         .then(function(result) {
@@ -907,22 +602,29 @@
           if (files.length === 0 && result.ghInfo && !result.source) {
             setStatus('No .md files found in /items. Ensure files exist and repo is public.', 5000);
           }
+          files.sort(function(a,b) { return a.localeCompare(b, undefined, {numeric:true, sensitivity:'base'}); });
 
-          // Sort only when order is not already meaningful (e.g. GitHub API response)
-          if (!result.preserveOrder) {
-            files.sort(function(a, b) {
-              var an = a.originalPath || a.filename;
-              var bn = b.originalPath || b.filename;
-              return an.localeCompare(bn, undefined, { numeric: true, sensitivity: 'base' });
-            });
+          // Clear select safely
+          fileSelect.textContent = '';
+          if (files.length === 0) {
+            var op = document.createElement('option');
+            op.textContent = 'No files found in /items';
+            op.disabled = true;
+            op.selected = true;
+            fileSelect.appendChild(op);
+          } else {
+            var prompt = document.createElement('option');
+            prompt.textContent = 'Select a file\u2026';
+            prompt.disabled = true;
+            prompt.selected = true;
+            fileSelect.appendChild(prompt);
+            for (var i = 0; i < files.length; i++) {
+              var opt = document.createElement('option');
+              opt.value = files[i];
+              opt.textContent = files[i];
+              fileSelect.appendChild(opt);
+            }
           }
-
-          // Store globally for use in the change listener
-          currentFileObjects = files;
-
-          // Build the grouped dropdown
-          populateFileSelect(files);
-
           console.log('[scan] Done. Source=' + currentScanSource + ', files=' + files.length);
           return files;
         })
@@ -946,15 +648,9 @@
     }
 
     fileSelect.addEventListener('change', function() {
-      var filename = fileSelect.value;
-      if (!filename) return;
-      // Look up the originalPath to use as the display name in the content header
-      var fileObj = null;
-      for (var i = 0; i < currentFileObjects.length; i++) {
-        if (currentFileObjects[i].filename === filename) { fileObj = currentFileObjects[i]; break; }
-      }
-      var displayName = fileObj ? (fileObj.originalPath || filename) : filename;
-      loadMarkdownFile(getFileUrl(filename), displayName);
+      var name = fileSelect.value;
+      if (!name) return;
+      loadMarkdownFile(getFileUrl(name), name);
       if (window.innerWidth <= 768) {
         var bc = document.querySelector('.body-content');
         if (bc) window.scrollTo({ top: bc.offsetTop, behavior: 'smooth' });
@@ -969,18 +665,7 @@
     document.addEventListener('DOMContentLoaded', function() {
       scanItems().then(function() {
         if (CONFIG.DEFAULT_FILE) {
-          // Find the file object matching DEFAULT_FILE (by filename or originalPath)
-          var defObj = null;
-          for (var i = 0; i < currentFileObjects.length; i++) {
-            if (currentFileObjects[i].filename === CONFIG.DEFAULT_FILE ||
-                currentFileObjects[i].originalPath === CONFIG.DEFAULT_FILE) {
-              defObj = currentFileObjects[i];
-              break;
-            }
-          }
-          var fn = defObj ? defObj.filename : CONFIG.DEFAULT_FILE;
-          var dn = defObj ? (defObj.originalPath || fn) : fn;
-          loadMarkdownFile(getFileUrl(fn), dn);
+          loadMarkdownFile(getFileUrl(CONFIG.DEFAULT_FILE), CONFIG.DEFAULT_FILE);
         }
       });
     });

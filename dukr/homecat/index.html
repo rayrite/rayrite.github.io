@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>AtariVault 2600 — WebGL2 Data Grid</title>
+<style>
+:root{
+  --void:#0f0f0f; --panel:#161616; --panel2:#1e1e1e; --panel3:#252525;
+  --orange:#ff6b00; --cyan:#00d4ff; --violet:#9b5de5; --dim:#777;
+  --text:#e0e0e0; --line:#2e2e2e;
+  --mono:"Courier New",Courier,monospace;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0;overflow:hidden;background:var(--void);color:var(--text);
+  font-family:"Segoe UI",system-ui,sans-serif;font-size:14px}
+body::before{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(ellipse at 20% 0%,rgba(255,107,0,.07),transparent 55%),
+             radial-gradient(ellipse at 85% 100%,rgba(0,212,255,.05),transparent 55%)}
+
+#app{height:100%;display:grid;grid-template-rows:auto auto 1fr auto auto;gap:8px;padding:8px}
+
+/* ---------- title bar ---------- */
+#bar{display:flex;align-items:center;gap:10px;background:var(--panel);
+  border:1px solid var(--line);border-left:3px solid var(--orange);padding:7px 11px}
+#bar h1{margin:0;font-family:var(--mono);font-size:13px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--orange);text-shadow:0 0 8px #ff6b00aa;white-space:nowrap}
+#bar .sub{font-family:var(--mono);font-size:11px;color:var(--dim);flex:1;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#bar .badge{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:var(--cyan);
+  border:1px solid #00d4ff44;padding:2px 7px;white-space:nowrap}
+
+/* ---------- controls ---------- */
+#controls{display:flex;flex-wrap:wrap;gap:7px;align-items:center;
+  background:var(--panel);border:1px solid var(--line);padding:7px 9px}
+.field{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:10px;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+.field select,.field input[type=search]{font-family:var(--mono);font-size:12px;
+  background:var(--panel3);color:var(--text);border:1px solid var(--line);padding:4px 6px;
+  text-transform:none;letter-spacing:0}
+.field input[type=search]{width:150px}
+.field select:focus-visible,.field input:focus-visible,button:focus-visible,#stage:focus-visible{
+  outline:2px solid var(--orange);outline-offset:1px}
+.tog{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:11px;
+  color:var(--text);cursor:pointer;white-space:nowrap}
+.tog input{accent-color:var(--orange);width:14px;height:14px}
+button{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+  padding:6px 10px;border:1px solid var(--line);background:var(--panel3);color:var(--text);cursor:pointer}
+button:hover{border-color:var(--orange);color:var(--orange)}
+button.on{background:var(--orange);border-color:var(--orange);color:#140a00}
+
+/* ---------- stage ---------- */
+#stagewrap{position:relative;min-height:0;border:1px solid var(--line);
+  background:var(--panel);box-shadow:0 0 26px rgba(255,107,0,.07) inset}
+#stage{display:block;width:100%;height:100%;touch-action:none;cursor:grab;outline:none}
+#stage.drag{cursor:grabbing}
+#hint{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);pointer-events:none;
+  font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:var(--dim);
+  background:rgba(15,15,15,.82);border:1px solid var(--line);padding:4px 9px;
+  transition:opacity .5s ease;white-space:nowrap;max-width:94%;overflow:hidden;text-overflow:ellipsis}
+#hint.gone{opacity:0}
+
+/* ---------- readout ---------- */
+#hud{display:grid;grid-template-columns:repeat(auto-fit,minmax(78px,1fr));
+  background:var(--panel);border:1px solid var(--line)}
+#hud div{padding:4px 8px;border-right:1px solid var(--line);font-family:var(--mono);min-width:0}
+#hud div:last-child{border-right:0}
+#hud span{display:block;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+#hud b{display:block;font-size:15px;font-weight:400;color:var(--text);letter-spacing:-.01em;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#hud b.good{color:var(--cyan)}
+#hud b.warn{color:var(--orange)}
+
+/* ---------- selection strip ---------- */
+#sel{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--cyan);
+  padding:6px 10px;font-family:var(--mono);font-size:11px;color:var(--dim);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#sel b{color:var(--cyan);font-weight:400}
+#sel i{color:var(--orange);font-style:normal}
+
+@media (max-width:760px){
+  #bar .sub{display:none}
+  .field input[type=search]{width:112px}
+  #hud div:nth-child(n+7){display:none}
+}
+@media (max-width:430px){
+  #hud div:nth-child(n+5){display:none}
+  #bar .badge{display:none}
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <header id="bar">
+    <h1>AtariVault 2600</h1>
+    <span class="sub">WebGL2 instanced data grid · frozen panes · virtualised columns and rows</span>
+    <span class="badge" id="badgeCount">—</span>
+  </header>
+
+  <div id="controls">
+    <label class="field"><span>Library</span>
+      <select id="cSize">
+        <option value="48">48 games</option>
+        <option value="500">500 games</option>
+        <option value="4000" selected>4,000 games</option>
+        <option value="20000">20,000 games</option>
+      </select>
+    </label>
+    <label class="field"><span>Find</span>
+      <input type="search" id="cFind" placeholder="title / dev / genre" autocomplete="off">
+    </label>
+    <label class="tog"><input type="checkbox" id="cVirt" checked>Virtualise</label>
+    <label class="tog"><input type="checkbox" id="cLod" checked>Text LOD</label>
+    <label class="tog"><input type="checkbox" id="cCross" checked>Crosshair</label>
+    <button id="cTour">▶ Auto-tour</button>
+    <button id="cReset">↺ Reset view</button>
+  </div>
+
+  <div id="stagewrap">
+    <canvas id="stage" tabindex="0"
+      aria-label="Atari 2600 collection grid. Arrow keys move the selection, page keys scroll, plus and minus zoom."></canvas>
+    <div id="hint">drag to pan · wheel to scroll · shift+wheel across · ctrl+wheel or pinch to zoom · click a cell · tap an attribute label to sort</div>
+  </div>
+
+  <section id="hud"></section>
+  <div id="sel">Select a cell to inspect it.</div>
+</div>
+<script>
+'use strict';
+/* ============================================================================
+   AtariVault 2600 — WebGL2 instanced data grid
+   ----------------------------------------------------------------------------
+   One draw call for the entire frame: cells, gridlines, glyphs, icons, cover
+   art and the heat strip are all instanced quads sampling one 1024x1024 atlas.
+   Frozen panes are per-instance scissor rectangles resolved in the fragment
+   shader, so freezing a header costs four floats rather than four draw calls.
+   ==========================================================================*/
+
+/* ------------------------------------------------------------------ colour
+   Packed little-endian so the GPU reads r,g,b,a from consecutive bytes. */
+function rgba(r, g, b, a) { return ((a << 24) | (b << 16) | (g << 8) | r) >>> 0; }
+function hex(h, a) { return rgba((h >> 16) & 255, (h >> 8) & 255, h & 255, a === undefined ? 255 : a); }
+const ORANGE = hex(0xff6b00), CYAN = hex(0x00d4ff), VIOLET = hex(0x9b5de5);
+const TEXT = hex(0xe0e0e0), DIM = hex(0x777777), DIM2 = hex(0xa8a8a8);
+const PANEL = hex(0x161616), PANEL2 = hex(0x1e1e1e), PANEL3 = hex(0x252525);
+const VOIDC = hex(0x0f0f0f), LINE = hex(0x2e2e2e), WHITE = hex(0xffffff);
+
+/* ------------------------------------------------------------- dimensions */
+let COL_W = 168, ROW_H = 34, HEADER_H = 108, FROZEN_W = 132, STRIP_H = 30;
+function applyResponsiveMetrics(cssW) {
+  const narrow = cssW < 720;
+  COL_W = narrow ? 132 : 168;
+  ROW_H = narrow ? 30 : 34;
+  HEADER_H = narrow ? 88 : 108;
+  FROZEN_W = narrow ? 96 : 132;
+}
+
+/* ============================================================== 1. DATA == */
+
+const DEVS = ['Activision', 'Atari', 'Imagic', 'Coleco', 'Parker Bros', 'Sega', 'M-Network', 'Tigervision', 'CBS Electronics', 'Taito'];
+const GENRES = ['Platformer', 'Adventure', 'Shooter', 'Strategy', 'Arcade', 'Action', 'Racing', 'Sports', 'Puzzle', 'Maze'];
+const CTRLS = ['Joystick', 'Paddle', 'Driving', 'Keypad', 'Trak-Ball'];
+const REGIONS = ['NTSC-U', 'PAL', 'SECAM', 'NTSC-J'];
+const LABELS = ['Text', 'Picture', 'Silver', 'Red', 'Blue', 'Sears', 'Prototype'];
+const CONDS = ['Mint', 'Near Mint', 'Very Good', 'Good', 'Fair', 'Loose'];
+const VARIANTS = ['(PAL)', '(Sears)', '(Text Label)', '(Silver)', '(Rev A)', '(Proto)', '(CX2601)', '(Blue Label)'];
+
+const BASE = [
+  ['Pitfall!', 1982, 0, 0], ['Adventure', 1980, 1, 1], ['Space Invaders', 1980, 9, 2],
+  ["Yars' Revenge", 1982, 1, 2], ['River Raid', 1982, 0, 2], ['Missile Command', 1981, 1, 3],
+  ['Asteroids', 1981, 1, 4], ['Kaboom!', 1981, 0, 5], ['Demon Attack', 1982, 2, 2],
+  ['Megamania', 1982, 0, 2], ['Pac-Man', 1982, 1, 9], ['Ms. Pac-Man', 1983, 1, 9],
+  ['Frogger', 1982, 4, 5], ['Donkey Kong', 1982, 3, 0], ['Berzerk', 1982, 1, 2],
+  ['Defender', 1981, 1, 2], ['Centipede', 1982, 1, 4], ['Combat', 1977, 1, 5],
+  ['Breakout', 1978, 1, 4], ['Circus Atari', 1980, 1, 4], ['Warlords', 1981, 1, 4],
+  ['Star Raiders', 1982, 1, 2], ['Enduro', 1983, 0, 6], ['Grand Prix', 1982, 0, 6],
+  ['Barnstorming', 1982, 0, 6], ['Chopper Command', 1982, 0, 2], ['Keystone Kapers', 1983, 0, 0],
+  ['H.E.R.O.', 1984, 0, 0], ['Pitfall II', 1984, 0, 0], ['Seaquest', 1983, 0, 2],
+  ['Stampede', 1981, 0, 5], ['Freeway', 1981, 0, 5], ['Ice Hockey', 1981, 0, 7],
+  ['Boxing', 1980, 0, 7], ['Tennis', 1981, 0, 7], ['Skiing', 1980, 0, 7],
+  ['Cosmic Ark', 1982, 2, 2], ['Atlantis', 1982, 2, 2], ['Dragonfire', 1982, 2, 5],
+  ['Moonsweeper', 1983, 7, 2], ['Espial', 1984, 7, 2], ['Q*bert', 1983, 4, 8],
+  ['Popeye', 1983, 4, 0], ['Frostbite', 1983, 0, 0], ['Crackpots', 1983, 0, 5],
+  ['Spider Fighter', 1982, 0, 2], ['Oink!', 1983, 0, 5], ['Plaque Attack', 1983, 0, 2]
+];
+
+const DATA = {
+  n: 0, title: [], serial: [], year: null, dev: null, pub: null, genre: null,
+  rating: null, media: null, fav: null, players: null, ctrl: null, region: null,
+  label: null, rom: null, cib: null, loose: null, cond: null, hours: null,
+  lastDays: null, done: null, cover: null
+};
+
+function mulberry(seed) {
+  let a = seed >>> 0;
+  return function () {
+    a = (a + 0x6d2b79f5) >>> 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+/** Deterministic, so two runs on two machines are comparable. */
+function buildLibrary(n) {
+  const r = mulberry(0x2600c0de);
+  const d = DATA;
+  d.n = n;
+  d.title = new Array(n);
+  d.serial = new Array(n);
+  d.year = new Int16Array(n); d.dev = new Uint8Array(n); d.pub = new Uint8Array(n);
+  d.genre = new Uint8Array(n); d.rating = new Uint8Array(n); d.media = new Uint8Array(n);
+  d.fav = new Uint8Array(n); d.players = new Uint8Array(n); d.ctrl = new Uint8Array(n);
+  d.region = new Uint8Array(n); d.label = new Uint8Array(n); d.rom = new Uint8Array(n);
+  d.cib = new Uint16Array(n); d.loose = new Uint16Array(n); d.cond = new Uint8Array(n);
+  d.hours = new Uint16Array(n); d.lastDays = new Uint16Array(n); d.done = new Uint8Array(n);
+  d.cover = new Uint8Array(n);
+
+  const roms = [2, 4, 8, 16, 32];
+  for (let i = 0; i < n; i++) {
+    const b = BASE[i % BASE.length];
+    const pass = Math.floor(i / BASE.length);
+    d.title[i] = pass === 0 ? b[0] : b[0] + ' ' + VARIANTS[(pass - 1 + (i % 3)) % VARIANTS.length];
+    d.serial[i] = 'CX' + (2600 + (i % 400)) + '-' + String(i % 1000).padStart(3, '0');
+    d.year[i] = b[1] + (pass === 0 ? 0 : (r() * 3) | 0);
+    d.dev[i] = b[2];
+    d.pub[i] = r() < 0.72 ? b[2] : (r() * DEVS.length) | 0;
+    d.genre[i] = b[3];
+    d.rating[i] = 3 + ((r() * 8) | 0);
+    d.media[i] = 1 + ((r() * 5) | 0);
+    d.fav[i] = r() < 0.22 ? 1 : 0;
+    d.players[i] = r() < 0.55 ? 1 : 2;
+    d.ctrl[i] = (r() * CTRLS.length) | 0;
+    d.region[i] = r() < 0.7 ? 0 : 1 + ((r() * 3) | 0);
+    d.label[i] = (r() * LABELS.length) | 0;
+    d.rom[i] = roms[(r() * roms.length) | 0];
+    d.loose[i] = 4 + ((r() * 90) | 0);
+    d.cib[i] = d.loose[i] * (2 + ((r() * 6) | 0));
+    d.cond[i] = (r() * CONDS.length) | 0;
+    d.hours[i] = (r() * 120) | 0;
+    d.lastDays[i] = (r() * 900) | 0;
+    d.done[i] = (r() * 101) | 0;
+    d.cover[i] = (r() * 24) | 0;
+  }
+}
+
+/* Attribute rows. `get` returns a display string; `sort` returns a sortable key. */
+const ATTRS = [
+  { label: 'TITLE', type: 'text', get: i => DATA.title[i], sort: i => DATA.title[i], align: 'l' },
+  { label: 'YEAR', type: 'text', get: i => String(DATA.year[i]), sort: i => DATA.year[i], align: 'c' },
+  { label: 'DEVELOPER', type: 'text', get: i => DEVS[DATA.dev[i]], sort: i => DEVS[DATA.dev[i]], align: 'l' },
+  { label: 'PUBLISHER', type: 'text', get: i => DEVS[DATA.pub[i]], sort: i => DEVS[DATA.pub[i]], align: 'l' },
+  { label: 'GENRE', type: 'text', get: i => GENRES[DATA.genre[i]], sort: i => GENRES[DATA.genre[i]], align: 'l' },
+  { label: 'RATING', type: 'stars', get: i => DATA.rating[i] + '/10', sort: i => DATA.rating[i], align: 'c' },
+  { label: 'MEDIA', type: 'carts', get: i => DATA.media[i] + ' copies', sort: i => DATA.media[i], align: 'c' },
+  { label: 'FAVORITE', type: 'heart', get: i => (DATA.fav[i] ? 'yes' : '—'), sort: i => DATA.fav[i], align: 'c' },
+  { label: 'COMPLETION', type: 'bar', get: i => DATA.done[i] + '%', sort: i => DATA.done[i], align: 'c' },
+  { label: 'CIB VALUE', type: 'text', get: i => '$' + DATA.cib[i], sort: i => DATA.cib[i], align: 'r' },
+  { label: 'LOOSE VALUE', type: 'text', get: i => '$' + DATA.loose[i], sort: i => DATA.loose[i], align: 'r' },
+  { label: 'CONDITION', type: 'text', get: i => CONDS[DATA.cond[i]], sort: i => DATA.cond[i], align: 'l' },
+  { label: 'PLAYERS', type: 'text', get: i => String(DATA.players[i]), sort: i => DATA.players[i], align: 'c' },
+  { label: 'CONTROLLER', type: 'text', get: i => CTRLS[DATA.ctrl[i]], sort: i => CTRLS[DATA.ctrl[i]], align: 'l' },
+  { label: 'REGION', type: 'text', get: i => REGIONS[DATA.region[i]], sort: i => DATA.region[i], align: 'c' },
+  { label: 'LABEL', type: 'text', get: i => LABELS[DATA.label[i]], sort: i => LABELS[DATA.label[i]], align: 'l' },
+  { label: 'ROM SIZE', type: 'text', get: i => DATA.rom[i] + 'KB', sort: i => DATA.rom[i], align: 'c' },
+  { label: 'PLAYTIME', type: 'text', get: i => DATA.hours[i] + 'h', sort: i => DATA.hours[i], align: 'c' },
+  { label: 'LAST PLAYED', type: 'text', get: i => DATA.lastDays[i] + 'd ago', sort: i => DATA.lastDays[i], align: 'c' },
+  { label: 'SERIAL', type: 'text', get: i => DATA.serial[i], sort: i => DATA.serial[i], align: 'l' }
+];
+
+/* ============================================================ 2. ATLAS == */
+
+const ATLAS = 1024;
+const G_CELL_W = 18, G_CELL_H = 34, G_FONT = 24, G_ADV = 14.4, G_COLS = 56;
+const CH0 = 32, CH1 = 126;
+const ICON_Y = 148, ICON_S = 64;
+const ICON = { STAR: 0, STAR_O: 1, HEART: 2, HEART_O: 3, CART: 4 };
+const WHITE_X = 900, WHITE_Y = 148, WHITE_S = 64;
+const COVER_Y = 256, COVER_S = 128, COVER_COLS = 8, COVER_N = 24;
+
+/* Classic 2600 hues, used for the procedural cover art. */
+const TIA = ['#000000', '#404040', '#6c6c6c', '#909090', '#b0b0b0', '#c8c8c8',
+  '#844700', '#a05000', '#c06800', '#e08000', '#f89800', '#ffb038',
+  '#004818', '#006828', '#008038', '#28a048', '#51b25b', '#7cc27e',
+  '#00305c', '#004078', '#005494', '#0068b0', '#0080d0', '#3ca0e8',
+  '#4c0068', '#68008c', '#8000a8', '#9c00c0', '#b810d8', '#d048f0'];
+
+const atlasCanvas = document.createElement('canvas');
+atlasCanvas.width = atlasCanvas.height = ATLAS;
+
+function buildAtlas() {
+  const c = atlasCanvas.getContext('2d');
+  c.clearRect(0, 0, ATLAS, ATLAS);
+
+  /* --- glyphs: two faces, white on transparent, used as alpha masks --- */
+  c.textBaseline = 'alphabetic';
+  c.fillStyle = '#ffffff';
+  for (let face = 0; face < 2; face++) {
+    c.font = (face ? 'bold ' : '') + G_FONT + 'px "Courier New", Courier, monospace';
+    for (let ch = CH0; ch <= CH1; ch++) {
+      const i = ch - CH0;
+      const col = i % G_COLS;
+      const row = ((i / G_COLS) | 0) + face * 2;
+      c.fillText(String.fromCharCode(ch), col * G_CELL_W + (G_CELL_W - G_ADV) / 2, row * G_CELL_H + 25);
+    }
+  }
+
+  /* --- white block for solid tinted quads --- */
+  c.fillStyle = '#ffffff';
+  c.fillRect(WHITE_X, WHITE_Y, WHITE_S, WHITE_S);
+
+  /* --- icons, also alpha masks so they can be tinted per cell --- */
+  const ix = n => n * ICON_S;
+  star(c, ix(ICON.STAR) + 32, ICON_Y + 32, 26, true);
+  star(c, ix(ICON.STAR_O) + 32, ICON_Y + 32, 26, false);
+  heart(c, ix(ICON.HEART) + 32, ICON_Y + 34, 24, true);
+  heart(c, ix(ICON.HEART_O) + 32, ICON_Y + 34, 24, false);
+  cart(c, ix(ICON.CART) + 32, ICON_Y + 32, 22);
+
+  /* --- procedural cover art: a plausible 2600 title screen per slot --- */
+  for (let i = 0; i < COVER_N; i++) {
+    const x = (i % COVER_COLS) * COVER_S;
+    const y = COVER_Y + ((i / COVER_COLS) | 0) * COVER_S;
+    cover(c, x, y, COVER_S, i);
+  }
+}
+
+function star(c, cx, cy, r, filled) {
+  c.save();
+  c.beginPath();
+  for (let i = 0; i < 10; i++) {
+    const rad = i % 2 === 0 ? r : r * 0.44;
+    const a = -Math.PI / 2 + (i * Math.PI) / 5;
+    const px = cx + Math.cos(a) * rad, py = cy + Math.sin(a) * rad;
+    i === 0 ? c.moveTo(px, py) : c.lineTo(px, py);
+  }
+  c.closePath();
+  c.strokeStyle = '#ffffff';
+  c.fillStyle = '#ffffff';
+  c.lineWidth = 4;
+  filled ? c.fill() : c.stroke();
+  c.restore();
+}
+
+function heart(c, cx, cy, r, filled) {
+  c.save();
+  c.beginPath();
+  c.moveTo(cx, cy + r * 0.72);
+  c.bezierCurveTo(cx - r * 1.5, cy - r * 0.28, cx - r * 0.52, cy - r * 1.2, cx, cy - r * 0.34);
+  c.bezierCurveTo(cx + r * 0.52, cy - r * 1.2, cx + r * 1.5, cy - r * 0.28, cx, cy + r * 0.72);
+  c.closePath();
+  c.strokeStyle = '#ffffff';
+  c.fillStyle = '#ffffff';
+  c.lineWidth = 4;
+  filled ? c.fill() : c.stroke();
+  c.restore();
+}
+
+/** A 2600 cartridge silhouette: shoulders, ridged grip, label window. */
+function cart(c, cx, cy, r) {
+  c.save();
+  c.fillStyle = '#ffffff';
+  c.fillRect(cx - r, cy - r * 0.9, r * 2, r * 1.8);
+  c.clearRect(cx - r * 0.62, cy - r * 0.55, r * 1.24, r * 0.8);
+  c.fillRect(cx - r * 0.62, cy - r * 0.55, r * 1.24, r * 0.8);
+  c.globalCompositeOperation = 'destination-out';
+  for (let i = -2; i <= 2; i++) c.fillRect(cx + i * r * 0.3 - r * 0.05, cy + r * 0.42, r * 0.1, r * 0.4);
+  c.fillRect(cx - r * 0.5, cy - r * 0.45, r, r * 0.6);
+  c.restore();
+}
+
+function cover(c, x, y, s, seed) {
+  const r = mulberry(0x600d + seed * 7919);
+  const pick = () => TIA[6 + ((r() * (TIA.length - 6)) | 0)];
+  c.save();
+  c.beginPath();
+  c.rect(x, y, s, s);
+  c.clip();
+
+  c.fillStyle = TIA[(r() * 3) | 0];
+  c.fillRect(x, y, s, s);
+
+  const mode = seed % 4;
+  if (mode === 0) {                       // horizontal playfield bands
+    for (let i = 0; i < 7; i++) {
+      c.fillStyle = pick();
+      c.fillRect(x, y + 14 + i * 15, s, 6 + ((r() * 6) | 0));
+    }
+  } else if (mode === 1) {                // starfield + ship
+    c.fillStyle = '#ffffff';
+    for (let i = 0; i < 40; i++) c.fillRect(x + r() * s, y + r() * s, 2, 2);
+    c.fillStyle = pick();
+    c.fillRect(x + s * 0.42, y + s * 0.62, s * 0.16, s * 0.1);
+    c.fillRect(x + s * 0.46, y + s * 0.52, s * 0.08, s * 0.12);
+  } else if (mode === 2) {                // maze
+    c.strokeStyle = pick();
+    c.lineWidth = 5;
+    for (let i = 0; i < 9; i++) {
+      c.beginPath();
+      const gx = x + 12 + ((r() * 6) | 0) * 18, gy = y + 12 + ((r() * 6) | 0) * 18;
+      c.moveTo(gx, gy);
+      r() < 0.5 ? c.lineTo(gx + 36, gy) : c.lineTo(gx, gy + 36);
+      c.stroke();
+    }
+  } else {                                // blocky sprites over a horizon
+    c.fillStyle = pick();
+    c.fillRect(x, y + s * 0.66, s, s * 0.34);
+    for (let i = 0; i < 5; i++) {
+      c.fillStyle = pick();
+      const bw = 10 + ((r() * 16) | 0);
+      c.fillRect(x + r() * (s - bw), y + s * 0.2 + r() * s * 0.4, bw, bw * 0.7);
+    }
+  }
+  /* scanlines tie the whole set together */
+  c.fillStyle = 'rgba(0,0,0,0.22)';
+  for (let sy = 0; sy < s; sy += 3) c.fillRect(x, y + sy, s, 1);
+  c.restore();
+}
+
+/* uv helpers -------------------------------------------------------------- */
+const K = 1 / ATLAS;
+function uvGlyph(ch, bold, out) {
+  const i = (ch < CH0 || ch > CH1 ? 32 : ch) - CH0;
+  const col = i % G_COLS, row = ((i / G_COLS) | 0) + (bold ? 2 : 0);
+  out[0] = col * G_CELL_W * K; out[1] = row * G_CELL_H * K;
+  out[2] = (col + 1) * G_CELL_W * K; out[3] = (row + 1) * G_CELL_H * K;
+}
+const UV_WHITE = [(WHITE_X + 16) * K, (WHITE_Y + 16) * K, (WHITE_X + 48) * K, (WHITE_Y + 48) * K];
+function uvIcon(n, out) {
+  out[0] = n * ICON_S * K; out[1] = ICON_Y * K;
+  out[2] = (n + 1) * ICON_S * K; out[3] = (ICON_Y + ICON_S) * K;
+}
+function uvCover(n, out) {
+  const i = n % COVER_N;
+  const x = (i % COVER_COLS) * COVER_S, y = COVER_Y + ((i / COVER_COLS) | 0) * COVER_S;
+  out[0] = x * K; out[1] = y * K; out[2] = (x + COVER_S) * K; out[3] = (y + COVER_S) * K;
+}
+
+/* =========================================================== 3. RENDERER */
+
+const canvas = document.getElementById('stage');
+const gl = canvas.getContext('webgl2', {
+  alpha: false, antialias: false, depth: false, stencil: false,
+  powerPreference: 'high-performance', desynchronized: true
+});
+
+if (!gl) {
+  document.getElementById('stagewrap').innerHTML =
+    '<p style="font-family:var(--mono);color:#ff6b00;padding:24px;line-height:1.7">' +
+    'WebGL2 is unavailable in this browser.<br>Check chrome://gpu — hardware acceleration is off.</p>';
+  throw new Error('WebGL2 required');
+}
+
+const VERT = `#version 300 es
+in vec2 a_corner;
+in vec4 i_rect;   // x, y, w, h in CSS pixels
+in vec4 i_uv;
+in vec4 i_color;
+in float i_flags;
+in vec4 i_clip;   // pane rectangle, CSS pixels
+
+uniform vec2 u_res;
+
+out vec2 v_uv;
+out vec4 v_color;
+out float v_flags;
+out vec4 v_clip;
+
+void main() {
+  vec2 p = i_rect.xy + a_corner * i_rect.zw;
+  gl_Position = vec4((p / u_res) * 2.0 - 1.0, 0.0, 1.0);
+  gl_Position.y = -gl_Position.y;
+  v_uv = mix(i_uv.xy, i_uv.zw, a_corner);
+  v_color = i_color;
+  v_flags = i_flags;
+  v_clip = i_clip;
+}`;
+
+const FRAG = `#version 300 es
+precision highp float;
+in vec2 v_uv;
+in vec4 v_color;
+in float v_flags;
+in vec4 v_clip;
+
+uniform sampler2D u_tex;
+uniform float u_dpr;
+uniform float u_hDev;
+
+out vec4 outColor;
+
+void main() {
+  // Frozen panes are per-instance scissor rectangles. Four floats beats four
+  // draw calls, and it keeps the whole frame in one batch.
+  vec2 css = vec2(gl_FragCoord.x / u_dpr, (u_hDev - gl_FragCoord.y) / u_dpr);
+  if (css.x < v_clip.x || css.x > v_clip.z || css.y < v_clip.y || css.y > v_clip.w) discard;
+
+  vec4 texel = texture(u_tex, v_uv);
+  if (v_flags > 1.5)      outColor = vec4(v_color.rgb, v_color.a * texel.a); // alpha mask
+  else if (v_flags > 0.5) outColor = texel * v_color;                        // rgba sprite
+  else                    outColor = v_color;                                // solid
+}`;
+
+function compile(type, src) {
+  const sh = gl.createShader(type);
+  gl.shaderSource(sh, src);
+  gl.compileShader(sh);
+  if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(sh));
+  return sh;
+}
+const prog = gl.createProgram();
+gl.attachShader(prog, compile(gl.VERTEX_SHADER, VERT));
+gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, FRAG));
+gl.linkProgram(prog);
+if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(prog));
+gl.useProgram(prog);
+
+const U = {
+  res: gl.getUniformLocation(prog, 'u_res'),
+  dpr: gl.getUniformLocation(prog, 'u_dpr'),
+  hDev: gl.getUniformLocation(prog, 'u_hDev')
+};
+gl.uniform1i(gl.getUniformLocation(prog, 'u_tex'), 0);
+
+/* ------------------------------------------------------------ quad batch */
+const CAP = 160000;
+const FLOATS = 14;               // rect4 uv4 color1 flags1 clip4
+const STRIDE = FLOATS * 4;       // 56 bytes
+const FLAG_SOLID = 0, FLAG_SPRITE = 1, FLAG_MASK = 2;
+
+const buf = new ArrayBuffer(CAP * STRIDE);
+const F32 = new Float32Array(buf);
+const U32 = new Uint32Array(buf);
+let qn = 0, qdropped = 0, glyphCount = 0;
+let clipX0 = 0, clipY0 = 0, clipX1 = 1e5, clipY1 = 1e5;
+
+function setClip(x0, y0, x1, y1) { clipX0 = x0; clipY0 = y0; clipX1 = x1; clipY1 = y1; }
+
+function quad(x, y, w, h, color, u0, v0, u1, v1, flags) {
+  if (qn >= CAP) { qdropped++; return; }
+  const o = qn++ * FLOATS;
+  F32[o] = x; F32[o + 1] = y; F32[o + 2] = w; F32[o + 3] = h;
+  F32[o + 4] = u0; F32[o + 5] = v0; F32[o + 6] = u1; F32[o + 7] = v1;
+  U32[o + 8] = color;
+  F32[o + 9] = flags;
+  F32[o + 10] = clipX0; F32[o + 11] = clipY0; F32[o + 12] = clipX1; F32[o + 13] = clipY1;
+}
+function rect(x, y, w, h, color) {
+  quad(x, y, w, h, color, UV_WHITE[0], UV_WHITE[1], UV_WHITE[2], UV_WHITE[3], FLAG_SOLID);
+}
+const _uv = [0, 0, 0, 0];
+function icon(n, x, y, s, color) {
+  uvIcon(n, _uv);
+  quad(x, y, s, s, color, _uv[0], _uv[1], _uv[2], _uv[3], FLAG_MASK);
+}
+function coverArt(n, x, y, w, h) {
+  uvCover(n, _uv);
+  quad(x, y, w, h, WHITE, _uv[0], _uv[1], _uv[2], _uv[3], FLAG_SPRITE);
+}
+
+function advanceFor(px) { return G_ADV * (px / G_CELL_H); }
+function textWidth(str, px) { return str.length * advanceFor(px); }
+function fitText(str, px, maxW) {
+  const per = advanceFor(px);
+  const max = Math.floor(maxW / per);
+  if (str.length <= max) return str;
+  if (max <= 1) return '';
+  return str.slice(0, max - 1) + '.';
+}
+/** x is the left edge of the ink, y the vertical centre. */
+function drawText(x, y, str, px, color, bold) {
+  const k = px / G_CELL_H;
+  const w = G_CELL_W * k, h = G_CELL_H * k, adv = G_ADV * k;
+  let cx = x - ((G_CELL_W - G_ADV) / 2) * k;
+  const top = y - h / 2;
+  for (let i = 0; i < str.length; i++) {
+    const ch = str.charCodeAt(i);
+    if (ch !== 32) {
+      uvGlyph(ch, bold, _uv);
+      quad(cx, top, w, h, color, _uv[0], _uv[1], _uv[2], _uv[3], FLAG_MASK);
+      glyphCount++;
+    }
+    cx += adv;
+  }
+}
+/** The LOD stand-in: one quad instead of a word nobody could read anyway. */
+function greek(x, y, w, px, color) {
+  rect(x, y - px * 0.16, w, Math.max(1, px * 0.32), color);
+}
+
+/* --------------------------------------------------------------- GL setup */
+const vao = gl.createVertexArray();
+gl.bindVertexArray(vao);
+
+const cornerBuf = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, cornerBuf);
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([0, 0, 1, 0, 0, 1, 1, 1]), gl.STATIC_DRAW);
+const aCorner = gl.getAttribLocation(prog, 'a_corner');
+gl.enableVertexAttribArray(aCorner);
+gl.vertexAttribPointer(aCorner, 2, gl.FLOAT, false, 8, 0);
+
+const instBuf = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, instBuf);
+gl.bufferData(gl.ARRAY_BUFFER, CAP * STRIDE, gl.DYNAMIC_DRAW);
+function inst(name, size, type, norm, offset) {
+  const loc = gl.getAttribLocation(prog, name);
+  gl.enableVertexAttribArray(loc);
+  gl.vertexAttribPointer(loc, size, type, norm, STRIDE, offset);
+  gl.vertexAttribDivisor(loc, 1);
+}
+inst('i_rect', 4, gl.FLOAT, false, 0);
+inst('i_uv', 4, gl.FLOAT, false, 16);
+inst('i_color', 4, gl.UNSIGNED_BYTE, true, 32);
+inst('i_flags', 1, gl.FLOAT, false, 36);
+inst('i_clip', 4, gl.FLOAT, false, 40);
+gl.bindVertexArray(null);
+
+buildAtlas();
+const tex = gl.createTexture();
+gl.bindTexture(gl.TEXTURE_2D, tex);
+gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
+gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, atlasCanvas);
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
+gl.disable(gl.DEPTH_TEST);
+gl.enable(gl.BLEND);
+gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+gl.clearColor(0.059, 0.059, 0.059, 1);
+
+let W = 1, H = 1, dpr = 1;
+function resize() {
+  const r = canvas.getBoundingClientRect();
+  if (r.width < 1 || r.height < 1) return;
+  W = r.width; H = r.height;
+  dpr = Math.min(window.devicePixelRatio || 1, 2);
+  canvas.width = Math.round(W * dpr);
+  canvas.height = Math.round(H * dpr);
+  gl.viewport(0, 0, canvas.width, canvas.height);
+  applyResponsiveMetrics(W);
+  clampView();
+}
+
+function submit() {
+  gl.clear(gl.COLOR_BUFFER_BIT);
+  if (qn === 0) return;
+  gl.useProgram(prog);
+  gl.bindVertexArray(vao);
+  gl.activeTexture(gl.TEXTURE0);
+  gl.bindTexture(gl.TEXTURE_2D, tex);
+  gl.uniform2f(U.res, W, H);
+  gl.uniform1f(U.dpr, dpr);
+  gl.uniform1f(U.hDev, canvas.height);
+  gl.bindBuffer(gl.ARRAY_BUFFER, instBuf);
+  gl.bufferSubData(gl.ARRAY_BUFFER, 0, new Uint8Array(buf, 0, qn * STRIDE));
+  gl.drawArraysInstanced(gl.TRIANGLE_STRIP, 0, 4, qn);
+  gl.bindVertexArray(null);
+}
+
+/* ============================================================== 4. STATE */
+
+const view = { tx: 0, ty: 0, zoom: 1, vx: 0, vy: 0 };
+const opts = { virt: true, lod: true, cross: true };
+let cols = new Int32Array(0);          // the filtered, sorted column order
+let sortAttr = -1, sortDir = 1, query = '';
+let sel = { c: -1, r: -1 };
+let heat = new Float32Array(0);
+let tour = false, tourT = 0;
+
+function rebuildColumns() {
+  const n = DATA.n;
+  const q = query.trim().toLowerCase();
+  const keep = [];
+  for (let i = 0; i < n; i++) {
+    if (q) {
+      const hay = DATA.title[i].toLowerCase() + ' ' + DEVS[DATA.dev[i]].toLowerCase() +
+        ' ' + GENRES[DATA.genre[i]].toLowerCase();
+      if (hay.indexOf(q) < 0) continue;
+    }
+    keep.push(i);
+  }
+  if (sortAttr >= 0) {
+    const key = ATTRS[sortAttr].sort;
+    keep.sort((a, b) => {
+      const ka = key(a), kb = key(b);
+      return (ka < kb ? -1 : ka > kb ? 1 : 0) * sortDir;
+    });
+  }
+  cols = Int32Array.from(keep);
+  buildHeat();
+  clampView();
+  const badge = cols.length === DATA.n
+    ? DATA.n.toLocaleString() + ' games · ' + (DATA.n * ATTRS.length).toLocaleString() + ' cells'
+    : cols.length.toLocaleString() + ' of ' + DATA.n.toLocaleString() + ' games';
+  document.getElementById('badgeCount').textContent = badge;
+}
+
+/** Aggregate the whole library once per change so the strip never walks it per frame. */
+function buildHeat() {
+  const buckets = Math.max(1, Math.min(cols.length, 220));
+  heat = new Float32Array(buckets);
+  if (cols.length === 0) return;
+  const per = cols.length / buckets;
+  for (let b = 0; b < buckets; b++) {
+    const s = Math.floor(b * per), e = Math.max(s + 1, Math.floor((b + 1) * per));
+    let sum = 0, k = 0;
+    for (let i = s; i < e && i < cols.length; i++) { sum += DATA.rating[cols[i]]; k++; }
+    heat[b] = k ? sum / k / 10 : 0;
+  }
+}
+
+function metrics() {
+  const z = view.zoom;
+  return {
+    z,
+    colW: COL_W * z,
+    rowH: ROW_H * z,
+    bodyX: FROZEN_W,
+    bodyY: HEADER_H,
+    bodyW: Math.max(1, W - FROZEN_W),
+    bodyH: Math.max(1, H - HEADER_H - STRIP_H),
+    stripY: H - STRIP_H
+  };
+}
+
+function clampView() {
+  const m = metrics();
+  const cw = cols.length * m.colW, ch = ATTRS.length * m.rowH;
+  view.tx = Math.min(0, Math.max(Math.min(0, m.bodyW - cw), view.tx));
+  view.ty = Math.min(0, Math.max(Math.min(0, m.bodyH - ch), view.ty));
+}
+
+/* ========================================================== 5. THE FRAME */
+
+let visCols = 0, visRows = 0, visCells = 0;
+
+function buildFrame() {
+  qn = 0; qdropped = 0; glyphCount = 0;
+  const m = metrics();
+  const fs = Math.max(6, 12.5 * m.z);
+  const pad = Math.max(4, 6 * m.z);
+
+  setClip(0, 0, W, H);
+  rect(0, 0, W, H, VOIDC);
+
+  /* ---- which cells are actually on screen ---- */
+  let c0 = 0, c1 = cols.length - 1, r0 = 0, r1 = ATTRS.length - 1;
+  if (opts.virt) {
+    c0 = Math.max(0, Math.floor(-view.tx / m.colW));
+    c1 = Math.min(cols.length - 1, Math.ceil((-view.tx + m.bodyW) / m.colW));
+    r0 = Math.max(0, Math.floor(-view.ty / m.rowH));
+    r1 = Math.min(ATTRS.length - 1, Math.ceil((-view.ty + m.bodyH) / m.rowH));
+  }
+  visCols = Math.max(0, c1 - c0 + 1);
+  visRows = Math.max(0, r1 - r0 + 1);
+  visCells = visCols * visRows;
+
+  /* ---- body ---- */
+  setClip(m.bodyX, m.bodyY, W, m.stripY);
+  rect(m.bodyX, m.bodyY, m.bodyW, m.bodyH, PANEL);
+
+  const guard = CAP - 4096;
+  outer:
+  for (let ci = c0; ci <= c1; ci++) {
+    const gi = cols[ci];
+    if (gi === undefined) continue;
+    const x = m.bodyX + view.tx + ci * m.colW;
+    if (opts.virt && (x > W || x + m.colW < m.bodyX)) continue;
+    for (let ri = r0; ri <= r1; ri++) {
+      if (qn > guard) break outer;          // safety net when virtualisation is off
+      const y = m.bodyY + view.ty + ri * m.rowH;
+      if (opts.virt && (y > m.stripY || y + m.rowH < m.bodyY)) continue;
+      const zebra = (ri & 1) === 0 ? PANEL2 : hex(0x1a1a1a);
+      rect(x, y, m.colW - 1, m.rowH - 1, zebra);
+      cellContent(gi, ATTRS[ri], x, y, m.colW - 1, m.rowH - 1, fs, pad, m.z);
+    }
+  }
+
+  /* ---- crosshair ---- */
+  if (opts.cross && sel.c >= 0) {
+    const x = m.bodyX + view.tx + sel.c * m.colW;
+    setClip(m.bodyX, m.bodyY, W, m.stripY);
+    rect(x, m.bodyY, m.colW - 1, m.bodyH, hex(0xff6b00, 26));
+    rect(x, m.bodyY, 2, m.bodyH, hex(0xff6b00, 150));
+    rect(x + m.colW - 3, m.bodyY, 2, m.bodyH, hex(0xff6b00, 150));
+    if (sel.r >= 0) {
+      const y = m.bodyY + view.ty + sel.r * m.rowH;
+      setClip(0, m.bodyY, W, m.stripY);
+      rect(0, y, W, m.rowH - 1, hex(0x00d4ff, 22));
+      setClip(m.bodyX, m.bodyY, W, m.stripY);
+      rect(x, y, m.colW - 1, m.rowH - 1, hex(0x00d4ff, 30));
+      rect(x, y, m.colW - 1, 2, CYAN);
+      rect(x, y + m.rowH - 3, m.colW - 1, 2, CYAN);
+    }
+  }
+
+  /* ---- frozen header: cover art + title ---- */
+  setClip(m.bodyX, 0, W, m.bodyY);
+  rect(m.bodyX, 0, m.bodyW, HEADER_H, hex(0x121212));
+  const artMax = HEADER_H - 34;
+  for (let ci = c0; ci <= c1; ci++) {
+    const gi = cols[ci];
+    if (gi === undefined) continue;
+    const x = m.bodyX + view.tx + ci * m.colW;
+    if (x > W || x + m.colW < m.bodyX) continue;
+    const cw = m.colW - 1;
+    const s = Math.min(cw - pad * 2, artMax);
+    const ax = x + (cw - s) / 2;
+    const isSel = ci === sel.c;
+    rect(x, 0, cw, HEADER_H, isSel ? hex(0x241608) : hex(0x161616));
+    rect(ax - 2, 8, s + 4, s + 4, isSel ? ORANGE : hex(0x2e2e2e));
+    coverArt(DATA.cover[gi], ax, 10, s, s);
+    const t = DATA.title[gi];
+    const tfs = Math.max(8, Math.min(13, 11 * m.z));
+    if (opts.lod && tfs < 8.5) {
+      greek(x + pad, HEADER_H - 15, cw - pad * 2, tfs, isSel ? ORANGE : CYAN);
+    } else {
+      const txt = fitText(t, tfs, cw - pad * 2);
+      drawText(x + (cw - textWidth(txt, tfs)) / 2, HEADER_H - 15, txt, tfs,
+        isSel ? ORANGE : CYAN, true);
+    }
+    rect(x + cw - 1, 0, 1, HEADER_H, hex(0x2e2e2e));
+  }
+
+  /* ---- frozen attribute column ---- */
+  setClip(0, m.bodyY, m.bodyX, m.stripY);
+  rect(0, m.bodyY, FROZEN_W, m.bodyH, hex(0x121212));
+  const lfs = Math.max(8, Math.min(11, 10 * Math.max(1, m.z * 0.6)));
+  for (let ri = r0; ri <= r1; ri++) {
+    const a = ATTRS[ri];
+    const y = m.bodyY + view.ty + ri * m.rowH;
+    if (y > m.stripY || y + m.rowH < m.bodyY) continue;
+    const isSel = ri === sel.r;
+    rect(0, y, FROZEN_W - 1, m.rowH - 1, isSel ? hex(0x0d2630) : hex(0x161616));
+    rect(0, y, 3, m.rowH - 1, isSel ? CYAN : hex(0x3a2410));
+    const label = fitText(a.label, lfs, FROZEN_W - 26);
+    drawText(10, y + m.rowH / 2, label, lfs, isSel ? CYAN : ORANGE, true);
+    if (ri === sortAttr) {
+      const ax = FROZEN_W - 14, ay = y + m.rowH / 2;
+      rect(ax - 4, ay - (sortDir > 0 ? 3 : 0), 8, 2, ORANGE);
+      rect(ax - 2, ay - 1 + (sortDir > 0 ? 3 : -3), 4, 2, ORANGE);
+    }
+  }
+
+  /* ---- corner ---- */
+  setClip(0, 0, m.bodyX, m.bodyY);
+  rect(0, 0, FROZEN_W, HEADER_H, hex(0x0d0d0d));
+  drawText(10, 22, 'ATTRIBUTE', 10, ORANGE, true);
+  drawText(10, HEADER_H - 34, 'tap a label', 9, hex(0x5a5a5a), false);
+  drawText(10, HEADER_H - 21, 'to sort', 9, hex(0x5a5a5a), false);
+
+  /* ---- pane seams ---- */
+  setClip(0, 0, W, H);
+  rect(0, HEADER_H - 1, W, 1, hex(0x3a3a3a));
+  rect(FROZEN_W - 1, 0, 1, m.stripY, hex(0x3a3a3a));
+
+  /* ---- heat strip navigator ---- */
+  drawStrip(m);
+}
+
+function cellContent(gi, a, x, y, w, h, fs, pad, z) {
+  const cy = y + h / 2;
+  const inner = w - pad * 2;
+  const readable = !(opts.lod && fs < 8.5);
+
+  if (a.type === 'stars') {
+    const n = Math.round(DATA.rating[gi] / 2);
+    const s = Math.min(h * 0.56, inner / 5.4);
+    let sx = x + (w - s * 5 * 1.06) / 2;
+    for (let k = 0; k < 5; k++) {
+      icon(k < n ? ICON.STAR : ICON.STAR_O, sx, cy - s / 2, s, k < n ? ORANGE : hex(0x4c4c4c));
+      sx += s * 1.06;
+    }
+    return;
+  }
+  if (a.type === 'carts') {
+    const n = DATA.media[gi];
+    const s = Math.min(h * 0.6, inner / 5.6);
+    let sx = x + (w - s * n * 1.12) / 2;
+    for (let k = 0; k < n; k++) { icon(ICON.CART, sx, cy - s / 2, s, CYAN); sx += s * 1.12; }
+    return;
+  }
+  if (a.type === 'heart') {
+    if (DATA.fav[gi]) {
+      const s = h * 0.58;
+      icon(ICON.HEART, x + (w - s) / 2, cy - s / 2, s, ORANGE);
+    } else {
+      rect(x + w / 2 - 4, cy - 1, 8, 2, hex(0x3f3f3f));
+    }
+    return;
+  }
+  if (a.type === 'bar') {
+    const p = DATA.done[gi] / 100;
+    const showPct = readable && inner > 62;
+    const bw = showPct ? inner - 34 : inner;
+    const bh = Math.max(3, h * 0.26);
+    rect(x + pad, cy - bh / 2, bw, bh, hex(0x2e2e2e));
+    rect(x + pad, cy - bh / 2, bw * p, bh, p > 0.79 ? CYAN : ORANGE);
+    if (showPct) drawText(x + pad + bw + 6, cy, DATA.done[gi] + '%', fs * 0.86, DIM2, false);
+    return;
+  }
+
+  const str = a.get(gi);
+  if (!readable) { greek(x + pad, cy, Math.min(inner, inner * 0.72), fs, hex(0x4a4a4a)); return; }
+  const txt = fitText(str, fs, inner);
+  const tw = textWidth(txt, fs);
+  const tx = a.align === 'r' ? x + w - pad - tw : a.align === 'c' ? x + (w - tw) / 2 : x + pad;
+  const col = a.label === 'TITLE' ? TEXT : a.align === 'r' ? hex(0x8fd6a0) : DIM2;
+  drawText(tx, cy, txt, fs, col, a.label === 'TITLE');
+}
+
+function drawStrip(m) {
+  setClip(0, m.stripY, W, H);
+  rect(0, m.stripY, W, STRIP_H, hex(0x121212));
+  rect(0, m.stripY, W, 1, hex(0x3a3a3a));
+  if (heat.length === 0 || cols.length === 0) return;
+
+  const padX = 6;
+  const usable = W - padX * 2;
+  const bw = usable / heat.length;
+  const top = m.stripY + 7, bh = STRIP_H - 13;
+  for (let b = 0; b < heat.length; b++) {
+    const v = heat[b];
+    const a = 40 + v * 200;
+    rect(padX + b * bw, top, Math.max(1, bw - 0.5), bh, hex(0xff6b00, a));
+  }
+  /* viewport window */
+  const cw = cols.length * m.colW;
+  const f0 = cw <= m.bodyW ? 0 : (-view.tx) / cw;
+  const f1 = cw <= m.bodyW ? 1 : (-view.tx + m.bodyW) / cw;
+  const wx = padX + f0 * usable, ww = Math.max(6, (f1 - f0) * usable);
+  rect(wx, top - 3, ww, bh + 6, hex(0x00d4ff, 34));
+  rect(wx, top - 3, 2, bh + 6, CYAN);
+  rect(wx + ww - 2, top - 3, 2, bh + 6, CYAN);
+}
+
+/* ============================================================== 6. INPUT */
+
+const stagewrap = document.getElementById('stagewrap');
+const hintEl = document.getElementById('hint');
+let hintTimer = setTimeout(() => hintEl.classList.add('gone'), 6500);
+
+function paneAt(px, py) {
+  const m = metrics();
+  if (py >= m.stripY) return 'strip';
+  if (py < HEADER_H) return px < FROZEN_W ? 'corner' : 'header';
+  return px < FROZEN_W ? 'labels' : 'body';
+}
+
+function colAt(px) {
+  const m = metrics();
+  const i = Math.floor((px - m.bodyX - view.tx) / m.colW);
+  return i >= 0 && i < cols.length ? i : -1;
+}
+function rowAt(py) {
+  const m = metrics();
+  const i = Math.floor((py - m.bodyY - view.ty) / m.rowH);
+  return i >= 0 && i < ATTRS.length ? i : -1;
+}
+
+const pointers = new Map();
+let drag = null, pinchDist = 0, moved = 0;
+
+function local(e) {
+  const r = canvas.getBoundingClientRect();
+  return { x: e.clientX - r.left, y: e.clientY - r.top };
+}
+
+canvas.addEventListener('pointerdown', e => {
+  canvas.setPointerCapture(e.pointerId);
+  const p = local(e);
+  pointers.set(e.pointerId, p);
+  pinchDist = 0;
+  moved = 0;
+  canvas.focus();
+  hideHint();
+
+  const pane = paneAt(p.x, p.y);
+  if (pane === 'strip') { jumpFromStrip(p.x); drag = { pane: 'strip' }; return; }
+  drag = { pane, x: p.x, y: p.y, t: performance.now() };
+  view.vx = view.vy = 0;
+  tour = false;
+  syncTourButton();
+});
+
+canvas.addEventListener('pointermove', e => {
+  const prev = pointers.get(e.pointerId);
+  if (!prev) return;
+  const p = local(e);
+  const dx = p.x - prev.x, dy = p.y - prev.y;
+  pointers.set(e.pointerId, p);
+  moved += Math.abs(dx) + Math.abs(dy);
+
+  if (pointers.size === 2) {
+    const two = [...pointers.values()];
+    const d = Math.hypot(two[0].x - two[1].x, two[0].y - two[1].y);
+    if (pinchDist > 0) {
+      zoomAt(Math.log(d / pinchDist), (two[0].x + two[1].x) / 2, (two[0].y + two[1].y) / 2);
+    }
+    pinchDist = d;
+    return;
+  }
+  if (!drag) return;
+  if (drag.pane === 'strip') { jumpFromStrip(p.x); return; }
+
+  // Dragging inside a frozen pane only moves the axis that pane can scroll.
+  const allowX = drag.pane === 'body' || drag.pane === 'header';
+  const allowY = drag.pane === 'body' || drag.pane === 'labels';
+  if (allowX) { view.tx += dx; view.vx = dx; }
+  if (allowY) { view.ty += dy; view.vy = dy; }
+  clampView();
+  canvas.classList.add('drag');
+});
+
+function endPointer(e) {
+  const p = pointers.get(e.pointerId);
+  pointers.delete(e.pointerId);
+  if (pointers.size < 2) pinchDist = 0;
+  canvas.classList.remove('drag');
+  if (p && drag && moved < 6) click(p.x, p.y);
+  if (pointers.size === 0) drag = null;
+}
+canvas.addEventListener('pointerup', endPointer);
+canvas.addEventListener('pointercancel', endPointer);
+
+function click(px, py) {
+  const pane = paneAt(px, py);
+  if (pane === 'labels') {
+    const r = rowAt(py);
+    if (r < 0) return;
+    if (sortAttr === r) sortDir = -sortDir; else { sortAttr = r; sortDir = 1; }
+    sel.r = r;
+    rebuildColumns();
+    return;
+  }
+  if (pane === 'header') { const c = colAt(px); if (c >= 0) { sel.c = c; sel.r = -1; describe(); } return; }
+  if (pane === 'body') {
+    const c = colAt(px), r = rowAt(py);
+    if (c >= 0 && r >= 0) { sel.c = c; sel.r = r; describe(); }
+  }
+}
+
+canvas.addEventListener('wheel', e => {
+  e.preventDefault();
+  hideHint();
+  tour = false; syncTourButton();
+  const p = local(e);
+  if (e.ctrlKey || e.metaKey) { zoomAt(-e.deltaY * 0.01, p.x, p.y); return; }
+  const unit = e.deltaMode === 1 ? 18 : 1;
+  if (e.shiftKey) view.tx -= e.deltaY * unit;
+  else { view.ty -= e.deltaY * unit; view.tx -= e.deltaX * unit; }
+  clampView();
+}, { passive: false });
+
+function zoomAt(logDelta, ax, ay) {
+  const m = metrics();
+  const before = view.zoom;
+  view.zoom = Math.max(0.45, Math.min(2.4, view.zoom * Math.exp(logDelta)));
+  const k = view.zoom / before;
+  // keep the grid point under the cursor pinned
+  view.tx = ax - m.bodyX - (ax - m.bodyX - view.tx) * k;
+  view.ty = ay - m.bodyY - (ay - m.bodyY - view.ty) * k;
+  clampView();
+}
+
+function jumpFromStrip(px) {
+  const m = metrics();
+  const padX = 6, usable = W - padX * 2;
+  const f = Math.max(0, Math.min(1, (px - padX) / usable));
+  const cw = cols.length * m.colW;
+  view.tx = -(f * cw - m.bodyW / 2);
+  view.vx = 0;
+  clampView();
+}
+
+canvas.addEventListener('keydown', e => {
+  const m = metrics();
+  let handled = true;
+  switch (e.key) {
+    case 'ArrowRight': moveSel(1, 0); break;
+    case 'ArrowLeft': moveSel(-1, 0); break;
+    case 'ArrowDown': moveSel(0, 1); break;
+    case 'ArrowUp': moveSel(0, -1); break;
+    case 'PageDown': view.ty -= m.bodyH * 0.9; break;
+    case 'PageUp': view.ty += m.bodyH * 0.9; break;
+    case 'Home': view.tx = 0; break;
+    case 'End': view.tx = m.bodyW - cols.length * m.colW; break;
+    case '+': case '=': zoomAt(0.18, W / 2, H / 2); break;
+    case '-': case '_': zoomAt(-0.18, W / 2, H / 2); break;
+    default: handled = false;
+  }
+  if (handled) { e.preventDefault(); clampView(); hideHint(); }
+});
+
+function moveSel(dc, dr) {
+  if (sel.c < 0) { sel.c = 0; sel.r = 0; } else {
+    sel.c = Math.max(0, Math.min(cols.length - 1, sel.c + dc));
+    sel.r = Math.max(0, Math.min(ATTRS.length - 1, (sel.r < 0 ? 0 : sel.r) + dr));
+  }
+  scrollSelIntoView();
+  describe();
+}
+
+function scrollSelIntoView() {
+  const m = metrics();
+  const x = view.tx + sel.c * m.colW;
+  if (x < 0) view.tx -= x;
+  else if (x + m.colW > m.bodyW) view.tx -= (x + m.colW - m.bodyW);
+  const y = view.ty + sel.r * m.rowH;
+  if (y < 0) view.ty -= y;
+  else if (y + m.rowH > m.bodyH) view.ty -= (y + m.rowH - m.bodyH);
+  clampView();
+}
+
+function hideHint() {
+  clearTimeout(hintTimer);
+  hintEl.classList.add('gone');
+}
+
+const selEl = document.getElementById('sel');
+function describe() {
+  if (sel.c < 0) { selEl.textContent = 'Select a cell to inspect it.'; return; }
+  const gi = cols[sel.c];
+  if (gi === undefined) return;
+  const title = DATA.title[gi];
+  if (sel.r < 0) {
+    selEl.innerHTML = '<b>' + esc(title) + '</b> · ' + esc(DEVS[DATA.dev[gi]]) + ' · ' +
+      DATA.year[gi] + ' · ' + esc(GENRES[DATA.genre[gi]]) + ' · rating ' + DATA.rating[gi] + '/10';
+    return;
+  }
+  const a = ATTRS[sel.r];
+  selEl.innerHTML = '<b>' + esc(title) + '</b> → <i>' + esc(a.label) + '</i> = ' + esc(a.get(gi)) +
+    '  <span style="color:#555">· column ' + (sel.c + 1) + ' of ' + cols.length.toLocaleString() +
+    ' · row ' + (sel.r + 1) + ' of ' + ATTRS.length + '</span>';
+}
+function esc(s) {
+  return String(s).replace(/[&<>]/g, c => (c === '&' ? '&amp;' : c === '<' ? '&lt;' : '&gt;'));
+}
+
+/* ================================================================ 7. HUD */
+
+const HUD = [
+  ['fps', 'frame'], ['ms', 'cpu ms'], ['zoom', 'zoom'],
+  ['cols', 'cols drawn'], ['rows', 'rows drawn'], ['cells', 'cells drawn'],
+  ['quads', 'quads'], ['glyphs', 'glyphs'], ['draws', 'draw calls'],
+  ['total', 'cells in doc']
+];
+const hudEl = document.getElementById('hud');
+const hudRefs = {};
+for (const [key, label] of HUD) {
+  const d = document.createElement('div');
+  d.innerHTML = '<span>' + label + '</span><b>—</b>';
+  hudEl.appendChild(d);
+  hudRefs[key] = d.querySelector('b');
+}
+function fmt(n) {
+  const a = Math.abs(n);
+  if (a >= 1e6) return (n / 1e6).toFixed(2) + 'M';
+  if (a >= 1e3) return (n / 1e3).toFixed(a >= 1e4 ? 0 : 1) + 'k';
+  return String(Math.round(n));
+}
+function setHud(key, value, cls) {
+  const el = hudRefs[key];
+  if (!el) return;
+  if (el.textContent !== value) el.textContent = value;
+  el.className = cls || '';
+}
+
+/* =========================================================== 8. CONTROLS */
+
+const $ = id => document.getElementById(id);
+
+$('cSize').addEventListener('change', e => {
+  buildLibrary(+e.target.value);
+  sel = { c: -1, r: -1 };
+  rebuildColumns();
+  describe();
+});
+let findTimer = 0;
+$('cFind').addEventListener('input', e => {
+  clearTimeout(findTimer);
+  const v = e.target.value;
+  findTimer = setTimeout(() => { query = v; sel = { c: -1, r: -1 }; rebuildColumns(); describe(); }, 90);
+});
+$('cVirt').addEventListener('change', e => { opts.virt = e.target.checked; });
+$('cLod').addEventListener('change', e => { opts.lod = e.target.checked; });
+$('cCross').addEventListener('change', e => { opts.cross = e.target.checked; });
+$('cReset').addEventListener('click', () => {
+  view.tx = 0; view.ty = 0; view.zoom = 1; view.vx = 0; view.vy = 0;
+  sortAttr = -1; sortDir = 1;
+  query = ''; $('cFind').value = '';
+  rebuildColumns();
+});
+const tourBtn = $('cTour');
+tourBtn.addEventListener('click', () => { tour = !tour; tourT = 0; syncTourButton(); });
+function syncTourButton() {
+  tourBtn.classList.toggle('on', tour);
+  tourBtn.textContent = tour ? '❚❚ Stop tour' : '▶ Auto-tour';
+}
+
+/* ============================================================== 9. FRAME */
+
+let fps = 0, acc = 0, frames = 0, last = performance.now(), ema = 4, hudAt = 0;
+
+function tick(now) {
+  const t0 = performance.now();
+  const dt = now - last;
+  last = now;
+  acc += dt; frames++;
+  if (acc >= 250) { fps = (frames * 1000) / acc; acc = 0; frames = 0; }
+
+  /* momentum, and the scripted tour that makes smoothness comparable run to run */
+  if (tour) {
+    tourT += dt / 1000;
+    const m = metrics();
+    const span = Math.max(1, cols.length * m.colW - m.bodyW);
+    view.tx = -span * (0.5 - 0.5 * Math.cos(tourT * 0.32));
+    view.ty = -Math.max(0, ATTRS.length * m.rowH - m.bodyH) *
+      (0.5 - 0.5 * Math.cos(tourT * 0.17));
+  } else if (!drag && (Math.abs(view.vx) > 0.05 || Math.abs(view.vy) > 0.05)) {
+    view.tx += view.vx;
+    view.ty += view.vy;
+    view.vx *= 0.93;
+    view.vy *= 0.93;
+    clampView();
+  }
+
+  clampView();   // cheap insurance: no code path can leave the view out of bounds
+  buildFrame();
+  submit();
+
+  ema += (performance.now() - t0 - ema) * 0.1;
+  if (now - hudAt > 140) {
+    hudAt = now;
+    setHud('fps', Math.round(fps) + '', fps < 50 ? 'warn' : 'good');
+    setHud('ms', ema.toFixed(2), ema > 6 ? 'warn' : '');
+    setHud('zoom', view.zoom.toFixed(2) + '\u00d7');
+    setHud('cols', fmt(visCols));
+    setHud('rows', fmt(visRows));
+    setHud('cells', fmt(visCells));
+    setHud('quads', fmt(qn) + (qdropped ? '+' : ''), qdropped ? 'warn' : '');
+    setHud('glyphs', fmt(glyphCount));
+    setHud('draws', '1', 'good');
+    setHud('total', fmt(cols.length * ATTRS.length));
+  }
+  requestAnimationFrame(tick);
+}
+
+/* ================================================================ start */
+
+new ResizeObserver(resize).observe(stagewrap);
+window.addEventListener('resize', resize);
+
+buildLibrary(+$('cSize').value);
+rebuildColumns();
+resize();
+sel = { c: 0, r: 0 };
+describe();
+requestAnimationFrame(tick);
+
+/* Handy in the console: __grid.view.zoom = 2 */
+window.__grid = { view, opts, DATA, cols: () => cols, metrics };
+</script>
+</body>
+</html>

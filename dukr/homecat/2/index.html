@@ -1,0 +1,2007 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"
+  />
+
+  <title>AtariVault GPU Data Grid</title>
+
+  <style>
+    :root {
+      color-scheme: dark;
+
+      --void: #0b0c0e;
+      --panel: #131518;
+      --panel-2: #191c20;
+      --panel-3: #22262b;
+
+      --text: #e8ebef;
+      --muted: #7e8792;
+      --line: rgba(255, 255, 255, 0.08);
+
+      --orange: #ff6b00;
+      --cyan: #00d4ff;
+      --violet: #9b5de5;
+
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-right: env(safe-area-inset-right, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --safe-left: env(safe-area-inset-left, 0px);
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      overscroll-behavior: none;
+      background: var(--void);
+      color: var(--text);
+      font-family:
+        Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+    }
+
+    body {
+      background:
+        radial-gradient(
+          circle at 20% -20%,
+          rgba(255, 107, 0, 0.12),
+          transparent 35%
+        ),
+        radial-gradient(
+          circle at 100% 100%,
+          rgba(0, 212, 255, 0.07),
+          transparent 35%
+        ),
+        var(--void);
+    }
+
+    button {
+      appearance: none;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+      border-radius: 8px;
+      min-height: 34px;
+      padding: 0 11px;
+      font: inherit;
+      font-size: 12px;
+      cursor: pointer;
+      transition:
+        border-color 120ms ease,
+        background 120ms ease,
+        transform 120ms ease;
+    }
+
+    button:hover {
+      border-color: rgba(255, 107, 0, 0.55);
+      background: rgba(255, 107, 0, 0.08);
+    }
+
+    button:active {
+      transform: scale(0.97);
+    }
+
+    button:focus-visible {
+      outline: 2px solid var(--cyan);
+      outline-offset: 2px;
+    }
+
+    #app {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+      padding:
+        var(--safe-top)
+        var(--safe-right)
+        var(--safe-bottom)
+        var(--safe-left);
+    }
+
+    .toolbar {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 62px;
+      padding: 9px 12px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(11, 12, 14, 0.88);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255, 107, 0, 0.35);
+      border-radius: 10px;
+      background: rgba(255, 107, 0, 0.09);
+      box-shadow:
+        0 0 20px rgba(255, 107, 0, 0.12),
+        inset 0 0 20px rgba(255, 107, 0, 0.03);
+      color: var(--orange);
+      font-size: 18px;
+    }
+
+    .brand-copy {
+      min-width: 0;
+    }
+
+    .brand h1 {
+      margin: 0;
+      overflow: hidden;
+      color: #f2f3f5;
+      font-size: 14px;
+      line-height: 1.2;
+      letter-spacing: 0.02em;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .brand h1 span {
+      color: var(--orange);
+      text-shadow: 0 0 12px rgba(255, 107, 0, 0.5);
+    }
+
+    .brand p {
+      margin: 3px 0 0;
+      overflow: hidden;
+      color: var(--muted);
+      font-size: 10px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .zoom-readout {
+      min-width: 54px;
+      text-align: center;
+      color: var(--orange);
+      font:
+        700 11px/1 "Courier New",
+        monospace;
+    }
+
+    .canvas-shell {
+      position: relative;
+      min-width: 0;
+      min-height: 0;
+      overflow: hidden;
+      background: #0d0f11;
+      isolation: isolate;
+    }
+
+    #pixi-host {
+      position: absolute;
+      inset: 0;
+      touch-action: none;
+      cursor: grab;
+    }
+
+    #pixi-host.dragging {
+      cursor: grabbing;
+    }
+
+    #pixi-host canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      touch-action: none;
+      outline: none;
+    }
+
+    .status {
+      position: absolute;
+      left: 12px;
+      bottom: 12px;
+      z-index: 5;
+
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+
+      max-width: calc(100% - 190px);
+      padding: 7px 9px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+
+      color: var(--muted);
+      background: rgba(10, 11, 13, 0.78);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+
+      font:
+        10px/1.2 "Courier New",
+        monospace;
+      pointer-events: none;
+    }
+
+    .status strong {
+      color: var(--cyan);
+      font-weight: 700;
+    }
+
+    .status .selected {
+      color: var(--orange);
+    }
+
+    .minimap-shell {
+      position: absolute;
+      right: 12px;
+      bottom: 12px;
+      z-index: 5;
+
+      width: 158px;
+      padding: 7px;
+      border: 1px solid rgba(255, 107, 0, 0.25);
+      border-radius: 9px;
+
+      background: rgba(10, 11, 13, 0.82);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+
+      box-shadow: 0 0 26px rgba(255, 107, 0, 0.08);
+    }
+
+    .minimap-title {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 5px;
+      color: var(--muted);
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    #minimap {
+      display: block;
+      width: 100%;
+      height: 76px;
+      border-radius: 5px;
+      cursor: crosshair;
+      touch-action: none;
+      background: #0d0f11;
+    }
+
+    .instructions {
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      z-index: 4;
+      transform: translateX(-50%);
+
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+
+      color: var(--muted);
+      background: rgba(10, 11, 13, 0.7);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+
+      font-size: 10px;
+      pointer-events: none;
+      white-space: nowrap;
+
+      animation: fade-help 6s forwards;
+    }
+
+    .error {
+      position: absolute;
+      inset: 20px;
+      z-index: 20;
+      display: none;
+      place-items: center;
+      padding: 24px;
+      text-align: center;
+      color: #ffb080;
+      border: 1px solid rgba(255, 107, 0, 0.35);
+      border-radius: 12px;
+      background: #15100d;
+    }
+
+    @keyframes fade-help {
+      0%,
+      65% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0;
+        visibility: hidden;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .toolbar {
+        min-height: 56px;
+        padding: 7px 8px;
+      }
+
+      .brand-icon {
+        width: 34px;
+        height: 34px;
+      }
+
+      .brand p {
+        display: none;
+      }
+
+      .controls button {
+        min-width: 34px;
+        padding: 0 8px;
+      }
+
+      #fit-button,
+      #jump-button {
+        display: none;
+      }
+
+      .minimap-shell {
+        right: 8px;
+        bottom: 8px;
+        width: 126px;
+      }
+
+      #minimap {
+        height: 62px;
+      }
+
+      .status {
+        left: 8px;
+        bottom: 8px;
+        max-width: calc(100% - 148px);
+      }
+
+      .instructions {
+        top: 8px;
+        max-width: calc(100% - 16px);
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .instructions {
+        animation: none;
+      }
+
+      button {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <header class="toolbar">
+      <div class="brand">
+        <div class="brand-icon" aria-hidden="true">▦</div>
+
+        <div class="brand-copy">
+          <h1><span>AtariVault</span> GPU Data Grid</h1>
+          <p>PixiJS v8 · WebGL · RBush · viewport virtualization</p>
+        </div>
+      </div>
+
+      <div class="controls" aria-label="Grid controls">
+        <button id="zoom-out" type="button" title="Zoom out">−</button>
+        <div id="zoom-readout" class="zoom-readout">100%</div>
+        <button id="zoom-in" type="button" title="Zoom in">+</button>
+        <button id="fit-button" type="button">Fit rows</button>
+        <button id="jump-button" type="button">Random game</button>
+        <button id="reset-button" type="button">Reset</button>
+      </div>
+    </header>
+
+    <main class="canvas-shell">
+      <div
+        id="pixi-host"
+        role="application"
+        aria-label="Interactive virtualized Atari game data grid"
+      ></div>
+
+      <div class="instructions">
+        Drag to pan · wheel/trackpad to scroll · Ctrl/⌘ + wheel or pinch to zoom
+      </div>
+
+      <div class="status">
+        <span>FPS <strong id="fps">—</strong></span>
+        <span>visible <strong id="visible-count">0</strong></span>
+        <span>indexed <strong id="indexed-count">0</strong></span>
+        <span id="selection-status" class="selected">Pitfall! · Title</span>
+      </div>
+
+      <div class="minimap-shell">
+        <div class="minimap-title">
+          <span>Document map</span>
+          <span id="renderer-name">WebGL</span>
+        </div>
+        <canvas
+          id="minimap"
+          width="300"
+          height="150"
+          aria-label="Document minimap"
+        ></canvas>
+      </div>
+
+      <div id="error" class="error"></div>
+    </main>
+  </div>
+
+  <script type="module">
+    import {
+      Application,
+      Container,
+      Graphics,
+      Text,
+      TextStyle
+    } from "https://cdn.jsdelivr.net/npm/pixi.js@8.17.1/dist/pixi.mjs";
+
+    import RBush from "https://cdn.jsdelivr.net/npm/rbush@4.0.1/+esm";
+
+    // ─────────────────────────────────────────────────────────────
+    // Configuration
+    // ─────────────────────────────────────────────────────────────
+
+    const COLUMN_COUNT = 700;
+    const ROW_COUNT = 64;
+
+    // 44,800 indexed cells, but only viewport-visible cells are mounted.
+    const TOTAL_CELL_COUNT = COLUMN_COUNT * ROW_COUNT;
+
+    const CELL_WIDTH = 144;
+    const CELL_HEIGHT = 38;
+
+    const LEFT_HEADER_WIDTH = 124;
+    const TOP_HEADER_HEIGHT = 98;
+
+    const MIN_ZOOM = 0.48;
+    const MAX_ZOOM = 2.2;
+
+    const PREFERS_REDUCED_MOTION = matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    const PALETTE = {
+      background: 0x0d0f11,
+      panel: 0x151719,
+      panelAlternate: 0x181a1d,
+      header: 0x1d2024,
+      headerSelected: 0x2a1c13,
+      border: 0x292d32,
+      borderSoft: 0x212429,
+      orange: 0xff6b00,
+      cyan: 0x00d4ff,
+      violet: 0x9b5de5,
+      text: 0xe2e5e9,
+      muted: 0x818994,
+      darkText: 0x101114
+    };
+
+    const BASE_GAMES = [
+      {
+        name: "Pitfall!",
+        year: 1982,
+        developer: "Activision",
+        genre: "Platformer",
+        rating: 9,
+        media: 5,
+        favorite: true
+      },
+      {
+        name: "Adventure",
+        year: 1980,
+        developer: "Atari",
+        genre: "Adventure",
+        rating: 8,
+        media: 3,
+        favorite: true
+      },
+      {
+        name: "Space Invaders",
+        year: 1980,
+        developer: "Taito",
+        genre: "Shooter",
+        rating: 7,
+        media: 4,
+        favorite: false
+      },
+      {
+        name: "Yars' Revenge",
+        year: 1982,
+        developer: "Atari",
+        genre: "Shooter",
+        rating: 8,
+        media: 2,
+        favorite: true
+      },
+      {
+        name: "River Raid",
+        year: 1982,
+        developer: "Activision",
+        genre: "Shooter",
+        rating: 9,
+        media: 4,
+        favorite: false
+      },
+      {
+        name: "Missile Command",
+        year: 1981,
+        developer: "Atari",
+        genre: "Strategy",
+        rating: 8,
+        media: 3,
+        favorite: false
+      },
+      {
+        name: "Asteroids",
+        year: 1981,
+        developer: "Atari",
+        genre: "Arcade",
+        rating: 9,
+        media: 5,
+        favorite: true
+      },
+      {
+        name: "Kaboom!",
+        year: 1981,
+        developer: "Activision",
+        genre: "Action",
+        rating: 8,
+        media: 2,
+        favorite: false
+      }
+    ];
+
+    const ATTRIBUTE_DEFINITIONS = [
+      ["Title", game => game.name],
+      ["Year", game => String(game.year)],
+      ["Developer", game => game.developer],
+      ["Genre", game => game.genre],
+      ["Rating", game => "★".repeat(game.rating) + "☆".repeat(10 - game.rating)],
+      ["Media", game => `${game.media} screenshots`],
+      ["Favorite", game => game.favorite ? "♥ Favorite" : "—"],
+      ["Platform", () => "Atari 2600"],
+      ["Region", (_, column) => column % 3 === 0 ? "PAL" : "NTSC"],
+      ["Players", (_, column) => String((column % 4) + 1)],
+      ["Condition", (_, column) => ["Mint", "Good", "Used"][column % 3]],
+      ["Manual", (_, column) => column % 3 ? "Included" : "Missing"],
+      ["Box", (_, column) => column % 4 ? "Included" : "Loose"],
+      ["Completed", (_, column) => column % 5 === 0 ? "Yes" : "No"],
+      ["Last Played", (_, column) => `20${18 + (column % 8)}-${String((column % 12) + 1).padStart(2, "0")}`],
+      ["Play Time", (_, column) => `${1 + (column % 48)}h ${column % 60}m`]
+    ];
+
+    const COVER_COLORS = [
+      0x36556f,
+      0x6e4d40,
+      0x27596a,
+      0x345f59,
+      0x566879,
+      0x8b5638,
+      0x6e3434,
+      0x513f72
+    ];
+
+    // ─────────────────────────────────────────────────────────────
+    // DOM
+    // ─────────────────────────────────────────────────────────────
+
+    const host = document.querySelector("#pixi-host");
+    const fpsElement = document.querySelector("#fps");
+    const visibleCountElement = document.querySelector("#visible-count");
+    const indexedCountElement = document.querySelector("#indexed-count");
+    const selectionStatusElement = document.querySelector("#selection-status");
+    const zoomReadoutElement = document.querySelector("#zoom-readout");
+    const rendererNameElement = document.querySelector("#renderer-name");
+
+    const minimap = document.querySelector("#minimap");
+    const minimapContext = minimap.getContext("2d");
+
+    indexedCountElement.textContent = TOTAL_CELL_COUNT.toLocaleString();
+
+    // ─────────────────────────────────────────────────────────────
+    // Application state
+    // ─────────────────────────────────────────────────────────────
+
+    const state = {
+      cameraX: 0,
+      cameraY: 0,
+      zoom: 1,
+
+      selectedColumn: 0,
+      selectedRow: 0,
+
+      velocityX: 0,
+      velocityY: 0,
+
+      dragging: false,
+      dragMoved: false,
+      lastPointerX: 0,
+      lastPointerY: 0,
+
+      pointers: new Map(),
+      pinchDistance: 0,
+      pinchWorldX: 0,
+      pinchWorldY: 0,
+
+      dirty: true,
+      frameCounter: 0,
+      fpsAccumulator: 0,
+      fpsTimestamp: performance.now()
+    };
+
+    const WORLD_WIDTH = COLUMN_COUNT * CELL_WIDTH;
+    const WORLD_HEIGHT = ROW_COUNT * CELL_HEIGHT;
+
+    // ─────────────────────────────────────────────────────────────
+    // PixiJS setup
+    // ─────────────────────────────────────────────────────────────
+
+    const app = new Application();
+
+    try {
+      await app.init({
+        resizeTo: host,
+        preference: "webgl",
+        background: PALETTE.background,
+        antialias: false,
+        autoDensity: true,
+        resolution: Math.min(devicePixelRatio || 1, 2),
+        powerPreference: "high-performance"
+      });
+    } catch (error) {
+      const errorElement = document.querySelector("#error");
+      errorElement.style.display = "grid";
+      errorElement.textContent =
+        `Unable to initialize PixiJS/WebGL: ${error.message}`;
+      throw error;
+    }
+
+    host.appendChild(app.canvas);
+
+    rendererNameElement.textContent =
+      app.renderer.constructor.name.replace("Renderer", "") || "WebGL";
+
+    const bodyLayer = new Container();
+    const columnHeaderLayer = new Container();
+    const rowHeaderLayer = new Container();
+    const overlayLayer = new Container();
+
+    const bodyMask = new Graphics();
+    const columnMask = new Graphics();
+    const rowMask = new Graphics();
+
+    bodyLayer.mask = bodyMask;
+    columnHeaderLayer.mask = columnMask;
+    rowHeaderLayer.mask = rowMask;
+
+    app.stage.addChild(bodyLayer);
+    app.stage.addChild(columnHeaderLayer);
+    app.stage.addChild(rowHeaderLayer);
+
+    app.stage.addChild(bodyMask);
+    app.stage.addChild(columnMask);
+    app.stage.addChild(rowMask);
+
+    app.stage.addChild(overlayLayer);
+
+    // ─────────────────────────────────────────────────────────────
+    // Text styles
+    // ─────────────────────────────────────────────────────────────
+
+    const cellTextStyle = new TextStyle({
+      fontFamily: "Segoe UI, system-ui, sans-serif",
+      fontSize: 11,
+      fill: PALETTE.text
+    });
+    
+    const mutedCellTextStyle = new TextStyle({
+      fontFamily: "Segoe UI, system-ui, sans-serif",
+      fontSize: 11,
+      fill: PALETTE.muted
+    });
+    
+    const favoriteCellStyle = new TextStyle({
+      fontFamily: "Segoe UI, system-ui, sans-serif",
+      fontSize: 11,
+      fill: PALETTE.orange
+    });
+    
+    const ratingCellStyle = new TextStyle({
+      fontFamily: "Segoe UI, system-ui, sans-serif",
+      fontSize: 9,
+      fill: 0xd8dde2
+    });
+
+
+    const rowHeaderStyle = new TextStyle({
+      fontFamily: "Segoe UI, system-ui, sans-serif",
+      fontSize: 10,
+      fontWeight: "700",
+      fill: PALETTE.orange,
+      letterSpacing: 0.5
+    });
+
+    const columnTitleStyle = new TextStyle({
+      fontFamily: "Segoe UI, system-ui, sans-serif",
+      fontSize: 10,
+      fontWeight: "700",
+      fill: PALETTE.cyan,
+      align: "center"
+    });
+
+    const columnIndexStyle = new TextStyle({
+      fontFamily: "Courier New, monospace",
+      fontSize: 8,
+      fill: PALETTE.muted
+    });
+
+    // ─────────────────────────────────────────────────────────────
+    // RBush spatial index
+    // ─────────────────────────────────────────────────────────────
+
+    const spatialIndex = new RBush(16);
+    const indexItems = new Array(TOTAL_CELL_COUNT);
+
+    let itemCursor = 0;
+
+    for (let row = 0; row < ROW_COUNT; row++) {
+      for (let column = 0; column < COLUMN_COUNT; column++) {
+        const minX = column * CELL_WIDTH;
+        const minY = row * CELL_HEIGHT;
+
+        indexItems[itemCursor++] = {
+          minX,
+          minY,
+          maxX: minX + CELL_WIDTH,
+          maxY: minY + CELL_HEIGHT,
+          column,
+          row
+        };
+      }
+    }
+
+    spatialIndex.load(indexItems);
+
+    // The standalone data array is no longer needed after bulk loading.
+    indexItems.length = 0;
+
+    // ─────────────────────────────────────────────────────────────
+    // Display-object pools
+    // ─────────────────────────────────────────────────────────────
+
+    const cellPool = [];
+    const columnHeaderPool = [];
+    const rowHeaderPool = [];
+
+    function createCellView() {
+      const container = new Container();
+      container.visible = false;
+
+      const background = new Graphics();
+      const text = new Text({
+        text: "",
+        style: cellTextStyle
+      });
+
+      text.x = 10;
+      text.y = 11;
+
+      container.addChild(background, text);
+      bodyLayer.addChild(container);
+
+      container.__key = "";
+      container.__selected = false;
+
+      return { container, background, text };
+    }
+
+    function createColumnHeaderView() {
+      const container = new Container();
+      container.visible = false;
+
+      const background = new Graphics();
+      const cover = new Graphics();
+
+      const title = new Text({
+        text: "",
+        style: columnTitleStyle
+      });
+
+      const index = new Text({
+        text: "",
+        style: columnIndexStyle
+      });
+
+      title.anchor.set(0.5, 0);
+      index.anchor.set(1, 0);
+
+      container.addChild(background, cover, title, index);
+      columnHeaderLayer.addChild(container);
+
+      container.__key = "";
+      container.__selected = false;
+
+      return { container, background, cover, title, index };
+    }
+
+    function createRowHeaderView() {
+      const container = new Container();
+      container.visible = false;
+
+      const background = new Graphics();
+      const text = new Text({
+        text: "",
+        style: rowHeaderStyle
+      });
+
+      text.x = 10;
+      text.y = 11;
+
+      container.addChild(background, text);
+      rowHeaderLayer.addChild(container);
+
+      container.__key = "";
+      container.__selected = false;
+
+      return { container, background, text };
+    }
+
+    function ensurePool(pool, count, factory) {
+      while (pool.length < count) {
+        pool.push(factory());
+      }
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // Data generation
+    // ─────────────────────────────────────────────────────────────
+
+    function getGame(column) {
+      const base = BASE_GAMES[column % BASE_GAMES.length];
+      const edition = Math.floor(column / BASE_GAMES.length) + 1;
+
+      return {
+        ...base,
+        displayName:
+          edition === 1
+            ? base.name
+            : `${base.name} #${String(edition).padStart(2, "0")}`
+      };
+    }
+
+    function getAttribute(row) {
+      const definition =
+        ATTRIBUTE_DEFINITIONS[row % ATTRIBUTE_DEFINITIONS.length];
+
+      const cycle = Math.floor(row / ATTRIBUTE_DEFINITIONS.length) + 1;
+
+      return {
+        label:
+          cycle === 1
+            ? definition[0]
+            : `${definition[0]} ${String(cycle).padStart(2, "0")}`,
+        formatter: definition[1]
+      };
+    }
+
+    function getCellValue(column, row) {
+      const game = getGame(column);
+      const attribute = getAttribute(row);
+
+      if (row % ATTRIBUTE_DEFINITIONS.length === 0) {
+        return game.displayName;
+      }
+
+      return String(attribute.formatter(game, column, row));
+    }
+
+    function truncateText(value, maxLength = 22) {
+      return value.length > maxLength
+        ? `${value.slice(0, maxLength - 1)}…`
+        : value;
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // Camera
+    // ─────────────────────────────────────────────────────────────
+
+    function viewportWorldWidth() {
+      return Math.max(
+        1,
+        (app.screen.width - LEFT_HEADER_WIDTH) / state.zoom
+      );
+    }
+
+    function viewportWorldHeight() {
+      return Math.max(
+        1,
+        (app.screen.height - TOP_HEADER_HEIGHT) / state.zoom
+      );
+    }
+
+    function clampCamera() {
+      const maxX = Math.max(0, WORLD_WIDTH - viewportWorldWidth());
+      const maxY = Math.max(0, WORLD_HEIGHT - viewportWorldHeight());
+
+      state.cameraX = Math.max(0, Math.min(maxX, state.cameraX));
+      state.cameraY = Math.max(0, Math.min(maxY, state.cameraY));
+    }
+
+    function screenToWorld(screenX, screenY) {
+      return {
+        x:
+          state.cameraX +
+          (screenX - LEFT_HEADER_WIDTH) / state.zoom,
+        y:
+          state.cameraY +
+          (screenY - TOP_HEADER_HEIGHT) / state.zoom
+      };
+    }
+
+    function setZoom(nextZoom, screenX, screenY) {
+      const oldWorldPoint = screenToWorld(screenX, screenY);
+
+      state.zoom = Math.max(
+        MIN_ZOOM,
+        Math.min(MAX_ZOOM, nextZoom)
+      );
+
+      state.cameraX =
+        oldWorldPoint.x -
+        (screenX - LEFT_HEADER_WIDTH) / state.zoom;
+
+      state.cameraY =
+        oldWorldPoint.y -
+        (screenY - TOP_HEADER_HEIGHT) / state.zoom;
+
+      clampCamera();
+      markDirty();
+    }
+
+    function focusCell(column, row, animate = true) {
+      const targetX =
+        column * CELL_WIDTH -
+        viewportWorldWidth() / 2 +
+        CELL_WIDTH / 2;
+
+      const targetY =
+        row * CELL_HEIGHT -
+        viewportWorldHeight() / 2 +
+        CELL_HEIGHT / 2;
+
+      if (!animate || PREFERS_REDUCED_MOTION) {
+        state.cameraX = targetX;
+        state.cameraY = targetY;
+        clampCamera();
+        markDirty();
+        return;
+      }
+
+      const startX = state.cameraX;
+      const startY = state.cameraY;
+      const startTime = performance.now();
+      const duration = 420;
+
+      function step(now) {
+        const progress = Math.min(1, (now - startTime) / duration);
+        const eased = 1 - Math.pow(1 - progress, 3);
+
+        state.cameraX = startX + (targetX - startX) * eased;
+        state.cameraY = startY + (targetY - startY) * eased;
+
+        clampCamera();
+        markDirty();
+
+        if (progress < 1) {
+          requestAnimationFrame(step);
+        }
+      }
+
+      requestAnimationFrame(step);
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // Drawing helpers
+    // ─────────────────────────────────────────────────────────────
+
+    function redrawMasks() {
+      const width = app.screen.width;
+      const height = app.screen.height;
+
+      bodyMask
+        .clear()
+        .rect(
+          LEFT_HEADER_WIDTH,
+          TOP_HEADER_HEIGHT,
+          Math.max(0, width - LEFT_HEADER_WIDTH),
+          Math.max(0, height - TOP_HEADER_HEIGHT)
+        )
+        .fill({ color: 0xffffff });
+
+      columnMask
+        .clear()
+        .rect(
+          LEFT_HEADER_WIDTH,
+          0,
+          Math.max(0, width - LEFT_HEADER_WIDTH),
+          TOP_HEADER_HEIGHT
+        )
+        .fill({ color: 0xffffff });
+
+      rowMask
+        .clear()
+        .rect(
+          0,
+          TOP_HEADER_HEIGHT,
+          LEFT_HEADER_WIDTH,
+          Math.max(0, height - TOP_HEADER_HEIGHT)
+        )
+        .fill({ color: 0xffffff });
+    }
+
+    function configureCell(view, item) {
+      const selected =
+        item.column === state.selectedColumn &&
+        item.row === state.selectedRow;
+
+      const key = `${item.column}:${item.row}`;
+
+      if (
+        view.container.__key !== key ||
+        view.container.__selected !== selected
+      ) {
+        view.container.__key = key;
+        view.container.__selected = selected;
+
+        const alternating = (item.column + item.row) % 2 === 0;
+
+        const backgroundColor = selected
+          ? 0x2a1c13
+          : alternating
+            ? PALETTE.panel
+            : PALETTE.panelAlternate;
+
+        view.background
+          .clear()
+          .rect(0, 0, CELL_WIDTH - 1, CELL_HEIGHT - 1)
+          .fill({ color: backgroundColor })
+          .stroke({
+            width: selected ? 1.5 : 1,
+            color: selected ? PALETTE.orange : PALETTE.borderSoft
+          });
+
+        if (item.column === state.selectedColumn && !selected) {
+          view.background
+            .rect(0, 0, 2, CELL_HEIGHT - 1)
+            .fill({ color: PALETTE.orange, alpha: 0.5 });
+        }
+
+        view.text.text = truncateText(
+          getCellValue(item.column, item.row),
+          state.zoom < 0.7 ? 12 : 24
+        );
+
+        const baseRow = item.row % ATTRIBUTE_DEFINITIONS.length;
+
+        if (baseRow === 6) {
+          view.text.style =
+            item.column % 2 === 0
+              ? favoriteCellStyle
+              : mutedCellTextStyle;
+        } else if (baseRow === 4) {
+          view.text.style = ratingCellStyle;
+        } else {
+          view.text.style = cellTextStyle;
+        }
+
+      }
+
+      view.container.x =
+        LEFT_HEADER_WIDTH +
+        (item.minX - state.cameraX) * state.zoom;
+
+      view.container.y =
+        TOP_HEADER_HEIGHT +
+        (item.minY - state.cameraY) * state.zoom;
+
+      view.container.scale.set(state.zoom);
+      view.container.visible = true;
+    }
+
+    function configureColumnHeader(view, column) {
+      const game = getGame(column);
+      const selected = column === state.selectedColumn;
+      const key = String(column);
+
+      if (
+        view.container.__key !== key ||
+        view.container.__selected !== selected
+      ) {
+        view.container.__key = key;
+        view.container.__selected = selected;
+
+        view.background
+          .clear()
+          .rect(0, 0, CELL_WIDTH - 1, TOP_HEADER_HEIGHT - 1)
+          .fill({
+            color: selected
+              ? PALETTE.headerSelected
+              : PALETTE.header
+          })
+          .stroke({
+            width: selected ? 1.5 : 1,
+            color: selected ? PALETTE.orange : PALETTE.border
+          });
+
+        const coverColor = COVER_COLORS[column % COVER_COLORS.length];
+
+        view.cover
+          .clear()
+          .roundRect(8, 8, CELL_WIDTH - 17, 54, 4)
+          .fill({ color: coverColor })
+          .rect(8, 40, CELL_WIDTH - 17, 22)
+          .fill({ color: 0x000000, alpha: 0.32 })
+          .circle(26 + ((column * 17) % 72), 26, 10)
+          .fill({
+            color:
+              column % 2 === 0
+                ? PALETTE.cyan
+                : PALETTE.orange,
+            alpha: 0.75
+          });
+
+        if (selected) {
+          view.cover
+            .roundRect(8, 8, CELL_WIDTH - 17, 54, 4)
+            .stroke({
+              width: 1.5,
+              color: PALETTE.orange
+            });
+        }
+
+        view.title.text = truncateText(game.displayName, 19);
+        view.title.x = CELL_WIDTH / 2;
+        view.title.y = 69;
+
+        view.index.text = `#${String(column + 1).padStart(3, "0")}`;
+        view.index.x = CELL_WIDTH - 8;
+        view.index.y = 8;
+      }
+
+      view.container.x =
+        LEFT_HEADER_WIDTH +
+        (column * CELL_WIDTH - state.cameraX) * state.zoom;
+
+      view.container.y = 0;
+      view.container.scale.x = state.zoom;
+      view.container.scale.y = 1;
+      view.container.visible = true;
+    }
+
+    function configureRowHeader(view, row) {
+      const selected = row === state.selectedRow;
+      const key = String(row);
+      const attribute = getAttribute(row);
+
+      if (
+        view.container.__key !== key ||
+        view.container.__selected !== selected
+      ) {
+        view.container.__key = key;
+        view.container.__selected = selected;
+
+        view.background
+          .clear()
+          .rect(0, 0, LEFT_HEADER_WIDTH - 1, CELL_HEIGHT - 1)
+          .fill({
+            color: selected
+              ? PALETTE.headerSelected
+              : PALETTE.header
+          })
+          .stroke({
+            width: selected ? 1.5 : 1,
+            color: selected ? PALETTE.violet : PALETTE.border
+          });
+
+        if (selected) {
+          view.background
+            .rect(0, 0, 3, CELL_HEIGHT - 1)
+            .fill({ color: PALETTE.violet });
+        }
+
+        view.text.text = truncateText(attribute.label.toUpperCase(), 17);
+      }
+
+      view.container.x = 0;
+      view.container.y =
+        TOP_HEADER_HEIGHT +
+        (row * CELL_HEIGHT - state.cameraY) * state.zoom;
+
+      view.container.scale.x = 1;
+      view.container.scale.y = state.zoom;
+      view.container.visible = true;
+    }
+
+    function renderCorner() {
+      overlayLayer.removeChildren();
+
+      const corner = new Graphics()
+        .rect(0, 0, LEFT_HEADER_WIDTH - 1, TOP_HEADER_HEIGHT - 1)
+        .fill({ color: PALETTE.header })
+        .stroke({ width: 1, color: PALETTE.border })
+        .rect(0, TOP_HEADER_HEIGHT - 3, LEFT_HEADER_WIDTH, 3)
+        .fill({ color: PALETTE.orange, alpha: 0.6 });
+
+      const label = new Text({
+        text: "ATTRIBUTE",
+        style: rowHeaderStyle
+      });
+
+      label.x = 10;
+      label.y = 61;
+
+      const sublabel = new Text({
+        text: "GPU GRID",
+        style: new TextStyle({
+          fontFamily: "Courier New, monospace",
+          fontSize: 9,
+          fill: PALETTE.muted
+        })
+      });
+
+      sublabel.x = 10;
+      sublabel.y = 77;
+
+      overlayLayer.addChild(corner, label, sublabel);
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // Virtualized rendering
+    // ─────────────────────────────────────────────────────────────
+
+    function markDirty() {
+      state.dirty = true;
+    }
+
+    function renderGrid() {
+      state.dirty = false;
+
+      clampCamera();
+      redrawMasks();
+
+      const overscanX = CELL_WIDTH * 2;
+      const overscanY = CELL_HEIGHT * 3;
+
+      const query = {
+        minX: Math.max(0, state.cameraX - overscanX),
+        minY: Math.max(0, state.cameraY - overscanY),
+        maxX: Math.min(
+          WORLD_WIDTH,
+          state.cameraX + viewportWorldWidth() + overscanX
+        ),
+        maxY: Math.min(
+          WORLD_HEIGHT,
+          state.cameraY + viewportWorldHeight() + overscanY
+        )
+      };
+
+      const visibleItems = spatialIndex.search(query);
+
+      visibleItems.sort((a, b) => {
+        if (a.row !== b.row) return a.row - b.row;
+        return a.column - b.column;
+      });
+
+      ensurePool(cellPool, visibleItems.length, createCellView);
+
+      for (let i = 0; i < cellPool.length; i++) {
+        const view = cellPool[i];
+
+        if (i < visibleItems.length) {
+          configureCell(view, visibleItems[i]);
+        } else {
+          view.container.visible = false;
+        }
+      }
+
+      const firstColumn = Math.max(
+        0,
+        Math.floor(query.minX / CELL_WIDTH)
+      );
+
+      const lastColumn = Math.min(
+        COLUMN_COUNT - 1,
+        Math.floor(query.maxX / CELL_WIDTH)
+      );
+
+      const visibleColumnCount = Math.max(
+        0,
+        lastColumn - firstColumn + 1
+      );
+
+      ensurePool(
+        columnHeaderPool,
+        visibleColumnCount,
+        createColumnHeaderView
+      );
+
+      for (let i = 0; i < columnHeaderPool.length; i++) {
+        const view = columnHeaderPool[i];
+
+        if (i < visibleColumnCount) {
+          configureColumnHeader(view, firstColumn + i);
+        } else {
+          view.container.visible = false;
+        }
+      }
+
+      const firstRow = Math.max(
+        0,
+        Math.floor(query.minY / CELL_HEIGHT)
+      );
+
+      const lastRow = Math.min(
+        ROW_COUNT - 1,
+        Math.floor(query.maxY / CELL_HEIGHT)
+      );
+
+      const visibleRowCount = Math.max(0, lastRow - firstRow + 1);
+
+      ensurePool(rowHeaderPool, visibleRowCount, createRowHeaderView);
+
+      for (let i = 0; i < rowHeaderPool.length; i++) {
+        const view = rowHeaderPool[i];
+
+        if (i < visibleRowCount) {
+          configureRowHeader(view, firstRow + i);
+        } else {
+          view.container.visible = false;
+        }
+      }
+
+      visibleCountElement.textContent =
+        visibleItems.length.toLocaleString();
+
+      zoomReadoutElement.textContent =
+        `${Math.round(state.zoom * 100)}%`;
+
+      const selectedGame = getGame(state.selectedColumn);
+      const selectedAttribute = getAttribute(state.selectedRow);
+
+      selectionStatusElement.textContent =
+        `${selectedGame.displayName} · ${selectedAttribute.label}`;
+
+      drawMinimap();
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // Minimap
+    // ─────────────────────────────────────────────────────────────
+
+    function drawMinimap() {
+      const width = minimap.width;
+      const height = minimap.height;
+
+      minimapContext.clearRect(0, 0, width, height);
+
+      minimapContext.fillStyle = "#0d0f11";
+      minimapContext.fillRect(0, 0, width, height);
+
+      const scale = Math.min(
+        width / WORLD_WIDTH,
+        height / WORLD_HEIGHT
+      );
+
+      const documentWidth = WORLD_WIDTH * scale;
+      const documentHeight = WORLD_HEIGHT * scale;
+
+      const offsetX = (width - documentWidth) / 2;
+      const offsetY = (height - documentHeight) / 2;
+
+      minimapContext.fillStyle = "#17191c";
+      minimapContext.fillRect(
+        offsetX,
+        offsetY,
+        documentWidth,
+        documentHeight
+      );
+
+      const columnStride = Math.max(
+        1,
+        Math.ceil(COLUMN_COUNT / 120)
+      );
+
+      for (
+        let column = 0;
+        column < COLUMN_COUNT;
+        column += columnStride
+      ) {
+        const game = getGame(column);
+        const alpha = 0.18 + game.rating / 18;
+
+        minimapContext.fillStyle =
+          `rgba(255,107,0,${alpha})`;
+
+        const x =
+          offsetX + column * CELL_WIDTH * scale;
+
+        minimapContext.fillRect(
+          x,
+          offsetY,
+          Math.max(1, CELL_WIDTH * scale * columnStride * 0.72),
+          documentHeight
+        );
+      }
+
+      const selectionX =
+        offsetX +
+        state.selectedColumn * CELL_WIDTH * scale;
+
+      const selectionY =
+        offsetY +
+        state.selectedRow * CELL_HEIGHT * scale;
+
+      minimapContext.fillStyle = "#00d4ff";
+      minimapContext.fillRect(
+        selectionX,
+        selectionY,
+        Math.max(2, CELL_WIDTH * scale),
+        Math.max(2, CELL_HEIGHT * scale)
+      );
+
+      const viewportX =
+        offsetX + state.cameraX * scale;
+
+      const viewportY =
+        offsetY + state.cameraY * scale;
+
+      const viewportWidth =
+        Math.min(documentWidth, viewportWorldWidth() * scale);
+
+      const viewportHeight =
+        Math.min(documentHeight, viewportWorldHeight() * scale);
+
+      minimapContext.strokeStyle = "#ff6b00";
+      minimapContext.lineWidth = 3;
+      minimapContext.strokeRect(
+        viewportX,
+        viewportY,
+        Math.max(3, viewportWidth),
+        Math.max(3, viewportHeight)
+      );
+
+      minimapContext.strokeStyle = "rgba(255,255,255,0.12)";
+      minimapContext.lineWidth = 1;
+      minimapContext.strokeRect(
+        offsetX + 0.5,
+        offsetY + 0.5,
+        documentWidth - 1,
+        documentHeight - 1
+      );
+    }
+
+    function navigateFromMinimap(event) {
+      const rect = minimap.getBoundingClientRect();
+
+      const localX =
+        (event.clientX - rect.left) *
+        (minimap.width / rect.width);
+
+      const localY =
+        (event.clientY - rect.top) *
+        (minimap.height / rect.height);
+
+      const scale = Math.min(
+        minimap.width / WORLD_WIDTH,
+        minimap.height / WORLD_HEIGHT
+      );
+
+      const documentWidth = WORLD_WIDTH * scale;
+      const documentHeight = WORLD_HEIGHT * scale;
+
+      const offsetX = (minimap.width - documentWidth) / 2;
+      const offsetY = (minimap.height - documentHeight) / 2;
+
+      const worldX = (localX - offsetX) / scale;
+      const worldY = (localY - offsetY) / scale;
+
+      state.cameraX = worldX - viewportWorldWidth() / 2;
+      state.cameraY = worldY - viewportWorldHeight() / 2;
+
+      state.velocityX = 0;
+      state.velocityY = 0;
+
+      clampCamera();
+      markDirty();
+    }
+
+    minimap.addEventListener("pointerdown", event => {
+      minimap.setPointerCapture(event.pointerId);
+      navigateFromMinimap(event);
+    });
+
+    minimap.addEventListener("pointermove", event => {
+      if (event.buttons) {
+        navigateFromMinimap(event);
+      }
+    });
+
+    // ─────────────────────────────────────────────────────────────
+    // Selection and hit testing
+    // ─────────────────────────────────────────────────────────────
+
+    function selectAtScreenPosition(screenX, screenY) {
+      if (
+        screenX < LEFT_HEADER_WIDTH ||
+        screenY < TOP_HEADER_HEIGHT
+      ) {
+        return;
+      }
+
+      const world = screenToWorld(screenX, screenY);
+
+      const hits = spatialIndex.search({
+        minX: world.x,
+        minY: world.y,
+        maxX: world.x,
+        maxY: world.y
+      });
+
+      if (!hits.length) return;
+
+      const hit = hits[0];
+
+      state.selectedColumn = hit.column;
+      state.selectedRow = hit.row;
+
+      markDirty();
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // Pointer panning and pinch zoom
+    // ─────────────────────────────────────────────────────────────
+
+    function canvasCoordinates(event) {
+      const rect = app.canvas.getBoundingClientRect();
+
+      return {
+        x:
+          (event.clientX - rect.left) *
+          (app.screen.width / rect.width),
+        y:
+          (event.clientY - rect.top) *
+          (app.screen.height / rect.height)
+      };
+    }
+
+    host.addEventListener("pointerdown", event => {
+      const point = canvasCoordinates(event);
+
+      host.setPointerCapture(event.pointerId);
+      state.pointers.set(event.pointerId, point);
+
+      state.velocityX = 0;
+      state.velocityY = 0;
+      state.dragMoved = false;
+
+      if (state.pointers.size === 1) {
+        state.dragging = true;
+        state.lastPointerX = point.x;
+        state.lastPointerY = point.y;
+        host.classList.add("dragging");
+      }
+
+      if (state.pointers.size === 2) {
+        const [first, second] = [...state.pointers.values()];
+
+        state.pinchDistance = Math.hypot(
+          second.x - first.x,
+          second.y - first.y
+        );
+
+        const centerX = (first.x + second.x) / 2;
+        const centerY = (first.y + second.y) / 2;
+        const world = screenToWorld(centerX, centerY);
+
+        state.pinchWorldX = world.x;
+        state.pinchWorldY = world.y;
+      }
+    });
+
+    host.addEventListener("pointermove", event => {
+      if (!state.pointers.has(event.pointerId)) return;
+
+      const point = canvasCoordinates(event);
+      state.pointers.set(event.pointerId, point);
+
+      if (state.pointers.size === 2) {
+        const [first, second] = [...state.pointers.values()];
+
+        const nextDistance = Math.hypot(
+          second.x - first.x,
+          second.y - first.y
+        );
+
+        const centerX = (first.x + second.x) / 2;
+        const centerY = (first.y + second.y) / 2;
+
+        if (state.pinchDistance > 0) {
+          const zoomFactor =
+            nextDistance / state.pinchDistance;
+
+          state.zoom = Math.max(
+            MIN_ZOOM,
+            Math.min(MAX_ZOOM, state.zoom * zoomFactor)
+          );
+
+          state.cameraX =
+            state.pinchWorldX -
+            (centerX - LEFT_HEADER_WIDTH) / state.zoom;
+
+          state.cameraY =
+            state.pinchWorldY -
+            (centerY - TOP_HEADER_HEIGHT) / state.zoom;
+
+          clampCamera();
+          markDirty();
+        }
+
+        state.pinchDistance = nextDistance;
+
+        const world = screenToWorld(centerX, centerY);
+        state.pinchWorldX = world.x;
+        state.pinchWorldY = world.y;
+
+        state.dragMoved = true;
+        return;
+      }
+
+      if (!state.dragging) return;
+
+      const deltaX = point.x - state.lastPointerX;
+      const deltaY = point.y - state.lastPointerY;
+
+      if (Math.abs(deltaX) + Math.abs(deltaY) > 2) {
+        state.dragMoved = true;
+      }
+
+      state.cameraX -= deltaX / state.zoom;
+      state.cameraY -= deltaY / state.zoom;
+
+      state.velocityX = -deltaX / state.zoom;
+      state.velocityY = -deltaY / state.zoom;
+
+      state.lastPointerX = point.x;
+      state.lastPointerY = point.y;
+
+      clampCamera();
+      markDirty();
+    });
+
+    function releasePointer(event) {
+      const point = canvasCoordinates(event);
+
+      state.pointers.delete(event.pointerId);
+
+      if (state.pointers.size === 0) {
+        if (!state.dragMoved) {
+          selectAtScreenPosition(point.x, point.y);
+        }
+
+        state.dragging = false;
+        state.pinchDistance = 0;
+        host.classList.remove("dragging");
+      } else if (state.pointers.size === 1) {
+        const remaining = [...state.pointers.values()][0];
+
+        state.lastPointerX = remaining.x;
+        state.lastPointerY = remaining.y;
+        state.pinchDistance = 0;
+      }
+    }
+
+    host.addEventListener("pointerup", releasePointer);
+    host.addEventListener("pointercancel", releasePointer);
+
+    // ─────────────────────────────────────────────────────────────
+    // Wheel and trackpad
+    // ─────────────────────────────────────────────────────────────
+
+    host.addEventListener(
+      "wheel",
+      event => {
+        event.preventDefault();
+
+        const point = canvasCoordinates(event);
+
+        if (event.ctrlKey || event.metaKey) {
+          const zoomFactor = Math.exp(-event.deltaY * 0.002);
+
+          setZoom(
+            state.zoom * zoomFactor,
+            point.x,
+            point.y
+          );
+
+          return;
+        }
+
+        let deltaX = event.deltaX;
+        let deltaY = event.deltaY;
+
+        // Shift + wheel maps vertical wheel movement to horizontal.
+        if (event.shiftKey && Math.abs(deltaX) < Math.abs(deltaY)) {
+          deltaX = deltaY;
+          deltaY = 0;
+        }
+
+        state.cameraX += deltaX / state.zoom;
+        state.cameraY += deltaY / state.zoom;
+
+        state.velocityX = deltaX * 0.08 / state.zoom;
+        state.velocityY = deltaY * 0.08 / state.zoom;
+
+        clampCamera();
+        markDirty();
+      },
+      { passive: false }
+    );
+
+    // ─────────────────────────────────────────────────────────────
+    // Controls
+    // ─────────────────────────────────────────────────────────────
+
+    document.querySelector("#zoom-in").addEventListener("click", () => {
+      setZoom(
+        state.zoom * 1.2,
+        app.screen.width / 2,
+        app.screen.height / 2
+      );
+    });
+
+    document.querySelector("#zoom-out").addEventListener("click", () => {
+      setZoom(
+        state.zoom / 1.2,
+        app.screen.width / 2,
+        app.screen.height / 2
+      );
+    });
+
+    document.querySelector("#reset-button").addEventListener("click", () => {
+      state.cameraX = 0;
+      state.cameraY = 0;
+      state.zoom = 1;
+      state.selectedColumn = 0;
+      state.selectedRow = 0;
+      state.velocityX = 0;
+      state.velocityY = 0;
+      markDirty();
+    });
+
+    document.querySelector("#fit-button").addEventListener("click", () => {
+      const availableHeight =
+        app.screen.height - TOP_HEADER_HEIGHT;
+
+      const fitZoom = Math.max(
+        MIN_ZOOM,
+        Math.min(MAX_ZOOM, availableHeight / WORLD_HEIGHT)
+      );
+
+      state.zoom = fitZoom;
+      state.cameraY = 0;
+      clampCamera();
+      markDirty();
+    });
+
+    document.querySelector("#jump-button").addEventListener("click", () => {
+      state.selectedColumn =
+        Math.floor(Math.random() * COLUMN_COUNT);
+
+      state.selectedRow =
+        Math.floor(Math.random() * ROW_COUNT);
+
+      focusCell(
+        state.selectedColumn,
+        state.selectedRow,
+        true
+      );
+
+      markDirty();
+    });
+
+    // ─────────────────────────────────────────────────────────────
+    // Keyboard navigation
+    // ─────────────────────────────────────────────────────────────
+
+    window.addEventListener("keydown", event => {
+      if (
+        event.target instanceof HTMLInputElement ||
+        event.target instanceof HTMLTextAreaElement
+      ) {
+        return;
+      }
+
+      let handled = true;
+
+      switch (event.key) {
+        case "ArrowLeft":
+          state.selectedColumn--;
+          break;
+
+        case "ArrowRight":
+          state.selectedColumn++;
+          break;
+
+        case "ArrowUp":
+          state.selectedRow--;
+          break;
+
+        case "ArrowDown":
+          state.selectedRow++;
+          break;
+
+        case "Home":
+          state.selectedColumn = 0;
+          break;
+
+        case "End":
+          state.selectedColumn = COLUMN_COUNT - 1;
+          break;
+
+        case "+":
+        case "=":
+          setZoom(
+            state.zoom * 1.2,
+            app.screen.width / 2,
+            app.screen.height / 2
+          );
+          break;
+
+        case "-":
+          setZoom(
+            state.zoom / 1.2,
+            app.screen.width / 2,
+            app.screen.height / 2
+          );
+          break;
+
+        default:
+          handled = false;
+      }
+
+      if (!handled) return;
+
+      event.preventDefault();
+
+      state.selectedColumn = Math.max(
+        0,
+        Math.min(COLUMN_COUNT - 1, state.selectedColumn)
+      );
+
+      state.selectedRow = Math.max(
+        0,
+        Math.min(ROW_COUNT - 1, state.selectedRow)
+      );
+
+      if (event.key.startsWith("Arrow") || event.key === "Home" || event.key === "End") {
+        focusCell(
+          state.selectedColumn,
+          state.selectedRow,
+          false
+        );
+      }
+
+      markDirty();
+    });
+
+    // ─────────────────────────────────────────────────────────────
+    // Resize
+    // ─────────────────────────────────────────────────────────────
+
+    const resizeObserver = new ResizeObserver(() => {
+      clampCamera();
+      redrawMasks();
+      renderCorner();
+      markDirty();
+    });
+
+    resizeObserver.observe(host);
+
+    // ─────────────────────────────────────────────────────────────
+    // Frame loop
+    // ─────────────────────────────────────────────────────────────
+
+    app.ticker.add(ticker => {
+      const deltaScale = Math.min(3, ticker.deltaMS / 16.667);
+
+      if (
+        !state.dragging &&
+        state.pointers.size === 0 &&
+        !PREFERS_REDUCED_MOTION
+      ) {
+        const speed =
+          Math.abs(state.velocityX) +
+          Math.abs(state.velocityY);
+
+        if (speed > 0.02) {
+          state.cameraX += state.velocityX * deltaScale;
+          state.cameraY += state.velocityY * deltaScale;
+
+          const friction = Math.pow(0.89, deltaScale);
+          state.velocityX *= friction;
+          state.velocityY *= friction;
+
+          clampCamera();
+          markDirty();
+        } else {
+          state.velocityX = 0;
+          state.velocityY = 0;
+        }
+      }
+
+      if (state.dirty) {
+        renderGrid();
+      }
+
+      state.frameCounter++;
+      state.fpsAccumulator += ticker.deltaMS;
+
+      if (state.fpsAccumulator >= 500) {
+        const measuredFps =
+          state.frameCounter /
+          (state.fpsAccumulator / 1000);
+
+        fpsElement.textContent =
+          String(Math.round(measuredFps));
+
+        state.frameCounter = 0;
+        state.fpsAccumulator = 0;
+      }
+    });
+
+    // ─────────────────────────────────────────────────────────────
+    // Boot
+    // ─────────────────────────────────────────────────────────────
+
+    renderCorner();
+    redrawMasks();
+    renderGrid();
+  </script>
+</body>
+</html>

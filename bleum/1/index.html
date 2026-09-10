@@ -1394,24 +1394,88 @@ button.chronoRow:hover {
     cursor: pointer
 }
 
-@media (max-width:640px) {
+/* BF-3 "Full-frame sheet" — mobile detail redesign (≤760px, the same zone
+   where the card becomes a bottom sheet). Desktop parity for the whole photo
+   AND the whole text:
+   - the image is never a cropped band: full card width at its natural aspect
+     (object-fit:contain), capped at 48vh so a tall portrait can't eat the
+     sheet. When the cap bites, a blurred cover copy of the same photo fills
+     the letterbox gutters (--fill is set per-event by Bt()).
+   - desktop's split labour, stacked: the photo pane stays put and the TEXT
+     pane is the one scroller (flex:1 + min-height:0 + overflow-y:auto), so
+     desc + chrono strip + connections + sources are all reachable however
+     long they run.
+   - the vertical accent edge becomes a horizontal 2px hairline under the
+     photo. The explicit z-indexes matter: the img becomes positioned so it
+     paints above the blurred ::before fill, which reshuffles paint order
+     for the tint and the IMG_REF caption too. */
+@media (max-width:760px) {
     #cardInner {
-        flex-direction: column;
-        overflow-y: auto
+        flex-direction: column
     }
 
     #photoPane {
         width: 100%;
-        height: 200px
+        flex: none;
+        background: #0b1020
+    }
+
+    #photoPane::before {
+        content: '';
+        position: absolute;
+        inset: -16px;
+        z-index: 0;
+        background-image: var(--fill, none);
+        background-size: cover;
+        background-position: center 20%;
+        filter: blur(16px) saturate(1.35) brightness(.75)
+    }
+
+    #photoPane img {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        height: auto;
+        max-height: 48vh;
+        object-fit: contain;
+        object-position: center
+    }
+
+    #photoTint {
+        z-index: 1
+    }
+
+    #imgRef {
+        z-index: 2
     }
 
     #photoPane::after {
-        display: none
+        left: 0;
+        right: 0;
+        top: auto;
+        bottom: 0;
+        width: auto;
+        height: 2px;
+        z-index: 3;
+        background: linear-gradient(90deg, var(--accent), color-mix(in srgb, var(--accent) 10%, transparent))
     }
 
     #textPane {
-        overflow-y: visible;
-        max-height: none
+        flex: 1;
+        min-height: 0;
+        max-height: none;
+        padding: 18px 18px calc(18px + env(safe-area-inset-bottom, 0px));
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch
+    }
+
+    #card h2 {
+        font-size: 20px
+    }
+
+    #sheetDesc {
+        font-size: 13px
     }
 }
 
@@ -1993,9 +2057,13 @@ button.chronoRow:hover {
         align-items: flex-end
     }
 
+    /* BF-3: dvh fallback for mobile URL bars + a partial-expand floor — a
+       short event still reads as "a sheet with room to scroll", not a stub. */
     #card {
         max-width: none;
         max-height: 92vh;
+        max-height: 92dvh;
+        min-height: 56vh;
         border-radius: 18px 18px 0 0;
         border-left: 0;
         border-right: 0;
@@ -5389,7 +5457,7 @@ function Bt(w) {
         Y = Lt[U],
         lt = "#" + ae[U % ae.length].toString(16).padStart(6, "0"),
         it = O.img[w];
-    v.style.setProperty("--accent", lt), L.classList.toggle("noimg", !it), W("sheetImg").src = it || "", W("sheetType").textContent = Y.short, W("sheetDate").textContent = O.dateLabel[w], W("sheetTitle").textContent = O.title[w], W("sheetDesc").textContent = O.desc[w], K();
+    v.style.setProperty("--accent", lt), L.classList.toggle("noimg", !it), W("sheetImg").src = it || "", W("photoPane").style.setProperty("--fill", it ? "url(\"" + it + "\")" : "none"), W("sheetType").textContent = Y.short, W("sheetDate").textContent = O.dateLabel[w], W("sheetTitle").textContent = O.title[w], W("sheetDesc").textContent = O.desc[w], K();
     let Ot = W("chrono");
     if (U === D) {
         let ue = O.start[U],

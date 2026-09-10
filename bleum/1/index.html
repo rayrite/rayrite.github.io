@@ -4655,11 +4655,16 @@ function trendBeacon(s) {
     b.body.context.clear().roundRect(0, 0, t, 26, 13).fill(988970), b.border.context.clear().roundRect(.75, .75, t - 1.5, 24.5, 13).stroke({
         width: 1.5,
         color: 15381256
-    }), b.body.alpha = i + .1, b.border.tint = 15381256, b.border.alpha = Math.min(1, i + .25), b.root.position.set(e, r), b.dot.visible = !0, b.dot.position.set(12, 13), b.dot.width = b.dot.height = RM.matches ? 6 : 4.5 + 2.5 * (1 + Math.sin(performance.now() / 300)) / 2, b.dot.tint = 15381256, b.name.position.set(22, 6.5), b.arrow.visible = !1, Le.push({
-        x: e,
-        y: r,
-        w: t,
-        h: 26,
+    }), b.body.alpha = i + .1, b.border.tint = 15381256, b.border.alpha = Math.min(1, i + .25), b.root.position.set(e, r), b.dot.visible = !0, b.dot.position.set(12, 13), b.dot.width = b.dot.height = RM.matches ? 6 : 4.5 + 2.5 * (1 + Math.sin(performance.now() / 300)) / 2, b.dot.tint = 15381256, b.name.position.set(22, 6.5), b.arrow.visible = !1,
+    // BF-4: the capsule is only 26px tall — under any comfortable finger
+    // target. Pad the hit rect 8px all round (draw box unchanged); it is
+    // pushed late so the reverse hit-test already favors it over the row
+    // beneath.
+    Le.push({
+        x: e - 8,
+        y: r - 8,
+        w: t + 16,
+        h: 26 + 16,
         kind: "trend",
         id: -1
     })
@@ -5074,7 +5079,14 @@ W("dFit").addEventListener("click", () => {
     De(null), W("bFit").click()
 });
 W("findDone").addEventListener("click", () => De(null));
-Z1.addEventListener("click", () => De(null));
+// BF-4: dismiss on pointerdown, not click. On touch, the sheet opens on the
+// canvas' pointerup; Chrome then fires the tap's compatibility click, which
+// re-hit-tests and lands on the JUST-RENDERED scrim (it covers the screen),
+// so a click handler here closed the sheet ~10ms after it opened — every
+// canvas tap-to-open (beacon, cards through their own backdrop) looked dead.
+// The opening tap's pointerdown happened before the scrim existed, so
+// pointerdown only fires here for a LATER, deliberate press.
+Z1.addEventListener("pointerdown", () => De(null));
 $1.addEventListener("input", s => {
     W("cFind").value = s.target.value, W("cFind").dispatchEvent(new Event("input"))
 });
@@ -5506,7 +5518,11 @@ function Bt(w) {
 function tt() {
     v.classList.remove("open"), K(), X.setFocus(-1), H = [], q()
 }
-W("closeBtn").onclick = tt, W("backdrop").onclick = tt;
+// BF-4: the lightbox backdrop dismisses on pointerdown for the same reason
+// the sheet scrim does — the card-tap that OPENS the lightbox is followed by
+// a compatibility click that would land on the just-shown backdrop and close
+// it instantly. closeBtn stays a normal click (a visible target you aim at).
+W("closeBtn").onclick = tt, W("backdrop").addEventListener("pointerdown", tt);
 let $e = [
         ["fps", "frame"],
         ["ms", "cpu ms"],

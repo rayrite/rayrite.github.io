@@ -246,6 +246,40 @@ header {
     font-weight: 700
 }
 
+/* Head row for the mobile tracks sheet: the title plus a visible Done button.
+   The blur-trap fix makes the sheet readable, but it still needed an explicit
+   close affordance — a scrim tap is not discoverable as "close". Desktop keeps
+   the bare title (the dropdown closes on outside click). */
+.sheetHead {
+    display: flex;
+    align-items: center;
+    gap: 10px
+}
+
+.sheetHead .sheetTitle {
+    flex: 1;
+    padding: 0 18px 8px
+}
+
+.trackDone {
+    display: none;
+    flex: none;
+    margin-right: 14px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    color: #fff;
+    background: rgba(148, 163, 184, .16);
+    border: 1px solid var(--line2);
+    border-radius: 99px;
+    padding: 7px 16px;
+    cursor: pointer
+}
+
+.trackDone:hover {
+    background: rgba(148, 163, 184, .26)
+}
+
 .trackRow {
     display: flex;
     align-items: center;
@@ -1672,6 +1706,57 @@ button.chronoRow:hover {
    is in. They disagreeing is precisely what the 800px layout bug caused: media
    queries read the 412px viewport while the canvas read its own latched 800px
    width, so the app was in mobile and desktop mode simultaneously. */
+/* ---------------- cluster member sheet ----------------
+   Residual capsules (same-day stacks, pairs closer than the cluster gap at
+   max zoom) can never split by zooming; clicking them opens this list and
+   each row jumps to the event's detail sheet. Same .connHit rhythm. */
+#clusterList {
+    padding: 0 10px 4px
+}
+
+.clusterHit {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    width: 100%;
+    padding: 11px 12px;
+    border: 0;
+    border-radius: 10px;
+    background: none;
+    color: var(--text);
+    font-size: 12.5px;
+    text-align: left;
+    cursor: pointer
+}
+
+.clusterHit:hover {
+    background: rgba(148, 163, 184, .09)
+}
+
+.clusterHit .chDot {
+    width: 8px;
+    height: 8px;
+    border-radius: 99px;
+    flex: none;
+    align-self: center
+}
+
+.clusterHit .chDate {
+    font-family: 'SF Mono', Consolas, monospace;
+    font-size: 9.5px;
+    color: var(--dim);
+    flex: none;
+    min-width: 66px
+}
+
+.clusterHit .chTitle {
+    font-size: 12.5px;
+    color: #e2e8f0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap
+}
+
 @media (max-width:760px) {
 
     /* The old control bar and the perf HUD both move behind the deck.
@@ -1686,7 +1771,14 @@ button.chronoRow:hover {
         padding: 0;
         border-bottom: 0;
         background: none;
-        overflow: visible
+        overflow: visible;
+        /* Bug fix (blur trap): #controls is a grid item and z-index:4 on a grid
+           item creates a stacking context — the fixed .trackPanel (z-index 41)
+           was trapped inside it and painted BELOW #scrim (z-index 40), so the
+           mobile tracks sheet opened as an unreadable blur behind the scrim.
+           auto removes the context; the panel then stacks above the scrim at
+           the root level. Desktop is untouched (this query is ≤760px only). */
+        z-index: auto
     }
 
     #controls>*:not(.trackControl) {
@@ -1850,6 +1942,10 @@ button.chronoRow:hover {
     }
 
     .sheetTitle {
+        display: block
+    }
+
+    .trackDone {
         display: block
     }
 
@@ -2083,6 +2179,16 @@ button.chronoRow:hover {
   <button class="srow" id="mVirt" type="button"><span class="lbl">Virtualise off-screen</span><span class="sw2"></span></button>
   <button class="srow" id="mLod" type="button"><span class="lbl">Text detail (LOD)</span><span class="sw2"></span></button>
   <button class="srow" id="mPerf" type="button"><span class="lbl">Performance overlay</span><span class="sw2"></span></button>
+</div>
+
+<!-- Residual-capsule escape hatch: a cluster whose members are too close in
+     time to ever separate at max zoom (same-day stacks, sub-threshold pairs)
+     opens this member list instead of a futile zoom-to-max. Tapping a row
+     jumps the timeline to that event and opens its detail sheet. -->
+<div id="clusterSheet" class="sheet" role="dialog" aria-modal="true" aria-labelledby="clusterTitle">
+  <div class="grab"></div>
+  <h3 id="clusterTitle">Events at this spot</h3>
+  <div id="clusterList"></div>
 </div>
 
 <!-- M3.5: the trending showcase — a bottom sheet built on open (trendBuild in
@@ -4771,8 +4877,15 @@ var cs = W("trackPanel"),
 
 function Up() {
     cs.innerHTML = "";
+    let head = document.createElement("div");
+    head.className = "sheetHead";
     let s = document.createElement("h3");
-    s.className = "sheetTitle", s.textContent = "Category tracks", cs.appendChild(s);
+    s.className = "sheetTitle", s.textContent = "Category tracks", head.appendChild(s);
+    // Mobile-only visible Done — the sheet needed an explicit close control,
+    // not just the (undiscoverable) scrim tap. Hidden by CSS ≥761px.
+    let done = document.createElement("button");
+    done.type = "button", done.className = "trackDone", done.textContent = "Done", done.addEventListener("click", () => De(null)), head.appendChild(done);
+    cs.appendChild(head);
     for (let t of X.trackOrder) {
         let e = document.createElement("div");
         e.className = "trackRow", e.dataset.id = String(t);
@@ -4845,6 +4958,7 @@ var J1 = W("moreSheet"),
     $1 = W("cFindMobile"),
     Ji = W("fab"),
     trendSheetEl = W("trendSheet"),
+    clusterSheetEl = W("clusterSheet"),
     // reassigned inside _w once the DOM wiring (and the jt/G jump helpers)
     // exist; the no-op keeps De() safe to call before boot completes
     trendOpen = () => {},
@@ -4855,7 +4969,7 @@ Ji.addEventListener("click", () => {
 });
 
 function De(s) {
-    Bl === s && (s = null), Bl = s, cs.classList.toggle("open", s === "tracks"), J1.classList.toggle("open", s === "more"), X1.classList.toggle("open", s === "find"), trendSheetEl && trendSheetEl.classList.toggle("open", s === "trend"), Z1.classList.toggle("on", s === "tracks" || s === "more" || s === "trend"), Dp.setAttribute("aria-expanded", String(s === "tracks")), Lp.setAttribute("aria-expanded", String(s === "tracks")), Op.setAttribute("aria-expanded", String(s === "more")), Lp.classList.toggle("hot", s === "tracks"), Op.classList.toggle("hot", s === "more"), _1.classList.toggle("hot", s === "find"), s && document.body.classList.remove("dialOpen"), Ji.setAttribute("aria-expanded", String(document.body.classList.contains("dialOpen"))), s === "more" && Vp(), s === "find" && $1.focus(), s === "trend" && trendOpen()
+    Bl === s && (s = null), Bl = s, cs.classList.toggle("open", s === "tracks"), J1.classList.toggle("open", s === "more"), X1.classList.toggle("open", s === "find"), trendSheetEl && trendSheetEl.classList.toggle("open", s === "trend"), clusterSheetEl && clusterSheetEl.classList.toggle("open", s === "cluster"), Z1.classList.toggle("on", s === "tracks" || s === "more" || s === "trend" || s === "cluster"), Dp.setAttribute("aria-expanded", String(s === "tracks")), Lp.setAttribute("aria-expanded", String(s === "tracks")), Op.setAttribute("aria-expanded", String(s === "more")), Lp.classList.toggle("hot", s === "tracks"), Op.classList.toggle("hot", s === "more"), _1.classList.toggle("hot", s === "find"), s && document.body.classList.remove("dialOpen"), Ji.setAttribute("aria-expanded", String(document.body.classList.contains("dialOpen"))), s === "more" && Vp(), s === "find" && $1.focus(), s === "trend" && trendOpen()
 }
 
 function Vp() {
@@ -4897,7 +5011,7 @@ $1.addEventListener("input", s => {
     W("cFind").value = s.target.value, W("cFind").dispatchEvent(new Event("input"))
 });
 document.addEventListener("pointerdown", s => {
-    cs.contains(s.target) || J1.contains(s.target) || X1.contains(s.target) || trendSheetEl && trendSheetEl.contains(s.target) || Dp.contains(s.target) || W("deck").contains(s.target) || W("bTrend") && W("bTrend").contains(s.target) || Ji.contains(s.target) || (Bl && De(null), document.body.classList.remove("dialOpen"), Ji.setAttribute("aria-expanded", "false"))
+    cs.contains(s.target) || J1.contains(s.target) || X1.contains(s.target) || trendSheetEl && trendSheetEl.contains(s.target) || clusterSheetEl && clusterSheetEl.contains(s.target) || Dp.contains(s.target) || W("deck").contains(s.target) || W("bTrend") && W("bTrend").contains(s.target) || Ji.contains(s.target) || (Bl && De(null), document.body.classList.remove("dialOpen"), Ji.setAttribute("aria-expanded", "false"))
 });
 document.addEventListener("keydown", s => {
     if (s.key === "Escape") {
@@ -5028,6 +5142,31 @@ function y(w) {
 }
 s.addEventListener("pointerup", y), s.addEventListener("pointercancel", y);
 
+// Residual capsule: the members are too close in time to ever separate (the
+// cluster gap at MIN_MSPP is ~5 days; same-day stacks can never split). Zooming
+// to max just strands the capsule there, so list the members instead — each
+// row jumps the timeline to that event and opens its detail sheet.
+function clusterOpen(ids) {
+    let O = X.EV,
+        host = W("clusterList");
+    host.replaceChildren();
+    W("clusterTitle").textContent = ids.length + (ids.length === 1 ? " event" : " events") + " share this spot";
+    for (let id of ids) {
+        let row = document.createElement("button");
+        row.type = "button", row.className = "clusterHit";
+        let d = document.createElement("span");
+        d.className = "chDot", d.style.background = "#" + ae[O.subj[id] % ae.length].toString(16).padStart(6, "0");
+        let de = document.createElement("span");
+        de.className = "chDate", de.textContent = O.dateLabel[id];
+        let ti = document.createElement("span");
+        ti.className = "chTitle", ti.textContent = O.title[id];
+        row.append(d, de, ti), row.addEventListener("click", () => {
+            De(null), H = [], jt(id)
+        }), host.appendChild(row)
+    }
+    De("cluster")
+}
+
 function b(w, O) {
     let U = x(w, O);
     if (U) {
@@ -5054,7 +5193,10 @@ function b(w, O) {
                 ee = it.slice(Ot, te + 1),
                 anchorId = ee[nearestIdx(Y.t, ee, F.center)],
                 er = unmergeScale(lt, anchorId, kp[lt], Ep, F.msPerPx);
-            X.startClusterZoom(lt, Y.t[anchorId], er, anchorId);
+            // unmergeScale bottoms out at Ep when the group can never split —
+            // verify the anchor actually comes free at er and fall back to the
+            // member sheet instead of a futile zoom-to-max (Bug 1).
+            clusterAnchorGroup(er, lt, anchorId, kp[lt]).count > 1 ? clusterOpen(ee) : X.startClusterZoom(lt, Y.t[anchorId], er, anchorId);
             return
         }
         if (U.kind === "trackHide") {

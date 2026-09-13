@@ -1,0 +1,202 @@
+# Background
+
+To comply with Vietnam Labour Code regulations on overtime, DXC Vietnam has requested the implementation of overtime restriction controls within the **ETES system** for employees working in Vietnam.
+
+Under Vietnam Labour Code, overtime is defined as any working time beyond the employee’s agreed normal working hours stated in the employment contract. The law specifies daily, monthly, and annual limits on overtime hours and mandates enhanced pay rates depending on when the overtime is performed (normal workdays, rest days, public holidays).
+
+Currently, overtime validations are primarily handled manually by the Vietnam Payroll and HR teams. Implementing automated controls in ETES will improve compliance, reduce manual effort, and minimize risk of labour law violations.
+
+# Business Objectives
+
+The objectives of this requirement are to:
+
+- Ensure full compliance with Vietnam Labour Code overtime regulations
+
+- Prevent employees from exceeding statutory overtime limits
+
+- Support multiple client working calendars (including Egypt and future client calendars)
+
+- Reduce manual payroll and HR validations related to overtime
+
+- Enable accurate overtime recording and payroll processing
+
+# Scope
+
+1.  In Scope
+
+- Configuration of overtime hour limits in ETES for Vietnam employees
+
+- Support for different working days, weekends, and public holidays based on client account
+
+- Restriction and validation of overtime input based on Vietnam Labour Code
+
+- Overtime eligibility control via approved WBS codes
+
+- Monitoring cumulative overtime (daily, monthly, annual)
+
+3.2 Out of Scope
+
+- Changes to overtime pay calculation in ADP GV
+
+- Retroactive correction of historical overtime records
+
+# Regulatory Framework (Vietnam Labour Code)
+
+4.1 Standard Working Time
+
+- Regular working time: **8 hours per day**
+
+- Total regular working time: **40 hours per week**
+
+4.2 Overtime Limits
+
+- Maximum Overtime and/or Bank Time per day: **4 hours**
+
+- Total working time (regular + Overtime and/or Bank Time): **must not exceed 12 hours/day**
+
+- Maximum Overtime and/or Bank Time per calendar month: **40 hours**
+
+- Maximum Overtime and/or Bank Time per calendar year:
+
+  - **200 hours per calendar year (standard limit)**
+
+  - **Up to 300 hours per calendar year** only with:
+
+    - Employee consent, and
+
+    - Approval from the Department of Labor
+
+These rules apply to **all days**, including weekdays, weekends, and public holidays.
+
+# Business Requirements
+
+5.1 Overtime Definition
+
+- **Overtime** is any working time exceeding the employee’s normal agreed working hours.
+
+- Work performed on **weekly rest days or public holidays** is also considered overtime.
+
+- Total Overtime and bank time should be followed the Labor Code requirements for days (4 hours for weekdays and 12 hours for weekends and public holidays), months (40 hours/calendar month) and years (200 – 300 hours/ calendar year).
+
+- Overtime and bank time can be submitted on the same day by one employee.
+
+- Overtime hours are payable if clients/accounts agree to pay the extra hours worked else Bank Time shall be compensated to the employees. As such, the daily, monthly and calendar year hours validations are for both Overtime and Bank Time hours
+
+5.2 Daily Overtime Restrictions
+
+- **BR-01:** ETES shall restrict Overtime and/or Bank Time entry to a maximum of **4 hours per day**. Ie. 2000-Overtime@1.5, 1010-Regular hours
+
+- **BR-02:** ETES shall ensure total working hours do not exceed **12 hours in any single day**, inclusive of overtime and/or Bank Time, weekends, and public holidays.
+
+> **Note:** Weekends and Public Holidays <u>do not require 1010-Regular</u> work hours entry ie. Only time entries: 1012-Weekend Overtime, 1013-Public Holidays Overtime (with pre-requisite of 8000-Public Holiday time code entry)
+>
+> **BR-03:** Overtime and Bank Time entry shall not be permitted on days where the employee is on <u>full day</u> **Annual Leave:8100, or Personal Leave:8900**. Employees can submit Annual Leave and Personal Leave on the same day.
+>
+> Overtime and Bank Time can be allowed for overtime entry for employees on <u>half day</u> Annual Leave and/or Personal Leave as employees shall be working for the other half day with Regular work hours entry.
+>
+> Eg.1: Half Day leave scenario \>\> \[1010-Regular:4hours\] + \[8100-Annual Leave and/or 2900-Bank Time: 4hours\] + \[2000-Overtime@1.5 : max 4hours\] = max of 12hours per day
+>
+> Eg.2: Full Day leave scenario \>\> 8100-Annual Leave or 8900-Personal Leave:8hours time entry. **NO** 1012-Overtime@1.5 nor 2900-Bank Time permitted
+>
+> Eg.3. Weekend Overtime \>\> 1012-Overtime@2: max 12hours per day, and **NO** 1010-Regular hours entry
+>
+> Eg 4. Public Holiday Overtime \>\> \[pre-requisite 8000-Public Holiday : 8hours (does not count into the overtime hours) + 1013-Overtime@3:8hours\] = max 12hours
+>
+> <u>Note for Technical team:</u> bypass rule needs to be considered in the tool due to the existing Global rule and it does not require 1010 work hours entry.
+
+# Addendum — Vietnam Overtime Review Follow-up
+
+*Content of `Vietnam_OT_latest_addendum.pdf`: email from Shelby Kee (People & Culture Team, DXC Technology Singapore), sent Friday, September 4, 2026 9:16 PM, subject "RE: Vietnam Overtime Review", attachment "Vietnam Overtime Restriction Requirement for etes 2026Sep4.docx". From: Akiboh, Donzalee J; John Sathiyaseelan, Selvin Johnson; E, Saravanan; Wright, Ray Dorian; BIN MOHD SHARIFUDDIN, MOHD ADNIN FIRDAUS. To: TAN, KUANG CHEN; Pham, Thi Xuan Nguyet; Palma, Leila H. Flag: Follow up / Pending Issues Need More Info.*
+
+Hi,
+
+Please find enclosed updated for the below discussed. Thanks.
+
+## 1. Time Code Decisions
+
+| Time Code | Description | Usage | Decision |
+| --- | --- | --- | --- |
+| 2900 | Bank Time | Yes | retain |
+| 2000 | Overtime @1.5 | Yes | overtime on working days, to rename text |
+| 1012 | Overtime @2.0 | Yes | weekend overtime |
+| 1013 | Overtime @3.0 | Yes | overtime on Public Holiday |
+| 2200 | Double Time | No | Remove |
+| 1011 | Hours GT 40 | Only 1 in year 2016: 01119745- Le Ngoc Cam Tu | Remove |
+| 0460 | Overtime for quota hours | No | Remove |
+
+## 2. Half Day and Full Day Annual Leave and Personal Leave; Weekend Overtime and Public Holiday Overtime
+
+- Half Day leave scenario \>\> \[1010-Regular:4hours\] + \[8100-Annual Leave and/or 2900-Bank Time: 4hours\] + \[2000-Overtime@1.5 : max 4hours\] = max of 12hours per day
+- Full Day leave scenario \>\> 8100-Annual Leave or 8900-Personal Leave:8hours time entry. NO 1012-Overtime@1.5 nor 2900-Bank Time permitted
+- Weekend Overtime \>\> 1012-Overtime@2: max 12hours per day, and NO 1010-Regular hours entry
+- Public Holiday Overtime \>\> \[pre-requisite 8000-Public Holiday : 8hours (does not count into the overtime hours) + 1013-Overtime@3:8hours\] = max 12hours
+
+## 3. Alert & Notifications for 160-199hours, 200-299 hours, 300 hours per Calendar Year
+
+For 160 till 199hours/calendar year:
+
+a. ETES to send Reminder Alert to employee upon submission
+
+b. Email Notifications on consolidated overtime and/or Bank time on weekly Friday 4.30pm IST / 6am ET to employee, ETES approving manager (in ETES profile) and HR&Payroll (via email distribution group).
+
+One email per manager on all his/her employees. One email on all the employees for HR&Payroll.
+
+For 200 - 299 hours / calendar year:
+
+a. Consent Alert to employee upon submission
+
+b. Consent Alert on consolidated employees for the manager upon approval
+
+c. Email Notifications on consolidated overtime and/or Bank time on weekly Friday 4.30pm IST / 6am ET to employee, ETES approving manager (in ETES profile) and HR&Payroll (via email distribution group).
+
+Details include employees with 160-199hours plus 200-299hours/calendar year.
+
+One email per manager on all his/her employees. One email on all the employees for HR&Payroll.
+
+For 300 hours / calendar year:
+
+a. Final Alert to employee only
+
+b. Email Notifications on consolidated overtime and/or Bank Time on weekly Friday (4.30pm IST / 6am ET) to employee, ETES approving manager and HR&Payroll (via email distribution group).
+
+Details including employees with 160-199hours plus 200-299hours plus 300hours / calendar year.
+
+One email per manager on all his/her employees. One email on all employee details for HR&Payroll.
+
+## 4. Report to Create for Overtime and Bank Time
+
+Warm Regards,
+
+Shelby Kee
+
+DXC Technology
+
+People & Culture Team
+
+skee2@dxc.com
+
+Singapore, UTC+8
+
+## Original Appointment (Meeting Details)
+
+- From: Kee, Shelby
+- Sent: Thursday, 3 September 2026 10:22 pm
+- To: Kee, Shelby; Akiboh, Donzalee J; John Sathiyaseelan, Selvin Johnson; E, Saravanan; Wright, Ray Dorian; BIN MOHD SHARIFUDDIN, MOHD ADNIN FIRDAUS; TAN, KUANG CHEN; Pham, Thi Xuan Nguyet; Palma, Leila H
+- Subject: Vietnam Overtime Review
+- When: Friday, 4 September 2026 9:00 pm-10:00 pm (UTC+08:00) Kuala Lumpur, Singapore.
+- Where: Microsoft Teams Meeting
+
+Microsoft Teams meeting
+
+Join: https://teams.microsoft.com/meet/210505154730869?p=xgeiaTWJ1PA3T5UIt4
+
+Meeting ID: 210 505 154 730 869
+
+Passcode: tw2qj38C
+
+Dial in by phone:
+
+- +65 6450 6461,,396754795# Singapore, All locations
+- 800 852 6353,,396754795# Singapore (Toll-free)
+- Find a local number
+- Phone conference ID: 396 754 795#

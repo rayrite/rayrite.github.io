@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>VA-13 · Lesson → Milestone Map (the 55-hour curriculum at a glance)</title>
+<style>
+:root{
+  --bg:#0f1115; --panel:#161a22; --ink:#e6e9ef; --muted:#9aa3b2;
+  --accent:#7aa2ff; --accent-2:#7cffd1; --warn:#ffb86b; --err:#ff6b6b;
+  --grid:#20262f; --radius:10px; --shadow:0 6px 24px rgba(0,0,0,.4);
+  --font:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:var(--font);height:100%}
+body{display:grid;grid-template-rows:auto 1fr auto;min-height:100vh}
+header{display:flex;align-items:center;gap:12px;padding:10px 14px;
+  background:linear-gradient(180deg,#1a1f2a,#131820);border-bottom:1px solid var(--grid);
+  position:sticky;top:0;z-index:10;flex-wrap:wrap}
+header h1{font-size:14px;margin:0;font-weight:600}
+header .tag{font-size:11px;background:#20262f;border:1px solid #2b313c;padding:2px 6px;border-radius:6px;color:var(--muted)}
+header .spacer{flex:1}
+header .ctrl{font-size:12px;background:#20262f;border:1px solid #2b313c;color:var(--ink);
+  padding:6px 10px;border-radius:8px;cursor:pointer;transition:.15s}
+header .ctrl:hover{border-color:var(--accent);color:var(--accent)}
+header .ctrl.primary{background:var(--accent);color:#0f1115;border-color:var(--accent)}
+main{display:grid;grid-template-columns:1fr;padding:18px;gap:18px}
+.panel{background:var(--panel);border:1px solid var(--grid);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.panel .hd{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--grid)}
+.panel .hd .dot{width:8px;height:8px;border-radius:50%;background:var(--accent-2)}
+.panel .hd h2{font-size:13px;margin:0;font-weight:600}
+.panel .hd .meta{margin-left:auto;font-size:11px;color:var(--muted);font-family:var(--mono)}
+.panel .bd{padding:14px}
+.stage{position:relative;background:#0b0e14;border-radius:8px;border:1px solid var(--grid);overflow:auto}
+.stage pre{margin:0;padding:18px;font-family:var(--mono);font-size:13px;line-height:1.55;color:#d6dbe6;white-space:pre;overflow:auto}
+.stage pre.mermaid{display:none}
+.stage .zoom{display:flex;gap:6px;position:absolute;top:8px;right:8px;z-index:2}
+.stage .zoom button{width:30px;height:30px;background:#1c212c;border:1px solid #2b313c;color:var(--ink);border-radius:6px;cursor:pointer;font-size:14px}
+.stage .zoom button:hover{border-color:var(--accent);color:var(--accent)}
+.stage .pct{position:absolute;bottom:8px;right:8px;font-size:11px;background:#1c212c;border:1px solid #2b313c;padding:3px 7px;border-radius:6px;color:var(--muted);font-family:var(--mono)}
+.panel.ascii .stage pre{font-size:13.5px;line-height:1.6}
+.stage .mermaid-rendered svg{background:transparent !important}
+.stage .mermaid-rendered text{fill:#e6e9ef !important;color:#e6e9ef !important}
+.stage .mermaid-rendered .node rect,.stage .mermaid-rendered .node polygon,
+.stage .mermaid-rendered .node circle,.stage .mermaid-rendered .node ellipse,
+.stage .mermaid-rendered .node path{fill:#1c212c !important;stroke:#3a4252 !important;stroke-width:1.2}
+.stage .mermaid-rendered .edgePath path{stroke:#5b6680 !important}
+.stage .mermaid-rendered marker path{fill:#5b6680 !important}
+.stage .mermaid-rendered .edgeLabel rect{fill:#161a22 !important}
+.stage .mermaid-rendered .cluster rect{fill:#11151c !important;stroke:#2b313c !important}
+.legend{padding:8px 14px 12px;display:flex;flex-wrap:wrap;gap:8px;font-size:11.5px;color:var(--muted)}
+.legend .chip{display:inline-flex;align-items:center;gap:6px;background:#1c212c;border:1px solid #2b313c;padding:3px 8px;border-radius:6px}
+.legend .sw{width:8px;height:8px;border-radius:50%}
+@media (max-width: 720px){
+  header{padding:8px 10px}
+  header h1{font-size:13px}
+  header .ctrl{padding:5px 8px;font-size:11px}
+  main{padding:10px;gap:12px}
+  .stage pre{font-size:11.5px}
+  .panel.ascii .stage pre{font-size:11.5px}
+}
+footer{padding:8px 14px;font-size:11px;color:var(--muted);border-top:1px solid var(--grid);background:#0c0f14;display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+footer .kbd{font-family:var(--mono);background:#1c212c;border:1px solid #2b313c;padding:1px 5px;border-radius:4px;font-size:10.5px}
+footer .spacer{flex:1}
+</style>
+</head>
+<body>
+<header>
+  <h1>VA-13 · Lesson → Milestone Map (the 55-hour curriculum at a glance)</h1>
+  <span class="tag">ScamShield Concierge · Visual Aid</span>
+  <span class="spacer"></span>
+  <button class="ctrl" id="zoomOut">−</button>
+  <button class="ctrl" id="zoomReset">100%</button>
+  <button class="ctrl" id="zoomIn">+</button>
+  <button class="ctrl primary" id="printBtn">⤓ Print</button>
+</header>
+<main>
+<section class="panel ascii"><div class="hd"><span class="dot"></span><h2>ASCII — lesson-to-milestone ladder (paste in README)</h2><span class="meta">marked MVP / MLP / v1 — every lesson feeds a gate</span></div><div class="bd"><div class="stage"><div class="zoom"><button data-act="in" title="Zoom in">+</button><button data-act="out" title="Zoom out">−</button></div><div class="pct">100%</div><div class="zoom-inner"><pre>
+┌──── LEARNING LADDER (4 milestones · 12 lessons · 55 budget hours) ────┐
+│                                                                         │
+│  LESSON     MILESTONE         DELIVERABLE                         ✓    │
+│  ──────     ─────────         ───────────                         ──    │
+│  L0  Meta ·         The roadmap itself + working agreement       done  │
+│  L1  Server·MVP     First-time login done; SSH key set;          ·     │
+│                    cPanel subdomain issued (HTTP only)                 │
+│  L2  Repo ·MVP     Private GitHub repo; .gitignore/.gitattributes;  │
+│                    first commit                                         │
+│  L3  Env   ·MVP    dev/staging/prod env strategy on Win laptop;      │
+│                    offline suite passing locally                        │
+│  L4  Code  ·MVP    Code walk-through of the proven pipeline;          │
+│                    golden replay green                                 │
+│                                                                         │
+│  ──── MVP GATE — ready for first live capture ────                     │
+│                                                                         │
+│  L5  Capture·MVP   lib/capture.js + blocked.test green;                │
+│                    first live facet capture OK                         │
+│  L6  Server ·MVP   router/orchestrator/jobs; SSE timeline + 409       │
+│  L7  Reports·MLP   dashboard port; layout parity; data.js adapter      │
+│                    passes golden byte-for-byte                         │
+│  L8  Deploy ·MLP   VPS stage 1: service user + Node24 + systemd;     │
+│                    SSH-tunnel rehearsal shows live report              │
+│                                                                         │
+│  ──── MLP GATE — VPS reachable via SSH tunnel, full demo runnable ──── │
+│                                                                         │
+│  L9  HTTPS   ·v1   cPanel subdomain + AutoSSL + Apache SSE proxy      │
+│  L10 CI/CD   ·v1   GitHub Actions: offline ci + tag-deploy + golden    │
+│                    gate on VPS; first green tag deploy                 │
+│                                                                         │
+│  ──── v1 GATE — closed beta reachable at https://subdomain ────       │
+│                                                                         │
+│  L11 Rehearse·v1   Demo-day rehearsal; runbook; pre-capture            │
+│                    backup report                                        │
+│  L12 Hardening·v1  Backups (JetBackup, nightly tar); journalctl         │
+│                    dashboards; observability baseline                   │
+│                                                                         │
+│  ──── v1 GATE — production-ready, demo-day safe ────                   │
+│                                                                         │
+│  (Post-buildathon — extracted to separate "Phase 2" lessons:)          │
+│     L13  Optional auth-plan Phase A/B                                  │
+│     L14  Vertical scaling (PgBouncer? No — actually,                  │
+│          PgBouncer is irrelevant; this stack has no DB)               │
+│     L15  Multi-VM topology (split app + db-tier later)                 │
+└─────────────────────────────────────────────────────────────────────────┘</pre></div></div></div></section>
+<section class="panel"><div class="hd"><span class="dot"></span><h2>Gantt — hours per lesson across the week</h2><span class="meta">5-hour daily budget × ~9 working days + buffer; do NOT spend more than budgeted</span></div><div class="bd"><div class="stage"><div class="zoom"><button data-act="in" title="Zoom in">+</button><button data-act="out" title="Zoom out">−</button></div><div class="pct">100%</div><div class="zoom-inner"><pre class="mermaid">
+gantt
+  title ScamShield Concierge · 55-hour Buildathon curriculum
+  dateFormat YYYY-MM-DD
+  axisFormat %a %Hh
+  section Phase 0 · foundation
+  L0  Meta + agreement                    :a0, 2026-09-19, 1h
+  L1  Server first-login                  :a1, after a0, 2h
+  L2  Git repo                            :a2, after a1, 1h
+  L3  Dev environments (Win laptop)       :a3, after a2, 2h
+  L4  Code walkthrough + golden replay    :a4, after a3, 3h
+  section Phase 1 · MVP (live on tunnel)
+  L5  Capture module + blocked test       :b1, after a4, 4h
+  L6  Router/orchestrator/jobs/SSE/UI     :b2, after b1, 4h
+  L7  Reports + dashboard port + adapter  :b3, after b2, 6h
+  L8  Deploy stage 1 (systemd + tunnel)   :b4, after b3, 5h
+  section Phase 2 · MLP (public URL)
+  L9  Apache + AutoSSL + SSE proxy        :c1, after b4, 4h
+  L10 CI/CD + tag deploy                 :c2, after c1, 5h
+  section Phase 3 · v1 (demo-ready)
+  L11 Rehearsal + runbook                :d1, after c2, 4h
+  L12 Backups + observability            :d2, after d1, 4h
+  section Buffer
+  Buffer (drift, blockers, retry)        :e1, 2026-09-23, 10h</pre></div></div></div></section>
+</main>
+<div class="legend"><span class="chip"><span class="sw" style="background:#7cffd1"></span>MVP — first live capture on VPS via SSH tunnel</span><span class="chip"><span class="sw" style="background:#7aa2ff"></span>MLP — public URL behind Apache + TLS</span><span class="chip"><span class="sw" style="background:#ffb86b"></span>v1 — demo-ready, rehearsed, observed</span><span class="chip"><span class="sw" style="background:#ff6b6b"></span>Buffer — for drift/blockers (do NOT pre-allocate)</span></div>
+<footer>
+  <span><b>Controls:</b> <span class="kbd">+</span>/<span class="kbd">−</span> zoom · <span class="kbd">0</span> reset · <span class="kbd">p</span> print</span>
+  <span>Pinch on mobile · scroll inside a panel</span>
+  <span class="spacer"></span>
+  <span>Built 2026-09-19</span>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script src="va.js"></script>
+</body>
+</html>

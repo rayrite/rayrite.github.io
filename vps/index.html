@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ScamShield VPS Curriculum</title>
+  <!--
+    VPS Curriculum hub — free-browse index for the ScamShield Buildathon curriculum.
+
+    Layout (all paths relative, works under any subfolder e.g. /vps/ on GitHub Pages):
+      index.html              <- this hub
+      reader/index.html       <- markdown reader (markdown_reader tool, reads items/manifest.json)
+      reader/items/           <- README.md + lessons/*.md
+      visual-aids/*.html      <- 16 standalone diagrams (need va.js in the same folder)
+
+    Markdown lessons open in the reader; deep links look like:
+      reader/index.html?file=lessons/L1-server-foundations.md
+  -->
+  <style>
+    :root {
+      --bg: #0a1628;
+      --panel: #111d35;
+      --panel-2: #162d45;
+      --border: #1e3a5f;
+      --border-2: #2a4a6f;
+      --text: #d6e4f5;
+      --dim: #7aaacf;
+      --dimmer: #4a7a9f;
+      --accent: #fbbf24;
+      --accent-soft: #f0d060;
+      --link: #93c5fd;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.55;
+    }
+    a { color: var(--link); text-decoration: none; }
+    a:hover { color: #bfdbfe; text-decoration: underline; }
+    code {
+      font-family: Consolas, 'Courier New', monospace;
+      background: var(--border);
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-size: 0.9em;
+    }
+
+    .wrap { max-width: 980px; margin: 0 auto; padding: 28px 18px 60px; }
+
+    /* === Header === */
+    header.hero { text-align: center; padding: 26px 10px 18px; border-bottom: 1px solid var(--border); }
+    .hero h1 { margin: 0 0 6px; font-size: 1.7rem; color: var(--accent); }
+    .hero p.sub { margin: 0 0 14px; color: var(--dim); font-size: 0.95rem; }
+    .stats { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+    .stat {
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 8px; padding: 8px 16px; text-align: center;
+    }
+    .stat b { display: block; font-size: 1.25rem; color: var(--accent-soft); }
+    .stat span { font-size: 0.78rem; color: var(--dim); text-transform: uppercase; letter-spacing: 0.04em; }
+
+    /* === Sections === */
+    section { margin-top: 34px; }
+    h2 {
+      color: var(--accent); font-size: 1.15rem; margin: 0 0 4px;
+      border-left: 4px solid var(--accent); padding-left: 10px;
+    }
+    .section-note { color: var(--dim); font-size: 0.85rem; margin: 0 0 12px; padding-left: 14px; }
+
+    /* === Milestone groups === */
+    .group {
+      background: var(--panel); border: 1px solid var(--border); border-radius: 10px;
+      margin-bottom: 14px; overflow: hidden;
+    }
+    .group-head {
+      display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+      padding: 10px 14px; background: var(--panel-2); border-bottom: 1px solid var(--border);
+    }
+    .group-head h3 { margin: 0; font-size: 0.98rem; color: var(--accent-soft); }
+    .group-head .range { color: var(--dimmer); font-size: 0.8rem; }
+    .group-head .desc { color: var(--dim); font-size: 0.82rem; margin-left: auto; }
+
+    /* === Lesson rows === */
+    .lesson {
+      display: flex; align-items: center; gap: 12px;
+      padding: 9px 14px; border-bottom: 1px solid var(--border);
+    }
+    .lesson:last-child { border-bottom: none; }
+    .lesson:hover { background: var(--panel-2); }
+    .lnum {
+      flex: none; width: 44px; text-align: center;
+      background: var(--border); color: var(--accent-soft);
+      border-radius: 6px; padding: 3px 0; font-weight: bold; font-size: 0.85rem;
+    }
+    .lbody { flex: 1; min-width: 0; }
+    .ltitle { font-size: 0.92rem; }
+    .ltitle a { color: var(--text); font-weight: 600; }
+    .ltitle a:hover { color: var(--link); }
+    .lmeta { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 3px; }
+    .hours { color: var(--dimmer); font-size: 0.78rem; white-space: nowrap; }
+    .va-chip {
+      display: inline-block; font-size: 0.72rem; padding: 1px 8px;
+      background: var(--border); border-radius: 10px; color: var(--dim);
+    }
+    .va-chip:hover { background: var(--border-2); color: var(--accent-soft); text-decoration: none; }
+    .badge {
+      flex: none; font-size: 0.72rem; font-weight: bold; letter-spacing: 0.03em;
+      padding: 2px 9px; border-radius: 10px; white-space: nowrap;
+      background: var(--border); color: var(--dim);
+    }
+    .badge.mvp { color: #93c5fd; }
+    .badge.mlp { color: #6ee7b7; }
+    .badge.v1 { color: #fbbf24; }
+    .badge.ops { color: #7aaacf; }
+    .badge.scale { color: #c4b5fd; }
+    .badge.security { color: #fca5a5; }
+    .badge.practice { color: #f9a8d4; }
+
+    /* === README / start card === */
+    .start-card {
+      display: flex; gap: 14px; align-items: center; flex-wrap: wrap;
+      background: linear-gradient(135deg, #162d45, #111d35);
+      border: 1px solid var(--border-2); border-radius: 10px;
+      padding: 16px 18px;
+    }
+    .start-card .big {
+      font-size: 1.05rem; font-weight: bold;
+    }
+    .start-card .big a { color: var(--accent); }
+    .start-card p { margin: 4px 0 0; color: var(--dim); font-size: 0.85rem; }
+
+    /* === Visual aids grid === */
+    .va-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 12px;
+    }
+    .va-card {
+      background: var(--panel); border: 1px solid var(--border); border-radius: 10px;
+      padding: 12px 14px; transition: border-color 0.15s, background 0.15s;
+    }
+    .va-card:hover { border-color: var(--border-2); background: var(--panel-2); }
+    .va-card .va-id { color: var(--accent); font-weight: bold; font-size: 0.8rem; }
+    .va-card .va-title { font-size: 0.92rem; margin: 3px 0 6px; }
+    .va-card .va-title a { color: var(--text); font-weight: 600; }
+    .va-card .va-title a:hover { color: var(--link); }
+    .va-card .va-lessons { color: var(--dimmer); font-size: 0.76rem; }
+    .va-card .va-lessons a { color: var(--dim); }
+    .va-card .va-lessons a:hover { color: var(--accent-soft); }
+
+    /* === Footer === */
+    footer {
+      margin-top: 44px; padding-top: 16px; border-top: 1px solid var(--border);
+      color: var(--dimmer); font-size: 0.8rem;
+    }
+    footer code { font-size: 0.85rem; }
+    .legend { display: flex; flex-wrap: wrap; gap: 10px; margin: 10px 0 16px; padding-left: 14px; }
+    .legend .badge { background: transparent; border: 1px solid var(--border); }
+
+    @media (max-width: 640px) {
+      .lesson { flex-wrap: wrap; }
+      .lnum { width: 40px; }
+      .group-head .desc { margin-left: 0; flex-basis: 100%; }
+    }
+    @media print {
+      body { background: #fff; color: #000; }
+      .hero h1, h2 { color: #000; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <h1>ScamShield Concierge &middot; VPS Curriculum</h1>
+    <p class="sub">Buildathon edition &mdash; every lesson has a single deliverable + a gate</p>
+    <div class="stats">
+      <div class="stat"><b>22</b><span>Lessons</span></div>
+      <div class="stat"><b>16</b><span>Visual aids</span></div>
+      <div class="stat"><b>4</b><span>Milestones</span></div>
+      <div class="stat"><b>55h</b><span>Core path L0&ndash;L12</span></div>
+    </div>
+  </header>
+
+  <div class="wrap">
+
+    <!-- ============ START ============ -->
+    <section>
+      <h2>Start here</h2>
+      <p class="section-note">The README is the curriculum map: full lesson table, milestones, and recommended reading order.</p>
+      <div class="start-card">
+        <div style="flex:1; min-width:220px;">
+          <div class="big"><a href="reader/index.html?file=README.md">Curriculum README</a></div>
+          <p>22 lessons &middot; 16 visual aids &middot; 4 milestones &mdash; open in the markdown reader, or <a href="reader/index.html">browse all markdown files</a>.</p>
+        </div>
+        <a class="badge v1" href="visual-aids/va13_curriculum_map.html" target="_blank" rel="noopener" style="text-decoration:none;">VA-13 &middot; curriculum map at a glance</a>
+      </div>
+    </section>
+
+    <!-- ============ LESSONS ============ -->
+    <section>
+      <h2>Lessons</h2>
+      <p class="section-note">Click a lesson to read it in the markdown reader. Gold chips jump to the related visual aid.</p>
+      <div class="legend">
+        <span class="badge mvp">MVP</span><span class="badge mlp">MLP</span><span class="badge v1">v1</span>
+        <span class="badge ops">ops</span><span class="badge scale">scale</span><span class="badge security">security</span><span class="badge practice">practice</span>
+      </div>
+
+      <!-- MVP -->
+      <div class="group">
+        <div class="group-head">
+          <h3>Orientation + MVP</h3><span class="range">L0&ndash;L8</span>
+          <span class="desc">Live demo on VPS via SSH tunnel &middot; tags v0.0-meta &rarr; v0.5-vps-tunnel</span>
+        </div>
+        <div class="lesson"><span class="lnum">L0</span>
+          <div class="lbody"><div class="ltitle"><a href="reader/index.html?file=lessons/L0-meta.md">Meta &middot; how this series is shaped</a></div>
+            <div class="lmeta"><span class="hours">1h</span><a class="va-chip" href="visual-aids/va13_curriculum_map.html" target="_blank" rel="noopener">VA-13</a></div></div>
+          <span class="badge mvp">MVP</span></div>
+        <div class="lesson"><span class="lnum">L1</span>
+          <div class="lbody"><div class="ltitle"><a href="reader/index.html?file=lessons/L1-server-foundations.md">Server foundations (VPS first-login, SSH, cPanel)</a></div>
+            <div class="lmeta"><span class="hours">2h</span><a class="va-chip" href="visual-aids/va01_system_context.html" target="_blank" rel="noopener">VA-01</a></div></div>
+          <span class="badge mvp">MVP</span></div>
+        <div class="lesson"><span class="lnum">L2</span>
+          <div class="lbody"><div class="ltitle"><a href="reader/index.html?file=lessons/L2-git-repo.md">Private GitHub repo + the 2 config files that matter</a></div>
+            <div class="lmeta"><span class="hours">1h</span></div></div>
+          <span class="badge mvp">MVP</span></div>
+        <div class="lesson"><span class="lnum">L3</span>
+          <div class="lbody"><div class="ltitle"><a href="reader/index.html?file=lessons/L3-dev-environments.md">Three dev environments + offline test suite</a></div>
+            <div class="lmeta"><span class="hours">2h</span><a class="va-chip" href="visual-aids/va05_dev_ci_prod.html" target="_blank" rel="noopener">VA-05</a></div></div>
+          <span class="badge mvp">MVP</span></div>
+        <div class="lesson"><span class="lnum">L4</span>
+          <div class="lbody"><div class="ltitle"><a href="reader/index.html?file=lessons/L4-pipeline-port.md">Port the proven pipeline; golden test green</a></div>
+            <div class="lmeta"><span class="hours">3h</span><a class="va-chip" href="visual-aids/va02_component_architecture.html" target="_blank" rel="noopener">VA-02</a> <a class="va-chip" href="visual-aids/va07_pipeline_replay.html" target="_blank" rel="noopener">VA-07</a></div></div>
+          <span class="badge mvp">MVP</span></div>
+        <div class="lesson"><span class="lnum">L5</span>
+          <div class="lbody"><div class="ltitle"><a href="reader/index.html?file=lessons/L5-capture-module.md"><code>lib/capture.js</code> + <code>blocked.test</code> + first live capture</a></div>
+            <div class="lmeta"><span class="hours">4h</span><a class="va-chip" href="visual-aids/va06_facet_state_machine.html" target="_blank" rel="noopener">VA-06</a></div></div>
+          <span class="badge mvp">MVP</span></div>
+        <div class="lesson"><span class="lnum">L6</span>
+          <div class="lbody"><div class="ltitle"><a href="reader/index.html?file=lessons/L6-orchestrator.md">Router + orchestrator + SSE + home UI</a></div>
+            <div class="lmeta"><span class="hours">4h</span>
+              <a class="va-chip" href="visual-aids/va02_component_architecture.html" target="_blank" rel="noopener">VA-02</a>
+              <a class="va-chip" href="visual-aids/va03_data_flow.html" target="_blank" rel="noopener">VA-03</a>
+              <a class="va-chip" href="visual-aids/va04_runtime_sequence.html" target="_blank" rel="noopener">VA-04</a>
+              <a class="va-chip" href="visual-aids/va12_job_directory_layout.html" target="_blank" rel="noopener">VA-12</a></div></div>
+          <span class="badge mvp">MVP</span></div>
+        <div class="lesson"><span class="lnum">L7</span>
+          <div class="lbody"><div class="ltitle"><a href="reader/index.html?file=lessons/L7-dashboard.md">Dashboard port + 22-field adapter + layout parity</a></div>
+            <div class="lmeta"><span class="hours">6h</span></div></div>
+          <span class="badge mvp">MVP</span></div>
+        <div class="lesson"><span class="lnum">L8</span>
+          <div class="lbody"><div class="ltitle"><a href="reader/index.html?file=lessons/L8-systemd-tunnel.md">VPS service user + Node 24 + systemd + SSH tunnel</a></div>
+            <div class="lmeta"><span class="hours">5h</span><a class="va-chip" href="visual-aids/va08_deployment_topology.html" target="_blank" rel="noopener">VA-08</a></div></div>
+          <span class="badge mvp">MVP</span></div>
+      </div>
+
+      <!-- MLP -->
+      <div class="group">
+        <div class="group-head">
+          <h3>MLP</h3><span class="range">L9&ndash;L10</span>
+          <span class="desc">Public https://concierge.&lt;your-domain&gt; URL &middot; tag v0.6-mlp-public</span>
+        </div>
+        <div class="lesson"><span class="lnum">L9</span>
+          <div class="lbody"><div class="ltitle"><a href="reader/index.html?file=lessons/L9-apache-tls.md">cPanel subdomain + AutoSSL + Apache SSE-safe proxy</a></div>
+            <div class="lmeta"><span class="hours">4h</span>
+              <a class="va-chip" href="visual-aids/va01_system_context.html" target="_blank" rel="noopener">VA-01</a>
+              <a class="va-chip" href="visual-aids/va08_deployment_topology.html" target="_blank" rel="noopener">VA-08</a></div></div>
+          <span class="badge mlp">MLP</span></div>
+        <div class="lesson"><span class="lnum">L10</span>
+          <div class="lbody"><div class="ltitle"><a href="reader/index.html?file=lessons/L10-cicd.md">GitHub Actions + tag-based rollback</a></div>
+            <div class="lmeta"><span class="hours">5h</span><a class="va-chip" href="visual-aids/va09_cicd_pipeline.html" target="_blank" rel="noopener">VA-09</a></div></div>
+          <span class="badge mlp">MLP</span></div>
+      </div>
+
+      <!-- v1 -->
+      <div class="group">
+        <div class="group-head">
+          <h3>v1</h3><span class="range">L11&ndash;L12</span>
+          <span class="desc">CI/CD + rehearsals + backups + observability &middot; tags v1.0-demo &middot; v1.0-rehearsal &middot; v1.0-hardened</span>
+        </div>
+        <div class="lesson"><span class="lnum">L11</span>
+          <div class="lbody"><div class="ltitle"><a href="reader/index.html?file=lessons/L11-rehearse.md">Demo-day rehearsal + runbook + fallback</a></div>
+            <div class="lmeta"><span class="hours">4h</span><a class="va-chip" href="visual-aids/va10_user_journeys.html" target="_blank" rel="noopener">VA-10</a></div></div>
+          <span class="badge v1">v1</span></div>
+        <div class="lesson"><span class="lnum">L12</span>
+          <div class="lbody"><div class="ltitle"><a href="reader/index.html?file=lessons/L12-backups-observability.md">Backups + observability + final hardening</a></div>
+            <div class="lmeta"><span class="hours">4h</span></div></div>
+          <span class="badge v1">v1</span></div>
+      </div>
+
+      <!-- post-v1 -->
+      <div class="group">
+        <div class="group-head">
+          <h3>Post-v1</h3><span class="range">L13&ndash;L21</span>
+          <span class="desc">Operations, scaling, security, handoff, talk-track &mdash; priority order: L21 &rarr; L13 &rarr; L15 &rarr; L19 &rarr; L14 &rarr; L20 &rarr; L18 &rarr; L17 &rarr; L16</span>
+        </div>
+        <div class="lesson"><span class="lnum">L13</span>
+          <div class="lbody"><div class="ltitle"><a href="reader/index.html?file=lessons/L13-ebay-wall-handling.md">When the wall hits &mdash; the eBay-day toolkit</a></div>
+            <div class="lmeta"><span class="hours">ad-hoc</span></div></div>
+          <span class="badge ops">ops</span></div>
+        <div class="lesson"><span class="lnum">L14</span>
+          <div class="lbody"><div class="ltitle"><a href="reader/index.html?file=lessons/L14-auth-phase-a.md">Auth-Plan Phase A &mdash; optional headed login + persistent profile</a></div>
+            <div class="lmeta"><span class="hours">5h</span></div></div>
+          <span class="badge ops">ops</span></div>
+        <div class="lesson"><span class="lnum">L15</span>
+          <div class="lbody"><div class="ltitle"><a href="reader/index.html?file=lessons/L15-replay-debugging.md">Replay as debugging &mdash; fix parsers without eBay</a></div>
+            <div class="lmeta"><span class="hours">ad-hoc</span>
+              <a class="va-chip" href="visual-aids/va07_pipeline_replay.html" target="_blank" rel="noopener">VA-07</a>
+              <a class="va-chip" href="visual-aids/va12_job_directory_layout.html" target="_blank" rel="noopener">VA-12</a></div></div>
+          <span class="badge ops">ops</span></div>
+        <div class="lesson"><span class="lnum">L16</span>
+          <div class="lbody"><div class="ltitle"><a href="reader/index.html?file=lessons/L16-vertical-scale.md">Vertical scale (single VPS, more capacity, no architecture change)</a></div>
+            <div class="lmeta"><span class="hours">6h</span></div></div>
+          <span class="badge scale">scale</span></div>
+        <div class="lesson"><span class="lnum">L17</span>
+          <div class="lbody"><div class="ltitle"><a href="reader/index.html?file=lessons/L17-multi-vm.md">Multi-VM topology, load balancer, IaC</a></div>
+            <div class="lmeta"><span class="hours">10h</span>
+              <a class="va-chip" href="visual-aids/va05_dev_ci_prod.html" target="_blank" rel="noopener">VA-05</a>
+              <a class="va-chip" href="visual-aids/va08_deployment_topology.html" target="_blank" rel="noopener">VA-08</a></div></div>
+          <span class="badge scale">scale</span></div>
+        <div class="lesson"><span class="lnum">L18</span>
+          <div class="lbody"><div class="ltitle"><a href="reader/index.html?file=lessons/L18-security-hardening.md">Enterprise security hardening (CIS, fail2ban, Vault, audit)</a></div>
+            <div class="lmeta"><span class="hours">8h</span>
+              <a class="va-chip" href="visual-aids/va11_security_threat_model.html" target="_blank" rel="noopener">VA-11</a>
+              <a class="va-chip" href="visual-aids/va14_maturity_ladder.html" target="_blank" rel="noopener">VA-14</a></div></div>
+          <span class="badge security">security</span></div>
+        <div class="lesson"><span class="lnum">L19</span>
+          <div class="lbody"><div class="ltitle"><a href="reader/index.html?file=lessons/L19-incident-response.md">When things break &mdash; incident-response patterns</a></div>
+            <div class="lmeta"><span class="hours">ad-hoc</span></div></div>
+          <span class="badge ops">ops</span></div>
+        <div class="lesson"><span class="lnum">L20</span>
+          <div class="lbody"><div class="ltitle"><a href="reader/index.html?file=lessons/L20-handoff.md">Operator handoff &mdash; onboarding the next person</a></div>
+            <div class="lmeta"><span class="hours">6h</span><a class="va-chip" href="visual-aids/va15_handoff_path.html" target="_blank" rel="noopener">VA-15</a></div></div>
+          <span class="badge ops">ops</span></div>
+        <div class="lesson"><span class="lnum">L21</span>
+          <div class="lbody"><div class="ltitle"><a href="reader/index.html?file=lessons/L21-demo-talk-track.md">The demo talk-track &mdash; 2 / 4 / 8-minute versions</a></div>
+            <div class="lmeta"><span class="hours">3h</span>
+              <a class="va-chip" href="visual-aids/va03_data_flow.html" target="_blank" rel="noopener">VA-03</a>
+              <a class="va-chip" href="visual-aids/va04_runtime_sequence.html" target="_blank" rel="noopener">VA-04</a>
+              <a class="va-chip" href="visual-aids/va06_facet_state_machine.html" target="_blank" rel="noopener">VA-06</a>
+              <a class="va-chip" href="visual-aids/va10_user_journeys.html" target="_blank" rel="noopener">VA-10</a>
+              <a class="va-chip" href="visual-aids/va16_talk_track_map.html" target="_blank" rel="noopener">VA-16</a></div></div>
+          <span class="badge practice">practice</span></div>
+      </div>
+    </section>
+
+    <!-- ============ VISUAL AIDS ============ -->
+    <section>
+      <h2>Visual aids</h2>
+      <p class="section-note">16 standalone HTML diagrams (ASCII + Mermaid) &mdash; open in a new tab. Lesson links jump back into the reader.</p>
+      <div class="va-grid">
+        <div class="va-card"><span class="va-id">VA-01</span>
+          <div class="va-title"><a href="visual-aids/va01_system_context.html" target="_blank" rel="noopener">System Context (C4 L1) &mdash; who talks to what</a></div>
+          <div class="va-lessons">used in <a href="reader/index.html?file=lessons/L1-server-foundations.md">L1</a>, <a href="reader/index.html?file=lessons/L9-apache-tls.md">L9</a></div></div>
+        <div class="va-card"><span class="va-id">VA-02</span>
+          <div class="va-title"><a href="visual-aids/va02_component_architecture.html" target="_blank" rel="noopener">Component Architecture &mdash; inside the Node process</a></div>
+          <div class="va-lessons">used in <a href="reader/index.html?file=lessons/L4-pipeline-port.md">L4</a>, <a href="reader/index.html?file=lessons/L6-orchestrator.md">L6</a></div></div>
+        <div class="va-card"><span class="va-id">VA-03</span>
+          <div class="va-title"><a href="visual-aids/va03_data_flow.html" target="_blank" rel="noopener">Data Flow &mdash; artifacts &amp; stages, query &rarr; report</a></div>
+          <div class="va-lessons">used in <a href="reader/index.html?file=lessons/L6-orchestrator.md">L6</a>, <a href="reader/index.html?file=lessons/L21-demo-talk-track.md">L21</a></div></div>
+        <div class="va-card"><span class="va-id">VA-04</span>
+          <div class="va-title"><a href="visual-aids/va04_runtime_sequence.html" target="_blank" rel="noopener">Runtime Sequence &mdash; happy path vs wall path</a></div>
+          <div class="va-lessons">used in <a href="reader/index.html?file=lessons/L6-orchestrator.md">L6</a>, <a href="reader/index.html?file=lessons/L21-demo-talk-track.md">L21</a></div></div>
+        <div class="va-card"><span class="va-id">VA-05</span>
+          <div class="va-title"><a href="visual-aids/va05_dev_ci_prod.html" target="_blank" rel="noopener">Environment Matrix &mdash; which test runs where</a></div>
+          <div class="va-lessons">used in <a href="reader/index.html?file=lessons/L3-dev-environments.md">L3</a>, <a href="reader/index.html?file=lessons/L17-multi-vm.md">L17</a></div></div>
+        <div class="va-card"><span class="va-id">VA-06</span>
+          <div class="va-title"><a href="visual-aids/va06_facet_state_machine.html" target="_blank" rel="noopener">Per-Facet State Machine (capture)</a></div>
+          <div class="va-lessons">used in <a href="reader/index.html?file=lessons/L5-capture-module.md">L5</a>, <a href="reader/index.html?file=lessons/L21-demo-talk-track.md">L21</a></div></div>
+        <div class="va-card"><span class="va-id">VA-07</span>
+          <div class="va-title"><a href="visual-aids/va07_pipeline_replay.html" target="_blank" rel="noopener">Pipeline Class/Module Diagram</a></div>
+          <div class="va-lessons">used in <a href="reader/index.html?file=lessons/L4-pipeline-port.md">L4</a>, <a href="reader/index.html?file=lessons/L15-replay-debugging.md">L15</a></div></div>
+        <div class="va-card"><span class="va-id">VA-08</span>
+          <div class="va-title"><a href="visual-aids/va08_deployment_topology.html" target="_blank" rel="noopener">Deployment Topology (VPS, corrected config)</a></div>
+          <div class="va-lessons">used in <a href="reader/index.html?file=lessons/L8-systemd-tunnel.md">L8</a>, <a href="reader/index.html?file=lessons/L9-apache-tls.md">L9</a>, <a href="reader/index.html?file=lessons/L17-multi-vm.md">L17</a></div></div>
+        <div class="va-card"><span class="va-id">VA-09</span>
+          <div class="va-title"><a href="visual-aids/va09_cicd_pipeline.html" target="_blank" rel="noopener">CI/CD Pipeline (GitHub &rarr; test &rarr; deploy)</a></div>
+          <div class="va-lessons">used in <a href="reader/index.html?file=lessons/L10-cicd.md">L10</a></div></div>
+        <div class="va-card"><span class="va-id">VA-10</span>
+          <div class="va-title"><a href="visual-aids/va10_user_journeys.html" target="_blank" rel="noopener">User Journeys &mdash; the 7 stories the app must tell</a></div>
+          <div class="va-lessons">used in <a href="reader/index.html?file=lessons/L11-rehearse.md">L11</a>, <a href="reader/index.html?file=lessons/L21-demo-talk-track.md">L21</a></div></div>
+        <div class="va-card"><span class="va-id">VA-11</span>
+          <div class="va-title"><a href="visual-aids/va11_security_threat_model.html" target="_blank" rel="noopener">Security Threat Model &mdash; DevSecOps view</a></div>
+          <div class="va-lessons">used in <a href="reader/index.html?file=lessons/L18-security-hardening.md">L18</a></div></div>
+        <div class="va-card"><span class="va-id">VA-12</span>
+          <div class="va-title"><a href="visual-aids/va12_job_directory_layout.html" target="_blank" rel="noopener">Job Directory Layout &mdash; the filesystem IS the database</a></div>
+          <div class="va-lessons">used in <a href="reader/index.html?file=lessons/L6-orchestrator.md">L6</a>, <a href="reader/index.html?file=lessons/L15-replay-debugging.md">L15</a></div></div>
+        <div class="va-card"><span class="va-id">VA-13</span>
+          <div class="va-title"><a href="visual-aids/va13_curriculum_map.html" target="_blank" rel="noopener">Lesson &rarr; Milestone Map (55-hour curriculum at a glance)</a></div>
+          <div class="va-lessons">used in <a href="reader/index.html?file=lessons/L0-meta.md">L0</a></div></div>
+        <div class="va-card"><span class="va-id">VA-14</span>
+          <div class="va-title"><a href="visual-aids/va14_maturity_ladder.html" target="_blank" rel="noopener">Maturity Ladder &mdash; M0 &rarr; M4 security posture</a></div>
+          <div class="va-lessons">used in <a href="reader/index.html?file=lessons/L18-security-hardening.md">L18</a></div></div>
+        <div class="va-card"><span class="va-id">VA-15</span>
+          <div class="va-title"><a href="visual-aids/va15_handoff_path.html" target="_blank" rel="noopener">Operator Handoff Path &mdash; 14-day reading rhythm</a></div>
+          <div class="va-lessons">used in <a href="reader/index.html?file=lessons/L20-handoff.md">L20</a></div></div>
+        <div class="va-card"><span class="va-id">VA-16</span>
+          <div class="va-title"><a href="visual-aids/va16_talk_track_map.html" target="_blank" rel="noopener">Demo Talk-Track &mdash; the 2 / 4 / 8-minute arc</a></div>
+          <div class="va-lessons">used in <a href="reader/index.html?file=lessons/L21-demo-talk-track.md">L21</a></div></div>
+      </div>
+    </section>
+
+    <footer>
+      <p><strong>Milestones:</strong> <strong>MVP</strong> &mdash; live demo on VPS via SSH tunnel (L1&ndash;L8) &middot;
+         <strong>MLP</strong> &mdash; public HTTPS URL (L9&ndash;L10) &middot;
+         <strong>v1</strong> &mdash; CI/CD + rehearsals + backups + observability (L11&ndash;L12) &middot;
+         <strong>post-v1</strong> &mdash; operations, scaling, security (L13&ndash;L21).</p>
+      <p>Folder layout: <code>index.html</code> (this hub) &middot; <code>reader/</code> markdown reader + <code>reader/items/</code> (README + lessons) &middot; <code>visual-aids/</code> diagrams.
+         All paths are relative, so the site works at <code>&lt;user&gt;.github.io/vps/</code> (or any subfolder).</p>
+    </footer>
+  </div>
+</body>
+</html>

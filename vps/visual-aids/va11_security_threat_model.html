@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>VA-11 · Security Threat Model — DevSecOps view</title>
+<style>
+:root{
+  --bg:#0f1115; --panel:#161a22; --ink:#e6e9ef; --muted:#9aa3b2;
+  --accent:#7aa2ff; --accent-2:#7cffd1; --warn:#ffb86b; --err:#ff6b6b;
+  --grid:#20262f; --radius:10px; --shadow:0 6px 24px rgba(0,0,0,.4);
+  --font:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:var(--font);height:100%}
+body{display:grid;grid-template-rows:auto 1fr auto;min-height:100vh}
+header{display:flex;align-items:center;gap:12px;padding:10px 14px;
+  background:linear-gradient(180deg,#1a1f2a,#131820);border-bottom:1px solid var(--grid);
+  position:sticky;top:0;z-index:10;flex-wrap:wrap}
+header h1{font-size:14px;margin:0;font-weight:600}
+header .tag{font-size:11px;background:#20262f;border:1px solid #2b313c;padding:2px 6px;border-radius:6px;color:var(--muted)}
+header .spacer{flex:1}
+header .ctrl{font-size:12px;background:#20262f;border:1px solid #2b313c;color:var(--ink);
+  padding:6px 10px;border-radius:8px;cursor:pointer;transition:.15s}
+header .ctrl:hover{border-color:var(--accent);color:var(--accent)}
+header .ctrl.primary{background:var(--accent);color:#0f1115;border-color:var(--accent)}
+main{display:grid;grid-template-columns:1fr;padding:18px;gap:18px}
+.panel{background:var(--panel);border:1px solid var(--grid);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.panel .hd{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--grid)}
+.panel .hd .dot{width:8px;height:8px;border-radius:50%;background:var(--accent-2)}
+.panel .hd h2{font-size:13px;margin:0;font-weight:600}
+.panel .hd .meta{margin-left:auto;font-size:11px;color:var(--muted);font-family:var(--mono)}
+.panel .bd{padding:14px}
+.stage{position:relative;background:#0b0e14;border-radius:8px;border:1px solid var(--grid);overflow:auto}
+.stage pre{margin:0;padding:18px;font-family:var(--mono);font-size:13px;line-height:1.55;color:#d6dbe6;white-space:pre;overflow:auto}
+.stage pre.mermaid{display:none}
+.stage .zoom{display:flex;gap:6px;position:absolute;top:8px;right:8px;z-index:2}
+.stage .zoom button{width:30px;height:30px;background:#1c212c;border:1px solid #2b313c;color:var(--ink);border-radius:6px;cursor:pointer;font-size:14px}
+.stage .zoom button:hover{border-color:var(--accent);color:var(--accent)}
+.stage .pct{position:absolute;bottom:8px;right:8px;font-size:11px;background:#1c212c;border:1px solid #2b313c;padding:3px 7px;border-radius:6px;color:var(--muted);font-family:var(--mono)}
+.panel.ascii .stage pre{font-size:13.5px;line-height:1.6}
+.stage .mermaid-rendered svg{background:transparent !important}
+.stage .mermaid-rendered text{fill:#e6e9ef !important;color:#e6e9ef !important}
+.stage .mermaid-rendered .node rect,.stage .mermaid-rendered .node polygon,
+.stage .mermaid-rendered .node circle,.stage .mermaid-rendered .node ellipse,
+.stage .mermaid-rendered .node path{fill:#1c212c !important;stroke:#3a4252 !important;stroke-width:1.2}
+.stage .mermaid-rendered .edgePath path{stroke:#5b6680 !important}
+.stage .mermaid-rendered marker path{fill:#5b6680 !important}
+.stage .mermaid-rendered .edgeLabel rect{fill:#161a22 !important}
+.stage .mermaid-rendered .cluster rect{fill:#11151c !important;stroke:#2b313c !important}
+.legend{padding:8px 14px 12px;display:flex;flex-wrap:wrap;gap:8px;font-size:11.5px;color:var(--muted)}
+.legend .chip{display:inline-flex;align-items:center;gap:6px;background:#1c212c;border:1px solid #2b313c;padding:3px 8px;border-radius:6px}
+.legend .sw{width:8px;height:8px;border-radius:50%}
+@media (max-width: 720px){
+  header{padding:8px 10px}
+  header h1{font-size:13px}
+  header .ctrl{padding:5px 8px;font-size:11px}
+  main{padding:10px;gap:12px}
+  .stage pre{font-size:11.5px}
+  .panel.ascii .stage pre{font-size:11.5px}
+}
+footer{padding:8px 14px;font-size:11px;color:var(--muted);border-top:1px solid var(--grid);background:#0c0f14;display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+footer .kbd{font-family:var(--mono);background:#1c212c;border:1px solid #2b313c;padding:1px 5px;border-radius:4px;font-size:10.5px}
+footer .spacer{flex:1}
+</style>
+</head>
+<body>
+<header>
+  <h1>VA-11 · Security Threat Model — DevSecOps view</h1>
+  <span class="tag">ScamShield Concierge · Visual Aid</span>
+  <span class="spacer"></span>
+  <button class="ctrl" id="zoomOut">−</button>
+  <button class="ctrl" id="zoomReset">100%</button>
+  <button class="ctrl" id="zoomIn">+</button>
+  <button class="ctrl primary" id="printBtn">⤓ Print</button>
+</header>
+<main>
+<section class="panel ascii"><div class="hd"><span class="dot"></span><h2>STRIDE-style threat model — what could go wrong, what stops it</h2><span class="meta">every STRIDE category lands on a real, implemented control</span></div><div class="bd"><div class="stage"><div class="zoom"><button data-act="in" title="Zoom in">+</button><button data-act="out" title="Zoom out">−</button></div><div class="pct">100%</div><div class="zoom-inner"><pre>
+┌── DEVSECOPS THREAT MODEL ────────────────────────────────────────────────────────┐
+│                                                                                  │
+│  STRIDE category         │ Asset at risk      │ Threat → Mitigation             │
+│  ────────────────────────┼────────────────────┼─────────────────────────────────│
+│  Spoofing                │ eBay session       │ NOT impersonated — app drives   │
+│                          │                    │ its own logged-out context.    │
+│                          │                    │ [OPTIONAL] session reuse = a   │
+│                          │                    │ HUMAN signed in; no automation │
+│                          │                    │ of credentials.                │
+│                          │                    │                                 │
+│  Tampering               │ captures/ on disk  │ Atomic writes (temp+rename).   │
+│                          │                    │ SHA-256 per artifact.           │
+│                          │                    │ 0700/0600 on data/auth.        │
+│                          │                    │ Only report/ subtree served.    │
+│                          │                    │                                 │
+│  Repudiation             │ job.json provenance│ Every event mirrored into      │
+│                          │                    │ job.json (cap 500).             │
+│                          │                    │ JSONL response sidecar.         │
+│                          │                    │ console messages persisted.    │
+│                          │                    │                                 │
+│  Information             │ data/auth/         │ 0700/0600 + systemd env.       │
+│  disclosure              │ (credentials)      │ Never in job.json / logs /     │
+│                          │                    │ repo / HTTP responses.         │
+│                          │                    │                                 │
+│  Denial of service      │ 2 GB VPS box       │ Single-flight · MemoryMax=2G · │
+│                          │ (MHTML memory)     │ pruneJobs(20).                 │
+│                          │                    │ Apache: timeout=3600 + no     │
+│                          │                    │ buffer.                        │
+│                          │                    │                                 │
+│  Elevation of privilege  │ Chromium sandbox   │ Chromium sandbox ON            │
+│                          │                    │ (no --no-sandbox).             │
+│                          │                    │ systemd cgroup kills whole     │
+│                          │                    │ tree if unit dies.             │
+│                          │                    │ EL9 ships unprivileged userns. │
+└──────────────────────────────────────────────────────────────────────────────────┘</pre></div></div></div></section>
+<section class="panel"><div class="hd"><span class="dot"></span><h2>Threat → asset → control flow</h2></div><div class="bd"><div class="stage"><div class="zoom"><button data-act="in" title="Zoom in">+</button><button data-act="out" title="Zoom out">−</button></div><div class="pct">100%</div><div class="zoom-inner"><pre class="mermaid">
+flowchart LR
+  classDef threat fill:#361b1b,stroke:#ff6b6b,color:#e6e9ef
+  classDef asset  fill:#1c212c,stroke:#7aa2ff,color:#e6e9ef
+  classDef ctrl   fill:#16221c,stroke:#7cffd1,color:#e6e9ef
+
+  T1["Spoofing&lt;br/&gt;eBay session"]
+  T2["Tampering&lt;br/&gt;captures on disk"]
+  T3["Repudiation&lt;br/&gt;what happened in job N?"]
+  T4["Info disclosure&lt;br/&gt;credentials leak"]
+  T5["DoS&lt;br/&gt;2GB VPS / MHTML memory"]
+  T6["EoP&lt;br/&gt;Chromium sandbox escape"]
+
+  A1[/"eBay session cookies"/]:::asset
+  A2[/"captures/ · report/ files"/]:::asset
+  A3[/"job.json event log"/]:::asset
+  A4[/"data/auth/profile (0700)"/]:::asset
+  A5[/"VPS RAM · systemd unit"/]:::asset
+  A6[/"Chromium sandbox · userns"/]:::asset
+
+  T1 --&gt; A1
+  T2 --&gt; A2
+  T3 --&gt; A3
+  T4 --&gt; A4
+  T5 --&gt; A5
+  T6 --&gt; A6
+
+  C1["No cred automation.&lt;br/&gt;Logged-out baseline.&lt;br/&gt;[OPT] manual headed login."]:::ctrl --&gt; T1
+  C2["Atomic writes (temp+rename).&lt;br/&gt;SHA-256 per artifact.&lt;br/&gt;Only report/ served."]:::ctrl --&gt; T2
+  C3["Event mirror into job.json&lt;br/&gt;(cap 500).&lt;br/&gt;JSONL response sidecar.&lt;br/&gt;Console messages."]:::ctrl --&gt; T3
+  C4["0700/0600 on data/auth.&lt;br/&gt;systemd env.&lt;br/&gt;Never in HTTP responses."]:::ctrl --&gt; T4
+  C5["Single-flight.&lt;br/&gt;MemoryMax=2G.&lt;br/&gt;pruneJobs(20).&lt;br/&gt;Apache timeout=3600."]:::ctrl --&gt; T5
+  C6["Chromium sandbox ON.&lt;br/&gt;systemd cgroup kills tree.&lt;br/&gt;userns enabled (EL9)."]:::ctrl --&gt; T6</pre></div></div></div></section>
+</main>
+<div class="legend"><span class="chip"><span class="sw" style="background:#ff6b6b"></span>Threat</span><span class="chip"><span class="sw" style="background:#7aa2ff"></span>Asset at risk</span><span class="chip"><span class="sw" style="background:#7cffd1"></span>Control in place</span></div>
+<footer>
+  <span><b>Controls:</b> <span class="kbd">+</span>/<span class="kbd">−</span> zoom · <span class="kbd">0</span> reset · <span class="kbd">p</span> print</span>
+  <span>Pinch on mobile · scroll inside a panel</span>
+  <span class="spacer"></span>
+  <span>Built 2026-09-19</span>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script src="va.js"></script>
+</body>
+</html>

@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>VA-03 · Data Flow — artifacts &amp; stages, query → report</title>
+<style>
+:root{
+  --bg:#0f1115; --panel:#161a22; --ink:#e6e9ef; --muted:#9aa3b2;
+  --accent:#7aa2ff; --accent-2:#7cffd1; --warn:#ffb86b; --err:#ff6b6b;
+  --grid:#20262f; --radius:10px; --shadow:0 6px 24px rgba(0,0,0,.4);
+  --font:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:var(--font);height:100%}
+body{display:grid;grid-template-rows:auto 1fr auto;min-height:100vh}
+header{display:flex;align-items:center;gap:12px;padding:10px 14px;
+  background:linear-gradient(180deg,#1a1f2a,#131820);border-bottom:1px solid var(--grid);
+  position:sticky;top:0;z-index:10;flex-wrap:wrap}
+header h1{font-size:14px;margin:0;font-weight:600}
+header .tag{font-size:11px;background:#20262f;border:1px solid #2b313c;padding:2px 6px;border-radius:6px;color:var(--muted)}
+header .spacer{flex:1}
+header .ctrl{font-size:12px;background:#20262f;border:1px solid #2b313c;color:var(--ink);
+  padding:6px 10px;border-radius:8px;cursor:pointer;transition:.15s}
+header .ctrl:hover{border-color:var(--accent);color:var(--accent)}
+header .ctrl.primary{background:var(--accent);color:#0f1115;border-color:var(--accent)}
+main{display:grid;grid-template-columns:1fr;padding:18px;gap:18px}
+.panel{background:var(--panel);border:1px solid var(--grid);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.panel .hd{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--grid)}
+.panel .hd .dot{width:8px;height:8px;border-radius:50%;background:var(--accent-2)}
+.panel .hd h2{font-size:13px;margin:0;font-weight:600}
+.panel .hd .meta{margin-left:auto;font-size:11px;color:var(--muted);font-family:var(--mono)}
+.panel .bd{padding:14px}
+.stage{position:relative;background:#0b0e14;border-radius:8px;border:1px solid var(--grid);overflow:auto}
+.stage pre{margin:0;padding:18px;font-family:var(--mono);font-size:13px;line-height:1.55;color:#d6dbe6;white-space:pre;overflow:auto}
+.stage pre.mermaid{display:none}
+.stage .zoom{display:flex;gap:6px;position:absolute;top:8px;right:8px;z-index:2}
+.stage .zoom button{width:30px;height:30px;background:#1c212c;border:1px solid #2b313c;color:var(--ink);border-radius:6px;cursor:pointer;font-size:14px}
+.stage .zoom button:hover{border-color:var(--accent);color:var(--accent)}
+.stage .pct{position:absolute;bottom:8px;right:8px;font-size:11px;background:#1c212c;border:1px solid #2b313c;padding:3px 7px;border-radius:6px;color:var(--muted);font-family:var(--mono)}
+.panel.ascii .stage pre{font-size:13.5px;line-height:1.6}
+.stage .mermaid-rendered svg{background:transparent !important}
+.stage .mermaid-rendered text{fill:#e6e9ef !important;color:#e6e9ef !important}
+.stage .mermaid-rendered .node rect,.stage .mermaid-rendered .node polygon,
+.stage .mermaid-rendered .node circle,.stage .mermaid-rendered .node ellipse,
+.stage .mermaid-rendered .node path{fill:#1c212c !important;stroke:#3a4252 !important;stroke-width:1.2}
+.stage .mermaid-rendered .edgePath path{stroke:#5b6680 !important}
+.stage .mermaid-rendered marker path{fill:#5b6680 !important}
+.stage .mermaid-rendered .edgeLabel rect{fill:#161a22 !important}
+.stage .mermaid-rendered .cluster rect{fill:#11151c !important;stroke:#2b313c !important}
+.legend{padding:8px 14px 12px;display:flex;flex-wrap:wrap;gap:8px;font-size:11.5px;color:var(--muted)}
+.legend .chip{display:inline-flex;align-items:center;gap:6px;background:#1c212c;border:1px solid #2b313c;padding:3px 8px;border-radius:6px}
+.legend .sw{width:8px;height:8px;border-radius:50%}
+@media (max-width: 720px){
+  header{padding:8px 10px}
+  header h1{font-size:13px}
+  header .ctrl{padding:5px 8px;font-size:11px}
+  main{padding:10px;gap:12px}
+  .stage pre{font-size:11.5px}
+  .panel.ascii .stage pre{font-size:11.5px}
+}
+footer{padding:8px 14px;font-size:11px;color:var(--muted);border-top:1px solid var(--grid);background:#0c0f14;display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+footer .kbd{font-family:var(--mono);background:#1c212c;border:1px solid #2b313c;padding:1px 5px;border-radius:4px;font-size:10.5px}
+footer .spacer{flex:1}
+</style>
+</head>
+<body>
+<header>
+  <h1>VA-03 · Data Flow — artifacts &amp; stages, query → report</h1>
+  <span class="tag">ScamShield Concierge · Visual Aid</span>
+  <span class="spacer"></span>
+  <button class="ctrl" id="zoomOut">−</button>
+  <button class="ctrl" id="zoomReset">100%</button>
+  <button class="ctrl" id="zoomIn">+</button>
+  <button class="ctrl primary" id="printBtn">⤓ Print</button>
+</header>
+<main>
+<section class="panel ascii"><div class="hd"><span class="dot"></span><h2>ASCII view — query → report (matches design.md §3)</h2><span class="meta">every box is a file on disk except SSE/HTTP links</span></div><div class="bd"><div class="stage"><div class="zoom"><button data-act="in" title="Zoom in">+</button><button data-act="out" title="Zoom out">−</button></div><div class="pct">100%</div><div class="zoom-inner"><pre>
+ query "rtx 3090"  (≤80 chars, validated)
+   │  POST /api/jobs
+   ▼
+┌──────────────────────────────────────────────────────────────────────────┐
+│ job.json  {id, query, state, events[], facets[], provenance}  data/jobs/{id}/ │
+└──────────────┬───────────────────────────────────────────────────────────┘
+               │  orchestrator (single-flight)
+               │
+               │   ┌──────────────── per facet: current → completed → sold ──────────────┐
+               │   │ facet URL  /sch/i.html?_nkw=…&amp;_sop=16 [&amp;LH_Complete=1|&amp;LH_Sold=1&amp;_sop=13] │
+               │   │        │ goto (domcontentloaded, 45 s)                                  │
+               │   │        ├──► signin.ebay.com? ──► facet.status = sign_in_required ┐      │
+               │   │        │                                                          │      │
+               │   │        ├──► block markers ──────► CaptureError('blocked')  (1 retry) │
+               │   │        │                          "No exact matches" → no_results  │  │
+               │   │        ▼                                                          │  │
+               │   │ live DOM, scrolled to ~200 cards (evidence-gated: images+fonts)   │  │
+               │   │        │ CDP Page.captureSnapshot(mhtml) → write IMMEDIATELY     │  │
+               │   │        ▼                                                          │  │
+               │   │ captures/{facet}.mhtml   6–126 MB · INERT (no &lt;script&gt;, forms off) │
+               │   │   │ + {facet}.png       SHA-256 + ts + url → provenance             │
+               │   │   │ + {facet}.html                                                      │
+               │   │   ▼                                                                  │
+               │   │ decoded HTML (3–10 MB)                                                │
+               │   │   │ extract.js: layout probe (s-card vs s-item) · s-card regex scan  │
+               │   │   │ · dedupe data-listingid · drop promo card                        │
+               │   │   ▼                                                                  │
+               │   │ cards[facet] (~200 ea) ── schema tripwire (22-field contract) ─────┘  │
+               │   └─────────────────────────────────────────────────────────────────────┘
+               ▼
+      mergeCaptures: union by listing id (sources = which facets showed it)
+               ▼
+┌──────────────────────────────────────────────────────────────────────────┐
+│ dataset.json   ~28 fields/listing (superset of report contract)          │
+└──────────────┬───────────────────────────────────────────────────────────┘
+               │ relevance.js: profile rules (first match wins) + query-token heuristic
+               ▼
+┌──────────────────────────────────────────────────────────────────────────┐
+│ relevance.json  {kept[], excluded[], byReason{}}   → META.excludedByReason│
+└──────────────┬───────────────────────────────────────────────────────────┘
+               │ analyze.js (profile-driven): variants · IQR-trimmed p25–p75 bands · risk flags/score · verdicts
+               ▼
+┌──────────────────────────────────────────────────────────────────────────┐
+│ analysis.json  (provenance + future spectrum view; dashboard does NOT consume it) │
+└──────────────┬───────────────────────────────────────────────────────────┘
+               │ report.js adapter: recordForAnalysis() → 22-field records
+               ▼
+┌──────────────────────────────────────────────────────────────────────────┐
+│ report/data.js   window.SCAMSHIELD_META + window.SCAMSHIELD_DATA         │
+│            + byte-identical copies: index.html, common.css, common.js   │
+└──────────────────────────────────────────────────────────────────────────┘
+               │ Browser renders dashboard SPA
+               ▼
+    Interactive faceted report (sidebar · summary band · spectrum chart)</pre></div></div></div></section>
+<section class="panel"><div class="hd"><span class="dot"></span><h2>Mermaid — pipeline + storage artifacts</h2></div><div class="bd"><div class="stage"><div class="zoom"><button data-act="in" title="Zoom in">+</button><button data-act="out" title="Zoom out">−</button></div><div class="pct">100%</div><div class="zoom-inner"><pre class="mermaid">
+flowchart LR
+  Q["Query 'rtx 3090'&lt;br/&gt;POST /api/jobs"] --&gt; J
+  J[/"job.json&lt;br/&gt;state + events + provenance"/]
+  J --&gt; OFC["orchestrator (single-flight)"]
+
+  OFC --&gt; F["facet loop&lt;br/&gt;current → completed → sold"]
+  F --&gt; CAPT["Playwright/CDP capture&lt;br/&gt;MHTML+PNG+HTML on disk"]
+  CAPT --&gt; DEC["decode mhtml"]
+  DEC --&gt; EX["extract.js&lt;br/&gt;layout probe · s-card regex · dedupe"]
+  EX --&gt; TW{"schema tripwire&lt;br/&gt;22-field contract"}
+  TW -- pass --&gt; MERGE["mergeCaptures&lt;br/&gt;union by listing id"]
+  TW -- fail --&gt; ERR["typed: parse_drift"]
+  MERGE --&gt; DS[/"dataset.json&lt;br/&gt;~28 fields/listing"/]
+  DS --&gt; REL["relevance.js&lt;br/&gt;profile rules + token heuristic"]
+  REL --&gt; RL[/"relevance.json&lt;br/&gt;kept/excluded/byReason"/]
+  RL --&gt; AN["analyze.js&lt;br/&gt;IQR p25-p75 + risk"]
+  AN --&gt; AJ[/"analysis.json&lt;br/&gt;(provenance; not consumed by dashboard)"/]
+  AN --&gt; REP["report.js&lt;br/&gt;22-field adapter → recordForAnalysis"]
+  REP --&gt; DJ[/"report/data.js&lt;br/&gt;window.SCAMSHIELD_META + DATA"/]
+  REP --&gt; ASSETS["copies: index.html · common.css · common.js&lt;br/&gt;(byte-identical per job)"]
+  DJ --&gt; DASH["Browser dashboard SPA&lt;br/&gt;(bands computed client-side)"]
+  ASSETS --&gt; DASH
+
+  classDef store fill:#16221c,stroke:#7cffd1,color:#e6e9ef
+  classDef storeBad fill:#361b1b,stroke:#ff6b6b,color:#e6e9ef
+  classDef ui fill:#1c212c,stroke:#7aa2ff,color:#e6e9ef
+  class J,DS,RL,AJ,DJ store
+  class ERR storeBad
+  class DASH ui</pre></div></div></div></section>
+</main>
+<div class="legend"><span class="chip"><span class="sw" style="background:#7cffd1"></span>File artifact (on disk, JSON)</span><span class="chip"><span class="sw" style="background:#ff6b6b"></span>Failure typed error</span><span class="chip"><span class="sw" style="background:#7aa2ff"></span>Browser / UI surface</span></div>
+<footer>
+  <span><b>Controls:</b> <span class="kbd">+</span>/<span class="kbd">−</span> zoom · <span class="kbd">0</span> reset · <span class="kbd">p</span> print</span>
+  <span>Pinch on mobile · scroll inside a panel</span>
+  <span class="spacer"></span>
+  <span>Built 2026-09-19</span>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script src="va.js"></script>
+</body>
+</html>

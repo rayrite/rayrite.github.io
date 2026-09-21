@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CVX Splash — Star Atlas</title>
+<style>
+  :root {
+    --void: #060a13; --ink: #eef2fb; --muted: #aab6cf;
+    --line: rgba(238, 242, 251, 0.14); --teal: #17e8d8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--void); color: var(--ink);
+    font-family: "Segoe UI", "Avenir Next", system-ui, sans-serif;
+    height: 100vh; overflow: hidden;
+  }
+  #bg { position: fixed; inset: 0; width: 100vw; height: 100vh; display: block; }
+  .stage {
+    position: fixed; inset: 0; display: flex; flex-direction: column;
+    justify-content: space-between; padding: clamp(20px, 4vw, 44px);
+    opacity: 0; animation: settle 1s ease-out 0.3s forwards;
+  }
+  @keyframes settle { to { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .stage { animation: none; opacity: 1; } }
+  .bar { display: flex; align-items: center; justify-content: space-between; }
+  .wordmark {
+    display: flex; align-items: center; gap: 12px;
+    font-family: "Bahnschrift", "Segoe UI", sans-serif;
+    font-weight: 700; font-size: 16px; letter-spacing: 0.14em;
+  }
+  .wordmark .pip {
+    width: 13px; height: 13px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #ff5ec7, #7a2170 75%);
+    box-shadow: 0 0 12px rgba(255, 94, 199, 0.7);
+  }
+  .variant {
+    color: var(--muted); font-size: 13.5px;
+    border: 1px solid var(--line); border-radius: 999px; padding: 5px 14px;
+  }
+  .hero { text-align: center; max-width: 680px; margin: 0 auto; padding-bottom: 5vh; }
+  .hero h1 {
+    font-family: "Bahnschrift", "Segoe UI", sans-serif;
+    font-size: clamp(2.2rem, 5.5vw, 3.8rem); font-weight: 700; line-height: 1.05;
+    text-shadow: 0 2px 28px rgba(3, 6, 12, 0.85);
+  }
+  .hero p {
+    margin: 14px auto 26px; max-width: 44ch; color: var(--muted);
+    font-size: clamp(0.95rem, 1.5vw, 1.1rem); line-height: 1.6;
+    text-shadow: 0 1px 18px rgba(3, 6, 12, 0.9);
+  }
+  .btn {
+    font: inherit; font-size: 14.5px; padding: 11px 24px; border-radius: 10px;
+    cursor: pointer; text-decoration: none; transition: transform 0.2s, background 0.2s;
+  }
+  .btn:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; }
+  .btn-solid { background: var(--ink); color: #0a0f1c; border: 1px solid var(--ink); }
+  .btn-solid:hover { background: #fff; transform: translateY(-1px); }
+  .foot { color: var(--muted); font-size: 13px; text-align: center; }
+
+  /* mobile & touch */
+  html, body { overscroll-behavior: none; }
+  body { height: 100dvh; -webkit-tap-highlight-color: transparent; }
+  #bg { touch-action: none; }
+  .stage { -webkit-user-select: none; user-select: none; }
+  .bar { flex-wrap: wrap; row-gap: 10px; }
+  @media (max-width: 640px) {
+    .wordmark { font-size: 14px; }
+    .variant { font-size: 11px; padding: 4px 10px; }
+    .hero h1 { font-size: clamp(1.9rem, 8.5vw, 2.5rem); }
+    .hero p { font-size: 0.92rem; }
+    .btn { padding: 13px 28px; font-size: 15px; }
+    .foot { font-size: 11.5px; }
+  }
+</style>
+</head>
+<body>
+<canvas id="bg" aria-hidden="true"></canvas>
+<div class="stage">
+  <header class="bar">
+    <div class="wordmark"><span class="pip"></span>CVX SPLASH</div>
+    <span class="variant">Variation — Star Atlas</span>
+  </header>
+  <main class="hero">
+    <h1>Star Atlas</h1>
+    <p>A rotating celestial lattice in drawn perspective — stars pinned to a sphere, linked along great-circle chords, the far side fading into depth haze. The pointer tilts the sphere.</p>
+    <a class="btn btn-solid" href="#">Get started</a>
+  </main>
+  <footer class="foot">Move the pointer to tilt the sphere</footer>
+</div>
+
+<script>
+(() => {
+  "use strict";
+  const canvas = document.getElementById("bg");
+  const ctx = canvas.getContext("2d");
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const TAU = Math.PI * 2;
+  const rnd = (a, b) => a + Math.random() * (b - a);
+  const hash = (i, s) => {
+    const x = Math.sin(i * 127.1 + s * 311.7) * 43758.5453;
+    return x - Math.floor(x);
+  };
+
+  let W = 0, H = 0;
+  function resize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth; H = window.innerHeight;
+    canvas.width = Math.round(W * dpr);
+    canvas.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function makeGlow(r, g, b) {
+    const s = document.createElement("canvas");
+    s.width = s.height = 64;
+    const c = s.getContext("2d");
+    const gr = c.createRadialGradient(32, 32, 0, 32, 32, 32);
+    gr.addColorStop(0, `rgba(${r},${g},${b},1)`);
+    gr.addColorStop(0.25, `rgba(${r},${g},${b},0.5)`);
+    gr.addColorStop(1, `rgba(${r},${g},${b},0)`);
+    c.fillStyle = gr;
+    c.fillRect(0, 0, 64, 64);
+    return s;
+  }
+  const glowStar = makeGlow(222, 234, 255);
+  const glowDeep = makeGlow(80, 110, 205);    // the far side, sunk in blue
+  const glowBright = makeGlow(200, 255, 248); // bright stars, teal-white
+  const glowPtr = makeGlow(23, 232, 216);
+
+  // stars pinned to a unit sphere
+  const N = 150, BRIGHT = 14;
+  const stars = [];
+  for (let i = 0; i < N; i++) {
+    let x, y, z, l;
+    do {
+      x = rnd(-1, 1); y = rnd(-1, 1); z = rnd(-1, 1);
+      l = Math.hypot(x, y, z);
+    } while (l < 0.2 || l > 1);
+    stars.push({
+      x: x / l, y: y / l, z: z / l,
+      bright: i < BRIGHT,
+      tw: rnd(0.6, 1.8), ph: rnd(0, TAU),
+      sx: 0, sy: 0, ss: 0, sz: 0            // projected, filled each frame
+    });
+  }
+
+  // the lattice: each bright star to its 2-3 nearest bright neighbours, plus long chords
+  const edges = [];
+  const linked = new Set();
+  function addEdge(a, b) {
+    if (a === b) return false;
+    const k = a < b ? a + "-" + b : b + "-" + a;
+    if (linked.has(k)) return false;
+    linked.add(k);
+    edges.push([a, b]);
+    return true;
+  }
+  for (let i = 0; i < BRIGHT; i++) {
+    const ds = [];
+    for (let j = 0; j < BRIGHT; j++) {
+      if (j === i) continue;
+      const dx = stars[i].x - stars[j].x, dy = stars[i].y - stars[j].y, dz = stars[i].z - stars[j].z;
+      ds.push([dx * dx + dy * dy + dz * dz, j]);
+    }
+    ds.sort((p, q) => p[0] - q[0]);
+    const nn = 2 + (hash(i, 9) < 0.4 ? 1 : 0);
+    for (let k = 0; k < nn; k++) addEdge(i, ds[k][1]);
+  }
+  let chords = 0;
+  while (chords < 5) {
+    if (addEdge((Math.random() * BRIGHT) | 0, (Math.random() * BRIGHT) | 0)) chords++;
+  }
+
+  // pointer eases toward the hand, or back to rest at center
+  let mx = 0.5, my = 0.5, px = 0.5, py = 0.5, hasPointer = false;
+  window.addEventListener("pointermove", e => {
+    mx = e.clientX / W; my = e.clientY / H; hasPointer = true;
+  });
+  window.addEventListener("pointerleave", () => { hasPointer = false; mx = 0.5; my = 0.5; });
+
+  let yawBase = 0;
+  let shoot = null;           // the foreground meteor
+  let nextShoot = 6;
+
+  const F = 1.2, CAM = 2.4, SPREAD = 0.44;
+  let cy = 1, sy = 0, cp = 1, sp = 0;
+  function project(s, yaw) {
+    // yaw about Y, then pitch about X
+    const x1 = s.x * cy + s.z * sy;
+    const z1 = -s.x * sy + s.z * cy;
+    const y2 = s.y * cp - z1 * sp;
+    const z2 = s.y * sp + z1 * cp;
+    const sc = F / (z2 + CAM);
+    s.sx = W / 2 + x1 * sc * Math.min(W, H) * SPREAD;
+    s.sy = H / 2 + y2 * sc * Math.min(W, H) * SPREAD;
+    s.ss = sc;
+    s.sz = z2;
+  }
+
+  function frame(now, dt) {
+    const t = now / 1000;
+    const grow = reduced ? 1 : Math.min(t / 1.8, 1);
+
+    px += (mx - px) * 0.07;
+    py += (my - py) * 0.07;
+    yawBase += 0.05 * dt;
+    const yaw = yawBase + (px - 0.5) * 0.6;
+    const pitch = 0.25 + (py - 0.5) * 0.7;
+    cy = Math.cos(yaw); sy = Math.sin(yaw);
+    cp = Math.cos(pitch); sp = Math.sin(pitch);
+
+    for (const s of stars) project(s, yaw);
+
+    const g = ctx.createLinearGradient(0, 0, 0, H);
+    g.addColorStop(0, "#060a14");
+    g.addColorStop(0.6, "#090f1d");
+    g.addColorStop(1, "#0c1322");
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, W, H);
+
+    ctx.globalCompositeOperation = "lighter";
+
+    // depth haze behind everything
+    let gr = ctx.createRadialGradient(W / 2, H / 2, 0, W / 2, H / 2, Math.min(W, H) * 0.62);
+    gr.addColorStop(0, "rgba(30,60,110,0.10)");
+    gr.addColorStop(1, "rgba(30,60,110,0)");
+    ctx.fillStyle = gr;
+    ctx.fillRect(0, 0, W, H);
+    gr = ctx.createRadialGradient(W * 0.76, H * 0.26, 0, W * 0.76, H * 0.26, W * 0.34);
+    gr.addColorStop(0, "rgba(106,31,94,0.13)");
+    gr.addColorStop(1, "rgba(106,31,94,0)");
+    ctx.fillStyle = gr;
+    ctx.fillRect(0, 0, W, H);
+
+    // equator ring, dotted where it rounds the front
+    ctx.fillStyle = "rgba(170,182,207,0.5)";
+    for (let i = 0; i < 72; i++) {
+      const a = i / 72 * TAU;
+      const s = { x: Math.cos(a), y: 0, z: Math.sin(a) };
+      project(s, yaw);
+      if (s.sz < 0) {
+        ctx.globalAlpha = (0.05 + 0.1 * s.ss) * grow;
+        ctx.beginPath();
+        ctx.arc(s.sx, s.sy, 0.9 + s.ss, 0, TAU);
+        ctx.fill();
+      }
+    }
+    ctx.globalAlpha = 1;
+
+    // far side first, near side over it
+    const order = stars.slice().sort((a, b) => b.sz - a.sz);
+    for (const s of order) {
+      if (s.bright) continue;
+      const far = s.sz > 0;
+      const twk = 0.7 + 0.3 * Math.sin(t * s.tw + s.ph);
+      const r = (1.6 + s.ss * 3.4) * twk;
+      ctx.globalAlpha = (far ? 0.14 + s.ss * 0.22 : 0.3 + s.ss * 0.5) * grow;
+      ctx.drawImage(far ? glowDeep : glowStar, s.sx - r * 2, s.sy - r * 2, r * 4, r * 4);
+    }
+    ctx.globalAlpha = 1;
+
+    // the lattice: alpha and weight follow the nearer end
+    for (const [ia, ib] of edges) {
+      const a = stars[ia], b = stars[ib];
+      const sn = Math.max(a.ss, b.ss);
+      let al = Math.pow(Math.max(0, (sn - 0.34) / 0.52), 2) * 0.4;
+      if (a.sz > 0 && b.sz > 0) al *= 0.22;   // far-side chords nearly vanish
+      al *= grow;
+      if (al < 0.005) continue;
+      ctx.strokeStyle = `rgba(23,232,216,${al})`;
+      ctx.lineWidth = 0.6 + sn * 1.4;
+      ctx.beginPath();
+      ctx.moveTo(a.sx, a.sy);
+      ctx.lineTo(b.sx, b.sy);
+      ctx.stroke();
+    }
+    ctx.lineWidth = 1;
+
+    // bright stars: glow plus a drawn four-point sparkle
+    for (const s of stars) {
+      if (!s.bright) continue;
+      const r = 6 + s.ss * 16;
+      ctx.globalAlpha = (0.35 + s.ss * 0.55) * grow;
+      ctx.drawImage(glowBright, s.sx - r, s.sy - r, r * 2, r * 2);
+      const L = (7 + s.ss * 16) * (0.85 + 0.15 * Math.sin(t * 1.6 + s.ph));
+      ctx.strokeStyle = `rgba(226,244,250,${(0.3 + s.ss * 0.55) * grow})`;
+      ctx.beginPath();
+      ctx.moveTo(s.sx - L, s.sy); ctx.lineTo(s.sx + L, s.sy);
+      ctx.moveTo(s.sx, s.sy - L); ctx.lineTo(s.sx, s.sy + L);
+      ctx.stroke();
+      ctx.fillStyle = `rgba(240,250,252,${(0.5 + s.ss * 0.5) * grow})`;
+      ctx.beginPath();
+      ctx.arc(s.sx, s.sy, 1.4 + s.ss, 0, TAU);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+
+    // a shooting star crosses the foreground now and then
+    if (!reduced) {
+      if (!shoot && t >= nextShoot) {
+        const dir = Math.random() < 0.5 ? 1 : -1;
+        shoot = {
+          x: dir > 0 ? -0.08 : 1.08, y: rnd(0.08, 0.34),
+          vx: dir * rnd(0.24, 0.34), vy: rnd(0.05, 0.1), life: 0
+        };
+      }
+      if (shoot) {
+        shoot.life += dt;
+        shoot.x += shoot.vx * dt;
+        shoot.y += shoot.vy * dt;
+        const hx = shoot.x * W, hy = shoot.y * H;
+        const sp2 = Math.hypot(shoot.vx, shoot.vy);
+        const fade = Math.min(shoot.life * 3, 1) * Math.max(0, 1 - shoot.life / 1.3);
+        for (let k = 1; k <= 5; k++) {
+          ctx.strokeStyle = `rgba(238,242,251,${0.4 * (1 - k / 6) * fade})`;
+          ctx.lineWidth = 2.2 - k * 0.35;
+          ctx.beginPath();
+          ctx.moveTo(hx - shoot.vx / sp2 * (k - 1) * 26, hy - shoot.vy / sp2 * (k - 1) * 26);
+          ctx.lineTo(hx - shoot.vx / sp2 * k * 26, hy - shoot.vy / sp2 * k * 26);
+          ctx.stroke();
+        }
+        ctx.globalAlpha = fade;
+        ctx.drawImage(glowStar, hx - 10, hy - 10, 20, 20);
+        ctx.globalAlpha = 1;
+        if (shoot.life > 1.3 || shoot.x < -0.15 || shoot.x > 1.15) {
+          shoot = null;
+          nextShoot = t + rnd(7, 12);
+        }
+      }
+    }
+
+    // pointer glow
+    if (hasPointer) {
+      ctx.globalAlpha = 0.4;
+      ctx.drawImage(glowPtr, px * W - 34, py * H - 34, 68, 68);
+      ctx.globalAlpha = 1;
+    }
+
+    ctx.globalCompositeOperation = "source-over";
+
+    const v = ctx.createRadialGradient(W / 2, H / 2, Math.min(W, H) * 0.36, W / 2, H / 2, Math.max(W, H) * 0.75);
+    v.addColorStop(0, "rgba(3,6,12,0)");
+    v.addColorStop(1, "rgba(3,6,12,0.55)");
+    ctx.fillStyle = v;
+    ctx.fillRect(0, 0, W, H);
+  }
+
+  let holdT = 4000;
+  resize();
+  window.addEventListener("resize", () => {
+    resize();
+    if (reduced) frame(holdT, 0.016);
+  });
+
+  if (reduced) {
+    // one drawn moment, four seconds in
+    frame(4000, 0);
+  } else {
+    let last = performance.now();
+    requestAnimationFrame(function loop(now) {
+      const dt = Math.min((now - last) / 1000, 0.05);
+      last = now;
+      frame(now, dt);
+      requestAnimationFrame(loop);
+    });
+  }
+})();
+</script>
+</body>
+</html>

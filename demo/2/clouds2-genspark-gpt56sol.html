@@ -1,0 +1,1415 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  />
+
+  <meta
+    name="description"
+    content="Procedural animated clouds moving toward the camera."
+  />
+
+  <title>Clouds Moving Toward Camera</title>
+
+  <style>
+    :root {
+      color-scheme: dark;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: #010611;
+    }
+
+    body {
+      position: relative;
+    }
+
+    #cloud-canvas {
+      position: fixed;
+      inset: 0;
+
+      display: block;
+      width: 100%;
+      height: 100%;
+
+      background: #010611;
+    }
+
+    /*
+     * Adds some additional depth around the edges.
+     */
+    .vignette {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+
+      background:
+        radial-gradient(
+          ellipse at center,
+          transparent 25%,
+          rgba(0, 4, 10, 0.08) 57%,
+          rgba(0, 2, 7, 0.55) 120%
+        ),
+        linear-gradient(
+          to bottom,
+          rgba(0, 4, 10, 0.08),
+          transparent 30%,
+          rgba(0, 3, 8, 0.18)
+        );
+    }
+  </style>
+</head>
+
+<body>
+  <canvas
+    id="cloud-canvas"
+    aria-label="Decorative animated clouds moving toward the camera"
+  ></canvas>
+
+  <div class="vignette" aria-hidden="true"></div>
+
+  <script>
+    class CloudFlythrough {
+      /**
+       * @param {HTMLCanvasElement} canvas
+       */
+      constructor(canvas) {
+        this.canvas = canvas;
+
+        this.gl = canvas.getContext("webgl", {
+          alpha: false,
+          antialias: false,
+          depth: false,
+          stencil: false,
+          premultipliedAlpha: false,
+          preserveDrawingBuffer: false,
+          powerPreference: "high-performance"
+        });
+
+        if (!this.gl) {
+          throw new Error(
+            "WebGL is unavailable. Enable hardware acceleration or use a modern browser."
+          );
+        }
+
+        this.program = null;
+        this.positionBuffer = null;
+
+        this.uniforms = {
+          resolution: null,
+          time: null,
+          speed: null
+        };
+
+        /*
+         * Controls how quickly cloud banks approach the camera.
+         *
+         * Recommended range:
+         * 0.025 = very slow
+         * 0.050 = cinematic
+         * 0.080 = clearly visible
+         * 0.120 = fast
+         */
+        this.speed = 0.055;
+
+        this.elapsedTime = 0;
+        this.lastFrameTime = 0;
+
+        this.animationFrame = 0;
+        this.running = false;
+
+        this.motionPreference = window.matchMedia(
+          "(prefers-reduced-motion: reduce)"
+        );
+
+        this.reducedMotion =
+          this.motionPreference.matches;
+
+        this.boundResize = this.resize.bind(this);
+        this.boundRenderFrame =
+          this.renderFrame.bind(this);
+        this.boundVisibilityChange =
+          this.handleVisibilityChange.bind(this);
+        this.boundMotionPreference =
+          this.handleMotionPreference.bind(this);
+      }
+
+      initialize() {
+        const vertexShader = this.createShader(
+          this.gl.VERTEX_SHADER,
+          this.vertexShaderSource
+        );
+
+        const fragmentShader = this.createShader(
+          this.gl.FRAGMENT_SHADER,
+          this.fragmentShaderSource
+        );
+
+        this.program = this.createProgram(
+          vertexShader,
+          fragmentShader
+        );
+
+        this.createFullscreenTriangle();
+        this.cacheUniformLocations();
+
+        window.addEventListener(
+          "resize",
+          this.boundResize,
+          { passive: true }
+        );
+
+        document.addEventListener(
+          "visibilitychange",
+          this.boundVisibilityChange
+        );
+
+        this.motionPreference.addEventListener(
+          "change",
+          this.boundMotionPreference
+        );
+
+        this.resize();
+
+        if (this.reducedMotion) {
+          this.draw(7);
+        } else {
+          this.start();
+        }
+      }
+
+      createFullscreenTriangle() {
+        const gl = this.gl;
+
+        /*
+         * One triangle large enough to cover the entire viewport.
+         */
+        const positions = new Float32Array([
+          -1, -1,
+           3, -1,
+          -1,  3
+        ]);
+
+        this.positionBuffer = gl.createBuffer();
+
+        gl.bindBuffer(
+          gl.ARRAY_BUFFER,
+          this.positionBuffer
+        );
+
+        gl.bufferData(
+          gl.ARRAY_BUFFER,
+          positions,
+          gl.STATIC_DRAW
+        );
+
+        const positionLocation =
+          gl.getAttribLocation(
+            this.program,
+            "a_position"
+          );
+
+        gl.enableVertexAttribArray(
+          positionLocation
+        );
+
+        gl.vertexAttribPointer(
+          positionLocation,
+          2,
+          gl.FLOAT,
+          false,
+          0,
+          0
+        );
+      }
+
+      cacheUniformLocations() {
+        const gl = this.gl;
+
+        this.uniforms.resolution =
+          gl.getUniformLocation(
+            this.program,
+            "u_resolution"
+          );
+
+        this.uniforms.time =
+          gl.getUniformLocation(
+            this.program,
+            "u_time"
+          );
+
+        this.uniforms.speed =
+          gl.getUniformLocation(
+            this.program,
+            "u_speed"
+          );
+      }
+
+      createShader(type, source) {
+        const gl = this.gl;
+        const shader = gl.createShader(type);
+
+        gl.shaderSource(shader, source);
+        gl.compileShader(shader);
+
+        if (
+          !gl.getShaderParameter(
+            shader,
+            gl.COMPILE_STATUS
+          )
+        ) {
+          const message =
+            gl.getShaderInfoLog(shader) ||
+            "Unknown shader compilation error.";
+
+          gl.deleteShader(shader);
+
+          throw new Error(message);
+        }
+
+        return shader;
+      }
+
+      createProgram(vertexShader, fragmentShader) {
+        const gl = this.gl;
+        const program = gl.createProgram();
+
+        gl.attachShader(program, vertexShader);
+        gl.attachShader(program, fragmentShader);
+        gl.linkProgram(program);
+
+        if (
+          !gl.getProgramParameter(
+            program,
+            gl.LINK_STATUS
+          )
+        ) {
+          const message =
+            gl.getProgramInfoLog(program) ||
+            "Unknown shader linking error.";
+
+          gl.deleteProgram(program);
+
+          throw new Error(message);
+        }
+
+        gl.deleteShader(vertexShader);
+        gl.deleteShader(fragmentShader);
+
+        return program;
+      }
+
+      resize() {
+        const cssWidth = Math.max(
+          1,
+          window.innerWidth
+        );
+
+        const cssHeight = Math.max(
+          1,
+          window.innerHeight
+        );
+
+        const viewportPixels =
+          cssWidth * cssHeight;
+
+        /*
+         * The procedural shader is intentionally rendered at a
+         * slightly reduced resolution. Soft clouds conceal the
+         * difference while improving performance significantly.
+         */
+        let quality;
+
+        if (viewportPixels > 2_500_000) {
+          quality = 0.55;
+        } else if (viewportPixels > 1_300_000) {
+          quality = 0.68;
+        } else {
+          quality = 0.82;
+        }
+
+        const pixelRatio = Math.min(
+          window.devicePixelRatio || 1,
+          1.7
+        );
+
+        const renderScale =
+          quality * pixelRatio;
+
+        const width = Math.max(
+          1,
+          Math.round(cssWidth * renderScale)
+        );
+
+        const height = Math.max(
+          1,
+          Math.round(cssHeight * renderScale)
+        );
+
+        if (
+          this.canvas.width !== width ||
+          this.canvas.height !== height
+        ) {
+          this.canvas.width = width;
+          this.canvas.height = height;
+        }
+
+        this.canvas.style.width =
+          `${cssWidth}px`;
+
+        this.canvas.style.height =
+          `${cssHeight}px`;
+
+        this.gl.viewport(
+          0,
+          0,
+          width,
+          height
+        );
+
+        if (!this.running) {
+          this.draw(
+            this.reducedMotion
+              ? 7
+              : this.elapsedTime
+          );
+        }
+      }
+
+      handleVisibilityChange() {
+        if (document.hidden) {
+          this.stop();
+          return;
+        }
+
+        if (this.reducedMotion) {
+          this.draw(7);
+        } else {
+          this.start();
+        }
+      }
+
+      handleMotionPreference(event) {
+        this.reducedMotion = event.matches;
+
+        if (this.reducedMotion) {
+          this.stop();
+          this.draw(7);
+        } else if (!document.hidden) {
+          this.start();
+        }
+      }
+
+      start() {
+        if (this.running) {
+          return;
+        }
+
+        this.running = true;
+        this.lastFrameTime = performance.now();
+
+        this.animationFrame =
+          requestAnimationFrame(
+            this.boundRenderFrame
+          );
+      }
+
+      stop() {
+        if (!this.running) {
+          return;
+        }
+
+        this.running = false;
+
+        cancelAnimationFrame(
+          this.animationFrame
+        );
+
+        this.animationFrame = 0;
+      }
+
+      renderFrame(currentTime) {
+        if (!this.running) {
+          return;
+        }
+
+        /*
+         * Clamp large time jumps after the tab was inactive.
+         */
+        const deltaSeconds = Math.min(
+          (
+            currentTime -
+            this.lastFrameTime
+          ) / 1000,
+          0.05
+        );
+
+        this.lastFrameTime = currentTime;
+        this.elapsedTime += deltaSeconds;
+
+        this.draw(this.elapsedTime);
+
+        this.animationFrame =
+          requestAnimationFrame(
+            this.boundRenderFrame
+          );
+      }
+
+      draw(time) {
+        const gl = this.gl;
+
+        gl.useProgram(this.program);
+
+        gl.uniform2f(
+          this.uniforms.resolution,
+          this.canvas.width,
+          this.canvas.height
+        );
+
+        gl.uniform1f(
+          this.uniforms.time,
+          time
+        );
+
+        gl.uniform1f(
+          this.uniforms.speed,
+          this.speed
+        );
+
+        gl.drawArrays(
+          gl.TRIANGLES,
+          0,
+          3
+        );
+      }
+
+      /**
+       * Change speed while the animation is running.
+       *
+       * Example:
+       * cloudFlythrough.setSpeed(0.08);
+       */
+      setSpeed(speed) {
+        this.speed = Math.max(
+          0,
+          Number(speed) || 0
+        );
+      }
+
+      destroy() {
+        this.stop();
+
+        window.removeEventListener(
+          "resize",
+          this.boundResize
+        );
+
+        document.removeEventListener(
+          "visibilitychange",
+          this.boundVisibilityChange
+        );
+
+        this.motionPreference.removeEventListener(
+          "change",
+          this.boundMotionPreference
+        );
+
+        if (this.positionBuffer) {
+          this.gl.deleteBuffer(
+            this.positionBuffer
+          );
+        }
+
+        if (this.program) {
+          this.gl.deleteProgram(
+            this.program
+          );
+        }
+      }
+
+      get vertexShaderSource() {
+        return `
+          attribute vec2 a_position;
+
+          void main() {
+            gl_Position = vec4(
+              a_position,
+              0.0,
+              1.0
+            );
+          }
+        `;
+      }
+
+      get fragmentShaderSource() {
+        return `
+          precision highp float;
+
+          uniform vec2 u_resolution;
+          uniform float u_time;
+          uniform float u_speed;
+
+          /*
+           * -------------------------------------------------------
+           * RANDOMNESS AND NOISE
+           * -------------------------------------------------------
+           */
+
+          float hash21(vec2 point) {
+            point = fract(
+              point *
+              vec2(123.34, 456.21)
+            );
+
+            point += dot(
+              point,
+              point + 45.32
+            );
+
+            return fract(
+              point.x * point.y
+            );
+          }
+
+          vec2 hash22(vec2 point) {
+            float first = hash21(point);
+
+            float second = hash21(
+              point +
+              first +
+              19.19
+            );
+
+            return vec2(
+              first,
+              second
+            );
+          }
+
+          float valueNoise(vec2 point) {
+            vec2 cell = floor(point);
+            vec2 local = fract(point);
+
+            /*
+             * Quintic interpolation gives smoother derivatives
+             * than basic linear interpolation.
+             */
+            local =
+              local *
+              local *
+              local *
+              (
+                local *
+                (
+                  local * 6.0 -
+                  15.0
+                ) +
+                10.0
+              );
+
+            float bottomLeft =
+              hash21(cell);
+
+            float bottomRight =
+              hash21(
+                cell +
+                vec2(1.0, 0.0)
+              );
+
+            float topLeft =
+              hash21(
+                cell +
+                vec2(0.0, 1.0)
+              );
+
+            float topRight =
+              hash21(
+                cell +
+                vec2(1.0, 1.0)
+              );
+
+            float bottom = mix(
+              bottomLeft,
+              bottomRight,
+              local.x
+            );
+
+            float top = mix(
+              topLeft,
+              topRight,
+              local.x
+            );
+
+            return mix(
+              bottom,
+              top,
+              local.y
+            );
+          }
+
+          float fbm(vec2 point) {
+            float result = 0.0;
+            float amplitude = 0.52;
+
+            mat2 rotation = mat2(
+               0.86,  0.51,
+              -0.51,  0.86
+            );
+
+            for (
+              int octave = 0;
+              octave < 5;
+              octave++
+            ) {
+              result +=
+                valueNoise(point) *
+                amplitude;
+
+              point =
+                rotation *
+                point *
+                2.03;
+
+              point += vec2(
+                13.17,
+                8.73
+              );
+
+              amplitude *= 0.5;
+            }
+
+            return result;
+          }
+
+          /*
+           * Domain warping creates folded, billowing structures
+           * instead of ordinary flat noise.
+           */
+          float cloudNoise(vec2 point) {
+            vec2 warpOne = vec2(
+              fbm(
+                point +
+                vec2(0.0, 0.0)
+              ),
+              fbm(
+                point +
+                vec2(5.2, 1.3)
+              )
+            );
+
+            vec2 warpTwo = vec2(
+              fbm(
+                point +
+                warpOne * 2.15 +
+                vec2(7.8, 2.6)
+              ),
+              fbm(
+                point +
+                warpOne * 1.9 +
+                vec2(2.1, 9.2)
+              )
+            );
+
+            float broadClouds = fbm(
+              point +
+              warpTwo * 1.72
+            );
+
+            float mediumDetail = fbm(
+              point * 1.84 +
+              warpOne * 1.2 +
+              warpTwo * 0.42
+            );
+
+            float fineDetail = valueNoise(
+              point * 7.1 +
+              warpTwo * 2.0
+            );
+
+            return
+              broadClouds * 0.69 +
+              mediumDetail * 0.25 +
+              fineDetail * 0.06;
+          }
+
+          /*
+           * -------------------------------------------------------
+           * STARS
+           * -------------------------------------------------------
+           */
+
+          float starField(
+            vec2 screenUv,
+            float time
+          ) {
+            vec2 aspect = vec2(
+              u_resolution.x /
+              u_resolution.y,
+              1.0
+            );
+
+            vec2 grid =
+              screenUv *
+              aspect *
+              230.0;
+
+            vec2 cell = floor(grid);
+            vec2 local = fract(grid);
+
+            float randomValue =
+              hash21(cell);
+
+            vec2 starPosition =
+              0.18 +
+              hash22(
+                cell + 14.7
+              ) *
+              0.64;
+
+            float distanceToStar =
+              length(
+                local -
+                starPosition
+              );
+
+            float exists =
+              step(
+                0.982,
+                randomValue
+              );
+
+            float radius = mix(
+              0.018,
+              0.07,
+              pow(
+                randomValue,
+                14.0
+              )
+            );
+
+            float star =
+              smoothstep(
+                radius,
+                0.0,
+                distanceToStar
+              ) *
+              exists;
+
+            float twinkle =
+              0.72 +
+              sin(
+                time *
+                (
+                  0.35 +
+                  randomValue * 1.3
+                ) +
+                randomValue * 40.0
+              ) *
+              0.28;
+
+            return star * twinkle;
+          }
+
+          /*
+           * -------------------------------------------------------
+           * FORWARD-MOVING CLOUD PLANE
+           * -------------------------------------------------------
+           *
+           * depth:
+           *   0.0 = far from the camera
+           *   1.0 = immediately in front of the camera
+           *
+           * As depth increases, coordinateScale decreases.
+           * This makes cloud features grow larger and gives the
+           * impression that they are approaching the viewer.
+           */
+
+          vec4 renderCloudPlane(
+            vec2 uv,
+            float depth,
+            float layerIndex
+          ) {
+            /*
+             * Use nonlinear depth so acceleration becomes slightly
+             * more obvious near the camera.
+             */
+            float perspectiveDepth =
+              pow(depth, 0.82);
+
+            /*
+             * High coordinate scale = small, distant features.
+             * Low coordinate scale = large, nearby features.
+             */
+            float coordinateScale = mix(
+              3.15,
+              0.54,
+              perspectiveDepth
+            );
+
+            /*
+             * Every layer gets a stable procedural offset.
+             */
+            vec2 layerOffset = vec2(
+              hash21(
+                vec2(
+                  layerIndex,
+                  17.2
+                )
+              ),
+              hash21(
+                vec2(
+                  layerIndex + 9.3,
+                  41.7
+                )
+              )
+            );
+
+            layerOffset =
+              (
+                layerOffset -
+                0.5
+              ) *
+              7.0;
+
+            /*
+             * A tiny sideways drift prevents the movement from
+             * looking like a simple camera zoom.
+             */
+            vec2 wind = vec2(
+              u_time *
+              (
+                0.006 +
+                layerIndex * 0.0008
+              ),
+              sin(
+                u_time * 0.035 +
+                layerIndex
+              ) *
+              0.025
+            );
+
+            /*
+             * The coordinate scaling occurs around the screen center,
+             * which acts as the perspective vanishing point.
+             */
+            vec2 cloudCoordinates =
+              uv *
+              coordinateScale +
+              layerOffset +
+              wind;
+
+            float density =
+              cloudNoise(
+                cloudCoordinates
+              );
+
+            /*
+             * Distant cloud banks are softer. Nearby banks develop
+             * more contrast as they approach the camera.
+             */
+            float threshold = mix(
+              0.57,
+              0.49,
+              perspectiveDepth
+            );
+
+            float softness = mix(
+              0.16,
+              0.095,
+              perspectiveDepth
+            );
+
+            float bodyAlpha =
+              smoothstep(
+                threshold,
+                threshold + softness,
+                density
+              );
+
+            float mistAlpha =
+              smoothstep(
+                threshold - 0.075,
+                threshold + 0.15,
+                density
+              ) *
+              0.2;
+
+            float alpha =
+              max(
+                bodyAlpha,
+                mistAlpha
+              );
+
+            /*
+             * Fade planes in when spawned far away and fade them out
+             * just before they pass through the camera.
+             *
+             * This is what makes the looping reset invisible.
+             */
+            float fadeIn =
+              smoothstep(
+                0.0,
+                0.16,
+                depth
+              );
+
+            float fadeOut =
+              1.0 -
+              smoothstep(
+                0.76,
+                1.0,
+                depth
+              );
+
+            float lifeOpacity =
+              fadeIn * fadeOut;
+
+            /*
+             * Cloud bank placement is biased toward the lower and
+             * right side, similar to the supplied reference.
+             */
+            float rightMask =
+              smoothstep(
+                -0.72,
+                0.62,
+                uv.x -
+                uv.y * 0.2 +
+                layerIndex * 0.035
+              );
+
+            float lowerMask =
+              1.0 -
+              smoothstep(
+                -0.6,
+                0.65,
+                uv.y
+              );
+
+            float spatialMask =
+              0.18 +
+              max(
+                rightMask,
+                lowerMask * 0.72
+              ) *
+              0.82;
+
+            alpha *=
+              lifeOpacity *
+              spatialMask;
+
+            /*
+             * Fake directional illumination.
+             *
+             * Sampling the noise field toward the upper-left tells
+             * us whether that side of a cloud is exposed to light.
+             */
+            vec2 lightDirection =
+              vec2(
+                -0.048,
+                0.062
+              ) *
+              coordinateScale;
+
+            float lightSample =
+              cloudNoise(
+                cloudCoordinates +
+                lightDirection
+              );
+
+            float shadowSample =
+              cloudNoise(
+                cloudCoordinates -
+                lightDirection * 0.58
+              );
+
+            float edgeLight =
+              clamp(
+                (
+                  lightSample -
+                  density
+                ) *
+                7.5 +
+                0.48,
+                0.0,
+                1.0
+              );
+
+            float internalShape =
+              clamp(
+                (
+                  density -
+                  shadowSample
+                ) *
+                5.2 +
+                0.48,
+                0.0,
+                1.0
+              );
+
+            float bodyBrightness =
+              smoothstep(
+                threshold - 0.03,
+                threshold + 0.21,
+                density
+              );
+
+            vec3 distantShadow =
+              vec3(
+                0.006,
+                0.035,
+                0.067
+              );
+
+            vec3 blueBody =
+              vec3(
+                0.035,
+                0.22,
+                0.37
+              );
+
+            vec3 illuminatedEdge =
+              vec3(
+                0.34,
+                0.72,
+                0.91
+              );
+
+            /*
+             * Nearby clouds become darker and more contrasty.
+             */
+            vec3 shadowColor = mix(
+              distantShadow * 1.8,
+              distantShadow,
+              perspectiveDepth
+            );
+
+            vec3 bodyColor = mix(
+              blueBody * 1.25,
+              blueBody,
+              perspectiveDepth
+            );
+
+            vec3 color = mix(
+              shadowColor,
+              bodyColor,
+              bodyBrightness * 0.76
+            );
+
+            color = mix(
+              color,
+              illuminatedEdge,
+              pow(
+                edgeLight,
+                1.35
+              ) *
+              0.84
+            );
+
+            color *= mix(
+              0.64,
+              1.12,
+              internalShape
+            );
+
+            /*
+             * Distant layers have slightly less saturation and
+             * contrast due to atmospheric perspective.
+             */
+            vec3 atmosphericColor =
+              vec3(
+                0.075,
+                0.22,
+                0.33
+              );
+
+            color = mix(
+              atmosphericColor,
+              color,
+              0.42 +
+              perspectiveDepth * 0.58
+            );
+
+            return vec4(
+              color,
+              clamp(
+                alpha,
+                0.0,
+                1.0
+              )
+            );
+          }
+
+          void main() {
+            vec2 fragment =
+              gl_FragCoord.xy;
+
+            vec2 screenUv =
+              fragment /
+              u_resolution;
+
+            /*
+             * Coordinates centered around zero and corrected for the
+             * viewport aspect ratio.
+             */
+            vec2 uv =
+              (
+                fragment -
+                u_resolution * 0.5
+              ) /
+              u_resolution.y;
+
+            /*
+             * -----------------------------------------------------
+             * SKY BACKGROUND
+             * -----------------------------------------------------
+             */
+
+            vec3 lowerSky =
+              vec3(
+                0.025,
+                0.115,
+                0.19
+              );
+
+            vec3 upperSky =
+              vec3(
+                0.002,
+                0.018,
+                0.045
+              );
+
+            vec3 color = mix(
+              lowerSky,
+              upperSky,
+              smoothstep(
+                0.0,
+                1.0,
+                screenUv.y
+              )
+            );
+
+            /*
+             * Cold glow toward the upper-left.
+             */
+            float skyGlow =
+              exp(
+                -length(
+                  uv -
+                  vec2(
+                    -0.28,
+                    0.36
+                  )
+                ) *
+                2.3
+              );
+
+            color +=
+              vec3(
+                0.025,
+                0.12,
+                0.21
+              ) *
+              skyGlow *
+              0.6;
+
+            /*
+             * Stars are rendered behind all clouds.
+             */
+            float stars =
+              starField(
+                screenUv,
+                u_time
+              );
+
+            color +=
+              vec3(
+                0.64,
+                0.82,
+                1.0
+              ) *
+              stars *
+              0.75;
+
+            /*
+             * -----------------------------------------------------
+             * CYCLIC Z-DEPTH CLOUD PLANES
+             * -----------------------------------------------------
+             *
+             * Each plane starts at a different point in its life.
+             * As one passes the camera, another appears far away.
+             */
+
+            for (
+              int layer = 0;
+              layer < 6;
+              layer++
+            ) {
+              float layerIndex =
+                float(layer);
+
+              float depth =
+                fract(
+                  u_time * u_speed +
+                  layerIndex / 6.0
+                );
+
+              vec4 cloud =
+                renderCloudPlane(
+                  uv,
+                  depth,
+                  layerIndex
+                );
+
+              /*
+               * Standard alpha compositing.
+               */
+              color = mix(
+                color,
+                cloud.rgb,
+                cloud.a * 0.72
+              );
+
+              /*
+               * Small screen-like contribution makes illuminated
+               * rims glow without flattening the shadows.
+               */
+              color +=
+                cloud.rgb *
+                cloud.a *
+                0.075;
+            }
+
+            /*
+             * Additional mist near the bottom gives the foreground
+             * a denser, closer feeling.
+             */
+            float lowerMist =
+              1.0 -
+              smoothstep(
+                0.0,
+                0.62,
+                screenUv.y
+              );
+
+            color +=
+              vec3(
+                0.018,
+                0.07,
+                0.11
+              ) *
+              lowerMist *
+              0.18;
+
+            /*
+             * Cool blue color grade.
+             */
+            color *= vec3(
+              0.88,
+              1.025,
+              1.15
+            );
+
+            /*
+             * Mild contrast curve.
+             */
+            color = pow(
+              max(color, 0.0),
+              vec3(0.91)
+            );
+
+            /*
+             * Vignette.
+             */
+            float vignette =
+              smoothstep(
+                1.18,
+                0.2,
+                length(
+                  uv *
+                  vec2(
+                    0.82,
+                    1.0
+                  )
+                )
+              );
+
+            color *= mix(
+              0.55,
+              1.0,
+              vignette
+            );
+
+            /*
+             * Dithering reduces color banding in the dark blue sky.
+             */
+            float grain =
+              hash21(
+                fragment +
+                fract(u_time) *
+                193.73
+              ) -
+              0.5;
+
+            color += grain * 0.011;
+
+            gl_FragColor = vec4(
+              color,
+              1.0
+            );
+          }
+        `;
+      }
+    }
+
+    const canvas =
+      document.getElementById(
+        "cloud-canvas"
+      );
+
+    try {
+      const cloudFlythrough =
+        new CloudFlythrough(canvas);
+
+      cloudFlythrough.initialize();
+
+      /*
+       * Accessible through your browser console:
+       *
+       * cloudFlythrough.setSpeed(0.08)
+       * cloudFlythrough.stop()
+       * cloudFlythrough.start()
+       * cloudFlythrough.destroy()
+       */
+      window.cloudFlythrough =
+        cloudFlythrough;
+    } catch (error) {
+      console.error(
+        "Cloud animation failed:",
+        error
+      );
+
+      document.body.style.background = `
+        radial-gradient(
+          circle at 70% 20%,
+          #164566,
+          #061522 55%,
+          #010611
+        )
+      `;
+    }
+  </script>
+</body>
+</html>

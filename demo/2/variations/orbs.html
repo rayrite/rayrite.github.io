@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CVX Splash — Drift Orbs</title>
+<style>
+  :root {
+    --void: #060a13; --ink: #eef2fb; --muted: #aab6cf;
+    --line: rgba(238, 242, 251, 0.14); --teal: #17e8d8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--void); color: var(--ink);
+    font-family: "Segoe UI", "Avenir Next", system-ui, sans-serif;
+    height: 100vh; overflow: hidden;
+  }
+  #bg { position: fixed; inset: 0; width: 100vw; height: 100vh; display: block; }
+  .stage {
+    position: fixed; inset: 0; display: flex; flex-direction: column;
+    justify-content: space-between; padding: clamp(20px, 4vw, 44px);
+    opacity: 0; animation: settle 1s ease-out 0.3s forwards;
+  }
+  @keyframes settle { to { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .stage { animation: none; opacity: 1; } }
+  .bar { display: flex; align-items: center; justify-content: space-between; }
+  .wordmark {
+    display: flex; align-items: center; gap: 12px;
+    font-family: "Bahnschrift", "Segoe UI", sans-serif;
+    font-weight: 700; font-size: 16px; letter-spacing: 0.14em;
+  }
+  .wordmark .pip {
+    width: 13px; height: 13px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #ff5ec7, #7a2170 75%);
+    box-shadow: 0 0 12px rgba(255, 94, 199, 0.7);
+  }
+  .variant {
+    color: var(--muted); font-size: 13.5px;
+    border: 1px solid var(--line); border-radius: 999px; padding: 5px 14px;
+  }
+  .hero { text-align: center; max-width: 680px; margin: 0 auto; padding-bottom: 5vh; }
+  .hero h1 {
+    font-family: "Bahnschrift", "Segoe UI", sans-serif;
+    font-size: clamp(2.2rem, 5.5vw, 3.8rem); font-weight: 700; line-height: 1.05;
+    text-shadow: 0 2px 28px rgba(3, 6, 12, 0.85);
+  }
+  .hero p {
+    margin: 14px auto 26px; max-width: 44ch; color: var(--muted);
+    font-size: clamp(0.95rem, 1.5vw, 1.1rem); line-height: 1.6;
+    text-shadow: 0 1px 18px rgba(3, 6, 12, 0.9);
+  }
+  .btn {
+    font: inherit; font-size: 14.5px; padding: 11px 24px; border-radius: 10px;
+    cursor: pointer; text-decoration: none; transition: transform 0.2s, background 0.2s;
+  }
+  .btn:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; }
+  .btn-solid { background: var(--ink); color: #0a0f1c; border: 1px solid var(--ink); }
+  .btn-solid:hover { background: #fff; transform: translateY(-1px); }
+  .foot { color: var(--muted); font-size: 13px; text-align: center; }
+
+  /* mobile & touch */
+  html, body { overscroll-behavior: none; }
+  body { height: 100dvh; -webkit-tap-highlight-color: transparent; }
+  #bg { touch-action: none; }
+  .stage { -webkit-user-select: none; user-select: none; }
+  .bar { flex-wrap: wrap; row-gap: 10px; }
+  @media (max-width: 640px) {
+    .wordmark { font-size: 14px; }
+    .variant { font-size: 11px; padding: 4px 10px; }
+    .hero h1 { font-size: clamp(1.9rem, 8.5vw, 2.5rem); }
+    .hero p { font-size: 0.92rem; }
+    .btn { padding: 13px 28px; font-size: 15px; }
+    .foot { font-size: 11.5px; }
+  }
+</style>
+</head>
+<body>
+<canvas id="bg" aria-hidden="true"></canvas>
+<div class="stage">
+  <header class="bar">
+    <div class="wordmark"><span class="pip"></span>CVX SPLASH</div>
+    <span class="variant">Variation — Drift Orbs</span>
+  </header>
+  <main class="hero">
+    <h1>Drift Orbs</h1>
+    <p>Soft bokeh spheres float in three depth layers. Move the pointer — nearby orbs gently part and drift home.</p>
+    <a class="btn btn-solid" href="#">Get started</a>
+  </main>
+  <footer class="foot">Move the pointer to stir the orbs</footer>
+</div>
+
+<script>
+(() => {
+  "use strict";
+  const canvas = document.getElementById("bg");
+  const ctx = canvas.getContext("2d");
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const TAU = Math.PI * 2;
+  const rnd = (a, b) => a + Math.random() * (b - a);
+
+  let W = 0, H = 0;
+  function resize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth; H = window.innerHeight;
+    canvas.width = Math.round(W * dpr);
+    canvas.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  window.addEventListener("resize", resize);
+  resize();
+
+  const PALETTE = [
+    [255, 94, 199],    // pink
+    [255, 179, 217],   // pale pink
+    [23, 232, 216],    // teal
+    [94, 158, 255],    // periwinkle
+    [232, 240, 255]    // white
+  ];
+
+  // depth bands: far (small, dim) mid near (big, soft, bright)
+  const orbs = [];
+  const BANDS = [
+    { n: 14, rMin: 0.012, rMax: 0.022, a: 0.35, par: 0.35 },
+    { n: 9,  rMin: 0.03,  rMax: 0.05,  a: 0.5,  par: 0.7 },
+    { n: 5,  rMin: 0.07,  rMax: 0.12,  a: 0.62, par: 1.15 }
+  ];
+  BANDS.forEach((b, bi) => {
+    for (let i = 0; i < b.n; i++) {
+      orbs.push({
+        hx: rnd(0.05, 0.95), hy: rnd(0.08, 0.92),     // home (relative)
+        x: 0, y: 0,                                     // current (relative)
+        r: rnd(b.rMin, b.rMax),
+        a: b.a * rnd(0.7, 1),
+        par: b.par,
+        col: PALETTE[Math.floor(Math.random() * (bi === 2 ? 3 : PALETTE.length))],
+        ax: rnd(0.02, 0.05), axd: rnd(17, 33),         // meander amplitude + period
+        ay: rnd(0.015, 0.045), ayd: rnd(13, 29),
+        ph: rnd(0, TAU),
+        pulse: rnd(0.06, 0.16), pulsed: rnd(7, 15),
+        born: bi * 0.28 + i * 0.07                      // staggered entrance
+      });
+    }
+  });
+
+  let px = -2, py = -2, mx = -2, my = -2;              // pointer, eased
+  window.addEventListener("pointermove", e => {
+    mx = e.clientX / W; my = e.clientY / H;
+  });
+  window.addEventListener("pointerleave", () => { mx = -2; my = -2; });
+
+  function drawStars(t) {
+    ctx.fillStyle = "#dfe8ff";
+    for (let i = 0; i < 90; i++) {
+      // stable pseudo-random star positions from index
+      const sx = ((Math.sin(i * 12.9898) * 43758.5453) % 1 + 1) % 1;
+      const sy = ((Math.sin(i * 78.233) * 12543.198) % 1 + 1) % 1;
+      const tw = 0.55 + 0.45 * Math.sin(t * (0.3 + (i % 7) * 0.13) + i);
+      ctx.globalAlpha = 0.5 * tw;
+      ctx.beginPath();
+      ctx.arc(sx * W, sy * H * 0.8, 0.5 + (i % 4) * 0.35, 0, TAU);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  function frame(now) {
+    const t = now / 1000;
+    px += (mx - px) * 0.05;
+    py += (my - py) * 0.05;
+
+    const g = ctx.createLinearGradient(0, 0, 0, H);
+    g.addColorStop(0, "#070b14");
+    g.addColorStop(0.6, "#0a0f1d");
+    g.addColorStop(1, "#0d1424");
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, W, H);
+
+    ctx.globalCompositeOperation = "lighter";
+    drawStars(t);
+
+    for (const o of orbs) {
+      const enter = Math.min(Math.max((t - o.born) / 1.6, 0), 1);
+      const ease = 1 - Math.pow(1 - enter, 3);
+
+      // autonomous meander around home
+      let x = o.hx + Math.sin(t * TAU / o.axd + o.ph) * o.ax;
+      let y = o.hy + Math.cos(t * TAU / o.ayd + o.ph * 1.7) * o.ay;
+
+      // pointer repulsion (spring back home is implicit: offset recomputed each frame)
+      if (px > -1) {
+        const dx = (x - px), dy = (y - py);
+        const d = Math.hypot(dx, dy);
+        const reach = 0.22;
+        if (d < reach && d > 0.0001) {
+          const push = (1 - d / reach) * 0.06 * o.par;
+          x += (dx / d) * push;
+          y += (dy / d) * push;
+        }
+        // pointer parallax
+        x += (px - 0.5) * 0.02 * o.par;
+        y += (py - 0.5) * 0.016 * o.par;
+      }
+
+      const r = o.r * (1 + Math.sin(t * TAU / o.pulsed + o.ph) * o.pulse) * W * ease;
+      const [cr, cg, cb] = o.col;
+      const a = o.a * ease;
+
+      const cx = x * W, cy = y * H;
+      const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+      grad.addColorStop(0, `rgba(${cr},${cg},${cb},${a})`);
+      grad.addColorStop(0.55, `rgba(${cr},${cg},${cb},${a * 0.35})`);
+      grad.addColorStop(1, `rgba(${cr},${cg},${cb},0)`);
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, TAU);
+      ctx.fill();
+
+      // inner core — reads as a glowing ball, not just a blur
+      const g2 = ctx.createRadialGradient(cx - r * 0.15, cy - r * 0.15, 0, cx, cy, r * 0.42);
+      g2.addColorStop(0, `rgba(${Math.min(cr + 40, 255)},${Math.min(cg + 40, 255)},${Math.min(cb + 40, 255)},${a * 0.8})`);
+      g2.addColorStop(1, `rgba(${cr},${cg},${cb},0)`);
+      ctx.fillStyle = g2;
+      ctx.beginPath();
+      ctx.arc(cx, cy, r * 0.42, 0, TAU);
+      ctx.fill();
+    }
+    ctx.globalCompositeOperation = "source-over";
+  }
+
+  if (reduced) frame(3000);
+  else requestAnimationFrame(function loop(now) { frame(now); requestAnimationFrame(loop); });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CVX Splash — Preview Gallery</title>
+<style>
+  :root {
+    --void: #060a13; --ink: #eef2fb; --muted: #aab6cf;
+    --line: rgba(238, 242, 251, 0.12); --teal: #17e8d8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--void); color: var(--ink);
+    font-family: "Segoe UI", "Avenir Next", system-ui, sans-serif;
+    min-height: 100vh;
+  }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: clamp(28px, 5vw, 64px) clamp(20px, 4vw, 40px) 72px; }
+  header.page { margin-bottom: clamp(28px, 4vw, 44px); }
+  .wordmark {
+    display: inline-flex; align-items: center; gap: 12px;
+    font-family: "Bahnschrift", "Segoe UI", sans-serif;
+    font-weight: 700; font-size: 16px; letter-spacing: 0.14em;
+    margin-bottom: 18px;
+  }
+  .wordmark .pip {
+    width: 14px; height: 14px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #ff5ec7, #7a2170 75%);
+    box-shadow: 0 0 14px rgba(255, 94, 199, 0.7);
+  }
+  h1 {
+    font-family: "Bahnschrift", "Segoe UI", sans-serif;
+    font-size: clamp(1.9rem, 4vw, 2.9rem); font-weight: 700; line-height: 1.1;
+  }
+  .lede {
+    margin-top: 12px; max-width: 60ch; color: var(--muted);
+    font-size: 1.02rem; line-height: 1.65;
+  }
+  .grid {
+    display: grid; gap: 26px;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+  }
+  .series { margin: 0; }
+  .series + .series { margin-top: 52px; }
+  .series h2 {
+    font-family: "Bahnschrift", "Segoe UI", sans-serif;
+    font-size: 1.15rem; font-weight: 700; letter-spacing: 0.02em;
+    margin-bottom: 18px;
+  }
+  .series .tagline { color: var(--muted); font-size: 0.92rem; margin: -10px 0 20px; max-width: 62ch; line-height: 1.55; }
+  .card { border: 1px solid var(--line); border-radius: 14px; overflow: hidden; transition: border-color 0.25s; }
+  .card:hover, .card:focus-within { border-color: rgba(23, 232, 216, 0.45); }
+  .frame { aspect-ratio: 16 / 10; background: #070b14; }
+  .frame iframe { width: 100%; height: 100%; border: 0; display: block; }
+  .meta { padding: 16px 18px 18px; display: flex; align-items: baseline; justify-content: space-between; gap: 14px; }
+  .meta h2 {
+    font-family: "Bahnschrift", "Segoe UI", sans-serif;
+    font-size: 1.08rem; font-weight: 700; letter-spacing: 0.02em;
+  }
+  .meta p { color: var(--muted); font-size: 0.88rem; line-height: 1.5; margin-top: 5px; max-width: 40ch; }
+  .meta a {
+    flex-shrink: 0; color: var(--teal); font-size: 0.88rem; text-decoration: none;
+    padding: 4px 2px; white-space: nowrap;
+  }
+  .meta a:hover { text-decoration: underline; }
+  .meta a:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; border-radius: 2px; }
+  .meta .links { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex-shrink: 0; }
+  .note {
+    margin-top: 34px; color: var(--muted); font-size: 0.9rem; line-height: 1.6;
+    border-top: 1px solid var(--line); padding-top: 18px; max-width: 70ch;
+  }
+
+  /* mobile */
+  @media (max-width: 640px) {
+    .grid { gap: 16px; }
+    .meta { padding: 13px 14px 15px; }
+    .meta h2 { font-size: 1rem; }
+    .meta p { font-size: 0.84rem; }
+    .note { margin-top: 24px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="page">
+    <div class="wordmark"><span class="pip"></span>CVX SPLASH</div>
+    <h1>Background variations</h1>
+    <p class="lede">One scene recreated from the reference, a deeper study of its billowing clouds, four riffs built around balls and particle effects, and a water series. Four families now grow deeper — their cards link to further variations each. Every page is a single self-contained HTML file.</p>
+  </header>
+
+  <main>
+  <section class="series">
+    <h2>Space and particles</h2>
+    <div class="grid">
+    <figure class="card">
+      <div class="frame"><iframe src="index.html" title="Nebula Drift preview" loading="lazy"></iframe></div>
+      <figcaption class="meta">
+        <div>
+          <h2>Nebula Drift</h2>
+          <p>The faithful recreation: breathing magenta nebula, pink planet, rising teal clouds, slow camera drift.</p>
+        </div>
+        <a href="index.html">Open full screen</a>
+      </figcaption>
+    </figure>
+
+    <figure class="card">
+      <div class="frame"><iframe src="variations/billow.html" title="Billow preview" loading="lazy"></iframe></div>
+      <figcaption class="meta">
+        <div>
+          <h2>Billow</h2>
+          <p>The reference's rising clouds promoted to the whole show: banks of vapor puffs that swell and churn as they climb, dimming the stars behind them, parting around the pointer.</p>
+        </div>
+        <div class="links">
+          <a href="variations/billow.html">Open full screen</a>
+          <a href="variations/clouds/index.html">Seven more variations</a>
+        </div>
+      </figcaption>
+    </figure>
+
+    <figure class="card">
+      <div class="frame"><iframe src="variations/orbs.html" title="Drift Orbs preview" loading="lazy"></iframe></div>
+      <figcaption class="meta">
+        <div>
+          <h2>Drift Orbs</h2>
+          <p>Bokeh spheres in three depth layers; the pointer gently parts them and they drift home.</p>
+        </div>
+        <a href="variations/orbs.html">Open full screen</a>
+      </figcaption>
+    </figure>
+
+    <figure class="card">
+      <div class="frame"><iframe src="variations/constellation.html" title="Constellation preview" loading="lazy"></iframe></div>
+      <figcaption class="meta">
+        <div>
+          <h2>Constellation</h2>
+          <p>Drifting motes linked into a slow web; the cursor joins as a glowing node and gathers neighbors.</p>
+        </div>
+        <div class="links">
+          <a href="variations/constellation.html">Open full screen</a>
+          <a href="variations/constellation/index.html">Six more variations</a>
+        </div>
+      </figcaption>
+    </figure>
+
+    <figure class="card">
+      <div class="frame"><iframe src="variations/bounce.html" title="Bounce preview" loading="lazy"></iframe></div>
+      <figcaption class="meta">
+        <div>
+          <h2>Bounce</h2>
+          <p>Elastic glowing spheres with real collisions, drop-in entrance, motion-trail afterglow, pointer shoving.</p>
+        </div>
+        <a href="variations/bounce.html">Open full screen</a>
+      </figcaption>
+    </figure>
+
+    <figure class="card">
+      <div class="frame"><iframe src="variations/comets.html" title="Comet Stream preview" loading="lazy"></iframe></div>
+      <figcaption class="meta">
+        <div>
+          <h2>Comet Stream</h2>
+          <p>Beads riding an invisible flowing current with tapering trails; the pointer bends the stream around it.</p>
+        </div>
+        <a href="variations/comets.html">Open full screen</a>
+      </figcaption>
+    </figure>
+    </div>
+  </section>
+
+  <section class="series">
+    <h2>Be water</h2>
+    <p class="tagline">Three water studies staged with a deep depth of field, like looking out from a ship's rail — the far field compressed and hazy, the near field big, soft, and out of focus.</p>
+    <div class="grid">
+    <figure class="card">
+      <div class="frame"><iframe src="variations/ocean.html" title="Open Water preview" loading="lazy"></iframe></div>
+      <figcaption class="meta">
+        <div>
+          <h2>Open Water</h2>
+          <p>Moonlit swells in thirteen receding rows — hazy at the horizon, tall and sharp up close — under the pink moon, riding a slow ship's sway.</p>
+        </div>
+        <div class="links">
+          <a href="variations/ocean.html">Open full screen</a>
+          <a href="variations/ocean/index.html">Six more variations</a>
+        </div>
+      </figcaption>
+    </figure>
+
+    <figure class="card">
+      <div class="frame"><iframe src="variations/biolum.html" title="Living Light preview" loading="lazy"></iframe></div>
+      <figcaption class="meta">
+        <div>
+          <h2>Living Light</h2>
+          <p>Bioluminescent plankton at every depth; the middle distance stays sharp while the near field melts into bokeh. Dragging stirs a glowing wake.</p>
+        </div>
+        <a href="variations/biolum.html">Open full screen</a>
+      </figcaption>
+    </figure>
+
+    <figure class="card">
+      <div class="frame"><iframe src="variations/abyss.html" title="Light Shafts preview" loading="lazy"></iframe></div>
+      <figcaption class="meta">
+        <div>
+          <h2>Light Shafts</h2>
+          <p>God-ray shafts slant through deep water over marine snow sinking at every depth. The pointer becomes a soft lantern.</p>
+        </div>
+        <div class="links">
+          <a href="variations/abyss.html">Open full screen</a>
+          <a href="variations/abyss/index.html">Six more variations</a>
+        </div>
+      </figcaption>
+    </figure>
+    </div>
+  </section>
+  </main>
+
+  <p class="note">All variations share one palette and the same placeholder overlay, so you can judge them side by side as splash-screen candidates. Each respects reduced-motion settings and resizes cleanly. No dependencies, nothing loaded from the network.</p>
+</div>
+</body>
+</html>

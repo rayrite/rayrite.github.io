@@ -1,0 +1,1457 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  />
+
+  <title>Procedural WebGL Clouds</title>
+
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: #020914;
+    }
+
+    body {
+      position: relative;
+    }
+
+    /*
+     * The WebGL canvas fills the viewport.
+     */
+    #cloud-canvas {
+      position: fixed;
+      inset: 0;
+
+      display: block;
+      width: 100%;
+      height: 100%;
+
+      background:
+        radial-gradient(
+          circle at 70% 20%,
+          #102f4b,
+          #04101d 55%,
+          #01060d
+        );
+
+      cursor: crosshair;
+      touch-action: none;
+    }
+
+    /*
+     * Very subtle vignette and color treatment over the rendered scene.
+     */
+    .atmosphere {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+
+      background:
+        radial-gradient(
+          ellipse at 50% 45%,
+          transparent 25%,
+          rgba(0, 5, 12, 0.14) 65%,
+          rgba(0, 3, 8, 0.48) 115%
+        ),
+        linear-gradient(
+          to bottom,
+          rgba(0, 4, 10, 0.12),
+          transparent 35%,
+          rgba(0, 2, 8, 0.2)
+        );
+
+      mix-blend-mode: multiply;
+    }
+
+    /*
+     * Optional small status indicator.
+     * Delete this element if you only want the clouds.
+     */
+    .status {
+      position: fixed;
+      left: max(1rem, env(safe-area-inset-left));
+      bottom: max(1rem, env(safe-area-inset-bottom));
+
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+
+      padding: 0.55rem 0.8rem;
+
+      border: 1px solid rgba(150, 209, 255, 0.14);
+      border-radius: 999px;
+
+      color: rgba(220, 240, 255, 0.66);
+      background: rgba(2, 10, 20, 0.38);
+      backdrop-filter: blur(14px);
+
+      font-size: 0.69rem;
+      font-weight: 650;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+
+      pointer-events: none;
+      user-select: none;
+
+      transition: opacity 800ms ease;
+    }
+
+    .status__dot {
+      width: 0.42rem;
+      height: 0.42rem;
+      border-radius: 999px;
+
+      background: #52b8ff;
+      box-shadow:
+        0 0 8px rgba(82, 184, 255, 0.9),
+        0 0 22px rgba(82, 184, 255, 0.5);
+
+      animation: pulse 2.4s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%,
+      100% {
+        opacity: 0.55;
+        transform: scale(0.85);
+      }
+
+      50% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .status__dot {
+        animation: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <canvas
+    id="cloud-canvas"
+    aria-label="Decorative animated storm clouds"
+  ></canvas>
+
+  <div class="atmosphere"></div>
+
+  <div class="status" id="status">
+    <span class="status__dot"></span>
+    <span>Move pointer for parallax</span>
+  </div>
+
+  <script>
+    class ProceduralCloudRenderer {
+      /**
+       * @param {HTMLCanvasElement} canvas
+       */
+      constructor(canvas) {
+        this.canvas = canvas;
+
+        this.gl = canvas.getContext("webgl", {
+          alpha: false,
+          antialias: false,
+          depth: false,
+          stencil: false,
+          premultipliedAlpha: false,
+          preserveDrawingBuffer: false,
+          powerPreference: "high-performance"
+        });
+
+        if (!this.gl) {
+          throw new Error(
+            "WebGL is unavailable. Try enabling hardware acceleration."
+          );
+        }
+
+        this.program = null;
+        this.positionBuffer = null;
+
+        this.uniforms = {
+          resolution: null,
+          time: null,
+          pointer: null,
+          intensity: null
+        };
+
+        this.cssWidth = 1;
+        this.cssHeight = 1;
+        this.renderScale = 1;
+
+        this.startTime = performance.now();
+        this.lastFrameTime = this.startTime;
+        this.accumulatedTime = 0;
+
+        this.animationFrame = 0;
+        this.running = false;
+
+        this.pointer = {
+          x: 0,
+          y: 0
+        };
+
+        this.pointerTarget = {
+          x: 0,
+          y: 0
+        };
+
+        this.prefersReducedMotion = window.matchMedia(
+          "(prefers-reduced-motion: reduce)"
+        );
+
+        this.reducedMotion =
+          this.prefersReducedMotion.matches;
+
+        this.boundResize = this.resize.bind(this);
+        this.boundPointerMove =
+          this.handlePointerMove.bind(this);
+        this.boundPointerLeave =
+          this.handlePointerLeave.bind(this);
+        this.boundVisibilityChange =
+          this.handleVisibilityChange.bind(this);
+        this.boundMotionPreference =
+          this.handleMotionPreference.bind(this);
+        this.boundRenderFrame =
+          this.renderFrame.bind(this);
+      }
+
+      initialize() {
+        const vertexShader = this.createShader(
+          this.gl.VERTEX_SHADER,
+          this.vertexShaderSource
+        );
+
+        const fragmentShader = this.createShader(
+          this.gl.FRAGMENT_SHADER,
+          this.fragmentShaderSource
+        );
+
+        this.program = this.createProgram(
+          vertexShader,
+          fragmentShader
+        );
+
+        this.createGeometry();
+        this.cacheUniformLocations();
+
+        window.addEventListener(
+          "resize",
+          this.boundResize,
+          { passive: true }
+        );
+
+        window.addEventListener(
+          "pointermove",
+          this.boundPointerMove,
+          { passive: true }
+        );
+
+        document.addEventListener(
+          "pointerleave",
+          this.boundPointerLeave
+        );
+
+        document.addEventListener(
+          "visibilitychange",
+          this.boundVisibilityChange
+        );
+
+        this.prefersReducedMotion.addEventListener(
+          "change",
+          this.boundMotionPreference
+        );
+
+        this.resize();
+
+        if (this.reducedMotion) {
+          this.draw(4);
+        } else {
+          this.start();
+        }
+      }
+
+      createGeometry() {
+        const gl = this.gl;
+
+        /*
+         * One fullscreen triangle covers the entire viewport.
+         *
+         * This is slightly more efficient than a two-triangle quad
+         * and avoids a diagonal interpolation seam.
+         */
+        const positions = new Float32Array([
+          -1, -1,
+           3, -1,
+          -1,  3
+        ]);
+
+        this.positionBuffer = gl.createBuffer();
+
+        gl.bindBuffer(
+          gl.ARRAY_BUFFER,
+          this.positionBuffer
+        );
+
+        gl.bufferData(
+          gl.ARRAY_BUFFER,
+          positions,
+          gl.STATIC_DRAW
+        );
+
+        const positionLocation =
+          gl.getAttribLocation(
+            this.program,
+            "a_position"
+          );
+
+        gl.enableVertexAttribArray(positionLocation);
+
+        gl.vertexAttribPointer(
+          positionLocation,
+          2,
+          gl.FLOAT,
+          false,
+          0,
+          0
+        );
+      }
+
+      cacheUniformLocations() {
+        const gl = this.gl;
+
+        this.uniforms.resolution =
+          gl.getUniformLocation(
+            this.program,
+            "u_resolution"
+          );
+
+        this.uniforms.time =
+          gl.getUniformLocation(
+            this.program,
+            "u_time"
+          );
+
+        this.uniforms.pointer =
+          gl.getUniformLocation(
+            this.program,
+            "u_pointer"
+          );
+
+        this.uniforms.intensity =
+          gl.getUniformLocation(
+            this.program,
+            "u_intensity"
+          );
+      }
+
+      createShader(type, source) {
+        const gl = this.gl;
+        const shader = gl.createShader(type);
+
+        gl.shaderSource(shader, source);
+        gl.compileShader(shader);
+
+        if (
+          !gl.getShaderParameter(
+            shader,
+            gl.COMPILE_STATUS
+          )
+        ) {
+          const message =
+            gl.getShaderInfoLog(shader) ||
+            "Unknown shader compilation error.";
+
+          gl.deleteShader(shader);
+
+          throw new Error(message);
+        }
+
+        return shader;
+      }
+
+      createProgram(vertexShader, fragmentShader) {
+        const gl = this.gl;
+        const program = gl.createProgram();
+
+        gl.attachShader(program, vertexShader);
+        gl.attachShader(program, fragmentShader);
+        gl.linkProgram(program);
+
+        if (
+          !gl.getProgramParameter(
+            program,
+            gl.LINK_STATUS
+          )
+        ) {
+          const message =
+            gl.getProgramInfoLog(program) ||
+            "Unknown shader link error.";
+
+          gl.deleteProgram(program);
+
+          throw new Error(message);
+        }
+
+        gl.deleteShader(vertexShader);
+        gl.deleteShader(fragmentShader);
+
+        return program;
+      }
+
+      resize() {
+        this.cssWidth = Math.max(
+          1,
+          window.innerWidth
+        );
+
+        this.cssHeight = Math.max(
+          1,
+          window.innerHeight
+        );
+
+        /*
+         * Procedural noise is expensive because it is evaluated for
+         * every rendered pixel.
+         *
+         * The scene is intentionally rendered below full Retina
+         * resolution. The soft clouds hide the difference well.
+         */
+        const viewportPixels =
+          this.cssWidth * this.cssHeight;
+
+        let quality;
+
+        if (viewportPixels > 2_500_000) {
+          quality = 0.58;
+        } else if (viewportPixels > 1_300_000) {
+          quality = 0.7;
+        } else {
+          quality = 0.82;
+        }
+
+        const devicePixelRatio = Math.min(
+          window.devicePixelRatio || 1,
+          1.7
+        );
+
+        this.renderScale =
+          devicePixelRatio * quality;
+
+        const width = Math.max(
+          1,
+          Math.round(
+            this.cssWidth * this.renderScale
+          )
+        );
+
+        const height = Math.max(
+          1,
+          Math.round(
+            this.cssHeight * this.renderScale
+          )
+        );
+
+        if (
+          this.canvas.width !== width ||
+          this.canvas.height !== height
+        ) {
+          this.canvas.width = width;
+          this.canvas.height = height;
+        }
+
+        this.canvas.style.width =
+          `${this.cssWidth}px`;
+
+        this.canvas.style.height =
+          `${this.cssHeight}px`;
+
+        this.gl.viewport(
+          0,
+          0,
+          width,
+          height
+        );
+
+        if (!this.running) {
+          this.draw(
+            this.reducedMotion
+              ? 4
+              : this.accumulatedTime
+          );
+        }
+      }
+
+      handlePointerMove(event) {
+        const normalizedX =
+          event.clientX /
+          Math.max(1, this.cssWidth);
+
+        const normalizedY =
+          event.clientY /
+          Math.max(1, this.cssHeight);
+
+        this.pointerTarget.x =
+          normalizedX * 2 - 1;
+
+        /*
+         * Invert Y so positive values point upward in shader space.
+         */
+        this.pointerTarget.y =
+          (1 - normalizedY) * 2 - 1;
+      }
+
+      handlePointerLeave() {
+        this.pointerTarget.x = 0;
+        this.pointerTarget.y = 0;
+      }
+
+      handleVisibilityChange() {
+        if (document.hidden) {
+          this.stop();
+        } else if (!this.reducedMotion) {
+          this.start();
+        } else {
+          this.draw(4);
+        }
+      }
+
+      handleMotionPreference(event) {
+        this.reducedMotion = event.matches;
+
+        if (this.reducedMotion) {
+          this.pointer.x = 0;
+          this.pointer.y = 0;
+          this.pointerTarget.x = 0;
+          this.pointerTarget.y = 0;
+
+          this.stop();
+          this.draw(4);
+        } else if (!document.hidden) {
+          this.start();
+        }
+      }
+
+      start() {
+        if (this.running) {
+          return;
+        }
+
+        this.running = true;
+        this.lastFrameTime = performance.now();
+
+        this.animationFrame =
+          requestAnimationFrame(
+            this.boundRenderFrame
+          );
+      }
+
+      stop() {
+        this.running = false;
+
+        cancelAnimationFrame(
+          this.animationFrame
+        );
+
+        this.animationFrame = 0;
+      }
+
+      renderFrame(currentTime) {
+        if (!this.running) {
+          return;
+        }
+
+        const deltaSeconds = Math.min(
+          (currentTime - this.lastFrameTime) /
+            1000,
+          0.05
+        );
+
+        this.lastFrameTime = currentTime;
+        this.accumulatedTime += deltaSeconds;
+
+        /*
+         * Frame-rate-independent pointer smoothing.
+         */
+        const responsiveness = 2.8;
+
+        const smoothing =
+          1 -
+          Math.exp(
+            -responsiveness * deltaSeconds
+          );
+
+        this.pointer.x +=
+          (
+            this.pointerTarget.x -
+            this.pointer.x
+          ) * smoothing;
+
+        this.pointer.y +=
+          (
+            this.pointerTarget.y -
+            this.pointer.y
+          ) * smoothing;
+
+        this.draw(this.accumulatedTime);
+
+        this.animationFrame =
+          requestAnimationFrame(
+            this.boundRenderFrame
+          );
+      }
+
+      draw(time) {
+        const gl = this.gl;
+
+        gl.useProgram(this.program);
+
+        gl.uniform2f(
+          this.uniforms.resolution,
+          this.canvas.width,
+          this.canvas.height
+        );
+
+        gl.uniform1f(
+          this.uniforms.time,
+          time
+        );
+
+        gl.uniform2f(
+          this.uniforms.pointer,
+          this.pointer.x,
+          this.pointer.y
+        );
+
+        gl.uniform1f(
+          this.uniforms.intensity,
+          1
+        );
+
+        gl.drawArrays(
+          gl.TRIANGLES,
+          0,
+          3
+        );
+      }
+
+      destroy() {
+        this.stop();
+
+        window.removeEventListener(
+          "resize",
+          this.boundResize
+        );
+
+        window.removeEventListener(
+          "pointermove",
+          this.boundPointerMove
+        );
+
+        document.removeEventListener(
+          "pointerleave",
+          this.boundPointerLeave
+        );
+
+        document.removeEventListener(
+          "visibilitychange",
+          this.boundVisibilityChange
+        );
+
+        this.prefersReducedMotion.removeEventListener(
+          "change",
+          this.boundMotionPreference
+        );
+
+        if (this.positionBuffer) {
+          this.gl.deleteBuffer(
+            this.positionBuffer
+          );
+        }
+
+        if (this.program) {
+          this.gl.deleteProgram(this.program);
+        }
+      }
+
+      get vertexShaderSource() {
+        return `
+          attribute vec2 a_position;
+
+          void main() {
+            gl_Position = vec4(
+              a_position,
+              0.0,
+              1.0
+            );
+          }
+        `;
+      }
+
+      get fragmentShaderSource() {
+        return `
+          precision highp float;
+
+          uniform vec2 u_resolution;
+          uniform vec2 u_pointer;
+          uniform float u_time;
+          uniform float u_intensity;
+
+          #define PI 3.141592653589793
+
+          /*
+           * Deterministic pseudo-random values.
+           */
+          float hash21(vec2 point) {
+            point = fract(
+              point *
+              vec2(123.34, 456.21)
+            );
+
+            point += dot(
+              point,
+              point + 45.32
+            );
+
+            return fract(
+              point.x * point.y
+            );
+          }
+
+          vec2 hash22(vec2 point) {
+            float value = hash21(point);
+
+            return vec2(
+              value,
+              hash21(
+                point + value + 19.19
+              )
+            );
+          }
+
+          /*
+           * Smooth two-dimensional value noise.
+           */
+          float noise(vec2 point) {
+            vec2 cell = floor(point);
+            vec2 local = fract(point);
+
+            local =
+              local *
+              local *
+              (3.0 - 2.0 * local);
+
+            float bottomLeft =
+              hash21(cell);
+
+            float bottomRight =
+              hash21(
+                cell + vec2(1.0, 0.0)
+              );
+
+            float topLeft =
+              hash21(
+                cell + vec2(0.0, 1.0)
+              );
+
+            float topRight =
+              hash21(
+                cell + vec2(1.0, 1.0)
+              );
+
+            float bottom = mix(
+              bottomLeft,
+              bottomRight,
+              local.x
+            );
+
+            float top = mix(
+              topLeft,
+              topRight,
+              local.x
+            );
+
+            return mix(
+              bottom,
+              top,
+              local.y
+            );
+          }
+
+          /*
+           * Fractal Brownian Motion.
+           *
+           * Rotating and scaling each octave reduces obvious grid
+           * repetition and creates more natural turbulent detail.
+           */
+          float fbm(vec2 point) {
+            float result = 0.0;
+            float amplitude = 0.52;
+
+            mat2 rotation = mat2(
+               0.86,  0.51,
+              -0.51,  0.86
+            );
+
+            for (
+              int octave = 0;
+              octave < 5;
+              octave++
+            ) {
+              result +=
+                amplitude * noise(point);
+
+              point =
+                rotation *
+                point *
+                2.03;
+
+              point += vec2(
+                17.17,
+                9.23
+              );
+
+              amplitude *= 0.5;
+            }
+
+            return result;
+          }
+
+          /*
+           * Domain-warped noise.
+           *
+           * Basic FBM often looks like smoke or camouflage.
+           * Feeding one noise field into another produces larger,
+           * folded, cauliflower-shaped cloud structures.
+           */
+          float cloudField(vec2 point) {
+            vec2 warpOne = vec2(
+              fbm(
+                point +
+                vec2(0.0, 0.0)
+              ),
+              fbm(
+                point +
+                vec2(5.7, 1.9)
+              )
+            );
+
+            vec2 warpTwo = vec2(
+              fbm(
+                point +
+                2.2 * warpOne +
+                vec2(8.3, 2.8)
+              ),
+              fbm(
+                point +
+                2.0 * warpOne +
+                vec2(2.1, 9.7)
+              )
+            );
+
+            float broadShape = fbm(
+              point +
+              1.75 * warpTwo
+            );
+
+            float roundedDetail = fbm(
+              point * 1.83 +
+              warpOne * 1.25 +
+              warpTwo * 0.45
+            );
+
+            float fineDetail = noise(
+              point * 7.4 +
+              warpTwo * 2.0
+            );
+
+            return
+              broadShape * 0.68 +
+              roundedDetail * 0.25 +
+              fineDetail * 0.07;
+          }
+
+          /*
+           * Converts a noise field into a lit cloud layer.
+           *
+           * Lighting is estimated by sampling density toward the
+           * upper-left light direction. This creates bright cloud
+           * rims and dark internal folds without a full 3D renderer.
+           */
+          vec4 cloudLayer(
+            vec2 uv,
+            float scale,
+            float threshold,
+            float softness,
+            float speed,
+            float phase,
+            float parallax,
+            float mask,
+            vec3 shadowColor,
+            vec3 middleColor,
+            vec3 lightColor
+          ) {
+            vec2 wind = vec2(
+              u_time * speed,
+              -u_time * speed * 0.18
+            );
+
+            vec2 point =
+              uv * scale +
+              wind +
+              u_pointer * parallax +
+              vec2(phase, phase * 0.37);
+
+            float density =
+              cloudField(point);
+
+            /*
+             * Samples toward the upper-left, where the imagined
+             * moonlight comes from.
+             */
+            vec2 lightDirection =
+              vec2(-0.045, 0.062);
+
+            float lightDensity =
+              cloudField(
+                point + lightDirection
+              );
+
+            float deepSample =
+              cloudField(
+                point -
+                lightDirection * 0.58
+              );
+
+            float alpha =
+              smoothstep(
+                threshold,
+                threshold + softness,
+                density
+              );
+
+            /*
+             * A secondary softer contour preserves mist around the
+             * harder cloud body.
+             */
+            float mist =
+              smoothstep(
+                threshold - 0.075,
+                threshold + softness * 1.7,
+                density
+              ) * 0.24;
+
+            alpha =
+              max(alpha, mist) * mask;
+
+            float edgeLighting =
+              clamp(
+                (
+                  lightDensity -
+                  density
+                ) * 7.0 + 0.48,
+                0.0,
+                1.0
+              );
+
+            float internalShadow =
+              clamp(
+                (
+                  density -
+                  deepSample
+                ) * 5.0 + 0.48,
+                0.0,
+                1.0
+              );
+
+            float bodyBrightness =
+              smoothstep(
+                threshold - 0.03,
+                threshold + 0.2,
+                density
+              );
+
+            vec3 color = mix(
+              shadowColor,
+              middleColor,
+              bodyBrightness * 0.72
+            );
+
+            color = mix(
+              color,
+              lightColor,
+              pow(edgeLighting, 1.4) * 0.82
+            );
+
+            color *= mix(
+              0.68,
+              1.12,
+              internalShadow
+            );
+
+            /*
+             * Slightly darken the densest interiors.
+             */
+            color *=
+              1.0 -
+              smoothstep(
+                0.72,
+                0.94,
+                density
+              ) * 0.2;
+
+            return vec4(
+              color,
+              clamp(alpha, 0.0, 1.0)
+            );
+          }
+
+          float starField(
+            vec2 uv,
+            float time
+          ) {
+            vec2 aspectGrid = vec2(
+              u_resolution.x /
+              u_resolution.y,
+              1.0
+            );
+
+            vec2 grid =
+              uv *
+              aspectGrid *
+              215.0;
+
+            vec2 id = floor(grid);
+            vec2 local = fract(grid);
+
+            float randomValue =
+              hash21(id);
+
+            vec2 starPosition =
+              0.2 +
+              hash22(id + 12.7) * 0.6;
+
+            float distanceToStar =
+              length(
+                local - starPosition
+              );
+
+            float exists =
+              step(0.982, randomValue);
+
+            float radius = mix(
+              0.022,
+              0.075,
+              pow(randomValue, 12.0)
+            );
+
+            float star =
+              smoothstep(
+                radius,
+                0.0,
+                distanceToStar
+              ) * exists;
+
+            float twinkle =
+              0.68 +
+              sin(
+                time *
+                (
+                  0.7 +
+                  randomValue * 1.9
+                ) +
+                randomValue * 30.0
+              ) * 0.32;
+
+            return star * twinkle;
+          }
+
+          void main() {
+            vec2 fragment =
+              gl_FragCoord.xy;
+
+            /*
+             * Centered coordinates with consistent scale on both
+             * portrait and landscape displays.
+             */
+            vec2 uv =
+              (
+                fragment -
+                0.5 * u_resolution
+              ) /
+              u_resolution.y;
+
+            vec2 screenUv =
+              fragment /
+              u_resolution;
+
+            float aspect =
+              u_resolution.x /
+              u_resolution.y;
+
+            /*
+             * Deep night-sky base.
+             */
+            vec3 horizonColor =
+              vec3(
+                0.035,
+                0.135,
+                0.225
+              );
+
+            vec3 zenithColor =
+              vec3(
+                0.004,
+                0.025,
+                0.06
+              );
+
+            float skyMix =
+              smoothstep(
+                0.0,
+                1.0,
+                screenUv.y
+              );
+
+            vec3 color = mix(
+              horizonColor,
+              zenithColor,
+              skyMix
+            );
+
+            /*
+             * Subtle blue atmospheric glow behind the clouds.
+             */
+            float moonGlow =
+              exp(
+                -length(
+                  uv -
+                  vec2(
+                    aspect * 0.24,
+                    0.36
+                  )
+                ) * 2.4
+              );
+
+            color +=
+              vec3(
+                0.025,
+                0.105,
+                0.18
+              ) *
+              moonGlow *
+              0.48;
+
+            /*
+             * Stars remain behind all cloud layers.
+             */
+            float stars =
+              starField(
+                screenUv +
+                u_pointer * 0.0017,
+                u_time
+              );
+
+            color +=
+              vec3(
+                0.65,
+                0.82,
+                1.0
+              ) *
+              stars *
+              0.72;
+
+            /*
+             * Distant upper atmospheric cloud veil.
+             */
+            float farMask =
+              0.28 +
+              0.72 *
+              smoothstep(
+                -0.55,
+                0.78,
+                uv.y +
+                uv.x * 0.12
+              );
+
+            vec4 farCloud =
+              cloudLayer(
+                uv +
+                vec2(-0.05, 0.12),
+                1.68,
+                0.545,
+                0.15,
+                0.008,
+                1.2,
+                0.035,
+                farMask,
+                vec3(
+                  0.018,
+                  0.075,
+                  0.125
+                ),
+                vec3(
+                  0.075,
+                  0.265,
+                  0.41
+                ),
+                vec3(
+                  0.24,
+                  0.57,
+                  0.76
+                )
+              );
+
+            color = mix(
+              color,
+              farCloud.rgb,
+              farCloud.a * 0.58
+            );
+
+            /*
+             * Middle cloud layer.
+             */
+            float middleMask =
+              0.36 +
+              0.64 *
+              smoothstep(
+                -0.72,
+                0.56,
+                uv.x +
+                uv.y * 0.1 +
+                0.14
+              );
+
+            vec4 middleCloud =
+              cloudLayer(
+                uv +
+                vec2(0.02, -0.03),
+                1.23,
+                0.52,
+                0.13,
+                0.014,
+                7.8,
+                0.065,
+                middleMask,
+                vec3(
+                  0.012,
+                  0.055,
+                  0.095
+                ),
+                vec3(
+                  0.055,
+                  0.25,
+                  0.405
+                ),
+                vec3(
+                  0.28,
+                  0.64,
+                  0.84
+                )
+              );
+
+            color = mix(
+              color,
+              middleCloud.rgb,
+              middleCloud.a * 0.78
+            );
+
+            /*
+             * The foreground mask concentrates the largest cloud
+             * formations on the right and lower portion of the scene,
+             * matching the supplied screenshot composition.
+             */
+            float rightMass =
+              smoothstep(
+                -0.58,
+                0.58,
+                uv.x -
+                uv.y * 0.18 +
+                0.25
+              );
+
+            float lowerMass =
+              1.0 -
+              smoothstep(
+                -0.5,
+                0.52,
+                uv.y
+              );
+
+            float foregroundMask =
+              clamp(
+                max(
+                  rightMass,
+                  lowerMass * 0.68
+                ),
+                0.0,
+                1.0
+              );
+
+            foregroundMask =
+              0.1 +
+              foregroundMask * 0.9;
+
+            vec4 foregroundCloud =
+              cloudLayer(
+                uv +
+                vec2(0.13, -0.12),
+                0.86,
+                0.49,
+                0.115,
+                0.021,
+                13.4,
+                0.105,
+                foregroundMask,
+                vec3(
+                  0.008,
+                  0.035,
+                  0.065
+                ),
+                vec3(
+                  0.045,
+                  0.235,
+                  0.39
+                ),
+                vec3(
+                  0.31,
+                  0.68,
+                  0.87
+                )
+              );
+
+            color = mix(
+              color,
+              foregroundCloud.rgb,
+              foregroundCloud.a * 0.94
+            );
+
+            /*
+             * Cool color grade.
+             */
+            color *= vec3(
+              0.88,
+              1.02,
+              1.13
+            );
+
+            color = pow(
+              max(color, 0.0),
+              vec3(0.9)
+            );
+
+            /*
+             * Soft vignette.
+             */
+            float vignette =
+              smoothstep(
+                1.15,
+                0.22,
+                length(
+                  uv *
+                  vec2(0.82, 1.0)
+                )
+              );
+
+            color *= mix(
+              0.58,
+              1.0,
+              vignette
+            );
+
+            /*
+             * Fine dithering prevents visible banding in dark areas.
+             */
+            float grain =
+              hash21(
+                fragment +
+                fract(u_time) * 231.7
+              ) -
+              0.5;
+
+            color += grain * 0.012;
+
+            color *= u_intensity;
+
+            gl_FragColor = vec4(
+              color,
+              1.0
+            );
+          }
+        `;
+      }
+    }
+
+    const canvas =
+      document.getElementById(
+        "cloud-canvas"
+      );
+
+    const status =
+      document.getElementById("status");
+
+    try {
+      const renderer =
+        new ProceduralCloudRenderer(canvas);
+
+      renderer.initialize();
+
+      /*
+       * Expose the renderer for experimentation:
+       *
+       * cloudRenderer.stop()
+       * cloudRenderer.start()
+       * cloudRenderer.draw(12)
+       * cloudRenderer.destroy()
+       */
+      window.cloudRenderer = renderer;
+
+      /*
+       * Let the UI hint fade away while leaving the clouds visible.
+       */
+      window.setTimeout(() => {
+        if (status) {
+          status.style.opacity = "0";
+        }
+      }, 5000);
+    } catch (error) {
+      console.error(
+        "Cloud renderer failed:",
+        error
+      );
+
+      if (status) {
+        status.textContent =
+          "WebGL unavailable";
+      }
+    }
+  </script>
+</body>
+</html>

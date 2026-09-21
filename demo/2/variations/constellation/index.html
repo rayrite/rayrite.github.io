@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CVX Splash — Constellation studies</title>
+<style>
+  :root {
+    --void: #060a13; --ink: #eef2fb; --muted: #aab6cf;
+    --line: rgba(238, 242, 251, 0.12); --teal: #17e8d8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--void); color: var(--ink);
+    font-family: "Segoe UI", "Avenir Next", system-ui, sans-serif;
+    min-height: 100vh;
+  }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: clamp(28px, 5vw, 64px) clamp(20px, 4vw, 40px) 72px; }
+  header.page { margin-bottom: clamp(28px, 4vw, 44px); }
+  .wordmark {
+    display: inline-flex; align-items: center; gap: 12px;
+    font-family: "Bahnschrift", "Segoe UI", sans-serif;
+    font-weight: 700; font-size: 16px; letter-spacing: 0.14em;
+    margin-bottom: 18px;
+  }
+  .wordmark .pip {
+    width: 14px; height: 14px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #ff5ec7, #7a2170 75%);
+    box-shadow: 0 0 14px rgba(255, 94, 199, 0.7);
+  }
+  h1 {
+    font-family: "Bahnschrift", "Segoe UI", sans-serif;
+    font-size: clamp(1.9rem, 4vw, 2.9rem); font-weight: 700; line-height: 1.1;
+  }
+  .lede {
+    margin-top: 12px; max-width: 60ch; color: var(--muted);
+    font-size: 1.02rem; line-height: 1.65;
+  }
+  .back {
+    display: inline-block; margin-bottom: 14px; color: var(--teal);
+    text-decoration: none; font-size: 0.9rem;
+  }
+  .back:hover { text-decoration: underline; }
+  .back:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; border-radius: 2px; }
+  .grid {
+    display: grid; gap: 26px;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+  }
+  .series { margin: 0; }
+  .series + .series { margin-top: 52px; }
+  .series h2 {
+    font-family: "Bahnschrift", "Segoe UI", sans-serif;
+    font-size: 1.15rem; font-weight: 700; letter-spacing: 0.02em;
+    margin-bottom: 18px;
+  }
+  .series .tagline { color: var(--muted); font-size: 0.92rem; margin: -10px 0 20px; max-width: 62ch; line-height: 1.55; }
+  .card { border: 1px solid var(--line); border-radius: 14px; overflow: hidden; transition: border-color 0.25s; }
+  .card:hover, .card:focus-within { border-color: rgba(23, 232, 216, 0.45); }
+  .frame { aspect-ratio: 16 / 10; background: #070b14; }
+  .frame iframe { width: 100%; height: 100%; border: 0; display: block; }
+  .meta { padding: 16px 18px 18px; display: flex; align-items: baseline; justify-content: space-between; gap: 14px; }
+  .meta h2 {
+    font-family: "Bahnschrift", "Segoe UI", sans-serif;
+    font-size: 1.08rem; font-weight: 700; letter-spacing: 0.02em;
+  }
+  .meta p { color: var(--muted); font-size: 0.88rem; line-height: 1.5; margin-top: 5px; max-width: 40ch; }
+  .meta a {
+    flex-shrink: 0; color: var(--teal); font-size: 0.88rem; text-decoration: none;
+    padding: 4px 2px; white-space: nowrap;
+  }
+  .meta a:hover { text-decoration: underline; }
+  .meta a:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; border-radius: 2px; }
+  .note {
+    margin-top: 34px; color: var(--muted); font-size: 0.9rem; line-height: 1.6;
+    border-top: 1px solid var(--line); padding-top: 18px; max-width: 70ch;
+  }
+
+  /* mobile */
+  @media (max-width: 640px) {
+    .grid { gap: 16px; }
+    .meta { padding: 13px 14px 15px; }
+    .meta h2 { font-size: 1rem; }
+    .meta p { font-size: 0.84rem; }
+    .note { margin-top: 24px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="page">
+    <div class="wordmark"><span class="pip"></span>CVX SPLASH</div>
+    <a class="back" href="../../preview.html">All variations</a>
+    <h1>Constellation — deeper studies</h1>
+    <p class="lede">Six riffs on the drifting linked motes: pulses that think, fireflies finding synchrony, a tiltable star sphere, threads with real waves, gravity done honestly, and a sky that draws its own constellations.</p>
+  </header>
+
+  <main>
+  <section class="series">
+    <div class="grid">
+    <figure class="card">
+      <div class="frame"><iframe src="synapse.html" title="Synapse preview" loading="lazy"></iframe></div>
+      <figcaption class="meta">
+        <div>
+          <h2>Synapse</h2>
+          <p>A fixed small-world web that fires in cascades; pulses visibly travel the links.</p>
+        </div>
+        <a href="synapse.html">Open full screen</a>
+      </figcaption>
+    </figure>
+
+    <figure class="card">
+      <div class="frame"><iframe src="fireflies.html" title="Fireflies preview" loading="lazy"></iframe></div>
+      <figcaption class="meta">
+        <div>
+          <h2>Fireflies</h2>
+          <p>Oscillator physics: blinks couple and drift toward synchrony; links form only among the lit.</p>
+        </div>
+        <a href="fireflies.html">Open full screen</a>
+      </figcaption>
+    </figure>
+
+    <figure class="card">
+      <div class="frame"><iframe src="starmap.html" title="Star Atlas preview" loading="lazy"></iframe></div>
+      <figcaption class="meta">
+        <div>
+          <h2>Star Atlas</h2>
+          <p>A perspective-projected sphere of linked stars the pointer can tilt.</p>
+        </div>
+        <a href="starmap.html">Open full screen</a>
+      </figcaption>
+    </figure>
+
+    <figure class="card">
+      <div class="frame"><iframe src="silk.html" title="Silk preview" loading="lazy"></iframe></div>
+      <figcaption class="meta">
+        <div>
+          <h2>Silk</h2>
+          <p>Damped wave equation on 22 strings; brush them and the vibration runs.</p>
+        </div>
+        <a href="silk.html">Open full screen</a>
+      </figcaption>
+    </figure>
+
+    <figure class="card">
+      <div class="frame"><iframe src="orbits.html" title="Orbits preview" loading="lazy"></iframe></div>
+      <figcaption class="meta">
+        <div>
+          <h2>Orbits</h2>
+          <p>Newtonian motes orbiting three hidden masses; the pointer adds its own gravity.</p>
+        </div>
+        <a href="orbits.html">Open full screen</a>
+      </figcaption>
+    </figure>
+
+    <figure class="card">
+      <div class="frame"><iframe src="scribe.html" title="Scribe preview" loading="lazy"></iframe></div>
+      <figcaption class="meta">
+        <div>
+          <h2>Scribe</h2>
+          <p>Meteors seed stars; clusters self-assemble into constellations that burn off.</p>
+        </div>
+        <a href="scribe.html">Open full screen</a>
+      </figcaption>
+    </figure>
+    </div>
+  </section>
+  </main>
+
+  <p class="note">Same family, same palette, one idea each. All self-contained, reduced-motion aware, nothing loaded from the network.</p>
+</div>
+</body>
+</html>

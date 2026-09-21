@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CVX Splash — Kelp</title>
+<style>
+  :root {
+    --void: #060a13; --ink: #eef2fb; --muted: #aab6cf;
+    --line: rgba(238, 242, 251, 0.14); --teal: #17e8d8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--void); color: var(--ink);
+    font-family: "Segoe UI", "Avenir Next", system-ui, sans-serif;
+    height: 100vh; overflow: hidden;
+  }
+  #bg { position: fixed; inset: 0; width: 100vw; height: 100vh; display: block; }
+  .stage {
+    position: fixed; inset: 0; display: flex; flex-direction: column;
+    justify-content: space-between; padding: clamp(20px, 4vw, 44px);
+    opacity: 0; animation: settle 1s ease-out 0.3s forwards;
+  }
+  @keyframes settle { to { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .stage { animation: none; opacity: 1; } }
+  .bar { display: flex; align-items: center; justify-content: space-between; }
+  .wordmark {
+    display: flex; align-items: center; gap: 12px;
+    font-family: "Bahnschrift", "Segoe UI", sans-serif;
+    font-weight: 700; font-size: 16px; letter-spacing: 0.14em;
+  }
+  .wordmark .pip {
+    width: 13px; height: 13px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #ff5ec7, #7a2170 75%);
+    box-shadow: 0 0 12px rgba(255, 94, 199, 0.7);
+  }
+  .variant {
+    color: var(--muted); font-size: 13.5px;
+    border: 1px solid var(--line); border-radius: 999px; padding: 5px 14px;
+  }
+  .hero { text-align: center; max-width: 680px; margin: 0 auto; padding-bottom: 5vh; }
+  .hero h1 {
+    font-family: "Bahnschrift", "Segoe UI", sans-serif;
+    font-size: clamp(2.2rem, 5.5vw, 3.8rem); font-weight: 700; line-height: 1.05;
+    text-shadow: 0 2px 28px rgba(3, 6, 12, 0.85);
+  }
+  .hero p {
+    margin: 14px auto 26px; max-width: 44ch; color: var(--muted);
+    font-size: clamp(0.95rem, 1.5vw, 1.1rem); line-height: 1.6;
+    text-shadow: 0 1px 18px rgba(3, 6, 12, 0.9);
+  }
+  .btn {
+    font: inherit; font-size: 14.5px; padding: 11px 24px; border-radius: 10px;
+    cursor: pointer; text-decoration: none; transition: transform 0.2s, background 0.2s;
+  }
+  .btn:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; }
+  .btn-solid { background: var(--ink); color: #0a0f1c; border: 1px solid var(--ink); }
+  .btn-solid:hover { background: #fff; transform: translateY(-1px); }
+  .foot { color: var(--muted); font-size: 13px; text-align: center; }
+
+  /* mobile & touch */
+  html, body { overscroll-behavior: none; }
+  body { height: 100dvh; -webkit-tap-highlight-color: transparent; }
+  #bg { touch-action: none; }
+  .stage { -webkit-user-select: none; user-select: none; }
+  .bar { flex-wrap: wrap; row-gap: 10px; }
+  @media (max-width: 640px) {
+    .wordmark { font-size: 14px; }
+    .variant { font-size: 11px; padding: 4px 10px; }
+    .hero h1 { font-size: clamp(1.9rem, 8.5vw, 2.5rem); }
+    .hero p { font-size: 0.92rem; }
+    .btn { padding: 13px 28px; font-size: 15px; }
+    .foot { font-size: 11.5px; }
+  }
+</style>
+</head>
+<body>
+<canvas id="bg" aria-hidden="true"></canvas>
+<div class="stage">
+  <header class="bar">
+    <div class="wordmark"><span class="pip"></span>CVX SPLASH</div>
+    <span class="variant">Variation — Kelp</span>
+  </header>
+  <main class="hero">
+    <h1>Kelp</h1>
+    <p>A kelp forest in current: each frond a chain of joints, root holding, tip lagging, the whole plant pouring with the flow. Shafts of light slant through; the pointer parts the fronds.</p>
+    <a class="btn btn-solid" href="#">Get started</a>
+  </main>
+  <footer class="foot">Part the fronds as you go</footer>
+</div>
+
+<script>
+(() => {
+  "use strict";
+  const canvas = document.getElementById("bg");
+  const ctx = canvas.getContext("2d");
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const TAU = Math.PI * 2;
+  const rnd = (a, b) => a + Math.random() * (b - a);
+  const hash = n => { const s = Math.sin(n * 127.1 + 311.7) * 43758.5453; return s - Math.floor(s); };
+
+  let W = 0, H = 0;
+  function resize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth; H = window.innerHeight;
+    canvas.width = Math.round(W * dpr);
+    canvas.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  window.addEventListener("resize", resize);
+  resize();
+
+  // teal-green shafts through the canopy
+  const NRAYS = 7;
+  const rays = [];
+  for (let i = 0; i < NRAYS; i++) {
+    rays.push({
+      u: rnd(0.05, 0.95), w: rnd(0.03, 0.09), len: rnd(0.45, 0.95),
+      d: rnd(0.25, 1), ph: rnd(0, TAU), sway: rnd(0.05, 0.12), tilt: rnd(-0.06, 0.14)
+    });
+  }
+
+  // each plant: a chain of 16 segments, root pinned to the floor
+  const SEGS = 16, NPL = 10;
+  const plants = [];
+  for (let i = 0; i < NPL; i++) {
+    plants.push({
+      u: (i + 0.5) / NPL + rnd(-0.045, 0.045),
+      s: rnd(0.5, 1.0),
+      ph: rnd(0, TAU),
+      ang: new Array(SEGS).fill(0)
+    });
+  }
+  plants.sort((a, b) => a.s - b.s);           // far fronds first
+
+  const N = 60;
+  const motes = [];
+  const MCOLS = [[205, 232, 226], [205, 232, 226], [205, 232, 226], [23, 232, 216]];
+  let seeded = false;
+
+  let mx = 0.5, my = 0.45, px = -2, py = -2;
+  window.addEventListener("pointermove", e => { mx = e.clientX / W; my = e.clientY / H; });
+  window.addEventListener("pointerleave", () => { mx = -2; my = -2; });
+
+  function ridge(base, amp, seed, col) {
+    ctx.beginPath(); ctx.moveTo(-12, H + 12);
+    for (let x = -12; x <= W + 12; x += 26) {
+      ctx.lineTo(x, H - base - hash(seed + x * 0.012) * amp - Math.sin(x * 0.02 + seed) * amp * 0.3);
+    }
+    ctx.lineTo(W + 12, H + 12); ctx.closePath();
+    ctx.fillStyle = col; ctx.fill();
+  }
+
+  function frame(now, dt) {
+    const t = now / 1000;
+    px += (mx - px) * 0.07;
+    py += (my - py) * 0.07;
+
+    if (!seeded && W > 0) {
+      for (let i = 0; i < N; i++) {
+        motes.push({
+          x: Math.random() * W, y: Math.random() * H,
+          d: 0.2 + Math.random() * 0.8,
+          col: MCOLS[(Math.random() * MCOLS.length) | 0], ph: rnd(0, TAU)
+        });
+      }
+      seeded = true;
+    }
+
+    const g = ctx.createLinearGradient(0, 0, 0, H);
+    g.addColorStop(0, "#071021");
+    g.addColorStop(0.5, "#030711");
+    g.addColorStop(1, "#02040a");
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, W, H);
+
+    // the floor light dies into rock
+    const fg = ctx.createLinearGradient(0, H * 0.78, 0, H);
+    fg.addColorStop(0, "rgba(2,5,7,0)");
+    fg.addColorStop(1, "rgba(2,5,7,0.75)");
+    ctx.fillStyle = fg;
+    ctx.fillRect(0, H * 0.78, W, H * 0.22);
+    ridge(H * 0.030, H * 0.050, 3.1, "rgba(7,15,16,0.55)");
+    ridge(H * 0.008, H * 0.034, 9.7, "rgba(3,8,10,0.9)");
+
+    ctx.globalCompositeOperation = "lighter";
+
+    let gr = ctx.createRadialGradient(W * 0.5, -H * 0.25, 0, W * 0.5, -H * 0.25, H * 0.95);
+    gr.addColorStop(0, "rgba(30,110,120,0.20)");
+    gr.addColorStop(1, "rgba(30,110,120,0)");
+    ctx.fillStyle = gr;
+    ctx.fillRect(0, 0, W, H);
+
+    for (const r of rays) {
+      const x0 = r.u * W + Math.sin(t * r.sway + r.ph) * W * 0.02
+               + (px > -1 ? (px - 0.5) * -40 * r.d : 0);
+      const th = r.tilt + Math.sin(t * r.sway * 0.8 + r.ph * 2) * 0.05;
+      const a = 0.04 + 0.07 * r.d;
+      const len = r.len * H * 1.1;
+      const wpx = r.w * W * (0.8 + 0.4 * r.d);
+      ctx.save();
+      ctx.translate(x0, -40);
+      ctx.rotate(th);
+      const rg = ctx.createLinearGradient(0, 0, 0, len);
+      rg.addColorStop(0, `rgba(30,180,150,${a})`);
+      rg.addColorStop(0.7, `rgba(30,180,150,${a * 0.35})`);
+      rg.addColorStop(1, "rgba(30,180,150,0)");
+      ctx.fillStyle = rg;
+      ctx.beginPath();
+      ctx.moveTo(-wpx * 0.35, 0); ctx.lineTo(wpx * 0.35, 0);
+      ctx.lineTo(wpx * 0.9, len); ctx.lineTo(-wpx * 0.9, len);
+      ctx.closePath(); ctx.fill();
+      ctx.restore();
+    }
+
+    if (px > -1) {
+      gr = ctx.createRadialGradient(px * W, py * H, 0, px * W, py * H, 190);
+      gr.addColorStop(0, "rgba(210,235,255,0.10)");
+      gr.addColorStop(1, "rgba(210,235,255,0)");
+      ctx.fillStyle = gr;
+      ctx.beginPath(); ctx.arc(px * W, py * H, 190, 0, TAU); ctx.fill();
+    }
+    ctx.globalCompositeOperation = "source-over";
+
+    // follow-the-leader fronds: each joint chases its flow target plus a
+    // fraction of the joint before it — the whip lag that makes kelp pour
+    ctx.lineCap = "round";
+    for (const p of plants) {
+      const s = p.s, segLen = Math.max(9, H * 0.052 * s);
+      const bx = p.u * W, by = H + 4;
+      const pxw = px * W, pyh = py * H;
+
+      // first pass: joint positions under the current angles, for the flow field
+      const pos = [[bx, by]];
+      for (let i = 0; i < SEGS; i++) {
+        const a = p.ang[i], q = pos[i];
+        pos.push([q[0] + Math.sin(a) * segLen, q[1] - Math.cos(a) * segLen]);
+      }
+
+      const tgt = new Array(SEGS), dev = new Array(SEGS);
+      for (let i = 0; i < SEGS; i++) {
+        const yn = Math.max(0, (H - pos[i][1]) / H);
+        const w = Math.pow((i + 1) / SEGS, 1.3);      // roots hold, tips swing wide
+        tgt[i] = w * (Math.sin(yn * 1.3 - t * 0.35 * s + p.ph) * 0.16
+                    + Math.sin(yn * 2.7 + t * 0.21) * 0.07);
+        dev[i] = p.ang[i] - tgt[i];
+      }
+
+      const ease = 1 - Math.exp(-4.2 * dt);
+      for (let i = 0; i < SEGS; i++) {
+        let desired = tgt[i] + (i > 0 ? 0.45 * dev[i - 1] : 0);
+        if (px > -1 && i >= 2) {                     // fronds bow around the lantern
+          const d = Math.hypot(pos[i][0] - pxw, pos[i][1] - pyh);
+          if (d < 150 && d > 1) {
+            const f = 1 - d / 150;
+            desired += Math.sign(pos[i][0] - pxw) * f * f * 0.55;
+          }
+        }
+        p.ang[i] += (desired - p.ang[i]) * ease;
+      }
+
+      for (let i = 0; i < SEGS; i++) {
+        const a = p.ang[i], q = pos[i];
+        pos[i + 1][0] = q[0] + Math.sin(a) * segLen;
+        pos[i + 1][1] = q[1] - Math.cos(a) * segLen;
+      }
+
+      const pa = 0.35 + 0.6 * s;                     // far plants hazier
+      for (let i = 0; i < SEGS; i++) {
+        const k = i / (SEGS - 1);
+        const cr = 18 + 28 * k, cg = 70 + 58 * k, cb = 62 + 42 * k;
+        ctx.strokeStyle = `rgba(${cr | 0},${cg | 0},${cb | 0},${(pa * (0.7 + 0.3 * k)).toFixed(2)})`;
+        ctx.lineWidth = (6 - 4.5 * k) * s;
+        ctx.beginPath();
+        ctx.moveTo(pos[i][0], pos[i][1]);
+        ctx.lineTo(pos[i + 1][0], pos[i + 1][1]);
+        ctx.stroke();
+      }
+
+      if (s > 0.6) {                                 // blades on the near plants
+        for (let j = 3; j <= 15; j += 3) {
+          const side = (j / 3) % 2 ? 1 : -1;
+          const bl = 11 * s * (1 - j / 44), bw = 3.2 * s;
+          const sway = Math.sin(t * 1.1 + j * 1.7 + p.ph) * 0.2;
+          ctx.save();
+          ctx.translate(pos[j][0], pos[j][1]);
+          ctx.rotate(p.ang[j - 1] + side * (0.95 + sway));
+          ctx.fillStyle = `rgba(30,96,80,${(0.5 * pa).toFixed(2)})`;
+          ctx.beginPath();
+          ctx.ellipse(side * bl * 0.5, 0, bl * 0.5, bw * 0.5, side * 0.35, 0, TAU);
+          ctx.fill();
+          ctx.restore();
+        }
+      }
+    }
+
+    // sparse marine snow
+    for (const m of motes) {
+      m.y += (5 + 28 * m.d) * dt;
+      m.x += Math.sin(t * 0.25 + m.ph) * 14 * dt * m.d;
+      if (m.y > H + 20) { m.y = -20; m.x = Math.random() * W; }
+      if (m.x < -30) m.x = W + 30; if (m.x > W + 30) m.x = -30;
+      let lit = 0;
+      if (px > -1) {
+        const dd = Math.hypot(m.x - px * W, m.y - py * H);
+        if (dd < 220) lit = (1 - dd / 220) * 1.2;
+      }
+      const [cr, cg, cb] = m.col;
+      ctx.fillStyle = `rgba(${cr},${cg},${cb},${Math.min(0.85, 0.14 + 0.34 * m.d + lit * 0.3)})`;
+      ctx.beginPath(); ctx.arc(m.x, m.y, 0.8 + 2.2 * m.d, 0, TAU); ctx.fill();
+    }
+
+    // vignette
+    const vg = ctx.createRadialGradient(W / 2, H / 2, Math.min(W, H) * 0.42, W / 2, H / 2, Math.max(W, H) * 0.78);
+    vg.addColorStop(0, "rgba(2,4,9,0)");
+    vg.addColorStop(1, "rgba(2,4,9,0.55)");
+    ctx.fillStyle = vg;
+    ctx.fillRect(0, 0, W, H);
+  }
+
+  let lastT = 0;
+  if (reduced) {
+    for (let k = 0; k < 300; k++) frame(k * 16, 0.016);
+    lastT = 300 * 16;
+    window.addEventListener("resize", () => frame(lastT, 0));
+  } else {
+    let last = performance.now();
+    requestAnimationFrame(function loop(now) {
+      const dt = Math.min((now - last) / 1000, 0.05);
+      last = now;
+      frame(now, dt);
+      requestAnimationFrame(loop);
+    });
+  }
+})();
+</script>
+</body>
+</html>

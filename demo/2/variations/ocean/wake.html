@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CVX Splash — Kelvin Wake</title>
+<style>
+  :root {
+    --void: #060a13; --ink: #eef2fb; --muted: #aab6cf;
+    --line: rgba(238, 242, 251, 0.14); --teal: #17e8d8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--void); color: var(--ink);
+    font-family: "Segoe UI", "Avenir Next", system-ui, sans-serif;
+    height: 100vh; overflow: hidden;
+  }
+  #bg { position: fixed; inset: 0; width: 100vw; height: 100vh; display: block; }
+  .stage {
+    position: fixed; inset: 0; display: flex; flex-direction: column;
+    justify-content: space-between; padding: clamp(20px, 4vw, 44px);
+    opacity: 0; animation: settle 1s ease-out 0.3s forwards;
+  }
+  @keyframes settle { to { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .stage { animation: none; opacity: 1; } }
+  .bar { display: flex; align-items: center; justify-content: space-between; }
+  .wordmark {
+    display: flex; align-items: center; gap: 12px;
+    font-family: "Bahnschrift", "Segoe UI", sans-serif;
+    font-weight: 700; font-size: 16px; letter-spacing: 0.14em;
+  }
+  .wordmark .pip {
+    width: 13px; height: 13px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #ff5ec7, #7a2170 75%);
+    box-shadow: 0 0 12px rgba(255, 94, 199, 0.7);
+  }
+  .variant {
+    color: var(--muted); font-size: 13.5px;
+    border: 1px solid var(--line); border-radius: 999px; padding: 5px 14px;
+  }
+  .hero { text-align: center; max-width: 680px; margin: 0 auto; padding-bottom: 5vh; }
+  .hero h1 {
+    font-family: "Bahnschrift", "Segoe UI", sans-serif;
+    font-size: clamp(2.2rem, 5.5vw, 3.8rem); font-weight: 700; line-height: 1.05;
+    text-shadow: 0 2px 28px rgba(3, 6, 12, 0.85);
+  }
+  .hero p {
+    margin: 14px auto 26px; max-width: 44ch; color: var(--muted);
+    font-size: clamp(0.95rem, 1.5vw, 1.1rem); line-height: 1.6;
+    text-shadow: 0 1px 18px rgba(3, 6, 12, 0.9);
+  }
+  .btn {
+    font: inherit; font-size: 14.5px; padding: 11px 24px; border-radius: 10px;
+    cursor: pointer; text-decoration: none; transition: transform 0.2s, background 0.2s;
+  }
+  .btn:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; }
+  .btn-solid { background: var(--ink); color: #0a0f1c; border: 1px solid var(--ink); }
+  .btn-solid:hover { background: #fff; transform: translateY(-1px); }
+  .foot { color: var(--muted); font-size: 13px; text-align: center; }
+
+  /* mobile & touch */
+  html, body { overscroll-behavior: none; }
+  body { height: 100dvh; -webkit-tap-highlight-color: transparent; }
+  #bg { touch-action: none; }
+  .stage { -webkit-user-select: none; user-select: none; }
+  .bar { flex-wrap: wrap; row-gap: 10px; }
+  @media (max-width: 640px) {
+    .wordmark { font-size: 14px; }
+    .variant { font-size: 11px; padding: 4px 10px; }
+    .hero h1 { font-size: clamp(1.9rem, 8.5vw, 2.5rem); }
+    .hero p { font-size: 0.92rem; }
+    .btn { padding: 13px 28px; font-size: 15px; }
+    .foot { font-size: 11.5px; }
+  }
+</style>
+</head>
+<body>
+<canvas id="bg" aria-hidden="true"></canvas>
+<div class="stage">
+  <header class="bar">
+    <div class="wordmark"><span class="pip"></span>CVX SPLASH</div>
+    <span class="variant">Variation — Kelvin Wake</span>
+  </header>
+  <main class="hero">
+    <h1>Kelvin Wake</h1>
+    <p>The ship's wake done honestly: the fixed nineteen-and-a-half-degree Kelvin envelope, transverse crests interfering with diverging ones, foam churning aft. The sea streams past because you are moving.</p>
+    <a class="btn btn-solid" href="#">Get started</a>
+  </main>
+  <footer class="foot">Riding the wake</footer>
+</div>
+
+<script>
+(() => {
+  "use strict";
+  const canvas = document.getElementById("bg");
+  const ctx = canvas.getContext("2d");
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const TAU = Math.PI * 2;
+  const rnd = (a, b) => a + Math.random() * (b - a);
+  const hash = (i, s) => ((Math.sin(i * 12.9898 + s * 78.233) * 43758.5453) % 1 + 1) % 1;
+
+  let W = 0, H = 0;
+  let mx = 0.5, my = 0.45, px = -2, py = -2;
+  window.addEventListener("pointermove", e => { mx = e.clientX / W; my = e.clientY / H; });
+  window.addEventListener("pointerleave", () => { mx = -2; my = -2; });
+
+  // deep-water dispersion w = sqrt(g k), 0.30W swell near a 5 s period
+  let G = 120;
+  const U = 80; // ship speed, px/s — the sea streams aft at U
+
+  // Kelvin half-angle: arcsin(1/3) = 19.47 deg, fixed for any hull in deep water
+  const KTH = Math.asin(1 / 3);
+  const KPERSP = 0.62; // the oblique view from the rail squashes the 19.47 deg spread
+
+  const NROWS = 14;
+  const rows = [];
+  function buildRows() {
+    rows.length = 0;
+    for (let i = 0; i < NROWS; i++) {
+      const v = 0.05 + (i / (NROWS - 1)) * 0.93;
+      const lam = W * (0.10 + 0.70 * Math.pow(v, 1.4));
+      const amp = H * (0.003 + 0.035 * Math.pow(v, 2.4));
+      const mk = (l, a, dir) => ({ k: TAU / l, w: Math.sqrt(G * TAU / l), a, dir, ph: rnd(0, TAU) });
+      const c = [mk(lam, amp, 1), mk(lam * 0.6, amp * 0.4, -1), mk(lam * 0.3, amp * 0.18, -1)];
+      const sumQ = c.reduce((s, o) => s + o.a * o.k, 0);
+      rows.push({ v, c, Q: Math.min(1, 0.85 / sumQ), y0: 0 });
+    }
+  }
+
+  // ambient swell with advection: phase = k x - (dir*w - k*Urow) t, so every
+  // row streams aft (right to left) — far rows slower, near rows faster
+  function prof(row, x, t) {
+    const Ur = U * (0.25 + 0.95 * row.v);
+    let y = 0, xd = 0, sl = 0;
+    for (const c of row.c) {
+      const th = c.k * x - (c.dir * c.w - c.k * Ur) * t + c.ph;
+      y += c.a * Math.sin(th);
+      xd += c.a * row.Q * Math.cos(th);
+      sl += c.a * c.k * Math.cos(th);
+    }
+    return [x - xd, y, sl];
+  }
+
+  // soft foam sprite, rendered once
+  const foamSpr = document.createElement("canvas");
+  foamSpr.width = foamSpr.height = 64;
+  {
+    const fc = foamSpr.getContext("2d");
+    const fg = fc.createRadialGradient(32, 32, 2, 32, 32, 30);
+    fg.addColorStop(0, "rgba(225,248,244,0.85)");
+    fg.addColorStop(0.6, "rgba(180,235,228,0.35)");
+    fg.addColorStop(1, "rgba(180,235,228,0)");
+    fc.fillStyle = fg;
+    fc.beginPath(); fc.arc(32, 32, 30, 0, TAU); fc.fill();
+  }
+
+  // the ship: fixed in frame, bobbing on the swell it rides
+  const ship = { x: 0, y: 0, pitch: 0, s: 1, rowIdx: 0 };
+  const crests = [];   // transverse crests radiating aft
+  const armFoam = [];  // foam flecks riding the Kelvin arms
+  const blobs = [];    // turbulent stern foam
+  const spray = [];    // bow spray
+  let maxD = 0, lamT = 0;
+
+  function buildScene() {
+    ship.x = W * 0.74;
+    ship.s = Math.max(0.7, Math.min(1.2, W / 1400));
+    ship.rowIdx = 0;
+    let best = 1;
+    rows.forEach((r, i) => { if (Math.abs(r.v - 0.55) < best) { best = Math.abs(r.v - 0.55); ship.rowIdx = i; } });
+    maxD = W * 1.05;
+    lamT = W * 0.11;
+    crests.length = 0;
+    for (let i = 0; i < 7; i++) crests.push({ p: 70 * ship.s + i * lamT });
+    armFoam.length = 0;
+    for (let i = 0; i < 110; i++)
+      armFoam.push({ d: rnd(70, maxD * 0.92), s: Math.random() < 0.5 ? -1 : 1, o: rnd(0.82, 1.04), r: rnd(1.6, 4.2), a: rnd(0.14, 0.34) });
+    blobs.length = 0;
+    for (let i = 0; i < 20; i++)
+      blobs.push({ x: ship.x - 56 * ship.s + rnd(-10, 10), y: 0, r: rnd(4, 16), a: rnd(0.2, 0.55) });
+  }
+
+  function step(dt, t) {
+    const hzs = H * (0.36 + 0.013 * Math.sin(t * 0.21));
+    for (const r of rows) r.y0 = hzs + (H - hzs) * Math.pow(r.v, 1.9);
+    const row = rows[ship.rowIdx];
+    const target = row.y0 + prof(row, ship.x, t)[1];
+    ship.y += (target - ship.y) * Math.min(1, dt * 5);
+    const sl = prof(row, ship.x, t)[2];
+    ship.pitch += (Math.atan(sl * 0.6) - ship.pitch) * Math.min(1, dt * 3);
+
+    for (const c of crests) {
+      c.p += U * dt * 0.9; // the wake radiates away as the sea streams past
+      if (c.p > maxD) c.p = c.p - maxD + 70 * ship.s;
+    }
+    for (const f of armFoam) {
+      f.d += U * dt * (0.88 + 0.1 * Math.sin(f.d * 0.01));
+      f.o += (Math.random() - 0.5) * 0.2 * dt; // slow diffusion off the arm
+      if (f.d > maxD) {
+        f.d = rnd(70, 150); f.s = Math.random() < 0.5 ? -1 : 1;
+        f.o = rnd(0.82, 1.04); f.r = rnd(1.6, 4.2); f.a = rnd(0.14, 0.34);
+      }
+    }
+    const stern = ship.x - 56 * ship.s;
+    for (const b of blobs) {
+      b.x -= U * dt * rnd(0.85, 1.1);
+      b.y += rnd(-8, 8) * dt;
+      b.r += 5 * dt;
+      b.a -= 0.14 * dt;
+      if (b.a < 0.02 || b.x < -40) {
+        b.x = stern + rnd(-6, 6); b.y = rnd(-2, 7); b.r = rnd(4, 9); b.a = rnd(0.35, 0.6);
+      }
+    }
+    for (let i = spray.length - 1; i >= 0; i--) {
+      const p = spray[i];
+      p.age += dt;
+      if (p.age > p.life) { spray.splice(i, 1); continue; }
+      p.vy += 320 * dt;
+      p.x += p.vx * dt; p.y += p.vy * dt;
+    }
+    if (Math.random() < 0.3 && spray.length < 80) {
+      const bow = ship.x + 56 * ship.s;
+      spray.push({ x: bow, y: ship.y - 3, vx: rnd(10, 110), vy: rnd(-150, -50), age: 0, life: rnd(0.3, 0.6) });
+    }
+  }
+
+  function draw(t) {
+    px += (mx - px) * 0.06;
+    py += (my - py) * 0.06;
+
+    const horizon = H * (0.36 + 0.013 * Math.sin(t * 0.21));
+    const sway = Math.sin(t * 0.13) * 6;
+    for (const row of rows) row.y0 = horizon + (H - horizon) * Math.pow(row.v, 1.9);
+
+    let g = ctx.createLinearGradient(0, -30, 0, horizon);
+    g.addColorStop(0, "#04070f");
+    g.addColorStop(1, "#0b1526");
+    ctx.fillStyle = g;
+    ctx.fillRect(-40, -40, W + 80, horizon + 41);
+
+    g = ctx.createLinearGradient(0, horizon, 0, H + 40);
+    g.addColorStop(0, "#0a1526");
+    g.addColorStop(0.35, "#071020");
+    g.addColorStop(1, "#040810");
+    ctx.fillStyle = g;
+    ctx.fillRect(-40, horizon, W + 80, H - horizon + 80);
+
+    // slight camera bob with the pointer
+    const camX = px > -1 ? (px - 0.5) * -14 : 0;
+    const camY = py > -1 ? (py - 0.5) * 10 : 0;
+    ctx.save();
+    ctx.translate(sway + camX, camY);
+
+    ctx.globalCompositeOperation = "lighter";
+    ctx.fillStyle = "#dfe8ff";
+    for (let i = 0; i < 110; i++) {
+      const sx = hash(i, 1) * W;
+      const sy = hash(i, 2) * horizon * 0.92;
+      const tw = 0.55 + 0.45 * Math.sin(t * (0.25 + (i % 6) * 0.11) + i * 1.7);
+      ctx.globalAlpha = 0.55 * tw * (1 - sy / horizon);
+      ctx.beginPath();
+      ctx.arc(sx, sy, 0.6 + (i % 4) * 0.32, 0, TAU);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+
+    const mX = W * (0.70 + Math.sin(t * 0.02) * 0.012);
+    const mY = horizon * 0.42 + Math.cos(t * 0.026) * 6;
+    const mR = Math.min(W, H) * 0.055;
+    let mg = ctx.createRadialGradient(mX, mY, mR * 0.2, mX, mY, mR * 5);
+    mg.addColorStop(0, "rgba(255,94,199,0.16)");
+    mg.addColorStop(1, "rgba(255,94,199,0)");
+    ctx.fillStyle = mg;
+    ctx.beginPath(); ctx.arc(mX, mY, mR * 5, 0, TAU); ctx.fill();
+
+    ctx.globalCompositeOperation = "source-over";
+    mg = ctx.createRadialGradient(mX - mR * 0.25, mY - mR * 0.25, mR * 0.1, mX, mY, mR);
+    mg.addColorStop(0, "#ffd6ec");
+    mg.addColorStop(0.55, "#ff9ed2");
+    mg.addColorStop(1, "#7a2170");
+    ctx.fillStyle = mg;
+    ctx.beginPath(); ctx.arc(mX, mY, mR, 0, TAU); ctx.fill();
+
+    ctx.globalCompositeOperation = "lighter";
+    let hz = ctx.createLinearGradient(0, horizon - 60, 0, horizon + 70);
+    hz.addColorStop(0, "rgba(120,150,200,0)");
+    hz.addColorStop(0.5, "rgba(120,150,200,0.10)");
+    hz.addColorStop(1, "rgba(120,150,200,0)");
+    ctx.fillStyle = hz;
+    ctx.fillRect(-40, horizon - 60, W + 80, 130);
+
+    const bw = W * 0.16;
+    const beam = ctx.createLinearGradient(mX - bw, 0, mX + bw, 0);
+    beam.addColorStop(0, "rgba(255,160,210,0)");
+    beam.addColorStop(0.5, "rgba(255,160,210,0.12)");
+    beam.addColorStop(1, "rgba(255,160,210,0)");
+    ctx.fillStyle = beam;
+    ctx.fillRect(mX - bw, horizon, bw * 2, H - horizon);
+    ctx.globalCompositeOperation = "source-over";
+
+    // ambient sea, streaming past
+    for (const row of rows) {
+      const v = row.v;
+      const shift = px > -1 ? (px - 0.5) * -30 * v : 0;
+      ctx.save();
+      ctx.translate(shift, 0);
+
+      const pts = [];
+      for (let x = -80; x <= W + 80; x += 6) {
+        const p = prof(row, x, t);
+        pts.push([p[0], row.y0 + p[1], p[2]]);
+      }
+
+      ctx.globalCompositeOperation = "source-over";
+      ctx.beginPath();
+      pts.forEach((p, k) => (k ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])));
+      ctx.lineTo(W + 80, H + 60);
+      ctx.lineTo(-80, H + 60);
+      ctx.closePath();
+      ctx.fillStyle = `rgba(6,11,22,${0.28 + 0.45 * v})`;
+      ctx.fill();
+
+      ctx.globalCompositeOperation = "lighter";
+      ctx.beginPath();
+      pts.forEach((p, k) => (k ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])));
+      const ca = 0.09 + 0.45 * Math.pow(v, 1.6);
+      ctx.strokeStyle = v > 0.6 ? `rgba(140,235,225,${ca})` : `rgba(90,140,180,${ca})`;
+      ctx.lineWidth = 0.8 + 1.4 * v;
+      ctx.stroke();
+
+      const sg = W * (0.04 + 0.12 * v);
+      const inv2 = 1 / (2 * sg * sg);
+      const gl = new Path2D();
+      for (let k = 0; k < pts.length - 1; k++) {
+        const a = pts[k], b = pts[k + 1];
+        const gauss = Math.exp(-((a[0] - mX) * (a[0] - mX)) * inv2);
+        const spec = Math.pow(Math.max(0, -a[2] * 1.25 + 0.22), 2) * gauss * (0.4 + 0.8 * v);
+        if (spec > 0.24) { gl.moveTo(a[0], a[1]); gl.lineTo(b[0], b[1]); }
+      }
+      ctx.lineWidth = 0.8 + 1.8 * v;
+      ctx.strokeStyle = "rgba(255,195,222,0.5)";
+      ctx.stroke(gl);
+
+      ctx.restore();
+    }
+
+    // the wake, laid over the sea from the bow aft
+    const bx = ship.x + 56 * ship.s, by = ship.y;
+    ctx.globalCompositeOperation = "lighter";
+
+    // envelope arms at +-19.47 deg
+    const tanK = Math.tan(KTH) * KPERSP;
+    ctx.strokeStyle = "rgba(150,228,222,0.26)";
+    ctx.lineWidth = 1.6;
+    for (const sgn of [-1, 1]) {
+      ctx.beginPath();
+      ctx.moveTo(bx - 8, by + sgn * 8 * tanK);
+      ctx.lineTo(bx - maxD, by + sgn * maxD * tanK);
+      ctx.stroke();
+    }
+
+    // transverse crests: arcs between the arms, bright at the cusps
+    for (const c of crests) {
+      const d = Math.max(70 * ship.s, c.p);
+      const w = d * tanK;
+      const fade = Math.max(0, 1 - d / maxD) * Math.min(1, (c.p - 40) / 130);
+      const bulge = d * 0.10;
+      const mid = new Path2D(), armL = new Path2D(), armR = new Path2D();
+      let sM = false, sL = false, sR = false;
+      for (let u = -1; u <= 1.001; u += 0.1) {
+        const x = bx - d + bulge * (1 - u * u);
+        const y = by + u * w;
+        if (Math.abs(u) <= 0.6) { sM ? mid.lineTo(x, y) : mid.moveTo(x, y); sM = true; }
+        if (u <= -0.4) { sL ? armL.lineTo(x, y) : armL.moveTo(x, y); sL = true; }
+        if (u >= 0.4) { sR ? armR.lineTo(x, y) : armR.moveTo(x, y); sR = true; }
+      }
+      ctx.lineWidth = 1 + fade;
+      ctx.strokeStyle = `rgba(160,235,228,${0.14 * fade})`;
+      ctx.stroke(mid);
+      ctx.strokeStyle = `rgba(190,246,240,${0.5 * fade})`;
+      ctx.stroke(armL);
+      ctx.stroke(armR);
+      // cusp interference — real Kelvin wakes sparkle at the arms
+      ctx.fillStyle = `rgba(230,252,248,${0.45 * fade})`;
+      ctx.beginPath(); ctx.arc(bx - d, by - w, 2.2, 0, TAU); ctx.fill();
+      ctx.beginPath(); ctx.arc(bx - d, by + w, 2.2, 0, TAU); ctx.fill();
+      // diverging crestlets riding the arms
+      ctx.strokeStyle = `rgba(170,240,232,${0.3 * fade})`;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(bx - d + bulge, by - w); ctx.lineTo(bx - d - 8, by - (w + 8 * tanK));
+      ctx.moveTo(bx - d + bulge, by + w); ctx.lineTo(bx - d - 8, by + (w + 8 * tanK));
+      ctx.stroke();
+    }
+
+    // foam flecks streaming along the arms — the V reads as much from foam as crests
+    for (const f of armFoam) {
+      const fade = Math.max(0, 1 - f.d / maxD);
+      const fx = bx - f.d;
+      const fy = by + f.s * f.d * tanK * f.o;
+      ctx.globalAlpha = f.a * fade;
+      ctx.drawImage(foamSpr, fx - f.r, fy - f.r * 0.6, f.r * 2, f.r * 1.2);
+    }
+    ctx.globalAlpha = 1;
+
+    // stern foam churning aft
+    for (const b of blobs) {
+      ctx.globalAlpha = b.a;
+      ctx.drawImage(foamSpr, b.x - b.r, ship.y + b.y - b.r * 0.5, b.r * 2, b.r);
+    }
+    ctx.globalAlpha = 1;
+
+    // the hull
+    ctx.globalCompositeOperation = "source-over";
+    ctx.save();
+    ctx.translate(ship.x, ship.y);
+    ctx.rotate(ship.pitch);
+    ctx.scale(ship.s, ship.s);
+    ctx.beginPath();
+    ctx.moveTo(-52, -8);
+    ctx.quadraticCurveTo(10, -10, 48, -7);
+    ctx.quadraticCurveTo(58, -4, 56, 0);
+    ctx.quadraticCurveTo(30, 14, -30, 13);
+    ctx.quadraticCurveTo(-50, 12, -52, -8);
+    ctx.closePath();
+    const hullG = ctx.createLinearGradient(0, -10, 0, 14);
+    hullG.addColorStop(0, "#13213a");
+    hullG.addColorStop(0.45, "#0a1424");
+    hullG.addColorStop(1, "#04070d");
+    ctx.fillStyle = hullG;
+    ctx.fill();
+    ctx.strokeStyle = "rgba(165,215,235,0.55)";
+    ctx.lineWidth = 1.3;
+    ctx.beginPath();
+    ctx.moveTo(-50, -8);
+    ctx.quadraticCurveTo(10, -10, 47, -7);
+    ctx.stroke();
+    ctx.strokeStyle = "rgba(120,160,185,0.22)";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(-38, -2);
+    ctx.quadraticCurveTo(8, -4, 40, -3);
+    ctx.stroke();
+    // mast with the family's pink pip as a riding light
+    ctx.strokeStyle = "rgba(120,150,170,0.5)";
+    ctx.beginPath();
+    ctx.moveTo(-8, -8); ctx.lineTo(-16, -34);
+    ctx.stroke();
+    ctx.globalCompositeOperation = "lighter";
+    let pg = ctx.createRadialGradient(-16, -34, 0, -16, -34, 13);
+    pg.addColorStop(0, "rgba(255,94,199,0.8)");
+    pg.addColorStop(1, "rgba(255,94,199,0)");
+    ctx.fillStyle = pg;
+    ctx.beginPath(); ctx.arc(-16, -34, 13, 0, TAU); ctx.fill();
+    ctx.fillStyle = "#ff9ed2";
+    ctx.beginPath(); ctx.arc(-16, -34, 2.2, 0, TAU); ctx.fill();
+    ctx.restore();
+
+    // bow spray
+    ctx.globalCompositeOperation = "lighter";
+    for (const p of spray) {
+      ctx.fillStyle = `rgba(216,244,240,${(1 - p.age / p.life) * 0.7})`;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 1.1, 0, TAU);
+      ctx.fill();
+    }
+
+    // lantern on the water
+    if (px > -1) {
+      const ly = rows[ship.rowIdx].y0 + prof(rows[ship.rowIdx], px * W, t)[1];
+      const lg = ctx.createRadialGradient(px * W, ly, 0, px * W, ly, 120);
+      lg.addColorStop(0, "rgba(150,235,225,0.10)");
+      lg.addColorStop(1, "rgba(150,235,225,0)");
+      ctx.fillStyle = lg;
+      ctx.beginPath();
+      ctx.ellipse(px * W, ly, 120, 40, 0, 0, TAU);
+      ctx.fill();
+    }
+
+    ctx.restore();
+    ctx.globalCompositeOperation = "source-over";
+
+    const vg = ctx.createRadialGradient(W / 2, H / 2, Math.min(W, H) * 0.4, W / 2, H / 2, Math.max(W, H) * 0.75);
+    vg.addColorStop(0, "rgba(2,4,8,0)");
+    vg.addColorStop(1, "rgba(2,4,8,0.5)");
+    ctx.fillStyle = vg;
+    ctx.fillRect(0, 0, W, H);
+  }
+
+  let t = 0;
+  function settle() { for (let i = 0; i < 100; i++) { t += 1 / 60; step(1 / 60, t); } draw(t); }
+
+  function resize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth; H = window.innerHeight;
+    canvas.width = Math.round(W * dpr);
+    canvas.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    G = 2 * Math.PI * (W * 0.3) / 25;
+    buildRows();
+    ship.y = H * 0.58;
+    buildScene();
+    if (reduced) settle();
+  }
+  window.addEventListener("resize", resize);
+  resize();
+
+  if (reduced) settle();
+  else {
+    let last = performance.now();
+    requestAnimationFrame(function loop(now) {
+      const dt = Math.min(0.05, (now - last) / 1000);
+      last = now;
+      t += dt;
+      step(dt, t);
+      draw(t);
+      requestAnimationFrame(loop);
+    });
+  }
+})();
+</script>
+</body>
+</html>

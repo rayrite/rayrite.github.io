@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CVX Splash — Stormfront</title>
+<style>
+  :root {
+    --void: #060a13; --ink: #eef2fb; --muted: #aab6cf;
+    --line: rgba(238, 242, 251, 0.14); --teal: #17e8d8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--void); color: var(--ink);
+    font-family: "Segoe UI", "Avenir Next", system-ui, sans-serif;
+    height: 100vh; overflow: hidden;
+  }
+  #bg { position: fixed; inset: 0; width: 100vw; height: 100vh; display: block; }
+  .stage {
+    position: fixed; inset: 0; display: flex; flex-direction: column;
+    justify-content: space-between; padding: clamp(20px, 4vw, 44px);
+    opacity: 0; animation: settle 1s ease-out 0.3s forwards;
+  }
+  @keyframes settle { to { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .stage { animation: none; opacity: 1; } }
+  .bar { display: flex; align-items: center; justify-content: space-between; }
+  .wordmark {
+    display: flex; align-items: center; gap: 12px;
+    font-family: "Bahnschrift", "Segoe UI", sans-serif;
+    font-weight: 700; font-size: 16px; letter-spacing: 0.14em;
+  }
+  .wordmark .pip {
+    width: 13px; height: 13px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #ff5ec7, #7a2170 75%);
+    box-shadow: 0 0 12px rgba(255, 94, 199, 0.7);
+  }
+  .variant {
+    color: var(--muted); font-size: 13.5px;
+    border: 1px solid var(--line); border-radius: 999px; padding: 5px 14px;
+  }
+  .hero { text-align: center; max-width: 680px; margin: 0 auto; padding-bottom: 5vh; }
+  .hero h1 {
+    font-family: "Bahnschrift", "Segoe UI", sans-serif;
+    font-size: clamp(2.2rem, 5.5vw, 3.8rem); font-weight: 700; line-height: 1.05;
+    text-shadow: 0 2px 28px rgba(3, 6, 12, 0.85);
+  }
+  .hero p {
+    margin: 14px auto 26px; max-width: 44ch; color: var(--muted);
+    font-size: clamp(0.95rem, 1.5vw, 1.1rem); line-height: 1.6;
+    text-shadow: 0 1px 18px rgba(3, 6, 12, 0.9);
+  }
+  .btn {
+    font: inherit; font-size: 14.5px; padding: 11px 24px; border-radius: 10px;
+    cursor: pointer; text-decoration: none; transition: transform 0.2s, background 0.2s;
+  }
+  .btn:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; }
+  .btn-solid { background: var(--ink); color: #0a0f1c; border: 1px solid var(--ink); }
+  .btn-solid:hover { background: #fff; transform: translateY(-1px); }
+  .foot { color: var(--muted); font-size: 13px; text-align: center; }
+
+  /* mobile & touch */
+  html, body { overscroll-behavior: none; }
+  body { height: 100dvh; -webkit-tap-highlight-color: transparent; }
+  #bg { touch-action: none; }
+  .stage { -webkit-user-select: none; user-select: none; }
+  .bar { flex-wrap: wrap; row-gap: 10px; }
+  @media (max-width: 640px) {
+    .wordmark { font-size: 14px; }
+    .variant { font-size: 11px; padding: 4px 10px; }
+    .hero h1 { font-size: clamp(1.9rem, 8.5vw, 2.5rem); }
+    .hero p { font-size: 0.92rem; }
+    .btn { padding: 13px 28px; font-size: 15px; }
+    .foot { font-size: 11.5px; }
+  }
+</style>
+</head>
+<body>
+<canvas id="bg" aria-hidden="true"></canvas>
+<div class="stage">
+  <header class="bar">
+    <div class="wordmark"><span class="pip"></span>CVX SPLASH</div>
+    <span class="variant">Variation — Stormfront</span>
+  </header>
+  <main class="hero">
+    <h1>Stormfront</h1>
+    <p>A tower of weather. Charge builds in the mass until the inside lights — rims flare, structure glows through, and the boil quickens where it struck.</p>
+    <a class="btn btn-solid" href="#">Get started</a>
+  </main>
+  <footer class="foot">Charge gathers where you look</footer>
+</div>
+
+<script>
+(() => {
+  "use strict";
+
+  // storm convection: latent-heat-driven overturning; discharge lights interior structure
+  class StormfrontScene {
+    constructor(canvas) {
+      this.canvas = canvas;
+
+      this.gl = canvas.getContext("webgl", {
+        alpha: false,
+        antialias: false,
+        depth: false,
+        stencil: false,
+        premultipliedAlpha: false,
+        preserveDrawingBuffer: false,
+        powerPreference: "high-performance"
+      });
+
+      if (!this.gl) {
+        throw new Error(
+          "WebGL is unavailable. Enable hardware acceleration or use a modern browser."
+        );
+      }
+
+      this.program = null;
+      this.positionBuffer = null;
+
+      this.uniforms = {
+        resolution: null,
+        time: null,
+        speed: null,
+        pointer: null
+      };
+
+      this.speed = 0.04;
+
+      this.elapsedTime = 0;
+      this.lastFrameTime = 0;
+
+      this.animationFrame = 0;
+      this.running = false;
+
+      // Eased pointer in [0, 1]; the target rests at center when idle.
+      this.pointerX = 0.5;
+      this.pointerY = 0.5;
+      this.pointerTargetX = 0.5;
+      this.pointerTargetY = 0.5;
+
+      this.motionPreference = window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      );
+
+      this.reducedMotion = this.motionPreference.matches;
+
+      this.boundResize = this.resize.bind(this);
+      this.boundRenderFrame = this.renderFrame.bind(this);
+      this.boundVisibilityChange = this.handleVisibilityChange.bind(this);
+      this.boundMotionPreference = this.handleMotionPreference.bind(this);
+      this.boundPointerMove = this.handlePointerMove.bind(this);
+      this.boundPointerLeave = this.handlePointerLeave.bind(this);
+    }
+
+    initialize() {
+      const vertexShader = this.createShader(
+        this.gl.VERTEX_SHADER,
+        this.vertexShaderSource
+      );
+
+      const fragmentShader = this.createShader(
+        this.gl.FRAGMENT_SHADER,
+        this.fragmentShaderSource
+      );
+
+      this.program = this.createProgram(vertexShader, fragmentShader);
+
+      this.createFullscreenTriangle();
+      this.cacheUniformLocations();
+
+      window.addEventListener("resize", this.boundResize, { passive: true });
+      document.addEventListener("visibilitychange", this.boundVisibilityChange);
+      this.motionPreference.addEventListener("change", this.boundMotionPreference);
+      window.addEventListener("pointermove", this.boundPointerMove, { passive: true });
+      window.addEventListener("pointerleave", this.boundPointerLeave);
+
+      this.resize();
+
+      if (this.reducedMotion) {
+        this.draw(7);
+      } else {
+        this.start();
+      }
+    }
+
+    createFullscreenTriangle() {
+      const gl = this.gl;
+
+      const positions = new Float32Array([
+        -1, -1,
+         3, -1,
+        -1,  3
+      ]);
+
+      this.positionBuffer = gl.createBuffer();
+
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.positionBuffer);
+      gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
+
+      const positionLocation = gl.getAttribLocation(this.program, "a_position");
+
+      gl.enableVertexAttribArray(positionLocation);
+      gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+    }
+
+    cacheUniformLocations() {
+      const gl = this.gl;
+
+      this.uniforms.resolution = gl.getUniformLocation(this.program, "u_resolution");
+      this.uniforms.time = gl.getUniformLocation(this.program, "u_time");
+      this.uniforms.speed = gl.getUniformLocation(this.program, "u_speed");
+      this.uniforms.pointer = gl.getUniformLocation(this.program, "u_pointer");
+    }
+
+    createShader(type, source) {
+      const gl = this.gl;
+      const shader = gl.createShader(type);
+
+      gl.shaderSource(shader, source);
+      gl.compileShader(shader);
+
+      if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+        const message = gl.getShaderInfoLog(shader) ||
+          "Unknown shader compilation error.";
+
+        gl.deleteShader(shader);
+
+        throw new Error(message);
+      }
+
+      return shader;
+    }
+
+    createProgram(vertexShader, fragmentShader) {
+      const gl = this.gl;
+      const program = gl.createProgram();
+
+      gl.attachShader(program, vertexShader);
+      gl.attachShader(program, fragmentShader);
+      gl.linkProgram(program);
+
+      if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+        const message = gl.getProgramInfoLog(program) ||
+          "Unknown shader linking error.";
+
+        gl.deleteProgram(program);
+
+        throw new Error(message);
+      }
+
+      gl.deleteShader(vertexShader);
+      gl.deleteShader(fragmentShader);
+
+      return program;
+    }
+
+    handlePointerMove(event) {
+      this.pointerTargetX = event.clientX / Math.max(1, window.innerWidth);
+      this.pointerTargetY = event.clientY / Math.max(1, window.innerHeight);
+    }
+
+    handlePointerLeave() {
+      this.pointerTargetX = 0.5;
+      this.pointerTargetY = 0.5;
+    }
+
+    resize() {
+      const cssWidth = Math.max(1, window.innerWidth);
+      const cssHeight = Math.max(1, window.innerHeight);
+
+      const viewportPixels = cssWidth * cssHeight;
+
+      // Soft clouds conceal a slightly reduced render resolution.
+      let quality;
+
+      if (viewportPixels > 2500000) {
+        quality = 0.55;
+      } else if (viewportPixels > 1300000) {
+        quality = 0.68;
+      } else {
+        quality = 0.82;
+      }
+
+      const pixelRatio = Math.min(window.devicePixelRatio || 1, 1.7);
+
+      const renderScale = quality * pixelRatio;
+
+      const width = Math.max(1, Math.round(cssWidth * renderScale));
+      const height = Math.max(1, Math.round(cssHeight * renderScale));
+
+      if (this.canvas.width !== width || this.canvas.height !== height) {
+        this.canvas.width = width;
+        this.canvas.height = height;
+      }
+
+      this.canvas.style.width = cssWidth + "px";
+      this.canvas.style.height = cssHeight + "px";
+
+      this.gl.viewport(0, 0, width, height);
+
+      if (!this.running) {
+        this.draw(this.reducedMotion ? 7 : this.elapsedTime);
+      }
+    }
+
+    handleVisibilityChange() {
+      if (document.hidden) {
+        this.stop();
+        return;
+      }
+
+      if (this.reducedMotion) {
+        this.draw(7);
+      } else {
+        this.start();
+      }
+    }
+
+    handleMotionPreference(event) {
+      this.reducedMotion = event.matches;
+
+      if (this.reducedMotion) {
+        this.stop();
+        this.draw(7);
+      } else if (!document.hidden) {
+        this.start();
+      }
+    }
+
+    start() {
+      if (this.running) {
+        return;
+      }
+
+      this.running = true;
+      this.lastFrameTime = performance.now();
+
+      this.animationFrame = requestAnimationFrame(this.boundRenderFrame);
+    }
+
+    stop() {
+      if (!this.running) {
+        return;
+      }
+
+      this.running = false;
+
+      cancelAnimationFrame(this.animationFrame);
+      this.animationFrame = 0;
+    }
+
+    renderFrame(currentTime) {
+      if (!this.running) {
+        return;
+      }
+
+      // Clamp large time jumps after the tab was inactive.
+      const deltaSeconds = Math.min((currentTime - this.lastFrameTime) / 1000, 0.05);
+
+      this.lastFrameTime = currentTime;
+      this.elapsedTime += deltaSeconds;
+
+      // Ease the pointer toward its target each frame.
+      this.pointerX += (this.pointerTargetX - this.pointerX) * 0.06;
+      this.pointerY += (this.pointerTargetY - this.pointerY) * 0.06;
+
+      this.draw(this.elapsedTime);
+
+      this.animationFrame = requestAnimationFrame(this.boundRenderFrame);
+    }
+
+    draw(time) {
+      const gl = this.gl;
+
+      gl.useProgram(this.program);
+
+      gl.uniform2f(this.uniforms.resolution, this.canvas.width, this.canvas.height);
+      gl.uniform1f(this.uniforms.time, time);
+      gl.uniform1f(this.uniforms.speed, this.speed);
+      gl.uniform2f(this.uniforms.pointer, this.pointerX, this.pointerY);
+
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+    }
+
+    destroy() {
+      this.stop();
+
+      window.removeEventListener("resize", this.boundResize);
+      document.removeEventListener("visibilitychange", this.boundVisibilityChange);
+      this.motionPreference.removeEventListener("change", this.boundMotionPreference);
+      window.removeEventListener("pointermove", this.boundPointerMove);
+      window.removeEventListener("pointerleave", this.boundPointerLeave);
+
+      if (this.positionBuffer) {
+        this.gl.deleteBuffer(this.positionBuffer);
+      }
+
+      if (this.program) {
+        this.gl.deleteProgram(this.program);
+      }
+    }
+
+    get vertexShaderSource() {
+      return `
+        attribute vec2 a_position;
+
+        void main() {
+          gl_Position = vec4(a_position, 0.0, 1.0);
+        }
+      `;
+    }
+
+    get fragmentShaderSource() {
+      return `
+        precision highp float;
+
+        uniform vec2 u_resolution;
+        uniform float u_time;
+        uniform float u_speed;
+        uniform vec2 u_pointer;
+
+        /*
+         * Noise kit: hash, quintic value noise, 5-octave fbm, and a
+         * two-level domain warp that folds the field into billows.
+         * warpGain swells the second warp near a strike (the boil);
+         * rain streaks and doubles the fine detail near the base.
+         */
+
+        float hash21(vec2 point) {
+          point = fract(point * vec2(123.34, 456.21));
+          point += dot(point, point + 45.32);
+          return fract(point.x * point.y);
+        }
+
+        vec2 hash22(vec2 point) {
+          float first = hash21(point);
+          float second = hash21(point + first + 19.19);
+          return vec2(first, second);
+        }
+
+        float valueNoise(vec2 point) {
+          vec2 cell = floor(point);
+          vec2 local = fract(point);
+
+          local = local * local * local * (local * (local * 6.0 - 15.0) + 10.0);
+
+          float bottomLeft = hash21(cell);
+          float bottomRight = hash21(cell + vec2(1.0, 0.0));
+          float topLeft = hash21(cell + vec2(0.0, 1.0));
+          float topRight = hash21(cell + vec2(1.0, 1.0));
+
+          float bottom = mix(bottomLeft, bottomRight, local.x);
+          float top = mix(topLeft, topRight, local.x);
+
+          return mix(bottom, top, local.y);
+        }
+
+        float fbm(vec2 point) {
+          float result = 0.0;
+          float amplitude = 0.52;
+
+          mat2 rotation = mat2(0.86, 0.51, -0.51, 0.86);
+
+          for (int octave = 0; octave < 5; octave++) {
+            result += valueNoise(point) * amplitude;
+            point = rotation * point * 2.03;
+            point += vec2(13.17, 8.73);
+            amplitude *= 0.5;
+          }
+
+          return result;
+        }
+
+        float cloudNoise(vec2 point, float warpGain, float rain) {
+          vec2 warpOne = vec2(fbm(point), fbm(point + vec2(5.2, 1.3)));
+
+          vec2 warpTwo = vec2(
+            fbm(point + warpOne * 2.15 + vec2(7.8, 2.6)),
+            fbm(point + warpOne * 1.9 + vec2(2.1, 9.2))
+          );
+
+          // The boil: overturning strengthens near the strike.
+          warpTwo *= warpGain;
+
+          float broadClouds = fbm(point + warpTwo * 1.72);
+          float mediumDetail = fbm(point * 1.84 + warpOne * 1.2 + warpTwo * 0.42);
+
+          // Drizzle at the base: vertically stretched fine detail,
+          // biased downward, scrolling with the fall.
+          float fineDetail = valueNoise(
+            point * vec2(7.1, 7.1 + rain * 4.0) +
+            warpTwo * 2.0 +
+            vec2(0.0, -0.02 * rain - u_time * 0.25 * rain)
+          );
+
+          float fineWeight = 0.06 + rain * 0.06;
+
+          return broadClouds * 0.69 + mediumDetail * 0.25 + fineDetail * fineWeight;
+        }
+
+        float starField(vec2 screenUv, float time) {
+          vec2 aspect = vec2(u_resolution.x / u_resolution.y, 1.0);
+
+          vec2 grid = screenUv * aspect * 230.0;
+          vec2 cell = floor(grid);
+          vec2 local = fract(grid);
+
+          float randomValue = hash21(cell);
+          vec2 starPosition = 0.18 + hash22(cell + 14.7) * 0.64;
+          float distanceToStar = length(local - starPosition);
+
+          float exists = step(0.982, randomValue);
+          float radius = mix(0.018, 0.07, pow(randomValue, 14.0));
+          float star = smoothstep(radius, 0.0, distanceToStar) * exists;
+
+          float twinkle = 0.72 + sin(time * (0.35 + randomValue * 1.3) + randomValue * 40.0) * 0.28;
+
+          return star * twinkle;
+        }
+
+        /*
+         * A plane of the tower: dark, dense, slow. fl is the current
+         * flash envelope; strikeUv is where the discharge sits.
+         */
+        vec4 renderCloudPlane(
+          vec2 uv,
+          vec2 screenUv,
+          float depth,
+          float layerIndex,
+          float fl,
+          vec2 strikeUv,
+          float rain
+        ) {
+          float perspectiveDepth = pow(depth, 0.82);
+
+          float coordinateScale = mix(3.15, 0.54, perspectiveDepth);
+
+          vec2 layerOffset = vec2(
+            hash21(vec2(layerIndex, 17.2)),
+            hash21(vec2(layerIndex + 9.3, 41.7))
+          );
+
+          layerOffset = (layerOffset - 0.5) * 7.0;
+
+          vec2 wind = vec2(
+            u_time * (0.006 + layerIndex * 0.0008),
+            sin(u_time * 0.035 + layerIndex) * 0.025
+          );
+
+          vec2 cloudCoordinates = uv * coordinateScale + layerOffset + wind;
+
+          // Convection quickens within the strike's reach.
+          float warpGain = 1.0 +
+            0.3 * fl * exp(-length(uv - strikeUv) * 2.2);
+
+          float density = cloudNoise(cloudCoordinates, warpGain, rain);
+
+          // Denser deck than the reference flythrough.
+          float threshold = mix(0.50, 0.46, perspectiveDepth);
+          float softness = mix(0.16, 0.095, perspectiveDepth);
+
+          float bodyAlpha = smoothstep(threshold, threshold + softness, density);
+          float mistAlpha = smoothstep(threshold - 0.075, threshold + 0.15, density) * 0.24;
+          float alpha = max(bodyAlpha, mistAlpha);
+
+          float fadeIn = smoothstep(0.0, 0.16, depth);
+          float fadeOut = 1.0 - smoothstep(0.76, 1.0, depth);
+          float lifeOpacity = fadeIn * fadeOut;
+
+          float rightMask = smoothstep(-0.72, 0.62, uv.x - uv.y * 0.2 + layerIndex * 0.035);
+          float lowerMask = 1.0 - smoothstep(-0.6, 0.65, uv.y);
+          float spatialMask = 0.18 + max(rightMask, lowerMask * 0.72) * 0.82;
+
+          alpha *= lifeOpacity * spatialMask;
+
+          // Light comes from the upper-left, but during a strike the
+          // direction flips to radiate outward from the discharge.
+          vec2 baseDirection = vec2(-0.048, 0.062);
+
+          vec2 toStrike = strikeUv - uv;
+
+          vec2 flashDirection = normalize(toStrike + vec2(0.0001, 0.0)) * 0.07;
+
+          vec2 lightDirection = mix(
+            baseDirection,
+            flashDirection,
+            clamp(fl * 1.5, 0.0, 1.0)
+          ) * coordinateScale;
+
+          float lightSample = cloudNoise(
+            cloudCoordinates + lightDirection,
+            warpGain,
+            rain
+          );
+
+          float shadowSample = cloudNoise(
+            cloudCoordinates - lightDirection * 0.58,
+            warpGain,
+            rain
+          );
+
+          float edgeLight = clamp((lightSample - density) * 7.5 + 0.48, 0.0, 1.0);
+          float internalShape = clamp((density - shadowSample) * 5.2 + 0.48, 0.0, 1.0);
+          float bodyBrightness = smoothstep(threshold - 0.03, threshold + 0.21, density);
+
+          // Storm-dark palette: deeper shadows, muzzled body.
+          vec3 distantShadow = vec3(0.006, 0.035, 0.067) * 0.55;
+          vec3 blueBody = vec3(0.035, 0.22, 0.37) * 0.62;
+          vec3 illuminatedEdge = vec3(0.30, 0.78, 0.85);
+
+          vec3 shadowColor = mix(distantShadow * 1.8, distantShadow, perspectiveDepth);
+          vec3 bodyColor = mix(blueBody * 1.25, blueBody, perspectiveDepth);
+
+          // The shadow floor lifts briefly while the flash decays.
+          shadowColor += fl * 0.10 * vec3(0.25, 0.22, 0.32);
+
+          vec3 color = mix(shadowColor, bodyColor, bodyBrightness * 0.76);
+
+          // Rim flare: gain spikes while lit from inside the mass.
+          color = mix(
+            color,
+            illuminatedEdge,
+            pow(edgeLight, 1.35) * 0.84 * (1.0 + 2.2 * fl)
+          );
+
+          color *= mix(0.64, 1.12, internalShape);
+
+          // The one pink moment: the structure itself glows through.
+          color += vec3(0.55, 0.38, 0.62) * fl * internalShape * 0.5;
+
+          // The storm is close — little atmospheric veiling.
+          vec3 atmosphericColor = vec3(0.05, 0.15, 0.23);
+          color = mix(atmosphericColor, color, 0.68 + perspectiveDepth * 0.32);
+
+          return vec4(color, clamp(alpha, 0.0, 1.0));
+        }
+
+        void main() {
+          vec2 fragment = gl_FragCoord.xy;
+
+          vec2 screenUv = fragment / u_resolution;
+
+          vec2 uv = (fragment - u_resolution * 0.5) / u_resolution.y;
+
+          /*
+           * Flash envelope: a hash-seeded 9-second cycle. Most windows
+           * build charge silently; some discharge with a sharp strike
+           * and a secondary restrike, then decay.
+           */
+          float flashSeed = floor(u_time / 9.0);
+          float cycleTime = fract(u_time / 9.0);
+
+          float strikeRoll = hash21(vec2(flashSeed, 91.3));
+          float spikeRoll = hash21(vec2(flashSeed, 3.1));
+
+          float flashOn = step(0.55, strikeRoll);
+
+          float strike = exp(-cycleTime * 7.0);
+          float restrike = exp(-abs(cycleTime - 0.13) * 14.0) * 0.85;
+
+          float fl = flashOn *
+            max(strike, restrike) *
+            (0.7 + 0.3 * spikeRoll);
+
+          /*
+           * Strike origin: hash-chosen per flash, y held in the mass,
+           * x blended toward the pointer — charge gathers where you look.
+           */
+          float strikeX = mix(hash21(vec2(flashSeed, 55.8)), u_pointer.x, 0.35);
+          float strikeY = 0.35 + hash21(vec2(flashSeed, 77.2)) * 0.35;
+
+          vec2 strikeUv = (vec2(strikeX, strikeY) - 0.5) *
+            vec2(u_resolution.x / u_resolution.y, 1.0);
+
+          // Drizzle lives in the lowest part of the frame.
+          float rain = (1.0 - smoothstep(0.0, 0.45, screenUv.y)) * 0.9;
+
+          vec3 lowerSky = vec3(0.02, 0.085, 0.14);
+          vec3 upperSky = vec3(0.002, 0.014, 0.035);
+
+          vec3 color = mix(lowerSky, upperSky, smoothstep(0.0, 1.0, screenUv.y));
+
+          float skyGlow = exp(-length(uv - vec2(-0.28, 0.36)) * 2.3);
+          color += vec3(0.02, 0.09, 0.16) * skyGlow * 0.5;
+
+          float stars = starField(screenUv, u_time);
+          color += vec3(0.64, 0.82, 1.0) * stars * 0.6;
+
+          // The whole sky lifts briefly with the discharge.
+          color += fl * 0.10 * vec3(0.55, 0.48, 0.7);
+
+          /*
+           * Seven cyclic planes: a slow towering mass rolling toward
+           * the camera.
+           */
+          for (int layer = 0; layer < 7; layer++) {
+            float layerIndex = float(layer);
+
+            float depth = fract(u_time * u_speed + layerIndex / 7.0);
+
+            vec4 cloud = renderCloudPlane(
+              uv,
+              screenUv,
+              depth,
+              layerIndex,
+              fl,
+              strikeUv,
+              rain
+            );
+
+            color = mix(color, cloud.rgb, cloud.a * 0.72);
+            color += cloud.rgb * cloud.a * 0.075;
+          }
+
+          float lowerMist = 1.0 - smoothstep(0.0, 0.62, screenUv.y);
+          color += vec3(0.012, 0.05, 0.08) * lowerMist * 0.2;
+
+          color *= vec3(0.88, 1.025, 1.15);
+          color = pow(max(color, 0.0), vec3(0.91));
+
+          float vignette = smoothstep(1.18, 0.2, length(uv * vec2(0.82, 1.0)));
+          color *= mix(0.55, 1.0, vignette);
+
+          float grain = hash21(fragment + fract(u_time) * 193.73) - 0.5;
+          color += grain * 0.011;
+
+          gl_FragColor = vec4(min(color, vec3(1.5)), 1.0);
+        }
+      `;
+    }
+  }
+
+  const canvas = document.getElementById("bg");
+
+  try {
+    const stormfrontScene = new StormfrontScene(canvas);
+
+    stormfrontScene.initialize();
+
+    window.stormfrontScene = stormfrontScene;
+  } catch (error) {
+    console.error("Cloud animation failed:", error);
+
+    document.body.style.background =
+      "radial-gradient(circle at 40% 45%, #241433, #0a1220 55%, #010611)";
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CVX Splash — Menu</title>
+<style>
+  :root {
+    --void: #060a13; --ink: #eef2fb; --muted: #aab6cf;
+    --line: rgba(238, 242, 251, 0.14); --teal: #17e8d8; --pink: #ff5ec7;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--void); color: var(--ink);
+    font-family: "Segoe UI", "Avenir Next", system-ui, sans-serif;
+    min-height: 100vh;
+  }
+  .main {
+    max-width: 920px; margin: 0 auto;
+    padding: clamp(24px, 4vw, 48px) clamp(20px, 4vw, 44px) 72px;
+    opacity: 0; animation: settle 0.8s ease-out 0.15s forwards;
+  }
+  @keyframes settle { to { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .main { animation: none; opacity: 1; } }
+
+  .bar {
+    display: flex; align-items: center; gap: 12px;
+    font-family: "Bahnschrift", "Segoe UI", sans-serif;
+    font-weight: 700; font-size: 16px; letter-spacing: 0.14em;
+  }
+  .pip {
+    width: 13px; height: 13px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #ff5ec7, #7a2170 75%);
+    box-shadow: 0 0 12px rgba(255, 94, 199, 0.7);
+  }
+
+  h1 {
+    font-family: "Bahnschrift", "Segoe UI", sans-serif;
+    font-size: clamp(2rem, 4.5vw, 2.9rem); font-weight: 700;
+    line-height: 1.05; margin-top: 30px;
+  }
+  .lede { margin-top: 12px; max-width: 58ch; color: var(--muted); font-size: 15px; line-height: 1.6; }
+  .gals { margin-top: 18px; font-size: 13.5px; color: var(--muted); }
+  .gals a { color: var(--teal); text-decoration: none; border-bottom: 1px solid rgba(23, 232, 216, 0.35); }
+  .gals a:hover { color: #5ff2e6; }
+  .gals .sep { margin: 0 8px; color: rgba(170, 182, 207, 0.45); }
+
+  section { margin-top: 44px; }
+  .sec-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 10px; }
+  .sec-head h2 {
+    font-family: "Bahnschrift", "Segoe UI", sans-serif;
+    font-size: 14px; font-weight: 700; letter-spacing: 0.13em;
+    text-transform: uppercase; color: var(--ink);
+  }
+  .count {
+    font-size: 11.5px; color: var(--muted);
+    border: 1px solid var(--line); border-radius: 999px; padding: 2px 10px;
+  }
+  .gal-link { margin-left: auto; font-size: 13px; color: var(--teal); text-decoration: none; }
+  .gal-link:hover { color: #5ff2e6; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 330px), 1fr)); column-gap: 40px; }
+  .row {
+    display: block; padding: 11px 6px 12px 0;
+    border-top: 1px solid var(--line);
+    text-decoration: none; transition: transform 0.15s ease;
+  }
+  .row:hover, .row:focus-visible { transform: translateX(4px); }
+  .row:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+  .row .name { color: var(--ink); font-size: 15px; font-weight: 600; transition: color 0.15s; }
+  .row:hover .name, .row:focus-visible .name { color: var(--teal); }
+  .row .desc { display: block; margin-top: 2px; color: var(--muted); font-size: 13px; line-height: 1.45; }
+  .tag {
+    display: inline-block; margin-left: 8px; padding: 1px 8px 2px;
+    border: 1px solid rgba(255, 94, 199, 0.5); border-radius: 999px;
+    color: var(--pink); font-size: 11px; letter-spacing: 0.06em;
+    vertical-align: 2px;
+  }
+
+  .foot { margin-top: 56px; color: var(--muted); font-size: 13px; text-align: center; }
+
+  /* mobile */
+  .gals, .sec-head { flex-wrap: wrap; }
+  @media (max-width: 640px) {
+    .grid { column-gap: 0; }
+    .row .name { font-size: 14.5px; }
+    .row .desc { font-size: 12.5px; }
+    .foot { margin-top: 40px; }
+  }
+</style>
+</head>
+<body>
+<div class="main">
+  <header class="bar"><span class="pip"></span>CVX SPLASH</header>
+
+  <h1>The whole shelf</h1>
+  <p class="lede">Every demo from the project on one page — the references that started it, the first wave of particle studies, and four families of deeper studies.</p>
+  <p class="gals">
+    Gallery views:
+    <a href="preview.html" target="_blank" rel="noopener">Preview</a><span class="sep">·</span>
+    <a href="variations/constellation/index.html" target="_blank" rel="noopener">Constellation</a><span class="sep">·</span>
+    <a href="variations/ocean/index.html" target="_blank" rel="noopener">Ocean</a><span class="sep">·</span>
+    <a href="variations/abyss/index.html" target="_blank" rel="noopener">Abyss</a><span class="sep">·</span>
+    <a href="variations/clouds/index.html" target="_blank" rel="noopener">Clouds</a>
+  </p>
+
+  <section>
+    <div class="sec-head">
+      <h2>References &amp; originals</h2><span class="count">5</span>
+    </div>
+    <div class="grid">
+      <a class="row" href="index.html" target="_blank" rel="noopener">
+        <span class="name">Nebula Drift</span>
+        <span class="desc">The original pixijs.com recreation — stars, breathing nebula, a pink planet, teal clouds rising.</span>
+      </a>
+      <a class="row" href="clouds2-genspark-gpt56sol.html" target="_blank" rel="noopener">
+        <span class="name">Clouds Moving Toward Camera<span class="tag">the brief</span></span>
+        <span class="desc">The reference that nailed the billowy look — a WebGL shader flythrough through domain-warped vapor.</span>
+      </a>
+      <a class="row" href="billow-clouds.html" target="_blank" rel="noopener">
+        <span class="name">Billow Clouds</span>
+        <span class="desc">Nebulon-style cloud tunnel — the first local pass at the billow motion.</span>
+      </a>
+      <a class="row" href="clouds-genspark-gpt56sol.html" target="_blank" rel="noopener">
+        <span class="name">Procedural WebGL Clouds</span>
+        <span class="desc">Earlier Genspark/GPT cloud study.</span>
+      </a>
+      <a class="row" href="pixijs-genspark-gpt56sol.html" target="_blank" rel="noopener">
+        <span class="name">Nebula — Interactive Creation Engine</span>
+        <span class="desc">Genspark/GPT take on the pixijs.com header.</span>
+      </a>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>First wave — particle studies</h2><span class="count">8</span>
+      <a class="gal-link" href="preview.html" target="_blank" rel="noopener">gallery view</a>
+    </div>
+    <div class="grid">
+      <a class="row" href="variations/orbs.html" target="_blank" rel="noopener">
+        <span class="name">Drift Orbs</span>
+        <span class="desc">Soft balls drifting in layered depth.</span>
+      </a>
+      <a class="row" href="variations/bounce.html" target="_blank" rel="noopener">
+        <span class="name">Bounce</span>
+        <span class="desc">Balls with bounce energy — one of the first studies.</span>
+      </a>
+      <a class="row" href="variations/comets.html" target="_blank" rel="noopener">
+        <span class="name">Comet Stream</span>
+        <span class="desc">Comets trailing across the dark.</span>
+      </a>
+      <a class="row" href="variations/biolum.html" target="_blank" rel="noopener">
+        <span class="name">Living Light</span>
+        <span class="desc">Bioluminescent particles breathing in the dark.</span>
+      </a>
+      <a class="row" href="variations/constellation.html" target="_blank" rel="noopener">
+        <span class="name">Constellation</span>
+        <span class="desc">Stars linking into figures — the family opener.</span>
+      </a>
+      <a class="row" href="variations/ocean.html" target="_blank" rel="noopener">
+        <span class="name">Open Water</span>
+        <span class="desc">The cruise-rail ocean look — the family opener.</span>
+      </a>
+      <a class="row" href="variations/abyss.html" target="_blank" rel="noopener">
+        <span class="name">Light Shafts</span>
+        <span class="desc">Sunbeams into deep water — the family opener.</span>
+      </a>
+      <a class="row" href="variations/billow.html" target="_blank" rel="noopener">
+        <span class="name">Billow</span>
+        <span class="desc">The approved billow direction — the family opener.</span>
+      </a>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>Constellation studies</h2><span class="count">6</span>
+      <a class="gal-link" href="variations/constellation/index.html" target="_blank" rel="noopener">gallery view</a>
+    </div>
+    <div class="grid">
+      <a class="row" href="variations/constellation/fireflies.html" target="_blank" rel="noopener">
+        <span class="name">Fireflies</span>
+        <span class="desc">Glowing wanderers over the dark.</span>
+      </a>
+      <a class="row" href="variations/constellation/orbits.html" target="_blank" rel="noopener">
+        <span class="name">Orbits</span>
+        <span class="desc">Bodies circling in a slow gravitational dance.</span>
+      </a>
+      <a class="row" href="variations/constellation/silk.html" target="_blank" rel="noopener">
+        <span class="name">Silk</span>
+        <span class="desc">Flowing threads folding over themselves.</span>
+      </a>
+      <a class="row" href="variations/constellation/scribe.html" target="_blank" rel="noopener">
+        <span class="name">Scribe</span>
+        <span class="desc">Lines of light, drawn and redrawn.</span>
+      </a>
+      <a class="row" href="variations/constellation/starmap.html" target="_blank" rel="noopener">
+        <span class="name">Star Atlas</span>
+        <span class="desc">A chart of the overhead sky.</span>
+      </a>
+      <a class="row" href="variations/constellation/synapse.html" target="_blank" rel="noopener">
+        <span class="name">Synapse</span>
+        <span class="desc">Nodes firing across a thinking web.</span>
+      </a>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>Ocean studies</h2><span class="count">6</span>
+      <a class="gal-link" href="variations/ocean/index.html" target="_blank" rel="noopener">gallery view</a>
+    </div>
+    <div class="grid">
+      <a class="row" href="variations/ocean/swell.html" target="_blank" rel="noopener">
+        <span class="name">Groundswell</span>
+        <span class="desc">Long-period lines rolling in deep water.</span>
+      </a>
+      <a class="row" href="variations/ocean/storm.html" target="_blank" rel="noopener">
+        <span class="name">Storm Sea</span>
+        <span class="desc">Steep crests and whitecaps at full wind.</span>
+      </a>
+      <a class="row" href="variations/ocean/rain.html" target="_blank" rel="noopener">
+        <span class="name">Night Rain</span>
+        <span class="desc">Rain stitching the surface apart.</span>
+      </a>
+      <a class="row" href="variations/ocean/wake.html" target="_blank" rel="noopener">
+        <span class="name">Kelvin Wake</span>
+        <span class="desc">The honest wake — 19.47° arms, interference crests, foam aft.</span>
+      </a>
+      <a class="row" href="variations/ocean/shoal.html" target="_blank" rel="noopener">
+        <span class="name">Shoaling</span>
+        <span class="desc">Swell standing up on the reef — Green's law, then the throw.</span>
+      </a>
+      <a class="row" href="variations/ocean/buoy.html" target="_blank" rel="noopener">
+        <span class="name">Mooring</span>
+        <span class="desc">A buoy heaving through the passing sea.</span>
+      </a>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>Abyss studies</h2><span class="count">6</span>
+      <a class="gal-link" href="variations/abyss/index.html" target="_blank" rel="noopener">gallery view</a>
+    </div>
+    <div class="grid">
+      <a class="row" href="variations/abyss/kelp.html" target="_blank" rel="noopener">
+        <span class="name">Kelp</span>
+        <span class="desc">A forest swaying in the surge.</span>
+      </a>
+      <a class="row" href="variations/abyss/jellies.html" target="_blank" rel="noopener">
+        <span class="name">Medusae</span>
+        <span class="desc">Jellies pulsing up through the dark.</span>
+      </a>
+      <a class="row" href="variations/abyss/whale.html" target="_blank" rel="noopener">
+        <span class="name">Leviathan</span>
+        <span class="desc">A whale crossing the far dark, trailing song.</span>
+      </a>
+      <a class="row" href="variations/abyss/vents.html" target="_blank" rel="noopener">
+        <span class="name">Smokers</span>
+        <span class="desc">Hydrothermal vents on the black floor.</span>
+      </a>
+      <a class="row" href="variations/abyss/school.html" target="_blank" rel="noopener">
+        <span class="name">Bait Ball</span>
+        <span class="desc">A school turning as one body.</span>
+      </a>
+      <a class="row" href="variations/abyss/descent.html" target="_blank" rel="noopener">
+        <span class="name">Descent</span>
+        <span class="desc">A slow sink past the light — and the lure.</span>
+      </a>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>Cloud studies</h2><span class="count">7</span>
+      <a class="gal-link" href="variations/clouds/index.html" target="_blank" rel="noopener">gallery view</a>
+    </div>
+    <div class="grid">
+      <a class="row" href="variations/clouds/cumulus.html" target="_blank" rel="noopener">
+        <span class="name">Cumulus</span>
+        <span class="desc">Packed puffy masses — density up.</span>
+      </a>
+      <a class="row" href="variations/clouds/fogbank.html" target="_blank" rel="noopener">
+        <span class="name">Fogbank</span>
+        <span class="desc">Thin, diffuse, low to the ground.</span>
+      </a>
+      <a class="row" href="variations/clouds/stormfront.html" target="_blank" rel="noopener">
+        <span class="name">Stormfront</span>
+        <span class="desc">Heavy and dark, rolling in.</span>
+      </a>
+      <a class="row" href="variations/clouds/updraft.html" target="_blank" rel="noopener">
+        <span class="name">Updraft</span>
+        <span class="desc">Buoyant vapor rising.</span>
+      </a>
+      <a class="row" href="variations/clouds/crosswind.html" target="_blank" rel="noopener">
+        <span class="name">Crosswind</span>
+        <span class="desc">Shear pushing the mass sideways.</span>
+      </a>
+      <a class="row" href="variations/clouds/streak.html" target="_blank" rel="noopener">
+        <span class="name">Streak</span>
+        <span class="desc">Fast passage through the vapor.</span>
+      </a>
+      <a class="row" href="variations/clouds/deepfield.html" target="_blank" rel="noopener">
+        <span class="name">Deep Field</span>
+        <span class="desc">Many planes of focus stacked deep.</span>
+      </a>
+    </div>
+  </section>
+
+  <footer class="foot">38 demos · every link opens full screen in a new tab</footer>
+</div>
+</body>
+</html>

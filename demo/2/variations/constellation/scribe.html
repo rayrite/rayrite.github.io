@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CVX Splash — Scribe</title>
+<style>
+  :root {
+    --void: #060a13; --ink: #eef2fb; --muted: #aab6cf;
+    --line: rgba(238, 242, 251, 0.14); --teal: #17e8d8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--void); color: var(--ink);
+    font-family: "Segoe UI", "Avenir Next", system-ui, sans-serif;
+    height: 100vh; overflow: hidden;
+  }
+  #bg { position: fixed; inset: 0; width: 100vw; height: 100vh; display: block; }
+  .stage {
+    position: fixed; inset: 0; display: flex; flex-direction: column;
+    justify-content: space-between; padding: clamp(20px, 4vw, 44px);
+    opacity: 0; animation: settle 1s ease-out 0.3s forwards;
+  }
+  @keyframes settle { to { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .stage { animation: none; opacity: 1; } }
+  .bar { display: flex; align-items: center; justify-content: space-between; }
+  .wordmark {
+    display: flex; align-items: center; gap: 12px;
+    font-family: "Bahnschrift", "Segoe UI", sans-serif;
+    font-weight: 700; font-size: 16px; letter-spacing: 0.14em;
+  }
+  .wordmark .pip {
+    width: 13px; height: 13px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #ff5ec7, #7a2170 75%);
+    box-shadow: 0 0 12px rgba(255, 94, 199, 0.7);
+  }
+  .variant {
+    color: var(--muted); font-size: 13.5px;
+    border: 1px solid var(--line); border-radius: 999px; padding: 5px 14px;
+  }
+  .hero { text-align: center; max-width: 680px; margin: 0 auto; padding-bottom: 5vh; }
+  .hero h1 {
+    font-family: "Bahnschrift", "Segoe UI", sans-serif;
+    font-size: clamp(2.2rem, 5.5vw, 3.8rem); font-weight: 700; line-height: 1.05;
+    text-shadow: 0 2px 28px rgba(3, 6, 12, 0.85);
+  }
+  .hero p {
+    margin: 14px auto 26px; max-width: 44ch; color: var(--muted);
+    font-size: clamp(0.95rem, 1.5vw, 1.1rem); line-height: 1.6;
+    text-shadow: 0 1px 18px rgba(3, 6, 12, 0.9);
+  }
+  .btn {
+    font: inherit; font-size: 14.5px; padding: 11px 24px; border-radius: 10px;
+    cursor: pointer; text-decoration: none; transition: transform 0.2s, background 0.2s;
+  }
+  .btn:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; }
+  .btn-solid { background: var(--ink); color: #0a0f1c; border: 1px solid var(--ink); }
+  .btn-solid:hover { background: #fff; transform: translateY(-1px); }
+  .foot { color: var(--muted); font-size: 13px; text-align: center; }
+
+  /* mobile & touch */
+  html, body { overscroll-behavior: none; }
+  body { height: 100dvh; -webkit-tap-highlight-color: transparent; }
+  #bg { touch-action: none; }
+  .stage { -webkit-user-select: none; user-select: none; }
+  .bar { flex-wrap: wrap; row-gap: 10px; }
+  @media (max-width: 640px) {
+    .wordmark { font-size: 14px; }
+    .variant { font-size: 11px; padding: 4px 10px; }
+    .hero h1 { font-size: clamp(1.9rem, 8.5vw, 2.5rem); }
+    .hero p { font-size: 0.92rem; }
+    .btn { padding: 13px 28px; font-size: 15px; }
+    .foot { font-size: 11.5px; }
+  }
+</style>
+</head>
+<body>
+<canvas id="bg" aria-hidden="true"></canvas>
+<div class="stage">
+  <header class="bar">
+    <div class="wordmark"><span class="pip"></span>CVX SPLASH</div>
+    <span class="variant">Variation — Scribe</span>
+  </header>
+  <main class="hero">
+    <h1>Scribe</h1>
+    <p>Meteors fall and leave stars behind; when enough gather near each other, the sky links them into a constellation that glows, then fades. The pointer draws where the next ones fall.</p>
+    <a class="btn btn-solid" href="#">Get started</a>
+  </main>
+  <footer class="foot">The pointer draws where they fall</footer>
+</div>
+
+<script>
+(() => {
+  "use strict";
+  const canvas = document.getElementById("bg");
+  const ctx = canvas.getContext("2d");
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const TAU = Math.PI * 2;
+  const rnd = (a, b) => a + Math.random() * (b - a);
+  const hash = (i, s) => {
+    const x = Math.sin(i * 127.1 + s * 311.7) * 43758.5453;
+    return x - Math.floor(x);
+  };
+
+  let W = 0, H = 0;
+  function resize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth; H = window.innerHeight;
+    canvas.width = Math.round(W * dpr);
+    canvas.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function makeGlow(r, g, b) {
+    const s = document.createElement("canvas");
+    s.width = s.height = 64;
+    const c = s.getContext("2d");
+    const gr = c.createRadialGradient(32, 32, 0, 32, 32, 32);
+    gr.addColorStop(0, `rgba(${r},${g},${b},1)`);
+    gr.addColorStop(0.25, `rgba(${r},${g},${b},0.5)`);
+    gr.addColorStop(1, `rgba(${r},${g},${b},0)`);
+    c.fillStyle = gr;
+    c.fillRect(0, 0, 64, 64);
+    return s;
+  }
+  const glowStar = makeGlow(232, 240, 255);
+  const glowMeteor = makeGlow(200, 255, 246);
+  const glowTeal = makeGlow(23, 232, 216);
+  const glowPtr = makeGlow(23, 232, 216);
+
+  const BG_STARS = 130;
+  const meteors = [];      // falling, each with a pre-chosen endpoint
+  const stars = [];        // left behind, living a while
+  const consts = [];       // self-assembled, glowing, burning off
+  let simT = 0;
+  let nextMeteor = 0.4;
+  let nextScan = 3;
+
+  let mx = -2, my = -2, px = -2, py = -2, hasPointer = false;
+  window.addEventListener("pointermove", e => {
+    mx = e.clientX / W; my = e.clientY / H; hasPointer = true;
+  });
+  window.addEventListener("pointerleave", () => { hasPointer = false; mx = -2; my = -2; });
+
+  function addStar(x, y) {
+    stars.push({ x, y, life: 0, ttl: rnd(18, 26), linked: null, ph: rnd(0, TAU) });
+    if (stars.length > 26) {
+      const old = stars.shift();
+      if (old.linked) old.linked.members = old.linked.members.filter(q => q !== old);
+    }
+  }
+
+  function step(dt, t) {
+    px += (mx - px) * 0.07;
+    py += (my - py) * 0.07;
+    simT += dt;
+
+    // meteors fall, mostly where the pointer is drawing
+    if (simT >= nextMeteor && meteors.length < 3) {
+      nextMeteor = simT + rnd(1.0, 2.2);
+      let x0;
+      if (hasPointer && Math.random() < 0.7) x0 = Math.max(0.03, Math.min(0.97, px + rnd(-0.15, 0.15)));
+      else x0 = rnd(0.05, 0.95);
+      const dir = Math.random() < 0.5 ? 1 : -1;
+      const y1 = rnd(0.15, 0.8);
+      const x1 = Math.max(0.03, Math.min(0.97, x0 + dir * rnd(0.25, 0.7) * (y1 + 0.04)));
+      meteors.push({ x0, y0: -0.04, x1, y1, u: 0, T: rnd(0.9, 1.4), trail: [] });
+    }
+    for (let k = meteors.length - 1; k >= 0; k--) {
+      const m = meteors[k];
+      m.u += dt / m.T;
+      const x = m.x0 + (m.x1 - m.x0) * m.u;
+      const y = m.y0 + (m.y1 - m.y0) * m.u;
+      const last = m.trail[m.trail.length - 1];
+      if (!last || Math.hypot(x - last[0], y - last[1]) > 0.006) {
+        m.trail.push([x, y]);
+        if (m.trail.length > 9) m.trail.shift();
+      }
+      if (m.u >= 1) {
+        meteors.splice(k, 1);
+        addStar(m.x1, m.y1);
+      }
+    }
+
+    for (let k = stars.length - 1; k >= 0; k--) {
+      const s = stars[k];
+      s.life += dt;
+      if (s.life > s.ttl) {
+        if (s.linked) s.linked.members = s.linked.members.filter(q => q !== s);
+        stars.splice(k, 1);
+      }
+    }
+
+    // every few seconds the sky looks for a gathering worth naming
+    if (simT >= nextScan) {
+      nextScan = simT + 5;
+      if (consts.length >= 3) {
+        const old = consts.shift();
+        old.t0 = Math.min(old.t0, simT - 8);   // send the oldest straight to its fade
+      }
+      const free = stars.filter(s => !s.linked && s.life > 0.8);
+      outer:
+      for (const seed of free) {
+        const cands = free.filter(s => s !== seed && Math.hypot(s.x - seed.x, s.y - seed.y) < 0.17)
+                          .sort((a, b) => ((a.x - seed.x) ** 2 + (a.y - seed.y) ** 2) - ((b.x - seed.x) ** 2 + (b.y - seed.y) ** 2));
+        const members = [seed];
+        for (const c of cands) {
+          if (members.length >= 6) break;
+          if (members.every(q => Math.hypot(c.x - q.x, c.y - q.y) < 0.17)) members.push(c);
+        }
+        if (members.length >= 3) {
+          // order by angle around the centroid, then link
+          let cx = 0, cy = 0;
+          for (const m of members) { cx += m.x; cy += m.y; }
+          cx /= members.length; cy /= members.length;
+          members.sort((a, b) => Math.atan2(a.y - cy, a.x - cx) - Math.atan2(b.y - cy, b.x - cx));
+          const con = { members, cx, cy, t0: simT };
+          for (const m of members) m.linked = con;
+          consts.push(con);
+          break outer;
+        }
+      }
+    }
+
+    // constellation lifecycles: pulse in, hold, burn off
+    for (let k = consts.length - 1; k >= 0; k--) {
+      const c = consts[k];
+      const age = simT - c.t0;
+      if (age >= 10) {
+        for (const m of c.members) {
+          m.linked = null;
+          m.ttl = Math.min(m.ttl, m.life + 2);   // spent stars fade sooner
+        }
+        consts.splice(k, 1);
+      }
+    }
+  }
+
+  function conAlpha(c) {
+    const age = simT - c.t0;
+    if (age < 1) { const e = age * age * (3 - 2 * age); return e * (1 + 0.2 * Math.sin(age * Math.PI)); }
+    if (age < 8) return 0.8 + 0.15 * Math.sin(age * 1.8);
+    return Math.max(0, (10 - age) / 2) * 0.95;
+  }
+
+  function frame(now, dt) {
+    const t = now / 1000;
+    const grow = reduced ? 1 : Math.min(t / 1.8, 1);
+
+    step(dt, t);
+
+    const g = ctx.createLinearGradient(0, 0, 0, H);
+    g.addColorStop(0, "#070b14");
+    g.addColorStop(0.6, "#0a0f1d");
+    g.addColorStop(1, "#0d1424");
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, W, H);
+
+    ctx.globalCompositeOperation = "lighter";
+
+    // two faint nebulae
+    let gr = ctx.createRadialGradient(W * 0.74, H * 0.24, 0, W * 0.74, H * 0.24, W * 0.38);
+    gr.addColorStop(0, "rgba(106,31,94,0.14)");
+    gr.addColorStop(1, "rgba(106,31,94,0)");
+    ctx.fillStyle = gr;
+    ctx.fillRect(0, 0, W, H);
+    gr = ctx.createRadialGradient(W * 0.18, H * 0.8, 0, W * 0.18, H * 0.8, W * 0.34);
+    gr.addColorStop(0, "rgba(23,150,150,0.09)");
+    gr.addColorStop(1, "rgba(23,150,150,0)");
+    ctx.fillStyle = gr;
+    ctx.fillRect(0, 0, W, H);
+
+    // the fixed sky, twinkling
+    ctx.fillStyle = "rgba(238,242,251,0.55)";
+    for (let i = 0; i < BG_STARS; i++) {
+      const tw = 0.5 + 0.5 * Math.sin(t * (0.4 + hash(i, 3)) * 2 + hash(i, 4) * TAU);
+      ctx.globalAlpha = (0.05 + 0.11 * tw) * grow;
+      const s = 1 + hash(i, 5) * 1.2;
+      ctx.fillRect(hash(i, 1) * W, hash(i, 2) * H, s, s);
+    }
+    ctx.globalAlpha = 1;
+
+    // meteors: bright heads, tapering trails
+    for (const m of meteors) {
+      const x = m.x0 + (m.x1 - m.x0) * m.u;
+      const y = m.y0 + (m.y1 - m.y0) * m.u;
+      const fade = Math.min(m.u * 6, 1) * Math.min((1 - m.u) * 4 + 0.3, 1);
+      for (let i = 1; i < m.trail.length; i++) {
+        const f = i / m.trail.length;
+        ctx.strokeStyle = `rgba(200,255,246,${0.5 * f * f * fade * grow})`;
+        ctx.lineWidth = 1 + 2.4 * f;
+        ctx.beginPath();
+        ctx.moveTo(m.trail[i - 1][0] * W, m.trail[i - 1][1] * H);
+        ctx.lineTo(m.trail[i][0] * W, m.trail[i][1] * H);
+        ctx.stroke();
+      }
+      ctx.globalAlpha = 0.95 * fade * grow;
+      ctx.drawImage(glowMeteor, x * W - 10, y * H - 10, 20, 20);
+      ctx.globalAlpha = 1;
+    }
+    ctx.lineWidth = 1;
+
+    // the sown stars
+    for (const s of stars) {
+      const aIn = Math.min(s.life / 1, 1);
+      const aOut = Math.max(0, Math.min((s.ttl - s.life) / 1.5, 1));
+      let al = aIn * aOut;
+      if (al <= 0.01) continue;
+      const tw = 0.75 + 0.25 * Math.sin(t * 1.7 + s.ph);
+      const r = 7 + 3 * tw;
+      ctx.globalAlpha = 0.7 * al * tw * grow;
+      ctx.drawImage(glowStar, s.x * W - r, s.y * H - r, r * 2, r * 2);
+      if (s.linked || al > 0.5) {
+        ctx.globalAlpha = 0.9 * al * grow;
+        ctx.fillStyle = "rgba(240,246,255,0.95)";
+        ctx.beginPath();
+        ctx.arc(s.x * W, s.y * H, 1.4, 0, TAU);
+        ctx.fill();
+      }
+    }
+    ctx.globalAlpha = 1;
+
+    // constellations drawn in teal, their stars brightened
+    for (const c of consts) {
+      const al = conAlpha(c) * grow;
+      if (al < 0.01) continue;
+      ctx.strokeStyle = `rgba(23,232,216,${Math.min(al * 0.55, 0.7)})`;
+      ctx.lineWidth = 1.4;
+      ctx.beginPath();
+      for (let i = 0; i < c.members.length; i++) {
+        const m = c.members[i];
+        if (i === 0) ctx.moveTo(m.x * W, m.y * H);
+        else ctx.lineTo(m.x * W, m.y * H);
+      }
+      ctx.stroke();
+      for (const m of c.members) {
+        ctx.globalAlpha = Math.min(al * 0.7, 0.85);
+        ctx.drawImage(glowTeal, m.x * W - 13, m.y * H - 13, 26, 26);
+      }
+      ctx.globalAlpha = 1;
+    }
+    ctx.lineWidth = 1;
+
+    // the pointer, faintly
+    if (hasPointer) {
+      ctx.globalAlpha = 0.3;
+      ctx.drawImage(glowPtr, px * W - 30, py * H - 30, 60, 60);
+      ctx.globalAlpha = 1;
+    }
+
+    ctx.globalCompositeOperation = "source-over";
+
+    const v = ctx.createRadialGradient(W / 2, H / 2, Math.min(W, H) * 0.36, W / 2, H / 2, Math.max(W, H) * 0.75);
+    v.addColorStop(0, "rgba(3,6,12,0)");
+    v.addColorStop(1, "rgba(3,6,12,0.55)");
+    ctx.fillStyle = v;
+    ctx.fillRect(0, 0, W, H);
+  }
+
+  let holdT = 0;
+  resize();
+  window.addEventListener("resize", () => {
+    resize();
+    if (reduced) frame(holdT, 0.016);
+  });
+
+  if (reduced) {
+    // run the cycle long enough for stars and a constellation to exist
+    for (let k = 0; k < 600; k++) frame(k * 16, 0.016);
+    if (consts.length === 0) {
+      const cx = 0.6, cy = 0.42;
+      const members = [];
+      for (let i = 0; i < 4; i++) {
+        const a = i / 4 * TAU + 0.5;
+        const r = rnd(0.045, 0.08);
+        const s = { x: cx + Math.cos(a) * r, y: cy + Math.sin(a) * r * 0.8, life: 6, ttl: 26, linked: null, ph: rnd(0, TAU) };
+        stars.push(s);
+        members.push(s);
+      }
+      const con = { members, cx, cy, t0: simT - 2.5 };
+      for (const m of members) m.linked = con;
+      consts.push(con);
+    }
+    holdT = 599 * 16;
+    frame(holdT, 0.016);
+  } else {
+    let last = performance.now();
+    requestAnimationFrame(function loop(now) {
+      const dt = Math.min((now - last) / 1000, 0.05);
+      last = now;
+      frame(now, dt);
+      requestAnimationFrame(loop);
+    });
+  }
+})();
+</script>
+</body>
+</html>

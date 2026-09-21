@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CVX Splash — Night Rain</title>
+<style>
+  :root {
+    --void: #060a13; --ink: #eef2fb; --muted: #aab6cf;
+    --line: rgba(238, 242, 251, 0.14); --teal: #17e8d8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--void); color: var(--ink);
+    font-family: "Segoe UI", "Avenir Next", system-ui, sans-serif;
+    height: 100vh; overflow: hidden;
+  }
+  #bg { position: fixed; inset: 0; width: 100vw; height: 100vh; display: block; }
+  .stage {
+    position: fixed; inset: 0; display: flex; flex-direction: column;
+    justify-content: space-between; padding: clamp(20px, 4vw, 44px);
+    opacity: 0; animation: settle 1s ease-out 0.3s forwards;
+  }
+  @keyframes settle { to { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .stage { animation: none; opacity: 1; } }
+  .bar { display: flex; align-items: center; justify-content: space-between; }
+  .wordmark {
+    display: flex; align-items: center; gap: 12px;
+    font-family: "Bahnschrift", "Segoe UI", sans-serif;
+    font-weight: 700; font-size: 16px; letter-spacing: 0.14em;
+  }
+  .wordmark .pip {
+    width: 13px; height: 13px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #ff5ec7, #7a2170 75%);
+    box-shadow: 0 0 12px rgba(255, 94, 199, 0.7);
+  }
+  .variant {
+    color: var(--muted); font-size: 13.5px;
+    border: 1px solid var(--line); border-radius: 999px; padding: 5px 14px;
+  }
+  .hero { text-align: center; max-width: 680px; margin: 0 auto; padding-bottom: 5vh; }
+  .hero h1 {
+    font-family: "Bahnschrift", "Segoe UI", sans-serif;
+    font-size: clamp(2.2rem, 5.5vw, 3.8rem); font-weight: 700; line-height: 1.05;
+    text-shadow: 0 2px 28px rgba(3, 6, 12, 0.85);
+  }
+  .hero p {
+    margin: 14px auto 26px; max-width: 44ch; color: var(--muted);
+    font-size: clamp(0.95rem, 1.5vw, 1.1rem); line-height: 1.6;
+    text-shadow: 0 1px 18px rgba(3, 6, 12, 0.9);
+  }
+  .btn {
+    font: inherit; font-size: 14.5px; padding: 11px 24px; border-radius: 10px;
+    cursor: pointer; text-decoration: none; transition: transform 0.2s, background 0.2s;
+  }
+  .btn:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; }
+  .btn-solid { background: var(--ink); color: #0a0f1c; border: 1px solid var(--ink); }
+  .btn-solid:hover { background: #fff; transform: translateY(-1px); }
+  .foot { color: var(--muted); font-size: 13px; text-align: center; }
+
+  /* mobile & touch */
+  html, body { overscroll-behavior: none; }
+  body { height: 100dvh; -webkit-tap-highlight-color: transparent; }
+  #bg { touch-action: none; }
+  .stage { -webkit-user-select: none; user-select: none; }
+  .bar { flex-wrap: wrap; row-gap: 10px; }
+  @media (max-width: 640px) {
+    .wordmark { font-size: 14px; }
+    .variant { font-size: 11px; padding: 4px 10px; }
+    .hero h1 { font-size: clamp(1.9rem, 8.5vw, 2.5rem); }
+    .hero p { font-size: 0.92rem; }
+    .btn { padding: 13px 28px; font-size: 15px; }
+    .foot { font-size: 11.5px; }
+  }
+</style>
+</head>
+<body>
+<canvas id="bg" aria-hidden="true"></canvas>
+<div class="stage">
+  <header class="bar">
+    <div class="wordmark"><span class="pip"></span>CVX SPLASH</div>
+    <span class="variant">Variation — Night Rain</span>
+  </header>
+  <main class="hero">
+    <h1>Night Rain</h1>
+    <p>A calm sea under rain. Every drop births an expanding ring whose front outruns its wake, thinning as it spreads — thousands of interfering ripples make the water live.</p>
+    <a class="btn btn-solid" href="#">Get started</a>
+  </main>
+  <footer class="foot">The rain bends around the pointer</footer>
+</div>
+
+<script>
+(() => {
+  "use strict";
+  const canvas = document.getElementById("bg");
+  const ctx = canvas.getContext("2d");
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const TAU = Math.PI * 2;
+  const rnd = (a, b) => a + Math.random() * (b - a);
+  const hash = (i, s) => ((Math.sin(i * 12.9898 + s * 78.233) * 43758.5453) % 1 + 1) % 1;
+
+  let W = 0, H = 0;
+  let mx = 0.5, my = 0.45, px = -2, py = -2;
+  window.addEventListener("pointermove", e => { mx = e.clientX / W; my = e.clientY / H; });
+  window.addEventListener("pointerleave", () => { mx = -2; my = -2; });
+
+  // deep-water dispersion w = sqrt(g k), 0.30W swell at ~5 s; the sea is calm tonight
+  let G = 120;
+  const CG = 26; // ring group speed, px/s — the front outruns its wake
+
+  const NROWS = 11;
+  const rows = [];
+  function buildRows() {
+    rows.length = 0;
+    for (let i = 0; i < NROWS; i++) {
+      const v = 0.05 + (i / (NROWS - 1)) * 0.90;
+      const lam = W * (0.14 + 0.55 * Math.pow(v, 1.4));
+      const amp = H * (0.002 + 0.022 * Math.pow(v, 2.4));
+      const mk = l => ({ k: TAU / l, w: Math.sqrt(G * TAU / l), a: 0, ph: rnd(0, TAU) });
+      const c1 = mk(lam), c2 = mk(lam * 0.66);
+      c1.a = amp; c2.a = amp * 0.3;
+      rows.push({ v, c: [c1, c2], y0: 0, ph2: rnd(0, TAU), glint: [] });
+      const ng = Math.floor(2 + v * 5);
+      for (let k = 0; k < ng; k++)
+        rows[i].glint.push({ u: Math.random(), sp: rnd(0.8, 2.6), ph3: rnd(0, TAU) });
+    }
+  }
+
+  // calm height field h(x,t) = sum A sin(kx - wt + phi), slope analytic
+  function prof(row, x, t) {
+    const c1 = row.c[0], c2 = row.c[1];
+    const th1 = c1.k * x - c1.w * t + c1.ph;
+    const th2 = c2.k * x + c2.w * t + c2.ph;
+    return [
+      c1.a * Math.sin(th1) + c2.a * Math.sin(th2),
+      c1.a * c1.k * Math.cos(th1) - c2.a * c2.k * Math.cos(th2)
+    ];
+  }
+
+  // rain in three depths; each drop lands on its own row's surface, never a flat line
+  const drops = [];
+  const ripples = []; // {x, y, born} — r = cg*(t-born), leading ring + dimmer wake
+  const MAXR = 220;
+  const WIND = 14;
+
+  function spawnDrop(d) {
+    d.x = rnd(-20, W + 20);
+    d.y = rnd(-H * 0.4, -10);
+  }
+  function buildDrops() {
+    drops.length = 0;
+    const layers = [
+      { n: 60, row: 2, sp: 150, len: 2, a: 0.10, w: 0.7 },
+      { n: 45, row: 5, sp: 280, len: 5, a: 0.22, w: 1.1 },
+      { n: 35, row: 9, sp: 480, len: 11, a: 0.35, w: 1.6 }
+    ];
+    for (const L of layers)
+      for (let i = 0; i < L.n; i++) {
+        const d = { row: L.row, sp: L.sp * rnd(0.85, 1.15), len: L.len * rnd(0.7, 1.3), a: L.a, w: L.w, x: 0, y: 0 };
+        spawnDrop(d); d.y = rnd(0, H * 0.5);
+        drops.push(d);
+      }
+  }
+
+  function step(dt, t) {
+    const hzs = H * (0.36 + 0.013 * Math.sin(t * 0.21));
+    for (const r of rows) r.y0 = hzs + (H - hzs) * Math.pow(r.v, 1.9);
+    for (const d of drops) {
+      d.y += d.sp * dt;
+      d.x += WIND * dt;
+      const row = rows[d.row];
+      if (d.y >= row.y0 + prof(row, d.x, t)[0]) {
+        if (ripples.length >= MAXR) ripples.shift();
+        ripples.push({ x: d.x, y: row.y0 + prof(row, d.x, t)[0], born: t });
+        spawnDrop(d);
+      }
+    }
+  }
+
+  const mists = [{ u: 0.2, s: 0.9 }, { u: 0.55, s: 1.2 }, { u: 0.85, s: 0.8 }];
+
+  function draw(t) {
+    px += (mx - px) * 0.06;
+    py += (my - py) * 0.06;
+
+    const horizon = H * (0.36 + 0.013 * Math.sin(t * 0.21));
+    const sway = Math.sin(t * 0.13) * 6;
+    for (const row of rows) row.y0 = horizon + (H - horizon) * Math.pow(row.v, 1.9);
+
+    let g = ctx.createLinearGradient(0, -30, 0, horizon);
+    g.addColorStop(0, "#04070f");
+    g.addColorStop(1, "#0b1526");
+    ctx.fillStyle = g;
+    ctx.fillRect(-40, -40, W + 80, horizon + 41);
+
+    g = ctx.createLinearGradient(0, horizon, 0, H + 40);
+    g.addColorStop(0, "#0a1526");
+    g.addColorStop(0.35, "#071020");
+    g.addColorStop(1, "#040810");
+    ctx.fillStyle = g;
+    ctx.fillRect(-40, horizon, W + 80, H - horizon + 80);
+
+    ctx.save();
+    ctx.translate(sway, 0);
+
+    ctx.globalCompositeOperation = "lighter";
+    ctx.fillStyle = "#dfe8ff";
+    for (let i = 0; i < 110; i++) {
+      const sx = hash(i, 1) * W;
+      const sy = hash(i, 2) * horizon * 0.92;
+      const tw = 0.55 + 0.45 * Math.sin(t * (0.25 + (i % 6) * 0.11) + i * 1.7);
+      ctx.globalAlpha = 0.45 * tw * (1 - sy / horizon);
+      ctx.beginPath();
+      ctx.arc(sx, sy, 0.6 + (i % 4) * 0.32, 0, TAU);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+
+    const mX = W * (0.70 + Math.sin(t * 0.02) * 0.012) + (px > -1 ? (px - 0.5) * -8 : 0);
+    const mY = horizon * 0.42 + Math.cos(t * 0.026) * 6;
+    const mR = Math.min(W, H) * 0.055;
+    let mg = ctx.createRadialGradient(mX, mY, mR * 0.2, mX, mY, mR * 5);
+    mg.addColorStop(0, "rgba(255,94,199,0.16)");
+    mg.addColorStop(1, "rgba(255,94,199,0)");
+    ctx.fillStyle = mg;
+    ctx.beginPath(); ctx.arc(mX, mY, mR * 5, 0, TAU); ctx.fill();
+
+    ctx.globalCompositeOperation = "source-over";
+    mg = ctx.createRadialGradient(mX - mR * 0.25, mY - mR * 0.25, mR * 0.1, mX, mY, mR);
+    mg.addColorStop(0, "#ffd6ec");
+    mg.addColorStop(0.55, "#ff9ed2");
+    mg.addColorStop(1, "#7a2170");
+    ctx.fillStyle = mg;
+    ctx.beginPath(); ctx.arc(mX, mY, mR, 0, TAU); ctx.fill();
+
+    ctx.globalCompositeOperation = "lighter";
+
+    let hz = ctx.createLinearGradient(0, horizon - 60, 0, horizon + 70);
+    hz.addColorStop(0, "rgba(120,150,200,0)");
+    hz.addColorStop(0.5, "rgba(120,150,200,0.12)");
+    hz.addColorStop(1, "rgba(120,150,200,0)");
+    ctx.fillStyle = hz;
+    ctx.fillRect(-40, horizon - 60, W + 80, 130);
+
+    const bw = W * 0.16;
+    const beam = ctx.createLinearGradient(mX - bw, 0, mX + bw, 0);
+    beam.addColorStop(0, "rgba(255,160,210,0)");
+    beam.addColorStop(0.5, "rgba(255,160,210,0.12)");
+    beam.addColorStop(1, "rgba(255,160,210,0)");
+    ctx.fillStyle = beam;
+    ctx.fillRect(mX - bw, horizon, bw * 2, H - horizon);
+
+    // mist banks drifting near the horizon
+    for (const m of mists) {
+      const mxp = ((m.u + t * 0.004 * m.s) % 1.3 - 0.15) * W;
+      const myp = horizon + 8 + m.s * 12;
+      const fg = ctx.createRadialGradient(mxp, myp, 0, mxp, myp, W * 0.22 * m.s);
+      fg.addColorStop(0, "rgba(130,160,205,0.05)");
+      fg.addColorStop(1, "rgba(130,160,205,0)");
+      ctx.fillStyle = fg;
+      ctx.save();
+      ctx.translate(mxp, myp);
+      ctx.scale(1, 0.16);
+      ctx.translate(-mxp, -myp);
+      ctx.beginPath(); ctx.arc(mxp, myp, W * 0.22 * m.s, 0, TAU); ctx.fill();
+      ctx.restore();
+    }
+
+    const pxW = px * W, pyH = py * H;
+
+    for (let ri = 0; ri < rows.length; ri++) {
+      const row = rows[ri];
+      const v = row.v;
+      const shift = px > -1 ? (px - 0.5) * -30 * v : 0;
+      ctx.save();
+      ctx.translate(shift, 0);
+
+      const pts = [];
+      for (let x = -60; x <= W + 60; x += 7) {
+        const p = prof(row, x, t);
+        pts.push([x, row.y0 + p[0], p[1]]);
+      }
+
+      ctx.globalCompositeOperation = "source-over";
+      ctx.beginPath();
+      pts.forEach((p, k) => (k ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])));
+      ctx.lineTo(W + 60, H + 60);
+      ctx.lineTo(-60, H + 60);
+      ctx.closePath();
+      ctx.fillStyle = `rgba(6,11,22,${0.28 + 0.45 * v})`;
+      ctx.fill();
+
+      // calm crest hairline
+      ctx.globalCompositeOperation = "lighter";
+      ctx.beginPath();
+      pts.forEach((p, k) => (k ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])));
+      const ca = 0.08 + 0.4 * Math.pow(v, 1.6);
+      ctx.strokeStyle = v > 0.6 ? `rgba(140,235,225,${ca})` : `rgba(90,140,180,${ca})`;
+      ctx.lineWidth = 0.7 + 1.2 * v;
+      ctx.stroke();
+
+      // gentle moon glitter on the slopes
+      const sg = W * (0.04 + 0.12 * v);
+      const inv2 = 1 / (2 * sg * sg);
+      const gl = new Path2D();
+      for (let k = 0; k < pts.length - 1; k++) {
+        const a = pts[k], b = pts[k + 1];
+        const gauss = Math.exp(-((a[0] - mX) * (a[0] - mX)) * inv2);
+        const spec = Math.pow(Math.max(0, -a[2] * 1.3 + 0.2), 2) * gauss * (0.3 + 0.6 * v);
+        if (spec > 0.2) { gl.moveTo(a[0], a[1]); gl.lineTo(b[0], b[1]); }
+      }
+      ctx.lineWidth = 0.8 + 1.6 * v;
+      ctx.strokeStyle = "rgba(255,195,222,0.35)";
+      ctx.stroke(gl);
+
+      // rain-shimmer specks riding this row
+      for (const f of row.glint) {
+        const gx = f.u * (W + 40) - 20;
+        const gi = pts[Math.max(0, Math.min(pts.length - 1, Math.round((gx + 60) / 7)))];
+        const tw = 0.5 + 0.5 * Math.sin(t * f.sp + f.ph3);
+        ctx.fillStyle = `rgba(210,235,240,${0.12 + 0.3 * v * tw})`;
+        ctx.fillRect(gx - 2, gi[1], 4, 1);
+      }
+
+      // this row's ripples: leading ring, then a dimmer wake at 0.62 r
+      const lead = new Path2D(), wake = new Path2D();
+      for (const rp of ripples) {
+        if (Math.abs(rp.y - row.y0) > 60) continue;
+        const age = t - rp.born;
+        const r = CG * age;
+        if (r > 85 || r < 1) continue;
+        lead.ellipse(rp.x, rp.y, r, r * 0.28, 0, 0, TAU);
+        wake.ellipse(rp.x, rp.y, r * 0.62, r * 0.62 * 0.28, 0, 0, TAU);
+        if (r < 12) { // the drop's own brief glow where it landed
+          ctx.globalAlpha = (1 - r / 12) * 0.3;
+          ctx.fillStyle = "rgba(210,235,245,1)";
+          ctx.beginPath();
+          ctx.arc(rp.x, rp.y, 1.4, 0, TAU);
+          ctx.fill();
+        }
+      }
+      ctx.globalAlpha = 0.5;
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = "rgba(185,222,238,0.55)";
+      ctx.stroke(lead);
+      ctx.globalAlpha = 0.25;
+      ctx.strokeStyle = "rgba(185,222,238,0.4)";
+      ctx.stroke(wake);
+      ctx.globalAlpha = 1;
+
+      // this layer's rain, streaks leaning into the wind
+      for (const d of drops) {
+        if (d.row !== ri) continue;
+        let a = d.a;
+        let bx = d.x - d.w * d.len * 0.35;
+        if (px > -1) {
+          const ddx = d.x - pxW, ddy = d.y - pyH;
+          const dd = Math.hypot(ddx, ddy);
+          if (dd < 130) { // the storm of drops parts around the pointer
+            const f = 1 - dd / 130;
+            a *= 1 + 1.3 * f;
+            bx += Math.sign(ddx || 1) * f * 18;
+          }
+        }
+        ctx.strokeStyle = `rgba(190,215,235,${Math.min(0.8, a)})`;
+        ctx.lineWidth = d.w;
+        ctx.beginPath();
+        ctx.moveTo(d.x, d.y);
+        ctx.lineTo(bx, d.y - d.len);
+        ctx.stroke();
+      }
+
+      ctx.restore();
+    }
+
+    // the lantern: a soft hold on the water beneath the pointer
+    if (px > -1) {
+      const nearRow = rows[rows.length - 2];
+      const ly = nearRow.y0 + prof(nearRow, pxW, t)[0];
+      const lg = ctx.createRadialGradient(pxW, ly, 0, pxW, ly, 130);
+      lg.addColorStop(0, "rgba(150,235,225,0.12)");
+      lg.addColorStop(1, "rgba(150,235,225,0)");
+      ctx.fillStyle = lg;
+      ctx.beginPath();
+      ctx.ellipse(pxW, ly, 130, 44, 0, 0, TAU);
+      ctx.fill();
+    }
+
+    ctx.restore();
+    ctx.globalCompositeOperation = "source-over";
+
+    const vg = ctx.createRadialGradient(W / 2, H / 2, Math.min(W, H) * 0.4, W / 2, H / 2, Math.max(W, H) * 0.75);
+    vg.addColorStop(0, "rgba(2,4,8,0)");
+    vg.addColorStop(1, "rgba(2,4,8,0.5)");
+    ctx.fillStyle = vg;
+    ctx.fillRect(0, 0, W, H);
+  }
+
+  let t = 0;
+  function settle() { for (let i = 0; i < 140; i++) { t += 1 / 60; step(1 / 60, t); } draw(t); }
+
+  function resize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth; H = window.innerHeight;
+    canvas.width = Math.round(W * dpr);
+    canvas.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    G = 2 * Math.PI * (W * 0.3) / 25;
+    buildRows();
+    buildDrops();
+    if (reduced) settle();
+  }
+  window.addEventListener("resize", resize);
+  resize();
+
+  if (reduced) settle();
+  else {
+    let last = performance.now();
+    requestAnimationFrame(function loop(now) {
+      const dt = Math.min(0.05, (now - last) / 1000);
+      last = now;
+      t += dt;
+      step(dt, t);
+      draw(t);
+      requestAnimationFrame(loop);
+    });
+  }
+})();
+</script>
+</body>
+</html>

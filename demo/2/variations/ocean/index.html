@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CVX Splash — Ocean studies</title>
+<style>
+  :root {
+    --void: #060a13; --ink: #eef2fb; --muted: #aab6cf;
+    --line: rgba(238, 242, 251, 0.12); --teal: #17e8d8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--void); color: var(--ink);
+    font-family: "Segoe UI", "Avenir Next", system-ui, sans-serif;
+    min-height: 100vh;
+  }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: clamp(28px, 5vw, 64px) clamp(20px, 4vw, 40px) 72px; }
+  header.page { margin-bottom: clamp(28px, 4vw, 44px); }
+  .wordmark {
+    display: inline-flex; align-items: center; gap: 12px;
+    font-family: "Bahnschrift", "Segoe UI", sans-serif;
+    font-weight: 700; font-size: 16px; letter-spacing: 0.14em;
+    margin-bottom: 18px;
+  }
+  .wordmark .pip {
+    width: 14px; height: 14px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #ff5ec7, #7a2170 75%);
+    box-shadow: 0 0 14px rgba(255, 94, 199, 0.7);
+  }
+  .back {
+    display: inline-block; margin-bottom: 14px; color: var(--teal);
+    text-decoration: none; font-size: 0.9rem;
+  }
+  .back:hover { text-decoration: underline; }
+  .back:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; border-radius: 2px; }
+  h1 {
+    font-family: "Bahnschrift", "Segoe UI", sans-serif;
+    font-size: clamp(1.9rem, 4vw, 2.9rem); font-weight: 700; line-height: 1.1;
+  }
+  .lede {
+    margin-top: 12px; max-width: 60ch; color: var(--muted);
+    font-size: 1.02rem; line-height: 1.65;
+  }
+  .grid {
+    display: grid; gap: 26px;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+  }
+  .series { margin: 0; }
+  .series + .series { margin-top: 52px; }
+  .series h2 {
+    font-family: "Bahnschrift", "Segoe UI", sans-serif;
+    font-size: 1.15rem; font-weight: 700; letter-spacing: 0.02em;
+    margin-bottom: 18px;
+  }
+  .series .tagline { color: var(--muted); font-size: 0.92rem; margin: -10px 0 20px; max-width: 62ch; line-height: 1.55; }
+  .card { border: 1px solid var(--line); border-radius: 14px; overflow: hidden; transition: border-color 0.25s; }
+  .card:hover, .card:focus-within { border-color: rgba(23, 232, 216, 0.45); }
+  .frame { aspect-ratio: 16 / 10; background: #070b14; }
+  .frame iframe { width: 100%; height: 100%; border: 0; display: block; }
+  .meta { padding: 16px 18px 18px; display: flex; align-items: baseline; justify-content: space-between; gap: 14px; }
+  .meta h2 {
+    font-family: "Bahnschrift", "Segoe UI", sans-serif;
+    font-size: 1.08rem; font-weight: 700; letter-spacing: 0.02em;
+  }
+  .meta p { color: var(--muted); font-size: 0.88rem; line-height: 1.5; margin-top: 5px; max-width: 40ch; }
+  .meta a {
+    flex-shrink: 0; color: var(--teal); font-size: 0.88rem; text-decoration: none;
+    padding: 4px 2px; white-space: nowrap;
+  }
+  .meta a:hover { text-decoration: underline; }
+  .meta a:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; border-radius: 2px; }
+  .note {
+    margin-top: 34px; color: var(--muted); font-size: 0.9rem; line-height: 1.6;
+    border-top: 1px solid var(--line); padding-top: 18px; max-width: 70ch;
+  }
+
+  /* mobile */
+  @media (max-width: 640px) {
+    .grid { gap: 16px; }
+    .meta { padding: 13px 14px 15px; }
+    .meta h2 { font-size: 1rem; }
+    .meta p { font-size: 0.84rem; }
+    .note { margin-top: 24px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="page">
+    <div class="wordmark"><span class="pip"></span>CVX SPLASH</div>
+    <a class="back" href="../../preview.html">All variations</a>
+    <h1>Ocean — deeper studies</h1>
+    <p class="lede">The moonlit rail view rebuilt around real fluid behavior: Gerstner wave sums with slope-lit glitter, dispersive rain rings, a proper Kelvin wake, shallow-water shoaling, and a buoy with honest buoyancy.</p>
+  </header>
+
+  <main>
+  <section class="series">
+    <div class="grid">
+    <figure class="card">
+      <div class="frame"><iframe src="swell.html" title="Groundswell preview" loading="lazy"></iframe></div>
+      <figcaption class="meta">
+        <div>
+          <h2>Groundswell</h2>
+          <p>A Gerstner wave spectrum with crossing sets; moonlight glints on facet slopes, whitecaps where the water folds.</p>
+        </div>
+        <a href="swell.html">Open full screen</a>
+      </figcaption>
+    </figure>
+
+    <figure class="card">
+      <div class="frame"><iframe src="storm.html" title="Storm Sea preview" loading="lazy"></iframe></div>
+      <figcaption class="meta">
+        <div>
+          <h2>Storm Sea</h2>
+          <p>Multidirectional chop near the steepness limit, spindrift, and lightning the whole surface answers.</p>
+        </div>
+        <a href="storm.html">Open full screen</a>
+      </figcaption>
+    </figure>
+
+    <figure class="card">
+      <div class="frame"><iframe src="rain.html" title="Night Rain preview" loading="lazy"></iframe></div>
+      <figcaption class="meta">
+        <div>
+          <h2>Night Rain</h2>
+          <p>Calm water under rain; each drop's ring expands at group speed and thins as it spreads.</p>
+        </div>
+        <a href="rain.html">Open full screen</a>
+      </figcaption>
+    </figure>
+
+    <figure class="card">
+      <div class="frame"><iframe src="wake.html" title="Kelvin Wake preview" loading="lazy"></iframe></div>
+      <figcaption class="meta">
+        <div>
+          <h2>Kelvin Wake</h2>
+          <p>The wake at its true 19.5&deg; with transverse-over-diverging interference and churning stern foam.</p>
+        </div>
+        <a href="wake.html">Open full screen</a>
+      </figcaption>
+    </figure>
+
+    <figure class="card">
+      <div class="frame"><iframe src="shoal.html" title="Shoaling preview" loading="lazy"></iframe></div>
+      <figcaption class="meta">
+        <div>
+          <h2>Shoaling</h2>
+          <p>Side-on shoaling: waves slow, bunch, stand up and break where depth runs out.</p>
+        </div>
+        <a href="shoal.html">Open full screen</a>
+      </figcaption>
+    </figure>
+
+    <figure class="card">
+      <div class="frame"><iframe src="buoy.html" title="Mooring preview" loading="lazy"></iframe></div>
+      <figcaption class="meta">
+        <div>
+          <h2>Mooring</h2>
+          <p>A buoy spring-mounted to the height field — it heels with the slope and bobs with real lag.</p>
+        </div>
+        <a href="buoy.html">Open full screen</a>
+      </figcaption>
+    </figure>
+    </div>
+  </section>
+  </main>
+
+  <p class="note">One shared palette, six fluid models. Everything is Canvas 2D in a single self-contained file, reduced-motion aware, nothing loaded from the network.</p>
+</div>
+</body>
+</html>

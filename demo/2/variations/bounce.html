@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CVX Splash — Bounce</title>
+<style>
+  :root {
+    --void: #060a13; --ink: #eef2fb; --muted: #aab6cf;
+    --line: rgba(238, 242, 251, 0.14); --teal: #17e8d8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--void); color: var(--ink);
+    font-family: "Segoe UI", "Avenir Next", system-ui, sans-serif;
+    height: 100vh; overflow: hidden;
+  }
+  #bg { position: fixed; inset: 0; width: 100vw; height: 100vh; display: block; }
+  .stage {
+    position: fixed; inset: 0; display: flex; flex-direction: column;
+    justify-content: space-between; padding: clamp(20px, 4vw, 44px);
+    opacity: 0; animation: settle 1s ease-out 0.3s forwards;
+  }
+  @keyframes settle { to { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .stage { animation: none; opacity: 1; } }
+  .bar { display: flex; align-items: center; justify-content: space-between; }
+  .wordmark {
+    display: flex; align-items: center; gap: 12px;
+    font-family: "Bahnschrift", "Segoe UI", sans-serif;
+    font-weight: 700; font-size: 16px; letter-spacing: 0.14em;
+  }
+  .wordmark .pip {
+    width: 13px; height: 13px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #ff5ec7, #7a2170 75%);
+    box-shadow: 0 0 12px rgba(255, 94, 199, 0.7);
+  }
+  .variant {
+    color: var(--muted); font-size: 13.5px;
+    border: 1px solid var(--line); border-radius: 999px; padding: 5px 14px;
+  }
+  .hero { text-align: center; max-width: 680px; margin: 0 auto; padding-bottom: 5vh; }
+  .hero h1 {
+    font-family: "Bahnschrift", "Segoe UI", sans-serif;
+    font-size: clamp(2.2rem, 5.5vw, 3.8rem); font-weight: 700; line-height: 1.05;
+    text-shadow: 0 2px 28px rgba(3, 6, 12, 0.85);
+  }
+  .hero p {
+    margin: 14px auto 26px; max-width: 44ch; color: var(--muted);
+    font-size: clamp(0.95rem, 1.5vw, 1.1rem); line-height: 1.6;
+    text-shadow: 0 1px 18px rgba(3, 6, 12, 0.9);
+  }
+  .btn {
+    font: inherit; font-size: 14.5px; padding: 11px 24px; border-radius: 10px;
+    cursor: pointer; text-decoration: none; transition: transform 0.2s, background 0.2s;
+  }
+  .btn:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; }
+  .btn-solid { background: var(--ink); color: #0a0f1c; border: 1px solid var(--ink); }
+  .btn-solid:hover { background: #fff; transform: translateY(-1px); }
+  .foot { color: var(--muted); font-size: 13px; text-align: center; }
+
+  /* mobile & touch */
+  html, body { overscroll-behavior: none; }
+  body { height: 100dvh; -webkit-tap-highlight-color: transparent; }
+  #bg { touch-action: none; }
+  .stage { -webkit-user-select: none; user-select: none; }
+  .bar { flex-wrap: wrap; row-gap: 10px; }
+  @media (max-width: 640px) {
+    .wordmark { font-size: 14px; }
+    .variant { font-size: 11px; padding: 4px 10px; }
+    .hero h1 { font-size: clamp(1.9rem, 8.5vw, 2.5rem); }
+    .hero p { font-size: 0.92rem; }
+    .btn { padding: 13px 28px; font-size: 15px; }
+    .foot { font-size: 11.5px; }
+  }
+</style>
+</head>
+<body>
+<canvas id="bg" aria-hidden="true"></canvas>
+<div class="stage">
+  <header class="bar">
+    <div class="wordmark"><span class="pip"></span>CVX SPLASH</div>
+    <span class="variant">Variation — Bounce</span>
+  </header>
+  <main class="hero">
+    <h1>Bounce</h1>
+    <p>Glowing elastic spheres collide and trade momentum, leaving soft trails. Shove them with the pointer.</p>
+    <a class="btn btn-solid" href="#">Get started</a>
+  </main>
+  <footer class="foot">Move the pointer through the balls to scatter them</footer>
+</div>
+
+<script>
+(() => {
+  "use strict";
+  const canvas = document.getElementById("bg");
+  const ctx = canvas.getContext("2d");
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const TAU = Math.PI * 2;
+  const rnd = (a, b) => a + Math.random() * (b - a);
+
+  let W = 0, H = 0;
+  function resize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth; H = window.innerHeight;
+    canvas.width = Math.round(W * dpr);
+    canvas.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    paintBase(1);      // repaint opaque on resize
+  }
+
+  const COLS = [
+    [255, 94, 199], [255, 179, 217], [23, 232, 216], [94, 158, 255], [232, 240, 255]
+  ];
+
+  const N = 16;
+  const balls = [];
+  for (let i = 0; i < N; i++) {
+    const r = rnd(16, 46);
+    balls.push({
+      x: rnd(r, 1400), y: rnd(-500, -60),        // drop in from above, staggered
+      vx: rnd(-60, 60), vy: 0,
+      r,
+      m: r * r,
+      col: COLS[i % COLS.length],
+      flash: 0,                                   // collision afterglow
+      dropped: false
+    });
+  }
+  // spread entrance positions across the width once we know it
+  let seeded = false;
+
+  let mx = -9999, my = -9999, hasPointer = false;
+  window.addEventListener("pointermove", e => { mx = e.clientX; my = e.clientY; hasPointer = true; });
+  window.addEventListener("pointerleave", () => { hasPointer = false; });
+
+  window.addEventListener("resize", resize);
+  resize();
+
+  function paintBase(alpha) {
+    ctx.globalCompositeOperation = "source-over";
+    const g = ctx.createLinearGradient(0, 0, 0, H);
+    g.addColorStop(0, "rgba(7,11,20," + alpha + ")");
+    g.addColorStop(0.6, "rgba(10,15,29," + alpha + ")");
+    g.addColorStop(1, "rgba(13,20,36," + alpha + ")");
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, W, H);
+  }
+
+  function physics(dt, t) {
+    if (!seeded) {
+      balls.forEach((b, i) => { b.x = ((i + 0.5) / N) * W + rnd(-30, 30); });
+      seeded = true;
+    }
+    for (const b of balls) {
+      // gentle gravity until the first floor hit; after that, near-neutral buoyancy
+      const g = b.dropped ? 26 : 640;
+      b.vy += g * dt;
+      // faint idle swirl keeps settled balls drifting
+      b.vx += Math.sin(t * 0.5 + b.r) * 4 * dt;
+
+      // pointer shove
+      if (hasPointer) {
+        const dx = b.x - mx, dy = b.y - my;
+        const d = Math.hypot(dx, dy);
+        if (d < 160 && d > 0.5) {
+          const f = (1 - d / 160) * 900;
+          b.vx += (dx / d) * f * dt;
+          b.vy += (dy / d) * f * dt;
+        }
+      }
+
+      b.x += b.vx * dt;
+      b.y += b.vy * dt;
+
+      // walls — floor sits above the footer hint so settled balls never cover it
+      const floor = H - 72;
+      if (b.x - b.r < 0) { b.x = b.r; b.vx = Math.abs(b.vx) * 0.94; b.flash = 1; }
+      if (b.x + b.r > W) { b.x = W - b.r; b.vx = -Math.abs(b.vx) * 0.94; b.flash = 1; }
+      if (b.y - b.r < 0) { b.y = b.r; b.vy = Math.abs(b.vy) * 0.94; b.flash = 1; }
+      if (b.y + b.r > floor) {
+        b.y = floor - b.r;
+        b.vy = -Math.abs(b.vy) * 0.86;
+        b.vx *= 0.995;
+        b.flash = Math.max(b.flash, 0.5);
+        b.dropped = true;
+        if (Math.abs(b.vy) < 18) b.vy = 0;        // settle instead of jittering
+      }
+
+      b.flash *= Math.pow(0.06, dt);              // decay afterglow
+    }
+
+    // pairwise elastic collisions
+    for (let i = 0; i < N; i++) {
+      for (let j = i + 1; j < N; j++) {
+        const a = balls[i], b = balls[j];
+        const dx = b.x - a.x, dy = b.y - a.y;
+        const d = Math.hypot(dx, dy);
+        const min = a.r + b.r;
+        if (d < min && d > 0.001) {
+          const nx = dx / d, ny = dy / d;
+          // separate overlap
+          const overlap = (min - d) / 2;
+          a.x -= nx * overlap; a.y -= ny * overlap;
+          b.x += nx * overlap; b.y += ny * overlap;
+          // impulse along normal (equal restitution)
+          const rvx = b.vx - a.vx, rvy = b.vy - a.vy;
+          const vn = rvx * nx + rvy * ny;
+          if (vn < 0) {
+            const imp = -(1.85 * vn) / (1 / a.m + 1 / b.m);   // restitution ~0.85
+            a.vx -= imp * nx / a.m; a.vy -= imp * ny / a.m;
+            b.vx += imp * nx / b.m; b.vy += imp * ny / b.m;
+            a.flash = b.flash = 1;
+          }
+        }
+      }
+    }
+  }
+
+  function draw(t) {
+    // translucent wash → motion trails
+    paintBase(0.16);
+
+    ctx.globalCompositeOperation = "lighter";
+    for (const b of balls) {
+      const [r, g, bl] = b.col;
+      const glow = 0.35 + b.flash * 0.45;
+
+      // halo
+      const gr = ctx.createRadialGradient(b.x, b.y, b.r * 0.4, b.x, b.y, b.r * 2.4);
+      gr.addColorStop(0, `rgba(${r},${g},${bl},${0.28 * glow})`);
+      gr.addColorStop(1, `rgba(${r},${g},${bl},0)`);
+      ctx.fillStyle = gr;
+      ctx.beginPath(); ctx.arc(b.x, b.y, b.r * 2.4, 0, TAU); ctx.fill();
+
+      // sphere body (additive reads as glowing glass)
+      const body = ctx.createRadialGradient(b.x - b.r * 0.3, b.y - b.r * 0.35, b.r * 0.1, b.x, b.y, b.r);
+      body.addColorStop(0, `rgba(${Math.min(r + 50, 255)},${Math.min(g + 50, 255)},${Math.min(bl + 50, 255)},0.95)`);
+      body.addColorStop(0.6, `rgba(${r},${g},${bl},0.55)`);
+      body.addColorStop(1, `rgba(${r},${g},${bl},0.12)`);
+      ctx.fillStyle = body;
+      ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, TAU); ctx.fill();
+    }
+    ctx.globalCompositeOperation = "source-over";
+  }
+
+  if (reduced) {
+    // let them settle instantly into a static arrangement
+    for (let k = 0; k < 60 * 14; k++) physics(1 / 60, k / 60);
+    paintBase(1);
+    draw(5);
+  } else {
+    let last = performance.now();
+    requestAnimationFrame(function loop(now) {
+      const dt = Math.min((now - last) / 1000, 0.033);
+      last = now;
+      physics(dt, now / 1000);
+      draw(now / 1000);
+      requestAnimationFrame(loop);
+    });
+  }
+})();
+</script>
+</body>
+</html>

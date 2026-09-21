@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CVX Splash — Bait Ball</title>
+<style>
+  :root {
+    --void: #060a13; --ink: #eef2fb; --muted: #aab6cf;
+    --line: rgba(238, 242, 251, 0.14); --teal: #17e8d8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--void); color: var(--ink);
+    font-family: "Segoe UI", "Avenir Next", system-ui, sans-serif;
+    height: 100vh; overflow: hidden;
+  }
+  #bg { position: fixed; inset: 0; width: 100vw; height: 100vh; display: block; }
+  .stage {
+    position: fixed; inset: 0; display: flex; flex-direction: column;
+    justify-content: space-between; padding: clamp(20px, 4vw, 44px);
+    opacity: 0; animation: settle 1s ease-out 0.3s forwards;
+  }
+  @keyframes settle { to { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .stage { animation: none; opacity: 1; } }
+  .bar { display: flex; align-items: center; justify-content: space-between; }
+  .wordmark {
+    display: flex; align-items: center; gap: 12px;
+    font-family: "Bahnschrift", "Segoe UI", sans-serif;
+    font-weight: 700; font-size: 16px; letter-spacing: 0.14em;
+  }
+  .wordmark .pip {
+    width: 13px; height: 13px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #ff5ec7, #7a2170 75%);
+    box-shadow: 0 0 12px rgba(255, 94, 199, 0.7);
+  }
+  .variant {
+    color: var(--muted); font-size: 13.5px;
+    border: 1px solid var(--line); border-radius: 999px; padding: 5px 14px;
+  }
+  .hero { text-align: center; max-width: 680px; margin: 0 auto; padding-bottom: 5vh; }
+  .hero h1 {
+    font-family: "Bahnschrift", "Segoe UI", sans-serif;
+    font-size: clamp(2.2rem, 5.5vw, 3.8rem); font-weight: 700; line-height: 1.05;
+    text-shadow: 0 2px 28px rgba(3, 6, 12, 0.85);
+  }
+  .hero p {
+    margin: 14px auto 26px; max-width: 44ch; color: var(--muted);
+    font-size: clamp(0.95rem, 1.5vw, 1.1rem); line-height: 1.6;
+    text-shadow: 0 1px 18px rgba(3, 6, 12, 0.9);
+  }
+  .btn {
+    font: inherit; font-size: 14.5px; padding: 11px 24px; border-radius: 10px;
+    cursor: pointer; text-decoration: none; transition: transform 0.2s, background 0.2s;
+  }
+  .btn:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; }
+  .btn-solid { background: var(--ink); color: #0a0f1c; border: 1px solid var(--ink); }
+  .btn-solid:hover { background: #fff; transform: translateY(-1px); }
+  .foot { color: var(--muted); font-size: 13px; text-align: center; }
+
+  /* mobile & touch */
+  html, body { overscroll-behavior: none; }
+  body { height: 100dvh; -webkit-tap-highlight-color: transparent; }
+  #bg { touch-action: none; }
+  .stage { -webkit-user-select: none; user-select: none; }
+  .bar { flex-wrap: wrap; row-gap: 10px; }
+  @media (max-width: 640px) {
+    .wordmark { font-size: 14px; }
+    .variant { font-size: 11px; padding: 4px 10px; }
+    .hero h1 { font-size: clamp(1.9rem, 8.5vw, 2.5rem); }
+    .hero p { font-size: 0.92rem; }
+    .btn { padding: 13px 28px; font-size: 15px; }
+    .foot { font-size: 11.5px; }
+  }
+</style>
+</head>
+<body>
+<canvas id="bg" aria-hidden="true"></canvas>
+<div class="stage">
+  <header class="bar">
+    <div class="wordmark"><span class="pip"></span>CVX SPLASH</div>
+    <span class="variant">Variation — Bait Ball</span>
+  </header>
+  <main class="hero">
+    <h1>Bait Ball</h1>
+    <p>A thousand small fish moving as one fluid — the ball swirling, parting around whatever enters it, flashing silver where it turns. Fish are the water here.</p>
+    <a class="btn btn-solid" href="#">Get started</a>
+  </main>
+  <footer class="foot">The school parts around you</footer>
+</div>
+
+<script>
+(() => {
+  "use strict";
+  const canvas = document.getElementById("bg");
+  const ctx = canvas.getContext("2d");
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const TAU = Math.PI * 2;
+  const rnd = (a, b) => a + Math.random() * (b - a);
+  const hash = n => { const s = Math.sin(n * 127.1 + 311.7) * 43758.5453; return s - Math.floor(s); };
+
+  let W = 0, H = 0;
+  function resize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth; H = window.innerHeight;
+    canvas.width = Math.round(W * dpr);
+    canvas.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  window.addEventListener("resize", resize);
+  resize();
+
+  const NRAYS = 4;
+  const rays = [];
+  for (let i = 0; i < NRAYS; i++) {
+    rays.push({
+      u: rnd(0.05, 0.95), w: rnd(0.03, 0.09), len: rnd(0.45, 0.9),
+      d: rnd(0.25, 1), ph: rnd(0, TAU), sway: rnd(0.05, 0.12), tilt: rnd(-0.06, 0.14)
+    });
+  }
+
+  const CELL = 28, SEPR = 14, VIEWR = 34, FLEER = 140;
+  const LX = -0.55, LY = -0.833;                 // the light the silver flashes toward
+
+  const layers = [
+    { n: 150, size: 2, ts: 0.7, alpha: 0.5, col: "130,160,205", vmin: 28, vmax: 92, fish: [], grid: new Map() },
+    { n: 230, size: 3, ts: 1, alpha: 0.85, col: "185,210,240", vmin: 40, vmax: 130, fish: [], grid: new Map() }
+  ];
+  for (const L of layers) {
+    for (let i = 0; i < L.n; i++) {
+      const a = rnd(0, TAU), sp = rnd(50, 90);
+      L.fish.push({
+        x: W * 0.5 + rnd(-120, 120), y: H * 0.5 + rnd(-90, 90),
+        vx: Math.cos(a) * sp, vy: Math.sin(a) * sp,
+        pink: Math.random() < 1 / 60
+      });
+    }
+  }
+
+  const N = 40;
+  const motes = [];
+  let seeded = false;
+  let nextPred = rnd(4, 10);
+  const preds = [];
+
+  let mx = 0.5, my = 0.45, px = -2, py = -2;
+  window.addEventListener("pointermove", e => { mx = e.clientX / W; my = e.clientY / H; });
+  window.addEventListener("pointerleave", () => { mx = -2; my = -2; });
+
+  function updateLayer(L, dts, t, fleeX, fleeY, hasFlee, predList) {
+    const fish = L.fish, grid = L.grid;
+    grid.clear();
+    for (let i = 0; i < fish.length; i++) {
+      const f = fish[i];
+      const key = ((f.x / CELL) | 0) * 4096 + ((f.y / CELL) | 0);
+      let arr = grid.get(key);
+      if (!arr) { arr = []; grid.set(key, arr); }
+      arr.push(i);
+    }
+    for (let i = 0; i < fish.length; i++) {
+      const f = fish[i];
+      const cx = (f.x / CELL) | 0, cy = (f.y / CELL) | 0;
+      let sx = 0, sy = 0, ax = 0, ay = 0, cxs = 0, cys = 0, cnt = 0;
+      for (let gx = cx - 1; gx <= cx + 1; gx++) {
+        for (let gy = cy - 1; gy <= cy + 1; gy++) {
+          const arr = grid.get(gx * 4096 + gy);
+          if (!arr) continue;
+          for (const j of arr) {
+            if (j === i) continue;
+            const o = fish[j];
+            const dx = o.x - f.x, dy = o.y - f.y;
+            const d2 = dx * dx + dy * dy;
+            if (d2 < 1e-4 || d2 > VIEWR * VIEWR) continue;
+            const d = Math.sqrt(d2);
+            if (d < SEPR) {                       // personal space is sacred
+              const w2 = 1 - d / SEPR;
+              sx -= dx / d * w2; sy -= dy / d * w2;
+            }
+            ax += o.vx; ay += o.vy; cxs += o.x; cys += o.y; cnt++;
+          }
+        }
+      }
+      let fx = sx * 260, fy = sy * 260;
+      if (cnt > 0) {
+        fx += ((ax / cnt - f.vx) * 1.6) + ((cxs / cnt - f.x) * 0.55);
+        fy += ((ay / cnt - f.vy) * 1.6) + ((cys / cnt - f.y) * 0.55);
+      }
+      fx += (L.cx - f.x) * 0.5;                   // a weak spring keeps one body
+      fy += (L.cy - f.y) * 0.5;
+
+      if (hasFlee) {                              // the pointer is the first predator
+        const dx = f.x - fleeX, dy = f.y - fleeY;
+        const d = Math.hypot(dx, dy);
+        if (d < FLEER && d > 0.5) {
+          const w2 = (1 - d / FLEER) ** 2 * 900 / d;
+          fx += dx * w2; fy += dy * w2;
+        }
+      }
+      for (const pr of predList) {                // and the dark one is the second
+        const dx = f.x - pr.x, dy = f.y - pr.y;
+        const d = Math.hypot(dx, dy);
+        if (d < FLEER && d > 0.5) {
+          const w2 = (1 - d / FLEER) ** 2 * 900 / d;
+          fx += dx * w2; fy += dy * w2;
+        }
+      }
+
+      f.vx += fx * dts; f.vy += fy * dts;
+      const sp = Math.hypot(f.vx, f.vy) || 0.001;
+      const cl = sp < L.vmin ? L.vmin / sp : sp > L.vmax ? L.vmax / sp : 1;
+      f.vx *= cl; f.vy *= cl;
+      f.x += f.vx * dts; f.y += f.vy * dts;
+      if (f.x < -30) f.x = W + 28; if (f.x > W + 30) f.x = -28;
+      if (f.y < -30) f.y = H + 28; if (f.y > H + 30) f.y = -28;
+    }
+  }
+
+  function drawLayer(L) {
+    // dashes batched into brightness buckets — waves of silver cross the ball
+    const buckets = [[], [], [], [], [], []];
+    const pinks = [];
+    for (const f of L.fish) {
+      const sp = Math.hypot(f.vx, f.vy) || 0.001;
+      const hx = f.vx / sp, hy = f.vy / sp;
+      const dot = hx * LX + hy * LY;
+      let b = 0.3 + 0.45 * Math.max(0, dot) ** 3;
+      if (dot > 0.92) b += 0.9;                   // specular turn against the light
+      const seg = [f.x - hx * L.size * 1.3, f.y - hy * L.size * 1.3, f.x + hx * L.size * 1.3, f.y + hy * L.size * 1.3];
+      if (f.pink) pinks.push(seg);
+      else buckets[Math.min(5, (b * 6) | 0)].push(seg);
+    }
+    ctx.lineWidth = L.size * 0.85;
+    ctx.lineCap = "round";
+    for (let bk = 0; bk < 6; bk++) {
+      const arr = buckets[bk];
+      if (!arr.length) continue;
+      const a = Math.min(1, ((bk + 1) / 6) * L.alpha + (bk === 5 ? 0.25 : 0));
+      ctx.strokeStyle = bk === 5 ? `rgba(235,245,255,${a.toFixed(3)})` : `rgba(${L.col},${a.toFixed(3)})`;
+      ctx.beginPath();
+      for (const s of arr) { ctx.moveTo(s[0], s[1]); ctx.lineTo(s[2], s[3]); }
+      ctx.stroke();
+    }
+    if (pinks.length) {
+      ctx.strokeStyle = `rgba(255,94,199,${(0.8 * L.alpha).toFixed(3)})`;
+      ctx.beginPath();
+      for (const s of pinks) { ctx.moveTo(s[0], s[1]); ctx.lineTo(s[2], s[3]); }
+      ctx.stroke();
+    }
+  }
+
+  function frame(now, dt) {
+    const t = now / 1000;
+    px += (mx - px) * 0.07;
+    py += (my - py) * 0.07;
+
+    if (!seeded && W > 0) {
+      for (let i = 0; i < N; i++) motes.push({ x: Math.random() * W, y: Math.random() * H, d: 0.2 + Math.random() * 0.8, ph: rnd(0, TAU) });
+      seeded = true;
+    }
+
+    // the two bodies wander the frame on layered sines
+    layers[0].cx = W * (0.42 + 0.26 * Math.sin(t * 0.05) + 0.10 * Math.sin(t * 0.023 + 2));
+    layers[0].cy = H * (0.46 + 0.20 * Math.sin(t * 0.041 + 1) + 0.08 * Math.sin(t * 0.017));
+    layers[1].cx = W * (0.56 + 0.24 * Math.sin(t * 0.043 + 4) + 0.09 * Math.sin(t * 0.019 + 1));
+    layers[1].cy = H * (0.52 + 0.18 * Math.sin(t * 0.037 + 3) + 0.08 * Math.sin(t * 0.021 + 2));
+
+    if (t > nextPred) {                           // something dark swims through
+      nextPred = t + rnd(18, 28);
+      const edge = (Math.random() * 4) | 0;
+      let x0, y0;
+      if (edge === 0) { x0 = -50; y0 = rnd(0.2, 0.8) * H; }
+      else if (edge === 1) { x0 = W + 50; y0 = rnd(0.2, 0.8) * H; }
+      else if (edge === 2) { x0 = rnd(0.2, 0.8) * W; y0 = -50; }
+      else { x0 = rnd(0.2, 0.8) * W; y0 = H + 50; }
+      const tx = layers[1].cx + rnd(-0.15, 0.15) * W, ty = layers[1].cy + rnd(-0.15, 0.15) * H;
+      const d = Math.hypot(tx - x0, ty - y0) || 1;
+      preds.push({ x: x0, y: y0, vx: (tx - x0) / d * 220, vy: (ty - y0) / d * 220, trail: [] });
+    }
+    for (let i = preds.length - 1; i >= 0; i--) {
+      const pr = preds[i];
+      pr.x += pr.vx * dt; pr.y += pr.vy * dt;
+      pr.trail.push([pr.x, pr.y]);
+      if (pr.trail.length > 12) pr.trail.shift();
+      if (pr.x < -80 || pr.x > W + 80 || pr.y < -80 || pr.y > H + 80) preds.splice(i, 1);
+    }
+
+    updateLayer(layers[0], dt * layers[0].ts, t, px * W, py * H, px > -1, preds);
+    updateLayer(layers[1], dt, t, px * W, py * H, px > -1, preds);
+
+    const g = ctx.createLinearGradient(0, 0, 0, H);
+    g.addColorStop(0, "#071021");
+    g.addColorStop(0.5, "#030711");
+    g.addColorStop(1, "#02040a");
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, W, H);
+
+    ctx.globalCompositeOperation = "lighter";
+    let gr = ctx.createRadialGradient(W * 0.5, -H * 0.25, 0, W * 0.5, -H * 0.25, H * 0.95);
+    gr.addColorStop(0, "rgba(40,90,140,0.18)");
+    gr.addColorStop(1, "rgba(40,90,140,0)");
+    ctx.fillStyle = gr;
+    ctx.fillRect(0, 0, W, H);
+    for (const r of rays) {
+      const x0 = r.u * W + Math.sin(t * r.sway + r.ph) * W * 0.02;
+      const th = r.tilt + Math.sin(t * r.sway * 0.8 + r.ph * 2) * 0.05;
+      const a = 0.03 + 0.05 * r.d;
+      const len = r.len * H * 1.1;
+      const wpx = r.w * W * (0.8 + 0.4 * r.d);
+      ctx.save();
+      ctx.translate(x0, -40);
+      ctx.rotate(th);
+      const rg = ctx.createLinearGradient(0, 0, 0, len);
+      rg.addColorStop(0, `rgba(23,232,216,${a})`);
+      rg.addColorStop(0.7, `rgba(23,232,216,${a * 0.35})`);
+      rg.addColorStop(1, "rgba(23,232,216,0)");
+      ctx.fillStyle = rg;
+      ctx.beginPath();
+      ctx.moveTo(-wpx * 0.35, 0); ctx.lineTo(wpx * 0.35, 0);
+      ctx.lineTo(wpx * 0.9, len); ctx.lineTo(-wpx * 0.9, len);
+      ctx.closePath(); ctx.fill();
+      ctx.restore();
+    }
+    ctx.globalCompositeOperation = "source-over";
+
+    drawLayer(layers[0]);                         // the hazy far body
+
+    for (const pr of preds) {                     // the autonomous predator
+      for (let ti = 0; ti < pr.trail.length - 1; ti++) {
+        const a = (ti / pr.trail.length) * 0.35;
+        ctx.strokeStyle = `rgba(6,10,16,${a.toFixed(3)})`;
+        ctx.lineWidth = 4 * (ti / pr.trail.length) + 1;
+        ctx.beginPath();
+        ctx.moveTo(pr.trail[ti][0], pr.trail[ti][1]);
+        ctx.lineTo(pr.trail[ti + 1][0], pr.trail[ti + 1][1]);
+        ctx.stroke();
+      }
+      ctx.fillStyle = "rgba(4,7,12,0.9)";
+      ctx.beginPath(); ctx.arc(pr.x, pr.y, 7, 0, TAU); ctx.fill();
+      ctx.strokeStyle = "rgba(30,60,80,0.3)";
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+
+    drawLayer(layers[1]);                         // the near body
+
+    ctx.globalCompositeOperation = "lighter";
+    if (px > -1) {
+      gr = ctx.createRadialGradient(px * W, py * H, 0, px * W, py * H, 190);
+      gr.addColorStop(0, "rgba(210,235,255,0.10)");
+      gr.addColorStop(1, "rgba(210,235,255,0)");
+      ctx.fillStyle = gr;
+      ctx.beginPath(); ctx.arc(px * W, py * H, 190, 0, TAU); ctx.fill();
+    }
+    ctx.globalCompositeOperation = "source-over";
+
+    for (const m of motes) {
+      m.y += (5 + 28 * m.d) * dt;
+      m.x += Math.sin(t * 0.25 + m.ph) * 14 * dt * m.d;
+      if (m.y > H + 20) { m.y = -20; m.x = Math.random() * W; }
+      if (m.x < -30) m.x = W + 30; if (m.x > W + 30) m.x = -30;
+      let lit = 0;
+      if (px > -1) {
+        const dd = Math.hypot(m.x - px * W, m.y - py * H);
+        if (dd < 220) lit = (1 - dd / 220) * 1.2;
+      }
+      ctx.fillStyle = `rgba(210,230,255,${Math.min(0.85, 0.14 + 0.34 * m.d + lit * 0.3)})`;
+      ctx.beginPath(); ctx.arc(m.x, m.y, 0.8 + 2.2 * m.d, 0, TAU); ctx.fill();
+    }
+
+    const vg = ctx.createRadialGradient(W / 2, H / 2, Math.min(W, H) * 0.42, W / 2, H / 2, Math.max(W, H) * 0.78);
+    vg.addColorStop(0, "rgba(2,4,9,0)");
+    vg.addColorStop(1, "rgba(2,4,9,0.55)");
+    ctx.fillStyle = vg;
+    ctx.fillRect(0, 0, W, H);
+  }
+
+  let lastT = 0;
+  if (reduced) {
+    for (let k = 0; k < 300; k++) frame(k * 16, 0.016);
+    lastT = 300 * 16;
+    window.addEventListener("resize", () => frame(lastT, 0));
+  } else {
+    let last = performance.now();
+    requestAnimationFrame(function loop(now) {
+      const dt = Math.min((now - last) / 1000, 0.05);
+      last = now;
+      frame(now, dt);
+      requestAnimationFrame(loop);
+    });
+  }
+})();
+</script>
+</body>
+</html>

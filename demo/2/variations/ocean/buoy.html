@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CVX Splash — Mooring</title>
+<style>
+  :root {
+    --void: #060a13; --ink: #eef2fb; --muted: #aab6cf;
+    --line: rgba(238, 242, 251, 0.14); --teal: #17e8d8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--void); color: var(--ink);
+    font-family: "Segoe UI", "Avenir Next", system-ui, sans-serif;
+    height: 100vh; overflow: hidden;
+  }
+  #bg { position: fixed; inset: 0; width: 100vw; height: 100vh; display: block; }
+  .stage {
+    position: fixed; inset: 0; display: flex; flex-direction: column;
+    justify-content: space-between; padding: clamp(20px, 4vw, 44px);
+    opacity: 0; animation: settle 1s ease-out 0.3s forwards;
+  }
+  @keyframes settle { to { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .stage { animation: none; opacity: 1; } }
+  .bar { display: flex; align-items: center; justify-content: space-between; }
+  .wordmark {
+    display: flex; align-items: center; gap: 12px;
+    font-family: "Bahnschrift", "Segoe UI", sans-serif;
+    font-weight: 700; font-size: 16px; letter-spacing: 0.14em;
+  }
+  .wordmark .pip {
+    width: 13px; height: 13px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #ff5ec7, #7a2170 75%);
+    box-shadow: 0 0 12px rgba(255, 94, 199, 0.7);
+  }
+  .variant {
+    color: var(--muted); font-size: 13.5px;
+    border: 1px solid var(--line); border-radius: 999px; padding: 5px 14px;
+  }
+  .hero { text-align: center; max-width: 680px; margin: 0 auto; padding-bottom: 5vh; }
+  .hero h1 {
+    font-family: "Bahnschrift", "Segoe UI", sans-serif;
+    font-size: clamp(2.2rem, 5.5vw, 3.8rem); font-weight: 700; line-height: 1.05;
+    text-shadow: 0 2px 28px rgba(3, 6, 12, 0.85);
+  }
+  .hero p {
+    margin: 14px auto 26px; max-width: 44ch; color: var(--muted);
+    font-size: clamp(0.95rem, 1.5vw, 1.1rem); line-height: 1.6;
+    text-shadow: 0 1px 18px rgba(3, 6, 12, 0.9);
+  }
+  .btn {
+    font: inherit; font-size: 14.5px; padding: 11px 24px; border-radius: 10px;
+    cursor: pointer; text-decoration: none; transition: transform 0.2s, background 0.2s;
+  }
+  .btn:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; }
+  .btn-solid { background: var(--ink); color: #0a0f1c; border: 1px solid var(--ink); }
+  .btn-solid:hover { background: #fff; transform: translateY(-1px); }
+  .foot { color: var(--muted); font-size: 13px; text-align: center; }
+
+  /* mobile & touch */
+  html, body { overscroll-behavior: none; }
+  body { height: 100dvh; -webkit-tap-highlight-color: transparent; }
+  #bg { touch-action: none; }
+  .stage { -webkit-user-select: none; user-select: none; }
+  .bar { flex-wrap: wrap; row-gap: 10px; }
+  @media (max-width: 640px) {
+    .wordmark { font-size: 14px; }
+    .variant { font-size: 11px; padding: 4px 10px; }
+    .hero h1 { font-size: clamp(1.9rem, 8.5vw, 2.5rem); }
+    .hero p { font-size: 0.92rem; }
+    .btn { padding: 13px 28px; font-size: 15px; }
+    .foot { font-size: 11.5px; }
+  }
+</style>
+</head>
+<body>
+<canvas id="bg" aria-hidden="true"></canvas>
+<div class="stage">
+  <header class="bar">
+    <div class="wordmark"><span class="pip"></span>CVX SPLASH</div>
+    <span class="variant">Variation — Mooring</span>
+  </header>
+  <main class="hero">
+    <h1>Mooring</h1>
+    <p>A buoy riding the same Gerstner sea — buoyancy springs it to the surface, the slope heels it over, its pink beacon answering the family. Every swell that passes is honestly answered.</p>
+    <a class="btn btn-solid" href="#">Get started</a>
+  </main>
+  <footer class="foot">Every swell, honestly answered</footer>
+</div>
+
+<script>
+(() => {
+  "use strict";
+  const canvas = document.getElementById("bg");
+  const ctx = canvas.getContext("2d");
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const TAU = Math.PI * 2;
+  const rnd = (a, b) => a + Math.random() * (b - a);
+  const hash = (i, s) => ((Math.sin(i * 12.9898 + s * 78.233) * 43758.5453) % 1 + 1) % 1;
+
+  let W = 0, H = 0;
+  let mx = 0.5, my = 0.45, px = -2, py = -2;
+  window.addEventListener("pointermove", e => { mx = e.clientX / W; my = e.clientY / H; });
+  window.addEventListener("pointerleave", () => { mx = -2; my = -2; });
+
+  // deep-water dispersion w = sqrt(g k); 0.30W swell at ~5 s, a calmer sea than the groundswell
+  let G = 120;
+
+  const NROWS = 12;
+  const rows = [];
+  let buoyRow = 0;
+  function buildRows() {
+    rows.length = 0;
+    for (let i = 0; i < NROWS; i++) {
+      const v = 0.04 + (i / (NROWS - 1)) * 0.94;
+      const lam = W * (0.10 + 0.72 * Math.pow(v, 1.4));
+      const amp = H * (0.0035 + 0.042 * Math.pow(v, 2.4));
+      const mk = (l, a, dir) => ({ k: TAU / l, w: Math.sqrt(G * TAU / l), a, dir, ph: rnd(0, TAU) });
+      const c = [
+        mk(lam, amp, 1),
+        mk(lam * 0.62, amp * 0.45, -1),
+        mk(lam * 0.31, amp * 0.22, -1),
+        mk(lam * 0.23, amp * 0.16, 1)
+      ];
+      const sumQ = c.reduce((s, o) => s + o.a * o.k, 0); // total steepness ~0.65
+      rows.push({ v, c, Q: Math.min(1, 0.8 / sumQ), breathe: rnd(0, TAU), y0: 0 });
+    }
+    buoyRow = 0;
+    let best = 1;
+    rows.forEach((r, i) => { if (Math.abs(r.v - 0.85) < best) { best = Math.abs(r.v - 0.85); buoyRow = i; } });
+  }
+
+  function prof(row, x, t) {
+    const br = 1 + 0.12 * Math.sin(t * TAU * 0.05 + row.breathe);
+    let y = 0, xd = 0, sl = 0;
+    for (const c of row.c) {
+      const a = c.a * br;
+      const th = c.k * x - c.dir * c.w * t + c.ph;
+      y += a * Math.sin(th);
+      xd += a * row.Q * Math.cos(th);
+      sl += a * c.k * Math.cos(th);
+    }
+    return [x - xd, y, sl];
+  }
+
+  // the buoy: a damped spring onto the height field, k ~ 30, c ~ 6 — underdamped,
+  // so it bobs naturally and lags a touch, which reads as mass
+  const buoy = { x: 0, y: 0, vy: 0, heel: 0, kick: 0 };
+  const spray = [];
+  let wavePh = 0;
+
+  function step(dt, t) {
+    const hzs = H * (0.36 + 0.013 * Math.sin(t * 0.21));
+    for (const r of rows) r.y0 = hzs + (H - hzs) * Math.pow(r.v, 1.9);
+    const row = rows[buoyRow];
+    const p = prof(row, buoy.x, t);
+    const surf = row.y0 + p[1];
+    buoy.vy += ((surf - buoy.y) * 30 - buoy.vy * 6) * dt;
+    buoy.y += buoy.vy * dt;
+    buoy.x = W * 0.5 + Math.sin(t * 0.10) * 8 + p[2] * 26; // gentle sway with the current
+    const target = Math.atan(p[2] * 0.7) + buoy.vy * 0.01; // heel with the slope, coupled to velocity
+    buoy.heel += (target - buoy.heel) * Math.min(1, dt * 4);
+    buoy.kick = Math.max(0, buoy.kick - dt);
+    wavePh = p[0] * 0.02;
+
+    for (let i = spray.length - 1; i >= 0; i--) {
+      const s = spray[i];
+      s.age += dt;
+      if (s.age > s.life) { spray.splice(i, 1); continue; }
+      s.vy += 340 * dt;
+      s.x += s.vx * dt; s.y += s.vy * dt;
+    }
+  }
+
+  function draw(t) {
+    px += (mx - px) * 0.06;
+    py += (my - py) * 0.06;
+
+    const horizon = H * (0.36 + 0.013 * Math.sin(t * 0.21));
+    const sway = Math.sin(t * 0.13) * 6;
+    for (const row of rows) row.y0 = horizon + (H - horizon) * Math.pow(row.v, 1.9);
+
+    let g = ctx.createLinearGradient(0, -30, 0, horizon);
+    g.addColorStop(0, "#04070f");
+    g.addColorStop(1, "#0b1526");
+    ctx.fillStyle = g;
+    ctx.fillRect(-40, -40, W + 80, horizon + 41);
+
+    g = ctx.createLinearGradient(0, horizon, 0, H + 40);
+    g.addColorStop(0, "#0a1526");
+    g.addColorStop(0.35, "#071020");
+    g.addColorStop(1, "#040810");
+    ctx.fillStyle = g;
+    ctx.fillRect(-40, horizon, W + 80, H - horizon + 80);
+
+    ctx.save();
+    ctx.translate(sway, 0);
+
+    ctx.globalCompositeOperation = "lighter";
+    ctx.fillStyle = "#dfe8ff";
+    for (let i = 0; i < 110; i++) {
+      const sx = hash(i, 1) * W;
+      const sy = hash(i, 2) * horizon * 0.92;
+      const tw = 0.55 + 0.45 * Math.sin(t * (0.25 + (i % 6) * 0.11) + i * 1.7);
+      ctx.globalAlpha = 0.55 * tw * (1 - sy / horizon);
+      ctx.beginPath();
+      ctx.arc(sx, sy, 0.6 + (i % 4) * 0.32, 0, TAU);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+
+    const mX = W * (0.70 + Math.sin(t * 0.02) * 0.012) + (px > -1 ? (px - 0.5) * -8 : 0);
+    const mY = horizon * 0.42 + Math.cos(t * 0.026) * 6;
+    const mR = Math.min(W, H) * 0.055;
+    let mg = ctx.createRadialGradient(mX, mY, mR * 0.2, mX, mY, mR * 5);
+    mg.addColorStop(0, "rgba(255,94,199,0.16)");
+    mg.addColorStop(1, "rgba(255,94,199,0)");
+    ctx.fillStyle = mg;
+    ctx.beginPath(); ctx.arc(mX, mY, mR * 5, 0, TAU); ctx.fill();
+
+    ctx.globalCompositeOperation = "source-over";
+    mg = ctx.createRadialGradient(mX - mR * 0.25, mY - mR * 0.25, mR * 0.1, mX, mY, mR);
+    mg.addColorStop(0, "#ffd6ec");
+    mg.addColorStop(0.55, "#ff9ed2");
+    mg.addColorStop(1, "#7a2170");
+    ctx.fillStyle = mg;
+    ctx.beginPath(); ctx.arc(mX, mY, mR, 0, TAU); ctx.fill();
+
+    ctx.globalCompositeOperation = "lighter";
+    let hz = ctx.createLinearGradient(0, horizon - 60, 0, horizon + 70);
+    hz.addColorStop(0, "rgba(120,150,200,0)");
+    hz.addColorStop(0.5, "rgba(120,150,200,0.10)");
+    hz.addColorStop(1, "rgba(120,150,200,0)");
+    ctx.fillStyle = hz;
+    ctx.fillRect(-40, horizon - 60, W + 80, 130);
+
+    const bw = W * 0.16;
+    const beam = ctx.createLinearGradient(mX - bw, 0, mX + bw, 0);
+    beam.addColorStop(0, "rgba(255,160,210,0)");
+    beam.addColorStop(0.5, "rgba(255,160,210,0.12)");
+    beam.addColorStop(1, "rgba(255,160,210,0)");
+    ctx.fillStyle = beam;
+    ctx.fillRect(mX - bw, horizon, bw * 2, H - horizon);
+    ctx.globalCompositeOperation = "source-over";
+
+    for (let ri = 0; ri < rows.length; ri++) {
+      const row = rows[ri];
+      const v = row.v;
+      const shift = px > -1 ? (px - 0.5) * -30 * v : 0;
+      ctx.save();
+      ctx.translate(shift, 0);
+
+      const pts = [];
+      for (let x = -80; x <= W + 80; x += 6) {
+        const p = prof(row, x, t);
+        pts.push([p[0], row.y0 + p[1], p[2]]);
+      }
+
+      ctx.globalCompositeOperation = "source-over";
+      ctx.beginPath();
+      pts.forEach((p, k) => (k ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])));
+      ctx.lineTo(W + 80, H + 60);
+      ctx.lineTo(-80, H + 60);
+      ctx.closePath();
+      ctx.fillStyle = `rgba(6,11,22,${0.30 + 0.42 * v})`;
+      ctx.fill();
+
+      ctx.globalCompositeOperation = "lighter";
+      ctx.beginPath();
+      pts.forEach((p, k) => (k ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])));
+      const ca = 0.10 + 0.5 * Math.pow(v, 1.6);
+      ctx.strokeStyle = v > 0.6 ? `rgba(140,235,225,${ca})` : `rgba(90,140,180,${ca})`;
+      ctx.lineWidth = 0.8 + 1.5 * v;
+      ctx.stroke();
+
+      const sg = W * (0.04 + 0.13 * v);
+      const inv2 = 1 / (2 * sg * sg);
+      const bright = new Path2D(), dim = new Path2D();
+      let foamP = null;
+      if (v > 0.78) foamP = new Path2D();
+      for (let k = 0; k < pts.length - 1; k++) {
+        const a = pts[k], b = pts[k + 1];
+        const gauss = Math.exp(-((a[0] - mX) * (a[0] - mX)) * inv2);
+        const spec = Math.pow(Math.max(0, -a[2] * 1.25 + 0.22), 2) * gauss * (0.4 + 0.8 * v);
+        if (gauss > 0.38 && spec > 0.14) {
+          const p2 = spec > 0.42 ? bright : dim;
+          p2.moveTo(a[0], a[1]); p2.lineTo(b[0], b[1]);
+        }
+        // whitecaps only on the nearest rows of this calmer sea
+        if (foamP) {
+          const s = Math.abs(a[2]);
+          if (s > 0.5) {
+            const tb = Math.floor(t * 2);
+            const n = 2 + Math.floor(hash(k, tb) * 3);
+            for (let j = 0; j < n; j++) {
+              const u = (hash(k * 7 + j, tb) - 0.5) * 24;
+              const dx = b[0] - a[0], dy = b[1] - a[1];
+              const L = Math.hypot(dx, dy) || 1;
+              const len = 3 + hash(j, k) * 6;
+              foamP.moveTo(a[0] + u * dx / L, a[1] + u * dy / L - 1);
+              foamP.lineTo(a[0] + (u + len) * dx / L, a[1] + (u + len) * dy / L - 1);
+            }
+            if (ri === buoyRow && Math.abs(a[0] - buoy.x) < 60 && buoy.kick <= 0 && Math.random() < 0.2) {
+              buoy.kick = 0.8;
+              buoy.vy += rnd(-110, -50); // a breaking crest shoves the hull
+              for (let j = 0; j < 5; j++)
+                spray.push({ x: buoy.x + rnd(-8, 8), y: buoy.y - 4, vx: rnd(-40, 40), vy: rnd(-120, -40), age: 0, life: rnd(0.3, 0.6) });
+            }
+          }
+        }
+      }
+      ctx.lineWidth = 0.9 + 2 * v;
+      ctx.strokeStyle = "rgba(255,195,222,0.8)";
+      ctx.stroke(bright);
+      ctx.strokeStyle = "rgba(255,195,222,0.34)";
+      ctx.stroke(dim);
+      if (foamP) {
+        ctx.lineWidth = 1 + 1.4 * v;
+        ctx.strokeStyle = `rgba(228,250,246,${0.25 + 0.5 * v})`;
+        ctx.stroke(foamP);
+      }
+
+      ctx.restore();
+    }
+
+    // beacon pulse: bright for 0.25 s of a 1.6 s cycle, then a long fade
+    const ph = t % 1.6;
+    const pulse = ph < 0.25 ? 1 : Math.max(0, 1 - (ph - 0.25) / 0.9);
+
+    // the buoy's reflection: a broken pink streak, each dash set by the passing phase
+    ctx.globalCompositeOperation = "lighter";
+    for (let i = 0; i < 6; i++) {
+      const ry = buoy.y + 8 + i * 7;
+      const rx = buoy.x + Math.sin(wavePh + i * 1.3) * (2 + i * 1.4);
+      ctx.fillStyle = `rgba(255,120,200,${pulse * (0.42 - i * 0.055)})`;
+      ctx.fillRect(rx - 2, ry, 4, 1.5);
+    }
+
+    // the buoy itself
+    ctx.globalCompositeOperation = "source-over";
+    ctx.save();
+    ctx.translate(buoy.x, buoy.y);
+    ctx.rotate(buoy.heel);
+    ctx.beginPath();
+    ctx.moveTo(-16, -4);
+    ctx.quadraticCurveTo(0, 10, 16, -4);
+    ctx.quadraticCurveTo(0, -8, -16, -4);
+    ctx.closePath();
+    ctx.fillStyle = "#05080f";
+    ctx.fill();
+    ctx.strokeStyle = "rgba(160,200,215,0.3)"; // a faint top edge catching the moon
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(-15, -5);
+    ctx.quadraticCurveTo(0, -8, 15, -5);
+    ctx.stroke();
+    ctx.strokeStyle = "rgba(120,150,170,0.5)";
+    ctx.beginPath();
+    ctx.moveTo(0, -6); ctx.lineTo(2, -22);
+    ctx.stroke();
+
+    // the beacon answering the family
+    ctx.globalCompositeOperation = "lighter";
+    const bg2 = ctx.createRadialGradient(2, -23, 0, 2, -23, 4 + 9 * pulse);
+    bg2.addColorStop(0, `rgba(255,94,199,${0.25 + 0.7 * pulse})`);
+    bg2.addColorStop(1, "rgba(255,94,199,0)");
+    ctx.fillStyle = bg2;
+    ctx.beginPath(); ctx.arc(2, -23, 4 + 9 * pulse, 0, TAU); ctx.fill();
+    ctx.fillStyle = `rgba(255,158,210,${0.4 + 0.6 * pulse})`;
+    ctx.beginPath(); ctx.arc(2, -23, 1.6, 0, TAU); ctx.fill();
+    ctx.restore();
+
+    for (const s of spray) {
+      ctx.fillStyle = `rgba(214,244,240,${(1 - s.age / s.life) * 0.7})`;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, 1.1, 0, TAU);
+      ctx.fill();
+    }
+
+    // faint lantern where the pointer leans
+    if (px > -1) {
+      const ly = rows[buoyRow].y0 + prof(rows[buoyRow], px * W, t)[1];
+      const lg = ctx.createRadialGradient(px * W, ly, 0, px * W, ly, 110);
+      lg.addColorStop(0, "rgba(150,235,225,0.08)");
+      lg.addColorStop(1, "rgba(150,235,225,0)");
+      ctx.fillStyle = lg;
+      ctx.beginPath();
+      ctx.ellipse(px * W, ly, 110, 36, 0, 0, TAU);
+      ctx.fill();
+    }
+
+    ctx.restore();
+    ctx.globalCompositeOperation = "source-over";
+
+    const vg = ctx.createRadialGradient(W / 2, H / 2, Math.min(W, H) * 0.4, W / 2, H / 2, Math.max(W, H) * 0.75);
+    vg.addColorStop(0, "rgba(2,4,8,0)");
+    vg.addColorStop(1, "rgba(2,4,8,0.5)");
+    ctx.fillStyle = vg;
+    ctx.fillRect(0, 0, W, H);
+  }
+
+  let t = 0;
+  function settle() { for (let i = 0; i < 120; i++) { t += 1 / 60; step(1 / 60, t); } draw(t); }
+
+  function resize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth; H = window.innerHeight;
+    canvas.width = Math.round(W * dpr);
+    canvas.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    G = 2 * Math.PI * (W * 0.3) / 25;
+    buildRows();
+    const hz = H * 0.36;
+    buoy.x = W * 0.5;
+    buoy.y = hz + (H - hz) * Math.pow(rows[buoyRow].v, 1.9);
+    if (reduced) settle();
+  }
+  window.addEventListener("resize", resize);
+  resize();
+
+  if (reduced) settle();
+  else {
+    let last = performance.now();
+    requestAnimationFrame(function loop(now) {
+      const dt = Math.min(0.05, (now - last) / 1000);
+      last = now;
+      t += dt;
+      step(dt, t);
+      draw(t);
+      requestAnimationFrame(loop);
+    });
+  }
+})();
+</script>
+</body>
+</html>

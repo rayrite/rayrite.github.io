@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Billow clouds — Nebulon-style cloud tunnel</title>
+<!--
+  Faithful standalone recreation of the pixijs.com "Nebulon" header's cloud layer
+  (the billowing clouds flying toward the camera), ported from the reverse-engineered
+  PixiJS v3 source (Goodboy Digital, fido framework) to PixiJS v8.
+
+  Original modules ported here (see _pixijs_research/REVERSE-ENGINEERING.md):
+    - com/fido/utils/Mini3d      -> Mini3d class below (verbatim math)
+    - com/nebulon/app/screens/Clouds / Cloud -> Clouds class below (verbatim motion)
+    - fido Ticker deltaTime      -> 0.06 * msElapsed, capped at 100ms (~1.0 at 60fps)
+
+  All cloud art is generated procedurally at load (no external assets);
+  skyCloud1/2.png from the original were backlit night clouds: dark navy bodies,
+  pale icy-blue crest along the top, flat darker bottoms.
+-->
+<style>
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #020409; }
+  canvas { display: block; }
+  /* mobile & touch */
+  html, body { overscroll-behavior: none; -webkit-tap-highlight-color: transparent; }
+  canvas { touch-action: none; }
+</style>
+</head>
+<body>
+<script src="https://cdn.jsdelivr.net/npm/pixi.js@8.21.0/dist/pixi.min.js"
+        integrity="sha384-M63Y6T7xfuqwc9J8+LKmpo0Eib/j8rOHiD7C1Nt1HwdznFV+5RVUZUHquFP/4ciG"
+        crossorigin="anonymous"></script>
+<script>
+'use strict';
+
+// ---------------------------------------------------------------------------
+// CONFIG — every motion number traces to the Nebulon source.
+// ---------------------------------------------------------------------------
+const CONFIG = {
+  design: { width: 1900, height: 1200 },      // NebulonApp safeSize (fixed world space)
+
+  clouds: {
+    count: 50,                                 // Clouds: "for (var e = 0; 50 > e; e++)"
+    speed: -15,                                // Clouds: this.speed (z units per ~frame)
+    range: 3000,                               // Clouds: this.range (tunnel length)
+    focalLength: 400,                          // Mini3d: this.focalLength
+    scaleRatioSpawn: 2,                        // Cloud ctor: this.scaleRatio (pre-recycle only)
+    scaleRatioRecycled: 5,                     // recycle: e.scaleRatio = 5
+    spawnX: [-4500, 4500],                     // recycle: x = random(-4500, 4500)
+    horizonY: 1200,                            // recycle: y = 1200 - |0.2 * x| + random(0, 200)
+    horizonSlope: 0.2,
+    horizonJitter: [0, 200],
+    fadeNearZ: 300,                            // z < 300 -> alpha = z / 300 (fade out at camera)
+    fadeInEase: 0.01,                          // else alpha += 0.01 * (1 - alpha)
+    scaleX: [0.6, 1.4],                        // recycle scale jitter
+    scaleY: [0.9, 1.1],
+    mirrorChance: 0.5,                         // 50% chance scaleOffset.x *= -1
+    rotFromX: -2e-4,                           // recycle: rotation = x * -0.0002
+  },
+
+  sway: {                                      // Clouds.update field drift
+    rotAmp: 0.08, rotFreq: 0.02,               // view.rotation = 0.08 * cos(0.02 * count)
+    yAmp: 200, yFreq: 0.03, yOffset: -50,      // position3d.y = 200 * sin(0.03 * count) - 50
+    yawAmp: 0.2, yawFreq: 0.01,                // rotation3d.y = 0.2 * sin(0.01 * count)
+  },
+
+  ticker: { dtScale: 0.06, dtCapMs: 100 },     // fido Ticker: 0.06 * ms, capped
+};
+
+// ---------------------------------------------------------------------------
+// Utilities
+// ---------------------------------------------------------------------------
+const rand = (min, max) => min + Math.random() * (max - min);
+
+// Seeded RNG (mulberry32) so the baked cloud sprites are reproducible while tuning.
+function mulberry32(seed) {
+  return function () {
+    seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+const seededRand = rng => (min, max) => min + rng() * (max - min);
+
+// Collect runtime errors where the verification harness can read them.
+window.__errors = [];
+window.addEventListener('error', e => window.__errors.push(String(e.message)));
+
+// ---------------------------------------------------------------------------
+// Procedural textures
+// ---------------------------------------------------------------------------
+
+// Night sky: vertical navy gradient + faint starfield (stand-in for skyBG.jpg).
+function makeSkyTexture() {
+  const W = CONFIG.design.width, H = CONFIG.design.height;
+  const cv = document.createElement('canvas');
+  cv.width = W; cv.height = H;
+  const g = cv.getContext('2d');
+
+  const grad = g.createLinearGradient(0, 0, 0, H);
+  grad.addColorStop(0.00, '#010208');
+  grad.addColorStop(0.40, '#040b1f');
+  grad.addColorStop(0.72, '#081a3d');
+  grad.addColorStop(1.00, '#0c2857');
+  g.fillStyle = grad;
+  g.fillRect(0, 0, W, H);
+
+  // Soft glow at the horizon band (where far clouds spawn) so distance reads as
+  // atmosphere, not just darkness — the original skyBG brightens low in frame.
+  const horizon = g.createRadialGradient(W * 0.5, H * 0.92, 0, W * 0.5, H * 0.92, H * 0.72);
+  horizon.addColorStop(0, 'rgba(42, 88, 164, 0.42)');
+  horizon.addColorStop(1, 'rgba(42, 88, 164, 0)');
+  g.fillStyle = horizon;
+  g.fillRect(0, 0, W, H);
+
+  // Stars, biased toward the upper sky.
+  for (let i = 0; i < 270; i++) {
+    const x = Math.random() * W;
+    const y = Math.pow(Math.random(), 1.5) * H * 0.82;
+    const r = rand(0.4, 1.3);
+    const a = rand(0.15, 0.85);
+    const bright = Math.random() < 0.06;
+    g.fillStyle = bright ? `rgba(200, 220, 255, ${a})` : `rgba(235, 240, 255, ${a})`;
+    g.beginPath();
+    g.arc(x, y, bright ? r * 1.4 : r, 0, Math.PI * 2);
+    g.fill();
+    if (bright) {
+      const glow = g.createRadialGradient(x, y, 0, x, y, r * 7);
+      glow.addColorStop(0, `rgba(180, 205, 255, ${a * 0.5})`);
+      glow.addColorStop(1, 'rgba(180, 205, 255, 0)');
+      g.fillStyle = glow;
+      g.beginPath();
+      g.arc(x, y, r * 7, 0, Math.PI * 2);
+      g.fill();
+    }
+  }
+  return PIXI.Texture.from(cv);
+}
+
+// One backlit night-cloud sprite (original skyCloud1/2.png were 1000x~544,
+// dark navy bodies, pale icy crest along the top lobes, flat darker bottom).
+function makeCloudTexture(seed) {
+  const W = 512, H = 280; // same ~0.55 height/width aspect as the originals
+  const cv = document.createElement('canvas');
+  cv.width = W; cv.height = H;
+  const g = cv.getContext('2d');
+  const r = seededRand(mulberry32(seed));
+
+  // Puffs are ellipses (stretchX wide, squashY flat) — the originals are wide,
+  // elongated mounds, not round balls.
+  const puff = (x, y, radius, color, alpha, squashY = 1, stretchX = 1) => {
+    g.save();
+    g.translate(x, y);
+    g.scale(stretchX, squashY);
+    const grad = g.createRadialGradient(0, 0, 0, 0, 0, radius);
+    grad.addColorStop(0, `rgba(${color}, ${alpha})`);
+    grad.addColorStop(1, `rgba(${color}, 0)`);
+    g.fillStyle = grad;
+    g.beginPath();
+    g.arc(0, 0, radius, 0, Math.PI * 2);
+    g.fill();
+    g.restore();
+  };
+
+  // Broad haze underlay: one faint consolidated mass so lobes merge visually.
+  for (let i = 0; i < 3; i++) {
+    puff(W * r(0.3, 0.7), H * r(0.6, 0.68), r(W * 0.22, W * 0.3), '30, 50, 96', r(0.07, 0.10), 0.5, 1.7);
+  }
+
+  // Crest line: layered arc strokes tracing the TOP CONTOUR of a lobe's
+  // ellipse — a thin defined icy edge with a short falloff, not a glow.
+  // (A radial-gradient puff can only ever glow; the backlight needs a line.)
+  const crest = (x, y, radius, color, stretchX, squashY, intensity = 1, a0 = -Math.PI * 0.82, a1 = -Math.PI * 0.18) => {
+    g.save();
+    g.translate(x, y);
+    g.scale(stretchX, squashY);
+    g.lineCap = 'round';
+    // wide, faint halo hugging the line
+    g.strokeStyle = `rgba(${color}, ${0.10 * intensity})`;
+    g.lineWidth = 8;
+    g.beginPath();
+    g.arc(0, 0, radius, a0 - Math.PI * 0.03, a1 + Math.PI * 0.03);
+    g.stroke();
+    // the defined icy edge itself
+    g.strokeStyle = `rgba(${color}, ${Math.min(0.34 * intensity, 0.5)})`;
+    g.lineWidth = 3;
+    g.beginPath();
+    g.arc(0, 0, radius, a0, a1);
+    g.stroke();
+    g.restore();
+  };
+
+  // Crest lobes: an irregular arc — jittered spacing, varied sizes, some
+  // lobes carrying a second smaller bump so the crest is not scallop-uniform.
+  const lobes = [];
+  const bumps = [];
+  const lobeCount = 8 + Math.floor(r(0, 4));
+  for (let i = 0; i < lobeCount; i++) {
+    const t = i / (lobeCount - 1) + r(-0.07, 0.07); // uneven spacing
+    const arch = Math.sin(t * Math.PI); // taller mid-span
+    const x = W * (0.12 + 0.76 * t) + r(-16, 16);
+    const y = H * (0.64 - 0.17 * arch) + r(-12, 12);
+    const radius = r(46, 78) * (0.7 + 0.5 * arch);
+    const stretchX = r(1.7, 2.3);
+    lobes.push({ x, y, radius, stretchX, arch });
+    // Body: dark navy mass, denser than the rim, stretched into a hummock.
+    // Dense enough that mid-distance clouds still carry a body under the crest.
+    puff(x, y, radius, '30, 50, 98', r(0.16, 0.24), 0.72, stretchX);
+    // Lit face: the original's lit sides are slate blue (#4a7aa8-ish), so a
+    // faint lighter stratum just under the crest sells the volumetric read.
+    puff(x, y - radius * 0.18, radius * 0.7, '58, 92, 140', r(0.09, 0.13), 0.55, r(1.5, 1.9));
+    // Secondary bump on ~a third of the lobes (no rim — stays dark).
+    if (r(0, 1) < 0.35) {
+      const bumpR = radius * r(0.35, 0.55);
+      const bx = x + radius * r(-0.5, 0.5);
+      const by = y - radius * 0.35;
+      bumps.push({ x: bx, y: by - bumpR * 0.4, radius: bumpR });
+      puff(bx, by, bumpR, '28, 46, 92', r(0.11, 0.16), 0.8, r(1.6, 2.0));
+    }
+  }
+  // Fill the interior between lobes so it reads as one consolidated mass.
+  for (let i = 0; i < 10; i++) {
+    puff(r(W * 0.18, W * 0.82), H * 0.62 + r(-8, 16), r(40, 70), '26, 44, 90', r(0.08, 0.13), 0.65, 1.6);
+  }
+  // Deepen the core slightly below center (backlit interior shadow).
+  puff(W * 0.5 + r(-40, 40), H * 0.68, W * 0.24, '8, 15, 38', 0.26, 0.5, 1.6);
+  // A few faint lighter wisps through the mid-body so big near clouds have
+  // internal tonal variation instead of one flat value.
+  for (let i = 0; i < 3; i++) {
+    puff(W * r(0.25, 0.75), H * r(0.5, 0.6), r(34, 60), '52, 84, 132', r(0.05, 0.08), 0.5, r(1.4, 1.8));
+  }
+
+  // The backlight: a DEFINED icy crest line tracing the top contour of most
+  // (not all) main lobes — never the bumps — with a lit shoulder hugging its
+  // underside so the line reads as an edge on the mass, not a floating stroke.
+  for (const lobe of lobes) {
+    if (r(0, 1) < 0.25) continue;
+    // Arc span follows the mound profile: tall mid-span lobes carry long
+    // crests; the thin end lobes get short crescents that die at their own
+    // mound, so no stroke bridges the dip between two separate masses.
+    const a0 = -Math.PI * (0.65 + 0.18 * lobe.arch + r(0, 0.05));
+    const a1 = -Math.PI * (0.35 - 0.18 * lobe.arch - r(0, 0.05));
+    crest(lobe.x, lobe.y, lobe.radius * r(0.74, 0.86), '178, 208, 222',
+      lobe.stretchX, 0.72, 1, a0, a1);
+    puff(lobe.x, lobe.y - lobe.radius * 0.38, lobe.radius * 0.55, '94, 132, 178',
+      r(0.12, 0.18), 0.32, lobe.stretchX * 0.85);
+  }
+  // Where the light catches hardest: one short, brighter arc segment.
+  if (r(0, 1) < 0.7) {
+    const lobe = lobes[Math.floor(r(1, lobes.length - 1))];
+    crest(lobe.x + r(-10, 10), lobe.y, lobe.radius * 0.78, '205, 230, 240', lobe.stretchX * 0.6, 0.72, 1.5,
+      -Math.PI * (0.60 + r(0, 0.08)), -Math.PI * (0.40 - r(0, 0.08)));
+  }
+
+  // Flat, darker base: kill everything below the spine so bodies read as
+  // silhouettes with lit crests, not glowing pillows.
+  const base = g.createLinearGradient(0, H * 0.58, 0, H);
+  base.addColorStop(0, 'rgba(0, 0, 0, 0)');
+  base.addColorStop(0.45, 'rgba(3, 7, 20, 0.42)');
+  base.addColorStop(0.75, 'rgba(2, 6, 18, 0.72)');
+  base.addColorStop(1, 'rgba(2, 6, 18, 0.95)');
+  g.globalCompositeOperation = 'source-atop';
+  g.fillStyle = base;
+  g.fillRect(0, 0, W, H);
+  g.globalCompositeOperation = 'source-over';
+
+  return PIXI.Texture.from(cv);
+}
+
+// ---------------------------------------------------------------------------
+// Mini3d — verbatim port of com/fido/utils/Mini3d (fake-3D perspective + depth sort)
+// ---------------------------------------------------------------------------
+class Mini3d {
+  constructor() {
+    this.view = new PIXI.Container();
+    this.view.sortableChildren = true;
+    this.children = [];
+    this.focalLength = CONFIG.clouds.focalLength;
+    this.position3d = { x: 0, y: 0, z: 0 };
+    this.rotation3d = { x: 0, y: 0, z: 0 };
+  }
+
+  addChild(sprite) {
+    sprite.anchor.set(0.5);
+    sprite.position3d = sprite.position3d || { x: 0, y: 0, z: 0 };
+    this.view.addChild(sprite);
+    this.children.push(sprite);
+  }
+
+  update() {
+    const sinX = Math.sin(this.rotation3d.x), cosX = Math.cos(this.rotation3d.x);
+    const sinY = Math.sin(this.rotation3d.y), cosY = Math.cos(this.rotation3d.y);
+    const sinZ = Math.sin(this.rotation3d.z), cosZ = Math.cos(this.rotation3d.z);
+
+    for (let i = 0; i < this.children.length; i++) {
+      const child = this.children[i];
+      const ox = child.position3d.x - this.position3d.x;
+      const oy = child.position3d.y - this.position3d.y;
+      const oz = child.position3d.z - this.position3d.z;
+
+      // x-rotation, then y-rotation, then z-rotation (original operand order).
+      const y1 = cosX * oy - sinX * oz;
+      const z1 = sinX * oy + cosX * oz;
+      const z2 = cosY * z1 - sinY * ox;
+      const x1 = sinY * z1 + cosY * ox;
+      const x2 = cosZ * x1 - sinZ * y1;
+      const y2 = sinZ * x1 + cosZ * y1;
+
+      // Perspective: clouds at z=0 are at the camera plane; z=+range is far away.
+      const u = this.focalLength / (this.focalLength + z2);
+      child.scale.x = child.scale.y = u * child.scaleRatio;
+      child.scale.x *= child.scaleOffset.x;
+      child.scale.y *= child.scaleOffset.y;
+      // Original sorted children by depth ascending (far first, near on top).
+      child.zIndex = -child.position3d.z;
+      child.position.x = x2 * u;
+      child.position.y = y2 * u;
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Clouds — verbatim port of com/nebulon/app/screens/Clouds (+ Cloud)
+// ---------------------------------------------------------------------------
+class Clouds {
+  constructor(textures) {
+    this.view = new PIXI.Container();
+    this.mini3d = new Mini3d();
+    this.view.addChild(this.mini3d.view);
+
+    this.speed = CONFIG.clouds.speed;
+    this.range = CONFIG.clouds.range;
+    this.clouds = [];
+
+    // Spawn spread across the tunnel. Negative z recycles on the first update,
+    // which staggers every cloud to its own depth (the original's bootstrap).
+    for (let i = 0; i < CONFIG.clouds.count; i++) {
+      const sprite = new PIXI.Sprite(textures[i % textures.length]);
+      sprite.scaleRatio = CONFIG.clouds.scaleRatioSpawn;
+      sprite.scaleOffset = { x: 1, y: 1 };
+      this.mini3d.addChild(sprite);
+      this.clouds.push(sprite);
+      sprite.position3d.z = -(this.range / CONFIG.clouds.count) * i;
+    }
+    this.count = 0;
+  }
+
+  update(dt) {
+    const C = CONFIG.clouds;
+    for (let i = 0; i < this.clouds.length; i++) {
+      const cloud = this.clouds[i];
+      cloud.position3d.z += this.speed * dt;
+
+      // Fade out as a cloud reaches the camera plane; ease back in once far.
+      if (cloud.position3d.z < C.fadeNearZ) {
+        cloud.alpha = cloud.position3d.z / C.fadeNearZ;
+      } else {
+        cloud.alpha += C.fadeInEase * (1 - cloud.alpha);
+      }
+
+      // Passed the camera: respawn at the far end of the tunnel.
+      if (cloud.position3d.z < 0) {
+        cloud.scaleRatio = C.scaleRatioRecycled;
+        cloud.position3d.z += this.range;
+        cloud.position3d.x = rand(C.spawnX[0], C.spawnX[1]);
+        cloud.position3d.y = C.horizonY
+          - Math.abs(C.horizonSlope * cloud.position3d.x)
+          + rand(C.horizonJitter[0], C.horizonJitter[1]);
+        cloud.rotation = cloud.position3d.x * C.rotFromX;
+        cloud.alpha = 0;
+        cloud.scaleOffset.x = rand(C.scaleX[0], C.scaleX[1]);
+        cloud.scaleOffset.y = rand(C.scaleY[0], C.scaleY[1]);
+        if (Math.random() < C.mirrorChance) cloud.scaleOffset.x *= -1;
+      }
+    }
+
+    this.mini3d.update();
+    this.count += dt;
+
+    // Whole-field sway — the slow "breathing" of the cloud bank.
+    const S = CONFIG.sway;
+    this.mini3d.view.rotation = S.rotAmp * Math.cos(S.rotFreq * this.count);
+    this.mini3d.position3d.y = S.yAmp * Math.sin(S.yFreq * this.count) + S.yOffset;
+    this.mini3d.rotation3d.y = S.yawAmp * Math.sin(S.yawFreq * this.count);
+  }
+
+  resize(w, h) {
+    this.mini3d.view.x = w / 2;
+    this.mini3d.view.y = h / 2;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Boot — fixed 1900x1200 world, cover-fit to the window (NebulonApp.resize)
+// ---------------------------------------------------------------------------
+(async () => {
+  const app = new PIXI.Application();
+  await app.init({
+    resizeTo: window,
+    resolution: Math.min(window.devicePixelRatio || 1, 2),
+    autoDensity: true,
+    background: '#010208',
+  });
+  document.body.appendChild(app.canvas);
+
+  const world = new PIXI.Container();
+  app.stage.addChild(world);
+
+  const sky = new PIXI.Sprite(makeSkyTexture());
+  world.addChild(sky);
+
+  const clouds = new Clouds([makeCloudTexture(100), makeCloudTexture(200)]);
+  world.addChild(clouds.view);
+  window.__clouds = clouds; // exposed for inspection/tuning
+
+  const fit = () => {
+    const s = Math.max(
+      window.innerWidth / CONFIG.design.width,
+      window.innerHeight / CONFIG.design.height
+    );
+    world.scale.set(s);
+    world.x = (window.innerWidth - CONFIG.design.width * s) / 2;
+    world.y = (window.innerHeight - CONFIG.design.height * s) / 2;
+    clouds.resize(CONFIG.design.width, CONFIG.design.height);
+  };
+  window.addEventListener('resize', fit);
+  fit();
+
+  // fido Ticker deltaTime semantics: 0.06 * msElapsed, capped at 100ms (~1 at 60fps).
+  // Reduced motion: keep the scene alive but drift at ~1/8 speed.
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const dtMul = reducedMotion ? 0.12 : 1;
+  app.ticker.add(ticker => {
+    const dt = Math.min(ticker.deltaMS, CONFIG.ticker.dtCapMs) * CONFIG.ticker.dtScale * dtMul;
+    clouds.update(dt);
+  });
+})();
+</script>
+</body>
+</html>

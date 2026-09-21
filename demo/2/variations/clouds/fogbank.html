@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CVX Splash — Fogbank</title>
+<style>
+  :root {
+    --void: #060a13; --ink: #eef2fb; --muted: #aab6cf;
+    --line: rgba(238, 242, 251, 0.14); --teal: #17e8d8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--void); color: var(--ink);
+    font-family: "Segoe UI", "Avenir Next", system-ui, sans-serif;
+    height: 100vh; overflow: hidden;
+  }
+  #bg { position: fixed; inset: 0; width: 100vw; height: 100vh; display: block; }
+  .stage {
+    position: fixed; inset: 0; display: flex; flex-direction: column;
+    justify-content: space-between; padding: clamp(20px, 4vw, 44px);
+    opacity: 0; animation: settle 1s ease-out 0.3s forwards;
+  }
+  @keyframes settle { to { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .stage { animation: none; opacity: 1; } }
+  .bar { display: flex; align-items: center; justify-content: space-between; }
+  .wordmark {
+    display: flex; align-items: center; gap: 12px;
+    font-family: "Bahnschrift", "Segoe UI", sans-serif;
+    font-weight: 700; font-size: 16px; letter-spacing: 0.14em;
+  }
+  .wordmark .pip {
+    width: 13px; height: 13px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #ff5ec7, #7a2170 75%);
+    box-shadow: 0 0 12px rgba(255, 94, 199, 0.7);
+  }
+  .variant {
+    color: var(--muted); font-size: 13.5px;
+    border: 1px solid var(--line); border-radius: 999px; padding: 5px 14px;
+  }
+  .hero { text-align: center; max-width: 680px; margin: 0 auto; padding-bottom: 5vh; }
+  .hero h1 {
+    font-family: "Bahnschrift", "Segoe UI", sans-serif;
+    font-size: clamp(2.2rem, 5.5vw, 3.8rem); font-weight: 700; line-height: 1.05;
+    text-shadow: 0 2px 28px rgba(3, 6, 12, 0.85);
+  }
+  .hero p {
+    margin: 14px auto 26px; max-width: 44ch; color: var(--muted);
+    font-size: clamp(0.95rem, 1.5vw, 1.1rem); line-height: 1.6;
+    text-shadow: 0 1px 18px rgba(3, 6, 12, 0.9);
+  }
+  .btn {
+    font: inherit; font-size: 14.5px; padding: 11px 24px; border-radius: 10px;
+    cursor: pointer; text-decoration: none; transition: transform 0.2s, background 0.2s;
+  }
+  .btn:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; }
+  .btn-solid { background: var(--ink); color: #0a0f1c; border: 1px solid var(--ink); }
+  .btn-solid:hover { background: #fff; transform: translateY(-1px); }
+  .foot { color: var(--muted); font-size: 13px; text-align: center; }
+
+  /* mobile & touch */
+  html, body { overscroll-behavior: none; }
+  body { height: 100dvh; -webkit-tap-highlight-color: transparent; }
+  #bg { touch-action: none; }
+  .stage { -webkit-user-select: none; user-select: none; }
+  .bar { flex-wrap: wrap; row-gap: 10px; }
+  @media (max-width: 640px) {
+    .wordmark { font-size: 14px; }
+    .variant { font-size: 11px; padding: 4px 10px; }
+    .hero h1 { font-size: clamp(1.9rem, 8.5vw, 2.5rem); }
+    .hero p { font-size: 0.92rem; }
+    .btn { padding: 13px 28px; font-size: 15px; }
+    .foot { font-size: 11.5px; }
+  }
+</style>
+</head>
+<body>
+<canvas id="bg" aria-hidden="true"></canvas>
+<div class="stage">
+  <header class="bar">
+    <div class="wordmark"><span class="pip"></span>CVX SPLASH</div>
+    <span class="variant">Variation — Fogbank</span>
+  </header>
+  <main class="hero">
+    <h1>Fogbank</h1>
+    <p>Thick weather. A near-solid deck of vapor, drifting past so slowly the banks barely resolve before they're around you.</p>
+    <a class="btn btn-solid" href="#">Get started</a>
+  </main>
+  <footer class="foot">The fog thins where you look</footer>
+</div>
+
+<script>
+(() => {
+  "use strict";
+  class CloudFlythrough {
+    /**
+     * @param {HTMLCanvasElement} canvas
+     */
+    constructor(canvas) {
+      this.canvas = canvas;
+
+      this.gl = canvas.getContext("webgl", {
+        alpha: false,
+        antialias: false,
+        depth: false,
+        stencil: false,
+        premultipliedAlpha: false,
+        preserveDrawingBuffer: false,
+        powerPreference: "high-performance"
+      });
+
+      if (!this.gl) {
+        throw new Error(
+          "WebGL is unavailable. Enable hardware acceleration or use a modern browser."
+        );
+      }
+
+      this.program = null;
+      this.positionBuffer = null;
+
+      this.uniforms = {
+        resolution: null,
+        time: null,
+        speed: null,
+        pointer: null
+      };
+
+      /*
+       * Controls how quickly cloud banks approach the camera.
+       * 0.028 = very slow — banks barely resolve.
+       */
+      this.speed = 0.028;
+
+      this.elapsedTime = 0;
+      this.lastFrameTime = 0;
+
+      /*
+       * Eased pointer position in [0, 1]. The raw target follows
+       * pointer events and relaxes back to center on leave.
+       */
+      this.pointer = { x: 0.5, y: 0.5 };
+      this.pointerTarget = { x: 0.5, y: 0.5 };
+
+      this.animationFrame = 0;
+      this.running = false;
+
+      this.motionPreference = window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      );
+
+      this.reducedMotion =
+        this.motionPreference.matches;
+
+      this.boundResize = this.resize.bind(this);
+      this.boundRenderFrame =
+        this.renderFrame.bind(this);
+      this.boundVisibilityChange =
+        this.handleVisibilityChange.bind(this);
+      this.boundMotionPreference =
+        this.handleMotionPreference.bind(this);
+      this.boundPointerMove =
+        this.handlePointerMove.bind(this);
+      this.boundPointerLeave =
+        this.handlePointerLeave.bind(this);
+    }
+
+    initialize() {
+      const vertexShader = this.createShader(
+        this.gl.VERTEX_SHADER,
+        this.vertexShaderSource
+      );
+
+      const fragmentShader = this.createShader(
+        this.gl.FRAGMENT_SHADER,
+        this.fragmentShaderSource
+      );
+
+      this.program = this.createProgram(
+        vertexShader,
+        fragmentShader
+      );
+
+      this.createFullscreenTriangle();
+      this.cacheUniformLocations();
+
+      window.addEventListener(
+        "resize",
+        this.boundResize,
+        { passive: true }
+      );
+
+      document.addEventListener(
+        "visibilitychange",
+        this.boundVisibilityChange
+      );
+
+      this.motionPreference.addEventListener(
+        "change",
+        this.boundMotionPreference
+      );
+
+      window.addEventListener(
+        "pointermove",
+        this.boundPointerMove,
+        { passive: true }
+      );
+
+      window.addEventListener(
+        "pointerleave",
+        this.boundPointerLeave,
+        { passive: true }
+      );
+
+      this.resize();
+
+      if (this.reducedMotion) {
+        this.draw(7);
+      } else {
+        this.start();
+      }
+    }
+
+    createFullscreenTriangle() {
+      const gl = this.gl;
+
+      /*
+       * One triangle large enough to cover the entire viewport.
+       */
+      const positions = new Float32Array([
+        -1, -1,
+         3, -1,
+        -1,  3
+      ]);
+
+      this.positionBuffer = gl.createBuffer();
+
+      gl.bindBuffer(
+        gl.ARRAY_BUFFER,
+        this.positionBuffer
+      );
+
+      gl.bufferData(
+        gl.ARRAY_BUFFER,
+        positions,
+        gl.STATIC_DRAW
+      );
+
+      const positionLocation =
+        gl.getAttribLocation(
+          this.program,
+          "a_position"
+        );
+
+      gl.enableVertexAttribArray(
+        positionLocation
+      );
+
+      gl.vertexAttribPointer(
+        positionLocation,
+        2,
+        gl.FLOAT,
+        false,
+        0,
+        0
+      );
+    }
+
+    cacheUniformLocations() {
+      const gl = this.gl;
+
+      this.uniforms.resolution =
+        gl.getUniformLocation(
+          this.program,
+          "u_resolution"
+        );
+
+      this.uniforms.time =
+        gl.getUniformLocation(
+          this.program,
+          "u_time"
+        );
+
+      this.uniforms.speed =
+        gl.getUniformLocation(
+          this.program,
+          "u_speed"
+        );
+
+      this.uniforms.pointer =
+        gl.getUniformLocation(
+          this.program,
+          "u_pointer"
+        );
+    }
+
+    createShader(type, source) {
+      const gl = this.gl;
+      const shader = gl.createShader(type);
+
+      gl.shaderSource(shader, source);
+      gl.compileShader(shader);
+
+      if (
+        !gl.getShaderParameter(
+          shader,
+          gl.COMPILE_STATUS
+        )
+      ) {
+        const message =
+          gl.getShaderInfoLog(shader) ||
+          "Unknown shader compilation error.";
+
+        gl.deleteShader(shader);
+
+        throw new Error(message);
+      }
+
+      return shader;
+    }
+
+    createProgram(vertexShader, fragmentShader) {
+      const gl = this.gl;
+      const program = gl.createProgram();
+
+      gl.attachShader(program, vertexShader);
+      gl.attachShader(program, fragmentShader);
+      gl.linkProgram(program);
+
+      if (
+        !gl.getProgramParameter(
+          program,
+          gl.LINK_STATUS
+        )
+      ) {
+        const message =
+          gl.getProgramInfoLog(program) ||
+          "Unknown shader linking error.";
+
+        gl.deleteProgram(program);
+
+        throw new Error(message);
+      }
+
+      gl.deleteShader(vertexShader);
+      gl.deleteShader(fragmentShader);
+
+      return program;
+    }
+
+    resize() {
+      const cssWidth = Math.max(
+        1,
+        window.innerWidth
+      );
+
+      const cssHeight = Math.max(
+        1,
+        window.innerHeight
+      );
+
+      const viewportPixels =
+        cssWidth * cssHeight;
+
+      /*
+       * The procedural shader is intentionally rendered at a
+       * slightly reduced resolution. Soft clouds conceal the
+       * difference while improving performance significantly.
+       */
+      let quality;
+
+      if (viewportPixels > 2_500_000) {
+        quality = 0.55;
+      } else if (viewportPixels > 1_300_000) {
+        quality = 0.68;
+      } else {
+        quality = 0.82;
+      }
+
+      const pixelRatio = Math.min(
+        window.devicePixelRatio || 1,
+        1.7
+      );
+
+      const renderScale =
+        quality * pixelRatio;
+
+      const width = Math.max(
+        1,
+        Math.round(cssWidth * renderScale)
+      );
+
+      const height = Math.max(
+        1,
+        Math.round(cssHeight * renderScale)
+      );
+
+      if (
+        this.canvas.width !== width ||
+        this.canvas.height !== height
+      ) {
+        this.canvas.width = width;
+        this.canvas.height = height;
+      }
+
+      this.canvas.style.width =
+        `${cssWidth}px`;
+
+      this.canvas.style.height =
+        `${cssHeight}px`;
+
+      this.gl.viewport(
+        0,
+        0,
+        width,
+        height
+      );
+
+      if (!this.running) {
+        this.draw(
+          this.reducedMotion
+            ? 7
+            : this.elapsedTime
+        );
+      }
+    }
+
+    handleVisibilityChange() {
+      if (document.hidden) {
+        this.stop();
+        return;
+      }
+
+      if (this.reducedMotion) {
+        this.draw(7);
+      } else {
+        this.start();
+      }
+    }
+
+    handleMotionPreference(event) {
+      this.reducedMotion = event.matches;
+
+      if (this.reducedMotion) {
+        this.stop();
+        this.draw(7);
+      } else if (!document.hidden) {
+        this.start();
+      }
+    }
+
+    handlePointerMove(event) {
+      this.pointerTarget.x =
+        event.clientX /
+        Math.max(1, window.innerWidth);
+
+      this.pointerTarget.y =
+        event.clientY /
+        Math.max(1, window.innerHeight);
+    }
+
+    handlePointerLeave() {
+      this.pointerTarget.x = 0.5;
+      this.pointerTarget.y = 0.5;
+    }
+
+    start() {
+      if (this.running) {
+        return;
+      }
+
+      this.running = true;
+      this.lastFrameTime = performance.now();
+
+      this.animationFrame =
+        requestAnimationFrame(
+          this.boundRenderFrame
+        );
+    }
+
+    stop() {
+      if (!this.running) {
+        return;
+      }
+
+      this.running = false;
+
+      cancelAnimationFrame(
+        this.animationFrame
+      );
+
+      this.animationFrame = 0;
+    }
+
+    renderFrame(currentTime) {
+      if (!this.running) {
+        return;
+      }
+
+      /*
+       * Clamp large time jumps after the tab was inactive.
+       */
+      const deltaSeconds = Math.min(
+        (
+          currentTime -
+          this.lastFrameTime
+        ) / 1000,
+        0.05
+      );
+
+      this.lastFrameTime = currentTime;
+      this.elapsedTime += deltaSeconds;
+
+      /*
+       * Ease the pointer toward its target every frame.
+       */
+      this.pointer.x +=
+        (this.pointerTarget.x - this.pointer.x) *
+        0.06;
+
+      this.pointer.y +=
+        (this.pointerTarget.y - this.pointer.y) *
+        0.06;
+
+      this.draw(this.elapsedTime);
+
+      this.animationFrame =
+        requestAnimationFrame(
+          this.boundRenderFrame
+        );
+    }
+
+    draw(time) {
+      const gl = this.gl;
+
+      gl.useProgram(this.program);
+
+      gl.uniform2f(
+        this.uniforms.resolution,
+        this.canvas.width,
+        this.canvas.height
+      );
+
+      gl.uniform1f(
+        this.uniforms.time,
+        time
+      );
+
+      gl.uniform1f(
+        this.uniforms.speed,
+        this.speed
+      );
+
+      gl.uniform2f(
+        this.uniforms.pointer,
+        this.pointer.x,
+        this.pointer.y
+      );
+
+      gl.drawArrays(
+        gl.TRIANGLES,
+        0,
+        3
+      );
+    }
+
+    /**
+     * Change speed while the animation is running.
+     */
+    setSpeed(speed) {
+      this.speed = Math.max(
+        0,
+        Number(speed) || 0
+      );
+    }
+
+    destroy() {
+      this.stop();
+
+      window.removeEventListener(
+        "resize",
+        this.boundResize
+      );
+
+      document.removeEventListener(
+        "visibilitychange",
+        this.boundVisibilityChange
+      );
+
+      this.motionPreference.removeEventListener(
+        "change",
+        this.boundMotionPreference
+      );
+
+      window.removeEventListener(
+        "pointermove",
+        this.boundPointerMove
+      );
+
+      window.removeEventListener(
+        "pointerleave",
+        this.boundPointerLeave
+      );
+
+      if (this.positionBuffer) {
+        this.gl.deleteBuffer(
+          this.positionBuffer
+        );
+      }
+
+      if (this.program) {
+        this.gl.deleteProgram(
+          this.program
+        );
+      }
+    }
+
+    get vertexShaderSource() {
+      return `
+        attribute vec2 a_position;
+
+        void main() {
+          gl_Position = vec4(
+            a_position,
+            0.0,
+            1.0
+          );
+        }
+      `;
+    }
+
+    get fragmentShaderSource() {
+      return `
+        precision highp float;
+
+        uniform vec2 u_resolution;
+        uniform float u_time;
+        uniform float u_speed;
+        uniform vec2 u_pointer;
+
+        /*
+         * -------------------------------------------------------
+         * RANDOMNESS AND NOISE
+         * -------------------------------------------------------
+         */
+
+        float hash21(vec2 point) {
+          point = fract(point * vec2(123.34, 456.21));
+
+          point += dot(point, point + 45.32);
+
+          return fract(point.x * point.y);
+        }
+
+        vec2 hash22(vec2 point) {
+          float first = hash21(point);
+
+          float second = hash21(point + first + 19.19);
+
+          return vec2(first, second);
+        }
+
+        float valueNoise(vec2 point) {
+          vec2 cell = floor(point);
+          vec2 local = fract(point);
+
+          /*
+           * Quintic interpolation gives smoother derivatives
+           * than basic linear interpolation.
+           */
+          local =
+            local *
+            local *
+            local *
+            (local * (local * 6.0 - 15.0) + 10.0);
+
+          float bottomLeft = hash21(cell);
+          float bottomRight = hash21(cell + vec2(1.0, 0.0));
+          float topLeft = hash21(cell + vec2(0.0, 1.0));
+          float topRight = hash21(cell + vec2(1.0, 1.0));
+
+          float bottom = mix(bottomLeft, bottomRight, local.x);
+          float top = mix(topLeft, topRight, local.x);
+
+          return mix(bottom, top, local.y);
+        }
+
+        float fbm(vec2 point) {
+          float result = 0.0;
+          float amplitude = 0.52;
+
+          mat2 rotation = mat2(0.86, 0.51, -0.51, 0.86);
+
+          for (int octave = 0; octave < 5; octave++) {
+            result += valueNoise(point) * amplitude;
+
+            point = rotation * point * 2.03;
+            point += vec2(13.17, 8.73);
+
+            amplitude *= 0.5;
+          }
+
+          return result;
+        }
+
+        /*
+         * Domain warping creates folded, billowing structures
+         * instead of ordinary flat noise.
+         */
+        float cloudNoise(vec2 point) {
+          vec2 warpOne = vec2(
+            fbm(point),
+            fbm(point + vec2(5.2, 1.3))
+          );
+
+          vec2 warpTwo = vec2(
+            fbm(point + warpOne * 2.15 + vec2(7.8, 2.6)),
+            fbm(point + warpOne * 1.9 + vec2(2.1, 9.2))
+          );
+
+          float broadClouds = fbm(point + warpTwo * 1.72);
+
+          float mediumDetail = fbm(
+            point * 1.84 + warpOne * 1.2 + warpTwo * 0.42
+          );
+
+          float fineDetail = valueNoise(point * 7.1 + warpTwo * 2.0);
+
+          return
+            broadClouds * 0.69 +
+            mediumDetail * 0.25 +
+            fineDetail * 0.06;
+        }
+
+        /*
+         * -------------------------------------------------------
+         * STARS
+         * -------------------------------------------------------
+         */
+
+        float starField(vec2 screenUv, float time) {
+          vec2 aspect = vec2(u_resolution.x / u_resolution.y, 1.0);
+
+          vec2 grid = screenUv * aspect * 230.0;
+
+          vec2 cell = floor(grid);
+          vec2 local = fract(grid);
+
+          float randomValue = hash21(cell);
+
+          vec2 starPosition =
+            0.18 + hash22(cell + 14.7) * 0.64;
+
+          float distanceToStar = length(local - starPosition);
+
+          // high density floor: most stars never make it through the deck
+          float exists = step(0.991, randomValue);
+
+          float radius = mix(0.018, 0.07, pow(randomValue, 14.0));
+
+          float star =
+            smoothstep(radius, 0.0, distanceToStar) * exists;
+
+          float twinkle =
+            0.72 +
+            sin(
+              time * (0.35 + randomValue * 1.3) +
+              randomValue * 40.0
+            ) *
+            0.28;
+
+          return star * twinkle;
+        }
+
+        /*
+         * -------------------------------------------------------
+         * FORWARD-MOVING CLOUD PLANE
+         * -------------------------------------------------------
+         */
+
+        // high-fog regime: optical depth so high only the nearest gradients read
+        vec4 renderCloudPlane(
+          vec2 uv,
+          float depth,
+          float layerIndex
+        ) {
+          float perspectiveDepth = pow(depth, 0.82);
+
+          float coordinateScale = mix(3.15, 0.54, perspectiveDepth);
+
+          vec2 layerOffset = vec2(
+            hash21(vec2(layerIndex, 17.2)),
+            hash21(vec2(layerIndex + 9.3, 41.7))
+          );
+
+          layerOffset = (layerOffset - 0.5) * 7.0;
+
+          vec2 wind = vec2(
+            u_time * (0.006 + layerIndex * 0.0008),
+            sin(u_time * 0.035 + layerIndex) * 0.025
+          );
+
+          /*
+           * Vanishing point below center: a shallow deck
+           * seen slightly from above.
+           */
+          vec2 uv_vp = uv - vec2(0.0, -0.22);
+
+          vec2 cloudCoordinates =
+            uv_vp * coordinateScale + layerOffset + wind;
+
+          float density = cloudNoise(cloudCoordinates);
+
+          /*
+           * The fog thins where you look: a soft circular
+           * clearing around the eased pointer position.
+           */
+          vec2 aspect = vec2(u_resolution.x / u_resolution.y, 1.0);
+          vec2 pointerUv = (u_pointer - 0.5) * aspect;
+          float clearing = exp(-length(uv - pointerUv) * 3.2);
+
+          float threshold =
+            mix(0.48, 0.44, perspectiveDepth) +
+            clearing * 0.05;
+
+          float softness = mix(0.22, 0.18, perspectiveDepth);
+
+          float bodyAlpha = smoothstep(
+            threshold,
+            threshold + softness,
+            density
+          );
+
+          float mistAlpha = smoothstep(
+            threshold - 0.075,
+            threshold + 0.15,
+            density
+          ) * 0.44;
+
+          float alpha = max(bodyAlpha, mistAlpha);
+
+          float fadeIn = smoothstep(0.0, 0.16, depth);
+          float fadeOut = 1.0 - smoothstep(0.76, 1.0, depth);
+          float lifeOpacity = fadeIn * fadeOut;
+
+          float rightMask = smoothstep(
+            -0.72,
+            0.62,
+            uv.x - uv.y * 0.2 + layerIndex * 0.035
+          );
+
+          float lowerMask =
+            1.0 - smoothstep(-0.6, 0.65, uv.y);
+
+          /*
+           * Raised floor keeps the deck near-continuous murk.
+           */
+          float spatialMask =
+            0.42 + max(rightMask * 0.8, lowerMask) * 0.58;
+
+          alpha *= lifeOpacity * spatialMask;
+
+          vec2 lightDirection = vec2(-0.048, 0.062) * coordinateScale;
+
+          float lightSample =
+            cloudNoise(cloudCoordinates + lightDirection);
+
+          float edgeLight = clamp(
+            (lightSample - density) * 7.5 + 0.48,
+            0.0,
+            1.0
+          );
+
+          float bodyBrightness = smoothstep(
+            threshold - 0.03,
+            threshold + 0.21,
+            density
+          );
+
+          vec3 distantShadow = vec3(0.006, 0.035, 0.067);
+          vec3 blueBody = vec3(0.035, 0.22, 0.37);
+          vec3 illuminatedEdge = vec3(0.30, 0.78, 0.85);
+
+          vec3 shadowColor = mix(
+            distantShadow * 1.8,
+            distantShadow,
+            perspectiveDepth
+          );
+
+          vec3 bodyColor = mix(
+            blueBody * 1.25,
+            blueBody,
+            perspectiveDepth
+          );
+
+          vec3 color = mix(
+            shadowColor,
+            bodyColor,
+            bodyBrightness * 0.76
+          );
+
+          color = mix(
+            color,
+            illuminatedEdge,
+            pow(edgeLight, 1.35) * 0.62
+          );
+
+          color *= mix(0.78, 1.08, bodyBrightness);
+
+          vec3 atmosphericColor = vec3(0.075, 0.22, 0.33);
+
+          /*
+           * Strengthened atmospheric perspective flattens the
+           * far deck into the haze.
+           */
+          color = mix(
+            atmosphericColor,
+            color,
+            0.30 + perspectiveDepth * 0.70
+          );
+
+          return vec4(color, clamp(alpha, 0.0, 1.0));
+        }
+
+        void main() {
+          vec2 fragment = gl_FragCoord.xy;
+          vec2 screenUv = fragment / u_resolution;
+
+          vec2 uv = (fragment - u_resolution * 0.5) / u_resolution.y;
+
+          vec3 lowerSky = vec3(0.025, 0.115, 0.19);
+          vec3 upperSky = vec3(0.002, 0.018, 0.045);
+
+          vec3 color = mix(
+            lowerSky,
+            upperSky,
+            smoothstep(0.0, 1.0, screenUv.y)
+          );
+
+          /*
+           * Cold glow pooled low, around the below-center
+           * vanishing point of the downward-angled camera.
+           */
+          float skyGlow =
+            exp(-length(uv - vec2(0.0, -0.22)) * 2.3);
+          color += vec3(0.02, 0.10, 0.17) * skyGlow * 0.55;
+
+          /*
+           * Stars are mostly veiled by the deck.
+           */
+          float stars = starField(screenUv, u_time);
+          color += vec3(0.64, 0.82, 1.0) * stars * 0.3;
+
+          /*
+           * Eight cyclic z-depth planes stack into the deck.
+           */
+          for (int layer = 0; layer < 8; layer++) {
+            float layerIndex = float(layer);
+
+            float depth = fract(
+              u_time * u_speed + layerIndex / 8.0
+            );
+
+            vec4 cloud = renderCloudPlane(
+              uv,
+              depth,
+              layerIndex
+            );
+
+            color = mix(color, cloud.rgb, cloud.a * 0.72);
+            color += cloud.rgb * cloud.a * 0.075;
+          }
+
+          /*
+           * Doubled lower mist: the deck presses in from below.
+           */
+          float lowerMist =
+            1.0 - smoothstep(0.0, 0.75, screenUv.y);
+          color += vec3(0.018, 0.07, 0.11) * lowerMist * 0.36;
+
+          color *= vec3(0.88, 1.025, 1.15);
+
+          /*
+           * Flattened contrast curve for the fog grade.
+           */
+          color = pow(max(color, 0.0), vec3(1.06));
+
+          float vignette = smoothstep(
+            1.18,
+            0.2,
+            length(uv * vec2(0.82, 1.0))
+          );
+          color *= mix(0.55, 1.0, vignette);
+
+          float grain =
+            hash21(fragment + fract(u_time) * 193.73) - 0.5;
+          color += grain * 0.011;
+
+          gl_FragColor = vec4(color, 1.0);
+        }
+      `;
+    }
+  }
+
+  const canvas = document.getElementById("bg");
+
+  try {
+    const cloudFlythrough =
+      new CloudFlythrough(canvas);
+
+    cloudFlythrough.initialize();
+
+    window.cloudFlythrough =
+      cloudFlythrough;
+  } catch (error) {
+    console.error(
+      "Cloud animation failed:",
+      error
+    );
+
+    document.body.style.background = "radial-gradient(circle at 70% 20%, #164566, #061522 55%, #010611)";
+  }
+})();
+</script>
+</body>
+</html>

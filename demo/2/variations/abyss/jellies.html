@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CVX Splash — Medusae</title>
+<style>
+  :root {
+    --void: #060a13; --ink: #eef2fb; --muted: #aab6cf;
+    --line: rgba(238, 242, 251, 0.14); --teal: #17e8d8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--void); color: var(--ink);
+    font-family: "Segoe UI", "Avenir Next", system-ui, sans-serif;
+    height: 100vh; overflow: hidden;
+  }
+  #bg { position: fixed; inset: 0; width: 100vw; height: 100vh; display: block; }
+  .stage {
+    position: fixed; inset: 0; display: flex; flex-direction: column;
+    justify-content: space-between; padding: clamp(20px, 4vw, 44px);
+    opacity: 0; animation: settle 1s ease-out 0.3s forwards;
+  }
+  @keyframes settle { to { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .stage { animation: none; opacity: 1; } }
+  .bar { display: flex; align-items: center; justify-content: space-between; }
+  .wordmark {
+    display: flex; align-items: center; gap: 12px;
+    font-family: "Bahnschrift", "Segoe UI", sans-serif;
+    font-weight: 700; font-size: 16px; letter-spacing: 0.14em;
+  }
+  .wordmark .pip {
+    width: 13px; height: 13px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #ff5ec7, #7a2170 75%);
+    box-shadow: 0 0 12px rgba(255, 94, 199, 0.7);
+  }
+  .variant {
+    color: var(--muted); font-size: 13.5px;
+    border: 1px solid var(--line); border-radius: 999px; padding: 5px 14px;
+  }
+  .hero { text-align: center; max-width: 680px; margin: 0 auto; padding-bottom: 5vh; }
+  .hero h1 {
+    font-family: "Bahnschrift", "Segoe UI", sans-serif;
+    font-size: clamp(2.2rem, 5.5vw, 3.8rem); font-weight: 700; line-height: 1.05;
+    text-shadow: 0 2px 28px rgba(3, 6, 12, 0.85);
+  }
+  .hero p {
+    margin: 14px auto 26px; max-width: 44ch; color: var(--muted);
+    font-size: clamp(0.95rem, 1.5vw, 1.1rem); line-height: 1.6;
+    text-shadow: 0 1px 18px rgba(3, 6, 12, 0.9);
+  }
+  .btn {
+    font: inherit; font-size: 14.5px; padding: 11px 24px; border-radius: 10px;
+    cursor: pointer; text-decoration: none; transition: transform 0.2s, background 0.2s;
+  }
+  .btn:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; }
+  .btn-solid { background: var(--ink); color: #0a0f1c; border: 1px solid var(--ink); }
+  .btn-solid:hover { background: #fff; transform: translateY(-1px); }
+  .foot { color: var(--muted); font-size: 13px; text-align: center; }
+
+  /* mobile & touch */
+  html, body { overscroll-behavior: none; }
+  body { height: 100dvh; -webkit-tap-highlight-color: transparent; }
+  #bg { touch-action: none; }
+  .stage { -webkit-user-select: none; user-select: none; }
+  .bar { flex-wrap: wrap; row-gap: 10px; }
+  @media (max-width: 640px) {
+    .wordmark { font-size: 14px; }
+    .variant { font-size: 11px; padding: 4px 10px; }
+    .hero h1 { font-size: clamp(1.9rem, 8.5vw, 2.5rem); }
+    .hero p { font-size: 0.92rem; }
+    .btn { padding: 13px 28px; font-size: 15px; }
+    .foot { font-size: 11.5px; }
+  }
+</style>
+</head>
+<body>
+<canvas id="bg" aria-hidden="true"></canvas>
+<div class="stage">
+  <header class="bar">
+    <div class="wordmark"><span class="pip"></span>CVX SPLASH</div>
+    <span class="variant">Variation — Medusae</span>
+  </header>
+  <main class="hero">
+    <h1>Medusae</h1>
+    <p>Jellyfish done honestly: bells contract for thrust and coast between pulses, tentacles trailing as heavy rope behind them. They glow, because everything down here does.</p>
+    <a class="btn btn-solid" href="#">Get started</a>
+  </main>
+  <footer class="foot">Stir the water around them</footer>
+</div>
+
+<script>
+(() => {
+  "use strict";
+  const canvas = document.getElementById("bg");
+  const ctx = canvas.getContext("2d");
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const TAU = Math.PI * 2;
+  const rnd = (a, b) => a + Math.random() * (b - a);
+  const hash = n => { const s = Math.sin(n * 127.1 + 311.7) * 43758.5453; return s - Math.floor(s); };
+
+  let W = 0, H = 0;
+  function resize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth; H = window.innerHeight;
+    canvas.width = Math.round(W * dpr);
+    canvas.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  window.addEventListener("resize", resize);
+  resize();
+
+  const NRAYS = 6;
+  const rays = [];
+  for (let i = 0; i < NRAYS; i++) {
+    rays.push({
+      u: rnd(0.05, 0.95), w: rnd(0.03, 0.09), len: rnd(0.45, 0.9),
+      d: rnd(0.25, 1), ph: rnd(0, TAU), sway: rnd(0.05, 0.12), tilt: rnd(-0.06, 0.14)
+    });
+  }
+
+  const NJ = 8;
+  const jellies = [];
+  let seeded = false;
+
+  const NBUB = 14;
+  const bubbles = [];
+
+  const N = 70;
+  const motes = [];
+  const MCOLS = [[210, 230, 255], [210, 230, 255], [210, 230, 255], [23, 232, 216]];
+
+  let mx = 0.5, my = 0.45, px = -2, py = -2;
+  window.addEventListener("pointermove", e => { mx = e.clientX / W; my = e.clientY / H; });
+  window.addEventListener("pointerleave", () => { mx = -2; my = -2; });
+
+  function makeJelly(s, u, v) {
+    const R = 14 + 24 * s;
+    const j = {
+      x: u * W, y: v * H, vx: 0, vy: 0, s, R,
+      ph: rnd(0, TAU),
+      period: rnd(2.4, 3.4) / s,          // far bells pulse on a slower clock
+      drift: rnd(0, TAU),
+      chains: []
+    };
+    const mk = (n, restLen) => {
+      const nodes = [];
+      for (let k = 0; k < n; k++) nodes.push({ x: j.x, y: j.y + k * restLen, px: j.x, py: j.y + k * restLen });
+      return { nodes, restLen };
+    };
+    for (let c = 0; c < 7; c++) j.chains.push({ oral: false, frac: c / 6, ch: mk(10, 2.3 * R / 10) });
+    for (let c = 0; c < 2; c++) j.chains.push({ oral: true, frac: 0.5 + (c ? 0.14 : -0.14), ch: mk(6, 1.4 * R / 6) });
+    return j;
+  }
+
+  function frame(now, dt) {
+    const t = now / 1000;
+    px += (mx - px) * 0.07;
+    py += (my - py) * 0.07;
+
+    if (!seeded && W > 0) {
+      for (let i = 0; i < NJ; i++) {
+        const s = 0.45 + 0.55 * (i / (NJ - 1)) + rnd(-0.04, 0.04);
+        jellies.push(makeJelly(Math.min(1, Math.max(0.45, s)), rnd(0.08, 0.92), rnd(0.05, 0.9)));
+      }
+      jellies.sort((a, b) => a.s - b.s);
+      for (let i = 0; i < NBUB; i++) bubbles.push({ x: Math.random() * W, y: Math.random() * H, r: rnd(0.8, 2.4), ph: rnd(0, TAU) });
+      for (let i = 0; i < N; i++) {
+        motes.push({
+          x: Math.random() * W, y: Math.random() * H, d: 0.2 + Math.random() * 0.8,
+          col: MCOLS[(Math.random() * MCOLS.length) | 0], ph: rnd(0, TAU)
+        });
+      }
+      seeded = true;
+    }
+
+    const g = ctx.createLinearGradient(0, 0, 0, H);
+    g.addColorStop(0, "#071021");
+    g.addColorStop(0.5, "#030711");
+    g.addColorStop(1, "#02040a");
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, W, H);
+
+    // faint rays behind everything living
+    ctx.globalCompositeOperation = "lighter";
+    let gr = ctx.createRadialGradient(W * 0.5, -H * 0.25, 0, W * 0.5, -H * 0.25, H * 0.95);
+    gr.addColorStop(0, "rgba(40,90,140,0.16)");
+    gr.addColorStop(1, "rgba(40,90,140,0)");
+    ctx.fillStyle = gr;
+    ctx.fillRect(0, 0, W, H);
+    for (const r of rays) {
+      const x0 = r.u * W + Math.sin(t * r.sway + r.ph) * W * 0.02;
+      const th = r.tilt + Math.sin(t * r.sway * 0.8 + r.ph * 2) * 0.05;
+      const a = 0.03 + 0.05 * r.d;
+      const len = r.len * H * 1.1;
+      const wpx = r.w * W * (0.8 + 0.4 * r.d);
+      ctx.save();
+      ctx.translate(x0, -40);
+      ctx.rotate(th);
+      const rg = ctx.createLinearGradient(0, 0, 0, len);
+      rg.addColorStop(0, `rgba(23,232,216,${a})`);
+      rg.addColorStop(0.7, `rgba(23,232,216,${a * 0.35})`);
+      rg.addColorStop(1, "rgba(23,232,216,0)");
+      ctx.fillStyle = rg;
+      ctx.beginPath();
+      ctx.moveTo(-wpx * 0.35, 0); ctx.lineTo(wpx * 0.35, 0);
+      ctx.lineTo(wpx * 0.9, len); ctx.lineTo(-wpx * 0.9, len);
+      ctx.closePath(); ctx.fill();
+      ctx.restore();
+    }
+    ctx.globalCompositeOperation = "source-over";
+
+    const pw = px * W, phh = py * H;
+
+    for (const j of jellies) {
+      // pulse: contraction half delivers a smooth thrust bump, then coast
+      j.ph += dt * TAU / j.period;
+      const c = (1 - Math.cos(j.ph)) / 2;                       // 0 relaxed … 1 contracted
+      const thrust = Math.pow(Math.max(0, Math.sin(j.ph)), 1.5);
+      j.vy -= thrust * 110 * j.s * dt;
+      j.vy += 10 * j.s * dt;                                    // slow sink between pulses
+      const drag = Math.exp(-1.1 * dt);                         // viscous coast
+      j.vx *= drag; j.vy *= drag;
+      // gentle horizontal wander on layered sines
+      j.x += (Math.sin(t * 0.11 + j.drift) * 9 + Math.sin(t * 0.043 + j.drift * 2) * 6) * j.s * dt;
+
+      // the swarm parts around the pointer like water
+      if (px > -1) {
+        const d = Math.hypot(j.x - pw, j.y - phh);
+        if (d < 170 && d > 1) {
+          const f = 1 - d / 170;
+          j.vx += (j.x - pw) / d * f * f * 90 * dt;
+          j.vy += (j.y - phh) / d * f * f * 90 * dt;
+        }
+      }
+
+      j.x += j.vx * dt; j.y += j.vy * dt;
+      if (j.y < -j.R * 2.5) { j.y = H + j.R * 2; j.x = rnd(0.06, 0.94) * W; j.vy = 0; }
+      if (j.y > H + j.R * 3) j.y = -j.R * 2;
+      if (j.x < -60) j.x = W + 50; if (j.x > W + 60) j.x = -50;
+
+      const wB = j.R * (1 - 0.22 * c), hB = j.R * (0.60 + 0.38 * c);
+
+      // tentacles — verlet rope pinned to the bell rim
+      for (const entry of j.chains) {
+        const ch = entry.ch, nodes = ch.nodes;
+        const fx = entry.frac * 2 - 1;
+        nodes[0].x = j.x + fx * wB * 0.92;
+        nodes[0].y = j.y + hB * 0.10 + Math.abs(fx) * hB * 0.06;
+        for (let k = 1; k < nodes.length; k++) {
+          const n = nodes[k];
+          const nx = n.x + (n.x - n.px) * 0.94 + Math.sin(t * 0.3 + n.y * 0.01) * 10 * dt * dt;
+          const ny = n.y + (n.y - n.py) * 0.94 + 30 * dt * dt;   // heavy rope
+          n.px = n.x; n.py = n.y; n.x = nx; n.y = ny;
+        }
+        for (let pass = 0; pass < 2; pass++) {                   // distance constraints
+          for (let k = 0; k < nodes.length - 1; k++) {
+            const a = nodes[k], b = nodes[k + 1];
+            let dx = b.x - a.x, dy = b.y - a.y;
+            const dist = Math.hypot(dx, dy) || 0.001;
+            const diff = (dist - ch.restLen) / dist;
+            if (k === 0) { b.x -= dx * diff; b.y -= dy * diff; }
+            else { a.x += dx * diff * 0.5; a.y += dy * diff * 0.5; b.x -= dx * diff * 0.5; b.y -= dy * diff * 0.5; }
+          }
+        }
+        ctx.strokeStyle = entry.oral
+          ? `rgba(255,150,210,${(0.12 * j.s).toFixed(3)})`
+          : `rgba(120,230,220,${(0.22 * j.s).toFixed(3)})`;
+        ctx.lineWidth = entry.oral ? 1.5 : 1;
+        ctx.beginPath();
+        ctx.moveTo(nodes[0].x, nodes[0].y);
+        for (let k = 1; k < nodes.length; k++) ctx.lineTo(nodes[k].x, nodes[k].y);
+        ctx.stroke();
+      }
+
+      // bell: dome + slight skirt, squeezed by the contraction
+      ctx.beginPath();
+      ctx.ellipse(j.x, j.y, wB, hB, 0, Math.PI, TAU);
+      ctx.moveTo(j.x + wB, j.y);
+      for (let sIdx = 0; sIdx < 3; sIdx++) {
+        const x1 = j.x + wB - (sIdx + 0.5) * (2 * wB / 3);
+        const x2 = j.x + wB - (sIdx + 1) * (2 * wB / 3);
+        ctx.quadraticCurveTo(x1, j.y + hB * 0.22, x2, j.y);
+      }
+      ctx.closePath();
+      const bg2 = ctx.createRadialGradient(j.x, j.y - hB * 0.35, 1, j.x, j.y, wB * 1.5);
+      bg2.addColorStop(0, `rgba(225,255,250,${((0.16 + 0.10 * c) * j.s).toFixed(3)})`);
+      bg2.addColorStop(0.55, `rgba(23,232,216,${(0.10 * j.s).toFixed(3)})`);
+      bg2.addColorStop(1, "rgba(23,232,216,0)");
+      ctx.fillStyle = bg2;
+      ctx.fill();
+      ctx.strokeStyle = `rgba(150,255,240,${((0.22 + 0.30 * c) * j.s).toFixed(3)})`;
+      ctx.lineWidth = 1 + 0.8 * j.s;
+      ctx.stroke();
+    }
+
+    // glows — they flash on thrust
+    ctx.globalCompositeOperation = "lighter";
+    for (const j of jellies) {
+      const c = (1 - Math.cos(j.ph)) / 2;
+      const R2 = j.R * 2.2;
+      const gg = ctx.createRadialGradient(j.x, j.y - j.R * 0.2, 0, j.x, j.y - j.R * 0.2, R2);
+      gg.addColorStop(0, `rgba(120,240,225,${((0.04 + 0.13 * c) * j.s).toFixed(3)})`);
+      gg.addColorStop(1, "rgba(120,240,225,0)");
+      ctx.fillStyle = gg;
+      ctx.beginPath(); ctx.arc(j.x, j.y - j.R * 0.2, R2, 0, TAU); ctx.fill();
+    }
+    if (px > -1) {
+      gr = ctx.createRadialGradient(pw, phh, 0, pw, phh, 190);
+      gr.addColorStop(0, "rgba(210,235,255,0.10)");
+      gr.addColorStop(1, "rgba(210,235,255,0)");
+      ctx.fillStyle = gr;
+      ctx.beginPath(); ctx.arc(pw, phh, 190, 0, TAU); ctx.fill();
+    }
+    ctx.globalCompositeOperation = "source-over";
+
+    // sparse bubbles
+    for (const b of bubbles) {
+      b.y -= (22 + 16 * b.r) * dt;
+      b.x += Math.sin(t * 2 + b.ph) * 12 * dt;
+      if (b.y < -10) { b.y = H + 10; b.x = Math.random() * W; }
+      ctx.strokeStyle = "rgba(170,225,235,0.15)";
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, TAU); ctx.stroke();
+    }
+
+    // marine snow
+    for (const m of motes) {
+      m.y += (5 + 28 * m.d) * dt;
+      m.x += Math.sin(t * 0.25 + m.ph) * 14 * dt * m.d;
+      if (m.y > H + 20) { m.y = -20; m.x = Math.random() * W; }
+      if (m.x < -30) m.x = W + 30; if (m.x > W + 30) m.x = -30;
+      let lit = 0;
+      if (px > -1) {
+        const dd = Math.hypot(m.x - pw, m.y - phh);
+        if (dd < 220) lit = (1 - dd / 220) * 1.2;
+      }
+      const [cr, cg, cb] = m.col;
+      ctx.fillStyle = `rgba(${cr},${cg},${cb},${Math.min(0.85, 0.14 + 0.34 * m.d + lit * 0.3)})`;
+      ctx.beginPath(); ctx.arc(m.x, m.y, 0.8 + 2.2 * m.d, 0, TAU); ctx.fill();
+    }
+
+    const vg = ctx.createRadialGradient(W / 2, H / 2, Math.min(W, H) * 0.42, W / 2, H / 2, Math.max(W, H) * 0.78);
+    vg.addColorStop(0, "rgba(2,4,9,0)");
+    vg.addColorStop(1, "rgba(2,4,9,0.55)");
+    ctx.fillStyle = vg;
+    ctx.fillRect(0, 0, W, H);
+  }
+
+  let lastT = 0;
+  if (reduced) {
+    for (let k = 0; k < 400; k++) frame(k * 16, 0.016);
+    lastT = 400 * 16;
+    window.addEventListener("resize", () => frame(lastT, 0));
+  } else {
+    let last = performance.now();
+    requestAnimationFrame(function loop(now) {
+      const dt = Math.min((now - last) / 1000, 0.05);
+      last = now;
+      frame(now, dt);
+      requestAnimationFrame(loop);
+    });
+  }
+})();
+</script>
+</body>
+</html>

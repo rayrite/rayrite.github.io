@@ -1,0 +1,1686 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  />
+
+  <meta
+    name="description"
+    content="A dependency-free, PixiJS-inspired animated nebula landing-page hero."
+  />
+
+  <title>Nebula — Interactive Creation Engine</title>
+
+  <style>
+    :root {
+      color-scheme: dark;
+
+      --color-background: #05030a;
+      --color-background-elevated: rgba(11, 8, 20, 0.58);
+      --color-text: #ffffff;
+      --color-text-muted: rgba(255, 255, 255, 0.76);
+
+      --color-pink: #ff2f92;
+      --color-pink-light: #ff77bd;
+      --color-purple: #8b5cff;
+      --color-blue: #50a5ff;
+
+      --page-padding: clamp(1.25rem, 4vw, 4rem);
+      --content-width: 78rem;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      background: var(--color-background);
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      min-height: 100%;
+      overflow-x: hidden;
+
+      color: var(--color-text);
+      background: var(--color-background);
+
+      font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    button,
+    a {
+      font: inherit;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    /*
+     * The hero is an isolated stacking context.
+     * The canvas lives at z-index 0 and the content at z-index 1.
+     */
+    .hero {
+      position: relative;
+      isolation: isolate;
+
+      display: grid;
+      min-height: max(620px, 100svh);
+      overflow: hidden;
+
+      background:
+        radial-gradient(
+          circle at 50% 40%,
+          rgba(41, 21, 66, 0.3),
+          transparent 50%
+        ),
+        #05030a;
+    }
+
+    /*
+     * This element holds the generated canvas.
+     */
+    .hero__canvas {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .hero__canvas canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    /*
+     * Soft edge shading helps keep text readable while preserving
+     * the bright cloud colors around the perimeter.
+     */
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+
+      background:
+        radial-gradient(
+          ellipse at center,
+          transparent 15%,
+          rgba(5, 3, 10, 0.08) 50%,
+          rgba(5, 3, 10, 0.55) 115%
+        ),
+        linear-gradient(
+          to bottom,
+          rgba(5, 3, 10, 0.25),
+          transparent 24%,
+          transparent 70%,
+          rgba(5, 3, 10, 0.55)
+        );
+    }
+
+    /*
+     * Subtle grain makes the gradients feel less digitally perfect.
+     * This is pure CSS and contains no external image.
+     */
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+
+      opacity: 0.045;
+      mix-blend-mode: soft-light;
+
+      background-image:
+        repeating-radial-gradient(
+          circle at 20% 30%,
+          rgba(255, 255, 255, 0.5) 0 0.6px,
+          transparent 0.8px 3px
+        );
+
+      background-size: 6px 6px;
+    }
+
+    .hero__layout {
+      position: relative;
+      z-index: 3;
+
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+
+      width: min(100%, var(--content-width));
+      min-height: inherit;
+      margin-inline: auto;
+      padding:
+        max(1.1rem, env(safe-area-inset-top))
+        var(--page-padding)
+        max(1.25rem, env(safe-area-inset-bottom));
+    }
+
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+
+      width: 100%;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.72rem;
+
+      color: #ffffff;
+      text-decoration: none;
+      letter-spacing: -0.035em;
+      font-size: 1.1rem;
+      font-weight: 750;
+    }
+
+    .brand__mark {
+      width: 2.15rem;
+      height: 2.15rem;
+      filter: drop-shadow(0 0 14px rgba(255, 47, 146, 0.5));
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: clamp(0.8rem, 2vw, 1.6rem);
+
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: rgba(255, 255, 255, 0.76);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 560;
+      transition:
+        color 180ms ease,
+        transform 180ms ease;
+    }
+
+    .nav-links a:hover {
+      color: #ffffff;
+    }
+
+    .github-link {
+      display: inline-grid;
+      place-items: center;
+
+      width: 2.35rem;
+      height: 2.35rem;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 999px;
+
+      background: rgba(10, 7, 18, 0.3);
+      backdrop-filter: blur(12px);
+    }
+
+    .github-link svg {
+      width: 1.05rem;
+      height: 1.05rem;
+    }
+
+    .hero__content {
+      align-self: center;
+      justify-self: center;
+
+      width: min(100%, 900px);
+      padding-block: clamp(3rem, 8vh, 7rem);
+
+      text-align: center;
+    }
+
+    .hero__eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+
+      margin-bottom: 1.5rem;
+      padding: 0.42rem 0.85rem 0.42rem 0.48rem;
+
+      border: 1px solid rgba(255, 71, 157, 0.32);
+      border-radius: 999px;
+
+      color: rgba(255, 255, 255, 0.84);
+      background: rgba(11, 7, 19, 0.4);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.06),
+        0 10px 40px rgba(255, 47, 146, 0.12);
+
+      backdrop-filter: blur(14px) saturate(130%);
+
+      font-size: 0.78rem;
+      font-weight: 650;
+      letter-spacing: 0.035em;
+      text-transform: uppercase;
+    }
+
+    .hero__eyebrow-badge {
+      padding: 0.22rem 0.5rem;
+      border-radius: 999px;
+
+      color: #ffffff;
+      background: linear-gradient(
+        135deg,
+        var(--color-pink),
+        var(--color-purple)
+      );
+
+      font-size: 0.64rem;
+      font-weight: 800;
+    }
+
+    .hero__title {
+      max-width: 12ch;
+      margin: 0 auto;
+
+      color: #ffffff;
+
+      font-size: clamp(3rem, 8vw, 7.25rem);
+      font-weight: 720;
+      line-height: 0.91;
+      letter-spacing: -0.065em;
+
+      text-wrap: balance;
+
+      text-shadow:
+        0 2px 20px rgba(7, 4, 15, 0.5),
+        0 8px 50px rgba(7, 4, 15, 0.35);
+    }
+
+    .hero__title-highlight {
+      display: inline-block;
+
+      color: transparent;
+
+      background:
+        linear-gradient(
+          105deg,
+          #ffffff 10%,
+          #ffd2ea 37%,
+          #ff74b7 62%,
+          #9e79ff 90%
+        );
+
+      background-clip: text;
+      -webkit-background-clip: text;
+    }
+
+    .hero__description {
+      max-width: 690px;
+      margin:
+        clamp(1.5rem, 4vw, 2.25rem)
+        auto
+        0;
+
+      color: var(--color-text-muted);
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      line-height: 1.65;
+      text-wrap: balance;
+
+      text-shadow: 0 2px 16px rgba(5, 3, 10, 0.85);
+    }
+
+    .hero__actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.85rem;
+
+      margin-top: clamp(1.75rem, 4vw, 2.6rem);
+    }
+
+    .button {
+      position: relative;
+      isolation: isolate;
+
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.65rem;
+
+      min-height: 3.15rem;
+      padding: 0.78rem 1.3rem;
+
+      border: 1px solid transparent;
+      border-radius: 0.72rem;
+
+      text-decoration: none;
+      font-size: 0.92rem;
+      font-weight: 720;
+
+      transition:
+        transform 180ms ease,
+        box-shadow 180ms ease,
+        border-color 180ms ease,
+        background 180ms ease;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+    }
+
+    .button:active {
+      transform: translateY(0);
+    }
+
+    .button:focus-visible,
+    .nav-links a:focus-visible,
+    .brand:focus-visible {
+      outline: 3px solid rgba(255, 119, 189, 0.85);
+      outline-offset: 4px;
+    }
+
+    .button--primary {
+      color: #ffffff;
+      background:
+        linear-gradient(
+          135deg,
+          #ff278a,
+          #df3ca7 55%,
+          #8e55ff
+        );
+
+      box-shadow:
+        0 14px 38px rgba(226, 38, 137, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.22);
+    }
+
+    .button--primary:hover {
+      box-shadow:
+        0 18px 48px rgba(226, 38, 137, 0.42),
+        inset 0 1px 0 rgba(255, 255, 255, 0.28);
+    }
+
+    .button--secondary {
+      border-color: rgba(255, 255, 255, 0.2);
+
+      color: #ffffff;
+      background: rgba(12, 8, 22, 0.42);
+
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.06),
+        0 12px 32px rgba(0, 0, 0, 0.16);
+
+      backdrop-filter: blur(14px);
+    }
+
+    .button--secondary:hover {
+      border-color: rgba(255, 255, 255, 0.36);
+      background: rgba(25, 17, 40, 0.6);
+    }
+
+    .button svg {
+      width: 1rem;
+      height: 1rem;
+    }
+
+    .hero__footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+
+      color: rgba(255, 255, 255, 0.46);
+      font-size: 0.72rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .hero__hint {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+    }
+
+    .hero__hint-dot {
+      width: 0.42rem;
+      height: 0.42rem;
+      border-radius: 999px;
+      background: #ff4e9f;
+      box-shadow: 0 0 14px rgba(255, 78, 159, 0.85);
+    }
+
+    .hero__scroll-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .hero__scroll-line {
+      width: 2.5rem;
+      height: 1px;
+      overflow: hidden;
+
+      background: rgba(255, 255, 255, 0.13);
+    }
+
+    .hero__scroll-line::after {
+      content: "";
+      display: block;
+
+      width: 50%;
+      height: 100%;
+
+      background: linear-gradient(
+        to right,
+        transparent,
+        #ff5ba8
+      );
+
+      animation: scroll-line 2.4s ease-in-out infinite;
+    }
+
+    @keyframes scroll-line {
+      from {
+        transform: translateX(-120%);
+      }
+
+      to {
+        transform: translateX(220%);
+      }
+    }
+
+    @media (max-width: 680px) {
+      .nav-links li:not(:last-child) {
+        display: none;
+      }
+
+      .hero__footer {
+        justify-content: center;
+      }
+
+      .hero__scroll-indicator {
+        display: none;
+      }
+
+      .hero__title {
+        max-width: 10ch;
+      }
+
+      .button {
+        flex: 1 1 10rem;
+        max-width: 14rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      .hero__scroll-line::after {
+        animation: none;
+      }
+
+      .button,
+      .nav-links a {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <section class="hero" id="hero">
+      <!--
+        The canvas is injected here by NebulaScene.
+        aria-hidden prevents decorative graphics from adding noise
+        for assistive technology.
+      -->
+      <div
+        class="hero__canvas"
+        id="nebula-canvas"
+        aria-hidden="true"
+      ></div>
+
+      <div class="hero__layout">
+        <nav class="navbar" aria-label="Primary navigation">
+          <a class="brand" href="#hero" aria-label="Nebula home">
+            <svg
+              class="brand__mark"
+              viewBox="0 0 48 48"
+              fill="none"
+              aria-hidden="true"
+            >
+              <defs>
+                <linearGradient
+                  id="brand-gradient"
+                  x1="7"
+                  y1="6"
+                  x2="40"
+                  y2="42"
+                  gradientUnits="userSpaceOnUse"
+                >
+                  <stop stop-color="#FF77BD" />
+                  <stop offset="0.48" stop-color="#FF2F92" />
+                  <stop offset="1" stop-color="#8B5CFF" />
+                </linearGradient>
+
+                <filter
+                  id="brand-glow"
+                  x="-50%"
+                  y="-50%"
+                  width="200%"
+                  height="200%"
+                >
+                  <feGaussianBlur stdDeviation="2.5" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
+
+              <circle
+                cx="24"
+                cy="24"
+                r="19"
+                stroke="url(#brand-gradient)"
+                stroke-width="3"
+                opacity="0.8"
+              />
+
+              <path
+                d="M24 7L28.4 19.6L41 24L28.4 28.4L24 41L19.6 28.4L7 24L19.6 19.6L24 7Z"
+                fill="url(#brand-gradient)"
+                filter="url(#brand-glow)"
+              />
+
+              <circle cx="24" cy="24" r="4.2" fill="white" />
+            </svg>
+
+            <span>nebula.js</span>
+          </a>
+
+          <ul class="nav-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#examples">Examples</a></li>
+            <li><a href="#docs">Documentation</a></li>
+
+            <li>
+              <a
+                class="github-link"
+                href="https://github.com/"
+                aria-label="View the project on GitHub"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M12 .7a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2.23c-3.22.7-3.9-1.37-3.9-1.37-.52-1.34-1.28-1.7-1.28-1.7-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.57-.29-5.28-1.29-5.28-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.04 0 0 .97-.31 3.16 1.18A10.9 10.9 0 0 1 12 6.13c.98 0 1.95.13 2.87.39 2.2-1.49 3.16-1.18 3.16-1.18.63 1.58.23 2.75.11 3.04.74.81 1.19 1.83 1.19 3.09 0 4.4-2.72 5.38-5.3 5.67.42.36.79 1.07.79 2.16v3.25c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .7Z"
+                  />
+                </svg>
+              </a>
+            </li>
+          </ul>
+        </nav>
+
+        <div class="hero__content">
+          <div class="hero__eyebrow">
+            <span class="hero__eyebrow-badge">New</span>
+            <span>A portable interactive canvas experience</span>
+          </div>
+
+          <h1 class="hero__title">
+            Build beautiful
+            <span class="hero__title-highlight">
+              digital worlds.
+            </span>
+          </h1>
+
+          <p class="hero__description">
+            A lightweight, responsive creation engine for immersive
+            web experiences—with layered atmospheric animation,
+            pointer parallax, additive light and procedural motion.
+          </p>
+
+          <div class="hero__actions">
+            <a class="button button--primary" href="#docs">
+              Get started
+
+              <svg
+                viewBox="0 0 20 20"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M4 10h12M11 5l5 5-5 5"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </a>
+
+            <a class="button button--secondary" href="#examples">
+              Explore examples
+            </a>
+          </div>
+        </div>
+
+        <footer class="hero__footer">
+          <div class="hero__hint">
+            <span class="hero__hint-dot"></span>
+            <span>Move your pointer</span>
+          </div>
+
+          <div class="hero__scroll-indicator" aria-hidden="true">
+            <span>Discover</span>
+            <span class="hero__scroll-line"></span>
+          </div>
+        </footer>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    /**
+     * A dependency-free reconstruction of the visual technique used
+     * by the PixiJS website hero.
+     *
+     * Architecture:
+     *
+     * NebulaScene
+     * ├── Input state
+     * ├── Resize lifecycle
+     * ├── Visibility lifecycle
+     * ├── Procedurally generated textures
+     * ├── Parallax layer state
+     * └── Canvas renderer
+     */
+    class NebulaScene {
+      /**
+       * @param {HTMLElement} host
+       */
+      constructor(host) {
+        this.host = host;
+
+        this.canvas = document.createElement("canvas");
+        this.canvas.setAttribute("role", "presentation");
+
+        const context = this.canvas.getContext("2d", {
+          alpha: false,
+          desynchronized: true
+        });
+
+        if (!context) {
+          throw new Error("This browser does not support Canvas 2D.");
+        }
+
+        this.context = context;
+        this.host.appendChild(this.canvas);
+
+        this.width = 1;
+        this.height = 1;
+        this.pixelRatio = 1;
+
+        this.elapsed = 0;
+        this.lastFrameTime = 0;
+        this.animationFrame = 0;
+
+        this.pointer = {
+          x: 0,
+          y: 0
+        };
+
+        this.pointerTarget = {
+          x: 0,
+          y: 0
+        };
+
+        this.isVisible = true;
+        this.isDocumentVisible = !document.hidden;
+        this.isRunning = false;
+
+        this.motionPreference = window.matchMedia(
+          "(prefers-reduced-motion: reduce)"
+        );
+
+        this.reduceMotion = this.motionPreference.matches;
+
+        this.layers = [];
+        this.stars = [];
+        this.particles = [];
+
+        this.resizeObserver = new ResizeObserver(() => {
+          this.resize();
+        });
+
+        this.intersectionObserver = new IntersectionObserver(
+          ([entry]) => {
+            this.isVisible = entry.isIntersecting;
+            this.synchronizeAnimationState();
+          },
+          {
+            rootMargin: "120px",
+            threshold: 0
+          }
+        );
+
+        this.boundHandlePointerMove =
+          this.handlePointerMove.bind(this);
+
+        this.boundHandlePointerLeave =
+          this.handlePointerLeave.bind(this);
+
+        this.boundHandleVisibilityChange =
+          this.handleVisibilityChange.bind(this);
+
+        this.boundHandleMotionPreference =
+          this.handleMotionPreference.bind(this);
+
+        this.boundAnimate = this.animate.bind(this);
+      }
+
+      initialize() {
+        this.createScene();
+
+        this.resizeObserver.observe(this.host);
+        this.intersectionObserver.observe(this.host);
+
+        window.addEventListener(
+          "pointermove",
+          this.boundHandlePointerMove,
+          { passive: true }
+        );
+
+        document.addEventListener(
+          "pointerleave",
+          this.boundHandlePointerLeave,
+          { passive: true }
+        );
+
+        document.addEventListener(
+          "visibilitychange",
+          this.boundHandleVisibilityChange
+        );
+
+        this.motionPreference.addEventListener(
+          "change",
+          this.boundHandleMotionPreference
+        );
+
+        this.resize();
+        this.synchronizeAnimationState();
+      }
+
+      createScene() {
+        /*
+         * These textures are generated once and reused each frame.
+         * We avoid regenerating gradients during animation.
+         */
+        const farCloud = this.createCloudTexture({
+          width: 1400,
+          height: 900,
+          seed: 174,
+          count: 85,
+          opacity: 0.095,
+          minRadius: 100,
+          maxRadius: 320,
+          palettes: [
+            [74, 40, 132],
+            [38, 86, 166],
+            [139, 34, 112]
+          ]
+        });
+
+        const middleCloud = this.createCloudTexture({
+          width: 1400,
+          height: 900,
+          seed: 778,
+          count: 70,
+          opacity: 0.115,
+          minRadius: 125,
+          maxRadius: 360,
+          palettes: [
+            [218, 28, 122],
+            [107, 47, 179],
+            [26, 110, 191]
+          ]
+        });
+
+        const nearCloud = this.createCloudTexture({
+          width: 1400,
+          height: 900,
+          seed: 2401,
+          count: 52,
+          opacity: 0.13,
+          minRadius: 150,
+          maxRadius: 430,
+          palettes: [
+            [255, 30, 130],
+            [188, 35, 145],
+            [55, 91, 216]
+          ]
+        });
+
+        this.layers = [
+          {
+            texture: farCloud,
+            depthX: 9,
+            depthY: 7,
+            driftX: 12,
+            driftY: 8,
+            speed: 0.12,
+            phase: 0.3,
+            scale: 1.16,
+            alpha: 0.72,
+            blendMode: "screen"
+          },
+          {
+            texture: middleCloud,
+            depthX: 21,
+            depthY: 15,
+            driftX: 24,
+            driftY: 15,
+            speed: 0.17,
+            phase: 1.8,
+            scale: 1.22,
+            alpha: 0.78,
+            blendMode: "screen"
+          },
+          {
+            texture: nearCloud,
+            depthX: 39,
+            depthY: 27,
+            driftX: 40,
+            driftY: 23,
+            speed: 0.22,
+            phase: 3.2,
+            scale: 1.3,
+            alpha: 0.76,
+            blendMode: "screen"
+          }
+        ];
+
+        this.createStars();
+        this.createParticles();
+      }
+
+      createStars() {
+        const random = this.createRandom(88731);
+
+        this.stars = Array.from({ length: 160 }, () => {
+          const bright = random() > 0.88;
+
+          return {
+            x: random(),
+            y: random(),
+            radius: bright
+              ? 0.7 + random() * 1.1
+              : 0.25 + random() * 0.65,
+            alpha: bright
+              ? 0.4 + random() * 0.5
+              : 0.12 + random() * 0.32,
+            pulseSpeed: 0.4 + random() * 1.2,
+            phase: random() * Math.PI * 2,
+            depth: 1 + random() * 4
+          };
+        });
+      }
+
+      createParticles() {
+        const random = this.createRandom(4429);
+
+        const colors = [
+          "255, 70, 160",
+          "152, 91, 255",
+          "62, 153, 255",
+          "255, 130, 195"
+        ];
+
+        this.particles = Array.from({ length: 24 }, () => ({
+          x: random(),
+          y: random(),
+          radius: 30 + random() * 115,
+          alpha: 0.025 + random() * 0.065,
+          speed: 0.06 + random() * 0.14,
+          phase: random() * Math.PI * 2,
+          travelX: 12 + random() * 50,
+          travelY: 8 + random() * 34,
+          depthX: 5 + random() * 27,
+          depthY: 4 + random() * 18,
+          color: colors[Math.floor(random() * colors.length)]
+        }));
+      }
+
+      /**
+       * Builds an atmospheric transparent texture from overlapping
+       * radial gradients.
+       */
+      createCloudTexture(options) {
+        const texture = document.createElement("canvas");
+
+        texture.width = options.width;
+        texture.height = options.height;
+
+        const context = texture.getContext("2d");
+        const random = this.createRandom(options.seed);
+
+        context.clearRect(
+          0,
+          0,
+          texture.width,
+          texture.height
+        );
+
+        context.globalCompositeOperation = "lighter";
+
+        for (let index = 0; index < options.count; index += 1) {
+          const palette =
+            options.palettes[
+              Math.floor(random() * options.palettes.length)
+            ];
+
+          /*
+           * Bias pink clouds toward the lower-left and blue/purple
+           * clouds toward the upper-right.
+           */
+          const colorBias = palette[0] > palette[2];
+
+          const x = colorBias
+            ? texture.width * (-0.08 + random() * 0.7)
+            : texture.width * (0.3 + random() * 0.78);
+
+          const y = colorBias
+            ? texture.height * (0.28 + random() * 0.82)
+            : texture.height * (-0.1 + random() * 0.8);
+
+          const radius =
+            options.minRadius +
+            random() *
+              (options.maxRadius - options.minRadius);
+
+          const stretchedRadius = radius * (0.55 + random() * 0.8);
+
+          context.save();
+
+          context.translate(x, y);
+          context.scale(
+            1.2 + random() * 1.4,
+            0.65 + random() * 0.7
+          );
+
+          const gradient = context.createRadialGradient(
+            0,
+            0,
+            0,
+            0,
+            0,
+            stretchedRadius
+          );
+
+          const alpha =
+            options.opacity * (0.55 + random() * 0.8);
+
+          gradient.addColorStop(
+            0,
+            `rgba(${palette[0]}, ${palette[1]}, ${palette[2]}, ${alpha})`
+          );
+
+          gradient.addColorStop(
+            0.22,
+            `rgba(${palette[0]}, ${palette[1]}, ${palette[2]}, ${alpha * 0.82})`
+          );
+
+          gradient.addColorStop(
+            0.56,
+            `rgba(${palette[0]}, ${palette[1]}, ${palette[2]}, ${alpha * 0.34})`
+          );
+
+          gradient.addColorStop(
+            1,
+            `rgba(${palette[0]}, ${palette[1]}, ${palette[2]}, 0)`
+          );
+
+          context.fillStyle = gradient;
+
+          context.beginPath();
+          context.arc(0, 0, stretchedRadius, 0, Math.PI * 2);
+          context.fill();
+
+          context.restore();
+        }
+
+        context.globalCompositeOperation = "source-over";
+
+        return texture;
+      }
+
+      handlePointerMove(event) {
+        const bounds = this.host.getBoundingClientRect();
+
+        if (
+          bounds.width <= 0 ||
+          bounds.height <= 0
+        ) {
+          return;
+        }
+
+        const localX =
+          (event.clientX - bounds.left) / bounds.width;
+
+        const localY =
+          (event.clientY - bounds.top) / bounds.height;
+
+        /*
+         * Clamp the input so pointer movement outside the hero does
+         * not create excessive layer travel.
+         */
+        this.pointerTarget.x = this.clamp(
+          localX * 2 - 1,
+          -1,
+          1
+        );
+
+        this.pointerTarget.y = this.clamp(
+          localY * 2 - 1,
+          -1,
+          1
+        );
+      }
+
+      handlePointerLeave() {
+        this.pointerTarget.x = 0;
+        this.pointerTarget.y = 0;
+      }
+
+      handleVisibilityChange() {
+        this.isDocumentVisible = !document.hidden;
+        this.synchronizeAnimationState();
+      }
+
+      handleMotionPreference(event) {
+        this.reduceMotion = event.matches;
+
+        if (this.reduceMotion) {
+          this.pointer.x = 0;
+          this.pointer.y = 0;
+          this.pointerTarget.x = 0;
+          this.pointerTarget.y = 0;
+        }
+
+        this.synchronizeAnimationState();
+        this.render();
+      }
+
+      synchronizeAnimationState() {
+        const shouldRun =
+          this.isVisible &&
+          this.isDocumentVisible &&
+          !this.reduceMotion;
+
+        if (shouldRun) {
+          this.start();
+        } else {
+          this.stop();
+          this.render();
+        }
+      }
+
+      start() {
+        if (this.isRunning) {
+          return;
+        }
+
+        this.isRunning = true;
+        this.lastFrameTime = performance.now();
+
+        this.animationFrame = requestAnimationFrame(
+          this.boundAnimate
+        );
+      }
+
+      stop() {
+        if (!this.isRunning) {
+          return;
+        }
+
+        this.isRunning = false;
+
+        cancelAnimationFrame(this.animationFrame);
+        this.animationFrame = 0;
+      }
+
+      animate(currentTime) {
+        if (!this.isRunning) {
+          return;
+        }
+
+        const elapsedMilliseconds =
+          currentTime - this.lastFrameTime;
+
+        /*
+         * Clamp the delta after inactive tabs or breakpoint pauses.
+         */
+        const deltaSeconds = Math.min(
+          elapsedMilliseconds / 1000,
+          1 / 20
+        );
+
+        this.lastFrameTime = currentTime;
+        this.elapsed += deltaSeconds;
+
+        this.update(deltaSeconds);
+        this.render();
+
+        this.animationFrame = requestAnimationFrame(
+          this.boundAnimate
+        );
+      }
+
+      update(deltaSeconds) {
+        /*
+         * Frame-rate-independent exponential smoothing.
+         *
+         * Higher responsiveness values follow the pointer faster.
+         */
+        const responsiveness = 4.2;
+        const smoothing =
+          1 - Math.exp(-responsiveness * deltaSeconds);
+
+        this.pointer.x +=
+          (this.pointerTarget.x - this.pointer.x) *
+          smoothing;
+
+        this.pointer.y +=
+          (this.pointerTarget.y - this.pointer.y) *
+          smoothing;
+      }
+
+      render() {
+        const context = this.context;
+        const width = this.width;
+        const height = this.height;
+        const time = this.reduceMotion ? 4 : this.elapsed;
+
+        context.save();
+
+        context.setTransform(
+          this.pixelRatio,
+          0,
+          0,
+          this.pixelRatio,
+          0,
+          0
+        );
+
+        context.clearRect(0, 0, width, height);
+
+        this.drawBackground(context, width, height, time);
+        this.drawStars(context, width, height, time);
+
+        for (const layer of this.layers) {
+          this.drawCloudLayer(
+            context,
+            layer,
+            width,
+            height,
+            time
+          );
+        }
+
+        this.drawParticles(context, width, height, time);
+        this.drawCentralGlow(context, width, height, time);
+        this.drawVignette(context, width, height);
+
+        context.restore();
+      }
+
+      drawBackground(context, width, height, time) {
+        const verticalGradient =
+          context.createLinearGradient(0, 0, 0, height);
+
+        verticalGradient.addColorStop(0, "#070612");
+        verticalGradient.addColorStop(0.45, "#090515");
+        verticalGradient.addColorStop(1, "#050209");
+
+        context.fillStyle = verticalGradient;
+        context.fillRect(0, 0, width, height);
+
+        /*
+         * Blue-violet illumination in the upper-right.
+         */
+        const blueX =
+          width * 0.82 +
+          Math.sin(time * 0.09) * width * 0.02;
+
+        const blueY =
+          height * 0.16 +
+          Math.cos(time * 0.07) * height * 0.02;
+
+        const blueRadius = Math.max(width, height) * 0.78;
+
+        const blueGlow = context.createRadialGradient(
+          blueX,
+          blueY,
+          0,
+          blueX,
+          blueY,
+          blueRadius
+        );
+
+        blueGlow.addColorStop(0, "rgba(52, 93, 231, 0.24)");
+        blueGlow.addColorStop(0.32, "rgba(71, 48, 169, 0.12)");
+        blueGlow.addColorStop(1, "rgba(10, 5, 22, 0)");
+
+        context.fillStyle = blueGlow;
+        context.fillRect(0, 0, width, height);
+
+        /*
+         * Pink illumination in the lower-left.
+         */
+        const pinkX =
+          width * 0.08 +
+          Math.cos(time * 0.08) * width * 0.025;
+
+        const pinkY =
+          height * 0.82 +
+          Math.sin(time * 0.06) * height * 0.025;
+
+        const pinkRadius = Math.max(width, height) * 0.72;
+
+        const pinkGlow = context.createRadialGradient(
+          pinkX,
+          pinkY,
+          0,
+          pinkX,
+          pinkY,
+          pinkRadius
+        );
+
+        pinkGlow.addColorStop(0, "rgba(255, 28, 129, 0.28)");
+        pinkGlow.addColorStop(0.34, "rgba(147, 29, 121, 0.14)");
+        pinkGlow.addColorStop(1, "rgba(10, 5, 22, 0)");
+
+        context.fillStyle = pinkGlow;
+        context.fillRect(0, 0, width, height);
+      }
+
+      drawStars(context, width, height, time) {
+        context.save();
+        context.globalCompositeOperation = "screen";
+
+        for (const star of this.stars) {
+          const x =
+            star.x * width +
+            this.pointer.x * star.depth;
+
+          const y =
+            star.y * height +
+            this.pointer.y * star.depth;
+
+          const pulse =
+            0.72 +
+            Math.sin(
+              time * star.pulseSpeed + star.phase
+            ) *
+              0.28;
+
+          context.beginPath();
+          context.arc(
+            x,
+            y,
+            star.radius,
+            0,
+            Math.PI * 2
+          );
+
+          context.fillStyle =
+            `rgba(222, 226, 255, ${star.alpha * pulse})`;
+
+          context.fill();
+        }
+
+        context.restore();
+      }
+
+      drawCloudLayer(
+        context,
+        layer,
+        width,
+        height,
+        time
+      ) {
+        const texture = layer.texture;
+
+        const driftX =
+          Math.sin(time * layer.speed + layer.phase) *
+          layer.driftX;
+
+        const driftY =
+          Math.cos(
+            time * layer.speed * 0.71 + layer.phase
+          ) *
+          layer.driftY;
+
+        const pointerX =
+          this.pointer.x * layer.depthX;
+
+        const pointerY =
+          this.pointer.y * layer.depthY;
+
+        const coverScale = Math.max(
+          width / texture.width,
+          height / texture.height
+        );
+
+        const scale = coverScale * layer.scale;
+        const drawWidth = texture.width * scale;
+        const drawHeight = texture.height * scale;
+
+        context.save();
+
+        context.globalAlpha = layer.alpha;
+        context.globalCompositeOperation = layer.blendMode;
+
+        context.translate(
+          width / 2 + driftX + pointerX,
+          height / 2 + driftY + pointerY
+        );
+
+        context.drawImage(
+          texture,
+          -drawWidth / 2,
+          -drawHeight / 2,
+          drawWidth,
+          drawHeight
+        );
+
+        context.restore();
+      }
+
+      drawParticles(context, width, height, time) {
+        context.save();
+        context.globalCompositeOperation = "lighter";
+
+        for (const particle of this.particles) {
+          const driftX =
+            Math.sin(time * particle.speed + particle.phase) *
+            particle.travelX;
+
+          const driftY =
+            Math.cos(
+              time * particle.speed * 0.73 +
+                particle.phase
+            ) * particle.travelY;
+
+          const x =
+            particle.x * width +
+            driftX +
+            this.pointer.x * particle.depthX;
+
+          const y =
+            particle.y * height +
+            driftY +
+            this.pointer.y * particle.depthY;
+
+          const pulse =
+            0.76 +
+            Math.sin(
+              time * particle.speed * 2 +
+                particle.phase
+            ) *
+              0.24;
+
+          const radius = particle.radius * pulse;
+
+          const gradient = context.createRadialGradient(
+            x,
+            y,
+            0,
+            x,
+            y,
+            radius
+          );
+
+          gradient.addColorStop(
+            0,
+            `rgba(${particle.color}, ${particle.alpha})`
+          );
+
+          gradient.addColorStop(
+            0.35,
+            `rgba(${particle.color}, ${particle.alpha * 0.5})`
+          );
+
+          gradient.addColorStop(
+            1,
+            `rgba(${particle.color}, 0)`
+          );
+
+          context.fillStyle = gradient;
+
+          context.beginPath();
+          context.arc(x, y, radius, 0, Math.PI * 2);
+          context.fill();
+        }
+
+        context.restore();
+      }
+
+      drawCentralGlow(context, width, height, time) {
+        const centerX =
+          width * 0.5 + this.pointer.x * 10;
+
+        const centerY =
+          height * 0.46 + this.pointer.y * 7;
+
+        const baseRadius = Math.min(width, height) * 0.45;
+
+        const pulse =
+          1 + Math.sin(time * 0.55) * 0.035;
+
+        const radius = baseRadius * pulse;
+
+        const gradient = context.createRadialGradient(
+          centerX,
+          centerY,
+          0,
+          centerX,
+          centerY,
+          radius
+        );
+
+        gradient.addColorStop(
+          0,
+          "rgba(255, 225, 245, 0.055)"
+        );
+
+        gradient.addColorStop(
+          0.23,
+          "rgba(255, 84, 169, 0.025)"
+        );
+
+        gradient.addColorStop(
+          0.58,
+          "rgba(111, 70, 225, 0.018)"
+        );
+
+        gradient.addColorStop(
+          1,
+          "rgba(10, 5, 20, 0)"
+        );
+
+        context.save();
+        context.globalCompositeOperation = "screen";
+        context.fillStyle = gradient;
+        context.fillRect(0, 0, width, height);
+        context.restore();
+      }
+
+      drawVignette(context, width, height) {
+        const radius = Math.max(width, height) * 0.78;
+
+        const vignette = context.createRadialGradient(
+          width / 2,
+          height / 2,
+          Math.min(width, height) * 0.16,
+          width / 2,
+          height / 2,
+          radius
+        );
+
+        vignette.addColorStop(0, "rgba(3, 2, 8, 0)");
+        vignette.addColorStop(0.6, "rgba(3, 2, 8, 0.08)");
+        vignette.addColorStop(1, "rgba(3, 2, 8, 0.58)");
+
+        context.fillStyle = vignette;
+        context.fillRect(0, 0, width, height);
+      }
+
+      resize() {
+        const bounds = this.host.getBoundingClientRect();
+
+        this.width = Math.max(1, Math.round(bounds.width));
+        this.height = Math.max(1, Math.round(bounds.height));
+
+        /*
+         * A 2x DPR cap prevents excessive GPU memory and fill-rate
+         * usage on high-density phones and monitors.
+         */
+        this.pixelRatio = Math.min(
+          window.devicePixelRatio || 1,
+          2
+        );
+
+        const physicalWidth = Math.round(
+          this.width * this.pixelRatio
+        );
+
+        const physicalHeight = Math.round(
+          this.height * this.pixelRatio
+        );
+
+        if (
+          this.canvas.width !== physicalWidth ||
+          this.canvas.height !== physicalHeight
+        ) {
+          this.canvas.width = physicalWidth;
+          this.canvas.height = physicalHeight;
+        }
+
+        this.canvas.style.width = `${this.width}px`;
+        this.canvas.style.height = `${this.height}px`;
+
+        this.render();
+      }
+
+      /**
+       * Mulberry32 seeded random generator.
+       *
+       * Seeded randomness keeps the generated clouds identical
+       * across page loads.
+       */
+      createRandom(seed) {
+        let state = seed >>> 0;
+
+        return function random() {
+          state += 0x6d2b79f5;
+
+          let value = state;
+
+          value = Math.imul(value ^ (value >>> 15), value | 1);
+          value ^=
+            value +
+            Math.imul(value ^ (value >>> 7), value | 61);
+
+          return (
+            ((value ^ (value >>> 14)) >>> 0) /
+            4294967296
+          );
+        };
+      }
+
+      clamp(value, minimum, maximum) {
+        return Math.min(
+          maximum,
+          Math.max(minimum, value)
+        );
+      }
+
+      destroy() {
+        this.stop();
+
+        this.resizeObserver.disconnect();
+        this.intersectionObserver.disconnect();
+
+        window.removeEventListener(
+          "pointermove",
+          this.boundHandlePointerMove
+        );
+
+        document.removeEventListener(
+          "pointerleave",
+          this.boundHandlePointerLeave
+        );
+
+        document.removeEventListener(
+          "visibilitychange",
+          this.boundHandleVisibilityChange
+        );
+
+        this.motionPreference.removeEventListener(
+          "change",
+          this.boundHandleMotionPreference
+        );
+
+        this.canvas.remove();
+      }
+    }
+
+    const host = document.getElementById("nebula-canvas");
+
+    if (host) {
+      try {
+        const nebula = new NebulaScene(host);
+
+        nebula.initialize();
+
+        /*
+         * Exposed for debugging in DevTools:
+         *
+         * window.nebulaScene.stop()
+         * window.nebulaScene.start()
+         * window.nebulaScene.destroy()
+         */
+        window.nebulaScene = nebula;
+      } catch (error) {
+        console.error("Unable to initialize nebula scene:", error);
+      }
+    }
+  </script>
+</body>
+</html>

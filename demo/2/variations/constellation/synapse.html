@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CVX Splash — Synapse</title>
+<style>
+  :root {
+    --void: #060a13; --ink: #eef2fb; --muted: #aab6cf;
+    --line: rgba(238, 242, 251, 0.14); --teal: #17e8d8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--void); color: var(--ink);
+    font-family: "Segoe UI", "Avenir Next", system-ui, sans-serif;
+    height: 100vh; overflow: hidden;
+  }
+  #bg { position: fixed; inset: 0; width: 100vw; height: 100vh; display: block; }
+  .stage {
+    position: fixed; inset: 0; display: flex; flex-direction: column;
+    justify-content: space-between; padding: clamp(20px, 4vw, 44px);
+    opacity: 0; animation: settle 1s ease-out 0.3s forwards;
+  }
+  @keyframes settle { to { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .stage { animation: none; opacity: 1; } }
+  .bar { display: flex; align-items: center; justify-content: space-between; }
+  .wordmark {
+    display: flex; align-items: center; gap: 12px;
+    font-family: "Bahnschrift", "Segoe UI", sans-serif;
+    font-weight: 700; font-size: 16px; letter-spacing: 0.14em;
+  }
+  .wordmark .pip {
+    width: 13px; height: 13px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #ff5ec7, #7a2170 75%);
+    box-shadow: 0 0 12px rgba(255, 94, 199, 0.7);
+  }
+  .variant {
+    color: var(--muted); font-size: 13.5px;
+    border: 1px solid var(--line); border-radius: 999px; padding: 5px 14px;
+  }
+  .hero { text-align: center; max-width: 680px; margin: 0 auto; padding-bottom: 5vh; }
+  .hero h1 {
+    font-family: "Bahnschrift", "Segoe UI", sans-serif;
+    font-size: clamp(2.2rem, 5.5vw, 3.8rem); font-weight: 700; line-height: 1.05;
+    text-shadow: 0 2px 28px rgba(3, 6, 12, 0.85);
+  }
+  .hero p {
+    margin: 14px auto 26px; max-width: 44ch; color: var(--muted);
+    font-size: clamp(0.95rem, 1.5vw, 1.1rem); line-height: 1.6;
+    text-shadow: 0 1px 18px rgba(3, 6, 12, 0.9);
+  }
+  .btn {
+    font: inherit; font-size: 14.5px; padding: 11px 24px; border-radius: 10px;
+    cursor: pointer; text-decoration: none; transition: transform 0.2s, background 0.2s;
+  }
+  .btn:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; }
+  .btn-solid { background: var(--ink); color: #0a0f1c; border: 1px solid var(--ink); }
+  .btn-solid:hover { background: #fff; transform: translateY(-1px); }
+  .foot { color: var(--muted); font-size: 13px; text-align: center; }
+
+  /* mobile & touch */
+  html, body { overscroll-behavior: none; }
+  body { height: 100dvh; -webkit-tap-highlight-color: transparent; }
+  #bg { touch-action: none; }
+  .stage { -webkit-user-select: none; user-select: none; }
+  .bar { flex-wrap: wrap; row-gap: 10px; }
+  @media (max-width: 640px) {
+    .wordmark { font-size: 14px; }
+    .variant { font-size: 11px; padding: 4px 10px; }
+    .hero h1 { font-size: clamp(1.9rem, 8.5vw, 2.5rem); }
+    .hero p { font-size: 0.92rem; }
+    .btn { padding: 13px 28px; font-size: 15px; }
+    .foot { font-size: 11.5px; }
+  }
+</style>
+</head>
+<body>
+<canvas id="bg" aria-hidden="true"></canvas>
+<div class="stage">
+  <header class="bar">
+    <div class="wordmark"><span class="pip"></span>CVX SPLASH</div>
+    <span class="variant">Variation — Synapse</span>
+  </header>
+  <main class="hero">
+    <h1>Synapse</h1>
+    <p>A night mind at work: nodes fire in slow cascades and pulses travel the links between them. Touch one with the pointer to start a thought.</p>
+    <a class="btn btn-solid" href="#">Get started</a>
+  </main>
+  <footer class="foot">Touch a node to fire a thought</footer>
+</div>
+
+<script>
+(() => {
+  "use strict";
+  const canvas = document.getElementById("bg");
+  const ctx = canvas.getContext("2d");
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const TAU = Math.PI * 2;
+  const rnd = (a, b) => a + Math.random() * (b - a);
+  const hash = (i, s) => {
+    const x = Math.sin(i * 127.1 + s * 311.7) * 43758.5453;
+    return x - Math.floor(x);
+  };
+
+  let W = 0, H = 0;
+  function resize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth; H = window.innerHeight;
+    canvas.width = Math.round(W * dpr);
+    canvas.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  // pre-rendered glow sprites — one radial gradient, blitted many times
+  function makeGlow(r, g, b) {
+    const s = document.createElement("canvas");
+    s.width = s.height = 64;
+    const c = s.getContext("2d");
+    const gr = c.createRadialGradient(32, 32, 0, 32, 32, 32);
+    gr.addColorStop(0, `rgba(${r},${g},${b},1)`);
+    gr.addColorStop(0.25, `rgba(${r},${g},${b},0.5)`);
+    gr.addColorStop(1, `rgba(${r},${g},${b},0)`);
+    c.fillStyle = gr;
+    c.fillRect(0, 0, 64, 64);
+    return s;
+  }
+  const glowTeal = makeGlow(23, 232, 216);
+  const glowPink = makeGlow(255, 94, 199);
+  const glowBolt = makeGlow(200, 255, 246);
+
+  const N = 64;
+  const nodes = [];
+  for (let i = 0; i < N; i++) {
+    nodes.push({
+      x: Math.random(), y: Math.random(),
+      jx: 0, jy: 0,                            // decaying nudge velocity
+      f1: rnd(0.4, 1.1), f2: rnd(0.3, 0.8),    // wander frequencies
+      ph: rnd(0, TAU), ph2: rnd(0, TAU),
+      nudgeT: rnd(2, 9),
+      flash: 0, ref: 0,
+      pink: Math.random() < 0.15
+    });
+  }
+
+  // fixed small-world graph: 2 nearest neighbours each, plus a few long links
+  const edges = [];
+  const adj = [];
+  for (let i = 0; i < N; i++) adj.push([]);
+  const seen = new Set();
+  function addEdge(a, b) {
+    if (a === b) return false;
+    const k = a < b ? a + "-" + b : b + "-" + a;
+    if (seen.has(k)) return false;
+    seen.add(k);
+    const e = { a, b, glow: 0 };
+    edges.push(e);
+    adj[a].push({ e, other: b });
+    adj[b].push({ e, other: a });
+    return true;
+  }
+  for (let i = 0; i < N; i++) {
+    const ds = [];
+    for (let j = 0; j < N; j++) {
+      if (j === i) continue;
+      const dx = nodes[i].x - nodes[j].x, dy = nodes[i].y - nodes[j].y;
+      ds.push([dx * dx + dy * dy, j]);
+    }
+    ds.sort((p, q) => p[0] - q[0]);
+    addEdge(i, ds[0][1]);
+    addEdge(i, ds[1][1]);
+  }
+  let longs = 0;
+  while (longs < 15) {
+    if (addEdge((Math.random() * N) | 0, (Math.random() * N) | 0)) longs++;
+  }
+
+  const pulses = [];
+  function fire(i) {
+    const n = nodes[i];
+    if (n.ref > 0) return;
+    n.flash = 1;
+    n.ref = rnd(2, 4);
+    for (const ln of adj[i]) {
+      if (pulses.length < 48) {
+        pulses.push({ e: ln.e, from: i, to: ln.other, pos: 0 });
+      }
+    }
+  }
+
+  let mx = -2, my = -2, px = -2, py = -2, hasPointer = false;
+  window.addEventListener("pointermove", e => {
+    mx = e.clientX / W; my = e.clientY / H; hasPointer = true;
+  });
+  window.addEventListener("pointerleave", () => { hasPointer = false; mx = -2; my = -2; });
+
+  let simT = 0;
+  let nextAuto = rnd(0.6, 1.4);
+
+  function step(dt, t) {
+    px += (mx - px) * 0.07;
+    py += (my - py) * 0.07;
+
+    for (const p of nodes) {
+      // layered-sine wander plus the odd nudge
+      let vx = Math.sin(t * p.f1 + p.ph) * 0.009 + Math.sin(t * p.f2 * 0.6 + p.ph2) * 0.006 + p.jx;
+      let vy = Math.cos(t * p.f2 * 1.1 + p.ph2) * 0.009 + Math.cos(t * p.f1 * 0.5 + p.ph) * 0.006 + p.jy;
+      p.jx *= Math.pow(0.3, dt);
+      p.jy *= Math.pow(0.3, dt);
+      p.nudgeT -= dt;
+      if (p.nudgeT <= 0) {
+        p.nudgeT = rnd(3, 10);
+        p.jx = rnd(-0.012, 0.012);
+        p.jy = rnd(-0.012, 0.012);
+      }
+      p.x += vx * dt;
+      p.y += vy * dt;
+      if (p.x < -0.05) p.x = 1.05; if (p.x > 1.05) p.x = -0.05;
+      if (p.y < -0.05) p.y = 1.05; if (p.y > 1.05) p.y = -0.05;
+      if (p.flash > 0) p.flash = Math.max(0, p.flash - dt / 0.8);
+      if (p.ref > 0) p.ref -= dt;
+    }
+
+    for (const e of edges) e.glow *= Math.pow(0.04, dt);
+
+    // pulses run the links; arrivals cascade
+    for (let k = pulses.length - 1; k >= 0; k--) {
+      const p = pulses[k];
+      p.pos += 1.4 * dt;
+      p.e.glow = Math.max(p.e.glow, 0.55);
+      if (p.pos >= 1) {
+        pulses.splice(k, 1);
+        fire(p.to);
+      }
+    }
+
+    // a thought begins somewhere on its own
+    simT += dt;
+    if (simT >= nextAuto) {
+      nextAuto = simT + rnd(1.2, 2);
+      fire((Math.random() * N) | 0);
+    }
+
+    // the pointer lights the nearest node
+    if (hasPointer) {
+      let best = -1, bd = 0.09;
+      for (let i = 0; i < N; i++) {
+        const d = Math.hypot(nodes[i].x - px, nodes[i].y - py);
+        if (d < bd) { bd = d; best = i; }
+      }
+      if (best >= 0) fire(best);
+    }
+  }
+
+  const STARS = 70;
+  function frame(now, dt) {
+    const t = now / 1000;
+    const grow = reduced ? 1 : Math.min(t / 1.6, 1);
+
+    step(dt, t);
+
+    const g = ctx.createLinearGradient(0, 0, 0, H);
+    g.addColorStop(0, "#070b14");
+    g.addColorStop(0.6, "#0a0f1d");
+    g.addColorStop(1, "#0d1424");
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, W, H);
+
+    ctx.globalCompositeOperation = "lighter";
+
+    // one faint nebula so it stays in the family
+    let gr = ctx.createRadialGradient(W * 0.68, H * 0.32, 0, W * 0.68, H * 0.32, W * 0.4);
+    gr.addColorStop(0, "rgba(106,31,94,0.16)");
+    gr.addColorStop(1, "rgba(106,31,94,0)");
+    ctx.fillStyle = gr;
+    ctx.fillRect(0, 0, W, H);
+
+    // sparse dim starfield, hash-placed
+    ctx.fillStyle = "rgba(238,242,251,0.5)";
+    for (let i = 0; i < STARS; i++) {
+      const sx = hash(i, 1) * W, sy = hash(i, 2) * H;
+      const tw = 0.5 + 0.5 * Math.sin(t * (0.4 + hash(i, 3)) * 2 + hash(i, 4) * TAU);
+      ctx.globalAlpha = 0.04 + 0.1 * tw;
+      const s = 1 + hash(i, 5);
+      ctx.fillRect(sx, sy, s, s);
+    }
+    ctx.globalAlpha = 1;
+
+    // links: hairlines, waking near the pointer or a passing pulse
+    ctx.lineWidth = 1;
+    for (const e of edges) {
+      const a = nodes[e.a], b = nodes[e.b];
+      let al = (0.055 + e.glow * 0.3 + (a.flash + b.flash) * 0.14) * grow;
+      if (hasPointer) {
+        const mxp = (a.x + b.x) / 2 - px, myp = (a.y + b.y) / 2 - py;
+        const d = Math.hypot(mxp, myp);
+        if (d < 0.2) al += (1 - d / 0.2) * 0.22;
+      }
+      if (al < 0.004) continue;
+      ctx.strokeStyle = `rgba(23,232,216,${Math.min(al, 0.6)})`;
+      ctx.beginPath();
+      ctx.moveTo(a.x * W, a.y * H);
+      ctx.lineTo(b.x * W, b.y * H);
+      ctx.stroke();
+    }
+
+    // nodes as small breathing glows
+    for (const p of nodes) {
+      const br = 0.22 + p.flash * 0.78;
+      const r = (5 + p.flash * 15) * (0.8 + 0.2 * Math.sin(t * 1.3 + p.ph));
+      ctx.globalAlpha = br * grow;
+      ctx.drawImage(p.pink ? glowPink : glowTeal, p.x * W - r, p.y * H - r, r * 2, r * 2);
+      if (p.flash > 0.35) {
+        ctx.globalAlpha = p.flash * grow;
+        ctx.fillStyle = "rgba(240,255,252,0.95)";
+        ctx.beginPath();
+        ctx.arc(p.x * W, p.y * H, 1.6 + p.flash * 1.6, 0, TAU);
+        ctx.fill();
+      }
+    }
+    ctx.globalAlpha = 1;
+
+    // pulses: bright dots with comet tails running the edges
+    for (const p of pulses) {
+      const a = nodes[p.from], b = nodes[p.to];
+      const ax = a.x * W, ay = a.y * H, bx = b.x * W, by = b.y * H;
+      for (let k = 3; k >= 1; k--) {
+        const q = Math.max(0, p.pos - k * 0.05);
+        ctx.globalAlpha = 0.5 * (1 - k / 4);
+        const tr = 5 - k;
+        ctx.drawImage(glowBolt, ax + (bx - ax) * q - tr, ay + (by - ay) * q - tr, tr * 2, tr * 2);
+      }
+      const hx = ax + (bx - ax) * p.pos, hy = ay + (by - ay) * p.pos;
+      ctx.strokeStyle = "rgba(200,255,246,0.4)";
+      ctx.beginPath();
+      ctx.moveTo(ax + (bx - ax) * Math.max(0, p.pos - 0.1), ay + (by - ay) * Math.max(0, p.pos - 0.1));
+      ctx.lineTo(hx, hy);
+      ctx.stroke();
+      ctx.globalAlpha = 0.95;
+      ctx.drawImage(glowBolt, hx - 7, hy - 7, 14, 14);
+    }
+    ctx.globalAlpha = 1;
+
+    // pointer glow
+    if (hasPointer) {
+      ctx.globalAlpha = 0.5;
+      ctx.drawImage(glowTeal, px * W - 30, py * H - 30, 60, 60);
+      ctx.globalAlpha = 0.9;
+      ctx.fillStyle = "rgba(238,242,251,0.9)";
+      ctx.beginPath();
+      ctx.arc(px * W, py * H, 2, 0, TAU);
+      ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+
+    ctx.globalCompositeOperation = "source-over";
+
+    // vignette
+    const v = ctx.createRadialGradient(W / 2, H / 2, Math.min(W, H) * 0.36, W / 2, H / 2, Math.max(W, H) * 0.75);
+    v.addColorStop(0, "rgba(3,6,12,0)");
+    v.addColorStop(1, "rgba(3,6,12,0.55)");
+    ctx.fillStyle = v;
+    ctx.fillRect(0, 0, W, H);
+  }
+
+  let holdT = 0;
+  resize();
+  window.addEventListener("resize", () => {
+    resize();
+    if (reduced) frame(holdT, 0.016);
+  });
+
+  if (reduced) {
+    // let a few cascades run, then hold one still frame
+    for (let k = 0; k < 260; k++) frame(k * 16, 0.016);
+    holdT = 259 * 16;
+  } else {
+    let last = performance.now();
+    requestAnimationFrame(function loop(now) {
+      const dt = Math.min((now - last) / 1000, 0.05);
+      last = now;
+      frame(now, dt);
+      requestAnimationFrame(loop);
+    });
+  }
+})();
+</script>
+</body>
+</html>

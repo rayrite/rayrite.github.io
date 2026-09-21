@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CVX Splash — Living Light</title>
+<style>
+  :root {
+    --void: #060a13; --ink: #eef2fb; --muted: #aab6cf;
+    --line: rgba(238, 242, 251, 0.14); --teal: #17e8d8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--void); color: var(--ink);
+    font-family: "Segoe UI", "Avenir Next", system-ui, sans-serif;
+    height: 100vh; overflow: hidden;
+  }
+  #bg { position: fixed; inset: 0; width: 100vw; height: 100vh; display: block; }
+  .stage {
+    position: fixed; inset: 0; display: flex; flex-direction: column;
+    justify-content: space-between; padding: clamp(20px, 4vw, 44px);
+    opacity: 0; animation: settle 1s ease-out 0.3s forwards;
+  }
+  @keyframes settle { to { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .stage { animation: none; opacity: 1; } }
+  .bar { display: flex; align-items: center; justify-content: space-between; }
+  .wordmark {
+    display: flex; align-items: center; gap: 12px;
+    font-family: "Bahnschrift", "Segoe UI", sans-serif;
+    font-weight: 700; font-size: 16px; letter-spacing: 0.14em;
+  }
+  .wordmark .pip {
+    width: 13px; height: 13px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #ff5ec7, #7a2170 75%);
+    box-shadow: 0 0 12px rgba(255, 94, 199, 0.7);
+  }
+  .variant {
+    color: var(--muted); font-size: 13.5px;
+    border: 1px solid var(--line); border-radius: 999px; padding: 5px 14px;
+  }
+  .hero { text-align: center; max-width: 680px; margin: 0 auto; padding-bottom: 5vh; }
+  .hero h1 {
+    font-family: "Bahnschrift", "Segoe UI", sans-serif;
+    font-size: clamp(2.2rem, 5.5vw, 3.8rem); font-weight: 700; line-height: 1.05;
+    text-shadow: 0 2px 28px rgba(3, 6, 12, 0.85);
+  }
+  .hero p {
+    margin: 14px auto 26px; max-width: 44ch; color: var(--muted);
+    font-size: clamp(0.95rem, 1.5vw, 1.1rem); line-height: 1.6;
+    text-shadow: 0 1px 18px rgba(3, 6, 12, 0.9);
+  }
+  .btn {
+    font: inherit; font-size: 14.5px; padding: 11px 24px; border-radius: 10px;
+    cursor: pointer; text-decoration: none; transition: transform 0.2s, background 0.2s;
+  }
+  .btn:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; }
+  .btn-solid { background: var(--ink); color: #0a0f1c; border: 1px solid var(--ink); }
+  .btn-solid:hover { background: #fff; transform: translateY(-1px); }
+  .foot { color: var(--muted); font-size: 13px; text-align: center; }
+
+  /* mobile & touch */
+  html, body { overscroll-behavior: none; }
+  body { height: 100dvh; -webkit-tap-highlight-color: transparent; }
+  #bg { touch-action: none; }
+  .stage { -webkit-user-select: none; user-select: none; }
+  .bar { flex-wrap: wrap; row-gap: 10px; }
+  @media (max-width: 640px) {
+    .wordmark { font-size: 14px; }
+    .variant { font-size: 11px; padding: 4px 10px; }
+    .hero h1 { font-size: clamp(1.9rem, 8.5vw, 2.5rem); }
+    .hero p { font-size: 0.92rem; }
+    .btn { padding: 13px 28px; font-size: 15px; }
+    .foot { font-size: 11.5px; }
+  }
+</style>
+</head>
+<body>
+<canvas id="bg" aria-hidden="true"></canvas>
+<div class="stage">
+  <header class="bar">
+    <div class="wordmark"><span class="pip"></span>CVX SPLASH</div>
+    <span class="variant">Variation — Living Light</span>
+  </header>
+  <main class="hero">
+    <h1>Living Light</h1>
+    <p>A quiet bay of drifting plankton, glowing at every depth. The middle distance stays sharp; the water near you melts into soft bokeh.</p>
+    <a class="btn btn-solid" href="#">Get started</a>
+  </main>
+  <footer class="foot">Drag the pointer to stir the glow</footer>
+</div>
+
+<script>
+(() => {
+  "use strict";
+  const canvas = document.getElementById("bg");
+  const ctx = canvas.getContext("2d");
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const TAU = Math.PI * 2;
+  const rnd = (a, b) => a + Math.random() * (b - a);
+
+  let W = 0, H = 0;
+  function resize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth; H = window.innerHeight;
+    canvas.width = Math.round(W * dpr);
+    canvas.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  window.addEventListener("resize", resize);
+  resize();
+
+  // gentle current from layered sines
+  function flow(x, y, t) {
+    return Math.sin(x * 3.7 + t * 0.11) * 1.2
+         + Math.cos(y * 2.9 - t * 0.14) * 1.0
+         + Math.sin((x + y) * 1.8 + t * 0.07) * 0.8;
+  }
+
+  const COLS = [
+    [23, 232, 216], [23, 232, 216], [23, 232, 216],   // teal plankton, most
+    [94, 158, 255], [94, 158, 255],                    // pale blue
+    [232, 240, 255],                                   // white
+    [255, 94, 199]                                     // rare pink
+  ];
+
+  const N = 110;
+  const FOCUS = 0.42;                 // the depth the "camera" is focused on
+  const P = [];
+  for (let i = 0; i < N; i++) {
+    P.push({
+      x: Math.random(), y: Math.random(),
+      d: 0.15 + Math.pow(Math.random(), 0.85) * 0.85,  // 0.15 far … 1 at the lens
+      col: COLS[(Math.random() * COLS.length) | 0],
+      ph: rnd(0, TAU),
+      wake: 0
+    });
+  }
+
+  // pointer + its velocity, for the wake
+  let mx = -2, my = -2, px = -2, py = -2, pvx = 0, pvy = 0;
+  let lastMx = 0, lastMy = 0, lastMt = 0;
+  window.addEventListener("pointermove", e => {
+    const x = e.clientX / W, y = e.clientY / H, now = performance.now();
+    if (lastMt) {
+      const dt = Math.max((now - lastMt) / 1000, 0.008);
+      pvx = (x - lastMx) / dt;
+      pvy = (y - lastMy) / dt;
+      const sp = Math.hypot(pvx, pvy);
+      if (sp > 3) { pvx *= 3 / sp; pvy *= 3 / sp; }    // clamp swipe speed
+    }
+    lastMx = x; lastMy = y; lastMt = now;
+    mx = x; my = y;
+  });
+  window.addEventListener("pointerleave", () => { mx = -2; my = -2; lastMt = 0; });
+
+  function frame(now, dt) {
+    const t = now / 1000;
+    px += (mx - px) * 0.08;
+    py += (my - py) * 0.08;
+    pvx *= Math.pow(0.25, dt);                          // wake fades when the hand stills
+    pvy *= Math.pow(0.25, dt);
+
+    // the bay: faintly lit from the surface above
+    const g = ctx.createLinearGradient(0, 0, 0, H);
+    g.addColorStop(0, "#0a1322");
+    g.addColorStop(0.5, "#071020");
+    g.addColorStop(1, "#050a14");
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, W, H);
+
+    ctx.globalCompositeOperation = "lighter";
+
+    // faint deep blooms keep it in the family
+    let gr = ctx.createRadialGradient(W * 0.78, H * 0.2, 0, W * 0.78, H * 0.2, W * 0.4);
+    gr.addColorStop(0, "rgba(106,31,94,0.16)");
+    gr.addColorStop(1, "rgba(106,31,94,0)");
+    ctx.fillStyle = gr; ctx.fillRect(0, 0, W, H);
+    gr = ctx.createRadialGradient(W * 0.18, H * 0.85, 0, W * 0.18, H * 0.85, W * 0.36);
+    gr.addColorStop(0, "rgba(14,120,130,0.12)");
+    gr.addColorStop(1, "rgba(14,120,130,0)");
+    ctx.fillStyle = gr; ctx.fillRect(0, 0, W, H);
+
+    for (const p of P) {
+      const a = flow(p.x, p.y, t);
+      const sp = 0.016 * (0.35 + p.d);                  // near plankton drift faster
+      let vx = Math.cos(a) * sp;
+      let vy = Math.sin(a) * sp * 0.7;
+
+      // stirring the water pushes and brightens nearby plankton
+      if (px > -1) {
+        const dx = p.x - px, dy = p.y - py;
+        const d = Math.hypot(dx, dy);
+        const reach = 0.15;
+        if (d < reach && d > 0.002) {
+          const f = 1 - d / reach;
+          vx += pvx * 0.10 * f * p.d;
+          vy += pvy * 0.10 * f * p.d;
+          p.wake = Math.min(1, p.wake + f * 3 * dt);
+        }
+      }
+      p.wake *= Math.pow(0.08, dt);
+
+      p.x += vx * dt;
+      p.y += vy * dt;
+      if (p.x < -0.06) p.x = 1.06; if (p.x > 1.06) p.x = -0.06;
+      if (p.y < -0.06) p.y = 1.06; if (p.y > 1.06) p.y = -0.06;
+
+      // depth of field: blur grows away from the focus depth in both directions
+      const b = Math.min(Math.abs(p.d - FOCUS) / (p.d > FOCUS ? 1 - FOCUS : FOCUS), 1);
+      const rBase = 2 + 22 * Math.pow(p.d, 1.7);        // physical size grows nearer
+      const r = Math.min(rBase * (1 + 1.5 * b), H * 0.09);
+      const al = (0.5 * (1 - 0.5 * b) + 0.25 * p.d) * (1 + p.wake * 0.8);
+
+      // distant plankton washes out toward the water's blue
+      const haze = (1 - p.d) * 0.45;
+      const cr = Math.round(p.col[0] * (1 - haze) + 120 * haze);
+      const cg = Math.round(p.col[1] * (1 - haze) + 150 * haze);
+      const cb = Math.round(p.col[2] * (1 - haze) + 190 * haze);
+
+      const cx = p.x * W, cy = p.y * H;
+      const gd = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+      gd.addColorStop(0, `rgba(${cr},${cg},${cb},${al})`);
+      gd.addColorStop(0.75, `rgba(${cr},${cg},${cb},${al * 0.5})`);
+      gd.addColorStop(1, `rgba(${cr},${cg},${cb},0)`);
+      ctx.fillStyle = gd;
+      ctx.beginPath(); ctx.arc(cx, cy, r, 0, TAU); ctx.fill();
+
+      // crisp core only where the depth is near focus
+      if (b < 0.3) {
+        ctx.fillStyle = `rgba(${Math.min(cr + 60, 255)},${Math.min(cg + 60, 255)},${Math.min(cb + 60, 255)},${(0.85 * (1 - b)) * (1 + p.wake)})`;
+        ctx.beginPath(); ctx.arc(cx, cy, rBase * 0.2, 0, TAU); ctx.fill();
+      }
+    }
+    ctx.globalCompositeOperation = "source-over";
+  }
+
+  if (reduced) {
+    // let the bay settle, then hold one still frame
+    for (let k = 0; k < 240; k++) frame(k * 16, 0.016);
+  } else {
+    let last = performance.now();
+    requestAnimationFrame(function loop(now) {
+      const dt = Math.min((now - last) / 1000, 0.05);
+      last = now;
+      frame(now, dt);
+      requestAnimationFrame(loop);
+    });
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CVX Splash — Shoaling</title>
+<style>
+  :root {
+    --void: #060a13; --ink: #eef2fb; --muted: #aab6cf;
+    --line: rgba(238, 242, 251, 0.14); --teal: #17e8d8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--void); color: var(--ink);
+    font-family: "Segoe UI", "Avenir Next", system-ui, sans-serif;
+    height: 100vh; overflow: hidden;
+  }
+  #bg { position: fixed; inset: 0; width: 100vw; height: 100vh; display: block; }
+  .stage {
+    position: fixed; inset: 0; display: flex; flex-direction: column;
+    justify-content: space-between; padding: clamp(20px, 4vw, 44px);
+    opacity: 0; animation: settle 1s ease-out 0.3s forwards;
+  }
+  @keyframes settle { to { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .stage { animation: none; opacity: 1; } }
+  .bar { display: flex; align-items: center; justify-content: space-between; }
+  .wordmark {
+    display: flex; align-items: center; gap: 12px;
+    font-family: "Bahnschrift", "Segoe UI", sans-serif;
+    font-weight: 700; font-size: 16px; letter-spacing: 0.14em;
+  }
+  .wordmark .pip {
+    width: 13px; height: 13px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #ff5ec7, #7a2170 75%);
+    box-shadow: 0 0 12px rgba(255, 94, 199, 0.7);
+  }
+  .variant {
+    color: var(--muted); font-size: 13.5px;
+    border: 1px solid var(--line); border-radius: 999px; padding: 5px 14px;
+  }
+  .hero { text-align: center; max-width: 680px; margin: 0 auto; padding-bottom: 5vh; }
+  .hero h1 {
+    font-family: "Bahnschrift", "Segoe UI", sans-serif;
+    font-size: clamp(2.2rem, 5.5vw, 3.8rem); font-weight: 700; line-height: 1.05;
+    text-shadow: 0 2px 28px rgba(3, 6, 12, 0.85);
+  }
+  .hero p {
+    margin: 14px auto 26px; max-width: 44ch; color: var(--muted);
+    font-size: clamp(0.95rem, 1.5vw, 1.1rem); line-height: 1.6;
+    text-shadow: 0 1px 18px rgba(3, 6, 12, 0.9);
+  }
+  .btn {
+    font: inherit; font-size: 14.5px; padding: 11px 24px; border-radius: 10px;
+    cursor: pointer; text-decoration: none; transition: transform 0.2s, background 0.2s;
+  }
+  .btn:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; }
+  .btn-solid { background: var(--ink); color: #0a0f1c; border: 1px solid var(--ink); }
+  .btn-solid:hover { background: #fff; transform: translateY(-1px); }
+  .foot { color: var(--muted); font-size: 13px; text-align: center; }
+
+  /* mobile & touch */
+  html, body { overscroll-behavior: none; }
+  body { height: 100dvh; -webkit-tap-highlight-color: transparent; }
+  #bg { touch-action: none; }
+  .stage { -webkit-user-select: none; user-select: none; }
+  .bar { flex-wrap: wrap; row-gap: 10px; }
+  @media (max-width: 640px) {
+    .wordmark { font-size: 14px; }
+    .variant { font-size: 11px; padding: 4px 10px; }
+    .hero h1 { font-size: clamp(1.9rem, 8.5vw, 2.5rem); }
+    .hero p { font-size: 0.92rem; }
+    .btn { padding: 13px 28px; font-size: 15px; }
+    .foot { font-size: 11.5px; }
+  }
+</style>
+</head>
+<body>
+<canvas id="bg" aria-hidden="true"></canvas>
+<div class="stage">
+  <header class="bar">
+    <div class="wordmark"><span class="pip"></span>CVX SPLASH</div>
+    <span class="variant">Variation — Shoaling</span>
+  </header>
+  <main class="hero">
+    <h1>Shoaling</h1>
+    <p>Swell meets a rising reef. As the water shallows each wave slows and bunches and stands up until it throws — side-on, in silhouette, exactly as the physics does it.</p>
+    <a class="btn btn-solid" href="#">Get started</a>
+  </main>
+  <footer class="foot">Lean over the rail</footer>
+</div>
+
+<script>
+(() => {
+  "use strict";
+  const canvas = document.getElementById("bg");
+  const ctx = canvas.getContext("2d");
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const TAU = Math.PI * 2;
+  const rnd = (a, b) => a + Math.random() * (b - a);
+  const hash = (i, s) => ((Math.sin(i * 12.9898 + s * 78.233) * 43758.5453) % 1 + 1) % 1;
+
+  let W = 0, H = 0;
+  let mx = 0.5, my = 0.45, px = -2, py = -2;
+  window.addEventListener("pointermove", e => { mx = e.clientX / W; my = e.clientY / H; });
+  window.addEventListener("pointerleave", () => { mx = -2; my = -2; });
+
+  // shallow-water celerity c = sqrt(g d), g ~ 9000 px/s^2 -> deep reef runs ~90 px/s
+  const G2 = 9000;
+  const DMAX = () => H * 0.52;      // water column at the right edge, px
+  const XB = () => W * 0.06;        // the reef crest, nearly broaching at far left
+  const DEEP = 0.90;                // relative depth offshore
+
+  // depth profile d(x): 0.90 relative at the right edge down to ~0.05 at the break
+  function dOf(x) {
+    const u = Math.max(0, Math.min(1, (x - XB()) / (W * 0.9)));
+    return 0.05 + (DEEP - 0.05) * Math.pow(u, 0.75);
+  }
+  const cOf = x => Math.sqrt(G2 * dOf(x));
+  // Green's law: H ~ d^(-1/4) — the wave stands up as depth runs out
+  const heightAt = (w, x) => w.H0 * Math.pow(DEEP / dOf(x), 0.25);
+  const lamAt = x => 320 * cOf(x) / Math.sqrt(G2 * DEEP); // lambda ~ c: crests bunch
+
+  const waves = [];    // swell lines in staggered lifecycle
+  const foamP = [];    // particles from the throw
+  const backwash = []; // threads running back down the reef
+  let nextSpawn = 3;
+
+  function spawnWave(x) { waves.push({ x, H0: rnd(24, 32), state: "swell", bt: 0, threw: false, bore: null }); }
+
+  function step(dt, t) {
+    if (t >= nextSpawn && waves.filter(w => w.state === "swell").length < 4) {
+      spawnWave(W + 60);
+      nextSpawn = t + rnd(7, 11);
+    }
+    for (let i = waves.length - 1; i >= 0; i--) {
+      const w = waves[i];
+      if (w.state === "swell") {
+        w.x -= cOf(w.x) * dt;
+        // breaking criterion: H/d > 0.78 — the crest can no longer hold its foot
+        if (heightAt(w, w.x) / (dOf(w.x) * DMAX()) > 0.78) { w.state = "break"; w.bt = 0; }
+      } else if (w.state === "break") {
+        w.bt += dt;
+        if (w.bt > 0.12 && !w.threw) {
+          w.threw = true;
+          const hy = -heightAt(w, w.x) * 0.5;
+          for (let j = 0; j < 26; j++)
+            foamP.push({ x: w.x + rnd(-8, 8), y: hy, vx: rnd(-170, -30), vy: rnd(-150, 10), age: 0, life: rnd(0.45, 1.0) });
+        }
+        if (w.bt > 0.35) { w.state = "bore"; w.bore = { x: w.x, a: 0.95 }; }
+      } else {
+        w.bore.x -= cOf(w.bore.x) * 0.8 * dt;
+        w.bore.a -= 0.22 * dt;
+        if (Math.random() < 0.05)
+          backwash.push({ x: w.bore.x + rnd(10, 60), a: 0.35 });
+        if (w.bore.a <= 0) waves.splice(i, 1);
+      }
+    }
+    for (let i = foamP.length - 1; i >= 0; i--) {
+      const p = foamP[i];
+      p.age += dt;
+      if (p.age > p.life) { foamP.splice(i, 1); continue; }
+      p.vy += 380 * dt;
+      p.x += p.vx * dt; p.y += p.vy * dt;
+    }
+    for (let i = backwash.length - 1; i >= 0; i--) {
+      const b = backwash[i];
+      b.x += 26 * dt;
+      b.a -= 0.10 * dt;
+      if (b.a <= 0) backwash.splice(i, 1);
+    }
+  }
+
+  // foam sprite for the bore and the throw
+  const foamSpr = document.createElement("canvas");
+  foamSpr.width = foamSpr.height = 64;
+  {
+    const fc = foamSpr.getContext("2d");
+    const fg = fc.createRadialGradient(32, 32, 2, 32, 32, 30);
+    fg.addColorStop(0, "rgba(225,250,246,0.9)");
+    fg.addColorStop(0.6, "rgba(170,232,226,0.4)");
+    fg.addColorStop(1, "rgba(170,232,226,0)");
+    fc.fillStyle = fg;
+    fc.beginPath(); fc.arc(32, 32, 30, 0, TAU); fc.fill();
+  }
+
+  function draw(t) {
+    px += (mx - px) * 0.06;
+    py += (my - py) * 0.06;
+
+    const yS = H * (0.44 + 0.010 * Math.sin(t * 0.21));
+    const sway = Math.sin(t * 0.13) * 6;
+
+    let g = ctx.createLinearGradient(0, -30, 0, yS);
+    g.addColorStop(0, "#04070f");
+    g.addColorStop(1, "#0b1526");
+    ctx.fillStyle = g;
+    ctx.fillRect(-40, -40, W + 80, yS + 41);
+
+    g = ctx.createLinearGradient(0, yS, 0, H + 40);
+    g.addColorStop(0, "#081120");
+    g.addColorStop(1, "#030710");
+    ctx.fillStyle = g;
+    ctx.fillRect(-40, yS, W + 80, H - yS + 80);
+
+    ctx.save();
+    ctx.translate(sway + (px > -1 ? (px - 0.5) * -24 : 0), py > -1 ? (py - 0.5) * 10 : 0);
+
+    ctx.globalCompositeOperation = "lighter";
+    ctx.fillStyle = "#dfe8ff";
+    for (let i = 0; i < 110; i++) {
+      const sx = hash(i, 1) * W;
+      const sy = hash(i, 2) * yS * 0.9;
+      const tw = 0.55 + 0.45 * Math.sin(t * (0.25 + (i % 6) * 0.11) + i * 1.7);
+      ctx.globalAlpha = 0.55 * tw * (1 - sy / yS);
+      ctx.beginPath();
+      ctx.arc(sx, sy, 0.6 + (i % 4) * 0.32, 0, TAU);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+
+    // the moon, high and left, path laid on the deep section
+    const mX = W * (0.24 + Math.sin(t * 0.02) * 0.01);
+    const mY = yS * 0.36 + Math.cos(t * 0.026) * 6;
+    const mR = Math.min(W, H) * 0.05;
+    let mg = ctx.createRadialGradient(mX, mY, mR * 0.2, mX, mY, mR * 5);
+    mg.addColorStop(0, "rgba(255,94,199,0.16)");
+    mg.addColorStop(1, "rgba(255,94,199,0)");
+    ctx.fillStyle = mg;
+    ctx.beginPath(); ctx.arc(mX, mY, mR * 5, 0, TAU); ctx.fill();
+
+    ctx.globalCompositeOperation = "source-over";
+    mg = ctx.createRadialGradient(mX - mR * 0.25, mY - mR * 0.25, mR * 0.1, mX, mY, mR);
+    mg.addColorStop(0, "#ffd6ec");
+    mg.addColorStop(0.55, "#ff9ed2");
+    mg.addColorStop(1, "#7a2170");
+    ctx.fillStyle = mg;
+    ctx.beginPath(); ctx.arc(mX, mY, mR, 0, TAU); ctx.fill();
+
+    ctx.globalCompositeOperation = "lighter";
+    let hz = ctx.createLinearGradient(0, yS - 50, 0, yS + 50);
+    hz.addColorStop(0, "rgba(120,150,200,0)");
+    hz.addColorStop(0.5, "rgba(120,150,200,0.10)");
+    hz.addColorStop(1, "rgba(120,150,200,0)");
+    ctx.fillStyle = hz;
+    ctx.fillRect(-40, yS - 50, W + 80, 100);
+
+    // build the surface line: background chop + each wave's traveling bump.
+    // Waves mid-throw still hold most of their mass, feeding it to the curl.
+    const pts = [];
+    const chops = (x, tt) => Math.sin(x * 0.021 - tt * 0.9) * 1.8 + Math.sin(x * 0.043 + tt * 0.6) * 1.3;
+    const bumps = [];
+    for (const w of waves) {
+      if (w.state === "bore") continue;
+      const lam = lamAt(w.x);
+      const xBack = w.x - lam * 1.24, span = lam * 2;
+      let Hw = heightAt(w, w.x);
+      if (w.state === "break") Hw *= 1 - 0.5 * Math.min(1, w.bt / 0.35);
+      const r = Math.min(0.82, heightAt(w, w.x) / (dOf(w.x) * DMAX()));
+      bumps.push({ xBack, span, Hw, r, cx: w.x });
+    }
+    for (let x = -40; x <= W + 40; x += 5) {
+      let y = yS + chops(x, t);
+      for (const b of bumps) {
+        const s = (x - b.xBack) / b.span;
+        if (s <= 0 || s >= 1) continue;
+        const sc = 0.62;
+        if (s < sc) y -= b.Hw * Math.sin(Math.PI * s / (2 * sc));
+        else {
+          const u = (s - sc) / (1 - sc);
+          y -= b.Hw * (1 - Math.pow(u, 1 / (1 + 3 * b.r))); // front face steepens with H/d
+        }
+      }
+      pts.push([x, y]);
+    }
+
+    // the water body — lighter than the stone beneath, so the shoaling
+    // masses read as water in silhouette, not as absence
+    const reefY = x => yS + dOf(x) * DMAX() + Math.sin(x * 0.008) * 3;
+    ctx.globalCompositeOperation = "source-over";
+    const wg = ctx.createLinearGradient(0, yS - 70, 0, yS + DMAX() * 0.95);
+    wg.addColorStop(0, "#16344f");
+    wg.addColorStop(0.45, "#0b2136");
+    wg.addColorStop(1, "#050e1c");
+    ctx.fillStyle = wg;
+    ctx.beginPath();
+    pts.forEach((p, k) => (k ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])));
+    for (let x = W + 40; x >= -40; x -= 12) ctx.lineTo(x, reefY(x));
+    ctx.closePath();
+    ctx.fill();
+
+    // the reef silhouette under the water line, with a wet sheen on the seam
+    ctx.beginPath();
+    ctx.moveTo(-40, H + 40);
+    for (let x = -40; x <= W + 40; x += 10) ctx.lineTo(x, reefY(x));
+    ctx.lineTo(W + 40, H + 40);
+    ctx.closePath();
+    ctx.fillStyle = "#02050a";
+    ctx.fill();
+    ctx.strokeStyle = "rgba(110,170,180,0.14)";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    for (let x = -40; x <= W + 40; x += 10) x === -40 ? ctx.moveTo(x, reefY(x)) : ctx.lineTo(x, reefY(x));
+    ctx.stroke();
+
+    // moon path glints on the deep section
+    const glPath = new Path2D();
+    for (let i = 0; i < 14; i++) {
+      const gx = mX + (hash(i, 5) - 0.5) * W * 0.22;
+      const gi = pts[Math.max(0, Math.min(pts.length - 1, Math.round((gx + 40) / 5)))];
+      const tw = 0.5 + 0.5 * Math.sin(t * (1 + (i % 4) * 0.4) + i * 2.1);
+      glPath.moveTo(gx - 4, gi[1]);
+      glPath.lineTo(gx + 4, gi[1]);
+    }
+    ctx.globalCompositeOperation = "lighter";
+    ctx.strokeStyle = "rgba(255,205,228,0.55)";
+    ctx.lineWidth = 1.5;
+    ctx.stroke(glPath);
+
+    // the surface line
+    ctx.strokeStyle = "rgba(150,210,220,0.5)";
+    ctx.lineWidth = 1.6;
+    ctx.beginPath();
+    pts.forEach((p, k) => (k ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])));
+    ctx.stroke();
+
+    // crest faces light up where they steepen — the shoaling made visible
+    ctx.lineCap = "round";
+    for (let k = 0; k < pts.length - 1; k++) {
+      const sl = Math.abs(pts[k + 1][1] - pts[k][1]) / 5;
+      const a = Math.min(0.85, Math.max(0, (sl - 0.18) * 1.9));
+      if (a < 0.1) continue;
+      ctx.strokeStyle = `rgba(200,244,238,${a})`;
+      ctx.lineWidth = 2.3;
+      ctx.beginPath();
+      ctx.moveTo(pts[k][0], pts[k][1]);
+      ctx.lineTo(pts[k + 1][0], pts[k + 1][1]);
+      ctx.stroke();
+    }
+
+    // the throw: crest curling forward, then foam particles and the bore
+    for (const w of waves) {
+      if (w.state === "break") {
+        const Hw = heightAt(w, w.x);
+        const grow = Math.min(1, w.bt / 0.35);
+        const cx = w.x, cy = yS - Hw * 0.9;
+        ctx.strokeStyle = `rgba(228,252,248,${0.85 * grow + 0.15})`;
+        ctx.lineWidth = 2.2;
+        for (let a = 0; a < 3; a++) {
+          const r = (5 + a * 5.5) * (0.6 + grow);
+          ctx.beginPath();
+          ctx.arc(cx - r * 0.6, cy + r * 0.4, r, -Math.PI * 0.4, Math.PI * 0.7);
+          ctx.stroke();
+        }
+        // the lip, a bright bead at the crest tip
+        const lip = ctx.createRadialGradient(cx, cy, 0, cx, cy, 13);
+        lip.addColorStop(0, "rgba(235,252,249,0.9)");
+        lip.addColorStop(1, "rgba(235,252,249,0)");
+        ctx.fillStyle = lip;
+        ctx.beginPath(); ctx.arc(cx, cy, 13, 0, TAU); ctx.fill();
+      } else if (w.state === "bore") {
+        const a = Math.max(0, w.bore.a);
+        for (let j = 0; j < 12; j++) {
+          const jx = w.bore.x + hash(j, 9) * 110 * (1 + j / 9) - 25;
+          const s = 20 + hash(j, 3) * 44;
+          ctx.globalAlpha = a * (0.5 + hash(j, 7) * 0.5);
+          ctx.drawImage(foamSpr, jx - s, yS - s * 0.4 + Math.sin(t * 3 + j) * 2, s * 2, s * 0.9);
+        }
+        ctx.globalAlpha = 1;
+      }
+    }
+    for (const p of foamP) {
+      ctx.fillStyle = `rgba(228,252,248,${(1 - p.age / p.life) * 0.9})`;
+      ctx.beginPath();
+      ctx.arc(p.x, yS + p.y, 2.2, 0, TAU);
+      ctx.fill();
+    }
+    // residual churn along the break zone — between throws the shelf never goes glassy
+    for (let i = 0; i < 12; i++) {
+      const fx = XB() + hash(i, 11) * W * 0.17;
+      const fi = pts[Math.max(0, Math.min(pts.length - 1, Math.round((fx + 40) / 5)))];
+      const fs = 12 + hash(i, 4) * 30;
+      const fa = 0.12 + 0.16 * (0.5 + 0.5 * Math.sin(t * 0.9 + i * 2.4));
+      ctx.globalAlpha = fa;
+      ctx.drawImage(foamSpr, fx - fs, fi[1] - fs * 0.5 + Math.sin(t * 1.3 + i) * 2, fs * 2, fs);
+    }
+    ctx.globalAlpha = 1;
+    // backwash threads sliding back down the reef
+    ctx.strokeStyle = "rgba(190,240,235,0.5)";
+    ctx.lineWidth = 1;
+    for (const b of backwash) {
+      ctx.globalAlpha = Math.max(0, b.a);
+      const bi = pts[Math.max(0, Math.min(pts.length - 1, Math.round((b.x + 40) / 5)))];
+      ctx.beginPath();
+      ctx.moveTo(b.x, bi[1] + 3);
+      ctx.lineTo(b.x + 22, bi[1] + 4);
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+
+    ctx.restore();
+    ctx.globalCompositeOperation = "source-over";
+
+    const vg = ctx.createRadialGradient(W / 2, H / 2, Math.min(W, H) * 0.4, W / 2, H / 2, Math.max(W, H) * 0.75);
+    vg.addColorStop(0, "rgba(2,4,8,0)");
+    vg.addColorStop(1, "rgba(2,4,8,0.5)");
+    ctx.fillStyle = vg;
+    ctx.fillRect(0, 0, W, H);
+  }
+
+  let t = 0;
+  function settle() { for (let i = 0; i < 100; i++) { t += 1 / 60; step(1 / 60, t); } draw(t); }
+
+  function resize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth; H = window.innerHeight;
+    canvas.width = Math.round(W * dpr);
+    canvas.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (reduced) settle();
+  }
+  window.addEventListener("resize", resize);
+  resize();
+
+  // open with two lines already under way, staggered
+  spawnWave(W * 0.95);
+  spawnWave(W * 0.55);
+  nextSpawn = rnd(4, 8);
+
+  if (reduced) settle();
+  else {
+    let last = performance.now();
+    requestAnimationFrame(function loop(now) {
+      const dt = Math.min(0.05, (now - last) / 1000);
+      last = now;
+      t += dt;
+      step(dt, t);
+      draw(t);
+      requestAnimationFrame(loop);
+    });
+  }
+})();
+</script>
+</body>
+</html>

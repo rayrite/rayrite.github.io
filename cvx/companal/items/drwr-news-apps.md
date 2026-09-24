@@ -9,7 +9,7 @@ Concatenation of the 11 program deliverables in reading order (00→10). Each se
 
 # 00 — Executive Summaries: US, EU, Asia (News-Aggregator App Industry, September 2026)
 
-**Date:** 2026-09-23 · **Program:** news-aggregator-industry-deep-dive · **This file:** the three market summaries that open the deliverable set (01 leaders · 02 forecast/TAM · 03 gaps · 04 SWOT · 05 concept · 06 GTM/monetization · 07 release · 08 link-in-bio · 09 architecture · 10 deployment).
+**Date:** 2026-09-23 · **Program:** news-aggregator-industry-deep-dive · **This file:** the three market summaries that open the deliverable set (01 leaders · 02 forecast/TAM · 03 gaps · 04 SWOT · 05 concept · 06 GTM/monetization · 07 release · 08 news-apps compete · 09 architecture · 10 deployment).
 **Method:** every figure traces to the session's primary-source captures (digests in `independent_research/scratch/research-news-aggregator-2026-09/scratch/notes/`, fetched 2026-09-23). Conflicts are shown side-by-side with attribution and **never averaged**. ❓ marks a checked-and-unfound gap. Confidence: **HIGH** = company-primary/top-tier · **MED** = reputable estimate · **LOW** = self-reported/stale/snippet-only.
 
 ---
@@ -77,7 +77,7 @@ The RSS renaissance is real but small: **Folo** (RSSNext, AGPL, 39,009 GitHub st
 1. Don't compete for gateway share — the ladder is locked by pre-installation. Compete for a *segment's* loyalty (Ground News proved ~$1M capital can buy a 3%-reach, top-2-category app via YouTube sponsorship flywheel).
 2. The AI answer layer is commoditizing *summaries*; the un-occupied positions are provenance (where did this come from), calm (anti-feed), and ownership (local-first/export) — see 03/05.
 3. Payment behavior is soft (16%/13% pay, falling in the repoll) — price at the RSS band ($36–100/yr), not the newspaper band.
-4. Every scale number in this market is self-reported or stale; build your own instrumented truth and say so loudly — it's a trust differentiator nobody in the leader set can credibly copy (see 08 §10.2 for the identical pattern in link-in-bio).
+4. Every scale number in this market is self-reported or stale; build your own instrumented truth and say so loudly — it's a trust differentiator nobody in the leader set can credibly copy (see 08 Obs. 4 for the identical pattern across the news-app leader set).
 
 ---
 
@@ -1764,476 +1764,742 @@ M0────M3────M6────────M9────M12───
 
 ---
 
-# ═══ FILE: 08-link-in-bio-competitive-analysis.md ═══
+# ═══ FILE: 08-news-apps-competitive-analysis.md ═══
 
-# 08 — Top-20 Link-in-Bio Platforms: Competitive Analysis + Tech-Stack Matrix (2026)
+# 08 — News Aggregator Competitive Analysis: Plumb vs the 2026 Field
 
-**Report date:** 2026-09-23
-**Scope:** The global "link in bio" / creator micro-page SaaS category — 20 live platforms profiled, plus the 2024–2026 consolidation deaths & watchlist.
-**Audience lens:** all consumer-facing categories **and** five developer/DevSecOps-lens categories (developer surface, data ownership & portability, security & compliance, reliability signals, internationalization) tracked as first-class matrix rows.
-**Provenance & freshness note:** this deliverable is the program-integrated edition of a same-day standalone research run (2026-09-23, `independent_research/2026-09-23-0001_link-in-bio/`). All facts were captured **on this date** from primary pages (official pricing/homepage/help-center fetches) and third-party sources (Sacra, GetLatka, TechCrunch, Tubefilter, Product Hunt, review platforms), archived as raw dumps in `independent_research/scratch/research-link-in-bio-saas-2026-09/scratch/pages/`. A same-day user-count + app-store refresh **was executed 2026-09-23** (US App Store / Google Play plus GB and IN storefront reads, live company homepages, and Semrush traffic lookups) and is folded into §6, matrix rows G1/G2/O1/P1, and footnotes 95–98; two Play-store lookalike misattributions it caught (a `com.getstan` package ≠ Stan; an "app.biolink" listing ≠ bio.link) are struck throughout. Everything below was written from captured sources only; model-memory items are labeled **[GK]** or **[memory]** and are never load-bearing.
+**Series:** News Aggregator Industry Deep Dive (2026-09-23) · **Document:** 08 of 11
+**Target app:** **Plumb** — the concept app specified in [05-new-app-concept.md](05-new-app-concept.md) (v1 spec; not a shipped product)
+**Research date:** 2026-09-24 (primary-source captures; series dated 2026-09-23)
+**Replaces:** the erroneous link-in-bio competitive analysis previously filed as document 08 (archived to `independent_research/scratch/`)
 
-**Conflict policy:** where sources disagree, both figures are shown with attribution and never averaged. Unknowns are the literal symbol ❓ with a note of what was checked. A QC pass re-verified every load-bearing numeric claim against the raw dumps before writing.
+**Market framing.** This report maps the 2026 consumer news-aggregator / news-reader competitive field against Plumb — a provenance-native, calm-by-design aggregator whose spec (05 §2.1–2.6) combines multi-protocol bring-your-own ingest, event clustering with source chains, a "You're caught up" hard stop, a default-2/day notification budget, verified-only breaking alerts (≥3 outlets or 1 wire), local-first SQLite/CRDT sync with E2E encryption, export-everything data ownership, zero behavioral tracking, a published shutdown plan, and honest AI (model + prompt labels, public AI register). The market it would enter is the "tool you control" stratum of news reading: paid and free readers competing for the burned power reader and the calm seeker, sitting underneath a platform-attention oligopoly (Google, Apple, MSN, Yahoo, X) and alongside an AI-native launch wave. Who buys: individuals (free tiers → $3–$15/mo personal subscriptions), teams (newsrooms, intelligence units), and — for the incumbents pivoting there — enterprises paying $1,600–$3,200/mo for intelligence tooling. The problem everyone in this stratum solves some slice of: *keep my whole reading world in one tool I trust and control, and stay informed calmly without manipulation.* Nobody solves the whole sentence; the matrix below shows exactly which slices each competitor leaves open.
+
+Plumb's spec'd UVP, for cell-by-cell reference throughout: "Every source you trust, one calm feed, every claim traceable — and when you're caught up, it says so." Spec'd pricing: Free (unlimited feeds) / Pro $4.99/mo · $39/yr / Team ~$999/yr / B2B provenance-API access at v3.
 
 ---
 
-## 1. Market Framing
+## 1. Methodology
 
-The link-in-bio market is the creator economy's smallest-looking, most contested front door: a single URL placed in a social profile that routes an audience to links, content, and — increasingly — checkout. What began in 2016–2019 as free utility SaaS (Linktree, Campsite, Lnk.Bio, Milkshake) has bifurcated into three monetization archetypes: **freemium link hubs** ($0–$35/mo subscriptions), **creator storefronts** (subscription plus a 0–9% take rate on sales), and **commerce marketplaces** (pure take rate plus a payments stack). As of 2026 the leader Linktree (70M+ registered users — first-party, not MAU) is pressured from three directions at once: its Nov 2025 price hikes (46–67%) opened a value band competitors are flooding; the fastest-growing player Whop ($142M annualized revenue Oct 2025, $1.6B valuation Feb 2026) monetizes payments rather than pages; and the platform substrate itself is testing away the category (Instagram clickable caption links for Meta Verified users, Mar 2026). A consolidation wave — Linktree's acquire-and-kill roll-up (Bento, Koji, Fingertip), Shopify killing Linkpop, Tap Bio dying Oct 31 2026, Snipfeed absorbed into Planoly — has removed at least five products since 2024 and made **data ownership, portability, and vendor-lifetime risk** a live purchase criterion for the first time.
+**Process.** Scope was pre-registered in the run's `00-scope.md` before any searching: direct = solves the same primary jobs-to-be-done for the same ICP (burned power reader / calm seeker); platform surfaces = indirect/structural (the distribution oligopoly documented in [01-market-map.md](01-market-map.md)). Eight parallel angle agents executed the sweep — (1) category-level recency sweep + roster cross-check, (2) Feedly + Readwise Reader, (3) Inoreader + NewsBlur + NetNewsWire, (4) Folo + OSS/indie reader cohort, (5) Ground News + AllSides, (6) SmartNews + NewsBreak + Flipboard, (7) AI-native field (Particle, Syft, Readless, Kagi News, Wisp + discovery), (8) indirect surfaces (Google, Apple, MSN, Yahoo, 1440, chatbots) — plus a ninth follow-up agent for roundup-gap products the cross-check surfaced (Feedbin, Kagi News, Current, Reeder, Inkl, Zetik, Newsreel). The lead then ran a deep-verification phase in a dedicated browser for every claim deferred by agents, read all angle notes in full, and wrote this report. Prior-run primary captures (2026-09-23, `research-news-aggregator-2026-09`) were updated, not redone.
 
-## 2. Methodology
+**Recency sweep (skill §3).** Six date-stamped category queries ran before the roster locked ("news aggregator app 2026", "news reader app launched 2026", "new RSS reader 2026", "AI news app launched 2026", "news app designed to reduce doomscrolling 2026", "news aggregator startup 2026 funding"). Products appearing in 2+ contexts and not already on the candidate list were promoted to direct-competitor candidates and dived: **Current, Kagi News, Reeder, Zetik (ex-NewsBang)**; **Readwise Reader (3 roundup appearances), Feedbin (2), Inkl (2)** entered via the roundup cross-check; **Newsreel** entered via Forbes launch coverage (2026-05-15). One product appearing 2× was **excluded with justification**: FreshRSS (self-hosted server software; its consumer surface is entirely third-party clients — it defines the "own the whole pipe" end of the ownership spectrum and appears in §6 observations, but it is not a consumer-app competitor). Watchlist single-appearance items (Matter, Boring Report, Drooid, Jarayid, Quill, Techmeme, News360, the SEO-farm digest wave) are listed in §4.22 without profiles.
 
-**Roster construction:** the 20-platform roster was cross-checked against the Product Hunt "link in bio" category (191 products, updated 2026-09-18) and 3+ 2026 alternatives roundups. **No tool appearing in 2+ 2026 roundups was excluded**; single-roundup/PH-tail entrants (Hopp by Wix, Paage, The Leap by Thinkific, own.page, Taap.it, Zaap, YourChamp, Linkrr, Taginbio, hoo.be, Podmu, Canva, Dub, OpenBento) are recorded in the watchlist. Known-dead tools are in the deaths table, not the roster. Some 2026 roundups still list Koji as live — treat any such roundup as unrefreshed.
+**Roster cross-check (skill §8).** Nine 2026 "best news/RSS apps" roundups were pulled and their tool lists tabulated (angle-01 §3): four independent (Zapier, Lifewire-via-Yahoo, MobileAppDaily, Computerworld) and five vendor-structured (readless ×3, daily.dev, Nutshell). Named by 2+ roundups and missing from our roster: **Readwise Reader (3×), Feedbin (2×), Inkl (2×)** — all three added and profiled. No other tool met the 2+ threshold without already being rostered. Google News (6×), Feedly (6×), Inoreader (5×), Apple News/SmartNews/Flipboard/NewsBlur (4×), Ground News (4×) confirmed the roster's core.
 
-**Classification defense (2026-current):** about.me, Squarespace Bio Sites, and Later Linkin.bio are **indirect** — in 2026 each is positioned as a feature of a broader product (identity page / website builder / social suite), verified against each fetched 2026 marketing page. Whop stays **direct** despite marketplace-first positioning because its storefront pages are sold and used as the bio-link destination by its 183k+–211k+ sellers (both reads kept, §6). Every other entry sells a standalone bio-page product as its primary 2026 offer.
+**Stale-knowledge check (skill §8).** Every "indirect" classification carries a 2026 product-page gap defense in §3.2 (e.g., Apple News: no RSS/OPML import anywhere in its 2026 documentation and no export path — a TidBITS 2026 thread documents a user losing ~4 years of saved stories; Google: no portable feed-list artifact exists, and 69% of news searches now end zero-click; 1440: zero source ownership — the reader's "feeds" are 1440's editorial choices). Where a defense could not be produced, the product was promoted or dropped — Newsreel is filed as direct-adjacent rather than indirect precisely because its Forbes framing contests the calm job even though its closed network does not contest the mechanics.
 
-**Stale-knowledge / recency defense:** every direct competitor's classification is backed by its 2026 product/pricing page fetch (dated in each profile); the two liveness anomalies found are flagged, not papered over: `squarespace.com/bio-sites` 404'd ("Moved") and `linkinbio.later.com` failed DNS at the 2026-09-23 fetch.
+**Verification and conflicts.** Four pre-registered falsifiers were tested (verification pass on file in the run's scratch): (1) roster cross-check — fired, handled above; (2) indirect defenses — all present; (3) pricing conflicts vs the 2026-09-23 digests — five figures checked, all confirmed or corrected with the fresh page winning (Ground Vantage $99.99/yr ✓; Feedly Pro+ $12.99/mo ✓ via third-party consensus because feedly.com stopped publishing consumer pricing first-party — logged as a finding of absence; Inoreader Pro $89.99/yr ✓ exact; NewsBlur $36/yr ✓ but the ladder now extends to Archive $99/yr and Pro $29/mo; Folo Pro $999.99/yr ✓ real, not a placeholder); (4) "any 2025–26 calm/provenance launch with >100k verified users" — **none found** (Wisp 0 US ratings, Kagi News 93, Current 112 with no user numbers, Zetik 472, Newsreel 8, Boring Report 465), so [03-gap-analysis-blue-ocean.md](03-gap-analysis-blue-ocean.md)'s white-space claim survives with named-challenger caveats (§6 Obs. 1). Where sources disagree, both positions are carried side-by-side with dates — never averaged (e.g., SmartNews 20–30M company-claimed MAU vs Sensor Tower's ~5M; Flipboard's 145M MAU self-claim unchanged since 2018; Ground News traffic: Similarweb ~8M Jul-25 vs Semrush 4.09M Aug-26 = tracker spread plus real decline, with Semrush's own last three months flat at 3.89/4.46/4.09M).
 
-**Limitations:** no Comscore/app-store-analytics paid data; no BuiltWith/Wappalyzer scan succeeded (himalayas.app blocked) so tech-stack signals come from job postings, careers pages, Sacra, and DOM/URL-structure inference, each confidence-marked. JS-gated pricing pages (Lnk.Bio, lit.link+, SlashPage Pro/Max, Syft-style) could not be read and are ❓, never guessed.
+**Tooling notes affecting confidence.** All external research ran through the project's research-toolkit (no built-in WebSearch/WebFetch; paywalls respected — the Forbes Newsreel article is cited from headline + snippets only). Three tooling incidents are on the record: (1) Tavily extract 401'd for the first agents of the run because the toolkit config is only found when the research folder's `driver/.env.sh` is sourced — fixed mid-run, with three agents' early fetches falling back to curl; (2) the DDG engine throttled all session, cascading searches to keyless Tavily with 429 backoffs — the main casualty is Reddit full-thread harvesting, covered by snippet-level evidence; (3) JS-walled pages (feedly.com pricing, Folo's live counters, Zetik's tier contents) were resolved by the lead's dedicated browser where load-bearing, or flagged 🟡/❓ where not. Store-rating data is US-centric unless noted. No page contained instructions addressed to an AI agent; fetched content was treated as data only.
 
-## 3. Market Overview
+---
 
-### 3.1 The three archetypes
+## 2. Market overview
 
-| Archetype | What the customer gets | Revenue model | Roster members |
-|---|---|---|---|
-| **Link hub (utility SaaS)** | Hosted micro-page of links/blocks under a social profile | Freemium sub $0–$35/mo; some payment pass-through | Linktree, Milkshake, Shorby, bio.link, Lnk.Bio, Campsite.bio, Liinks, Taplink, Solo.to, SlashPage, lit.link, about.me, Squarespace Bio Sites, Later Linkin.bio |
-| **Creator storefront (commerce SaaS)** | Page + native checkout: products, courses, bookings, email | Subscription + take rate (0–12% by tier) or 0%-fee subscription | Stan, Beacons, Komi, SuperProfile, Milkshake (partial) |
-| **Marketplace (commerce network)** | Storefronts + demand side (discovery feed, brand deals) + payments stack | Take rate on GMV + payments fees + financial services; no seller sub | Whop, Wishlink (brand-commission affiliate) |
+**The demand side is restructuring around the reader's distrust.** Reuters Institute's DNR 2026 marks the first year social/video networks (54%) overtook news organizations' own sites and apps (51%) as the most-used online news source globally; 30% of people now name social/video as their *main* source, and 52% of 18–24s name social/video/AI (DNR 2026). Trust keeps setting records in the wrong direction — 25% of Americans trust news most of the time, and only 20% globally trust AI-chatbot answers (DNR 2026). Google's answer layer is simultaneously absorbing the referral: zero-click news searches rose from 56% (May 2024) to 69% (May 2025, Similarweb via Digiday), AI Overviews serve 2.5B MAU (Google I/O 2026), and Chartbeat (via DNR 2026) measured Google organic-search traffic to 2,500+ publisher sites down 33% globally / 38% US over Nov 2024–Nov 2025. The result is a reader who is *served* by more news surfaces than ever and *equipped* by almost none of them — which is exactly the gap [03-gap-analysis-blue-ocean.md](03-gap-analysis-blue-ocean.md) documents as the program's opening (P1–P6 pains; failure modes: ad-load punishment, notification-as-engagement, opaque personalization, paywall-ladder confusion, provenance-invisible).
 
-### 3.2 Market size (conflicting — never averaged)
+**The shelf says the same thing.** On the US App Store and Google Play "News" charts (Appfigures, Sep 2026), the top ranks are X at #1 on both stores, the White House app top-3 iOS, police-scanner alert app CrimeRadar top-5 on both, and Substack charting as a news app on both. The "News" shelf is being eaten by social platforms, alert utilities, and subscription-reading networks — while every product in this report's direct set lives below that strata. The platform oligopoly (documented fully in [01-market-map.md](01-market-map.md) and defended as indirect in §4.2) absorbs attention at billions-of-users scale (Apple News claims the #1 news app in the US/CA/AU; yahoo.com draws ~3.5B visits/month; MSN still reaches ~145–149M US visits/month even while declining ~28% YoY), but none of it is a tool the reader controls.
 
-Report-mill estimates spread from **$0.4B (2025, marketintelo)** through **$1.12B (2024, growthmarketreports)**, **$1.2B→$3.2B at 14.4% CAGR (strategymrc)**, **$1.62B→$4.24B by 2033 at 13.2% (linkship)**, to **$1.8B→$6.4B at 15.2% (dataintelo)** — a directional band of ~$0.4–1.8B (2024/25) growing ~13–15%/yr, all low-confidence. Bottom-up sanity check from this run's verified revenue: Linktree $42–55.5M + Stan ~$22–40M + sub-$10M tail puts **core link-in-bio SaaS at roughly $250–400M/yr**, with creator-commerce layering $200M+ on top (Whop alone $142M annualized — but Whop is a marketplace whose GMV is mostly not link-page SaaS). The creator-economy headline ($480B, ylink.pro) is rejected as a category TAM.
+**The tool stratum, where Plumb would compete, splits into five live clusters:**
 
-### 3.3 The consolidation wave
+1. **Power-reader SaaS** — Feedly, Inoreader, NewsBlur, Folo, Readwise Reader, Feedbin. RSS-heritage, subscription-funded, feature-rich; this is where the burned power reader already pays. Its 2026 condition: the leaders are self-disrupting (Feedly has pivoted its roadmap energy to enterprise threat/market intelligence and stopped publishing consumer pricing first-party; Readwise has officially frozen Reader feature development "to focus on quality"; Inoreader removed its cheap Supporter tier; Folo's ladder now runs to a $999.99/yr consumer tier and its client ships engagement mechanics). The RSS niche itself is small and stable — ~$300M in 2024 growing ~6.3%/yr, ~50M users worldwide (vendor-sourced, low confidence) — but its users are the highest-willingness-to-pay readers in news.
+2. **Trust-positioned aggregators** — Ground News ($99.99/yr Vantage gating ownership panels and factuality ratings), AllSides, inkl. These prove provenance features *monetize*; their gaps (US-frame single-label bias averaging, 2,276-outlet ownership coverage vs 50K sources, no export, no correction tracking) are Plumb's wedge depth.
+3. **AI-native wave** — Particle, Syft, Zetik, Newsreel, plus 2025–26 launches Kagi News, Wisp, Current, Jarayid, Drooid. Venture- or solo-funded, cluster-and-summarize products monetizing maximalism (Particle) or agent-briefing (Zetik). AI disclosure is universally absent — no per-element labels, no public AI register anywhere in the field (§6 Obs. 9).
+4. **Calm-by-design entrants** — Kagi News (one 5-minute edition/day, 12:00 UTC), Current (no unread counts, ever; content fades by type half-life), Reeder (unread counts removed in the 2024 rebuild), Readless ("no streaks, badges, or guilt UI"), Wisp ("starve the outrage machine"). The lane Plumb spec'd is being entered — but each entrant ships one calm mechanic without provenance depth or bring-your-own ingest (§6 Obs. 8).
+5. **Free OSS / indie** — NetNewsWire, NewsBlur (self-host), FreshRSS, Miniflux, Reeder, Unread. The trust incumbents of exactly Plumb's Tier-A hunting ground; unbeatable on price, structurally limited on platforms (NNW is Apple-only), ingest breadth, or velocity of feature addition.
 
-At least five products died or were absorbed since 2024 — detailed in §4.1. The strategic consequence: **vendor-lifetime risk is now a demonstrated, purchasable-against criterion** (Bento users had a finite export window, then permanent data deletion, Feb 13 2026), yet almost nobody in the roster sells against it (see observation 10.5).
+**Context that shapes the entry window.** Pocket's shutdown (2025-07-08) re-opened the read-it-later/refugee pipeline and boosted Matter, Instapaper, Raindrop and the indie alternatives (TechCrunch 2026-08-14); a 2025 VPN Tier Lists investigation found ~80% of popular RSS readers "phone home" with reading habits, IPs and feed subscriptions — poisoning the trust well precisely where Plumb's zero-tracking + shutdown-plan posture aims; and Feedbin publicly offered "6 months free to any Feedly customers switching" during Feedly's August 2026 weeklong slowdown — the incumbents are already poaching each other's refugees. Substack is the counter-trend on the open web (+27–29% YoY, ~94–96M visits, 7th-biggest US news site, Press Gazette/Similarweb Aug 2026), confirming that reader-funded, reader-owned surfaces can still grow against the platform tide.
 
-### 3.4 Regional structure
+## 3. Competitor roster
 
-Asia is regional-player territory: lit.link (Japan), SlashPage (Korea), Taplink (RU/CIS), SuperProfile/Wishlink (India). No native Korean or Chinese link-in-bio player appears in Western sources (China structurally separate: WeChat/Douyin mini-programs; Xiaohongshu link restrictions). Recurring Asia pain point: **payments** — Stripe-centric platforms leave Asian creators without local-currency checkout. In the EU, GDPR/data-residency posture is an active vendor-marketing theme (linke.ro, alllinks.cc) that none of the US leaders answer.
+### 3.1 Direct competitors (13 profiled in §4.1–4.13; emerging cohort §4.14–4.21)
 
-## 4. Competitor Roster (20 platforms)
+| # | Product | Vendor | URL | One-line positioning |
+|---|---------|--------|-----|----------------------|
+| 1 | Feedly | Feedly, Inc. (bootstrapped) | feedly.com | "AI platform for threat intelligence and market intelligence" — the former RSS leader, now an enterprise AI-intelligence vendor with a consumer reader attached |
+| 2 | Inoreader | Innologica Ltd (Bulgaria) | inoreader.com | "The content reader for power users" — maximal power-tool RSS with Intelligence AI and BYOAI |
+| 3 | NewsBlur | Samuel Clay (solo) | newsblur.com | "A personal news reader bringing people together" — open-source original-site reader with Intelligence Training and a rapid 2026 shipping cadence |
+| 4 | NetNewsWire | Brent Simmons + community (Ranchero Software) | netnewswire.com | "The free, open-source RSS reader for Mac and iOS" — the trust baseline of Apple-only reading |
+| 5 | Folo | RSSNext / Natural Selection Labs Pte Ltd (Singapore) | folo.is | "Follow everything in one place" — the Web3-adjacent open-source follow-everything reader |
+| 6 | Readwise Reader | Readwise, Inc. (bootstrapped) | readwise.io/reader | "Read it later × read everything" — the burned power reader's paid read-it-all machine, now officially feature-frozen |
+| 7 | Feedbin | Feedbin, Inc. (Ben Ubois, solo) | feedbin.com | "A nice place to read on the web" — typography-first reader and the ecosystem's sync backbone |
+| 8 | Ground News | Snapwise Inc. (Kitchener, ON) | ground.news | "See the full picture of global events, not just one side" — bias/ownership metadata monetized at $99.99/yr |
+| 9 | SmartNews | SmartNews, Inc. (Tokyo/SF) | smartnews.com | "Information that matters" — ad-funded algorithmic aggregation at claimed 20–30M MAU, IPO-track |
+| 10 | NewsBreak | Particle Media Inc. (US; ex-Yidian) | newsbreak.com | "#1 local news app" — local-first ad-funded aggregation, 40M MAR self-claimed |
+| 11 | Flipboard | Flipboard, Inc. | flipboard.com | "One place for all your news" — magazine-format aggregator pivoting to the fediverse |
+| 12 | Particle | Mina Labs, Inc. | particle.news | "Your personalized news companion" — the Artifact-successor AI news app, highest-velocity shipper |
+| 13 | Syft | Orion Arm Pte Ltd (Singapore) | syft.ai | "Your AI-native news agent" — cross-language topic-agent briefing with an aggressive IAP ladder |
 
-| # | Platform | HQ / Region | Type | URL | One-line positioning (2026) | Status |
-|---|---|---|---|---|---|---|
-| 1 | Linktree | Melbourne, AU | Direct | linktr.ee | Category creator; "everything you are, in one simple link" — links, commerce, sponsored placements | Alive (leader) |
-| 2 | Whop | New York, US | Direct (marketplace) | whop.com | Commerce marketplace for "internet entrepreneurs" — storefronts, Discover feed, payments network | Alive (fastest-growing) |
-| 3 | Stan | Los Angeles, US | Direct (storefront) | stan.store | All-in-one creator storefront, 0% transaction fees, live in under 10 minutes | Alive (profitable) |
-| 4 | Beacons | US (Beacons AI Inc.) | Direct (storefront) | beacons.ai | AI-teammate ("Beam") + storefront/media kit for multi-SKU creators | Alive |
-| 5 | Komi | ❓ | Direct (storefront/media-kit) | komi.io | Free mini-site + brand-deal access; email CRM on Pro | Alive |
-| 6 | Milkshake | ❓ (AU-made per [memory]) | Direct | milkshake.app | Card-style mobile-first swipable site builder; 5M+ downloads | Alive |
-| 7 | Shorby | ❓ | Direct | shorby.com | Marketer smart pages: messenger buttons, retargeting pixels, dynamic feeds | Alive |
-| 8 | bio.link | ❓ | Direct | bio.link | One cheap Pro plan with an AI chat assistant on your page; 3M+ creators | Alive |
-| 9 | Lnk.Bio | ❓ | Direct | lnk.bio | Minimalist ultra-cheap link hub incl. a lifetime plan (price ❓) | Alive |
-| 10 | Campsite.bio | US per [memory] | Direct | campsite.bio | Agency/brand-grade link hub: seats, org tiers, deep analytics; 250k+ users | Alive |
-| 11 | Liinks | ❓ | Direct | liinks.co | Bento-style visual link pages; "you're the customer, not the product" | Alive |
-| 12 | Taplink | RU/CIS origin | Direct | taplink.at | Micro-landing pages with CRM, payments, AI page generation | Alive |
-| 13 | Solo.to | ❓ | Direct | solo.to | Bare-bones bio page from $1/mo; 2FA even on free tier | Alive |
-| 14 | SlashPage | South Korea | Direct | slashpage.com | Korean multi-block pages with an "allow LLMs to index" SEO toggle | Alive |
-| 15 | SuperProfile | India (by Cosmofeed) | Direct (storefront) | superprofile.bio | India "complete creator toolkit": courses, bookings, AutoDM, WhatsApp | Alive |
-| 16 | Wishlink | Gurugram, India (Creatormon Pvt Ltd) | Direct (marketplace) | wishlink.com | Brand-affiliate shops for Indian creators; 250+ brands, 100k+ creators | Alive |
-| 17 | lit.link | Japan (TieUps Inc. per primary © 2020; digest says GMO Pepabo — CONFLICT) | Direct | lit.link | Japan's default creator/fandom (推し活) bio page | Alive |
-| 18 | about.me | US per [memory] | Indirect (identity page) | about.me | Original personal profile page, pivoting upmarket with Virtual Twin AI + CRM | Alive |
-| 19 | Squarespace Bio Sites | US (Squarespace) | Indirect (website-platform feature) | bio.site | Bio page inside the full Squarespace ecosystem | Alive; /bio-sites 404 at fetch |
-| 20 | Later Linkin.bio | Canada per [memory] | Indirect (social-suite feature) | linkinbio.later.com | IG-grid-linked pages bundled with the Later suite | Company alive; subdomain DNS failed at fetch |
+**Emerging cohort (§4.14–4.21, compact profiles + compact matrix in §5.2):** Current (terrygodier.com/current), Kagi News (news.kagi.com), Reeder (reederapp.com), Inkl (inkl.com), Zetik (newsbang.ai), Newsreel (newsreel.co), Readless (readless.app), Wisp (wisp.news).
 
-### 4.1 Deaths & watchlist
+### 3.2 Indirect competitors (structural context; 2026 product-page gap defenses)
 
-| Tool | Vendor / fate | What happened | Date |
-|---|---|---|---|
-| **Bento** | Linktree (acq. Jun 2023) | Site/app/all user pages offline; **data permanently deleted**; links redirect to Linktree; migration offer = Pro discount; Bento features shipped into Linktree | **Dead Feb 13, 2026** |
-| **Koji** | Linktree (acq. from GoMeta Dec 14 2023; ~$40M raised) | Sunset; 3 months Linktree Pro offered; no confirmed data-migration tooling | **Dead Jan 31, 2024** |
-| **Linkpop** | Shopify | Shut down; migration to Shopify surfaces | **Dead Jul 7, 2025** |
-| **Tap Bio** | Independent | Card-swipe pages; "continues until Oct 31 2026"; migrating to Link in Profile (codes TB50M/TB50Y); Free (2 cards)/Silver ~$3/Gold ~$8 per most sources (Taplink's blog claims $5/$12 — conflict) | **Dying Oct 31, 2026** |
-| **Fingertip** | Linktree (acq. 2025) | Sunset; users migrated to Linktree; founders joined to build "LinkApps ecosystem" | **Dead May 1, 2026** |
-| **Snipfeed** | Planoly (acq. Jan 24, 2025) | Reborn as "Planoly Creator Store" (Shopify, Printful, PayPal, Stripe, Zoom) | Absorbed Jan 2025 |
-| **Carrd** (indirect honorable mention) | Independent | Closest low-cost substitute: free (3 sites), Pro from **$19/yr**, custom domains (Let's Encrypt), forms (Mailchimp/Kit/ActiveCampaign/EmailOctopus), embeds (Stripe/PayPal/Gumroad/Typeform), analytics (GA/Plausible/Matomo) | Alive; permanently relevant on price |
-| Watchlist | Hopp by Wix, Paage, The Leap, own.page, Taap.it, Zaap, YourChamp, Linkrr, Taginbio, hoo.be (1.5M+ claim), Podmu, Canva, Dub, OpenBento | Single-roundup/PH-tail entrants; none displaced a roster entry on traction or breadth | Monitored |
+| Product | Vendor | Why indirect (2026 defense) |
+|---------|--------|------------------------------|
+| Google News / Discover / AI Mode | Google | No portable feed-list artifact exists anywhere in the 2026 surface — following is opaque personalization, not owned subscription lists; no OPML/RSS export path; 69% of news searches now end zero-click and AI Overviews serve 2.5B MAU. It absorbs attention; it does not solve "my sources, my tool." (angle-08 §2) |
+| Apple News+ | Apple | No RSS/OPML import anywhere in 2026 documentation; closed $12.99/mo magazine bundle in 4 countries only; no export path — a TidBITS 2026 thread documents a user losing ~4 years of saved stories on a device issue. (angle-08 §1) |
+| MSN / Copilot | Microsoft | Portal-style algorithmic feed absorbed into Copilot; US visits −28% YoY early 2026 (Similarweb via press); no BYO-source ingest, no export. (angle-08 §3) |
+| Yahoo News + Scout | Yahoo | ~3.5B visits/mo portal reach with AI audio Morning Briefing (2026) — attention competitor, but no user-owned feeds, no provenance surface. (angle-08 §4) |
+| X | X Corp. | The #1 "news app" on both US stores (Appfigures Sep 2026) — the default habit. Indirect by structure: follow-graph social platform, no feed ownership, no export, algorithmic timeline. (angle-01 §5) |
+| 1440 + newsletter cohort | 1440 Media LLC | ~4.6M subs mid-2026, ~$27M rev, $101M valuation; solves "one calm email" but with zero source ownership — the "feeds" are 1440's editorial choices; cohort plateaus at 4–5M (theSkimm contracted from 7M peak; Morning Brew 4M+ stale since 2022) show the ceiling of not being a tool. (angle-08 §5) |
+| AI chatbots (ChatGPT, Perplexity) | OpenAI et al. | 10% global weekly news use but flat in US/UK/FR/DE; only 20% trust chatbot answers; referrals <1%; Perplexity's publisher program (2,400+ partners) is an answer-engine, not a reader's tool. (angle-08 §6) |
+| Hamilton AI | Hamilton AI Inc. | Publisher first-party AI Q&A embedded in outlets' own sites — evidence news orgs will build AI surfaces themselves (partner-risk for any aggregator's AI features), but no consumer reader product. (angle-01 §4.9) |
 
-## 5. Full Pricing Ladder — all tiers with quotas/limits (2026-09-23 fetches)
+---
 
-Annual-billed per-month prices where offered. Every cell below is from the platform's own pricing page or help center unless marked.
+## 4. Per-competitor profiles (direct set)
 
-| Platform | Tier | Price | Key quotas / usage limits |
-|---|---|---|---|
-| **Linktree** | Free | $0 | Unlimited basic links; sell products/courses/brand offers; Linktree branding; restricted themes/analytics |
-| | Starter | $8/mo · $6 annual | Personalized page, basic analytics; **9% seller fee** on digital products |
-| | Pro | $15/mo · $12 annual | Branding removal; custom themes/fonts/layouts; advanced analytics; mailing-list integrations |
-| | Premium | $35/mo · $30 annual | **0% selling fees**; affiliate shop (keep 100%); dynamic links + smart routing; advanced analytics **and data export**; social scheduling; unlimited IG auto-replies |
-| | Agency/Enterprise | Custom | Team seats, **SSO**, dedicated support |
-| **Whop** | Seller | $0 subscription | No SaaS fee — fee stack instead: **3% base** on direct sales; **0% Discover** marketplace fee (was 30%); cards 2.7%+$0.30 domestic / +1.5% intl / +1% FX; **+0.8% orchestration** (claims 6–10% declined-payment recovery); **BNPL 15%** (10 partners, limits to $42,750, terms to 5 yrs); fraud screening **$0.07/txn**; disputes **$15–29**; payouts $2.50 next-day ACH or 5%+$1 instant crypto/Venmo |
-| **Stan** | Creator | $29/mo · $300/yr | Unlimited products and customers; **0% transaction fees** |
-| | Creator Pro | $99/mo · $948/yr | Same 0% fees; higher-tier features. No free plan |
-| **Beacons** | Free | $0 | Unlimited links, media kit, **9% seller fee**, 5 email automations, 50 email sends |
-| | Creator | $10/mo · ~$8.33 annual | Custom domain (1st yr free), advanced SEO, AI text+image, 500 sends |
-| | Creator Plus | $30/mo · ~$25 annual | **0% transaction fee**, BNPL for buyers, unlimited emails, memberships |
-| | Creator Max | $90/mo · ~$75 annual | Google Workspace, NFC Card, white-glove support |
-| **Komi** | Starter | $0 | Custom mini-site; unlimited affiliate links; brand-deal access; **unlimited fan contacts**; unlimited team members |
-| | Pro | $16/mo annual (~$20 monthly) | **0% fee** on digital sales; unlimited email campaigns; Meta Pixel; custom domain; priority support. 14-day trial |
-| **Milkshake** | Free | $0 | Unlimited links & Cards; sell via Stripe (platform fee % ❓); 30 days insights |
-| | Lite | $2.99/mo | Removes branding only |
-| | Pro | $6.99/mo · $5 annual | 365-day insights **+ export**; contact-form Card; mailing list (Sheets+Mailchimp); Meta pixel; SEO tools; "lower fees when you sell" (% ❓) |
-| | Pro+ | $10/mo qtrly ($29.99/3mo) · ~$8.33 annual | + custom domain; further-reduced sell fees (% ❓) |
-| **Shorby** | Rocket | $15/mo · $12 annual | **5 smart pages, 10 links/page cap, no custom domain**; 1 retargeting pixel |
-| | Pro | $29/mo · $24 annual ($25 per mobilo — minor conflict) | 50 pages; 5 dynamic feeds; **7 pixels**; GA; custom domain; scheduled blocks |
-| | Agency | $99/mo · $82 annual | 250 pages; **10 team members**; 1M tracked clicks; white label. No permanent free tier (5-day trial); **Stripe only** |
-| **bio.link** | Free | $0 | Core page |
-| | Pro | $7.49/mo (yearly saves 50%) | Unlimited sites & visitors; **AI chat assistant**; custom domain; white-label; posts + email list; QR codes; real-time stats; 15+ themes. 7-day trial |
-| **Lnk.Bio** | Free + Premium | ❓ (JS-gated) | "One of the most affordable" incl. a **lifetime plan** per third party (sublyna 2026); no built-in monetization per hoo.be comparison |
-| **Campsite.bio** | Free | $0 | Core links |
-| | Pro | $7/mo | Unlimited links; archive/restore; bulk management; lock links; 4,000+ icons; analytics (views/clicks/referral/geo); opt-in forms, pixels; custom domain |
-| | Add-ons | +$1.50/profile/mo · +$1.50/collaborator | Linear per-seat expansion |
-| | Org Pro / Org Pro+ | ❓ | Universal links, member management |
-| **Liinks** | Build | $0 | Build free; **publishing requires paid** (14-day trial at go-live) |
-| | Starter | $5/mo · $48/yr | Links, images, videos, music embeds, forms, text blocks, folders, social icons; analytics |
-| | Pro | $12/mo · $120/yr | + custom domain; **priced per pack of 5 profiles** |
-| **Taplink** | Free | $0 | Social/call/SMS/email buttons; text; services; FAQ; map; free themes; QR; view stats |
-| | Pro | $4/mo (annual billing) | Images, music, video; price lists; image backgrounds; page analytics |
-| | Business | $8/mo (annual billing) | Request/order forms; countdown; custom domain; payment acceptance; CRM; subpages. Monthly prices ❓ |
-| **Solo.to** | Beginner | $0 | Dividers, background, basic analytics (**1-month window**), **2FA** |
-| | Personal | **$1/mo annual-only** | 50 links; action social buttons; link SEO; background video; scheduled links; cloning; analytics 6 months |
-| | Entrepreneur | $5/mo ($6 monthly) | **2 pages**; embeds; custom link images; 100 links+embeds |
-| | Professional | $10/mo ($15 monthly) | **5 pages**; analytics 12 months |
-| **SlashPage** | Free / Pro / Max | Free / ❓ / ❓ | Pro: custom domain, multilingual translation; GA/Pixel/Sheets on Pro+; LinkedIn Insight "coming soon" |
-| **SuperProfile** | Starter | Free | **10% platform fee** on every sale |
-| | Premium | ₹11,999/yr | **5% fee** |
-| | Pro | ₹49,999/yr | Custom fee; growth manager; branding removal; email + WhatsApp marketing. **Gateway charges extra on all tiers**. Conflict: creatorflow (Feb 2026) describes "$29/mo per Instagram account" — both stated |
-| **Wishlink** | Creators | Free | No subscription; brand-side commissions; monthly payouts on brand-confirmed sales |
-| **lit.link** | Basic / lit.link+ | Free / ❓ (JS-gated) | Plus: original share image; rich-text links; live video background; opening cover video; extra fonts/backgrounds |
-| **about.me** | Free | $0 | Page + yourname link + email signature |
-| | Standard | $5/mo ($60/yr) | **Virtual Twin AI**, CRM lead capture, appointment scheduling |
-| | Pro | $7.50/mo ($90/yr) | Custom domain; Google Calendar bookings; testimonials/portfolio/video; GA stats + visitor details |
-| **Squarespace Bio Sites** | ❓ | $4.99/mo start per creator-hero (Aug 2026) vs "no subscription, 8% per sale" per Stan's table vs free+paid per earlier digest — **all three stated**; primary page 404 at fetch |
-| **Later Linkin.bio** | ❓ | Later suite entry ~$18/mo per third-party table (suite pricing, not bio-page pricing) |
+### 4.1 Feedly — the leader that left the room
 
-**The ladder end-to-end (annual-billed):** $0 free tiers (15 of 20) → **$1** Solo.to → **$2.99** Milkshake Lite → **$4** Taplink Pro → **$5** Liinks/about.me → **$6** Linktree Starter → **$7** Campsite → **$7.49** bio.link → **$8** Taplink Business/Beacons Creator → **$12–15** Linktree Pro/Shorby → **$16** Komi → **$29** Stan/Shorby-Pro-monthly/Beacons Plus → **$35** Linktree Premium → **$90–99** Beacons Max/Shorby Agency/Stan Pro → custom enterprise (Linktree only). Two structural facts: (a) **Linktree's Nov 2025 hike (46–67%) abandoned the $5–12 value band**, now owned by Campsite, Liinks, bio.link, Solo.to, Taplink, Milkshake; (b) **Stan inverted the ladder** ($29 floor, 0% fees) and **Whop deleted it** (no subscription) — the subscription middle is squeezed from both ends.
+**Overview.** Feedly, Inc.; founded 2008 by Arthur Bodolec, Sébastien Vassaux, and Alexandre de Oliviera; bootstrapped, ~55–70 headcount (LinkedIn band vs Indeed postings). The 2013 Google-Reader-collapse beneficiary and longtime #1 name in RSS now self-describes as an "AI platform for threat intelligence and market intelligence" (feedly.com, 2026-09-24) — the homepage's only Pricing link points at `/threat-intelligence/pricing`, and consumer tier pricing is no longer published first-party (lead-browser verification, 2026-09-24; finding of absence). Consumer pricing therefore rests on third-party consensus (MED confidence): Free (100 feeds, 100 saved searches), Pro $6.99/mo · $72/yr (2,500 feeds, Leo AI, 3rd-party integrations), Pro+ $12.99/mo · $99/yr (unlimited feeds, newsletter-to-feed, annotations); Enterprise/Threat Intelligence from $1,600–$3,200/mo (feedly.com threat-intelligence pages via archive + third parties; readless ×2, SoftwareFinder 2026). 15M-user self-claim on About (2026) vs 14M claimed in 2018 press — the number barely moves while the product's center of gravity moves to enterprise.
 
-## 6. Market Data — users/MAU, revenue, app-store rankings (per platform)
+**UVP.** "AI-driven market and threat intelligence for security and knowledge teams" (feedly.com, 2026-09-24) — the single thing Feedly now does better than anyone: enterprise-grade AI entity/tag intelligence over a big source universe. The consumer reader is retained but no longer marketed.
 
-| Platform | Users / scale | Revenue (conflicts kept) | Funding / valuation | App-store & review signal |
+**Features by category** (categories 1–12 = the matrix's category set; sources inline):
+1. *Ingest & protocols:* RSS/Atom/JSON Feed (JSON Feed verified via erat.org 2023, MED), Google News keyword feeds, newsletters-to-feed (Pro+), RSS-fuzzy-page scraping, 100–unlimited feed ladders (inoreader.com/pricing-tier comparison tables; readless.io/feedly-pricing 2026).
+2. *Reading & calm:* clean magazine/theme views; boards & highlights for GTM workflow; **no calm architecture — no caught-up stop, no session bounds, unread-count inbox model is the product** (feedly.com product pages 2026-09).
+3. *AI:* Leo the AI research assistant — prioritization, summarization, entity tracking, "less like this" feedback loops (feedly.com/ai; enterprise docs 2026); Censys integration for CTI (feedly.com blog 2026-09-17); **no model/prompt labels, no public AI register**.
+4. *Provenance & trust:* none beyond source attribution; no bias ratings, no ownership panels, no correction tracking, no wire markers.
+5. *Platforms & sync:* iOS, Android, web, desktop apps; account-cloud sync, no local-first, no E2E.
+6. *Data ownership:* OPML export exists; API access tier-gated; no self-host; no published data-map.
+7. *Extensibility:* the historic differentiator — IFTTT/Zapier/Slack/Teams integrations, API on paid tiers; enterprise API.
+8. *Security:* SOC 2 Type 2 (announced 2026-07-02, feedly.com/blog); 2FA present (TOTP); history: June 2014 DDoS extortion attack, two waves, ransom refused, no data compromise claimed (Fast Company/The Hacker News 2014) — *the prior run's "2019 breach" was wrong; no 2019 incident exists.* **August 2026: weeklong consumer slowdown/outage + data-fetch failures, TechCrunch coverage 2026-08-17.**
+9. *Monetization:* free 100 feeds; Pro/Pro+ as above; enterprise ladder $1.6k–$3.2k/mo — the consumer tiers are now the tail of the business.
+10. *Notifications:* digests, saved-search alerts; no budget concept.
+11. *Traction:* 15M users self-claimed (About, 2026) vs 14M (2018 press) — 🟡 self-reported, flat-by-increment; store ratings modest vs algorithmic apps (US iOS ~4.8★/…; count not load-bearing this run).
+12. *Company & independence:* bootstrapped and independent — but the roadmap's center of mass is enterprise CTI/market-intel; consumer maintenance mode is the 2026 reality (Aug-2026 outage handling criticized; pricing pages pulled).
+
+**Plumb-relevant gaps.** No calm architecture, no provenance layer, no AI disclosure, consumer features in maintenance mode, and the August 2026 outage handed every consumer power-user a switching reason — Feedbin publicly offered "6 months free to any Feedly customers switching" during it (feedbin.com, Aug 2026).
+
+### 4.2 Inoreader — the power tool
+
+**Overview.** Innologica Ltd, Plovdiv, Bulgaria; founded 2012 by Yordan Yordanov (CEO) and Ivo Janevski; ~20–40 staff. The "everything and the kitchen sink" reader: the broadest ingest matrix, the deepest rules/filters system, and — new in 2026 — BYOAI. Free tier: 150 feeds + 20 newsletters + 20 web pages, **with ads in the free web/app**. Pro $89.99/yr ($7.50/mo annual · $9.99 monthly): 2,500 feeds, Intelligence AI (1M tokens/mo), unlimited rules. Team tier for shared reading. The cheap $20/yr Supporter tier was removed from public pricing in 2026 (legacy renewals only) — a price-floor rise for exactly Plumb's ICP. (inoreader.com/pricing + features, 2026-09-24.)
+
+**UVP.** "The content reader for power users who want to monitor everything" (inoreader.com) — nobody else matches its rules engine + monitoring breadth; it is the monitoring console to Feedly's intelligence platform.
+
+**Features by category:**
+1. *Ingest:* RSS/Atom/JSON Feed, Google News keywords, social feeds, newsletters, web-page monitoring (XPath-style), YouTube channels, podcast feeds — broadest in the established set; polling on free ≥1×/hr (inoreader.com; help.inoreader.com 2026).
+2. *Reading:* list/magazine/card views, full-text search, rules & filters (the killer feature: auto-mark-read, tag, notify, star on complex predicates), reading statistics; classic unread inbox, **no calm mechanics**.
+3. *AI:* Intelligence AI (summaries, Q&A over feeds, 1M tok/mo Pro); **BYOAI since 2026-04-14** (bring your own OpenAI/Anthropic/etc. key — the most reader-friendly AI-cost posture in the established set); no AI-disclosure labeling.
+4. *Provenance:* none — no ratings, ownership, or corrections surfaces.
+5. *Platforms:* web, iOS, Android, desktop apps (Windows/macOS/Linux via wrappers); cloud sync.
+6. *Data ownership:* OPML in/out; API is **Pro-only**; no self-host.
+7. *Extensibility:* API + webhooks + push services (Pro+ heritage); IFTTT/Zapier.
+8. *Security:* **the posture leader of the established set — ISO 27001, ISO 9001, PCI DSS attested, passkeys/WebAuthn, 2FA** (inoreader.com/security + blog 2025–26); no public breach history found.
+9. *Monetization:* free-with-ads / Pro $89.99 / Team; no lifetime options.
+10. *Notifications:* rich — push, email digest, webhooks on rules; Smart Folders as monitoring alerts; **no budget concept; notifications are a power feature to maximize, not bound**.
+11. *Traction:* no official MAU; ~"millions of registered users" marketing-adjacent claims only (🟡); changelog velocity extremely high (2026-09-21 release notes) — the fastest-shipping established consumer reader (inoreader.com/blog).
+12. *Company:* independent, profitable-ish (bootstrapped, Bulgarian dev-cost base), no VC; consumer-focused roadmap still visibly active.
+
+**Plumb-relevant gaps.** Zero provenance and zero calm — Inoreader optimizes the *monitoring* job, not the *informed-calmly* job; free tier carries ads; API paywalled. Its BYOAI and ISO/passkey posture are the bars Plumb should clear on AI-cost honesty and account security respectively.
+
+### 4.3 NewsBlur — the solo shipping machine
+
+**Overview.** Samuel Clay, solo founder-operator, San Francisco; founded 2010; open source (MIT) since inception — 7,627★ on GitHub (2026-09-24), self-hostable; freemium SaaS at newsblur.com. Free: 64 sites, 10 stories/feed in river. Premium $36/yr: 1,024 sites, unlimited river. **Premium Archive $99/yr: 4,096 sites + the 2026 feature wave.** Premium Pro $29/mo (launched 2026-04): 10,000 sites, 5–15 min fetch, priority support. (newsblur.com/pricing, 2026-09-24.) The prior run's "just $36/yr" framing is stale — the ladder now ends at $348/yr-equivalent.
+
+**UVP.** "A personal news reader that brings people together" with per-feed machine-learning training — the original (and still only established) Intelligence Training model: thumbs-up/down per feed/tag/author/publisher trains the story classifier. (newsblur.com.)
+
+**Features by category:**
+1. *Ingest:* RSS/Atom, text/origimg extraction from original sites, hidden-gem feeds; 64→4,096 site ladders; no newsletter ingest or social protocols (ActivityPub/Mastodon) as first-class feeds.
+2. *Reading:* the trained river + per-feed views; **story clustering shipped 2026-03-18 (Archive tier)**; Daily Briefing (AI, Archive); multiple themes; the strongest "read the original" ethic (original-text extraction).
+3. *AI:* **Ask AI on Claude/GPT/Gemini/Grok (Archive tier, 2026)** + AI Daily Briefing + Web Feeds LLM extraction — the fastest AI shipping among the reader-natives; **no AI labeling/register disclosure**; model choice is exposed, which is partial honesty.
+4. *Provenance:* source-level only; no ratings/ownership/corrections.
+5. *Platforms:* web + iOS + Android; self-host (Docker); sync via account.
+6. *Data ownership:* OPML in/out; **self-hostable — the only established-set consumer reader where the whole pipe can be yours**; MIT client+server.
+7. *Extensibility:* **the 2026 bar-setter: an MCP server (HTTP/OAuth) + newsblur-cli v0.2.2** — agent-friendly reader operations nobody else ships; API long public.
+8. *Security:* ❌ **2FA absent — GitHub issue #1647 "Add two-factor authentication" open since 2022-03-13, still unresolved (2026-09)**; no breach history; solo-operator bus factor is the structural risk.
+9. *Monetization:* freemium ladder $0/$36/$99/$29-mo — consumer-first, no ads anywhere.
+10. *Notifications:* per-feed push, iOS/Android; saved-search alerts; no budget concept.
+11. *Traction:* no MAU disclosure; 25+ substantive blog posts Jan–Sep 2026 and visible release velocity = the busiest roadmap in the reader-native set (newsblur.com/blog).
+12. *Company:* one person. Independence total; durability is the question (bus factor 1), though 16 years of continuous operation and OSS mitigates (community could fork).
+
+**Plumb-relevant gaps.** Clustering + AI + MCP is the closest functional overlap with Plumb's spec in the established set — but it is Archive-tier-gated ($99/yr), carries no provenance layer, no calm architecture, no AI disclosure, and no 2FA. NewsBlur validates Plumb's feature set; it doesn't occupy it.
+
+### 4.4 NetNewsWire — the free baseline
+
+**Overview.** Brent Simmons (Ranchero Software) + community contributors; the open-source Mac+iOS RSS reader; MIT; 10,406★ at Ranchero-Software/NetNewsWire (2026-09-23 push; the old org path 404s — prior-run repo link corrected). Current: 7.1.4, 2026-09-20. Free forever; no paid tier; no ads; no telemetry. Mac (macOS 15+) and iOS (iOS 26+) only. (netnewswire.com; GitHub.)
+
+**UVP.** "Free and open source, fast, and native" — the trust baseline: the reader you run when you want zero entities between you and your feeds. Simmons: "we don't want any private information" (netnewswire.com/privacy-ethos).
+
+**Features by category:**
+1. *Ingest:* RSS/Atom/JSON Feed; WebSub instant push; Twitter/Reddit script feeds via community extensions; OPML import.
+2. *Reading:* strict chronological, absolutely; smart feeds; articles theme; **no AI, no notifications, no rules engine** — a deliberate minimalism ("boring tech" ethos).
+3. *AI:* none, on principle.
+4. *Provenance:* none (source-level trust by construction).
+5. *Platforms:* Mac + iPhone/iPad; Apple-only; **iCloud sync (flaky per community reports) or Feedbin/NewsBlur/Inoreader/FreshRSS sync accounts**.
+6. *Data ownership:* local-first SQLite under the user's control — the gold standard until export UX: **starred-items export requires digging into SQLite (community-documented gap)**; OPML out.
+7. *Extensibility:* extensions system (macOS), open source, Feedbin-sync client ecosystem citizen.
+8. *Security:* no accounts (iCloud path), no telemetry, OSS audit; no 2FA concept (❓ n/a).
+9. *Monetization:* free; Simmons' blog documents the choice not to monetize.
+10. *Notifications:* none (2026 apps still without push — a deliberate scope choice).
+11. *Traction:* 10.4k GitHub stars, MacStories-famous, Apple-ecosystem niche leader; no user counts (❓ n/a — no telemetry).
+12. *Company:* community project with one benevolent lead; 20+ year lineage (NetNewsWire roots 2002); zero shutdown-profit-motive.
+
+**Plumb-relevant gaps.** NNW cannot be undercut on price or trust, and doesn't need to be: it is Apple-only, feature-minimal (no clusters, no notifications, no newsletters/social, no Android/web), and sync-dependent on third parties. Plumb's Tier-A hunt (03's "disillusioned power reader") will cross-shop NNW — the wedge is breadth + calm mechanics + provenance on top of the same trust posture, cross-platform.
+
+### 4.5 Folo — the open-source follow-everything machine with Web3 gravity
+
+**Overview.** Folo (ex-Follow.is), by RSSNext / Natural Selection Labs Pte Ltd, Singapore — the Web3/RSS3 parent (Sky9 + Mask Network 2021 round). AGPL-3.0 **client-only** (backend closed — issue #2178 open); 39,012★ on GitHub (plateaued); ~29.83M cumulative release-asset downloads with hard decay (v1.14.0 Sep 2026: ~3.1k direct downloads in 6 days vs 1.22M/release mid-2025); Play 10K+ installs; iOS 53 US ratings (4.09★); Discord 16,905 members. Pricing (embedded plans JSON, folo.is/pricing 2026-09-24): **Free $0 (150 subscriptions) / Basic $4.99-mo · $49.99-yr / Plus $9.99-mo · $99.99-yr / Pro $99.99-mo · $999.99-yr** — the $999.99/yr tier is real, not a placeholder (prior-run disbelief corrected). Landing page displays license "GPL-3.0"; the repo is AGPL-3.0 — their own marketing understates the copyleft.
+
+**UVP.** "Follow everything in one place" — RSS, social platforms, podcasts, YouTube, images, with built-in AI and an engagement economy on top. The only open-source client with modern social-ingest breadth.
+
+**Features by category:**
+1. *Ingest:* the widest protocol sweep: RSS/Atom/JSON Feed + **built-in RSSHub routes (Twitter 24, YouTube 13, Mastodon 7, Bluesky 6, TikTok 5; reddit 0)** + newsletters (email-in) + more; list/entry/media view modes per feed.
+2. *Reading:* view modes (social/article/picture/video/audio); **no unread-count removal or calm mechanics — engagement-oriented defaults**.
+3. *AI:* integrated summarization/translation/rewriting with **BYOK (bring your own key) + MCP services + custom fetch-template integrations** — technically the most extensible AI surface; **no AI disclosure/labels**.
+4. *Provenance:* **feed-claim system** (creators claim feeds, identity-verifiable) — the only provenance-adjacent feature in the direct set; no ratings/ownership/corrections.
+5. *Platforms:* Windows/macOS/Linux desktop + web + iOS + Android; account sync.
+6. *Data ownership:* OPML in/out; **telemetry (PostHog + Firebase) DEFAULT ON** — `sendAnonymousData: true` in defaults.ts (repo, 2026-09) with opt-out — the VPN-Tier-Lists "80% of RSS readers phone home" finding made concrete in the OSS-labeled cohort.
+7. *Extensibility:* Actions (rule engine), integrations with custom templates, BYOK AI, **MCP services** — second only to NewsBlur.
+8. *Security:* OSS client (auditable), closed backend (not auditable); no 2FA surface found; Web3 wallet integrations add attack surface.
+9. *Monetization:* the 4-tier ladder above plus **Web3 monetization: Power points, tipping, RSS3 token withdrawal, Boosts ×10/×100 = "Feed Refresh Acceleration"** — engagement mechanics fused with payment.
+10. *Notifications:* standard per-feed push; no budget.
+11. *Traction:* star plateau + download decay + modest store counts = **a large window-shopper base that isn't converting to retained installs** (🟡 inference from decay curve; stated as read, not fact).
+12. *Company:* VC-adjacent (Sky9/Mask), Singapore; OSS brand with closed backend and token economy — the trust posture Plumb's covenant contradicts point-by-point.
+
+**Plumb-relevant gaps.** Folo proves appetite for modern multi-protocol ingest + extensible AI — and simultaneously demonstrates the trust ceiling of telemetry-default-on, engagement-token mechanics. The spec's §5 "follow.app community" row is stale (follow.app dead; this cohort is Folo's) — flagged for the spec's next revision.
+
+### 4.6 Readwise Reader — the paid power reader, officially frozen
+
+**Overview.** Readwise, Inc.; founders Daniel Doyon (CEO) + Tristan Homsi (CTO); bootstrapped, profitable, SF. Reader: the "read-it-later × read-everything" supersystem built on the Readwise highlighting backend. Pricing: **Full $9.99/mo (annual billing) · $12.99 monthly; no free tier; 30-day trial; "lock in your price for life" grandfathering** (readwise.io/pricing, 2026-09-24). In 2025–26 the company publicly deprioritized Reader: an official Reddit reply on r/readwise states they are "intentionally ignoring feature requests… to focus on quality and performance" — a documented feature-freeze admission. API v3 public.
+
+**UVP.** "Every word you read, saved and searchable forever" — the only reader whose moat is longitudinal memory (highlights, annotations, spaced repetition) rather than feed processing.
+
+**Features by category:**
+1. *Ingest:* RSS, newsletters (email-in), EPUB/PDF/web-docs save-later, YouTube (with transcripts), podcasts (snips), Twitter/X lists — the save-everything pipeline (readwise.io/reader).
+2. *Reading:* excellent typography modes, Ghostreader inline AI, highlight-anywhere, spaced-repetition resurfacing — **maximalist by design; zero calm mechanics** (the corpus is infinite by intent).
+3. *AI:* Ghostreader (summary/Q&A/chat-with-doc, on GPT-4-class models — model not labeled per element); no disclosure register.
+4. *Provenance:* none beyond source capture fidelity.
+5. *Platforms:* web + iOS + Android; cloud sync; no desktop app; **no E2E**.
+6. *Data ownership:* exports (highlights/docs, API v3) — genuinely good; **no 2FA** (official Reddit reply: optimizing "user experience over enterprise compliance" — lead-verified quote, r/readwise).
+7. *Extensibility:* public API v3; webhooks; Obsidian/Notion/logseq export pipelines — strong.
+8. *Security:* no 2FA, no E2E, no SOC 2/ISO published; no breach history found (🟡).
+9. *Monetization:* single expensive tier, no free — **the highest personal-tier price among reader-natives**; "price for life" lock-in marketing.
+10. *Notifications:* digests (daily review email) — engagement-positive, not bounded.
+11. *Traction:* no user numbers published (🟡); large loyal base evidenced by subreddit/culture; freeze admission is the 2026 signal.
+12. *Company:* independent, bootstrapped, profitable — durable, but the flagship product is in deliberate stasis while the founders chase quality/polish and the Readwise core.
+
+**Plumb-relevant gaps.** The burned power reader's two paid homes (Feedly $99/yr+, Reader $120+/yr) are respectively pivoting away and freezing — at exactly Plumb's price band ($39–60/yr) and feature set. Reader's memory-moat (highlights, resurfacing) is the one thing Plumb's spec doesn't counter; its freeze is the switching window.
+
+### 4.7 Feedbin — the backbone
+
+**Overview.** Feedbin, Inc.; Ben Ubois, solo, bootstrapped since 2013 (launched the day before Google Reader's shutdown announcement); open source (self-hostable) since 2013-08-27. Single tier: **$7/mo · $70/yr, 30-day trial** — simple, famous, stable. No user numbers ever published (❓). (feedbin.com; feedbin.com/blog.)
+
+**UVP.** "A nice place to read on the web" — typography-first, ad-free, subscriber-funded reading with the ecosystem's most-reimplemented API. The reader other readers sync through.
+
+**Features by category:**
+1. *Ingest:* RSS/Atom, **newsletters via per-newsletter unique addresses (privacy mechanism)**, podcasts (Airshow app), YouTube channels, Mastodon accounts; OPML import. (feedbin.com; feedbin.com/blog 2025–26.)
+2. *Reading:* clean typography ("hand-picked fonts"), dark mode, full-content Pages (login-walled pages via extension); classic unread model — no calm mechanics.
+3. *AI:* none shipped (a deliberate quiet).
+4. *Provenance:* by construction (you see exactly your feeds; newsletter addresses reveal who sold you out — accidental provenance tooling).
+5. *Platforms:* web + iOS (official) + Airshow (podcasts); **sync backbone for NetNewsWire, Reeder Classic, Unread, ReadKit, Enzo (visionOS)** (feedbin.com/apps).
+6. *Data ownership:* **open source + self-hostable + OPML/API export — the ownership ceiling of the hosted set**.
+7. *Extensibility:* **REST API v2 = the de-facto client standard** of the indie-reader ecosystem (api.feedbin.com; github.com/feedbin/feedbin-api).
+8. *Security:* HTTPS-only API; minimal-permission browser extension; no 2FA surface found (❓); no breach history.
+9. *Monetization:* one fair price, no ladder, no ads — the anti-Folo/Ground pricing posture.
+10. *Notifications:* not surfaced this run (❓).
+11. *Traction:* 13 years continuous + 6+ native third-party clients = durable niche; scale unknown by choice.
+12. *Company:* one person (bus factor 1, again — but OSS + self-host mitigates); August 2026's "6 months free for Feedly refugees" promo shows active opportunism.
+
+**Plumb-relevant gaps.** Feedbin is less a competitor than infrastructure Plumb's ICP respects — and a cautionary pricing ceiling: $70/yr with no AI and no provenance is the reference price for honest, minimal reading. Plumb's pitch against it: same covenant, plus clustering, provenance, calm mechanics, and AI with labels — at roughly half the annual price.
+
+### 4.8 Ground News — provenance monetized, provenance contested
+
+**Overview.** Snapwise Inc., Kitchener, Ontario; founded 2017–18 (About says 2017, Wikipedia 2018-04-27 — conflict carried); founders Harleen Kaur (CEO, ex-NASA New Horizons, ex-Rolls-Royce VP) and Sukh Singh (CTO); ~18 employees (About, Sept 2026) vs 29 (Datanyze) vs LinkedIn 51–200 band — conflict carried. Lifetime funding ~$1.01M per PitchBook via Revenue Memo (2026-08-18, unconfirmed), from 8 named individuals — including J. Joe Ricketts, which fuels a persistent "right-wing psy-op" narrative (Literate Machine essay, Aug 2026, ~671K video views). Scale claim: "over 50,000 different news sources," ~60,000 articles/day — self-reported. Web pricing (subscribe page, 2026-09-24): **Vantage $99.99/yr ($8.33/mo annual-only)**; affiliate price $59.99/yr teaches buyers never to pay list. Mobile IAPs: Vantage $9.99-mo/$99.99-yr; Premium $3.99-mo with Premium Yearly listed at **three simultaneous legacy price points ($29.99/$39.99/$49.99)**; Pro $0.99-mo/$9.99-yr.
+
+**UVP.** "See the full picture of global events, not just one side" — per-story coverage comparison across the spectrum with bias/ownership/factuality metadata layered on (ground.news/subscribe).
+
+**Features by category:**
+1. *Ingest:* topics/interests/outlets, Local (set location), 5 regional editions; **no RSS/OPML, no newsletters, no user-added sources** — strictly their 50K corpus filtered (help.ground.news 866177).
+2. *Reading:* story-cluster comparison view with Bias Bar; Bias Comparison Summary (L/C/R per story); Blindspot feed + weekly report (formula published); "In Focus"; Daily Digest; podcasts & opinions with AI summaries; **no chronological mode, no caught-up stop, offline explicitly unsupported** (help 335105/225473).
+3. *AI:* AI-generated bias-comparison summaries with "human-in-the-loop" claimed; NLP clustering; **no model names, no prompt disclosure, no AI register** (help 3189505).
+4. *Provenance:* the flagship — but structurally compromised: bias = **average of AllSides + Ad Fontes + MBFC "when available," publication-level, verbatim "in the context of the U.S. political system"**; factuality = Ad Fontes + MBFC average, paywalled; ownership = 8 hand-coded categories covering **2,276 outlets vs the 50K corpus**; no correction tracker, no "why am I seeing this," no wire markers. US 61.29% of traffic; party colors were US-default until the v4.32 Aug-2026 patch; no foreign-language filter exists (help admits). (rating-system page; Semrush Aug 2026.)
+5. *Platforms:* web + iOS + Android + browser extension (Media Bias Checker on social links) + newsletters; no desktop app.
+6. *Data ownership:* **no export anywhere**; data deletion via a form separate from cancellation; "no ads / no data selling" (privacy FAQ) **but Google Tag Manager + Sentry ship on the web app** — "no ad-tech" is the accurate claim, not "no analytics."
+7. *Extensibility:* no public API; group subs (40–50% off), education, B2B data deals (Straight Arrow News "Media Miss").
+8. *Security:* **no 2FA/passkey feature or help article found**; impersonation-scam warning exists (their brand is being spoofed).
+9. *Monetization:* the provenance ladder itself: free (6 Blindspot/day) → Pro → Premium → Vantage ($99.99/yr gates ownership panel + bias dashboard).
+10. *Notifications:* alerts + daily-update toggle + digest push (v4.31); **no budget concept.**
+11. *Traction:* 4.7★/48,070 US App Store ratings; #2 Magazines & Newspapers; Semrush 4.09M visits Aug-2026 (−8.36% m/m; last three months 3.89/4.46/4.09M — a flat 4–4.5M band, **not the "halving" the prior run rejected**; the ~36–40% Similarweb-vs-Semrush gap is tracker spread + real decline, stated side-by-side); most-sponsored brand on YouTube (1,863 integrations, Axios/Gospel Stats Oct 2025); subscribers undisclosed.
+12. *Company:* independent, small, mission-marketed — but CJR documents Ground using AllSides ratings without permission or pay (MBFC no agreement either): **the provenance of the provenance tool is contested**, and the rater-licensing gap it exposes is a live B2B opening for Plumb.
+
+**Plumb-relevant gaps.** Ground is the incumbent proof that provenance features monetize — and the incumbent demonstration of provenance done shallowly: one averaged US-frame label, a 2,276-outlet ownership panel sold against a 50K-source corpus, no corrections, no export, no offline, no 2FA, no calm. Plumb's raters-side-by-side + global frame + correction tracking is the direct counter-design.
+
+### 4.9 SmartNews — the engagement ratchet, gamified
+
+**Overview.** SmartNews, Inc.; Tokyo (Shibuya) HQ, Palo Alto US office; founded 2012; CEO Kaisei Hamamoto (since Nov 2023); ~$410–479M raised including $69.3M SMBC venture debt (Jan 2024); last equity round Series F 2021 ($230M @ $2B — the prior run's "Series D" framing corrected); secondary-market value ~¥200–213B (~$1.3–1.4B); first US-segment quarterly operating profit Q3 2025, first full-year FY2025 (Toyo Keizai). **IPO: October-2026 TSE target reported by Bloomberg 2026-03-25 — still unfiled as of 2026-09-24 (EN+JP sweep); treat as lapsed/unconfirmed.** Free, ad-supported (~85–90% of revenue); Japan-only SmartNews+ ¥1,480/mo (100k cumulative subs, 2025-07-23); **US "Ads-Free Subscription Plan" live (terms dated 2024-10-15), price shown in-app only (❓ — App Store IAP list JS-walled)** with ad exceptions written in (third-party publisher ads, sponsored content still appear). Google Play: 50M+ downloads.
+
+**UVP.** "We combine the best of quality journalism with expert curation to help you stay informed — and feel good while doing it" (Play listing, 2026-09-24) — plus US TikTok marketing: "news with no paywalls from over 4,500+ publishers."
+
+**Features by category:**
+1. *Ingest:* follow channels/topics/outlets; tab customization; **no user-added RSS** — RSS exists only as publisher-side SmartFormat ingestion (about.smartnews.com/publishers).
+2. *Reading:* SmartView de-cluttered quick-read format (>75% of partners); algorithmic channel feeds; **no chronological mode documented anywhere**; complaints: back-out refreshes feed to top, blocked topics reappear (Play reviews 2026).
+3. *AI:* AI Matome gen-AI summaries (Jul–Aug 2025), standalone NewsArc AI long-form app (2025-08-05), in-app ES/ZH translation (2026-07-16) — the spec's §2.3 translation-demand validation; **zero AI disclosure.**
+4. *Provenance:* none — brand-level trust marketing (Trustmark Award 2026) instead of structural provenance.
+5. *Platforms:* iOS/Android/web; US+JP (+ more) editions after the 2023 China exit.
+6. *Data ownership:* no export surface.
+7. *Extensibility:* none consumer-facing.
+8. *Security:* ad-tech business (SmartNews Ads, 64 agency partners 2026); no 2FA surface found; no breach history found this run.
+9. *Monetization:* ads-first; **SmartNews Rewards (US, 2026-03-25): points per article + daily reading missions redeemable for gift cards/charity — "first of its kind in the U.S." — then the daily goal was raised 30→75 articles/day and users revolted in reviews.** The literal gamification datapoint for Plumb's anti-position.
+10. *Notifications:* breaking + per-topic + per-team pushes; complaints of notifications leading to nonexistent/mismatched stories; **no budget, no corroboration gate.**
+11. *Traction:* company claims 20–30M MAU; Japan ~15–20M plateauing (NewsPicks analyst); **Sensor Tower ~5M worldwide MAU, −28–30% YoY (2023)** — conflict carried side-by-side; US weekly reach 3% (−3pp, DNR-derived carry; chart extraction failed twice); revenue conflicts $104.5M vs $163.8M (GetLatka variants) vs ¥20–30B.
+12. *Company:* VC-heavy, IPO-aspirant, ad-fundamental — the structural opposite of Plumb's covenant, and the ads-every-2-3-articles / unclosable-countdown / phishing-quality-ad complaints (Play 2026) are the demand signal for Plumb's calm lane.
+
+### 4.10 NewsBreak — the cautionary tale running at scale
+
+**Overview.** Founded 2015 by Jeff Zheng (CEO); trade name **Particle Media**; HQ Mountain View with New York, Beijing and Shanghai offices; Yidian (Chinese news aggregator) early investor, divested 2019; **Harry Shum (ex-Microsoft AI & Research EVP) chairman since 2020**; $115M Series C (Jan 2021, Francisco Partners) in the ~$1B-valuation era; US-only availability. Free, ad-supported; **no consumer subscription tier found anywhere** — monetization is advertising (advertiser pitch: "Reach more than 40 million users") plus local-business products.
+
+⚠ **Name-collision warning for any Plumb competitive intelligence:** NewsBreak's Play developer name is "Particle Media Inc." — unrelated to Particle (Mina Labs, §4.12). The two products occupy opposite ends of the trust spectrum and must never be conflated in sourcing.
+
+**UVP.** "The nation's leading local news app... News by your zipcode... All in one place" (newsbreak.com/about, 2026-09-24) — local-first aggregation plus original content "powered by trusted local voices."
+
+**Features by category:**
+1. *Ingest:* zipcode/location feed + granular local topics; no RSS import; publisher syndication + contributor UGC + proprietary local content ops.
+2. *Reading:* explicit behavioral personalization ("learns what you love... responds to your choices and reading habits"); no chronological mode; no export.
+3. *AI:* **NBot agentic assistant (beta, 2025-05-29)** — "doesn't just inform, it enables action... learns what matters to each user and adapts in real time" across "10,000+ trusted content sources"; conversational neighborhood guide (crime maps, traffic, events), custom story tracking. *(Corrects the task brief's "Aria" — that's Opera's AI.)* Also: AI content generation at the center of the 2024 misinformation record.
+4. *Provenance:* none structural — brand claims plus a homepage disclaimer added **after Reuters' inquiry** that content "may not always be error-free"; NewsGuard rates the property externally.
+5. *Platforms:* iOS/Android/web; US-only.
+6. *Data ownership:* no export; **CCPA "Don't Sell My Info" link implies data sale by default.**
+7. *Extensibility:* none consumer-facing.
+8. *Security:* standard; lawmaker scrutiny (Sen. Warner; Rep. Krishnamoorthi, House China committee) over Chinese origins and "opaque algorithms" (Reuters 2024-06-08).
+9. *Monetization:* pure ad/local-SMB; store ratings 4.7★/773k (iOS), 4.2★/330k (Android) — enormous review bases.
+10. *Notifications:* the marketing itself: "You're first to know when news breaks — timely alerts and push notifications" + "Stay alert, stay safe — immediate access to local crime and police alerts." **This is the firehose/crime-alert pattern Plumb's spec §2.5 names its "verified-only breaking (≥3 outlets or 1 wire)" rule against.**
+11. *Traction:* **three simultaneous self-claims on one site — "50M readers" (consumer page) vs "40M+ users" (advertiser page) vs "45M+ locals" (Play ad)** — none third-party verified; Reuters 2024: "most downloaded US news app" (download-rank metric); 32.2M US web visits Aug-2025 (prior-run carry).
+12. *Company:* the documented failure mode of unaudited AI in news: **Reuters 2024-06-05 — 40+ erroneous AI-generated stories 2021–2024, including the entirely-fabricated Bridgeton NJ Christmas-Eve shooting and a food-bank misinformation item that turned hungry people away**; NBC-documented contributor fake-crime stories linked to GoFundMe pages for nonexistent victims; Patch Media $1.75M copyright settlement (2022); Emmerich Newspapers settlement (2021). Plumb's honest-AI register is the direct structural answer to this record.
+
+### 4.11 Flipboard (+ Surf) — the magazine pivoting to the open web
+
+**Overview.** Flipboard, Inc.; founded 2010; Mike McCue co-founder/CEO throughout; independent. The "social magazine" — visually curated publisher magazines — now executing a three-year pivot to the open social web: Mastodon beta in-app (2023-02-28) → 1,000+ publisher magazines federated on ActivityPub with 20 new partners incl. Smithsonian, Bloomberg Green, The Intercept, Mashable (2024) → **Surf launched 2024-12-18** (invite-only open-social-web browser: ActivityPub/Mastodon/Pixelfed/PeerTube + Bluesky AT-Proto + Threads + RSS + YouTube + podcasts) → Starter Sets feed templates (2025-05-22) → "social websites" (2026-04-03). Surf still carries its BETA badge at 550,267,541 posts / 300,235 feeds (2026-09-24). Free; **no paid tier found for either product** (absence-of-evidence, MED confidence). Layoffs: 24 staff = 21% (Axios via Nieman, Oct 2022; some coverage dates Mar 2023 — ambiguity carried) with McCue's email citing "the bad economy and tough outlook for the digital ad business."
+
+**UVP.** Flagship: the flip-through social magazine. Surf: **"algorithm-free feeds"** — "Instead of getting stuck in an algorithmically generated timeline... custom feeds" (TechCrunch 2025-05-22) — the nearest neighbor to Plumb's values among the mass trio.
+
+**Features by category:**
+1. *Ingest:* flagship = topics/publishers/smart magazines (arbitrary user RSS weak — dropped years ago; full OPML import not offered; 🟡/❓ help pages JS-walled); **Surf is RSS-native plus social protocols.**
+2. *Reading:* magazine flip UI (the original calm-format design — complaints are about ads, not feed anxiety); Surf adds per-source topic filtering ("track what they have to say about tech").
+3. *AI:* none marketed in 2026 captures — Surf's anti-algorithm positioning is explicitly non-AI.
+4. *Provenance:* none at article level; protocol-level openness (federation, publish-to-Bluesky) is structurally provenance-adjacent.
+5. *Platforms:* iOS/Android/web both products.
+6. *Data ownership:* no OPML/export surface found this run (❓); federation reduces walled-garden capture structurally.
+7. *Extensibility:* none consumer-facing (the fediverse pivot IS the extensibility story).
+8. *Security:* standard; no 2FA surface captured.
+9. *Monetization:* advertising — with a 2025–26 quality collapse in reviews: Amazon tie-up "every third or fourth flip... opens a new browser window"; Temu "suggestive... almost pornographic" ads with ignored reports; X-buttons that open the ad anyway.
+10. *Notifications:* no push complaints surfaced; no budget feature documented (❓).
+11. *Traction:* **the 145M MAU figure is Digiday 2018-08-27 — eight years stale; current MAU unknown** (Forbes McCue interview Oct 2025 unfetchable, snippets show no number); Surf counters are content-side only. The most-quoted number in the category is also the oldest.
+12. *Company:* independent, mission-led, ad-fundamental — Surf's values-proximity with zero provenance/calm/monetization makes it the most likely acquirer-partner or lane-neighbor for Plumb's protocol posture.
+
+### 4.12 Particle — the AI-native leader, maximalist by design
+
+**Overview.** Mina Labs, Inc.; Sara Beykpour (CEO, ex-Twitter Sr Director PM — Twitter Blue/Video) and Marcel Molina (CTO, ex-Twitter eng, ex-Tesla); $4.4M seed (Kindred+Adverb, 2023) + $10.9M Series A (Lightspeed + Axel Springer, Jun 2024, with Reuters newswire partnership) = **$15.3M total; no new round found 2025–2026.** iOS Nov 2024 (Apple Editors' Choice) → web May 2025 → Android Feb 2026. **Particle+ $2.99/mo · $29.99/yr** (Custom Summaries, Voice Choice, Private Questions, crossword archive, icons); free tier "usable/generous" (Wisp's disclosed-conflict review).
+
+**UVP.** "Your personalized news companion" — multi-perspective AI story cards (Overview/Media/Articles/Quotes/Questions tabs, Opposite Sides, political-spectrum chart of covering outlets, ELI5/5Ws summary styles, TTS, podcast-clip extraction) — the Artifact-successor with the field's best-funded execution.
+
+**Features by category:**
+1. *Ingest:* follow topics/people/places/entities/journalists/publishers + curated sections + live-event hubs; **no RSS import, no OPML, no user-chosen sources** — follow-graph + publisher APIs (Reuters, AFP, Fortune).
+2. *Reading:* cluster cards with per-story multi-article view; **no chronological mode, no caught-up/calm concept** — third-party critique: "'Personalized' still tends toward engagement… Depth and calm are adjacent but not identical goals"; "can feel like managing a dashboard... configuring a cockpit" (Wisp review 2026-08).
+3. *AI:* GPT-4o "among others" + proprietary processing + human editors (Nov-2024 press; **no public update since — the stack disclosure is frozen in 2024**); story-level Q&A chatbot with web-sourced evidence; multilingual summaries (19 languages); **AI disclosure: none — /faq, /methodology, /ai, /how-it-works, /publishers all 404**; robots.txt *welcomes* GPTBot/OAI-SearchBot/Applebot into /answers/ while excluding bing/ddg from /entity/ — deliberately feeding LLM answer engines.
+4. *Provenance:* strongest-in-field commercial implementation: every summary cites sources, primary-source links (court docs, posts), author profiles; **no outlet-ownership panel, no correction tracker**; "unusually transparent with sources; you still have to care enough to check them" (Wisp).
+5. *Platforms:* iOS (min iOS 18 — aggressive floor), Android, web.
+6. *Data ownership:* **web app serves an ad-tech cookie banner — "personalized advertisements on other platforms... advertising, analytics and retargeting" — on the flagship web product**; no export feature anywhere.
+7. *Extensibility:* none public.
+8. *Security:* standard policy pages; no threat model/SBOM/bounty.
+9. *Monetization:* $2.99/mo Particle+ — the cheapest meaningful AI subscription in the field; free tier generous.
+10. *Notifications:* daily digest + instant "making news" alerts on followed entities — engagement-style push, no budget.
+11. *Traction:* **zero user numbers anywhere — no MAU/DAU/revenue ever published; the absence IS the finding** ("the leading AI news app" publishes no traction); proxies: 4.76★/1,236 US iOS ratings, 4.4★/82 Play (vs Yahoo News's 68,543 US ratings — 55×); Editors' Choice.
+12. *Company:* VC-backed ($15.3M), highest velocity in the AI-native field (releases 2026-09-15/17, podcast AI + Android Feb 2026, live-event surfaces), Reuters/Axel Springer partnerships — and ad-tech retargeting on web plus an all-404 methodology layer.
+
+### 4.13 Syft — the agent ladder
+
+**Overview.** Orion Arm Pte Ltd, Singapore (also Toki AI calendar); founders Raymond Wang (ex-Ele.me co-founder) + Haochuan Guo; **$11M raised at $100M valuation (Jun 2025, mostly non-VC) — for the Toki product; no Syft-specific round exists**; stated ambition 100M users across portfolio (low conf). **Canonical domain syft.ai** (the getsyft.com reference in materials circulating from the prior run is a GoDaddy for-sale page — $2,499 or $209/mo lease — not Syft property). iOS + Android + web. Free with IAP ladder: **Go $0.99/week · Plus $9.99/mo · $79.99/yr · Pro $19.99/mo · $159.99/yr** (tier contents JS-walled ❓; the AppBrain "$690/yr" figure is stale/misparsed — store IAPs win).
+
+**UVP.** "Your AI-native news agent... reads the entire internet" — cross-language scan-and-summarize into a daily briefing ("24 hours summed in 2 minutes"), with dedup across sources ("Folded from 44 sources").
+
+**Features by category:**
+1. *Ingest:* type-any-topic AI channels; **filter/block/add own websites and RSS feeds — the only headline AI-native with explicit user RSS add-in** (freshness behavior undocumented); no OPML.
+2. *Reading:* daily briefing (top-3), multilingual dedup ("No Duplicates, Just Key Takeaways"); **3.0 redesign backlash (mid-2026): merged topics into a generic feed, removed daily AI topic summaries + morning email, paywalled categories — users churned to Inoreader** (Play reviews); no calm mechanics beyond marketing language.
+3. *AI:* core product — cross-language summarize/translate (~36-language site); **no Q&A, no AI disclosure of any kind.**
+4. *Provenance:* source links per story; multi-source fold counts; no trust metadata.
+5. *Platforms:* iOS + Android + web.
+6. *Data ownership:* personalization preferences retained server-side long-run; **no export documented.**
+7. *Extensibility:* none.
+8. *Security:* standard ToS/privacy; nothing notable.
+9. *Monetization:* the aggressive ladder above — $0.99/wk entry is the most extractive pricing shape in the field.
+10. *Notifications:* daily briefing; morning email removed in 3.0.
+11. *Traction:* iOS 4.61★/66 US ratings (flat since 2026-09-23 — near-zero iOS traction in the US; FR 241 ratings, #102 News France); Play 4.1★/1,743 US reviews, 100K+ downloads; mwm.ai ~75k+ iOS downloads estimate; "#1 news app in some major countries" still uncorroborated.
+12. *Company:* Singapore holding-co pattern (portfolio bet, shared valuation); **velocity slowing — no release since 2026-07-17/31 (~2-month gap at research date)**; the 3.0 backlash is a live case study in AI-native products alienating their own power users.
+
+### 4.14 Current — the river
+
+Terry Godier (Jupiter Interactive Group LLC), side project; iOS/iPadOS/macOS one purchase, iCloud sync. **$9.99 one-time, no IAP.** "An RSS reader built on a simple idea: your feed should never make you feel behind" — no unread counts ("Not 'not yet'. Never."), no badges, no three-pane layout; content ages by type half-lives (**breaking ~3h bright, daily ~18h, essays ~3d, evergreen ~1wk**) then dims and fades. Voices: follow individual writers via author metadata — the developer also authored **"Byline," a spec adding author context to RSS/Atom/JSON feeds**, the closest shipped analogue to Plumb's provenance-native thesis. RSS + OPML in; no API; 4.4★/112 US ratings; no user numbers published (flagged). (TechCrunch 2026-02-19; App Store; terrygodier.com/current.) **Plumb read:** the purest calm mechanic in market — validates the design language; lacks provenance, AI, Android/web, and any team/business surface. The one-person one-time-purchase model is also the durability caution.
+
+### 4.15 Kagi News (Kite) — the ritual
+
+Kagi Inc. (the user-funded no-ads search company), launched 2025-09-30. Free apps (iOS/Android, no IAP); web requires Kagi account sign-in; no tier-gating documented. **One edition per day, hard-capped at 12:00 UTC** (~30-min rollout) — "a natural endpoint... turns news from an endless habit into a contained ritual"; complete news diet in 5 minutes; Mark-all-as-read; anti-personalization by design ("diversity over echo chambers"). AI distills "thousands of community-curated RSS feeds" into structured sections (Summary/Highlights/Key Quotes/Timeline/Context/Impact) **with every review citing its sources, and the source list itself public on GitHub** (kite-public, MIT frontend, 1,075★; full dataset published at kite.kagi.com/kite.json under CC BY-NC 4.0 — a de facto public API; third-party front-ends already exist). "Zero tracking, zero ads"; RSS fetches proxied so sources can't see readers; App Store privacy label: Data Not Collected. Traction: 4.55★/93 US iOS; no MAU. Gaps vs Plumb: no personal feeds, no provenance depth beyond citation, models unnamed. (blog.kagi.com 2025-09-30; help.kagi.com/kagi/news; github.com/kagisearch/kite-public.) **Plumb read:** the strongest live validation of the calm+honest lane — and its GitHub-sourced corpus + open dataset are exactly the surfaces Plumb's public-AI-register thesis pushes further.
+
+### 4.16 Reeder — the rebuild
+
+Silvio Rizzi, solo indie, 15-year franchise. New Reeder (2024 rebuild): free to use, **$1/mo · $10/yr** unlocks shared feeds, Mastodon/Bluesky timeline sync, >10 feeds; unified chronological timeline of RSS + YouTube + podcasts + Mastodon + Bluesky + Reddit ("not meant to replace full-featured clients"); **unread counts removed — "a thing of the past. Instead, your timeline position is synced"**; shared feeds = any tag becomes a public auto-updating JSON feed. Apple-only (iOS 17+/macOS 14+); **iCloud-exclusive sync — the new app does NOT sync via Feedbin/Inoreader (that's Reeder Classic, $4.99 one-time, still sold)**; "Reeder does not collect any data... nothing." 4.3★/875 US ratings (new) + 823 (Classic). (reederapp.com; TechCrunch 2024-09-23.) **Plumb read:** a beloved indie killed its own unread counts two years before Current shipped — the calm mechanic has an installed-base precedent; but Apple-only + no AI + no provenance leaves the intersection open.
+
+### 4.17 Inkl — the bundle
+
+Founded 2014 by Gautam Mishra (Sydney); $250k seed (North Base Media — Marcus Brauchli); evolved from pay-per-read "Spotify for news" to a closed curated bundle: "over 100 of the world's best news titles" (Economist, Bloomberg, FT, Foreign Policy, Reuters, Guardian variants) with no paywalls, no ads, no clickbait — "you are the customer." **$9.99/mo · $99.99/yr** (iOS IAPs; 7-day trial with explicitly no auto-charge). Human-curated; Good News feed (three positive stories every morning); Analysis feed; related-articles-under-every-story framing. **No BYO RSS** — closed corpus; no export (n/a); iOS/Android/web + institutional programs (Classroom/Libraries/Academy). 4.5★/723 US ratings over 12 years = modest but durable; no funding news since 2014. (apps.apple.com; TechCrunch 2014-12-12; LinkedIn.) **Plumb read:** proof readers pay $100/yr for curated trust without owning anything — and a publisher-licensing structure Plumb's B2B endgame could learn from.
+
+### 4.18 Zetik (ex-NewsBang) — the watcher
+
+Newsbang, Inc. (developer name unchanged through the rebrand); funding dark. "An AI agent that watches what you name — and briefs you only when something actually moves... No doomscrolling": you name topics/trackers; the agent assembles sources across newsrooms/podcasts/blogs/GitHub/research papers/newsletters; you can pin/connect your own; deduped multi-source folds ("Folded from 44 sources"); "a feed that takes feedback" (say "too much of X" and it adjusts). iOS + Android. Free + IAPs: **Plus $14.99/mo · Pro $149.99** (billing period unmarked ❓). 4.6★/472 US ratings — the strongest count of the new entrants. (apps.apple.com; newsbang.ai.) **Plumb read:** the inverted ingest model (agent picks sources, user names topics) is the genuine alternative to feed-ownership; briefs-only-when-something-moves is a real calm mechanic — but no provenance metadata, no export, no disclosure, and an unmarked $149.99 IAP shape straight out of the extractive playbook.
+
+### 4.19 Newsreel — the human network
+
+Jack Brewster (ex-WSJ/Forbes), Newsreel Inc.; Kickstarter 2024 ($54,839/217 backers) + $100k Glen Nelson Center; **chasing a $1M round per Forbes 2026-05-15 — no close announced as of 2026-09-24** (Forbes paywall respected; headline + snippets only). "For writers who want human readers. For readers who want news from humans" — rebuild the digital town square against AI slop: swipeable interactive stories from a vetted journalist/expert network, friends' takes, "track how your views evolve over time" (gamified rather than calm-mechanics); explicitly anti-AI-slop (DNR 2026 stats in its own marketing); **≥50% of revenue to writers, 0% platform fee** — humans-by-name IS the provenance model. Free + **Premium $5.99/mo · $49.99/yr**; institutional tiers. iOS only found; 4.5★/8 US ratings — very early. (apps.apple.com; newsreel.co/press; Kickstarter.) **Plumb read:** direct-adjacent — contests the trust job via humans rather than mechanics; its ≥50%-to-writers structure is a creator-economy flank Plumb's reader-side thesis doesn't cover.
+
+### 4.20 Readless — the honest summarizer
+
+One person, bootstrapped, California, begun mid-2025. No native app — forward newsletters to a personal @mail.readless.app address (+ Substack connect + RSS URLs) → AI summarizes → **cross-source dedup/merge ("same story across multiple sources merged into a single item with links back to every newsletter that covered it")** → scheduled email digest. **Pro $4.90/mo · Max $9/mo, monthly-only** (annual "planned, waitlist"). The closest-to-honest AI framing in the field — "Summaries don't invent details… If a number, name, or claim shows up in your digest, it came from a real source. Every digest item links back to the original" — but no model names, no prompt versioning. Calm-adjacent ethos: "no streaks, badges, or guilt UI." No traction numbers disclosed anywhere. (readless.app/about, /pricing.) **Plumb read:** the merge-with-links mechanic is precisely Plumb's cluster source-chain in email form; its "don't invent details" rule is the folk version of Plumb's AI register.
+
+### 4.21 Wisp — the starver
+
+Nikita Kolyadin, solo; iOS released 2026-04-07, v1.5 updated 2026-08-06; **0 US ratings**; free; Android per site. "Calm news app... Built to starve the outrage machine": event clustering → one neutral summary, chronological order, topics you choose, an end — explicitly anti-Particle: "No chatbot. No spectrum charts. No clips… you can finish and close." (iTunes lookup; wisp.news/blog.) **Plumb read:** zero traction, pure positioning proof — the calm lane is being entered by indies in 2026, none with provenance depth.
+
+### 4.22 Watchlist (no profiles this run)
+
+**Boring Report** — indie (Vasishta Kalinadhabhotla), free, 4.72★/465 US, LLM rewrites headlines to strip sensationalism; donation-funded; Android beta exists (lead-verified). Single mechanic, closed source list. **Drooid** (Veritometrics, India; iOS 2025-01-20, upd 2026-09-13, 58 US ratings) — multi-perspective AI aggregation, small. **Jarayid** (Arabic AI platform, iOS released 2026-09-10 — a literal this-month launch, 0 ratings). **Matter** (read-later, Pocket-shutdown beneficiary), **Quill, Techmeme, News360** — single roundup appearances, not dived. **The SEO-farm digest wave**: ~10 tiny AI-digest products (gobrief, SereneReader, Miniloop et al.) each publishing a "best news/RSS apps 2026" listicle starring themselves to farm comparison SEO — a contamination pattern this report's roundup cross-check had to filter for; no product substance found beyond their own blogs. **FreshRSS** (16,126★, v1.30.0 2026-09-09) and **Miniflux** ($15/yr hosted) — the self-host backbone, roster-context per methodology; **Unread** ($29.99/yr, MacStories-awarded indie reader) and **Stringer/Liferea/Fluent Reader** — OSS ecosystem health markers, covered in the prior run's platform notes.
+
+## 5. Composite feature matrix
+
+Column key: **PL** = Plumb (per spec 05) · **FLY** Feedly · **INO** Inoreader · **NBL** NewsBlur · **NNW** NetNewsWire · **FOL** Folo · **RWR** Readwise Reader · **FDB** Feedbin · **GRN** Ground News · **SMN** SmartNews · **NWK** NewsBreak · **FLP** Flipboard · **PTC** Particle · **SYF** Syft.
+
+Plumb cells are **spec-based** (05 §2.1–2.6), not shipped-product claims: ✅ = committed at MVP; 🟡ⁿ = scheduled at V1/V2 per the spec's priority column (footnoted); the unshipped state itself is flagged in every traction cell. Competitor cells are evidence-based per §4 profiles. Full symbol semantics in the Legend (§5.15).
+
+### 5.1 Ingest & protocols
+
+| Sub-feature | PL | FLY | INO | NBL | NNW | FOL | RWR | FDB | GRN | SMN | NWK | FLP | PTC | SYF |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| RSS/Atom/JSON Feed | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ❌¹ | ❌ | 🟡² | ❌ | 🟡³ |
+| Newsletter ingestion | ✅ᵛ¹ | ✅ᵖ⁺ | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | 🟡⁴ |
+| Social protocols (Bluesky/AP/Mastodon) | ✅ᵛ¹ᐟ² | ❌ | ❓ | ❌ | 🟡⁵ | ✅⁶ | 🟡⁷ | ✅ | ❌ | ❌ | ❌ | ✅⁸ | ❌ | ❌ |
+| Podcasts / YouTube | 🟡ᵛ² | 🟡 | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ | 🟡 | ❌ | ❌ | ✅ | 🟡 | 🟡⁴ |
+| OPML import | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| Web-page monitoring | 🟡ᵛ² | 🟡 | ✅ | ❌ | ❌ | 🟡 | 🟡 | 🟡 | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+
+¹ SmartNews RSS exists only as publisher-side SmartFormat ingestion. ² Flipboard flagship dropped arbitrary-RSS additions; Surf (its beta companion) is RSS-native. ³ Syft: user can add own sites/RSS to agent channels; no OPML. ⁴ podcasts/blogs/newsletters among agent-assembled sources, not user feed management. ⁵ NNW community script feeds (Twitter/Reddit). ⁶ Folo via built-in RSSHub routes (Twitter 24, YouTube 13, Mastodon 7, Bluesky 6, TikTok 5; reddit 0). ⁷ Readwise: X lists yes; other protocols unverified. ⁸ Surf: ActivityPub + AT-Proto + Threads + RSS + YouTube + podcasts.
+
+### 5.2 Reading experience & calm design
+
+| Sub-feature | PL | FLY | INO | NBL | NNW | FOL | RWR | FDB | GRN | SMN | NWK | FLP | PTC | SYF |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| Event/story clustering | ✅ | ❌ | ❌ | 🟡¹ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ✅ | ✅² |
+| Chronological mode always available | ✅ | ✅ | ✅ | ✅ | ✅ | 🟡 | ✅ | ✅ | ❌ | ❌ | ❌ | 🟡 | ❌ | ❌ |
+| "Caught up" hard stop / bounded session | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| Typography-first reading view | ✅ | 🟡 | 🟡 | 🟡 | ✅ | 🟡 | ✅ | ✅ | 🟡 | ✅³ | 🟡 | ✅ | ✅ | 🟡 |
+| Keyboard shortcuts (j/k contract) | ✅ | ✅ | ✅ | ✅ | ✅ | 🟡 | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| Offline reading | ✅⁴ | 🟡 | ✅ | 🟡 | ✅ | 🟡 | ✅ | 🟡 | ❌⁵ | ✅ | ❌ | 🟡 | ❌ | ❌ |
+
+¹ NewsBlur clustering shipped 2026-03-18, gated to Premium Archive ($99/yr). ² Syft folds ("Folded from 44 sources") = dedup clusters. ³ SmartView de-cluttered format — validated demand, wrapped in countdown interstitials. ⁴ Plumb: local-first by construction; offline packs at V1. ⁵ Ground: "Offline browsing is not currently supported" (help 335105/225473).
+
+### 5.3 AI features & disclosure
+
+| Sub-feature | PL | FLY | INO | NBL | NNW | FOL | RWR | FDB | GRN | SMN | NWK | FLP | PTC | SYF |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| AI summaries | ✅ | ✅ | ✅ | 🟡¹ | ❌ | ✅ | ✅ | ❌ | ✅ | ✅ | 🟡 | ❌ | ✅ | ✅ |
+| AI Q&A / chat | ❌² | ✅ | ✅ | 🟡¹ | ❌ | 🟡³ | ✅ | ❌ | ❌ | ❌ | 🟡⁴ | ❌ | ✅ | ❌ |
+| Machine translation | ✅ᵛ¹ | ❌ | ❓ | ❌ | ❌ | ✅ | ❌ | ❌ | ✅⁵ | ✅ | ❌ | ❌ | ✅ | ✅ |
+| Per-element AI labels (model+prompt) | ✅ᵛ¹ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| Public AI register / methodology | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | 🟡⁶ | ❌ | ❌ | ❌ | ❌⁷ | ❌ |
+
+¹ NewsBlur AI (Ask AI Claude/GPT/Gemini/Grok, Daily Briefing) gated to Archive tier. ² Plumb spec §7: deliberately not an AI-summary product; AI is labeled plumbing. ³ Folo BYOK enables chat-style use; not a shipped assistant. ⁴ NBot agentic beta. ⁵ Ground: subscriber-only per-article translate. ⁶ Ground publishes a bias-methodology page (not an AI register; AI use described qualitatively with "human-in-the-loop" claim). ⁷ Particle's /methodology, /ai, /faq all 404; AI stack known only from Nov-2024 press.
+
+### 5.4 Provenance & trust
+
+| Sub-feature | PL | FLY | INO | NBL | NNW | FOL | RWR | FDB | GRN | SMN | NWK | FLP | PTC | SYF |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| Multi-source comparison per story | ✅ | ❌ | ❌ | 🟡 | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ✅ | 🟡¹ |
+| Bias ratings | 🟡ᵛ²² | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | 🟡³ | ❌ | ❌ | ❌ | ✅⁴ | ❌ |
+| Outlet ownership/funding panel | 🟡ᵛ² | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | 🟡⁵ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| Correction tracker | ✅ᵛ¹ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| "Why am I seeing this" panel | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| C2PA content credentials | 🟡ᵛ¹ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+
+¹ Syft: corroboration counts ("folded from 44 sources") without per-source trust metadata. ² Plumb V2: multiple raters shown side-by-side with linked methodologies, coverage-level, global frame — explicitly *not* a flattened score (spec §7 anti-scope). ³ Ground: 3 US raters averaged into one blended publication-level label, "in the context of the U.S. political system" (verbatim); factuality paywalled. ⁴ Particle: political-spectrum chart of covering outlets per story. ⁵ Ground: 8 ownership categories, 2,276 outlets vs 50K corpus, Vantage-gated.
+
+### 5.5 Platforms & sync
+
+| Sub-feature | PL | FLY | INO | NBL | NNW | FOL | RWR | FDB | GRN | SMN | NWK | FLP | PTC | SYF |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| iOS | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Android | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ | 🟡¹ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Web | 🟡ᵖʳᵒ | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Desktop app | ❓ | 🟡 | ✅ | 🟡 | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| Local-first + E2E sync | ✅ᵛ¹ | ❌ | ❌ | ❌ | 🟡² | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+
+¹ Feedbin Android via third-party clients (ecosystem). ² NNW local-first with iCloud sync (flaky per community reports); no E2E relay. Plumb: local-first MVP; E2E-encrypted relay at V1 (server sees ciphertext only; Cloud-Bundle Sync fallback named).
+
+### 5.6 Data ownership & privacy
+
+| Sub-feature | PL | FLY | INO | NBL | NNW | FOL | RWR | FDB | GRN | SMN | NWK | FLP | PTC | SYF |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| Export (OPML/JSON, one button) | ✅ | ✅ | ✅ | ✅ | 🟡¹ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ❓ | ❌ | ❌ |
+| Zero behavioral tracking | ✅ | ❓ | ❌² | 🟡 | ✅ | ❌³ | ❓ | ✅ | ❌⁴ | ❌ | ❌⁵ | ❌ | ❌⁶ | ❌ |
+| Account optional | ✅ | ❌ | ❌ | 🟡 | ✅ | ❌ | ❌ | ❌ | ❌ | 🟡 | ❓ | 🟡 | 🟡 | ❓ |
+| OSS client / self-host | 🟡⁷ | ❌ | ❌ | ✅ | ✅ | 🟡⁸ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| Published data-map | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+
+¹ NNW OPML yes; starred-items export requires SQLite digging. ² Inoreader free tier serves ads. ³ Folo telemetry (PostHog+Firebase) default-on. ⁴ Ground ships GTM+Sentry on web (no ad-tech, but not zero-analytics). ⁵ NewsBreak CCPA "Don't Sell My Info" link implies data sale default. ⁶ Particle web retargeting consent banner. ⁷ Plumb: escrowed client source release per shutdown plan. ⁸ Folo AGPL client; backend closed.
+
+### 5.7 Extensibility & dev surface
+
+| Sub-feature | PL | FLY | INO | NBL | NNW | FOL | RWR | FDB | GRN | SMN | NWK | FLP | PTC | SYF |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| Public API | ✅ᵖʳᵒ | 🟡¹ | 🟡¹ | ✅ | ❌ | ❌ | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| Rules/automation engine | 🟡² | 🟡 | ✅ | ✅ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | 🟡 |
+| CLI / MCP agent tooling | ❓ | ❌ | ❌ | ✅³ | ❌ | ✅⁴ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+
+¹ API on paid tiers only. ² Plumb: local "less like this" at MVP; full rules engine not in v1 spec. ³ NewsBlur MCP server (HTTP/OAuth) + newsblur-cli v0.2.2 (2026). ⁴ Folo MCP services + BYOK + custom integration templates.
+
+### 5.8 Security posture
+
+| Sub-feature | PL | FLY | INO | NBL | NNW | FOL | RWR | FDB | GRN | SMN | NWK | FLP | PTC | SYF |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 2FA / passkeys | ❓⁵ | ✅ | ✅ | ❌⁶ | ➖⁷ | ❓ | ❌⁸ | ❓ | ❌ | ❓ | ❓ | ❓ | ❓ | ❓ |
+| Clean breach history | ➖ | 🟡⁹ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| SBOM / threat model / signed releases | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| Third-party audit / certification | ➖ | ✅¹⁰ | ✅¹¹ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| Bug bounty / responsible disclosure | 🟡ᵛ¹ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ |
+
+⁵ Plumb: account-optional local-first design reframes the question; 2FA not specified in v1 spec (open design item, spec §2.4 covers CSP/SBOM/signed/threat-model instead). ⁶ GitHub issue #1647 open since 2022-03-13. ⁷ NNW: no accounts exist. ⁸ Readwise: official "optimizing for user experience over enterprise compliance" (r/readwise). ⁹ June 2014 DDoS extortion, ransom refused, no data compromise (not a 2019 event — corrected). ¹⁰ SOC 2 Type 2 (2026-07-02). ¹¹ ISO 27001, ISO 9001, PCI DSS, passkeys.
+
+### 5.9 Monetization & pricing (see also pricing reference below)
+
+| Sub-feature | PL | FLY | INO | NBL | NNW | FOL | RWR | FDB | GRN | SMN | NWK | FLP | PTC | SYF |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| Meaningful free tier | ✅¹ | ✅ | 🟡² | ✅ | ✅ | ✅ | ❌ | ❌³ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Ad-free option | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 🟡⁴ | ❌ | ❌ | 🟡⁵ | ✅ |
+| Team/enterprise tier | 🟡ᵛ² | ✅ | ✅ | ❌ | ➖ | ❌ | ❌ | ❌ | 🟡⁶ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| No ads ever (structural) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | 🟡⁵ | ✅ |
+
+¹ Plumb Free: unlimited feeds (bounded by documented invisible guardrails, spec §2.6 panel footnote), clustering, 1 sync device, Today brief. ² Inoreader free carries ads. ³ Feedbin: 30-day trial only. ⁴ SmartNews US Ads-Free plan exists (terms 2024-10-15) with written exceptions; price in-app only. ⁵ Particle: no in-app ads, but web serves ad-tech/retargeting consent. ⁶ Ground group subscriptions (40–50% off).
+
+### 5.10 Notifications & alerts
+
+| Sub-feature | PL | FLY | INO | NBL | NNW | FOL | RWR | FDB | GRN | SMN | NWK | FLP | PTC | SYF |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| Digest / brief format | ✅¹ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ❓ | ✅ | ✅ | 🟡 | ❓ | ✅ | ✅ |
+| Breaking alerts | ✅ᵛᵉʳ | 🟡 | ✅ | ✅ | ❌ | ❓ | ❌ | ❓ | ✅ | ✅ | ✅ | ❓ | ✅ | ✅ |
+| User-set notification budget | ✅² | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌³ | ❌⁴ | ❌ | ❌ | ❌ |
+| Corroboration-gated breaking | ✅⁵ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌⁶ | ❌⁷ | ❌ | ❌ | ❌ |
+
+¹ Plumb: 90-second Today brief (MVP) + Sunday weekly review (V1); morning-brief push in user-chosen digest window. ² Default 2/day, "spend" preview before enabling a topic. ³ SmartNews Rewards (2026-03-25) pushes the opposite direction — daily reading missions, goal raised 30→75 articles/day. ⁴ NewsBreak's marketing is the firehose itself ("first to know"; crime/police alerts). ⁵ Verified-only breaking: ≥3 outlets or 1 wire — "the anti-NewsBreak rule" (spec §2.5). ⁶ Mismatched-story push complaints (Play 2026). ⁷ Contributor fake-crime alerts documented by NBC.
+
+### 5.11 Traction & scale (inline flags; no symbol semantics — self-reported ⚑ / stale ⌛ / tracker-conflict ⚔)
+
+| Row | PL | FLY | INO | NBL | NNW | FOL | RWR | FDB | GRN | SMN | NWK | FLP | PTC | SYF |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| User scale | ➖ unshipped | 15M ⌛⚑ | n/a ⚑ | n/a | n/a | ~n/a ⚔ | n/a ⚑ | n/a | "millions" ⚑ | 20–30M ⚑ vs ~5M ⚔ | 40/45/50M ⌛⚑ | 145M ⌛ (2018) | none published | ~n/a ⚑ |
+| Store ratings (US) | ➖ | modest | modest | modest | modest | iOS 53 | small | n/a | 48.1k @4.7 | large | 773k @4.7 | large | 1.2k @4.76 | iOS 66 / Play 1.7k |
+| Funding | spec: boot | boot | boot | none | none | Sky9+Mask | boot | none | ~$1.01M | ~$410–479M | $115M Series C | VC-era legacy | $15.3M | $11M (sibling) |
+| Shipping velocity (2026) | spec | low (consumer) | ✅ very high | ✅ very high | ✅ steady | 🟡 decay | ❄ frozen | ✅ steady | ✅ high | 🟡 | ✅ | 🟡 | ✅ highest | 🟡 slowing |
+
+### 5.12 Company & independence
+
+| Sub-feature | PL | FLY | INO | NBL | NNW | FOL | RWR | FDB | GRN | SMN | NWK | FLP | PTC | SYF |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| Founder-controlled / bootstrapped | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ | 🟡¹ | ❌ | ❌ | ✅ | ❌ | ❌ |
+| Durability signals | ✅² | 🟡³ | ✅ | 🟡⁴ | ✅⁵ | 🟡⁶ | 🟡⁷ | ✅⁸ | ✅ | 🟡⁹ | 🟡¹⁰ | 🟡¹¹ | ✅ | 🟡¹² |
+| No-ads business model | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | 🟡 | ✅ |
+
+¹ Ground: independent but individual-investor optics contested (Ricketts). ² Plumb: published binding shutdown plan day one (90-day notice, full export, escrowed client). ³ Feedly: consumer maintenance mode + Aug-2026 outage. ⁴ NewsBlur: bus factor 1 (OSS mitigates). ⁵ NNW: 20+ year lineage, community. ⁶ Folo: download decay, star plateau. ⁷ Readwise: official feature freeze. ⁸ Feedbin: 13 years + self-host option. ⁹ SmartNews: IPO target lapsed/unfiled. ¹⁰ NewsBreak: lawmaker scrutiny + misinformation record. ¹¹ Flipboard: 21% layoffs, 8-year-stale scale claim. ¹² Syft: ~2-month release gap + 3.0 backlash.
+
+### 5.13 Emerging-cohort compact matrix (category-level)
+
+| Category | Current | Kagi News | Reeder | Inkl | Zetik | Newsreel | Readless | Wisp |
+|---|---|---|---|---|---|---|---|---|
+| Ingest breadth | ✅ RSS+OPML | ❌ no BYO | ✅ RSS+YT+pods+social | ❌ closed bundle | 🟡 agent-picked + pin | ❌ closed network | ✅ newsletters+RSS | 🟡 topics |
+| Calm mechanics | ✅ river, half-lives, no counts | ✅ 1/day, 5-min diet | ✅ counts removed | 🟡 editor pacing | 🟡 briefs-on-movement | ❌ gamified | 🟡 digest schedules | ✅ clustering + end |
+| AI features | ❌ | ✅ distill+translate | ❌ | ❌ human | ✅ agent+dedup | ❌ anti-AI | ✅ summaries | ✅ neutral summaries |
+| AI disclosure | ❌ | 🟡 cites sources | n/a | n/a | ❌ | n/a | 🟡 "don't invent" rule | ❌ |
+| Provenance | 🟡 Voices+Byline spec | ✅ cited + open corpus | 🟡 JSON feeds out | ✅ named brands | 🟡 fold counts | ✅ named journalists | ✅ links to all sources | 🟡 |
+| Platforms | 🟡 Apple-only | ✅ web+iOS+Android | 🟡 Apple-only | ✅ iOS+Android+web | ✅ iOS+Android | 🟡 iOS only | ❌ web/email | 🟡 iOS (+Android site) |
+| Data ownership | 🟡 iCloud; export ❓ | ✅ OSS + open dataset | 🟡 iCloud store | ❌ closed | ❌ no export | ❌ closed | 🟡 no export feature | ❓ |
+| Extensibility | ❌ | ✅ GitHub + kite.json | 🟡 JSON feeds out | ❌ | ❌ | ❌ | ❌ | ❌ |
+| Zero tracking | ❓ | ✅ proxied fetches | ✅ collects nothing | 🟡 | ❓ | ❓ | 🟡 pledge | ❓ |
+| Notifications | ✅ none by design | ✅ 1/day cadence | ❌ none marketed | 🟡 morning digest | ✅ agent-initiated | 🟡 social hooks | ✅ digest-schedule only | 🟡 |
+| Traction (US iOS ratings) | 112 | 93 | 875 (+823 Classic) | 723 | 472 | 8 | none published | 0 |
+| Pricing | $9.99 once | free | $1/mo·$10/yr (+$4.99 Classic) | $9.99/mo·$99.99/yr | Plus $14.99/mo·Pro $149.99 | $5.99/mo·$49.99/yr | $4.90/$9 monthly-only | free |
+
+### 5.14 Pricing reference (personal tiers, exact where first-party)
+
+| Product | Free tier | Paid (personal) | Annual equivalent | Source tier |
 |---|---|---|---|---|
-| **Linktree** | **70M+ registered users — first-party, live on linktr.ee 2026-09-23 (registered accounts, NOT MAU; first-party since ≥ Apr 2025 per TechCrunch; 50M+ milestone May 2024)**; 1.2B monthly unique visitors (getlatka); 1B+ clicks/week; 240M commerce clicks/mo; ~$300M/mo commerce sales (~$6B annual GMV, company-cited); **GB App Store #67 Social Networking**; Semrush **290.96M visits/mo (Aug 2026)** | **$55.5M 2024, +50% YoY** (Sacra; $37M 2023) vs **$42M ARR 2024** (getlatka) — CONFLICT; losses narrowed to ~$19M (AFR Jan 2026); 308 employees | $110M Series C Mar 2022 @ **$1.3B**; total raised $165.7M ($10.7M A 2020, $45M B 2021, $110M C 2022) | **iOS US 4.82★/61,369 ( refreshed 2026-09-23; #81 Social Networking per original capture) · Google Play 4.6★/62,160, 1M+ downloads (updated 2026-09-16)**; Trustpilot ~4/5 "Great" (a "3.9/7,000 reviews" figure also circulates); Capterra 4.4 |
-| **Whop** | **18.4M+ users; 183,628 sellers** (original-run capture) **vs 20–21M users; 211K+ sellers** (Sacra, Feb-2026 refresh) — both kept; 258 sellers $1M+; 4M+ monthly Discover visitors; ~$100M/month GMV; **$4.6B+ paid out (homepage, live 2026-09-23) vs $2.67B cumulative lifetime GMV (Sacra, Feb 2026)** — different metrics, never merged; creator payouts ~$3B/yr; avg creator earns $8,413/mo | **$142M annualized Oct 2025** (from $56M end-2024; "250%" headline vs ~153% arithmetic — both stated); ~$60.2M platform MRR end-2025 (Sacra est.); effective take ~4.0% (2022) → ~5.5% (early 2025) | Tether-led **$200M @ $1.6B (Feb 2026)**; >$50M Series B (Bain Capital Ventures, Jul 2024) @ $800M; $17M Series A (Insight, Thiel, Mateen, The Chainsmokers, O'Leary); total $218M; **~20 engineers ≈ $7.1M revenue/engineer** | **iOS US 4.82★/57,754 · Play 4.7★/137,591, 1M+ downloads (2026-09-23)**; Sacra: "surpassed Stan in scale, 10× faster growth"; 30k+ affiliates at 30% recurring |
-| **Stan** | **No creator count published** (stan.store is JS-rendered, no figure, 2026-09-23); the third-party "80,000+ active creators" read is carried unverified; **$600M+ cumulative creator earnings (company, 2026-09-23) vs $100M+ total creator sales volume (original-run capture)** — different metric/vintage, both kept; 50%+ of GMV from $4–30 digital downloads; 171 employees (getlatka) | **$40M ARR Apr 2026** (Sacra; $35M end-2025; $1.7M 2022 → $14.7M 2023 → ~$28–30M 2024) vs **$21.9M 2025-est** (getlatka) — CONFLICT; profitable ~40% EBITDA | $5M Forerunner seed (2022) as sole institutional round (Sacra) vs a 2025-09-15 raise signal + Gary Vaynerchuk strategic (Pulse2) — conflicts kept | **iOS-only** — US 4.87★/12,667 (publisher FindCommunity Inc.) · GB 4.8★/1.9K (IAP £24.99/£79.99); **no official Android app** (the Play package `com.getstan` is an unrelated Singapore lookalike — fn 95); no custom domain (linke.ro 2026) |
-| **Beacons** | **10M+ creators — now first-party current (beacons.ai live 2026-09-23)**; older third-party reads persist as the spread: 7M+ (fahimai, since ≥ Aug 2024) and 4–6M (inflowave) — 10M+ carried as the current claim, never averaged; Semrush 37.64M visits/mo; "billions of page views per day" (implausible: ~25–50× Linktree's measured 1.2B/mo visitors — flagged, not fact) | ~$11M (builtbyfoundry, undated, low conf.) | ~$29.8M raised (YC, a16z) vs $50M Series B led by Spark (inflowave) — CONFLICT | iOS US **3.21★/97** · Play **3.59★/1,584, 500K+ downloads** (2026-09-23 — near-zero US iOS rating volume, corroborating the trust problem); **Trustpilot 1.8–1.9/5 — worst in roster** (billing/support) |
-| **Milkshake** | **5M+ (milkshake.app live 2026-09-23)**; the developer is now listed as **Codelbee Pty Ltd** — ownership changed hands since the AU-origin story [memory] | ❓ | ❓ | **iOS 4.89★/14,720 · Play 4.65★/29,338, 1M+ downloads (2026-09-23)** — best consumer rating in roster (an earlier "4.9★/70K+ reviews" read was also captured); no desktop editor (review-verified) |
-| **bio.link** | **3M+ creators (homepage live 2026-09-23; older footer: +1.5M)** | ❓ | ❓ | **No official app on either storefront (2026-09-23)**; the Google Play listing "app.biolink" (Publishrr Inc., 4.2★/2,081, 1M+) is an **unrelated lookalike** — attribution struck (fn 96) |
-| **Campsite.bio** | 250k+ creators/agencies/brands (Orangetheory, Dell, Georgetown) | ❓ | ❓ | ❓ |
-| **Taplink** | ❓ | ❓ | ❓ | **Product Hunt 5.0★ across 316 reviews** — strongest PH signal in roster |
-| **SuperProfile** | ~50k creators (Feb 2026); promo reels 299K–712K views | ❓ | Cosmofeed; founded 2021 (creatorflow) vs 2020 (digest) — conflict | Influencer-led distribution (#GoSelfMade) |
-| **Wishlink** | **100k+ creators; 250+ brands; 15,000+ community** (original-run capture) **vs 40K+ MAU creators; 300K+ pieces/mo; 6M+ orders; Rs 350Cr+ monthly GMV** (company claims, 2026-09-23 refresh) — CONFLICT kept; Meta Business Partner | ❓ (brand-side economics; the Rs 350Cr+/mo GMV claim sits here when re-verified) | Creatormon Pvt Ltd (CIN U74994HR2022PTC100843); **$17.5M Series B led by Vertex Ventures SEA & India (2026-02-24, via indianstartupnews.com — Vertex's own press page 404s on recheck)** | **iOS IN 4.7★/2,214 · Play 1M+ downloads, rating count not exposed (2026-09-23)** vs original capture "Play 4.8★ / App Store 4.6★" — both kept |
-| **Komi / Shorby / Lnk.Bio / Liinks / Solo.to / SlashPage / lit.link / about.me / Bio Sites / Linkin.bio** | ❓ or [memory] only — no current traction figures in fetched sources | ❓ | Squarespace: public-company scale, platform-level trust pages | lit.link: **4M registered users** (JP; claim-asset vintage 2025-10 — carried with caution, fn 97); Western-source gap documented |
+| **Plumb (spec)** | Unlimited feeds | **$4.99/mo · $39/yr** | $39 | ~$999/yr site ≤25 seats (V2) |
+| Feedly | 100 feeds | Pro $6.99/mo · Pro+ $12.99/mo | $72 / $99 | Enterprise $1,600–3,200/mo |
+| Inoreader | 150+20+20 w/ ads | Pro $9.99/mo ($7.50 annual-billing) | **$89.99** | Team |
+| NewsBlur | 64 sites | Premium $36/yr · Archive $99/yr · Pro $29/mo | $36–$99 ($348 Pro) | — |
+| NetNewsWire | everything | — | — | — |
+| Folo | 150 subs | Basic $4.99/mo · Plus $9.99/mo · Pro $99.99/mo | $49.99 / $99.99 / $999.99 | — |
+| Readwise Reader | none (30-day trial) | $12.99/mo monthly · $9.99/mo annual-billing | ~$119.88 | — |
+| Feedbin | none (30-day trial) | $7/mo | **$70** | — |
+| Ground News | 6 Blindspot/day | Premium $3.99/mo · Vantage $9.99/mo | Vantage **$99.99** annual-only (web) | Group subs 40–50% off |
+| SmartNews | full product (ads) | US Ads-Free plan (price in-app ❓) · JP SmartNews+ ¥1,480/mo | ❓ | — |
+| NewsBreak | full product (ads) | — | — | — |
+| Flipboard | full product (ads) | — | — | — |
+| Particle | generous free | **$2.99/mo · $29.99/yr** | $29.99 | — |
+| Syft | free | Go $0.99/wk · Plus $9.99/mo · Pro $19.99/mo | $79.99 / $159.99 | — |
 
-## 7. Monetization Strategy (per archetype, with exemplars)
+### 5.15 Legend
 
-1. **Flat subscription + 0% fees** (Stan $29/$99; Komi Pro; Beacons paid tiers) — win on simplicity. Stan's ceiling exposed: single-tier NDR limit, gross churn catching acquisition, **ARPC declining $491 → $437** — hence the Stanley AI upsell motion.
-2. **Cheap subscription + declining take rate** (Linktree 9%→0%; Milkshake declining Stripe fees; SuperProfile 10%→5%→custom) — win on upgrade economics. Beacons fee-ladder break-evens: Plus beats Free at ~$333/mo of sales, beats Creator at ~$222/mo.
-3. **No subscription, pure take rate + financial services** (Whop 3%+payments stack; Wishlink brand-side commissions) — win on GMV scale. Whop's economics show the marketplace model out-earning every subscription player except Linktree itself.
-4. **Linktree runs all three at once**: subscriptions + commerce fees + **Sponsored Links** ads (Hulu, Sam's Club, Harry's; US-only) + Shops/Rewards/wallet/"Earn" + Kajabi-delivered courses — the only triple-model operator in the roster.
-5. **Adjacencies as monetization**: lit.link sells Gen-Z ad inventory (TieUps ad network); Whop Treasury pays **6% APY on USDT0** (Mar 2026, MoonPay deposits) and productizes payments as the **Whop Payments Network for 27,000+ external businesses**; Squarespace uses Bio Sites as a funnel into full-site plans; Later bundles Linkin.bio into suite subscriptions.
+- **✅** — feature confirmed present in current public docs / product page / listing (captured 2026-09-23/24).
+- **🟡** — partial, limited, behind a paywall, in beta, or (Plumb column only) scheduled at V1/V2 in the spec's priority column. The condition is footnoted at the table.
+- **❌** — feature absent or explicitly not offered.
+- **➖** — not applicable (e.g., breach history for an unshipped concept; team tier for a free OSS project).
+- **❓** — could not be confirmed from public sources this run; further research needed.
+- **Plumb column:** every cell is **per spec (05)**, not a shipped claim. ✅ = MVP commitment; 🟡ᵛ¹/ᵛ² = V1/V2 roadmap item; ➖ = unshipped. Plumb platform cells reflect the spec's store-distribution targets and 09's architecture; anything not in the spec is ❓, never inferred.
+- **Traction row flags (§5.11):** ⚑ self-reported by the company · ⌛ stale (figure unchanged for years) · ⚔ tracker conflict carried side-by-side.
+- **Emerging compact matrix (§5.13)** uses the same symbol semantics at category level.
 
-## 8. Composite Feature Matrix (16 categories × 20 platforms)
+## 6. Strategic observations
 
-Column key: **LT** Linktree · **WH** Whop · **ST** Stan · **BE** Beacons · **KO** Komi · **MK** Milkshake · **SB** Shorby · **BL** bio.link · **LB** Lnk.Bio · **CB** Campsite.bio · **LI** Liinks · **TL** Taplink · **SO** Solo.to · **SP** SlashPage · **SU** SuperProfile · **WI** Wishlink · **LL** lit.link · **AM** about.me · **BS** Squarespace Bio Sites · **LR** Later Linkin.bio.
-Categories: **A** Pricing & plans · **B** Core page building · **C** Analytics · **D** Commerce · **E** Audience tools · **F** AI features · **G** Mobile apps · **H** Integrations & embeds · **I** Developer surface (dev lens) · **J** Data ownership & portability (dev lens) · **K** Security & compliance (DevSecOps lens) · **L** Reliability signals (DevSecOps lens) · **M** Internationalization · **N** Business model · **O** Market traction · **P** Sentiment & engagement.
+Numbered observations, each tied to the profiles (§4) and matrix (§5) evidence that supports it. No assertion below rests on vibes; where a claim is single-source or self-reported it says so.
 
-| Sub-feature | LT | WH | ST | BE | KO | MK | SB | BL | LB | CB | LI | TL | SO | SP | SU | WI | LL | AM | BS | LR |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| **A. Pricing & plans** | | | | | | | | | | | | | | | | | | | | |
-| A1. Permanent free tier | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | 🟡¹ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 🟡² | ❓ |
-| A2. Entry paid ≤ $8/mo | ✅³ | ➖ | ❌ | ✅⁴ | ❌ | ✅ | ❌ | ✅ | ❓ | ✅ | ✅ | ✅⁵ | ✅⁶ | ❓ | ❓⁷ | ➖ | ❓ | ✅ | ✅⁸ | ❓ |
-| A3. Annual billing discount | ✅ | ➖ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❓ | ❓ | ✅ | 🟡⁹ | ✅ | ❓ | 🟡¹⁰ | ➖ | ❓ | ✅ | ❓ | ❓ |
-| A4. Four-plus plan tiers (incl. free) | ✅ | ➖ | ❌ | ✅ | ❌ | ✅ | ❌ | ❌ | ❓ | 🟡¹¹ | ❌ | ❌ | ✅ | ❌ | 🟡¹² | ➖ | ❓ | ❌ | ❓ | ❓ |
-| **B. Core page building** | | | | | | | | | | | | | | | | | | | | |
-| B1. Rich blocks beyond plain links | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 🟡¹³ | ✅ | ✅ | ✅ | 🟡¹⁴ | ✅ | ✅ | 🟡¹⁵ | ✅ | 🟡¹⁶ | ✅ | ✅ |
-| B2. Themes & branding customization | ✅ | ❓ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❓ | ❓ | ✅ | ✅ | ✅ | ✅ | 🟡¹⁷ | ✅ | ✅ | ✅ | ✅ | ❓ |
-| B3. Custom CSS or code-level control | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ |
-| B4. Custom domain | ✅¹⁹ | ❓ | ❌²⁰ | ✅ | ✅ | ✅²¹ | ✅ | ✅ | ❓ | ✅ | ✅ | ✅ | ❓ | ✅ | ❓ | ❓ | ❓ | ✅ | ✅ | ❓ |
-| B5. Remove platform branding | ✅ | ❓ | ❓ | ✅²² | ✅ | ✅ | 🟡²³ | ✅ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ✅ | ➖ | ❓ | ✅ | ❓ | ❓ |
-| **C. Analytics** | | | | | | | | | | | | | | | | | | | | |
-| C1. Basic views/clicks included | ✅ | ❓ | ❓ | ✅ | ✅ | 🟡²⁴ | ✅ | ✅ | ❓ | ✅ | ✅ | ✅ | 🟡²⁵ | 🟡²⁶ | ❓ | ✅ | ❓ | ✅ | ✅ | ❓ |
-| C2. Geo or traffic-source breakdown | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | 🟡²⁷ | ❓ | ❓ | ✅ | 🟡²⁸ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ |
-| C3. Tracking pixels or GA | ❓ | ❓ | ❓ | ❓ | ✅ | ✅ | ✅ | ❓ | ❓ | ✅ | ❓ | ❓ | ❓ | ✅ | ❓ | ❓ | ❓ | ✅ | ❓ | ❓ |
-| C4. Commerce or conversion tracking | ✅ | ❓ | ❓ | 🟡²⁹ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ✅ | ❓ | ❓ | ❓ | ❓ |
-| C5. Analytics data export | ✅ | ❓ | ❓ | ❓ | ❓ | ✅ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | 🟡³⁰ | ❓ | ❓ | ❓ | 🟡³⁰ | ❓ | ❓ |
-| **D. Commerce** | | | | | | | | | | | | | | | | | | | | |
-| D1. Sell digital products natively | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❓ | ❌ | ❌ | ❓ | ❓ | ✅ | ❓ | ❓ | ✅ | 🟡³¹ | 🟡³² | ❌ | ✅ | 🟡³³ |
-| D2. Native courses | ✅ | ✅ | ✅ | ✅ | ❓ | ❌ | ❌ | ❌ | ❌ | ❓ | ❓ | ❓ | ❓ | ❓ | ✅ | ❌ | ❓ | ❌ | ❓ | ❌ |
-| D3. Appointments or bookings | ✅ | ❓ | ✅ | ✅ | ❓ | ❌ | ❌ | ❓ | ❌ | ❓ | ❓ | ❓ | ❓ | ❓ | ✅ | ❌ | ❓ | ✅ | 🟡³⁴ | ❓ |
-| D4. Tips or donations | ✅ | ❓ | ❓ | ❓ | ✅ | ❌ | ❌ | ❓ | ❌ | ❓ | ❓ | ✅ | ❓ | ❓ | ❓ | ❌ | ❓ | ❌ | 🟡³⁵ | ❓ |
-| D5. Documented take rate on sales | ✅ | ✅ | ✅ | ✅ | ✅ | 🟡⁹⁴ | ➖ | ➖ | ➖ | ❓ | ❓ | ❓ | ❓ | ❓ | ✅ | ✅³⁶ | ❓ | ➖ | ✅ | ➖ |
-| **E. Audience tools** | | | | | | | | | | | | | | | | | | | | |
-| E1. Email capture | ✅ | ❓ | ✅ | ✅ | ✅ | ✅ | ❓ | ✅ | ❓ | ✅ | ✅ | ✅ | ❓ | ❓ | ✅ | ❓ | ❓ | ✅ | ✅ | ❓ |
-| E2. Broadcast email campaigns | ❓ | ❓ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ✅ | ❓ | ❓ | ❓ | ✅ | ❓ |
-| E3. DM, SMS or WhatsApp automation | 🟡³⁷ | ❓ | ❓ | ✅ | ❓ | ❌ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ✅ | ✅ | ❓ | ❌ | ✅ | ❓ |
-| E4. CRM or lead management | ❓ | ❓ | ❓ | ❓ | ✅ | ❌ | ❓ | ❓ | ❓ | ❓ | ❓ | ✅ | ❓ | ❓ | ❓ | ❓ | ❓ | ✅ | ❓ | ❓ |
-| **F. AI features** | | | | | | | | | | | | | | | | | | | | |
-| F1. Creator-side AI generation | ✅ | ❓ | ✅ | ✅ | ❓ | ❓ | ❓ | ✅ | ❓ | ❓ | ❓ | ✅ | ❓ | ❓ | ❓ | ❓ | ❓ | ✅ | ✅ | ❓ |
-| F2. Visitor-facing AI assistant | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ✅ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ✅ | ❓ | ❓ |
-| F3. AI page builder or auto-generation | ✅ | ❓ | ❓ | 🟡³⁸ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ✅ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ✅ | ❓ |
-| **G. Mobile apps** | | | | | | | | | | | | | | | | | | | | |
-| G1. iOS app | ✅ | ✅ | ✅⁹⁵ | ✅ | ❓ | ✅ | ❓ | ❌⁹⁶ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ✅ | ❓ | ❓ | ❓ | ❓ |
-| G2. Android app | ✅ | ✅ | ❌⁹⁵ | ✅ | ❓ | ✅ | ❓ | ❌⁹⁶ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ✅ | ❓ | ❓ | ❓ | ❓ |
-| G3. Mobile editor parity | ❓ | ❓ | ❓ | ❓ | ❓ | ❌³⁹ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ✅⁴⁰ | ❓ | ❓ | ❓ |
-| **H. Integrations & embeds** | | | | | | | | | | | | | | | | | | | | |
-| H1. Social or media embeds | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❓ | ❓ | ✅ | ✅ | ✅ | ❓ | ❓ | 🟡⁴¹ | ✅ | ✅ | ✅ | ✅ |
-| H2. Multiple payment providers | ✅ | ✅ | 🟡⁴² | ✅ | ❓ | 🟡⁴³ | 🟡⁴³ | ❓ | ❓ | ❓ | ❓ | 🟡⁴⁴ | ❓ | ❓ | 🟡⁴⁵ | ❓ | ❓ | ❓ | ✅ | ❓ |
-| H3. Ecommerce platform integrations | ✅ | ✅ | ❓ | ❓ | ✅⁴⁶ | ❌ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ✅⁴⁷ | ❓ | ❌ | ✅ | ❓ |
-| **I. Developer surface (dev lens)** | | | | | | | | | | | | | | | | | | | | |
-| I1. Public API | ❓ | ✅ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓⁴⁸ | ❓ |
-| I2. Webhooks | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ |
-| I3. Third-party app or extension platform | ❓ | ✅ | ❌ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ✅⁵⁰ | ✅⁵¹ | ❓ | ❓ | ❓ | ❓ | ❌ | ✅⁵² | ❓ |
-| I4. CLI, git or IaC deployment | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| I5. Self-host or open-source core | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| **J. Data ownership & portability (dev lens)** | | | | | | | | | | | | | | | | | | | | |
-| J1. Page or content export | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | 🟡⁵⁵ | ❓ | ❓ | ❓ | ❓ | 🟡⁵⁶ | ❓ |
-| J2. Analytics export | ✅ | ❓ | ❓ | ❓ | ❓ | ✅ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ✅⁵⁷ | ❓ | ❓ | ❓ | ✅⁵⁷ | ❓ | ❓ |
-| J3. Migration or no-lock-in pledge | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | 🟡⁵⁸ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ |
-| **K. Security & compliance (DevSecOps lens)** | | | | | | | | | | | | | | | | | | | | |
-| K1. 2FA or MFA for accounts | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ✅ | ❓ | ❓ | 🟡⁵⁹ | ❓ | ❓ | ❓ | ❓ |
-| K2. Team seats or multi-seat workflows | ✅ | ❓ | ❓ | ✅ | ✅ | ❌ | ✅ | ❓ | 🟡⁶⁰ | ✅ | ✅ | ❓ | ❓ | ❓ | ❓ | ➖ | ❓ | ❓ | ✅ | 🟡⁶¹ |
-| K3. SSO or SAML | ✅⁶² | ❓⁶³ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ |
-| K4. GDPR/DPA posture published | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ |
-| K5. SOC 2 or ISO 27001 attestation | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ |
-| K6. Bug bounty or coordinated disclosure | ❓ | ✅ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ |
-| **L. Reliability signals (DevSecOps lens)** | | | | | | | | | | | | | | | | | | | | |
-| L1. Public status page | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ |
-| L2. SLA published | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ |
-| L3. Public scale or uptime claims | ✅ | ✅ | ✅ | 🟡⁶⁷ | ❓ | ✅ | ❓ | ✅ | ❓ | ✅⁶⁸ | ❓ | ✅⁶⁹ | ❓ | ❓ | ✅⁷⁰ | ✅ | ❓ | ❓ | ❓ | ❓ |
-| **M. Internationalization** | | | | | | | | | | | | | | | | | | | | |
-| M1. Non-English UI or market focus | ✅⁷¹ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ✅ | ❓ | ✅ | ✅ | ✅ | ✅ | ❓ | ✅⁷² | ❓ |
-| M2. Local payment methods (beyond Stripe US/EU) | ❓ | ✅ | ❓ | ❓ | ❓ | 🟡⁷³ | 🟡⁷³ | ❓ | ❓ | ❓ | ❓ | 🟡⁷⁴ | ❓ | ❓ | ✅ | ✅⁷⁵ | ❓ | ❓ | ❓ | ❓ |
-| M3. Data-residency choice | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ |
-| **N. Business model** | | | | | | | | | | | | | | | | | | | | |
-| N1. Subscription SaaS | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ |
-| N2. Take rate or per-sale fee | ✅ | ✅ | ✅⁷⁷ | ✅ | ✅⁷⁷ | 🟡⁹⁴ | ➖ | ➖ | ➖ | ❓ | ❓ | ❓ | ❓ | ❓ | ✅ | ✅ | ❓ | ➖ | ✅ | ➖ |
-| N3. Ads or sponsored placements | ✅ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❌⁷⁸ | ❓ | ❓ | ❓ | ❓ | ❓ | ✅ | ❓ | ❓ | ❓ |
-| N4. Marketplace or brand-discovery network | ✅ | ✅ | ❌ | ✅ | ✅ | ❌ | ❌ | ❌ | ❓ | ❌ | ❌ | ❌ | ❌ | ❌ | ❓ | ✅ | ❓ | ❌ | ❓ | ❓ |
-| **O. Market traction** | | | | | | | | | | | | | | | | | | | | |
-| O1. 1M-plus users or equivalent scale | ✅ | ✅ | ❌⁷⁹ | ✅⁸⁰ | ❓ | ✅⁸¹ | ❓ | ✅ | ❓ | ❌⁸² | ❓ | ❓ | ❓ | ❓ | ❌⁸³ | ❌⁸² | ✅⁹⁷ | ❓ | ❓ | ❓ | ❓ |
-| O2. $10M-plus raised or $100M-plus valuation | ✅ | ✅ | ❌⁸⁴ | ✅⁸⁵ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ✅ | ❓ |
-| O3. $10M-plus annual revenue | ✅⁸⁶ | ✅ | ✅⁸⁷ | 🟡⁸⁸ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ |
-| **P. Sentiment & engagement** | | | | | | | | | | | | | | | | | | | | |
-| P1. App-store or storefront rating 4.5-plus | ✅ | ✅⁹⁸ | ✅⁹⁵ | ❌⁹⁸ | ❓ | ✅ | ❓ | ❓ | ❓ | ❓ | ❓ | ✅⁸⁹ | ❓ | ❓ | ❓ | ✅ | ❓ | ❓ | ❓ | ❓ |
-| P2. Review-platform coverage | ✅⁹⁰ | ❓ | ❓ | ✅⁹¹ | ❓ | ❓ | ✅⁹² | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ |
-| P3. Public engagement metrics | ✅ | ✅ | ✅ | ✅⁹³ | ❓ | ✅ | ❓ | ✅ | ❓ | ✅ | ❓ | ✅ | ❓ | ❓ | ✅ | ✅ | ❓ | ❓ | ❓ | ❓ |
+**1. The Plumb wedge is real, and 2026's entrants have validated its parts without occupying their intersection.** Across the 13-competitor main matrix, three rows are ✅ for Plumb and ❌ for *every* established player: a "caught up" hard stop (§5.2), per-element AI labels (§5.3), and a "why am I seeing this" panel (§5.4). The calm lane now has live occupants — Reeder removed unread counts in its 2024 rebuild (§4.16; TechCrunch 2024-09-23), Current ships half-life decay (§4.14; TechCrunch 2026-02-19), Kagi News hard-caps at one edition/day (§4.15; blog.kagi.com 2025-09-30), Wisp markets "an end" (§4.21) — but each is partial: Apple-only, no provenance, no AI honesty, and traction under 500 US ratings apiece (verification-pass falsifier verdict #4). Nobody combines calm mechanics + provenance depth + honest-AI labeling + export-everything. That intersection remains Plumb's alone to claim, with a speed caveat: the lane is being probed in real time.
 
-### 8.1 Legend
+**2. The paid power-reader segment is self-disrupting in real time — a switching window Plumb's spec anticipated.** Feedly has removed consumer pricing from its first-party site entirely (only enterprise TI pricing is published; $6.99/$12.99 tiers carry third-party-consensus confidence — §4.1, verification-pass) while an Aug-2026 outage (TechCrunch 2026-08-17) shook reliability perceptions. Readwise Reader is in an officially admitted feature freeze ("intentionally ignoring feature requests" — r/readwise, §4.6). Inoreader gates its API and intelligence rules behind Pro (§4.2). Folo fused its reader to an engagement-token economy with telemetry default-on (§4.5). Each is a documented irritant at exactly Plumb's price band ($39–60/yr vs Feedly $99+/yr, Reader ~$120/yr), and Feedbin's Aug-2026 "6 months free for Feedly refugees" promo (§4.7) proves the window is already being arbitraged — by infrastructure, not by a full-stack alternative.
 
-| Symbol | Meaning |
-|---|---|
-| ✅ | Feature confirmed present in current (2026) public docs / pricing page / product page captured this run |
-| ❌ | Absent or explicitly not offered |
-| 🟡 | Partial, limited, paywalled, in beta, or conditional — numbered footnote states the condition |
-| ➖ | Not applicable to this platform's model |
-| ❓ | Could not confirm from captured public sources; the relevant page was checked and did not answer it. Never inferred |
+**3. Provenance demonstrably monetizes — and its incumbent implementations are shallow enough to counter-design against.** Ground News gates its ownership panel and bias dashboard behind Vantage at $99.99/yr (§4.8, ground.news/subscribe 2026-09-24); Feedly converted provenance-flavored features into $1,600–3,200/mo enterprise threat-intelligence seats (§4.1). But Ground's implementation averages three US raters into one publication-level label "in the context of the U.S. political system" (verbatim, rating-system page), covers ownership for 2,276 outlets against a claimed 50K corpus, and — per CJR — uses AllSides ratings without license or pay. The rater-licensing gap CJR documents is itself the opening for Plumb's B2B Provenance API (spec §2.6, V3): the field's provenance metadata supply chain is unresolved, and a provenance-native client would enter with clean structural answers (multiple raters side-by-side, global frame, correction tracking — spec §2.3) rather than a blended score.
 
-### 8.2 Footnotes
+**4. Self-reported and stale scale numbers are the category's standard currency.** This is the identical pattern found across the series' leader documents (03 §1.3, 04 W4, 00 §1.4), reproduced here in the news-app set: Feedly's "15M users" (§4.1) is arithmetically indistinguishable from its 2018-era 14M self-claim; Flipboard's ubiquitously-quoted 145M MAU is a Digiday figure from 2018-08-27, eight years stale, with no current number anywhere (§4.11); NewsBreak publishes three different user counts simultaneously on one property — 50M "readers," 40M+ "users," 45M+ "locals" (§4.10, newsbreak.com + Play listing 2026-09-24); SmartNews claims 20–30M MAU while Sensor Tower's last public estimate was ~5M worldwide (conflict carried side-by-side, §4.9); Particle, "the leading AI news app," has never published a user number at all — the absence is the finding (§4.12); Ground says "millions" with no denominator (§4.8); Syft's "#1 news app in some major countries" remains uncorroborated (§4.13). Consequence for Plumb: **store-rating counts are the only cross-comparable traction metric in the field** (§5.11 uses them), and any Plumb go-to-market that publishes verifiable, dated, auditable numbers — even small ones — instantly differentiates in a market where nobody else does.
 
-1. **Liinks**: building free, publishing requires paid (14-day trial at go-live).
-2. **Bio Sites**: free tier per digest, but /bio-sites 404'd at fetch; third-party pricing conflicts.
-3. **Linktree**: $6/mo annual-billed Starter after Nov 2025 hike.
-4. **Beacons**: $10 monthly / ~$8.33 annual Creator.
-5. **Taplink**: $4/mo Pro quoted with annual billing.
-6. **Solo.to**: $1/mo Personal, annual-only.
-7. **SuperProfile**: ₹ annual plans vs $29/mo-per-IG-account claim (creatorflow) — conflict; USD conversion ❓.
-8. **Bio Sites**: $4.99/mo per creator-hero (Aug 2026); Stan's table: no subscription + 8%/sale.
-9. **Taplink**: annual discounts published; monthly prices ❓.
-10. **SuperProfile**: annual-only pricing published.
-11. **Campsite**: Pro plus two Org tiers.
-12. **SuperProfile**: two paid tiers.
-13. **Lnk.Bio**: lightweight unlimited links; block depth ❓; no built-in monetization per hoo.be.
-14. **Solo.to**: embeds only on Entrepreneur+.
-15. **Wishlink**: shop-centric product cards from brand catalogs, not arbitrary blocks.
-16. **about.me**: portfolio/testimonial/video blocks.
-17. **SuperProfile**: branding removal on Pro only.
-19. **Linktree**: custom domain on paid tiers per third-party tables; not itemized on current pricing extract.
-20. **Stan**: no custom domain (linke.ro, 2026).
-21. **Milkshake**: custom domain on Pro+ only.
-22. **Beacons**: branding removal begins at Creator, full at Creator Plus.
-23. **Shorby**: white-label only on Agency.
-24. **Milkshake**: free keeps 30 days of insights; 365 on Pro.
-25. **Solo.to**: analytics window 30d free / 6mo Personal / 12mo Professional.
-26. **SlashPage**: via GA on Pro+; native analytics ❓.
-27. **Shorby**: geo/UTM via external GA on Pro, not native.
-28. **Liinks**: traffic-source breakdown confirmed; geo/device ❓.
-29. **Beacons**: "Faster Analytics" + Beam trend discovery; classic funnels ❓.
-30. **SlashPage / about.me**: export via Google Sheets (Pro+) / GA (Pro) rather than native.
-31. **Wishlink**: affiliate brand catalogs only, not creators' own products.
-32. **lit.link**: "shops" block referenced; depth and fees ❓.
-33. **Later**: grid routes to external commerce; native checkout ❓.
-34. **Bio Sites**: Squarespace suite includes scheduling; Bio Sites-specific availability ❓.
-35. **Bio Sites**: suite donations; Bio Sites-specific ❓.
-36. **Wishlink**: commissions paid by brands; no creator-facing take rate.
-37. **Linktree**: phone/email capture + IG auto-replies on Premium; SMS broadcast ❓.
-38. **Beacons**: Beam link-in-bio generation "coming soon."
-39. **Milkshake**: no desktop editor — mobile-app-first (review-verified).
-40. **lit.link**: mobile-first editing is the advertised path; desktop parity ❓.
-41. **Wishlink**: IG/YouTube commerce linking; arbitrary media embeds ❓.
-42. **Stan**: built-in payment processing; processor unnamed.
-43. **Milkshake, Shorby**: Stripe only.
-44. **Taplink**: payments on Business tier; provider ❓.
-45. **SuperProfile**: gateway charges extra; provider ❓.
-46. **Komi**: Shopify among supported integrations.
-47. **Wishlink**: 250+ brand catalogs integrated.
-48. **Squarespace**: platform-level APIs exist; Bio Sites-specific API ❓.
-50. **Taplink**: extensions/add-on ecosystem referenced in its marketing.
-51. **Solo.to**: Extensions page referenced in pricing docs.
-52. **Squarespace**: Extensions marketplace at suite level.
-55. **SlashPage**: Google Sheets sync only.
-56. **Squarespace**: site export exists at platform level; Bio Sites export ❓.
-57. **SlashPage / about.me**: analytics export via GA integration.
-58. **Liinks**: "you're the customer, not the product" is an ads/privacy pledge, not a portability pledge. Counterpoint: Bento permanently deleted all user data at its Feb 13 2026 shutdown.
-59. **Wishlink**: OTP phone verification at signup; account-level 2FA ❓.
-60. **Lnk.Bio**: Agency/Multi-Accounts product in nav.
-61. **Later**: team features exist in the suite; Linkin.bio-specific ❓.
-62. **Linktree**: SSO on Agency/Enterprise.
-63. **Whop**: enterprise offering exists (network.whop.com); SSO ❓.
-67. **Beacons**: "billions of page views per day" claim — unverified, flagged implausible.
-68. **Campsite**: 250k+ creators claim.
-69. **Taplink**: 5.0★ across 316 Product Hunt reviews.
-70. **SuperProfile**: 50k+ creators; promo reels 299K–712K views.
-71. **Linktree**: App Store listing shows English + 13 more languages.
-72. **Squarespace**: geo-localized marketing (German pricing observed).
-73. **Milkshake, Shorby**: Stripe only — USD/EUR/GBP-centric rails.
-74. **Taplink**: payments accepted; local-currency rails ❓.
-75. **Wishlink**: India-first brand-commission payouts.
-77. **Stan and Komi**: 0% documented (Stan: no take rate at all; Komi: 0% on Pro).
-78. **Liinks**: explicit no-ads / no-data-selling pledge.
-79. **Stan**: no creator count published (2026-09-23 homepage check — JS-rendered, no figure); the third-party "80k active creators" read and the company's "$600M+ cumulative creator earnings" do not establish 1M+ users — below 1M on every read.
-80. **Beacons**: 10M+ is now the current first-party claim (beacons.ai live 2026-09-23); 7M+ (third-party since ≥ Aug 2024) and 4–6M persist as older reads — spread carried, never averaged.
-81. **Milkshake**: 5M+ per live milkshake.app (2026-09-23; the page does not disambiguate downloads vs registered users); iOS 4.89★/14,720 · Play 4.65★/29,338 (1M+).
-82. **Campsite** (250k+) and **Wishlink** (100k+): below 1M.
-83. **SuperProfile**: 50k+ — below 1M.
-84. **Stan**: $5M seed sole disclosed institutional round — profitable instead; 2025-09-15 raise signal conflicts.
-85. **Beacons**: ~$29.8M raised per digest vs $50M Series B (Spark) claim — conflict carried.
-86. **Linktree**: $55.5M 2024 (Sacra) vs $42M ARR 2024 (getlatka) — conflict carried.
-87. **Stan**: $40M ARR Apr 2026 (Sacra) vs $21.9M 2025-est (getlatka) — conflict carried.
-88. **Beacons**: ~$11M revenue claim, undated, low confidence.
-89. **Taplink**: Product Hunt 5.0★ (316 reviews) as the store proxy.
-90. **Linktree**: Trustpilot ~4/5 "Great"; a "3.9 across 7,000 reviews" figure also circulates.
-91. **Beacons**: Trustpilot 1.8–1.9 — worst in roster.
-92. **Shorby**: AppSumo lifetime-deal complaints documented.
-93. **Beacons**: "billions of page views per day" company claim (same caveat as 67).
-94. **Milkshake**: Stripe selling documented on free tier and "lower fees when you sell" on Pro/Pro+, but the fee % is not stated on the captured pricing page (❓).
-95. **Stan (G1/G2/P1)**: iOS-only — US App Store 4.87★/12,667 (publisher FindCommunity Inc.) and GB 4.8★/1.9K (IAP £24.99/£79.99); **no official Android app exists** — the Google Play package `com.getstan` ("STAN: Live Clubs & Communities", GETSTAN TECHNOLOGIES, Singapore) is an unrelated lookalike; any attribution of it to Stan was struck in the 2026-09-23 refresh.
-96. **bio.link (G1/G2)**: no official app on either storefront; the Google Play listing "app.biolink" (Publishrr Inc., 4.2★/2,081, 1M+) is an unrelated lookalike — attribution struck 2026-09-23.
-97. **lit.link (O1)**: 4M registered users (Japan; the claim asset dates to 2025-10 — older marketing material, carried with caution).
-98. **Store-rating refresh 2026-09-23**: Whop iOS US 4.82★/57,754 · Play 4.7★/137,591 (1M+); Beacons iOS US 3.21★/97 · Play 3.59★/1,584 (500K+) — below the 4.5 bar on both storefronts.
+**5. Free-tier feed caps are the category's ratchet — and Plumb's free tier is engineered against exactly this switching moment.** Every meaningful freemium reader caps the core asset: Feedly 100 feeds, Inoreader 150+20+20 (with ads), NewsBlur 64 sites, Folo 150 subscriptions, Reeder >10 feeds behind the paid unlock (§4.1–4.5, §4.16). The caps are where power readers live before they pay — and where they churn when the paid tier disappoints (observation 2). Plumb's spec answers with unlimited free feeds bounded by documented invisible guardrails (learned sync cadence, ~5,000-feed abuse ceiling, dormancy decay — spec §2.6): the cap is replaced by an honest, published physics. The structural risk is inverted: Plumb's free tier must stay genuinely usable, because its entire wedge claim is honesty about limits the others hide.
 
-### 8.3 Category-wide notes (findings, not data gaps)
+**6. The pricing middle is open: cheap products without Plumb's depth, deep products at 2–3× Plumb's price.** Below Plumb's $39/yr: Particle at $29.99/yr (no provenance panel, no calm mechanics, ad-tech on web — §4.12), Reeder at $10/yr (Apple-only, no AI — §4.16), Readless at ~$4.90/mo monthly-only (§4.20). At or above: Feedbin $70/yr with no AI and no clustering (§4.7), Inoreader $89.99/yr (§4.2), Feedly Pro+ $99/yr (§4.1), Readwise ~$119.88/yr frozen (§4.6), Ground Vantage $99.99/yr annual-only (§4.8). Plumb's $4.99/mo·$39/yr lands in the vacated middle with the strongest feature claim at that price. Two integrity data-points bracket it: Ground's $59.99 affiliate price teaches buyers never to trust list price (§4.8), and NewsBlur's Premium Yearly row simultaneously displays $29.99/$39.99/$49.99 legacy price points (§4.3) — pricing hygiene itself is a trust surface in this category, which Plumb's single-price annual-first design (spec §2.6) treats as part of the covenant.
 
-- **B3 (custom CSS), I2 (webhooks), K4 (GDPR/DPA), K5 (SOC 2/ISO), L1/L2 (status page, SLA), M3 (data residency): no platform among the 20 documents these on any page fetched.** Rows are ❓ because absence of marketing is not proof of absence — except **I4 (CLI/git/IaC) and I5 (self-host), which are ❌**: a SaaS page product definitionally offers neither, verified across every fetched pricing/docs page.
-- The uniform ❓ band across I/K/L/M **is the headline finding for a developer/DevSecOps reader: this market does not market to builders.** Only Whop ships API + app platform + bug bounty; only Solo.to advertises 2FA; only Linktree ships SSO.
+**7. The 2026 power-user bar has moved to agentic surfaces — Plumb's spec only half-clears it.** NewsBlur ships an MCP server plus newsblur-cli v0.2.2 (§4.3); Folo ships MCP services, BYOK AI, and a custom-integration template system (§4.5); Readwise and Feedbin maintain public APIs that anchor whole client ecosystems (§4.6–4.7); Kagi News's kite.json dataset is already a de facto public API with third-party frontends (§4.15). Plumb's spec commits to a Pro API token and a V3 B2B Provenance API (spec §2.6) — table stakes, but no MCP surface is specified. Given NewsBlur and Folo shipped MCP in 2026 and Plumb's ICP is exactly the population that uses it, an MCP server should enter the spec's V1/V2 conversation; it is currently the one power-user surface where the spec trails the market's demonstrated bar rather than leading it.
 
-## 9. Tech-Stack Matrix (the "tech stack" matrix for compared tech SaaS)
+**8. Security posture is the category's least-finished surface — and the one where Plumb's DevSecOps-first spec is uncontested.** Across 13 competitors: 2FA absent at NewsBlur (GitHub issue #1647, open since 2022-03-13), Readwise (officially deprioritized, r/readwise), and Ground (no feature or help article found); third-party certification exists at exactly two vendors (Feedly SOC 2 Type 2, 2026-07-02; Inoreader ISO 27001/9001 + PCI DSS + passkeys); not one ships an SBOM, a public threat model, or signed release artifacts (§5.8 — the all-❌ row). Inoreader's certification pair proves the bar is achievable at small-company scale. Plumb's spec commits CSP + SBOM + signed releases + a public threat model at MVP with a bug bounty at V1 (spec §2.4) — the only such posture in the field, and cheap to maintain relative to its differentiation value for the reader ICP that 03 identified as security-adjacent professionals.
 
-Signal classes: company-primary pages (HIGH) · job-posting-derived and Sacra/getlatka (MED) · URL/DOM-structure inference (MED, labeled) · ❓ checked-not-found · [GK] model memory, framing only. No BuiltWith/Wappalyzer scan succeeded (himalayas.app blocked), so stack truth rests on the first three classes.
+**9. Calm mechanics crossed from thesis to shipping between 2024 and 2026 — the lane's occupants are proof-of-demand, not occupiers.** Reeder (installed base, 15-year franchise) removed unread counts in its 2024 rebuild; Current ($9.99 once) ships type-proportional half-lives; Kagi News (a funded company's product) hard-caps at one edition per day with a 5-minute complete diet; Wisp markets explicitly anti-Particle positioning (§4.14–4.16, §4.21). Each validates a component of Plumb's §2.2 architecture. Each is also partial: Apple-only (Current, Reeder), no personal feeds (Kagi), no provenance (all), no AI-honesty layer (all), and traction below 500 US ratings each — versus 773k ratings for NewsBreak and 48.1k for Ground. The demand signal is real but unserved at scale; the window between "validated" and "occupied" is where Plumb must land, and it is measured in quarters, not years.
 
-### 9.1 Consolidated cross-company matrix
+**10. AI disclosure is universally absent — Plumb's public register would be first and uncontested.** No player in the 21-product field publishes model names with prompt versions, or any AI register: Particle's /methodology, /ai, and /faq all return 404 while its robots.txt welcomes GPTBot into /answers/ (§4.12 — disclosure-free by design while feeding answer engines); SmartNews ships AI summaries and a standalone AI app with zero disclosure (§4.9); Ground claims "human-in-the-loop" with no register (§4.8); NewsBlur and Folo expose model *choice* without labels (§4.3, §4.5); Readwise labels nothing per element (§4.6). The nearest approximations are Readless's "summaries don't invent details" rule and Kagi's source-citing distills (§4.15, §4.20) — folk honesty without published mechanics. Plumb's MVP commitment to a public AI register plus per-element model+prompt labels (spec §2.3) has no competitor within one product generation.
 
-| Layer | Linktree | Beacons | Whop | Stan | Squarespace Bio Sites | about.me | lit.link |
-|---|---|---|---|---|---|---|---|
-| Frontend (web) | React + TypeScript (MED) | React (MED) | ❓ [GK: Next.js] | Mobile-first storefront, framework ❓ | Squarespace renderer (HIGH) | Own renderer (HIGH) | Block editor, framework ❓ (HIGH behavior) |
-| Frontend (mobile) | Native iOS (US 4.82★/61,369) + Android (Play 4.6★/62,160, 1M+) (HIGH, refreshed 2026-09-23) | iOS + Android (US 3.21★/97 · Play 3.59★/1,584 — HIGH, 2026-09-23) | iOS + Android (US 4.82★/57,754 · Play 4.7★/137,591 — HIGH, 2026-09-23) | iOS-only native (US 4.87★/12,667); **no Android app** (HIGH, 2026-09-23) | Squarespace app suite [GK] | ❓ | Mobile-web-first, app ❓ |
-| Backend | Node.js/TS + **legacy PHP monolith** being displaced (MED) | ❓ | ❓ + public API + CLI (MED) | ❓ (bundled payment/hosting/scheduling/funnels as services) | Squarespace platform (HIGH) | ❓ | ❓ |
-| API | GraphQL + REST (MED) | ❓ | **Public developer API, docs.whop.com** (HIGH) | ❓ | Platform APIs [GK] | ❓ | ❓ |
-| Data (OLTP) | PostgreSQL (MED) | ❓ | ❓ | ❓ | Platform (HIGH) | ❓ | ❓ |
-| Data (warehouse) | Snowflake (MED) | ❓ | Analytics Engineer role exists, stack ❓ | ❓ | ➖ | ➖ | ➖ |
-| Search | Elasticsearch (MED) | ❓ | Discover search ❓ | ❓ | ➖ | ➖ | ➖ |
-| Infra & deploy | **AWS S3, EventBridge, SQS, Lambda, ECS, CDK** (MED) | **Cloudflare edge observed directly** (careers page served a CF challenge, 2026-09-23); origin ❓ | ❓ cloud; Brooklyn + Palo Alto org | ❓ | Platform (HIGH) | ❓ | Operator CONFLICT: TieUps Inc. (fresh footer © 2020) vs GMO Pepabo (digest) |
-| Observability | ❓ | ❓ | ❓ | ❓ | ➖ | ➖ | ❓ |
-| Analytics | Snowflake + tiered product analytics (MED) | Beam "Faster Analytics" (HIGH) | Strategic-finance analytics fn (HIGH existence) | In-product, tooling ❓ | Squarespace Analytics + **AI Visibility** (HIGH) | Google Analytics on Pro (HIGH) | ➖ |
-| Payments | Shops, wallet, Sponsored Links; PSP ❓ | 9% free / 0% Creator Plus; BNPL; PSP ❓ | **Proprietary multi-PSP smart routing: Stripe + PayPal + Coinbase Commerce + MoonPay + Tether; 135+ currencies; 100+ methods; 195+ countries; local acquiring US/EU/CA/AU/UK; +0.8% orchestration; 10 BNPL partners; Whop Payments Network for 27k+ external businesses** (HIGH, Sacra) | 0% tx fee model; PSP ❓ | Squarespace Payments [GK: Stripe] | ➖ | In-page shops; PSP ❓ |
-| Email / comms | Email+phone capture; ESP ❓ | Newsletters, **Auto-DMs**, automations (HIGH) | Discord as community substrate (MED) | Built-in email automation (MED) | Email + SMS Campaigns (HIGH) | Email-signature product (HIGH) | ➖ |
-| AI | AI design tools + Canva deepening (MED) | **Beam AI teammate** — strategy, growth analysis, brand-deal negotiation (HIGH) | **Claude for internal eng/ops** (Sacra); customer AI ❓ | **Stanley agent** — autonomous posting to LinkedIn/IG (HIGH) | AI Website Builder, Design Intelligence, AI Visibility (HIGH) | **Virtual Twin AI** (HIGH) | ➖ |
-| Security surface | ❓ WAF/bounty | Cloudflare bot challenge (HIGH) | **Bug bounty** — only formal program in category (HIGH) | ❓ | Platform security ❓ detail | ❓ | ❓ |
-| Design tooling | Storybook (MED) | ❓ | ❓ | ❓ | Templates (HIGH) | ➖ | Preset library (HIGH) |
-| Support/recruiting fingerprint | ❓ | ❓ | ❓ | ❓ | ❓ | ❓ | **Zendesk** (help.lit.link/hc/ja path — inference); **Wantedly** recruiting |
+**11. Engagement mechanics are actively poisoning trust in the scaled players — and all of 03's named failure modes are confirmed live in 2026 captures.** SmartNews Rewards launched points-per-article reading missions in 2026-03 and then raised the daily goal from 30 to 75 articles/day, triggering user revolt (§4.9; announcement 2026-03-25 + Play reviews). Folo ships telemetry default-on (PostHog + Firebase, defaults.ts) inside an OSS-labeled client, fused with Power/tipping/Boost token mechanics (§4.5). NewsBreak's marketing is the firehose itself — "stay alert, stay safe — immediate access to local crime and police alerts" — on top of the Reuters-documented 2021–2024 record of 40+ erroneous AI stories including a fabricated shooting (§4.10; Reuters 2024-06-05). Flipboard's 2025–26 reviews describe ad-quality collapse (Amazon auto-opening tabs, Temu ad complaints, §4.11). Ad-load ratchets, firehose notifications, opaque personalization, and provenance-invisible AI — the anti-patterns 03 §2 catalogued are not historical; they are the current operating model of the category's largest players, which is precisely the demand condition Plumb's §2.5 verified-only breaking rule ("the anti-NewsBreak rule") is designed against.
 
-### 9.2 Secondary-tier stack signals
+**12. Data ownership is claimed more than practiced — the honest minority is small enough to join, and differentiated by publishing.** No export surface at all: Ground, SmartNews, NewsBreak, Particle, Syft (§4.8–4.13). Data-sale defaults: NewsBreak's CCPA "Don't Sell My Info" link implies sale by default; Particle's web app serves an ad-tech/retargeting consent banner (§4.10, §4.12). Behavioral telemetry: Folo default-on (§4.5). The honest minority — Feedbin (OSS + self-host + API export), NetNewsWire (local SQLite, no telemetry), NewsBlur (self-hostable) — proves the posture is viable but none of them publish a data-map or bind themselves to a shutdown plan. Plumb's export-everything-one-button at MVP, published data-map, zero-behavioral-tracking covenant, and 90-day escrowed shutdown plan (spec §2.4) extend the honest minority's posture with *published, auditable commitments* — the difference between being trustworthy and being verifiably trustworthy, which is the entire brand thesis.
 
-| Company | Signal | Confidence |
-|---|---|---|
-| **bio.link** | AI assistant trained on your content; testimonial ties it to **Buy Me a Coffee** ("this service was linked with buymeacoffee") ⇒ [GK] BMC-team ownership | HIGH (features) / GK (ownership) |
-| **Wishlink** | **Engineering blog exists at engineering.wishlink.com** (contents unfetched ❓); monthly bank payouts | HIGH (existence) |
-| **SuperProfile/Cosmofeed** | Gateway charges extra on all plans (unnamed PSP ⇒ Razorpay/Cashfree-style Indian gateway ❓); WhatsApp marketing; AutoDM; UPI-native market context (competitor Playto markets "0% on UPI") | HIGH (fees) / ❓ (gateway) |
-| **Carrd** | Integration map: payments Stripe/PayPal/Gumroad; forms Mailchimp/Kit/ActiveCampaign/EmailOctopus; analytics GA/Plausible/Matomo; **Let's Encrypt** TLS on custom domains | HIGH (own site) |
-| **SlashPage** | **"Allow search engines and LLMs to index this site" toggle** — LLM-crawler policy as a user-facing control | HIGH |
+## 7. Sources
 
-### 9.3 What the stacks reveal
+Consolidated from the angle notes (§1 methodology; full capture logs in `scratch/notes/angle-01…09` and page captures in `scratch/pages/`). Grouped by subject; the §4 profile in which each is cited appears in parentheses. Where a JS wall, paywall, or robots directive limited capture, the limitation is noted in §1 and the profile.
 
-1. **AWS + TypeScript + React convergence.** Where anything is visible (Linktree; [GK] Whop/Beacons), the pattern is the 2020s default: TS end-to-end, React front, Node services, PostgreSQL, AWS. Linktree's specific mix — Lambda + ECS + EventBridge + SQS + CDK, Snowflake + Elasticsearch on top of PostgreSQL — is the textbook event-driven shape for a page product: enormous read volume, tiny payloads, every click an event. **No moat in framework choice; the moat is elsewhere.**
-2. **The PHP-legacy shadow.** Linktree — $1.3B valuation, 70M users — still carries a legacy PHP monolith alongside Node/GraphQL a decade after shipping fast on PHP. The lesson: the embarrassing first version persists; plan the strangler-pattern seam early (which is exactly what event-bus architecture buys you).
-3. **Payments as the moat.** The category default is the "Stripe Connect wrapper"; Whop built proprietary multi-PSP smart routing, local acquiring in five regions, crypto rails, BNPL across ten partners, decline-recovery orchestration — then productized it as the Whop Payments Network for 27k+ external businesses. In creator commerce, **payment acceptance quality** (decline recovery, local methods, payout speed, high-risk-vertical tolerance) is durable in a way page-rendering never can be. Every ambitious link-in-bio company converges on fintech; Whop got there first and deepest.
-4. **Lean-stack economics.** Whop: ~20 engineers at $142M ⇒ **≈$7.1M revenue/engineer** (computed). Stan: 171 employees at $40M ⇒ ≈$234k/employee. Linktree: 308 at $42–55.5M ⇒ ≈$136–180k/employee. Lean is the winning configuration at category scale, with Claude-assisted internal ops as a stated Whop accelerant.
-5. **VPS feasibility argument (bridging to deliverable 10).** A bio page is a cached, mostly-static payload: the user's 2vCPU/2GB/10TB baseline is bandwidth-bound long before CPU-bound. Rough arithmetic: 10TB/mo ÷ ~50KB/view ≈ **~200M page views/month ceiling before CDN offload** — the LW CDN doc's model (CDN pulls from origin; users never hit origin) is exactly the promotion path. At 0→10k DAU a single VPS with origin caching is comfortably sufficient; first promotion trigger is bandwidth, second is click-event write throughput — which is where the queue-in-front-of-analytics-writes pattern (Linktree's SQS/EventBridge shape) becomes the thing to copy.
-6. **Category-wide blind spots the matrix exposes:** observability ❓ across the board; security signaling near-absent (one bug bounty in 20); **AI now table stakes** — every major survivor ships a named AI feature (Beam, Stanley, Virtual Twin, Linktree design AI, Design Intelligence, bio.link assistant), so differentiation has shifted from "has AI" to "AI does what"; **LLM discoverability emerging as a new layer** (Squarespace "AI Visibility," SlashPage's LLM-index toggle) — an analytics layer nobody else measures yet.
+### 7.1 Target spec + series context
 
-### 9.4 Open-source inventory relevant to this category
+- Plumb spec: `independent_research/2026-09-23-news-aggregator-industry-deep-dive/05-new-app-concept.md` (§2.1–2.6, §5, §7 — matrix Plumb column source)
+- Series: 00-executive-summary, 03 (white-space + failure modes), 04 (leader-set weaknesses), 07 (release plan), 09 (architecture) — same folder
+- Reuters Institute Digital News Report 2026 (market stats; DNR-derived US reach carry, §4.9)
+- VPN Tier Lists RSS-reader privacy audit (80% phone-home finding, §2 market overview)
+- Appfigures / press coverage of the Pocket shutdown (2025) and Substack counter-trend (§2)
 
-| Project | Stack | What it is | Source class |
-|---|---|---|---|
-| **linkpage** (rhnvrm) | Go; single self-contained self-hostable binary [GK] | Minimal one-page link-in-bio you own — the "smallest viable competitor" | [GK] |
-| **lynk** (chroline) | Next.js + MDX + next-seo [GK] | Dev-flavored bio page authored in MDX in a repo — git-based editing, Vercel-deployable | [GK] |
-| **Dub** (dub.co) | [GK] OSS link management/attribution, TS/Next.js | Observed in PH link-in-bio category this run; OSS status from general knowledge | Presence HIGH / OSS [GK] |
-| **LittleLink family** (LittleLink static generator; LittleLink-Custom PHP fork; LinkStack PHP) | Static HTML/CSS; PHP | The canonical self-hosted alternatives family (medevel list roster not re-fetched) | [GK] |
-| **Carrd** (commercial) | Closed; integration surface is the published map | Not OSS, but the cleanest map of which third-party services a one-page product needs | HIGH |
+### 7.2 Feedly (§4.1)
 
-Takeaway (feeds deliverable 09): the OSS floor for this category is very low — a static page generator is technically sufficient — which is why competition happens in commerce, payments, and audience tooling, the layers OSS conspicuously does not provide.
+- feedly.com homepage + /threat-intelligence/pricing (lead-browser capture, 2026-09; consumer pricing absent first-party — `scratch/pages/lead-feedly-*.md`)
+- Feedly blog: SOC 2 Type 2 announcement (2026-07-02); Aug-2026 incident postmortem coverage via TechCrunch (2026-08-17)
+- June 2014 DDoS extortion: Fast Company; The Hacker News (correction of the prior run's "2019 breach")
+- Third-party pricing consensus: readless.app (×2), SoftwareFinder (MED confidence, per verification-pass)
+- erat.org/feedly-json-feed (JSON Feed support, 2023)
 
-## 10. Strategic Observations
+### 7.3 Inoreader (§4.2)
 
-**10.1 The developer surface is a near-total white space.** Exactly one of 20 platforms documents a public API (Whop); it is also the only one with a third-party App Store/SDK and a bug bounty. Zero document webhooks, CLI/git/IaC, or self-hosting. For a developer-founder entrant this is the clearest unoccupied position in the market: a headless/API-first bio-page with real export and an OSS escape hatch. The demand signal exists — OpenBento (open-source Bento clone) and Bopbee (OpenBento hosting) appeared in 2026 Bento-migration roundups precisely because Bento's design-minded, developer-adjacent users had nowhere sanctioned to go when Linktree deleted the product.
+- inoreader.com/pricing, /blog (BYOAI, 2026-04-14), changelog (fastest velocity in set)
+- Certification pages: ISO 27001, ISO 9001, PCI DSS; passkey support docs
+- Innologica/Bulgaria company background; Supporter-tier removal (2026 pricing page)
 
-**10.2 Security and reliability posture is undocumented market-wide — a DevSecOps-differentiation opening.** Only Solo.to advertises 2FA (free tier), only Linktree offers SSO (Enterprise), only Whop runs a bug bounty; not one of the 20 publishes SOC 2/ISO 27001, a DPA, a status page, or an SLA in any fetched material. EU vendors already sell against the GDPR/data-residency vacuum (linke.ro, alllinks.cc). **A newcomer that publishes SOC 2, a DPA, EU hosting, and a public status page would be first in the category on every one of those axes simultaneously.**
+### 7.4 NewsBlur (§4.3)
 
-**10.3 Over-indexing: AI and email capture are table stakes; reliability and portability are not.** Every 2026-current release cycle ships AI; 12/20 capture email. Nobody ships uptime transparency or credible export. Parity zone: page-building + analytics-lite + email. Differentiation zone: empty.
+- newsblur.com/pricing (2026-09-24), newsblur.com/blog (clustering 2026-03-18; 2026 feature wave)
+- github.com/samuelclay/NewsBlur — 7,627★; issue #1647 (2FA, open since 2022-03-13); MCP server + newsblur-cli v0.2.2 releases
 
-**10.4 The pricing-band war.** Linktree's Nov 2025 hike (46–67%) abandoned the $5–12 band now owned by six cheaper rivals; Stan inverted the ladder and Whop deleted it. The subscription middle is squeezed from both ends — flat-fee simplicity below, GMV economics above.
+### 7.5 NetNewsWire (§4.4)
 
-**10.5 Consolidation made vendor-lifetime risk a purchase criterion — and nobody sells against it.** Six demonstrable data-loss/sunset events in three years (Bento, Koji, Linkpop, Tap Bio, Fingertip, Snipfeed-absorption), yet the closest thing to an ownership pledge in the roster is Liinks' ads/privacy line. **A "your page, your data" positioning (one-click full export, documented deletion policy, open schema) is unclaimed.**
+- netnewswire.com (+ /privacy-ethos); github.com/Ranchero-Software/NetNewsWire (10,406★; 7.1.4, 2026-09-20)
+- MacStories coverage; community starred-export SQLite documentation
 
-**10.6 Business models bifurcated into three clean strategies** (§7): flat-subscription-0%-fee vs cheap-sub-declining-take vs no-sub-pure-take+fintech. Linktree alone runs all three plus ads.
+### 7.6 Folo (§4.5)
 
-**10.7 Platform risk is existential and favors audience-ownership features.** Instagram testing clickable caption links for Meta Verified users (Mar 2026) attacks the core routing value. Most defensible: products that own the audience relationship (Stan email, Beacons email/DM, Komi CRM, SuperProfile WhatsApp) vs pure link routers (Shorby, Lnk.Bio, Solo.to, Campsite).
+- folo.is/pricing embedded plans JSON (2026-09-24 — 4-tier ladder incl. $999.99/yr Pro)
+- github.com/RSSNext/Folo — 39,012★; issue #2178 (AGPL client-only); defaults.ts telemetry flags
+- Discord community count (16,905); Play/iOS listings; release-asset download series (~29.83M cumulative, decay curve per verification-pass)
 
-**10.8 Reputation gaps are wide open.** Beacons 1.8–1.9 Trustpilot; Shorby AppSumo resentment; Linktree hike backlash + inability to process Apple/Google subscription refunds; Stan ARPC declining ($491→$437) with churn catching acquisition. Support quality and billing transparency are differentiators no player currently markets.
+### 7.7 Readwise Reader (§4.6)
 
-**10.9 Regional moats are language and payments, not features.** lit.link/SlashPage/Taplink/SuperProfile/Wishlink hold their markets on localization + local money movement — the same lever Whop industrialized globally (135+ currencies). The Asia Stripe gap is the most-cited unmet creator pain in the region.
+- readwise.io/pricing (2026-09-24), readwise.io/reader
+- r/readwise official replies (feature-freeze admission; 2FA stance — lead-verified)
+- API v3 docs; Obsidian/Notion export pipeline docs
 
-**10.10 The matrix's biggest single-cell finding.** Whop is the only ✅ in I1 (public API) and K6 (bug bounty); Solo.to the only ✅ in K1 (2FA); Linktree the only ✅ in K3 (SSO). Three different companies each hold a unique compliance/dev checkbox; no one holds them all, and the overlap between the leader's feature set and the field's trust surface is zero. **Whoever bundles those four checkboxes ships a category-defining trust page overnight.**
+### 7.8 Feedbin (§4.7)
 
-## 11. Why This Matters for the News-Aggregator Program (bridge to 05/06/07/09/10)
+- feedbin.com, feedbin.com/blog (Airshow 3.0, 2026-07-13; Feedly-refugee promo, Aug 2026), feedbin.com/apps
+- api.feedbin.com / github.com/feedbin/feedbin-api (REST v2 client standard)
+- OSS + self-host docs (since 2013-08-27)
 
-1. **Landing-page/GTM mechanics (05, 06).** Plumb's landing page and referral loop are a link-in-bio-shaped problem: one URL, routed audience, conversion instrumentation. The pricing-band analysis says the sub-$10/mo creator-tool band is the accepted norm (Solo.to $1 → bio.link $7.49 → Campsite $7); the trust analysis says a calm-tech, no-ads, export-first page would be first in category on every unoccupied axis (10.1/10.2/10.5). If Plumb ever ships a creator/publisher self-serve surface, the four-checkbox trust bundle (API, 2FA, SSO-class controls, bounty/disclosure + status page + DPA) is the cheapest differentiation available — it is literally unoccupied.
-2. **Monetization pattern lessons (06).** The three clean strategies map directly onto news-app monetization options: flat-subscription-0%-fee (Simplest; Stan's ceiling — single-tier NDR, ARPC decline — is the cautionary tale), declining-take-rate (upgrade economics; break-even math as in Beacons), and pure-take+fintech (Whop's payments-as-moat is the deepest lesson: distribution without payment acceptance quality is not defensible). Plumb's local-first, privacy-first stance corresponds to the unclaimed "your data, your page" position — the same white space identified in 10.5, and the same one the news side occupies via provenance/calm (03).
-3. **Architecture validation (09).** The boring-stack convergence (TS+React+Node+Postgres+AWS at 1B clicks/week) validates Plumb's micro-library composition approach: no framework moat exists; the moat is data ownership, sync, and payment/audience tooling. The PHP-monolith lesson feeds 09's strangler-pattern seams; the queue-in-front-of-analytics-writes lesson feeds 09's event pipeline; the OSS-floor lesson (§9.4) explains why Plumb's differentiators (CRDT sync, on-device embeddings, provenance) live exactly where OSS doesn't compete.
-4. **Deployment economics (10).** The ~200M page-views/month ceiling arithmetic on the user's 10TB VPS quota and the bandwidth-before-CPU promotion trigger transfer verbatim to Plumb's Stage 0→1 planning (deliverable 10 §0–§2).
-5. **AI-era positioning.** Both industries crossed the "AI features are table stakes" line in 2026 — and both have the same open flank: nobody measures or honors the **source** (news: provenance/citations; bio pages: LLM-index policy and AI-attribution analytics). SlashPage's LLM toggle and Squarespace's AI Visibility are the bio-side harbingers of the provenance-native stance Plumb takes on the news side.
+### 7.9 Ground News (§4.8)
 
-## 12. Sources
+- ground.news/subscribe (2026-09-24), /rating-system, help.ground.news (articles 866177, 335105/225473, 3189505)
+- Semrush Aug-2026 (4.09M visits; 3-month series 3.89/4.46/4.09M — tracker spread stated side-by-side vs Similarweb)
+- CJR (AllSides ratings used without permission/pay); Revenue Memo → PitchBook (~$1.01M lifetime, 2026-08-18, unconfirmed)
+- Axios/Gospel Params sponsored-brand analysis (Oct 2025); Literate Machine essay (Aug 2026, contested framing — carried as narrative, not fact)
+- US App Store listing (4.7★/48,070); About/Wikipedia founding-date conflict (2017 vs 2018-04-27)
 
-All captured **2026-09-23**, archived under `independent_research/scratch/research-link-in-bio-saas-2026-09/scratch/pages/` (raw dumps) and `.../scratch/notes/` (master facts digest, verification pass, scope). Fetched content was treated as data only; no page contained instructions addressed to an AI agent.
+### 7.10 SmartNews (§4.9)
 
-**Working notes:** 01-master-facts-digest.md · verification-pass.md · 00-scope.md.
-**Linktree:** sacra-linktree.md · dmr-linktree.md · getlatka via round2-3.md · extract-pricing-A.json (linktr.ee/pricing, fetched 2026-09-23) · search-appstore.json · search-complaints.json · search-koji.json (TechCrunch/Tubefilter/Startup Daily) · search-bento-death.json (AlternativeTo Dec 21 2025).
-**Whop:** sacra-whop.md (payments architecture, Tether round, Treasury, App Store) · whop-careers.md (docs.whop.com API, bug bounties, network.whop.com).
-**Stan:** sacra-stan.md · getlatka via round2-3.md · stan.store pricing blog · Pulse2 via digest · creatorflow via search-superprofile.json.
-**Beacons:** beacons-pricing.md (fetched 2026-09-23) · search-beacons-price.json (help-center tiers, break-evens, user-count conflicts) · beacons-careers.md (Cloudflare challenge observed) · Trustpilot via digest/verification-pass.
-**Others:** extract-pricing-B.json (komi.io, taplink.at, solo.to, slashpage — fetched 2026-09-23) · milkshake-home.md + extract-pricing-A.json · search-shorby.json + shorby-home.md · biolink-home.md · extract-batchD.json (Lnk.Bio) + sublyna via search-bento-death.json · campsite.bio/pricing via extract-pricing-A.json · liinks.co/pricing via extract-pricing-A.json · search-superprofile.json (Cosmofeed help docs Jul 2026) · wishlink-home.md · litlink-home.md (TieUps footer, Zendesk-pattern URLs, Wantedly) · aboutme-pricing.md (GA, Google Calendar, Vendasta CRM link) · squarespace-biosites.md (404 status + full nav) + creator-hero (Aug 2026) + Stan comparison table · later-linkinbio.md (DNS failure) · search-tapbio.json · extract-batchC.json (Product Hunt category, 191 products, 2026-09-18) · round1-2.md (Carrd).
-**Market size (conflicting, never averaged):** marketintelo, growthmarketreports, strategymrc, linkship, dataintelo via digest §7; bottom-up $250–400M core estimate derived in digest.
-**LiquidWeb grounding for §9.3-5:** lw-caching.md, lw-cdn.md, lw-cloud-vps.md + live recheck digest (this program's notes/angle-18).
-**User-count + app-store refresh (2026-09-23, folded in post-integration):** linktr.ee · whop.com · beacons.ai · milkshake.app · bio.link · stan.store (JS-rendered, no count) · wishlink.com live-page reads; US App Store + Google Play (+ GB/IN storefront) listings for Linktree, Whop, Stan, Beacons, Milkshake, bio.link, Wishlink; Semrush traffic lookups (Linktree 290.96M, Beacons 37.64M visits/mo); Wishlink Series B via indianstartupnews.com (2026-02-24; Vertex press page 404 on recheck). **Lookalike strikes:** "STAN: Live Clubs & Communities" (GETSTAN TECHNOLOGIES Pte. Ltd., Singapore; package `com.getstan`) is **not** stan.store's Stan; "app.biolink" (Publishrr Inc.) is **not** bio.link — both Play listings are unrelated products whose names collide.
+- about.smartnews.com/publishers (SmartFormat); Google Play listing (2026-09-24)
+- SmartNews blog/announcements: SmartNews+ ¥1,480 (2025-07-23), Rewards US (2026-03-25), ES/ZH translation (2026-07-16), NewsArc (2025-08-05), AI Matome (Jul–Aug 2025)
+- US Ads-Free terms (2024-10-15 — price in-app only, JS-walled)
+- Bloomberg IPO report (2026-03-25, unfiled as of 2026-09-24); Toyo Keizai profitability reporting
+- Sensor Tower ~5M MAU (2023) vs company 20–30M claim — carried side-by-side; NewsPicks analyst; GetLatka revenue variants (conflict logged)
 
-**Conflicts registry (carried, never averaged):** Linktree revenue $55.5M (Sacra) vs $42M (getlatka); Linktree 70M+ = **registered accounts, not MAU** (basis flag, first-party); Stan ARR $40M (Sacra) vs $21.9M (getlatka); Stan funding $5M-only vs 2025-09-15 signal vs Vaynerchuk strategic; Stan creator-earnings $600M+ (company, 2026-09-23) vs $100M+ sales volume (original capture) vs unverified third-party "80k active creators"; Whop YoY "250%" headline vs ~153% arithmetic; Whop ~20 engineers (digest) vs absent-from-fresh-dump; Whop users 18.4M/183,628 sellers (original) vs 20–21M/211K+ (Sacra Feb 2026); Whop $4.6B+ paid-out (homepage) vs $2.67B lifetime GMV (Sacra — different metrics, kept apart); Beacons users 10M+ (first-party current) vs 7M/4–6M (older third-party reads); Beacons raised ~$29.8M vs $50M Spark; Beacons fees "no platform fees" vs 9% seller fee (resolved: two fee families); Wishlink creators 100k+ (original) vs 40K+ MAU + Rs 350Cr+/mo GMV (company claims, 2026-09-23); Wishlink store ratings 4.8/4.6 (original) vs 4.7★ iOS-IN / Play rating-count-not-exposed (refresh); lit.link operator TieUps (primary) vs GMO Pepabo (digest); Squarespace Bio Sites live (digest) vs 404 (fresh); Tap Bio tiers $3/$8 vs $5/$12; Shorby Pro annual $24 vs $25; SuperProfile ₹-annual vs $29/mo; Milkshake fees per own page vs Taplink's "no monetization" claim (primary wins).
+### 7.11 NewsBreak (§4.10)
 
-**[GK]/[memory] items (framing only):** rhnvrm/linkpage and chroline/lynk details; medevel roster/LittleLink family; Dub OSS status; bio.link–Buy Me a Coffee ownership; Squarespace-Payments-Stripe; Whop/Beacons frameworks; Linktree-Cloudflare edge; HQ cities for Beacons/Milkshake/Campsite/Liinks/about.me/Squarespace/Later.
+- newsbreak.com/about + /advertisers (2026-09-24 — the three simultaneous user-count claims)
+- Reuters: erroneous AI stories (2024-06-05); lawmaker scrutiny (2024-06-08)
+- NBC News: contributor fake-crime GoFundMe scams; Patch Media $1.75M settlement (2022); Emmerich Newspapers settlement (2021)
+- NBot announcement (2025-05-29); iOS/Play listings (4.7★/773k; 4.2★/330k); CCPA "Don't Sell My Info" link
+- 32.2M US visits Aug-2025 (prior-run digest, flagged "carried")
 
-*Full-length originals: `independent_research/2026-09-23-0001_link-in-bio/04-competitive-analysis.md` (801 lines, per-competitor deep dives) and `05-tech-stack-matrix.md` (323 lines, per-company stack tables with evidence notes). This edition preserves their verified content in program-integrated form; nothing load-bearing was dropped. The 2026-09-23 user-count + app-store refresh (US App Store / Google Play + GB/IN storefronts, live company pages, Semrush lookups) is folded into §6, matrix rows G1/G2/O1/P1, and footnotes 95–98; the two Play-store lookalike misattributions it caught (`com.getstan` ≠ Stan; "app.biolink" ≠ bio.link) are struck throughout and recorded in the header and sources.*
+### 7.12 Flipboard + Surf (§4.11)
 
----
+- flipboard.com; Surf app (BETA counters: 550,267,541 posts / 300,235 feeds, 2026-09-24)
+- Flipboard blog: Mastodon beta (2023-02-28); 2024 ActivityPub federation announcements; social websites (2026-04-03)
+- TechCrunch Surf/Starter Sets (2025-05-22); Digiday (2018-08-27 — the 145M MAU source, flagged stale)
+- Axios via Nieman Lab (24 staff / 21% layoffs, Oct-2022 dating ambiguity carried); Play/App Store reviews 2025–26 (ad quality)
+
+### 7.13 Particle (§4.12)
+
+- particle.news (+ robots.txt capture 2026-09; /methodology, /ai, /faq, /publishers — 404s; web ad-tech consent banner)
+- Launch/funding press (Nov 2024): $10.9M Series A — Lightspeed + Axel Springer, Reuters partnership; $4.4M seed 2023
+- US App Store (4.76★/1,236) vs Yahoo News 68,543 (the 55× comparison); Play (4.4★/82)
+- Wisp review (2026-08, disclosed conflict) — "managing a dashboard" critique
+
+### 7.14 Syft (§4.13)
+
+- syft.ai (canonical domain; getsyft.com is a GoDaddy for-sale page — verification-pass correction)
+- App Store / Play listings (IAP ladder: $0.99/wk · $9.99/mo · $79.99/yr · $19.99/mo · $159.99/yr)
+- Funding press (Jun 2025): $11M @ $100M — Toki product, not Syft; Orion Arm Pte Ltd registry context
+- Play reviews 2026 (3.0 backlash, churn-to-Inoreader); mwm.ai download estimate; AppBrain (stale figure, superseded)
+
+### 7.15 Emerging cohort (§4.14–4.22)
+
+- Current: terrygodier.com/current; App Store; TechCrunch (2026-02-19); Byline author-metadata spec
+- Kagi News: blog.kagi.com (2025-09-30 launch); help.kagi.com/kagi/news; github.com/kagisearch/kite-public (MIT, 1,075★); kite.kagi.com/kite.json (CC BY-NC 4.0); App privacy label (Data Not Collected)
+- Reeder: reederapp.com; TechCrunch (2024-09-23); App Store (new + Classic)
+- Inkl: App Store; TechCrunch (2014-12-12); LinkedIn (Mishra/North Base Media $250k seed)
+- Zetik: App Store (IAPs — store beats AppBrain per verification-pass); newsbang.ai
+- Newsreel: App Store; newsreel.co/press; Kickstarter ($54,839/217); Forbes (2026-05-15 — paywall respected, snippets only)
+- Readless: readless.app/about, /pricing
+- Wisp: iTunes lookup API; wisp.news/blog (2026-04-07 release)
+- Watchlist: boringreport.org + App Store (4.72★/465; Android beta lead-verified); Play (Drooid); Jarayid (2026-09-10 release); FreshRSS GitHub (16,126★, v1.30.0 2026-09-09); Miniflux ($15/yr hosted); Unread/Stringer/Liferea (ecosystem context)
+
+### 7.16 Indirect competitors (§3.2 defenses)
+
+- Google News/Discover/AI Mode, Apple News+, MSN/Copilot, Yahoo News + Scout: 2026 product-page gaps per angle-08 notes
+- 1440 Media + newsletter cohort: subscriber-count claims and 2026 positioning (§3.2)
+- AI chatbots as news interfaces: 2026 usage surveys (angle-07/08 notes)
+- Hamilton AI (publisher first-party AI): product page (2026)
 
 # ═══ FILE: 09-architecture-plan.md ═══
 

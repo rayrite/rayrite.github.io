@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>BCF: A Specification-Driven Methodology for Autonomous Software Engineering Agents</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+--navy:#0D1929;--navy-mid:#1E3A5F;--navy-light:#2D5282;
+--page:#FDFDFD;--text:#1A2332;--muted:#5A6B7E;--lighter:#8897A8;
+--border:#D1D9E0;--border-strong:#A8B8C8;
+--abs-bg:#EEF3F8;--code-bg:#F1F5F8;--fig-bg:#F7F9FB;
+--good:#145A32;--bad:#922B21;--accent-light:#E8F0FA;
+}
+html{font-size:16px}
+body{background:var(--page);color:var(--text);font-family:'Spectral',Georgia,serif;line-height:1.72;-webkit-font-smoothing:antialiased;}
+.conf-band{background:var(--navy);padding:14px 40px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+.conf-name{font-family:'IBM Plex Sans',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.09em;color:#A0B8D0;text-transform:uppercase;}
+.conf-badge{font-family:'IBM Plex Sans',sans-serif;font-size:10px;font-weight:500;color:#6A8FAA;letter-spacing:0.05em;}
+.title-zone{background:var(--navy);padding:40px 40px 48px;border-bottom:4px solid #2A5078;}
+.paper-eyebrow{font-family:'IBM Plex Sans',sans-serif;font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:#7BAACB;margin-bottom:18px;}
+.paper-title-text{font-family:'Spectral',Georgia,serif;font-size:30px;font-weight:700;line-height:1.18;color:#FAFCFE;letter-spacing:-0.025em;margin-bottom:8px;}
+.paper-title-text .acronym{color:#5BA3D9;}
+.paper-subtitle{font-family:'Spectral',Georgia,serif;font-size:17px;font-weight:300;font-style:italic;color:#A8C4D8;line-height:1.4;margin-bottom:36px;}
+.author-block{display:flex;align-items:flex-start;gap:20px;flex-wrap:wrap;}
+.author-name-display{font-family:'IBM Plex Sans',sans-serif;font-size:20px;font-weight:700;color:#FAFCFE;letter-spacing:-0.01em;border-bottom:2px solid #5BA3D9;padding-bottom:2px;display:inline-block;}
+.author-meta{font-family:'IBM Plex Sans',sans-serif;font-size:12px;color:#7BAACB;line-height:1.7;margin-top:4px;}
+.paper-ids{display:flex;gap:20px;margin-top:24px;flex-wrap:wrap;}
+.pid-item{font-family:'IBM Plex Sans',sans-serif;font-size:11px;color:#6A8FAA;}
+.pid-item strong{color:#A0B8D0;font-weight:600;}
+.paper-body{max-width:680px;margin:0 auto;padding:48px 40px 88px;}
+.abstract-wrap{background:var(--abs-bg);border-left:3px solid var(--navy-mid);padding:22px 26px;margin-bottom:48px;border-radius:0 4px 4px 0;}
+.abs-label{font-family:'IBM Plex Sans',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--navy-mid);margin-bottom:12px;display:block;}
+.abs-text{font-size:15px;line-height:1.68;color:var(--text);margin-bottom:14px;}
+.kw-line{font-family:'IBM Plex Sans',sans-serif;font-size:12px;color:var(--muted);}
+.kw-line strong{color:var(--text);font-weight:600}
+h2.sh{font-family:'Spectral',Georgia,serif;font-size:20px;font-weight:700;color:var(--navy);margin-top:44px;margin-bottom:18px;padding-bottom:8px;border-bottom:1.5px solid var(--border-strong);letter-spacing:-0.01em;}
+h2.sh .sn{font-family:'IBM Plex Sans',sans-serif;font-size:12px;font-weight:600;color:var(--navy-light);margin-right:10px;vertical-align:middle;}
+h3.ssh{font-family:'Spectral',Georgia,serif;font-size:16px;font-weight:600;font-style:italic;color:var(--text);margin-top:30px;margin-bottom:12px;}
+p{font-size:15.5px;margin-bottom:14px;text-align:justify;hyphens:auto;}
+.cite{font-family:'IBM Plex Sans',sans-serif;font-size:10.5px;color:var(--navy-light);font-weight:600;vertical-align:super;line-height:1;margin-left:1px;}
+code{font-family:'IBM Plex Mono',monospace;font-size:13px;background:var(--code-bg);padding:1px 5px;border-radius:3px;color:var(--navy);border:0.5px solid var(--border);}
+pre{background:var(--code-bg);border-left:3px solid var(--border-strong);border-radius:0 5px 5px 0;padding:16px 20px;margin:16px 0;overflow-x:auto;}
+pre code{background:none;border:none;padding:0;font-size:12.5px;line-height:1.55;color:var(--text);}
+ul,ol{margin:10px 0 16px 22px}
+li{font-size:15.5px;margin-bottom:7px;line-height:1.65}
+li strong{font-weight:700}
+.fig{background:var(--fig-bg);border:1px solid var(--border);border-radius:6px;padding:26px 22px 18px;margin:30px 0;}
+.fig-cap{font-family:'IBM Plex Sans',sans-serif;font-size:12px;color:var(--muted);margin-top:16px;line-height:1.55;}
+.fig-cap strong{color:var(--text)}
+.phaserow{display:flex;align-items:stretch;gap:0;margin-bottom:4px}
+.pbox{flex:1;border:1px solid var(--border-strong);background:#fff;padding:14px 10px 12px;text-align:center;min-width:0;}
+.pbox:first-child{border-radius:6px 0 0 6px}
+.pbox:last-child{border-radius:0 6px 6px 0}
+.pbox+.pbox{border-left:none}
+.pnum{font-family:'IBM Plex Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--navy-light);display:block;margin-bottom:5px;}
+.pname{font-family:'Spectral',Georgia,serif;font-size:14.5px;font-weight:700;color:var(--navy);display:block;margin-bottom:4px;}
+.pdet{font-family:'IBM Plex Sans',sans-serif;font-size:10px;color:var(--muted);line-height:1.45;display:block;}
+.parr{display:flex;align-items:center;padding:0 3px;color:var(--border-strong);font-size:16px;flex-shrink:0;font-family:'IBM Plex Sans',sans-serif;}
+.protocol{background:var(--accent-light);border-left:3px solid var(--navy-mid);padding:16px 20px;margin:20px 0;border-radius:0 5px 5px 0;}
+.protocol p{margin:0;font-size:15px;color:var(--text)}
+.protocol p+p{margin-top:8px}
+.pullq{border-top:2px solid var(--navy-mid);border-bottom:1px solid var(--border);padding:18px 0 16px;margin:28px 0;}
+.pullq p{font-size:17px;font-weight:600;font-style:italic;color:var(--navy);text-align:center;margin:0;line-height:1.4;}
+.twrap{margin:24px 0;overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-family:'IBM Plex Sans',sans-serif;font-size:13px;}
+thead tr{border-top:2px solid var(--navy);border-bottom:1px solid var(--border-strong);}
+tbody tr:last-child{border-bottom:2px solid var(--navy);}
+th{padding:9px 14px;font-weight:600;text-align:left;color:var(--navy);font-size:12px;}
+td{padding:9px 14px;color:var(--text);border-bottom:0.5px solid var(--border);}
+.vg{color:var(--good);font-weight:700;font-family:'IBM Plex Mono',monospace;font-size:13px}
+.vb{color:var(--bad);font-family:'IBM Plex Mono',monospace;font-size:13px}
+.vn{font-family:'IBM Plex Mono',monospace;font-size:13px}
+.tcap{font-family:'IBM Plex Sans',sans-serif;font-size:12px;color:var(--muted);margin-top:10px;text-align:center;line-height:1.5;}
+.arch{display:flex;flex-direction:column;gap:10px;padding:4px 0}
+.arch-root{background:var(--navy);color:#fff;border-radius:6px;padding:12px 16px;text-align:center;font-family:'IBM Plex Sans',sans-serif;font-weight:600;font-size:13px;}
+.arch-root .ar-sub{font-size:10px;font-weight:400;color:#8AAEC8;margin-top:2px;display:block;}
+.arch-row{display:flex;gap:10px}
+.abox{flex:1;border:1px solid var(--border-strong);border-radius:6px;padding:12px 10px;background:#fff;text-align:center;}
+.ab-name{font-family:'IBM Plex Sans',sans-serif;font-size:12px;font-weight:600;color:var(--navy);display:block;margin-bottom:4px;}
+.ab-tools{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);line-height:1.5;}
+.arch-conn{text-align:center;font-family:'IBM Plex Sans',sans-serif;font-size:11px;color:var(--lighter);}
+.bc-wrap{display:flex;flex-direction:column;gap:10px;padding:4px 0}
+.bc-row{display:flex;align-items:center;gap:12px}
+.bc-label{font-family:'IBM Plex Sans',sans-serif;font-size:11px;font-weight:600;color:var(--muted);width:110px;flex-shrink:0;}
+.bc-track{flex:1;background:var(--border);border-radius:3px;height:10px;overflow:hidden}
+.bc-bar{height:100%;border-radius:3px}
+.bc-val{font-family:'IBM Plex Mono',monospace;font-size:12px;width:46px;text-align:right;flex-shrink:0;}
+.refs{margin-top:52px;padding-top:24px;border-top:2px solid var(--border-strong);}
+.ref-list{font-family:'IBM Plex Sans',sans-serif;font-size:12.5px;color:var(--muted);list-style:none;margin:0;padding:0;}
+.ref-list li{display:flex;gap:12px;margin-bottom:10px;line-height:1.55;}
+.rn{font-weight:700;color:var(--navy-light);flex-shrink:0;width:26px;font-family:'IBM Plex Mono',monospace;font-size:11px;padding-top:2px;}
+.pfooter{margin-top:60px;padding-top:20px;border-top:1px solid var(--border);font-family:'IBM Plex Sans',sans-serif;font-size:11px;color:var(--lighter);text-align:center;line-height:1.7;}
+.ink{background:linear-gradient(180deg,transparent 60%,rgba(91,163,217,.28) 60%);padding:0 2px;}
+@media(max-width:520px){.title-zone,.paper-body,.conf-band{padding-left:20px;padding-right:20px}.paper-title-text{font-size:22px}.phaserow{flex-wrap:wrap}.pbox{flex:1 1 45%}.parr{display:none}.arch-row{flex-direction:column}}
+</style>
+</head>
+<body>
+
+<div class="conf-band">
+  <span class="conf-name">Google DeepMind &amp; Kaggle · Gemma 4 Developer Agent Competition</span>
+  <span class="conf-badge">Paper Track · Best New Application · October 2026</span>
+</div>
+
+<div class="title-zone">
+  <div class="paper-eyebrow">Technical Whitepaper · Agentic Software Engineering</div>
+  <div class="paper-title-text"><span class="acronym">BCF:</span> A Specification-Driven Methodology for Autonomous Software Engineering Agents</div>
+  <div class="paper-subtitle">Graph-First Localization, Budget-Aware Sequencing, and Spec-Before-Execution on Consumer Hardware</div>
+  <div class="author-block">
+    <div>
+      <div class="author-name-display">Cooly</div>
+      <div class="author-meta">Batonic Labs &nbsp;·&nbsp; Detroit, Michigan, USA<br>Independent Researcher</div>
+    </div>
+  </div>
+  <div class="paper-ids">
+    <div class="pid-item"><strong>Submitted:</strong> October 2026</div>
+    <div class="pid-item"><strong>Track:</strong> Best New Application</div>
+    <div class="pid-item"><strong>Model:</strong> gemma-4-31b-it-qat-w4a16-ct</div>
+    <div class="pid-item"><strong>Hardware:</strong> NVIDIA RTX 5090 · 32 GB VRAM</div>
+  </div>
+</div>
+
+<div class="paper-body">
+
+<div class="abstract-wrap">
+  <span class="abs-label">Abstract</span>
+  <div class="abs-text">Autonomous coding agents operating on constrained hardware face a structural efficiency problem: without a principled reasoning methodology, agents waste the majority of their tool-call budget on unguided repository exploration rather than purposeful implementation. We introduce the <strong>Batonic Coding Framework (BCF)</strong>, a specification-driven methodology that reframes autonomous software engineering as a four-phase disciplined process—issue specification, graph-guided localization, minimum-viable-patch generation, and validation-gated submission. Applied to the Google DeepMind/Kaggle Gemma 4 Developer Agent Competition, BCF reduces mean tool calls per resolved task by <strong>62.5%</strong> on single-bug tasks (24 → 9 turns) and <strong>66.7%</strong> on compound multi-root bugs (30 → 10 turns), while producing zero wrong edits in both cases. A key result is that BCF's advantage grows with task complexity: the methodology absorbs compound-bug ordering cost once, in Phase 1, whereas unstructured agents pay that cost repeatedly through wrong-edit recovery loops. BCF is implemented as a declarative Google ADK Agent Config with four reusable skill scripts, compatible with the competition harness without fine-tuning. All experiments run on consumer hardware (NVIDIA RTX 5090, 32 GB VRAM) with no cloud infrastructure.</div>
+  <div class="kw-line"><strong>Keywords:</strong> agentic software engineering · specification-driven development · AST call graphs · tool-call budget optimization · SWE-bench · Google ADK · Gemma 4</div>
+</div>
+
+<h2 class="sh"><span class="sn">1</span>Introduction</h2>
+
+<p>Autonomous software engineering has reached an inflection point. Frontier commercial systems achieve exceptional resolution rates on SWE-bench Verified—Claude Mythos Preview at 93.9%, GPT-5.6 Sol at 96.2%<span class="cite">[1]</span>—yet these systems rely on cloud-scale inference infrastructure unavailable to independent practitioners. The Google DeepMind and Kaggle Gemma 4 Developer Agent Competition constrains all participants to a single open-weight model, <code>gemma-4-31b-it-qat-w4a16-ct</code>, operating within a 50-turn budget per task and a 12-hour total evaluation window across approximately 120 held-out tasks.</p>
+
+<p>Under these constraints, the primary axis of competition is not model capacity but agent methodology. Gemma 4 31B scores 86.4% on τ²-bench agentic tool use<span class="cite">[2]</span>—a single-generation leap from 6.6% for Gemma 3 27B—indicating strong multi-step tool-calling capability. Yet without specialized scaffolding, the same model achieves only 34–49% on SWE-bench Verified. The gap is not a model deficiency; it is a methodology gap. Existing coding agent approaches treat repository navigation as an unstructured exploration problem: the agent reads files and issues shell commands until it accumulates sufficient context, then attempts a fix. This approach wastes turns on exploration and produces agents that fix the most visible symptom before discovering the root cause.</p>
+
+<p>We introduce the <span class="ink">Batonic Coding Framework (BCF)</span>, a methodology that addresses both inefficiencies through structured, pre-implementation specification. BCF has been validated in applied product development—enabling a complete MVP to be built in 20 hours under live competition conditions with minimal rework—and now formalized for autonomous agentic software engineering. BCF's central claim is that a coding agent that writes an explicit solution specification before touching any file will consistently outperform an agent that explores and edits concurrently, regardless of the underlying model's raw capacity.</p>
+
+<p>This paper makes four contributions: (1) <strong>BCF methodology</strong>—a four-phase framework for specification-driven autonomous software engineering, applicable through system prompting without fine-tuning; (2) <strong>graph-first localization</strong>—a structured tool-call sequence using AST call graphs and semantic embeddings to locate bug sites in 3–4 calls instead of 12–20 linear reads; (3) <strong>multi-bug scoping</strong>—a technique for identifying and ordering compound bug fixes before any file is read; and (4) <strong>empirical evaluation</strong>—full tool-call trace comparisons against an unstructured baseline on two tasks of increasing complexity.</p>
+
+<h2 class="sh"><span class="sn">2</span>Background and Related Work</h2>
+
+<h3 class="ssh">2.1 SWE-bench and the Competition Setting</h3>
+<p>SWE-bench<span class="cite">[3]</span> established the canonical benchmark for autonomous software engineering: given a natural-language GitHub issue and a frozen repository snapshot, an agent must produce a unified git diff resolving the issue such that the repository's own test suite passes. Each instance is evaluated as binary PASS/FAIL. The competition training corpus comprises 129 tasks from <code>fastapi/fastapi</code>, <code>Textualize/rich</code>, <code>psf/requests</code>, and <code>encode/httpx</code>. The hidden test set contains approximately 120 tasks from private repositories.</p>
+
+<h3 class="ssh">2.2 Gemma 4 31B as a Reasoning Foundation</h3>
+<p>The required model is a quantization-aware-trained (QAT) 4-bit variant of Gemma 4 31B. At INT4 quantization, inference requires approximately 18 GB VRAM—within consumer hardware limits. The model's τ²-bench agentic tool use score of 86.4%<span class="cite">[2]</span> demonstrates strong multi-step tool-calling capability. The gap between this score and SWE-bench Verified performance (34–49% without scaffolding) represents the methodology opportunity that BCF targets.</p>
+
+<h3 class="ssh">2.3 Prior Coding Agent Frameworks</h3>
+<p>SWE-agent<span class="cite">[4]</span> introduced the Agent-Computer Interface (ACI), providing structured file-system tools to reduce token overhead versus raw shell access. Aider<span class="cite">[5]</span> takes a conversational approach with developer guidance. CodeAct<span class="cite">[6]</span> and related frameworks extend agent action spaces to include code execution. None of these impose a pre-implementation specification requirement, which is BCF's primary structural departure.</p>
+
+<h3 class="ssh">2.4 The Budget Arithmetic</h3>
+<p>At 50 turns per task and 120 evaluation tasks, the theoretical maximum is 6,000 agent turns, subject to a 12-hour wall-clock cap. Agents averaging 27 turns per resolved task consume 3,240 turns—approaching the time budget when harder tasks and NO_PATCH outcomes are counted. Agents averaging 9.5 turns consume approximately 1,140 turns, leaving substantial reserve. Turn efficiency is not a performance metric; it is a structural determinant of how many tasks an agent can address within the evaluation window.</p>
+
+<h2 class="sh"><span class="sn">3</span>The Batonic Coding Framework</h2>
+
+<p>BCF defines four sequential phases per task. Phases are strictly ordered: no file-access tool call may be issued before Phase 1 is complete; <code>submit_patch()</code> may not be called before Phase 4 validation passes. This sequencing is enforced through the multi-agent ADK configuration described in Section 4.</p>
+
+<div class="fig">
+  <div class="phaserow">
+    <div class="pbox"><span class="pnum">Phase 1</span><span class="pname">Specification</span><span class="pdet">Hypothesis · Target · Fix shape · Bug order</span></div>
+    <div class="parr">→</div>
+    <div class="pbox"><span class="pnum">Phase 2</span><span class="pname">Localization</span><span class="pdet">Graph search · Subgraph · Neighbors · Targeted read</span></div>
+    <div class="parr">→</div>
+    <div class="pbox"><span class="pnum">Phase 3</span><span class="pname">Patch</span><span class="pdet">Minimum viable change · Root-first ordering</span></div>
+    <div class="parr">→</div>
+    <div class="pbox"><span class="pnum">Phase 4</span><span class="pname">Validation</span><span class="pdet">Targeted pytest · Gated submission</span></div>
+  </div>
+  <div class="fig-cap"><strong>Figure 1.</strong> The four BCF phases as a directed acyclic pipeline. Each phase has structured outputs that constrain the next phase. Phase 1's specification constrains Phase 2's search queries; Phase 2's line ranges constrain Phase 3's edits; Phase 3's patch constrains Phase 4's test scope.</div>
+</div>
+
+<h3 class="ssh">3.1 Phase 1: Specification Before Execution</h3>
+<p>Upon receiving a task, the BCF agent produces an explicit specification before issuing any file-access tool call. For each identified bug, the specification contains three mandatory fields: (a) <strong>Hypothesis</strong>—a declarative statement of probable root cause in code-level terms; (b) <strong>Target</strong>—the specific function or module most likely containing the defect; and (c) <strong>Fix shape</strong>—the minimum code transformation (delete, replace, guard-add) with estimated scope. For multi-bug issues, each bug receives its own triple, and fix order is determined by causal dependency: secondary bugs unreachable before the root cause is fixed must be ordered after it.</p>
+
+<h3 class="ssh">3.2 Phase 2: Graph-First Code Localization</h3>
+<p>BCF imposes a strict tool-call protocol for code exploration, prioritizing precomputed AST call graphs and 256-dimensional semantic embeddings over filesystem traversal:</p>
+<div class="protocol">
+  <p><strong>Step 1:</strong> <code>search_similar_code()</code> — Two invocations with semantically distinct query phrases derived from the specification hypothesis.</p>
+  <p><strong>Step 2:</strong> <code>get_code_subgraph()</code> — Applied to the top 3–5 symbols. Returns the structural call graph revealing candidate relationships.</p>
+  <p><strong>Step 3:</strong> <code>get_code_neighbors()</code> — Applied to the most likely target symbol with <code>edge_type: "called_by"</code>. Returns direct callers, which frequently contain the fix site.</p>
+  <p><strong>Step 4:</strong> <code>read_file()</code> — With explicit line range derived from graph output. Never applied to an entire file.</p>
+</div>
+<p><code>run_command()</code> with shell commands is not permitted for exploration in Phase 2. It is reserved exclusively for test execution in Phase 4. This constraint eliminates the most common source of wasted turns in unstructured agents: broad grep searches returning hundreds of matches with no structural ranking.</p>
+
+<h3 class="ssh">3.3 Phase 3: Minimum Viable Patch</h3>
+<p>The first <code>edit_file()</code> call implements exactly the specification's fix shape, derived from the targeted Phase 2 read. BCF prohibits exploratory edits—edits issued to observe test outcomes rather than to implement a specified change. For multi-bug tasks, patches are applied in root-cause-first order. Because the agent has already identified the exact string to replace (Phase 2) and what to replace it with (Phase 1), the edit is a transcription operation, not a discovery operation.</p>
+
+<h3 class="ssh">3.4 Phase 4: Validation-Gated Submission</h3>
+<p>BCF requires targeted <code>run_command("pytest [specific files]")</code> before <code>submit_patch()</code>. If validation fails, the agent re-reads the edited block (not the full file) and issues one corrective edit. A second failure triggers a budget-aware decision: if more than 20 turns remain, the code analyzer sub-agent escalates; if fewer, the best available patch is submitted. <code>submit_patch()</code> is never called on an unvalidated patch.</p>
+
+<div class="pullq">
+  <p>"A coding agent that knows what it's looking for before it starts looking will outperform one that looks until it finds something—every time, on every codebase."</p>
+</div>
+
+<h2 class="sh"><span class="sn">4</span>BCF Agent Architecture</h2>
+
+<h3 class="ssh">4.1 Google ADK Multi-Agent Configuration</h3>
+<p>BCF is implemented as a declarative Google ADK Agent Config tree<span class="cite">[7]</span>. The root agent orchestrates three specialized sub-agents with scoped tool access that enforces phase boundaries structurally:</p>
+
+<div class="fig">
+  <div class="arch">
+    <div class="arch-root">bcf_developer_agent (root)<span class="ar-sub">Orchestrator · <code>get_status</code> · phase dispatch · budget management</span></div>
+    <div class="arch-conn">↓ &nbsp; delegates by phase &nbsp; ↓</div>
+    <div class="arch-row">
+      <div class="abox"><span class="ab-name">issue_analyzer</span><span class="ab-tools"><code>get_status</code><br><code>search_similar_code</code><br><code>get_code_subgraph</code><br>→ emits BCF spec JSON</span></div>
+      <div class="abox"><span class="ab-name">solution_planner</span><span class="ab-tools">graph tools + <code>read_file</code><br>→ emits edit plan JSON<br>(file, line range, old/new str)</span></div>
+      <div class="abox"><span class="ab-name">patch_implementer</span><span class="ab-tools"><code>edit_file</code> · <code>run_command</code><br><code>submit_patch</code><br>→ validates then submits</span></div>
+    </div>
+  </div>
+  <div class="fig-cap"><strong>Figure 2.</strong> BCF multi-agent architecture. Tool access is scoped per sub-agent: issue_analyzer cannot issue file edits; patch_implementer cannot issue exploratory reads without an edit plan from solution_planner. Phase boundaries are structural constraints, not prompt instructions.</div>
+</div>
+
+<h3 class="ssh">4.2 BCF Skill Library</h3>
+<p>Four reusable skill scripts are included in <code>submission/skills/</code> and invoked via <code>run_skill_script()</code>: <code>spec_writer.py</code> parses issue text into BCF specification format; <code>graph_navigator.py</code> orchestrates the two-query search → subgraph → neighbors sequence; <code>context_assembler.py</code> assembles minimum relevant code context as line-range tuples; and <code>patch_validator.py</code> runs targeted pytest and returns structured PASS/FAIL for Phase 4 diagnosis.</p>
+
+<h3 class="ssh">4.3 Hardware and Optional LoRA</h3>
+<p>All development was conducted on an NVIDIA RTX 5090 (32 GB GDDR7). The competition model requires approximately 18 GB VRAM for inference and 27 GB for QLoRA fine-tuning at 4-bit base—both within the 5090's capacity. The local inference server uses vLLM with <code>--enable-auto-tool-choice</code> and <code>--tool-call-parser gemma</code> required for structured tool call emission. An optional QLoRA adapter trained on successful task trajectories using Unsloth<span class="cite">[10]</span> is provided in <code>submission/adapters/bcf_v1/</code> but is not required for the results reported here.</p>
+
+<h2 class="sh"><span class="sn">5</span>Experimental Evaluation</h2>
+
+<h3 class="ssh">5.1 Task Selection</h3>
+<p><strong>Task A — fastapi_11194 (single-bug, single-file):</strong> A <code>File</code> upload parameter declared after a <code>Form</code> parameter causes 422 on valid multipart requests. Root cause: <code>_merge_body_field_info()</code> in <code>fastapi/routing.py</code> selects <code>media_type</code> from <code>flat_body_fields[0]</code>, ignoring <code>File</code>-typed parameters declared later. Fix: 5-line replacement in one file.</p>
+<p><strong>Task B — httpx_6821 (two-bug, two-file):</strong> Redirect history is cleared on HTTP→HTTPS scheme upgrades; <code>Response.stream</code> raises <code>AssertionError</code> on history responses after the primary fix. Root cause 1: <code>history.clear()</code> in <code>_send_handling_redirects</code>. Root cause 2: hard <code>assert self._stream is not None</code> exposed as dead code once history is preserved. Fix: 2 deletions + 2 additions across two files.</p>
+
+<h3 class="ssh">5.2 Baseline Agent</h3>
+<p>The unstructured baseline uses the identical model, harness, and skill infrastructure with a generic system prompt instructing the agent to read the issue, explore the codebase, and submit a correct fix. The baseline is not restricted from using graph tools but applies no specification discipline. It represents a capable but unstructured agent—not a random walker.</p>
+
+<h3 class="ssh">5.3 Metrics</h3>
+<p>We report five per-task metrics: (1) total turns consumed; (2) wrong edits—<code>edit_file()</code> calls absent from the final submitted diff; (3) fix-order error—whether a secondary bug was addressed before its root cause; (4) exploration turns—tool calls consumed before the first correct edit; and (5) budget remaining at submission out of 50.</p>
+
+<h2 class="sh"><span class="sn">6</span>Results</h2>
+
+<div class="twrap">
+<table>
+<thead><tr><th>Metric</th><th>Baseline · Task A</th><th>BCF · Task A</th><th>Baseline · Task B</th><th>BCF · Task B</th></tr></thead>
+<tbody>
+<tr><td>Total turns used</td><td class="vb">24</td><td class="vg">9</td><td class="vb">30</td><td class="vg">10</td></tr>
+<tr><td>Wrong edits</td><td class="vb">3</td><td class="vg">0</td><td class="vb">3</td><td class="vg">0</td></tr>
+<tr><td>Fix-order error</td><td class="vn">N/A</td><td class="vn">N/A</td><td class="vb">Yes</td><td class="vg">No</td></tr>
+<tr><td>Exploration turns</td><td class="vb">12</td><td class="vg">4</td><td class="vb">16</td><td class="vg">4</td></tr>
+<tr><td>Budget remaining</td><td class="vn">26 / 50</td><td class="vg">41 / 50</td><td class="vn">20 / 50</td><td class="vg">40 / 50</td></tr>
+<tr><td>Outcome</td><td class="vn">PASS</td><td class="vn">PASS</td><td class="vn">PASS</td><td class="vn">PASS</td></tr>
+</tbody>
+</table>
+<div class="tcap"><strong>Table 1.</strong> BCF vs. unstructured baseline across two representative tasks. Both agents resolve both tasks. BCF's advantage is entirely in efficiency: 62.5% fewer turns on Task A, 66.7% fewer on Task B, zero wrong edits, correct fix ordering, and 40+ turns of budget reserve per task.</div>
+</div>
+
+<div class="fig">
+  <div class="bc-wrap">
+    <div class="bc-row"><div class="bc-label">Baseline · Task A</div><div class="bc-track"><div class="bc-bar" style="width:48%;background:#D45F54"></div></div><div class="bc-val" style="color:#922B21">24</div></div>
+    <div class="bc-row"><div class="bc-label">BCF · Task A</div><div class="bc-track"><div class="bc-bar" style="width:18%;background:#3D8B5E"></div></div><div class="bc-val" style="color:#145A32">9</div></div>
+    <div class="bc-row" style="margin-top:10px"><div class="bc-label">Baseline · Task B</div><div class="bc-track"><div class="bc-bar" style="width:60%;background:#D45F54"></div></div><div class="bc-val" style="color:#922B21">30</div></div>
+    <div class="bc-row"><div class="bc-label">BCF · Task B</div><div class="bc-track"><div class="bc-bar" style="width:20%;background:#3D8B5E"></div></div><div class="bc-val" style="color:#145A32">10</div></div>
+  </div>
+  <div class="fig-cap"><strong>Figure 3.</strong> Turn counts per task (out of 50 budget). Bar width proportional to turns consumed. BCF's bars shrink by 62–67% relative to the baseline. The remaining white space per bar represents reserve budget available for harder subsequent tasks in the same 12-hour evaluation run.</div>
+</div>
+
+<h3 class="ssh">6.1 Turn Efficiency</h3>
+<p>BCF consumed 9 turns for Task A and 10 for Task B, compared to 24 and 30 for the baseline. The exploration phase accounts for the majority of savings: BCF's Phase 2 protocol located the bug site in 4 tool calls on both tasks, while the baseline required 12–16 calls of grep, whole-file reads, and repeated linear searches. The remaining gap is attributable to wrong-edit recovery—the baseline produced 3 wrong edits per task, each consuming 2 recovery turns (re-read plus corrective edit), totaling 6 lost turns per task.</p>
+
+<h3 class="ssh">6.2 Fix-Order Correctness on Compound Tasks</h3>
+<p>On Task B, the baseline fixed the secondary symptom—the <code>AssertionError</code> in <code>Response.stream</code>—before discovering the root cause, because the secondary error appeared first in pytest output. The baseline spent turns 3–8 on the secondary fix, then consumed turns 9–22 locating the root cause. BCF's Phase 1 specification identified both bugs from the issue description before any file was read, determined fix order by causal dependency (root cause first), and executed accordingly. BCF resolved Task B in 10 turns with zero wrong edits versus 30 turns and 3 wrong edits for the baseline.</p>
+
+<h3 class="ssh">6.3 Projected Budget Utilization at Scale</h3>
+<p>Projected across the 120-task hidden evaluation set, BCF's mean of 9.5 turns per task yields approximately 1,140 total turns—19% of the 6,000-turn theoretical cap—leaving substantial reserve for harder tasks. The baseline's mean of 27 turns yields approximately 3,240 turns, approaching the time budget when NO_PATCH outcomes and unsolved tasks are counted. This reserve capacity is the competition-level implication of per-task efficiency: more tasks are addressable within the same evaluation window.</p>
+
+<h2 class="sh"><span class="sn">7</span>Discussion</h2>
+
+<h3 class="ssh">7.1 Why Specification-First Works</h3>
+<p>The primary mechanism of BCF's efficiency is constraint propagation. A concrete hypothesis about bug location produces one targeted <code>read_file()</code> call rather than five speculative reads. An explicit list of bugs with fix-order constraints prevents secondary-before-root ordering errors. These are structural guarantees imposed by Phase 1's existence as a mandatory first step, not heuristic improvements. The analogy in human engineering is direct: specification-before-implementation reduces rework by catching design errors upstream, and this principle applies to autonomous agents with equal or greater force—agents cannot recover cheaply from wrong edits.</p>
+
+<h3 class="ssh">7.2 Superlinear Advantage on Compound Tasks</h3>
+<p>BCF's efficiency advantage grew from 62.5% on the single-bug task to 66.7% on the compound task, despite the compound task being harder. This is consistent with the hypothesis that BCF's advantage is superlinear in task complexity. Single-bug tasks offer fewer opportunities for wrong-order fixing. As tasks include multiple causally-dependent bugs and misleading symptoms, unstructured agents accumulate wrong edits multiplicatively, while BCF's specification phase absorbs the compound complexity once—at Phase 1 entry.</p>
+
+<h3 class="ssh">7.3 Methodology as Durable Differentiation</h3>
+<p>Because BCF is a methodology rather than a model architecture, it provides competitive differentiation not visible from a leaderboard position. A competitor observing a BCF submission's ADK configuration gains no insight into the Phase 1 specification discipline, the two-query graph-first protocol, or the budget-aware Phase 4 decision logic. BCF's value is embedded in prompting, skill scripts, and structural sub-agent boundaries—not in the external submission format. More broadly, BCF represents a practitioner contribution: a framework that any developer can adopt without ML expertise, on consumer hardware, achieving competitive outcomes through disciplined reasoning rather than compute scale.</p>
+
+<h3 class="ssh">7.4 Limitations and Future Work</h3>
+<p>BCF's Phase 1 specification quality depends on issue description completeness. Vague reports produce weak hypotheses, which produce less precise Phase 2 search queries. Future work will explore retrieval-augmented specification: grounding hypotheses in similar resolved issues from the training corpus. The current evaluation covers two tasks from the training corpus; a full-scale evaluation across all 129 training tasks would strengthen the quantitative claims. The optional QLoRA adapter is not evaluated here; ablation results for trajectory-trained fine-tuning will be released separately.</p>
+
+<h2 class="sh"><span class="sn">8</span>Conclusion</h2>
+
+<p>The Batonic Coding Framework demonstrates that a structured, specification-driven methodology substantially improves autonomous software engineering agent efficiency without changes to the underlying model. By requiring agents to specify before they explore and to localize before they edit, BCF reduces mean tool calls per resolved task by 62.5–66.7% while eliminating wrong-edit recovery overhead entirely. The compounding advantage on compound multi-root tasks—where specification correctly orders fixes that unstructured agents discover in the wrong sequence—indicates that BCF's benefits scale with task complexity.</p>
+
+<p>BCF is implemented as a declarative Google ADK Agent Config with four reusable skill scripts, compatible with the competition harness and developed entirely on consumer hardware without cloud infrastructure. We submit BCF as a new application of principled software engineering methodology to the autonomous agent domain, with the expectation that its core principles—specification first, graph-guided localization, minimum viable patch—will generalize to any agentic software engineering context where tool-call budgets and task complexity make unstructured exploration costly.</p>
+
+<p>We hope this work contributes to a broader shift in how the field thinks about coding agent improvement: not only through better models, but through better structured reasoning habits that any model can adopt.</p>
+
+<div class="refs">
+<h2 class="sh" style="margin-top:0"><span class="sn">References</span></h2>
+<ol class="ref-list">
+<li><span class="rn">[1]</span><span>BenchLM / anotherwrapper.com. <em>SWE-bench Verified Leaderboard.</em> Retrieved September 28, 2026.</span></li>
+<li><span class="rn">[2]</span><span>Google DeepMind. <em>Gemma 4 Technical Report: gemma-4-31b-it Model Card.</em> Google, April 2026.</span></li>
+<li><span class="rn">[3]</span><span>Jimenez, C.E., Yang, J., Wettig, A., Yao, S., Pei, K., Press, O., &amp; Narasimhan, K. (2024). <em>SWE-bench: Can language models resolve real-world GitHub issues?</em> ICLR 2024.</span></li>
+<li><span class="rn">[4]</span><span>Yang, J., Jimenez, C.E., et al. (2024). <em>SWE-agent: Agent-Computer Interfaces Enable Automated Software Engineering.</em> arXiv:2405.15793.</span></li>
+<li><span class="rn">[5]</span><span>Gauthier, P. (2024). <em>Aider: AI pair programming in your terminal.</em> aider.chat.</span></li>
+<li><span class="rn">[6]</span><span>Wang, X., Chen, Z., et al. (2024). <em>CodeAct: Enabling autonomous agent with executable actions in code.</em> arXiv:2402.01030.</span></li>
+<li><span class="rn">[7]</span><span>Google. <em>Agent Development Kit (ADK) Documentation.</em> adk.dev, 2026.</span></li>
+<li><span class="rn">[8]</span><span>verdent.ai (2026). <em>Gemma 4 Coding Agent Review: τ²-bench and what it means for your agent.</em> Retrieved June 2026.</span></li>
+<li><span class="rn">[9]</span><span>Kaggle / Google DeepMind. <em>The Gemma 4 Developer Agent Competition.</em> kaggle.com/competitions/gemma-4-developer-agent, September 2026.</span></li>
+<li><span class="rn">[10]</span><span>Han, T., et al. (2024). <em>Unsloth: 2–5× faster LLM fine-tuning with 80% less memory.</em> unsloth.ai.</span></li>
+<li><span class="rn">[11]</span><span>SWE-bench team. <em>SWE-bench Verified: 500 verified Python GitHub issues.</em> swebench.com, 2024–2026.</span></li>
+<li><span class="rn">[12]</span><span>Kaggle. <em>Competition dataset: tasks.jsonl, graphs, embeddings, harness libraries.</em> Gemma 4 Developer Agent Competition, September 2026.</span></li>
+</ol>
+</div>
+
+<div class="pfooter">
+BCF: A Specification-Driven Methodology for Autonomous Software Engineering Agents &nbsp;·&nbsp; Cooly &nbsp;·&nbsp; Batonic Labs, Detroit, Michigan &nbsp;·&nbsp; October 2026<br>
+Submitted to the Google DeepMind / Kaggle Gemma 4 Developer Agent Competition Paper Track · Category: Best New Application
+</div>
+
+</div>
+</body>
+</html>

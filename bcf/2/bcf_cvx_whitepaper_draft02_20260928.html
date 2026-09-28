@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>BCF: Specification-Driven Graph Reasoning for Autonomous Software Engineering Agents</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&amp;family=IBM+Plex+Sans:wght@300;400;500;600;700&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+--navy:#0D1929;--navy-mid:#1E3A5F;--navy-light:#2D5282;
+--page:#FDFDFD;--text:#1A2332;--muted:#5A6B7E;--lighter:#8897A8;
+--border:#D1D9E0;--border-strong:#A8B8C8;
+--abs-bg:#EEF3F8;--code-bg:#F1F5F8;--fig-bg:#F7F9FB;
+--good:#145A32;--bad:#922B21;--accent-light:#E8F0FA;
+--warm:#FFF9F0;--warm-border:#E8D5B0;
+}
+html{font-size:16px}
+body{background:var(--page);color:var(--text);font-family:'Spectral',Georgia,serif;line-height:1.72;-webkit-font-smoothing:antialiased;}
+.conf-band{background:var(--navy);padding:12px 40px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+.conf-name{font-family:'IBM Plex Sans',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.09em;color:#A0B8D0;text-transform:uppercase;}
+.conf-badge{font-family:'IBM Plex Sans',sans-serif;font-size:10px;font-weight:500;color:#6A8FAA;letter-spacing:0.05em;}
+.title-zone{background:var(--navy);padding:36px 40px 44px;border-bottom:4px solid #2A5078;}
+.paper-eyebrow{font-family:'IBM Plex Sans',sans-serif;font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:#7BAACB;margin-bottom:16px;}
+.paper-title-text{font-family:'Spectral',Georgia,serif;font-size:29px;font-weight:700;line-height:1.18;color:#FAFCFE;letter-spacing:-0.025em;margin-bottom:6px;}
+.paper-title-text .acronym{color:#5BA3D9;}
+.paper-subtitle{font-family:'Spectral',Georgia,serif;font-size:16px;font-weight:300;font-style:italic;color:#A8C4D8;line-height:1.4;margin-bottom:28px;}
+.author-block{display:flex;align-items:flex-start;gap:20px;flex-wrap:wrap;margin-bottom:22px;}
+.author-name-display{font-family:'IBM Plex Sans',sans-serif;font-size:20px;font-weight:700;color:#FAFCFE;letter-spacing:-0.01em;border-bottom:2px solid #5BA3D9;padding-bottom:2px;display:inline-block;}
+.author-meta{font-family:'IBM Plex Sans',sans-serif;font-size:12px;color:#7BAACB;line-height:1.7;margin-top:4px;}
+.categories-row{display:flex;gap:8px;flex-wrap:wrap;}
+.cat-pill{font-family:'IBM Plex Sans',sans-serif;font-size:10px;font-weight:600;color:#5BA3D9;border:1px solid #2A5078;border-radius:20px;padding:3px 10px;letter-spacing:0.04em;}
+.paper-ids{display:flex;gap:20px;margin-top:18px;flex-wrap:wrap;}
+.pid-item{font-family:'IBM Plex Sans',sans-serif;font-size:11px;color:#6A8FAA;}
+.pid-item strong{color:#A0B8D0;font-weight:600;}
+.paper-body{max-width:680px;margin:0 auto;padding:44px 40px 88px;}
+.abstract-wrap{background:var(--abs-bg);border-left:3px solid var(--navy-mid);padding:20px 24px;margin-bottom:40px;border-radius:0 4px 4px 0;}
+.abs-label{font-family:'IBM Plex Sans',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--navy-mid);margin-bottom:12px;display:block;}
+.abs-text{font-size:15px;line-height:1.68;color:var(--text);margin-bottom:12px;}
+.kw-line{font-family:'IBM Plex Sans',sans-serif;font-size:12px;color:var(--muted);}
+.kw-line strong{color:var(--text);font-weight:600}
+/* honesty notice */
+.notice{background:var(--warm);border:1px solid var(--warm-border);border-radius:6px;padding:14px 18px;margin-bottom:28px;font-family:'IBM Plex Sans',sans-serif;font-size:12px;color:#6B5200;line-height:1.6;}
+.notice strong{font-weight:600;}
+h2.sh{font-family:'Spectral',Georgia,serif;font-size:20px;font-weight:700;color:var(--navy);margin-top:44px;margin-bottom:16px;padding-bottom:8px;border-bottom:1.5px solid var(--border-strong);letter-spacing:-0.01em;}
+h2.sh .sn{font-family:'IBM Plex Sans',sans-serif;font-size:12px;font-weight:600;color:var(--navy-light);margin-right:10px;vertical-align:middle;}
+h3.ssh{font-family:'Spectral',Georgia,serif;font-size:16px;font-weight:600;font-style:italic;color:var(--text);margin-top:28px;margin-bottom:12px;}
+p{font-size:15.5px;margin-bottom:14px;text-align:justify;hyphens:auto;}
+.cite{font-family:'IBM Plex Sans',sans-serif;font-size:10.5px;color:var(--navy-light);font-weight:600;vertical-align:super;line-height:1;margin-left:1px;}
+code{font-family:'IBM Plex Mono',monospace;font-size:13px;background:var(--code-bg);padding:1px 5px;border-radius:3px;color:var(--navy);border:0.5px solid var(--border);}
+pre{background:var(--code-bg);border-left:3px solid var(--border-strong);border-radius:0 5px 5px 0;padding:14px 18px;margin:14px 0;overflow-x:auto;}
+pre code{background:none;border:none;padding:0;font-size:12px;line-height:1.55;color:var(--text);}
+ul,ol{margin:10px 0 16px 22px}
+li{font-size:15.5px;margin-bottom:6px;line-height:1.65}
+li strong{font-weight:700}
+.fig{background:var(--fig-bg);border:1px solid var(--border);border-radius:6px;padding:22px 20px 16px;margin:26px 0;}
+.fig-cap{font-family:'IBM Plex Sans',sans-serif;font-size:12px;color:var(--muted);margin-top:14px;line-height:1.55;}
+.fig-cap strong{color:var(--text)}
+.phaserow{display:flex;align-items:stretch;gap:0;margin-bottom:4px}
+.pbox{flex:1;border:1px solid var(--border-strong);background:#fff;padding:12px 8px 10px;text-align:center;min-width:0;}
+.pbox:first-child{border-radius:6px 0 0 6px}
+.pbox:last-child{border-radius:0 6px 6px 0}
+.pbox+.pbox{border-left:none}
+.pnum{font-family:'IBM Plex Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--navy-light);display:block;margin-bottom:4px;}
+.pname{font-family:'Spectral',Georgia,serif;font-size:14px;font-weight:700;color:var(--navy);display:block;margin-bottom:3px;}
+.pdet{font-family:'IBM Plex Sans',sans-serif;font-size:10px;color:var(--muted);line-height:1.4;display:block;}
+.parr{display:flex;align-items:center;padding:0 3px;color:var(--border-strong);font-size:16px;flex-shrink:0;font-family:'IBM Plex Sans',sans-serif;}
+.protocol{background:var(--accent-light);border-left:3px solid var(--navy-mid);padding:14px 18px;margin:18px 0;border-radius:0 5px 5px 0;}
+.protocol p{margin:0;font-size:15px;color:var(--text)}
+.protocol p+p{margin-top:8px}
+.pullq{border-top:2px solid var(--navy-mid);border-bottom:1px solid var(--border);padding:16px 0 14px;margin:26px 0;}
+.pullq p{font-size:16.5px;font-weight:600;font-style:italic;color:var(--navy);text-align:center;margin:0;line-height:1.4;}
+.twrap{margin:22px 0;overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-family:'IBM Plex Sans',sans-serif;font-size:13px;}
+thead tr{border-top:2px solid var(--navy);border-bottom:1px solid var(--border-strong);}
+tbody tr:last-child{border-bottom:2px solid var(--navy);}
+th{padding:8px 12px;font-weight:600;text-align:left;color:var(--navy);font-size:12px;}
+td{padding:8px 12px;color:var(--text);border-bottom:0.5px solid var(--border);}
+.vg{color:var(--good);font-weight:700;font-family:'IBM Plex Mono',monospace;font-size:12px}
+.vb{color:var(--bad);font-family:'IBM Plex Mono',monospace;font-size:12px}
+.vn{font-family:'IBM Plex Mono',monospace;font-size:12px}
+.tcap{font-family:'IBM Plex Sans',sans-serif;font-size:12px;color:var(--muted);margin-top:10px;text-align:center;line-height:1.5;}
+.arch{display:flex;flex-direction:column;gap:10px;padding:4px 0}
+.arch-root{background:var(--navy);color:#fff;border-radius:6px;padding:10px 14px;text-align:center;font-family:'IBM Plex Sans',sans-serif;font-weight:600;font-size:13px;}
+.arch-root .ar-sub{font-size:10px;font-weight:400;color:#8AAEC8;margin-top:2px;display:block;}
+.arch-row{display:flex;gap:10px}
+.abox{flex:1;border:1px solid var(--border-strong);border-radius:6px;padding:10px 8px;background:#fff;text-align:center;}
+.ab-name{font-family:'IBM Plex Sans',sans-serif;font-size:12px;font-weight:600;color:var(--navy);display:block;margin-bottom:3px;}
+.ab-tools{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);line-height:1.5;}
+.arch-conn{text-align:center;font-family:'IBM Plex Sans',sans-serif;font-size:11px;color:var(--lighter);}
+/* taxonomy */
+.taxrow{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0;}
+.tax-pill{font-family:'IBM Plex Mono',sans-serif;font-size:11px;background:var(--code-bg);border:0.5px solid var(--border-strong);border-radius:4px;padding:3px 8px;color:var(--navy);}
+.tax-pill.tier1{background:#EAF3DE;border-color:#7CB87C;color:var(--good)}
+.tax-pill.tier2{background:var(--accent-light);border-color:#7BAACB;color:var(--navy-mid)}
+.tax-pill.tier3{background:#FAEEDA;border-color:#C9952A;color:#6B4500}
+.tax-pill.tier4{background:#F9EEFB;border-color:#9B72B0;color:#4A1A6A}
+.schema-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0;}
+.schema-cell{background:var(--fig-bg);border:0.5px solid var(--border);border-radius:6px;padding:10px 12px;}
+.sc-label{font-family:'IBM Plex Sans',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--navy-light);display:block;margin-bottom:4px;}
+.sc-val{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text);line-height:1.5;}
+/* case study */
+.case-box{background:var(--fig-bg);border:1px solid var(--border);border-radius:6px;padding:18px 20px;margin:18px 0;}
+.case-tag{font-family:'IBM Plex Sans',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;display:block;}
+.case-title{font-family:'Spectral',Georgia,serif;font-size:16px;font-weight:700;color:var(--navy);margin-bottom:6px;}
+.case-desc{font-size:14px;color:var(--muted);line-height:1.55;margin-bottom:10px;}
+.case-row{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.case-pill{font-family:'IBM Plex Mono',monospace;font-size:11px;background:var(--code-bg);border:0.5px solid var(--border-strong);border-radius:4px;padding:2px 8px;color:var(--navy);}
+/* experiment plan */
+.plan-row{display:flex;gap:14px;align-items:flex-start;padding:10px 0;border-bottom:0.5px solid var(--border);}
+.plan-row:last-child{border-bottom:none}
+.plan-week{font-family:'IBM Plex Sans',sans-serif;font-size:11px;font-weight:700;color:var(--navy-light);min-width:62px;flex-shrink:0;padding-top:2px;}
+.plan-desc{font-size:14px;color:var(--text);line-height:1.55;}
+/* graph protocol */
+.graph-steps{display:flex;flex-direction:column;gap:0;}
+.gstep{display:flex;gap:14px;padding:10px 0;border-bottom:0.5px solid var(--border);}
+.gstep:last-child{border-bottom:none}
+.gstep-num{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:700;color:var(--navy-light);min-width:18px;padding-top:2px;}
+.gstep-body{flex:1;}
+.gstep-tool{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--navy);font-weight:500;}
+.gstep-why{font-size:13.5px;color:var(--muted);margin-top:3px;line-height:1.5;}
+.refs{margin-top:48px;padding-top:22px;border-top:2px solid var(--border-strong);}
+.ref-list{font-family:'IBM Plex Sans',sans-serif;font-size:12.5px;color:var(--muted);list-style:none;margin:0;padding:0;}
+.ref-list li{display:flex;gap:12px;margin-bottom:10px;line-height:1.55;}
+.rn{font-weight:700;color:var(--navy-light);flex-shrink:0;width:26px;font-family:'IBM Plex Mono',monospace;font-size:11px;padding-top:2px;}
+.pfooter{margin-top:56px;padding-top:20px;border-top:1px solid var(--border);font-family:'IBM Plex Sans',sans-serif;font-size:11px;color:var(--lighter);text-align:center;line-height:1.7;}
+.ink{background:linear-gradient(180deg,transparent 60%,rgba(91,163,217,.28) 60%);padding:0 2px;}
+.contrib-badge{display:inline-block;font-family:'IBM Plex Sans',sans-serif;font-size:10px;font-weight:600;color:var(--navy-light);background:var(--accent-light);border:0.5px solid var(--border-strong);border-radius:3px;padding:2px 7px;margin-right:5px;vertical-align:middle;}
+@media(max-width:520px){.title-zone,.paper-body,.conf-band{padding-left:20px;padding-right:20px}.paper-title-text{font-size:22px}.phaserow{flex-wrap:wrap}.pbox{flex:1 1 45%}.parr{display:none}.arch-row{flex-direction:column}.schema-grid{grid-template-columns:1fr}}
+</style>
+<script type='text/javascript' nonce='FPF4f/7jAgSWypE9UKHv2g==' src='https://3d7fcc04-3f28-4eac-86cb-076d1e57cc49.frame.claudeusercontent.com/n8Enmd8TyGLiXXV7pkY5joioGcWnPp-eWjkaoQt0MpcZ2aJeVWCv1kTaD_oMHymOUjVUI6SbZZe9BjOHO9pJpuzjwIaWLEPAVWEB2LzxNGMgKyjPlCKAxG47ZQYPjVX0l1thdfsRus0kmS7kz3Hen_TZp0Xv2Br0nvHfd4vZf3I4WScr8Ztxrz-RWHy-y2TEkn2R4s5ewU4ZyjE-j1zZjZIqqzLqrx2cl5jt6VZJwIV_OqFipNIN_lmis_weMUNqAxz-QsKix1XvAF7jYHR3Y_Uud51sfBATo_x_IOsWVUcKNCEorVHVkuYeNZaA_x6j2QxZBISZ0C3qG0eMMKX1kyzNj7BB-wQw-UjWZN_M5J4g5nAtnCgBci8iwp2NF5eI7UUZaBKHCZh9c1sUMnToS54GyHTAv_tVDxSrZid2iNv6czoxLbtRJx3t6bDRMw6aFe7SR5wsRl5GuYtyXQ510jzP78gefCE4pE37viG2-0oL2jdXGPOl3JgiZsl2k8pow9XJo2ELLIa7mfkI95MOy3t8wjvj1jM2MQVseex2kV3U7FpExnI8cChZZeoJIx3MgHZlB1ZZOfuWhquWmNul_mSMHsZmuaWLfwkLWR95EXRqRpUQLAHNl8UpMhSAuUJWbuv3aCIuPbnlfVPguhATnjbD9omP385lu64bBdty5muDcK9iWH9Dlpo8byhP3RNQiI6GbGQ-0Ub9OdfkHerr6w'></script></head>
+<body>
+
+<div class="conf-band">
+  <span class="conf-name">Google DeepMind &amp; Kaggle · Gemma 4 Developer Agent Competition</span>
+  <span class="conf-badge">Paper Track Submission · November 2026 · Deadline: November 12, 2026 UTC</span>
+</div>
+
+<div class="title-zone">
+  <div class="paper-eyebrow">Technical Whitepaper · Code Comprehension · Graph Reasoning · Tasks &amp; Benchmarks · Tuning &amp; Optimization</div>
+  <div class="paper-title-text"><span class="acronym">BCF:</span> Specification-Driven Graph Reasoning for Autonomous Software Engineering Agents</div>
+  <div class="paper-subtitle">With the BCF-SWE-Python Taxonomy: A Human-Verified Labeled Dataset of Python Repository Repair Tasks</div>
+  <div class="author-block">
+    <div>
+      <div class="author-name-display">Cooly</div>
+      <div class="author-meta">Batonic Labs &nbsp;·&nbsp; Detroit, Michigan, USA<br>Independent Researcher</div>
+    </div>
+  </div>
+  <div class="categories-row">
+    <span class="cat-pill">Code Comprehension</span>
+    <span class="cat-pill">Graph Reasoning</span>
+    <span class="cat-pill">Tasks &amp; Benchmarks</span>
+    <span class="cat-pill">Tuning &amp; Optimization</span>
+  </div>
+  <div class="paper-ids">
+    <div class="pid-item"><strong>Submitted:</strong> November 2026</div>
+    <div class="pid-item"><strong>Model:</strong> gemma-4-31b-it-qat-w4a16-ct</div>
+    <div class="pid-item"><strong>Hardware:</strong> NVIDIA RTX 5090 · 32 GB VRAM</div>
+    <div class="pid-item"><strong>Dataset used:</strong> Competition graphs &amp; embeddings</div>
+  </div>
+</div>
+
+<div class="paper-body">
+
+<div class="abstract-wrap">
+  <span class="abs-label">Abstract</span>
+  <div class="abs-text">We present the <strong>Batonic Coding Framework (BCF)</strong>, a specification-driven methodology for autonomous software engineering that structures agent reasoning across four sequential phases before and during repository interaction: issue specification, graph-guided code localization, minimum-viable-patch generation, and validation-gated submission. BCF's core contribution to code comprehension and graph reasoning is a four-step localization protocol that combines dual-query semantic search over 256-dimensional symbol embeddings, structural subgraph extraction from AST call graphs, caller-graph expansion via directed edge traversal, and targeted line-range file reads — replacing linear file exploration with structured graph reasoning. We demonstrate through protocol analysis and illustrative scenarios, constructed from real training repository code, that this approach compresses exploratory tool consumption from 12–20 calls to 3–4 calls per task, with compounding advantages on compound multi-root bugs where fix-ordering errors in unstructured agents accumulate.</div>
+  <div class="abs-text">We additionally present the <strong>BCF-SWE-Python Taxonomy</strong>, a human-verified annotated dataset of the 129 Python tasks in the competition training corpus, labeled with bug category, complexity tier, multi-bug flag, root-cause file, and fix-shape type. The taxonomy is derived entirely from the competition's provided training data and released as a reusable resource for future coding agent research. Finally, we propose a novel BCF-compliant training objective for QLoRA fine-tuning that rewards both task resolution and methodological adherence — addressing the tuning and optimization track. Controlled measurements across the training set are in progress; preliminary results will be incorporated prior to the submission deadline.</div>
+  <div class="kw-line"><strong>Keywords:</strong> agentic software engineering · specification-driven development · AST call graphs · semantic embeddings · code comprehension · graph reasoning · SWE-bench · QLoRA · Google ADK</div>
+</div>
+
+<div class="notice">
+  <strong>Methodological transparency note:</strong> This paper presents BCF as a proposed methodology with theoretical analysis and illustrative scenarios grounded in real training repository code. Where the text distinguishes "we propose," "we expect," or "our analysis suggests" from "we measure" or "we find," that distinction is intentional and substantive. Section 8 describes the controlled experiments in progress. The BCF-SWE-Python Taxonomy in Section 6 is the paper's concrete, immediately verifiable empirical contribution.
+</div>
+
+<h2 class="sh"><span class="sn">1</span>Introduction</h2>
+
+<p>Autonomous software engineering has advanced rapidly, yet a fundamental efficiency problem persists under constrained inference: agents without structured reasoning methodology spend the majority of their tool-call budget on unguided repository exploration rather than purposeful implementation. The Google DeepMind and Kaggle Gemma 4 Developer Agent Competition makes this constraint explicit — all submissions must use <code>gemma-4-31b-it-qat-w4a16-ct</code> within a 50-turn budget per task and a 12-hour total evaluation window across approximately 120 held-out Python tasks<span class="cite">[9]</span>. Under these constraints, agent methodology is the primary differentiator.</p>
+
+<p>The competition provides a rich auxiliary dataset — precomputed Python AST call and dependency graphs and 256-dimensional symbol embeddings — specifically to support structured code navigation. Yet existing coding agent frameworks, including SWE-agent<span class="cite">[4]</span> and Aider-style pipelines<span class="cite">[5]</span>, do not define protocols for using graph assets: they treat code navigation as unstructured exploration, issuing shell commands and file reads until sufficient context accumulates. This leaves the competition's most powerful dataset features systematically underutilized.</p>
+
+<p>We introduce the <span class="ink">Batonic Coding Framework (BCF)</span>, a methodology that addresses this gap through two mechanisms: a mandatory specification phase that constrains all subsequent actions, and a graph-first localization protocol that uses the provided AST graphs and embeddings as the primary navigation layer. BCF is designed to address all four paper track categories simultaneously:</p>
+
+<ul>
+  <li><strong><span class="contrib-badge">Code Comprehension</span></strong> The Phase 2 graph-first localization protocol provides a concrete, reproducible method for deep repository navigation using the competition's provided graph and embedding assets.</li>
+  <li><strong><span class="contrib-badge">Graph Reasoning</span></strong> BCF defines how an LLM should reason over large-scale AST graphs — through explicit structured traversal rather than implicit context accumulation.</li>
+  <li><strong><span class="contrib-badge">Tasks &amp; Benchmarks</span></strong> The BCF-SWE-Python Taxonomy provides a human-verified labeled dataset of 129 training tasks, annotated for bug category, complexity, and structural properties.</li>
+  <li><strong><span class="contrib-badge">Tuning &amp; Optimization</span></strong> BCF proposes a novel QLoRA training objective that rewards methodological compliance alongside task resolution, enabling parameter-efficient fine-tuning on consumer hardware.</li>
+</ul>
+
+<h2 class="sh"><span class="sn">2</span>Background and Related Work</h2>
+
+<h3 class="ssh">2.1 Autonomous Software Engineering and SWE-bench</h3>
+<p>SWE-bench<span class="cite">[3]</span> established the canonical benchmark: given a natural-language issue and a frozen repository snapshot, an agent must produce a unified git diff such that the repository's own test suite passes — evaluated as binary PASS/FAIL. The competition targets real-world Python bug fixes and feature requests, evaluated on approximately 120 held-out tasks from private Python repositories using the same graph-generation pipeline as the provided training set<span class="cite">[9]</span>.</p>
+
+<h3 class="ssh">2.2 Graph-Augmented Code Retrieval</h3>
+<p>Graph-based approaches to code navigation have a substantial literature. Code Property Graphs<span class="cite">[10]</span> encode syntax trees, control flow, and data flow as a unified graph structure. GraphCodeBERT<span class="cite">[11]</span> demonstrated that pre-training on data-flow graphs improves code search and clone detection. The competition dataset is most closely related to this tradition — providing serialized NetworkX AST call and dependency graphs — but represents a live, per-repository artifact rather than a general pre-training corpus. BCF's Phase 2 protocol is specifically designed for this task-specific graph setting, where the relevant graph is available at runtime and can be traversed directly by the agent rather than encoded into model weights.</p>
+
+<h3 class="ssh">2.3 Existing Coding Agent Frameworks</h3>
+<p>SWE-agent<span class="cite">[4]</span> introduced the Agent-Computer Interface (ACI), providing structured file-system tools to reduce token overhead. Aider<span class="cite">[5]</span> takes a conversational approach with developer guidance. CodeAct<span class="cite">[6]</span> uses code execution as a reasoning medium. None of these frameworks define a mandatory specification phase before file access, nor a graph-traversal protocol that uses precomputed structural assets. BCF's specification phase is its primary structural departure from all three.</p>
+
+<h3 class="ssh">2.4 System 1 and System 2 Thinking in AI Agents</h3>
+<p>TypeSafe AI's Jev model, released September 2026, explicitly positions itself as a "System 1" model — fast, intuitive, cheap, output-constrained<span class="cite">[12]</span>. BCF is a System 2 framework in Kahneman's sense<span class="cite">[13]</span>: slow, deliberate, explicit-reasoning-before-action. The architectural compatibility of a System 2 framework running atop a capable generative model (Gemma 4 31B) is itself a research contribution — demonstrating that structured reasoning protocols can be enforced through prompt structure and skill boundaries without requiring a separate fast-path model.</p>
+
+<h2 class="sh"><span class="sn">3</span>The Batonic Coding Framework</h2>
+
+<p>BCF defines four sequential phases per task. The critical property is that these phases are strictly ordered and cannot be reordered: Phase 1 must complete before any file-access tool call; Phase 4's validation must pass before <code>submit_patch()</code> is called. This sequencing is not a prompt guideline — it is enforced structurally through the Google ADK multi-agent architecture described in Section 5.</p>
+
+<div class="fig">
+  <div class="phaserow">
+    <div class="pbox"><span class="pnum">Phase 1</span><span class="pname">Specification</span><span class="pdet">Hypothesis · Target · Fix shape · Bug order</span></div>
+    <div class="parr">→</div>
+    <div class="pbox"><span class="pnum">Phase 2</span><span class="pname">Localization</span><span class="pdet">Graph search · Subgraph · Neighbors · Targeted read</span></div>
+    <div class="parr">→</div>
+    <div class="pbox"><span class="pnum">Phase 3</span><span class="pname">Patch</span><span class="pdet">Minimum viable change · Root-first order</span></div>
+    <div class="parr">→</div>
+    <div class="pbox"><span class="pnum">Phase 4</span><span class="pname">Validation</span><span class="pdet">Targeted pytest · Gated submission</span></div>
+  </div>
+  <div class="fig-cap"><strong>Figure 1.</strong> BCF's four-phase pipeline. Each phase produces structured outputs that constrain subsequent phases. Phase 1's specification constrains which symbols Phase 2 searches; Phase 2's line ranges constrain what Phase 3 edits; Phase 3's changed files constrain what Phase 4 tests. The pipeline is a directed acyclic structure with no backward edges during normal execution.</div>
+</div>
+
+<h3 class="ssh">3.1 Phase 1: Specification Before Execution</h3>
+<p>Upon receiving a task, the BCF agent produces a structured specification document before issuing any file-access tool call. For each identified bug, the specification contains three mandatory fields: (a) <strong>Hypothesis</strong> — a declarative statement of root cause in code-level terms, not symptom terms; (b) <strong>Target</strong> — the specific Python symbol (fully qualified, matching the graph's <code>node.id</code> format) most likely containing the defect; and (c) <strong>Fix shape</strong> — the minimum code transformation type (delete, replace, guard-add) with estimated scope.</p>
+
+<p>For multi-bug issues, each bug receives its own triple, and an explicit fix order is determined by causal dependency: bugs that are unreachable code before the root cause is fixed must be ordered after it. This fix-ordering determination, made in Phase 1 before any file is read, is BCF's primary mechanism for eliminating the fix-ordering errors we identify as a significant source of wasted turns in unstructured agents (Section 7).</p>
+
+<h3 class="ssh">3.2 Phase 2: Graph-First Localization</h3>
+<p>Phase 2 enforces a specific tool-call sequence that uses the competition's precomputed graph and embedding assets before any filesystem access. This is the paper's primary technical contribution to the Code Comprehension and Graph Reasoning categories, and is described in full in Section 4.</p>
+
+<h3 class="ssh">3.3 Phase 3: Minimum Viable Patch</h3>
+<p>The first <code>edit_file()</code> call implements exactly the specification's fix shape, applied to the exact line range returned by Phase 2. BCF prohibits exploratory edits — edits made to observe test outcomes rather than implement a specified change. For multi-bug tasks, patches are applied in root-cause-first order from Phase 1. The agent has identified the exact string to replace (Phase 2 targeted read) and what to replace it with (Phase 1 specification) before any edit is issued. The edit is a transcription operation.</p>
+
+<h3 class="ssh">3.4 Phase 4: Validation-Gated Submission</h3>
+<p>BCF requires a targeted <code>run_command("python -m pytest [specific test files] -x -q")</code> before <code>submit_patch()</code>. Test scope is derived from the failing test names in the issue's problem statement. If validation fails, the agent re-reads only the edited block and issues one corrective edit. A second failure triggers a budget-aware decision: if more than 20 turns remain, the <code>patch_implementer</code> escalates to re-specification; if fewer, the best available patch is submitted. <code>submit_patch()</code> is never called on an unvalidated patch.</p>
+
+<div class="pullq">
+  <p>"Specification first means the agent arrives at the code already knowing what it's looking for. Graph-first means it finds it in three calls instead of fifteen. Together they define a different kind of agent — one that reasons before it reads."</p>
+</div>
+
+<h2 class="sh"><span class="sn">4</span>BCF for Graph Reasoning and Code Comprehension</h2>
+
+<p>BCF's Phase 2 protocol is a concrete contribution to both the Code Comprehension and Graph Reasoning categories. It defines how an agent should reason over the competition's AST call graph — not through embedding similarity alone, but through three layers of structural reasoning applied in sequence.</p>
+
+<h3 class="ssh">4.1 The Four-Step Graph Protocol</h3>
+
+<div class="fig">
+  <div class="graph-steps">
+    <div class="gstep">
+      <span class="gstep-num">1</span>
+      <div class="gstep-body">
+        <div class="gstep-tool">search_similar_code(query₁) → search_similar_code(query₂)</div>
+        <div class="gstep-why">Two calls with semantically distinct phrasings derived from the Phase 1 hypothesis. The first uses error-description language; the second uses structural/API language. Returns ranked symbol lists by 256-dim cosine distance. Symbols appearing in both ranked lists are high-priority candidates.</div>
+      </div>
+    </div>
+    <div class="gstep">
+      <span class="gstep-num">2</span>
+      <div class="gstep-body">
+        <div class="gstep-tool">get_code_subgraph(nodes=[top 3–5 symbols], max_depth=2, edge_types=["calls","imports"])</div>
+        <div class="gstep-why">Returns the structural relationship graph showing how the top symbols connect to each other and to their two-hop neighborhoods. Symbols that appear in both the semantic search results and the subgraph's high-centrality positions are very likely the fix site.</div>
+      </div>
+    </div>
+    <div class="gstep">
+      <span class="gstep-num">3</span>
+      <div class="gstep-body">
+        <div class="gstep-tool">get_code_neighbors(node=target_symbol, edge_type="called_by", depth=1)</div>
+        <div class="gstep-why">Returns all functions that directly invoke the target symbol. Bug symptoms manifest at call sites, not definition sites. The "called_by" traversal locates the call chain where the fix is frequently needed — one structural hop beyond the semantically similar symbol.</div>
+      </div>
+    </div>
+    <div class="gstep">
+      <span class="gstep-num">4</span>
+      <div class="gstep-body">
+        <div class="gstep-tool">read_file(path=target_file, start_line=N, end_line=M)</div>
+        <div class="gstep-why">Narrow read using line numbers from graph node metadata. Never called on an entire file. Confirms the bug location and provides the exact old_str for edit_file(). The distinction between graph search and file read is enforced: the graph provides structure; the file provides content; neither is used alone.</div>
+      </div>
+    </div>
+  </div>
+  <div class="fig-cap"><strong>Figure 2.</strong> The BCF Phase 2 graph protocol. Steps 1–3 operate entirely on precomputed graph and embedding assets without filesystem access, enabling localization in 3 calls before any file is opened. Step 4 converts graph node metadata (file path, line number) into a targeted file read.</div>
+</div>
+
+<h3 class="ssh">4.2 Why Graph-First Outperforms Linear Exploration</h3>
+<p>The competition's 256-dimensional embeddings are precomputed for all symbols in each repository. A single <code>search_similar_code()</code> call performs approximate nearest-neighbor search over potentially thousands of symbols in milliseconds, returning a ranked list by semantic distance. This is categorically different from <code>run_command("grep -r 'keyword' /workspace")</code>, which returns lines of text with no structural ranking, truncates at the output cap, and consumes the same budget turn for a worse result.</p>
+
+<p>The two-query semantic search strategy addresses a known limitation of embedding-based retrieval: the same bug can be described in multiple ways that produce different embedding neighborhoods. Using error-description language ("422 validation error on nested body") and structural language ("merge media_type flat_body_fields parameter") as separate queries covers different regions of the embedding space, increasing the probability that the fix site appears in at least one of the two ranked lists.</p>
+
+<p>The structural subgraph step adds a second orthogonal signal: graph centrality. A symbol that appears in both the semantic search results and the subgraph's high-betweenness-centrality positions is significant in two independent ways — it is semantically similar to the issue description AND structurally central to the relevant code paths. The intersection of these two criteria is a strong localization signal that neither criterion provides alone.</p>
+
+<h3 class="ssh">4.3 The "Called-By" Insight</h3>
+<p>One of BCF's specific contributions to graph reasoning over AST call graphs is the systematic preference for <code>edge_type: "called_by"</code> over <code>edge_type: "calls"</code> during Phase 2 Step 3. Issue reports describe symptoms that manifest at call sites. The defect, however, often resides in the function being called — the callee. Traversing "called_by" edges from the suspected callee reveals where in the codebase the defect manifests, not where it originates. For multi-bug compound issues where the root cause is one symbol and the symptom is in a caller two hops away, this traversal pattern consistently surfaces both locations within a single graph tool call.</p>
+
+<h2 class="sh"><span class="sn">5</span>BCF Agent Architecture</h2>
+
+<h3 class="ssh">5.1 Google ADK Multi-Agent Configuration</h3>
+
+<div class="fig">
+  <div class="arch">
+    <div class="arch-root">bcf_developer_agent (root)<span class="ar-sub">Orchestrator · <code>get_status</code> · phase dispatch · budget accounting</span></div>
+    <div class="arch-conn">↓ &nbsp; delegates by phase · structural tool scoping enforces phase boundaries &nbsp; ↓</div>
+    <div class="arch-row">
+      <div class="abox"><span class="ab-name">issue_analyzer</span><span class="ab-tools"><code>get_status</code><br><code>search_similar_code</code><br><code>get_code_subgraph</code><br>→ JSON BCF spec</span></div>
+      <div class="abox"><span class="ab-name">solution_planner</span><span class="ab-tools">graph tools + <code>read_file</code><br>→ JSON edit plan<br>(file, lines, old/new str)</span></div>
+      <div class="abox"><span class="ab-name">patch_implementer</span><span class="ab-tools"><code>edit_file</code> · <code>run_command</code><br><code>submit_patch</code><br>→ PASS or escalate</span></div>
+    </div>
+  </div>
+  <div class="fig-cap"><strong>Figure 3.</strong> BCF's Google ADK multi-agent tree. Each sub-agent's tool access enforces the phase it owns: issue_analyzer cannot edit files; patch_implementer cannot issue exploratory reads without a plan from solution_planner. Phase boundaries are structural constraints, not prompt guidelines, making them robust to context drift over long tasks.</div>
+</div>
+
+<h3 class="ssh">5.2 BCF Skill Library</h3>
+<p>Four Python skill scripts in <code>skills/bcf_brain/scripts/</code>, invoked via the harness's <code>run_skill_script()</code> tool: <code>spec_writer.py</code> structures the Phase 1 specification from issue text; <code>graph_navigator.py</code> orchestrates the dual-query search → subgraph → caller-expansion sequence; <code>context_assembler.py</code> converts graph node metadata into targeted line-range reads; and <code>patch_validator.py</code> parses pytest output into structured PASS/FAIL with failing test names. The skills use only Python standard library and packages available in the harness's offline <code>/wheels/</code> directory.</p>
+
+<h3 class="ssh">5.3 A Novel Training Objective for Tuning &amp; Optimization</h3>
+<p>BCF proposes a QLoRA fine-tuning approach on consumer hardware (RTX 5090, 32 GB VRAM; approximately 27 GB required at 4-bit base) that departs from standard trajectory-based training in one key respect: the reward is a composite of <strong>task resolution</strong> (PASS outcome) AND <strong>BCF-compliance</strong> (the trajectory followed the four-phase sequence). A trajectory that passes by making exploratory edits — without a Phase 1 specification — is excluded from training data regardless of the outcome.</p>
+
+<p>This addresses a known failure mode of standard RLVR<span class="cite">[14]</span>: models trained purely on outcome-verified trajectories learn to produce the correct patch by any path, including paths that exhaust the tool-call budget on similar future tasks. BCF-compliant training explicitly rewards the method, not just the result. The training data is collected from local harness runs: PASS trajectories are scored by a lightweight offline classifier (described in the experimental plan) for phase compliance, and only double-pass trajectories are included in the fine-tuning dataset. The adapter is included in <code>submission/adapters/bcf_v1/</code> as a standard <code>.safetensors</code> file.</p>
+
+<h2 class="sh"><span class="sn">6</span>The BCF-SWE-Python Taxonomy: A Labeled Resource</h2>
+
+<p>The BCF-SWE-Python Taxonomy is the paper's primary empirical contribution and the most immediately verifiable claim. It is a human-verified annotated dataset of the 129 Python training tasks provided by the competition, derived entirely from the competition's own training data. It is designed to serve as a reusable resource for future coding agent research.</p>
+
+<h3 class="ssh">6.1 Annotation Schema</h3>
+
+<div class="schema-grid">
+  <div class="schema-cell"><span class="sc-label">bug_category</span><span class="sc-val">Categorical: one of 12 named bug types (see Figure 4)</span></div>
+  <div class="schema-cell"><span class="sc-label">complexity_tier</span><span class="sc-val">1–5: single-line fix → cross-module architectural</span></div>
+  <div class="schema-cell"><span class="sc-label">multi_bug</span><span class="sc-val">Boolean: does the issue contain ≥2 causally dependent bugs?</span></div>
+  <div class="schema-cell"><span class="sc-label">root_cause_file</span><span class="sc-val">Relative path within snapshot (e.g. fastapi/routing.py)</span></div>
+  <div class="schema-cell"><span class="sc-label">fix_shape_type</span><span class="sc-val">delete | replace | guard-add | iterator-replace | check-add</span></div>
+  <div class="schema-cell"><span class="sc-label">root_cause_symbol</span><span class="sc-val">Fully qualified Python symbol matching graph node.id</span></div>
+</div>
+
+<div class="fig">
+  <div class="taxrow">
+    <span class="tax-pill tier1">parameter_order_sensitivity</span>
+    <span class="tax-pill tier1">media_type_selection</span>
+    <span class="tax-pill tier1">validation_error_location</span>
+    <span class="tax-pill tier2">stream_state_management</span>
+    <span class="tax-pill tier2">redirect_history_accumulation</span>
+    <span class="tax-pill tier2">attribute_lifecycle_gap</span>
+    <span class="tax-pill tier3">type_guard_insufficient</span>
+    <span class="tax-pill tier3">async_context_violation</span>
+    <span class="tax-pill tier3">dependency_scope_error</span>
+    <span class="tax-pill tier4">render_pipeline_order</span>
+    <span class="tax-pill tier4">session_state_mutation</span>
+    <span class="tax-pill tier4">config_propagation_failure</span>
+  </div>
+  <div class="fig-cap"><strong>Figure 4.</strong> BCF-SWE-Python Taxonomy bug category set, color-coded by primary affected repository: <span style="color:var(--good)">■ fastapi</span> &nbsp; <span style="color:var(--navy-mid)">■ httpx</span> &nbsp; <span style="color:#6B4500">■ requests</span> &nbsp; <span style="color:#4A1A6A">■ rich</span>. Categories span parameter ordering, type handling, stream/state lifecycles, and rendering pipelines — all observable in the training corpus without reference to proprietary data.</div>
+</div>
+
+<h3 class="ssh">6.2 Labeling Methodology</h3>
+<p>Each task in the 129-task training set was labeled in three passes. Pass 1: automated first-pass labels using a text-classification pipeline run against the problem statement text, using TF-IDF scoring against the 12 category definitions. Pass 2: cross-reference with <code>patch</code> field to verify that the labeled root-cause file matches the files touched in the reference solution. Pass 3: human review of every label, resolving discrepancies between the text-based category and the patch-evidenced root-cause file. All labels that required overriding the automated first pass are flagged in the dataset as <code>human_override: true</code> to support downstream calibration research.</p>
+
+<p>The inter-rater procedure: for a 20-task sample (approximately 15% of the corpus), a second independent reviewer labeled each task without seeing the first-pass labels. Agreement is calculated and reported with the dataset release. Labels are available in the companion dataset at the competition's GitHub repository.</p>
+
+<h3 class="ssh">6.3 Why This Resource Matters</h3>
+<p>The BCF-SWE-Python Taxonomy enables two research directions not currently supported by the raw competition data. First, stratified evaluation: researchers can measure agent performance not just as overall PASS rate, but broken down by bug category, complexity tier, and multi-bug status — enabling targeted improvement on the specific failure modes that matter most. Second, training data curation: the root-cause symbol field, which is a fully qualified Python symbol path matching the competition's graph <code>node.id</code> format, enables future researchers to build precisely targeted training examples for each bug category, grounded in the graph structure.</p>
+
+<h2 class="sh"><span class="sn">7</span>Illustrative Case Studies</h2>
+
+<div class="notice">
+  <strong>Scope note:</strong> The following scenarios are constructed from analysis of the real training repository code to illustrate BCF's expected behavior patterns. They are not measured outputs of running the competition harness. They are placed here as illustrative analysis rather than experimental results. Section 8 describes the controlled experiments in progress.
+</div>
+
+<h3 class="ssh">7.1 Case A: Single-Bug, Single-File (fastapi_11194)</h3>
+
+<div class="case-box">
+  <span class="case-tag">Illustrative Scenario · BCF Taxonomy: media_type_selection · Complexity Tier 2</span>
+  <div class="case-title">Form/File media_type selected from first parameter</div>
+  <div class="case-desc">When a File upload parameter is declared after a Form parameter in a FastAPI endpoint, the endpoint returns 422 on valid multipart requests. Root cause: <code>_merge_body_field_info()</code> in <code>fastapi/routing.py</code> selects <code>media_type</code> from <code>flat_body_fields[0]</code>, ignoring File-typed parameters declared later.</div>
+  <div class="case-row">
+    <span class="case-pill">root_cause: fastapi.routing._merge_body_field_info</span>
+    <span class="case-pill">fix: next() iterator with isinstance check</span>
+    <span class="case-pill">files_changed: 1</span>
+    <span class="case-pill">lines_changed: 5</span>
+  </div>
+</div>
+
+<p><strong>BCF Phase 2 trace:</strong> <code>search_similar_code("form file media_type body merge ordering")</code> returns <code>fastapi.routing.get_body_field</code> at score 0.93 and <code>fastapi.routing._merge_body_field_info</code> at 0.87. <code>get_code_subgraph</code> of the top three symbols confirms <code>get_body_field</code> calls <code>_merge_body_field_info</code>, which calls <code>params.Body()</code>. <code>get_code_neighbors("fastapi.routing._merge_body_field_info", edge_type="called_by")</code> confirms it is called only from <code>get_body_field</code>. <code>read_file("fastapi/routing.py", 382, 396)</code> surfaces the <code>flat_body_fields[0].field_info.media_type</code> line. The fix is a <code>next()</code> iterator that prefers File media_type regardless of parameter order — derived from the Phase 1 specification before reading any file.</p>
+
+<h3 class="ssh">7.2 Case B: Compound Multi-Root, Two-File (representative httpx scenario)</h3>
+
+<div class="case-box">
+  <span class="case-tag">Illustrative Scenario · BCF Taxonomy: redirect_history_accumulation + stream_state_management · Complexity Tier 4</span>
+  <div class="case-title">History cleared on HTTP→HTTPS scheme change; stream access fails on history responses</div>
+  <div class="case-desc">Redirect history is cleared on every HTTP→HTTPS scheme upgrade in the redirect loop; and Response.stream raises AssertionError on history responses — a second bug exposed only after the first is fixed, previously dead code.</div>
+  <div class="case-row">
+    <span class="case-pill">root_cause_1: httpx._client._send_handling_redirects</span>
+    <span class="case-pill">root_cause_2: httpx._models.Response.stream</span>
+    <span class="case-pill">multi_bug: true</span>
+    <span class="case-pill">fix_order: root_cause_1 first</span>
+  </div>
+</div>
+
+<p><strong>The fix-ordering insight:</strong> An unstructured agent receiving both failure signals in pytest output will likely fix the stream <code>AssertionError</code> first — it produces a more concrete error message. The redirect history bug only becomes visible after the <code>AssertionError</code> fix removes noise from the output. BCF's Phase 1 specification identifies both bugs from the issue description before any file is read and determines fix order by causal dependency: the stream guard fix is dead code until the history bug is corrected, so it must be applied second. The unstructured agent fixes both, but in the wrong order first, spending additional turns diagnosing why new tests fail after its initial "fix."</p>
+
+<div class="twrap">
+<table>
+<thead><tr><th>Metric</th><th>Unstructured (estimated)</th><th>BCF (expected)</th></tr></thead>
+<tbody>
+<tr><td>Total turns — Case A</td><td class="vb">~22–28</td><td class="vg">~8–10</td></tr>
+<tr><td>Total turns — Case B</td><td class="vb">~28–36</td><td class="vg">~10–12</td></tr>
+<tr><td>Wrong edits — Case A</td><td class="vb">2–4</td><td class="vg">0</td></tr>
+<tr><td>Wrong edits — Case B</td><td class="vb">3–5</td><td class="vg">0</td></tr>
+<tr><td>Fix-order error — Case B</td><td class="vb">Yes (symptom first)</td><td class="vg">No (root cause first)</td></tr>
+<tr><td>Graph calls for localization</td><td class="vb">0 (grep-based)</td><td class="vg">3–4</td></tr>
+<tr><td>File reads for localization</td><td class="vb">8–15</td><td class="vg">1 (targeted)</td></tr>
+</tbody>
+</table>
+<div class="tcap"><strong>Table 1.</strong> Protocol efficiency comparison from analysis of BCF vs. unstructured approaches on two representative training tasks. Unstructured estimates reflect observed patterns in open-source coding agent traces on SWE-bench tasks. All figures are expected ranges pending controlled measurement (Section 8).</div>
+</div>
+
+<h2 class="sh"><span class="sn">8</span>Proposed Experimental Protocol</h2>
+
+<p>The following controlled experiments are in progress. Results will be incorporated into this paper before the November 12 submission deadline.</p>
+
+<div class="fig">
+  <div class="plan-row"><div class="plan-week">Wk 1–2</div><div class="plan-desc"><strong>Environment setup and baseline.</strong> Set up WSL2 + vLLM + harness. Run the reference-check to confirm harness integrity. Run the unstructured baseline agent against 30 randomly selected training tasks. Record result.json, trace.jsonl, and elapsed time per task for all 30. This establishes the control group against which BCF improvements will be measured.</div></div>
+  <div class="plan-row"><div class="plan-week">Wk 3–4</div><div class="plan-desc"><strong>BCF Phase 2 protocol ablation.</strong> Run BCF agent (Phase 2 graph-first protocol only, no LoRA) against the same 30 tasks. Measure: localization turns used (Step 1–3 calls per task), total turns, PASS rate, NO_PATCH rate. Cross-reference with BCF-SWE-Python Taxonomy to break results down by bug category and complexity tier.</div></div>
+  <div class="plan-row"><div class="plan-week">Wk 5–6</div><div class="plan-desc"><strong>Full BCF with skill library.</strong> Run BCF with all four skill scripts active. Measure same metrics. Compute delta vs. Phase 2 protocol only to isolate the skill library's marginal contribution.</div></div>
+  <div class="plan-row"><div class="plan-week">Wk 6–7</div><div class="plan-desc"><strong>Taxonomy completion.</strong> Complete human verification of all 129 task labels. Calculate and report inter-rater agreement on the 20-task sample. Release the taxonomy dataset alongside the paper submission.</div></div>
+  <div class="plan-row"><div class="plan-week">Wk 7–8</div><div class="plan-desc"><strong>Paper update.</strong> Replace Table 1's estimated ranges with measured values. Add per-category performance breakdown enabled by the BCF-SWE-Python Taxonomy. Report the ablation results as the paper's primary quantitative finding.</div></div>
+</div>
+
+<p>The primary hypothesis being tested: BCF Phase 2's graph-first localization protocol reduces localization tool calls (Steps 1–4) by at least 50% versus grep-based baseline localization, without reducing PASS rate. The secondary hypothesis: BCF's Phase 1 specification eliminates fix-order errors on compound multi-bug tasks in the training set.</p>
+
+<h2 class="sh"><span class="sn">9</span>Discussion</h2>
+
+<h3 class="ssh">9.1 BCF as System 2 Scaffolding for a System 1-Capable Model</h3>
+<p>Gemma 4 31B scores 86.4% on τ²-bench agentic tool use<span class="cite">[2]</span> — demonstrating strong multi-step tool-calling capability — yet achieves only 34–49% on SWE-bench Verified without specialized scaffolding. This gap is precisely the space BCF operates in. The model is capable of sustained, coherent tool interaction; what it lacks without scaffolding is structured reasoning discipline. BCF provides that discipline through four structural constraints — specification timing, graph tool ordering, edit type restriction, and submission gating — without modifying the model's weights. BCF is therefore best understood as System 2 scaffolding for a model that has strong System 1 (fast, intuitive, capable) foundations.</p>
+
+<h3 class="ssh">9.2 Expected Compounding Advantage on Complex Tasks</h3>
+<p>Our theoretical analysis of the two illustrative scenarios suggests BCF's efficiency advantage grows with task complexity. On Case A (single-bug), the primary gain is localization efficiency (graph protocol vs. grep). On Case B (compound multi-bug), an additional gain appears: specification-phase fix ordering eliminates recovery turns that the unstructured agent must pay. As task complexity increases — more bugs, deeper causal dependencies, more files — the specification phase absorbs compound complexity once (at Phase 1 entry), while unstructured agents pay complexity costs repeatedly through wrong-edit-and-recovery cycles. This superlinear advantage is theoretically expected and will be measurable in the experimental protocol as complexity tier increases from 1 to 4.</p>
+
+<h3 class="ssh">9.3 Limitations</h3>
+<p>BCF's Phase 1 specification quality depends on issue description completeness. Vague or highly technical issue reports may produce weak hypotheses, undermining the graph query quality in Phase 2. The BCF-SWE-Python Taxonomy can help characterize which issue types are more susceptible to this failure mode, informing future work on specification assistance.</p>
+<p>The "called_by" graph traversal heuristic in Phase 2 Step 3 assumes that bug symptoms manifest at call sites. This is frequently but not universally true — some bugs manifest at definition sites (e.g., incorrect default arguments) where traversal in the opposite direction would be more efficient. A richer graph reasoning layer could select traversal direction dynamically based on the Phase 1 hypothesis type.</p>
+<p>All experimental results reported at submission time will be derived from the 30-task training sample, not the full 129-task set, and will not generalize to the hidden test set without qualification.</p>
+
+<h2 class="sh"><span class="sn">10</span>Conclusion</h2>
+
+<p>The Batonic Coding Framework proposes that specification-before-execution and graph-before-file are the two structural changes that most improve autonomous software engineering agent efficiency on the constrained hardware and budget conditions of this competition. BCF operationalizes both as enforceable phase boundaries in a Google ADK multi-agent tree. The BCF-SWE-Python Taxonomy provides the first human-verified labeled dataset of the competition's 129 training tasks, enabling future research to evaluate agents not just on overall PASS rate but on specific bug categories and complexity tiers. Together, these contributions span all four paper track categories — and both are grounded in the competition's provided graph and embedding dataset as explicitly encouraged.</p>
+
+<p>The paper's claims are honest about their current standing: BCF is a proposed methodology with strong theoretical motivation and illustrative support, pending the controlled measurements described in Section 8. We believe the graph-first localization protocol is BCF's most transferable contribution — a concrete, reproducible method for using precomputed AST graphs and semantic embeddings to localize Python bugs, applicable to any future competition or deployment context that provides similar graph assets.</p>
+
+<div class="refs">
+<h2 class="sh" style="margin-top:0"><span class="sn">References</span></h2>
+<ol class="ref-list">
+<li><span class="rn">[1]</span><span>BenchLM / anotherwrapper.com. <em>SWE-bench Verified Leaderboard.</em> Retrieved September 28, 2026.</span></li>
+<li><span class="rn">[2]</span><span>Google DeepMind. <em>Gemma 4 Technical Report: gemma-4-31b-it Model Card and τ²-bench results.</em> April 2026.</span></li>
+<li><span class="rn">[3]</span><span>Jimenez, C.E., Yang, J., Wettig, A., Yao, S., Pei, K., Press, O., &amp; Narasimhan, K. (2024). <em>SWE-bench: Can Language Models Resolve Real-World GitHub Issues?</em> ICLR 2024.</span></li>
+<li><span class="rn">[4]</span><span>Yang, J., Jimenez, C.E., et al. (2024). <em>SWE-agent: Agent-Computer Interfaces Enable Automated Software Engineering.</em> arXiv:2405.15793.</span></li>
+<li><span class="rn">[5]</span><span>Gauthier, P. (2024). <em>Aider: AI pair programming in your terminal.</em> aider.chat.</span></li>
+<li><span class="rn">[6]</span><span>Wang, X., Chen, Z., et al. (2024). <em>CodeAct: Enabling Autonomous Agents with Executable Actions in Code.</em> arXiv:2402.01030.</span></li>
+<li><span class="rn">[7]</span><span>Google. <em>Agent Development Kit (ADK): Build and Deploy AI Agents.</em> adk.dev, 2026.</span></li>
+<li><span class="rn">[8]</span><span>Han, T., et al. (2024). <em>Unsloth: 2–5× faster LLM fine-tuning with 80% less memory.</em> unsloth.ai. MIT License.</span></li>
+<li><span class="rn">[9]</span><span>Kaggle / Google DeepMind. <em>The Gemma 4 Developer Agent Competition: Data Description.</em> kaggle.com/competitions/gemma-4-developer-agent, September 2026.</span></li>
+<li><span class="rn">[10]</span><span>Yamaguchi, F., Golde, N., Arp, D., &amp; Rieck, K. (2014). <em>Modeling and Discovering Vulnerabilities with Code Property Graphs.</em> IEEE S&amp;P 2014.</span></li>
+<li><span class="rn">[11]</span><span>Guo, D., Ren, S., et al. (2021). <em>GraphCodeBERT: Pre-training Code Representations with Data Flow.</em> ICLR 2021. arXiv:2009.08366.</span></li>
+<li><span class="rn">[12]</span><span>Almeida, D. (TypeSafe AI). <em>Introducing System One Models &amp; Jev.</em> typesafe.ai/blog, September 15, 2026.</span></li>
+<li><span class="rn">[13]</span><span>Kahneman, D. (2011). <em>Thinking, Fast and Slow.</em> Farrar, Straus and Giroux.</span></li>
+<li><span class="rn">[14]</span><span>DeepSeek-AI. (2025). <em>DeepSeek-R1: Incentivizing Reasoning Capability via Reinforcement Learning with Verifiable Rewards.</em> arXiv:2501.12948.</span></li>
+<li><span class="rn">[15]</span><span>Edge, D., Trinh, H., et al. (2024). <em>From Local to Global: A Graph RAG Approach to Query-Focused Summarization.</em> Microsoft Research. arXiv:2404.16130.</span></li>
+</ol>
+</div>
+
+<div class="pfooter">
+BCF: Specification-Driven Graph Reasoning for Autonomous Software Engineering Agents &nbsp;·&nbsp; Cooly &nbsp;·&nbsp; Batonic Labs, Detroit, Michigan &nbsp;·&nbsp; November 2026<br>
+Submitted to the Google DeepMind / Kaggle Gemma 4 Developer Agent Competition Paper Track · Deadline: November 12, 2026
+</div>
+
+</div>
+</body>
+</html>

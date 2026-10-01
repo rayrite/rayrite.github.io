@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>doc 03 · httpx_3672 slide decks — index</title>
+<style>
+  :root{
+    --page:#0e1116; --surface:#151a21; --raised:#1b222c; --sunken:#11151c;
+    --hair:rgba(255,255,255,.08); --hair-2:rgba(255,255,255,.14);
+    --ink:#eef1f5; --ink-2:#aab4c0; --ink-3:#7a8694; --deem:#566070;
+    --s1:#3987e5;
+    --good:#0ca30c; --warn:#fab219;
+    --good-wash:rgba(12,163,12,.12); --warn-wash:rgba(250,178,25,.10);
+    --sans:system-ui,-apple-system,"Segoe UI",sans-serif;
+    --mono:"Cascadia Code","JetBrains Mono",ui-monospace,"Consolas",monospace;
+    color-scheme:dark;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--page);color:var(--ink);font-family:var(--sans);font-size:16.5px;line-height:1.55;
+       min-height:100svh;display:flex;flex-direction:column;padding:48px clamp(20px,6vw,72px) 40px}
+  @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001s!important;transition-duration:.001s!important}}
+
+  main{max-width:980px;margin:auto;width:100%;display:flex;flex-direction:column;gap:22px}
+
+  .kicker{font:600 13.5px/1.4 var(--sans);color:var(--ink-3)}
+  h1{font:700 clamp(30px,4.6vw,46px)/1.1 var(--mono);letter-spacing:-.02em;margin:4px 0 0}
+  h1 .u{color:var(--ink-3)}
+  .sub{color:var(--ink-2);max-width:66ch;margin:0;font-size:15px}
+  .sub b{color:var(--ink);font-weight:600}
+
+  .term{background:var(--sunken);border:1px solid var(--hair);border-radius:10px;overflow:hidden}
+  .term-bar{display:flex;gap:6px;padding:7px 14px;border-bottom:1px solid var(--hair);background:rgba(255,255,255,.02)}
+  .term-bar i{width:10px;height:10px;border-radius:50%;background:var(--deem);opacity:.6}
+  .term-body{padding:11px 15px;font:400 12.5px/1.7 var(--mono);color:var(--ink-2);overflow-x:auto}
+  .term-body .p{color:var(--s1)} .term-body .out{color:var(--ink-3)} .term-body .hl{color:var(--ink)}
+  .cursor{display:inline-block;width:8px;height:15px;background:var(--ink-2);vertical-align:-2px;animation:blink 1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+
+  /* menu */
+  .menu{display:flex;flex-direction:column;gap:10px}
+  .deck{display:grid;grid-template-columns:64px 1fr auto;gap:16px;align-items:center;
+        background:var(--surface);border:1px solid var(--hair);border-left:3px solid var(--ink-3);
+        border-radius:10px;padding:15px 18px;text-decoration:none;color:var(--ink);
+        transition:border-color .15s,background .15s}
+  .deck:hover,.deck:focus-visible{border-left-color:var(--s1);background:var(--raised)}
+  .deck:focus-visible{outline:2px solid var(--s1);outline-offset:2px}
+  .ver{font:700 17px/1.15 var(--mono);color:var(--ink)}
+  .ver small{display:block;font:500 10.5px/1.4 var(--mono);color:var(--ink-3);letter-spacing:.02em}
+  .deck h2{margin:0 0 3px;font:650 16.5px/1.3 var(--sans);letter-spacing:-.005em}
+  .deck .desc{margin:0;font:400 13px/1.5 var(--sans);color:var(--ink-2)}
+  .meta{display:flex;flex-direction:column;align-items:flex-end;gap:7px;white-space:nowrap}
+  .chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}
+  .chip{display:inline-flex;align-items:center;gap:5px;font:600 11px/1 var(--mono);padding:4px 7px;border-radius:5px;border:1px solid var(--hair-2)}
+  .chip .g{font-family:var(--sans)}
+  .chip.v{background:var(--good-wash);border-color:rgba(12,163,12,.4)} .chip.v .g{color:var(--good)}
+  .chip.sim{background:var(--warn-wash);border-color:rgba(250,178,25,.35)} .chip.sim .g{color:var(--warn)}
+  .chip.est{background:rgba(255,255,255,.04);border-color:var(--hair-2);border-style:dashed} .chip.est .g{color:var(--ink-2)}
+  .count{font:500 12px/1.4 var(--mono);color:var(--ink-3)}
+  .count b{color:var(--ink-2);font-weight:600}
+  .key{font:600 11.5px/1 var(--mono);color:var(--ink-2);border:1px solid var(--hair-2);border-bottom-width:2px;border-radius:5px;padding:4px 7px;background:var(--sunken)}
+  @media (max-width:760px){
+    .deck{grid-template-columns:1fr auto}
+    .ver{grid-column:1/-1;display:flex;gap:10px;align-items:baseline}
+    .meta{grid-row:2}
+  }
+
+  footer{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font:400 12px/1.6 var(--mono);color:var(--ink-3);max-width:980px;margin:0 auto;width:100%}
+  footer b{color:var(--ink-2);font-weight:600}
+  footer a{color:var(--s1);text-decoration:none}
+  footer a:hover,footer a:focus-visible{text-decoration:underline}
+  :focus-visible{outline:2px solid var(--s1);outline-offset:2px}
+</style>
+</head>
+<body>
+
+<main>
+  <div>
+    <div class="kicker">deliverables/2026-09-30-2 · companion decks to doc 03 — the real-data BCF case study</div>
+    <h1>httpx<span class="u">_</span>3672 <span class="u">· three decks</span></h1>
+    <p class="sub">The dataset's only httpx task (1 of 129), seen three ways: <b>the matchup</b>, <b>the raw data</b>, and <b>the run itself</b>. Every deck is a single standalone HTML file — no build step, nothing to install.</p>
+  </div>
+
+  <div class="term" role="img" aria-label="Terminal: listing the three deck files">
+    <div class="term-bar"><i></i><i></i><i></i></div>
+    <div class="term-body" id="bootlines"></div>
+  </div>
+
+  <nav class="menu" aria-label="Slide decks">
+    <a class="deck" href="03-bcf-simulation-httpx-3672.slides.html" target="_blank" rel="noopener" data-key="1">
+      <span class="ver">v1<small>the matchup</small></span>
+      <span>
+        <h2>BCF vs a naive agent</h2>
+        <p class="desc">Two simulated trajectories on the same task: the four verified traps, the naive run's self-sabotage revert, the BCF run's journal entry that prevents it, and the head-to-head budget spend.</p>
+        <span class="chips">
+          <span class="chip sim"><span class="g">≈</span> [SIM] both trajectories</span>
+          <span class="chip v"><span class="g">✓</span> [V] task, code &amp; harness facts</span>
+        </span>
+      </span>
+      <span class="meta">
+        <span class="key">press 1</span>
+        <span class="count"><b>11</b> slides</span>
+      </span>
+    </a>
+
+    <a class="deck" href="03-bcf-simulation-httpx-3672.slides.v2.html" target="_blank" rel="noopener" data-key="2">
+      <span class="ver">v2<small>the raw data</small></span>
+      <span>
+        <h2>The training data, verbatim</h2>
+        <p class="desc">What the package actually hands you: the 8-field tasks.jsonl record, all 243 chars of problem_statement, the full test_patch, per-file gold-patch stats, the 740-node/1,618-edge graph, and the snapshot tree.</p>
+        <span class="chips">
+          <span class="chip v"><span class="g">✓</span> 100% [V] — every byte quoted from the package</span>
+        </span>
+      </span>
+      <span class="meta">
+        <span class="key">press 2</span>
+        <span class="count"><b>10</b> slides</span>
+      </span>
+    </a>
+
+    <a class="deck" href="03-bcf-simulation-httpx-3672.slides.v3.html" target="_blank" rel="noopener" data-key="3">
+      <span class="ver">v3<small>the run</small></span>
+      <span>
+        <h2>The BCF run, step by step</h2>
+        <p class="desc">Eight steps from get_status() to resolved = True, each with what happens before, during, and after — the spec and journal t=09 verbatim, submit plus the Container B verdict, and per-call duration estimates.</p>
+        <span class="chips">
+          <span class="chip sim"><span class="g">≈</span> [SIM] the trajectory</span>
+          <span class="chip v"><span class="g">✓</span> [V] harness facts</span>
+          <span class="chip est"><span class="g">±</span> [EST] durations, assumptions stated</span>
+        </span>
+      </span>
+      <span class="meta">
+        <span class="key">press 3</span>
+        <span class="count"><b>13</b> slides</span>
+      </span>
+    </a>
+  </nav>
+</main>
+
+<footer>
+  <span><b>Companions</b> <a href="03-bcf-simulation-httpx-3672.md">03-bcf-simulation-httpx-3672.md</a> (prose walkthrough + reproduction appendix) · <a href="00-README.md">00-README.md</a> (package guide)</span>
+  <span>↑↓ select · <b>1–3</b> open · generated 2026-10-01</span>
+</footer>
+
+<script>
+(function(){
+"use strict";
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;")}
+
+/* boot typing */
+var reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
+var boot=document.getElementById("bootlines");
+var lines=[
+ {cls:"p",txt:"$ cd deliverables/2026-09-30-2 && ls -1 03-*.html"},
+ {cls:"out",txt:"03-bcf-simulation-httpx-3672.slides.html      # v1 — the matchup"},
+ {cls:"out",txt:"03-bcf-simulation-httpx-3672.slides.v2.html   # v2 — the raw data"},
+ {cls:"hl", txt:"03-bcf-simulation-httpx-3672.slides.v3.html   # v3 — the run, step by step"}
+];
+if(reduced){
+  boot.innerHTML=lines.map(function(l){return '<span class="'+l.cls+'">'+esc(l.txt)+'</span>'}).join("<br>");
+}else{
+  var li=0,ci=0,out="";
+  function step(){
+    if(li>=lines.length)return;
+    var l=lines[li];
+    if(ci===0){out+=(out?"<br>":"")+'<span class="'+l.cls+'">'}
+    ci++;
+    if(ci>=l.txt.length){out+=esc(l.txt)+"</span>";li++;ci=0;boot.innerHTML=out;setTimeout(step,li===1?260:120)}
+    else{boot.innerHTML=out+esc(l.txt.slice(0,ci))+'<span class="cursor"></span>';setTimeout(step,12+Math.random()*20)}
+  }
+  step();
+}
+
+/* keyboard: 1–3 open, arrows roam focus */
+var decks=Array.prototype.slice.call(document.querySelectorAll(".deck"));
+document.addEventListener("keydown",function(e){
+  if(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA")return;
+  if(e.key>="1"&&e.key<="3"){
+    var d=decks[+e.key-1];
+    if(d){e.preventDefault();window.open(d.href,"_blank","noopener")}
+  }else if(e.key==="ArrowDown"||e.key==="ArrowUp"){
+    var cur=decks.indexOf(document.activeElement);
+    var next=e.key==="ArrowDown"?(cur+1)%decks.length:(cur-1+decks.length)%decks.length;
+    e.preventDefault();decks[next].focus();
+  }
+});
+})();
+</script>
+</body>
+</html>

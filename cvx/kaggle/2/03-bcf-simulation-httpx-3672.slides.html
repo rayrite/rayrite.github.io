@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>httpx_3672 — BCF vs a naive agent · real-data walkthrough</title>
+<style>
+  :root{
+    --page:#0e1116; --surface:#151a21; --raised:#1b222c; --sunken:#11151c;
+    --hair:rgba(255,255,255,.08); --hair-2:rgba(255,255,255,.14);
+    --ink:#eef1f5; --ink-2:#aab4c0; --ink-3:#7a8694; --deem:#566070;
+    --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181;
+    --good:#0ca30c; --warn:#fab219; --crit:#d03b3b;
+    --good-wash:rgba(12,163,12,.12); --warn-wash:rgba(250,178,25,.10); --crit-wash:rgba(208,59,59,.13);
+    --diff-del:rgba(214,79,67,.14); --diff-add:rgba(25,158,112,.15);
+    --sans:system-ui,-apple-system,"Segoe UI",sans-serif;
+    --mono:"Cascadia Code","JetBrains Mono",ui-monospace,"Consolas",monospace;
+    color-scheme:dark;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--page);color:var(--ink);font-family:var(--sans);font-size:16.5px;line-height:1.55}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto} *,*::before,*::after{animation-duration:.001s!important;transition-duration:.001s!important}}
+
+  /* ---------- deck chrome ---------- */
+  .deck{scroll-snap-type:y proximity}
+  .rail{position:fixed;left:14px;top:50%;transform:translateY(-50%);z-index:40;display:flex;flex-direction:column;gap:9px}
+  .rail button{width:12px;height:12px;border-radius:3px;border:1px solid var(--hair-2);background:transparent;padding:0;cursor:pointer;position:relative}
+  .rail button[aria-current="true"]{background:var(--s1);border-color:var(--s1)}
+  .rail button span{position:absolute;left:22px;top:50%;transform:translateY(-50%);font:500 12px/1 var(--sans);color:var(--ink-2);white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s}
+  .rail button:hover span,.rail button:focus-visible span{opacity:1}
+  .rail button:focus-visible{outline:2px solid var(--s1);outline-offset:2px}
+  @media (max-width:960px){.rail{display:none}}
+
+  .slide{min-height:100svh;scroll-snap-align:start;position:relative;display:flex;padding:48px clamp(20px,6vw,72px) 64px}
+  .slide-inner{max-width:1140px;margin:auto;width:100%;display:flex;flex-direction:column;gap:18px}
+  .receipt{position:absolute;left:clamp(20px,6vw,72px);bottom:26px;right:clamp(20px,6vw,72px);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font:400 12px/1.5 var(--mono);color:var(--ink-3)}
+  .receipt .r b{color:var(--ink-2);font-weight:600}
+  .kicker{font:600 13.5px/1.4 var(--sans);color:var(--ink-3)}
+  h2{font:650 30px/1.2 var(--sans);letter-spacing:-.01em;margin:0;max-width:24ch}
+  .sub{color:var(--ink-2);max-width:72ch;margin:0}
+
+  /* evidence chips */
+  .chip{display:inline-flex;align-items:center;gap:6px;font:600 12px/1 var(--mono);padding:5px 9px;border-radius:5px;border:1px solid var(--hair-2)}
+  .chip .g{font-family:var(--sans)}
+  .chip.v{background:var(--good-wash);border-color:rgba(12,163,12,.4)} .chip.v .g{color:var(--good)}
+  .chip.sim{background:var(--warn-wash);border-color:rgba(250,178,25,.35)} .chip.sim .g{color:var(--warn)}
+  .chip.bad{background:var(--crit-wash);border-color:rgba(208,59,59,.4)} .chip.bad .g{color:#ef8686}
+  .chips{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .chiprow-label{font:500 13px/1 var(--sans);color:var(--ink-3)}
+
+  /* terminal & code */
+  .term{background:var(--sunken);border:1px solid var(--hair);border-radius:10px;overflow:hidden}
+  .term-bar{display:flex;gap:6px;padding:7px 14px;border-bottom:1px solid var(--hair);background:rgba(255,255,255,.02)}
+  .term-bar i{width:10px;height:10px;border-radius:50%;background:var(--deem);opacity:.6}
+  .term-body{padding:12px 16px;font:400 13px/1.6 var(--mono);color:var(--ink-2);overflow-x:auto}
+  .term-body .p{color:var(--s1)} .term-body .out{color:var(--ink-3)} .term-body .hl{color:var(--ink)}
+  .cursor{display:inline-block;width:8px;height:15px;background:var(--ink-2);vertical-align:-2px;animation:blink 1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+  code.inline{font:500 .92em var(--mono);background:var(--raised);padding:1px 6px;border-radius:4px;color:var(--ink)}
+  .diff{font:400 12.5px/1.7 var(--mono)} .diff .del{background:var(--diff-del);color:#e8a09d} .diff .add{background:var(--diff-add);color:#8fd8b8}
+
+  /* stat strip */
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--hair);border:1px solid var(--hair);border-radius:10px;overflow:hidden}
+  .stat{background:var(--surface);padding:11px 16px}
+  .stat b{display:block;font:650 23px/1.15 var(--sans);letter-spacing:-.01em}
+  .stat span{font:400 12.5px/1.4 var(--sans);color:var(--ink-3)}
+
+  /* trap slips */
+  .traps{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media (max-width:860px){.traps{grid-template-columns:1fr}}
+  .trap{background:var(--surface);border:1px solid var(--hair);border-left:3px solid var(--s1);border-radius:8px;padding:14px 18px}
+  .trap:nth-child(2){border-left-color:var(--s5)}
+  .trap:nth-child(3){border-left-color:var(--s4)}
+  .trap:nth-child(4){border-left-color:var(--s2)}
+  .trap h3{margin:0 0 6px;font:650 17px/1.35 var(--sans)}
+  .trap p{margin:0 0 8px;color:var(--ink-2);font-size:13.5px}
+  .trap .where{font:400 11.5px/1.6 var(--mono);color:var(--ink-3)}
+
+  /* asymmetry panels */
+  .asym{display:grid;grid-template-columns:1fr 56px 1fr;gap:0;align-items:stretch}
+  @media (max-width:860px){.asym{grid-template-columns:1fr}.asym .bridge{flex-direction:row!important;margin:10px 0}}
+  .panel{background:var(--surface);border:1px solid var(--hair);border-radius:10px;padding:14px 18px}
+  .panel h4{margin:0 0 10px;font:650 14px/1.4 var(--sans);color:var(--ink-2)}
+  .bridge{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:var(--ink-3);font:500 11.5px/1.4 var(--sans);text-align:center;padding:0 8px}
+
+  /* charts */
+  .chart{background:var(--surface);border:1px solid var(--hair);border-radius:10px;padding:14px 18px 10px}
+  .chart h4{margin:0 0 4px;font:650 15px/1.4 var(--sans)}
+  .chart .note{font:400 12.5px/1.5 var(--sans);color:var(--ink-3);margin:0 0 8px}
+  .chart svg{display:block;width:100%;height:auto}
+  .chart svg text{font-family:var(--mono)}
+  .scrollwrap{overflow-x:auto}
+  .scrollwrap>.inner{min-width:760px}
+  #distChart svg,#allocChart svg{max-width:780px}
+  .legend{display:flex;gap:18px;flex-wrap:wrap;margin:2px 0 10px}
+  .legend .li{display:inline-flex;align-items:center;gap:7px;font:500 12.5px/1 var(--sans);color:var(--ink-2)}
+  .legend .sw{width:10px;height:10px;border-radius:3px}
+  .tooltip{position:fixed;z-index:60;pointer-events:none;background:var(--raised);border:1px solid var(--hair-2);border-radius:8px;padding:10px 12px;max-width:300px;box-shadow:0 8px 24px rgba(0,0,0,.5);opacity:0;transition:opacity .12s}
+  .tooltip.on{opacity:1}
+  .tooltip .t-call{font:650 12px/1.4 var(--mono);color:var(--ink)}
+  .tooltip .t-tool{font:500 12px/1.5 var(--mono);color:var(--ink-2);word-break:break-word}
+  .tooltip .t-note{font:400 12px/1.5 var(--sans);color:var(--ink-3);margin-top:3px}
+  .tooltip .sw{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:6px;vertical-align:0}
+  details.tbl{margin-top:10px;border-top:1px solid var(--hair);padding-top:8px}
+  details.tbl summary{cursor:pointer;font:500 12.5px/1.6 var(--sans);color:var(--ink-3)}
+  details.tbl table{border-collapse:collapse;width:100%;margin-top:8px;font:400 12.5px/1.5 var(--mono)}
+  details.tbl th,details.tbl td{text-align:left;padding:5px 10px;border-bottom:1px solid var(--hair);color:var(--ink-2);font-weight:400}
+  details.tbl th{color:var(--ink-3);font-weight:600}
+  .cap{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:6px 22px;margin:10px 0 0;padding:0;list-style:none}
+  .cap li{font:400 12.5px/1.55 var(--sans);color:var(--ink-2)}
+  .cap .n{font:650 12px var(--mono);color:var(--ink);margin-right:7px}
+
+  /* verdict + gates */
+  .verdict{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .stamp{display:inline-flex;align-items:center;gap:9px;font:700 14px/1 var(--sans);padding:9px 14px;border-radius:8px;border:1px solid}
+  .stamp.fail{background:var(--crit-wash);border-color:rgba(208,59,59,.5);color:#ef8686}
+  .stamp.pass{background:var(--good-wash);border-color:rgba(12,163,12,.45);color:#5ec95e}
+  .stamp .mono{font:600 13px var(--mono)}
+  .gates{display:flex;gap:8px;flex-wrap:wrap}
+  .gate{font:600 12.5px/1 var(--mono);padding:8px 11px;border-radius:6px;background:var(--good-wash);border:1px solid rgba(12,163,12,.35);color:#5ec95e}
+
+  /* head-to-head + component map */
+  .duo-note{font:400 13.5px/1.6 var(--sans);color:var(--ink-2)}
+  .map{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--hair);border:1px solid var(--hair);border-radius:10px;overflow:hidden}
+  @media (max-width:860px){.map{grid-template-columns:1fr}}
+  .map .row{background:var(--surface);padding:11px 16px;display:grid;grid-template-columns:118px 1fr;gap:12px}
+  .map .id{font:650 12.5px/1.5 var(--mono);color:var(--ink)}
+  .map .id small{display:block;font-weight:400;color:var(--ink-3)}
+  .map p{margin:0;font:400 13px/1.5 var(--sans);color:var(--ink-2)}
+  .map p b{color:var(--ink);font-weight:600}
+
+  /* honesty slide */
+  .warnbox{border:1px solid rgba(250,178,25,.35);background:var(--warn-wash);border-radius:10px;padding:12px 16px;font:500 13.5px/1.55 var(--sans);color:var(--ink-2)}
+  .pred{background:var(--surface);border:1px solid var(--hair);border-left:3px solid var(--s1);border-radius:8px;padding:12px 16px}
+  .pred h4{margin:0 0 6px;font:650 14.5px/1.4 var(--sans)}
+  .pred p{margin:0;font:400 13.5px/1.6 var(--sans);color:var(--ink-2)}
+
+  ul.plain{margin:0;padding-left:20px;color:var(--ink-2)} ul.plain li{margin:5px 0;font-size:14px}
+  ul.plain b{color:var(--ink);font-weight:600}
+
+  /* hero slide */
+  .hero-id{font:700 clamp(44px,7.5vw,84px)/1.05 var(--mono);letter-spacing:-.02em;margin:6px 0 2px}
+  .hero-id .u{color:var(--ink-3)}
+  .boot{min-height:150px}
+  .fadein{opacity:0;transform:translateY(8px)}
+  .fadein.in{opacity:1;transform:none;transition:opacity .5s ease,transform .5s ease}
+  @media (prefers-reduced-motion:reduce){.fadein{opacity:1;transform:none}}
+
+  a{color:var(--s1)}
+  :focus-visible{outline:2px solid var(--s1);outline-offset:2px}
+  .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</head>
+<body>
+<nav class="rail" aria-label="Slides">
+  <button data-i="0" aria-current="true"><span>1 · httpx_3672</span></button>
+  <button data-i="1"><span>2 · the task</span></button>
+  <button data-i="2"><span>3 · four traps</span></button>
+  <button data-i="3"><span>4 · trap 1</span></button>
+  <button data-i="4"><span>5 · naive run</span></button>
+  <button data-i="5"><span>6 · BCF run</span></button>
+  <button data-i="6"><span>7 · head-to-head</span></button>
+  <button data-i="7"><span>8 · why it survived</span></button>
+  <button data-i="8"><span>9 · component map</span></button>
+  <button data-i="9"><span>10 · what it doesn't prove</span></button>
+  <button data-i="10"><span>11 · receipts</span></button>
+</nav>
+
+<main class="deck" id="deck">
+
+<!-- ============ 1 · TITLE ============ -->
+<section class="slide" id="s1">
+  <div class="slide-inner">
+    <div class="term boot" role="img" aria-label="Terminal: loading competition task httpx_3672 from the data package">
+      <div class="term-bar"><i></i><i></i><i></i></div>
+      <div class="term-body" id="bootlines"></div>
+    </div>
+    <div class="fadein" id="heroBlock">
+      <div class="kicker">A real-data case study · BCF vs a naive agent · Kaggle Gemma 4 Developer Agent</div>
+      <h1 class="hero-id">httpx<span class="u">_</span>3672</h1>
+      <p class="sub" style="font-size:18px">The <b style="color:var(--ink)">only httpx task</b> in the 129-task training set — and the real-data replacement for the invented <code class="inline">httpx_6821</code> case study, whose functions never existed in the competition code.</p>
+    </div>
+    <div class="fadein chips" id="heroChips" style="gap:14px">
+      <span class="chiprow-label">How to read every claim in this deck:</span>
+      <span class="chip v"><span class="g">✓</span> [V]&nbsp;verified against the data package</span>
+      <span class="chip sim"><span class="g">≈</span> [SIM]&nbsp;simulated trajectory · design target, not measurement</span>
+    </div>
+  </div>
+  <div class="receipt"><span><b>Source</b> deliverables/2026-09-30-2/03-bcf-simulation-httpx-3672.md</span><span>1 / 11</span></div>
+</section>
+
+<!-- ============ 2 · THE TASK ============ -->
+<section class="slide" id="s2">
+  <div class="slide-inner" style="gap:14px">
+    <div class="kicker">The task, verbatim <span class="chip v" style="margin-left:8px"><span class="g">✓</span> tasks.jsonl</span></div>
+    <h2>Five loose bullets, one explicit rename</h2>
+    <div class="term">
+      <div class="term-bar"><i></i><i></i><i></i></div>
+      <div class="term-body">
+        <span class="p">issue · encode/httpx @ 4acf5c2 · created 2025-09-19</span><br>
+        <span class="hl">Server connection handling.</span><br>
+        &nbsp;&nbsp;* Add <span class="hl">HTTPParser.keep_alive</span>.<br>
+        &nbsp;&nbsp;* Server... always read request to completion on keep alives.<br>
+        &nbsp;&nbsp;* <span class="hl">HTTPParser.complete -&gt; .reset</span><br>
+        &nbsp;&nbsp;* Close streams on server exit.<br>
+        &nbsp;&nbsp;* Don't raise <span class="hl">KeyboardException</span> on server exit. <span class="out">&nbsp;← [sic] · hints: none</span>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat"><b>7 files</b><span>in the gold patch — verified</span></div>
+      <div class="stat"><b>2 trees</b><span>sync <code class="inline">src/httpx/</code> + async <code class="inline">src/ahttpx/</code>, file-for-file mirrors</span></div>
+      <div class="stat"><b>9,385 chars</b><span>gold diff — rename, predicate, drain, cleanup</span></div>
+      <div class="stat"><b>1 of 129</b><span>httpx tasks in the whole dataset</span></div>
+    </div>
+    <div class="chart scrollwrap">
+      <div class="inner">
+        <h4>Training tasks by repository <span style="color:var(--ink-3);font-weight:400">— the case study lives on the thinnest slice of the data</span></h4>
+        <div id="distChart" aria-label="Bar chart: fastapi 67, rich 48, requests 13, httpx 1. httpx is highlighted."></div>
+        <details class="tbl"><summary>Data table</summary>
+          <table><thead><tr><th>repo</th><th>tasks</th></tr></thead>
+          <tbody><tr><td>fastapi/fastapi</td><td>67</td></tr><tr><td>Textualize/rich</td><td>48</td></tr><tr><td>psf/requests</td><td>13</td></tr><tr><td>encode/httpx</td><td>1</td></tr></tbody></table>
+        </details>
+      </div>
+    </div>
+  </div>
+  <div class="receipt"><span><b>§1</b> · tasks.jsonl (single line) · snapshot counts</span><span>2 / 11</span></div>
+</section>
+
+<!-- ============ 3 · FOUR TRAPS ============ -->
+<section class="slide" id="s3">
+  <div class="slide-inner">
+    <div class="kicker">What the snapshot actually contains <span class="chip v" style="margin-left:8px"><span class="g">✓</span> all four read this session</span></div>
+    <h2>Four traps, all verified in the code</h2>
+    <div class="traps">
+      <div class="trap">
+        <h3>1 · The suite you can see is not the suite that scores</h3>
+        <p>Local tests still call the old API; the hidden test patch renames it. Local red on the <i>correct</i> fix; local green on a <i>wrong</i> one.</p>
+        <div class="where">tests/test_parsers.py:70, 116, 318, 557, 594 ↔ hidden test_patch (5 hunks)</div>
+      </div>
+      <div class="trap">
+        <h3>2 · A duplicated sync/async tree</h3>
+        <p>Every module exists twice. Naive grep hit-lists double; half-tree fixes look complete and are not. The gold patch touches both trees.</p>
+        <div class="where">src/httpx/_parsers.py:378 &amp; src/ahttpx/_parsers.py:378 · 239 ahttpx.* nodes in the task graph</div>
+      </div>
+      <div class="trap">
+        <h3>3 · A silent no-op at the call site</h3>
+        <p>The server "resets" the parser by evaluating an attribute and discarding it. No test reaches this line; the symptom points here, the tests point elsewhere.</p>
+        <div class="where">src/httpx/_server.py:92 — self._parser.complete &nbsp;(no parentheses)</div>
+      </div>
+      <div class="trap">
+        <h3>4 · Broken code no test reaches</h3>
+        <p>A guaranteed TypeError on the server's 500 path, a GenericAlias where a list belongs, an interruptible wait loop — all real, all named in the issue, all invisible to the graded run.</p>
+        <div class="where">_server.py:48 Response(code=500,…) · _network.py:163 list[NetworkStream] · _server.py:100 wait()</div>
+      </div>
+    </div>
+  </div>
+  <div class="receipt"><span><b>§2</b> · extracted snapshot · graph JSON (740 nodes) · HARNESS_README §8.2</span><span>3 / 11</span></div>
+</section>
+
+<!-- ============ 4 · TRAP 1 ANATOMY ============ -->
+<section class="slide" id="s4">
+  <div class="slide-inner">
+    <div class="kicker">Trap 1 decides the task <span class="chip v" style="margin-left:8px"><span class="g">✓</span> mechanism verified</span></div>
+    <h2>Two suites, one rename, opposite verdicts</h2>
+    <div class="asym">
+      <div class="panel">
+        <h4>Container A — what the agent sees</h4>
+        <div class="diff">
+          tests/test_parsers.py (base commit)<br>
+          <span class="del">-&nbsp;&nbsp;p.complete()</span>&nbsp;&nbsp;× 5 call sites<br><br>
+          After the correct rename (issue text):<br>
+          <span class="out" style="color:var(--ink-3)">5 failed, 19 passed</span><br>
+          <span class="del">AttributeError: 'HTTPParser' object has no attribute 'complete'</span>
+        </div>
+      </div>
+      <div class="bridge"><span>anti-tamper reset</span><span style="font:700 18px var(--sans);color:var(--ink-2)">⇄</span><span>test_patch applied</span></div>
+      <div class="panel">
+        <h4>Container B — what is graded</h4>
+        <div class="diff">
+          tests/test_parsers.py (after hidden test_patch)<br>
+          <span class="add">+&nbsp;&nbsp;p.reset()</span>&nbsp;&nbsp;× 5 call sites<br><br>
+          Agent edits to test files are discarded<br>
+          (git checkout HEAD + git clean -f), then:<br>
+          <span class="add">test_parser · test_parser_server · test_parser_repr</span><br>
+          <span class="add">test_client_connection_close · test_server_connection_close</span>
+        </div>
+      </div>
+    </div>
+    <p class="sub">The graded truth lives in a file the agent never sees. The only bridge is the issue line <code class="inline">HTTPParser.complete -&gt; .reset</code> — so the winning move is to <b style="color:var(--ink)">trust the spec over the local test signal</b>. A policy that treats visible red as ground truth fails here regardless of how well it localizes.</p>
+  </div>
+  <div class="receipt"><span><b>§2 · trap 1</b> · HARNESS_README §8.2.3–5 (reset → test_patch → pytest targets)</span><span>4 / 11</span></div>
+</section>
+
+<!-- ============ 5 · SIM A: NAIVE ============ -->
+<section class="slide" id="s5">
+  <div class="slide-inner">
+    <div class="chips">
+      <div class="kicker" style="flex:1">Simulation A · Config 1 — generic prompt, grep-first, no spec, no gates</div>
+      <span class="chip sim"><span class="g">≈</span> [SIM] one plausible roll, not a distribution</span>
+    </div>
+    <h2>The naive agent rediscovers the traps, the hard way</h2>
+    <div class="chart scrollwrap">
+      <div class="inner">
+        <h4>Tool calls against the 50-call budget — naive (43 calls)</h4>
+        <p class="note">Hover any tick · hollow ticks are free calls (get_status, submit_patch)</p>
+        <div id="ribbonNaive"></div>
+        <ul class="cap">
+          <li><span class="n">①</span>rename applied in the sync parser → local suite goes red on the correct fix</li>
+          <li><span class="n">②</span>reverts the fix the hidden suite would have accepted</li>
+          <li><span class="n">③</span>repeat loop: refuted reads re-derived, one grep repeated verbatim</li>
+          <li><span class="n">④</span>budget warning: "40/50 used — finalize and submit"</li>
+        </ul>
+        <details class="tbl"><summary>Trace table</summary><div id="tblNaive"></div></details>
+      </div>
+    </div>
+    <div class="verdict">
+      <span class="stamp fail">✗ FAIL <span class="mono">resolved = False</span></span>
+      <span class="chip bad"><span class="g">✗</span> test_misread — visible red treated as ground truth</span>
+      <span class="chip bad"><span class="g">✗</span> budget_exhausted_exploring — ≈30 calls before any validated edit</span>
+    </div>
+  </div>
+  <div class="receipt"><span><b>§4</b> · [SIM] trajectory · tool schemas real (HARNESS_README §6)</span><span>5 / 11</span></div>
+</section>
+
+<!-- ============ 6 · SIM B: BCF ============ -->
+<section class="slide" id="s6">
+  <div class="slide-inner">
+    <div class="chips">
+      <div class="kicker" style="flex:1">Simulation B · Config 3 — spec-first, gates, journal · flat, no sub-agents</div>
+      <span class="chip sim"><span class="g">≈</span> [SIM] design target</span>
+    </div>
+    <h2>The BCF agent spends the same budget on decisions</h2>
+    <div class="chart scrollwrap">
+      <div class="inner">
+        <h4>Tool calls against the 50-call budget — BCF (24 calls)</h4>
+        <p class="note">Phases run left to right; G0 blocks all file access until a valid spec exists</p>
+        <div id="ribbonBcf"></div>
+        <ul class="cap">
+          <li><span class="n">spec</span>issue-text classifier → machine-parseable spec with real symbols (2 calls)</li>
+          <li><span class="n">localize</span>3 graph calls find the dual tree; 2 reads confirm the caller-level faults (5)</li>
+          <li><span class="n">patch</span>edits in topological fix_order — rename first, then predicate, then server (11)</li>
+          <li><span class="n">validate</span>/tmp repro · visible tests migrated · targeted + regression pytest (6)</li>
+        </ul>
+        <details class="tbl"><summary>Trace table</summary><div id="tblBcf"></div></details>
+      </div>
+    </div>
+    <div class="verdict">
+      <span class="stamp pass">✓ PASS <span class="mono">resolved = True</span></span>
+      <span class="chip v"><span class="g">✓</span> 0 wrong edits · 0 reverts · 0 loops · rescue never tripped</span>
+    </div>
+  </div>
+  <div class="receipt"><span><b>§5</b> · [SIM] trajectory · graph node ids real (httpx._parsers.HTTPParser.complete)</span><span>6 / 11</span></div>
+</section>
+
+<!-- ============ 7 · HEAD-TO-HEAD ============ -->
+<section class="slide" id="s7">
+  <div class="slide-inner">
+    <div class="kicker">Same 50-call budget, different spend <span class="chip sim" style="margin-left:8px"><span class="g">≈</span> [SIM] design targets</span></div>
+    <h2>Where the calls went</h2>
+    <div class="chart">
+      <h4>Call allocation by activity</h4>
+      <p class="note">Counts exclude free calls (get_status, submit_patch)</p>
+      <div id="allocChart"></div>
+      <details class="tbl"><summary>Data table</summary>
+        <table><thead><tr><th>agent</th><th>spec &amp; status</th><th>search &amp; read</th><th>edits</th><th>validation</th><th>rework</th><th>total</th></tr></thead>
+        <tbody>
+          <tr><td>naive (C1)</td><td>2</td><td>17</td><td>15</td><td>4</td><td>4</td><td>42</td></tr>
+          <tr><td>BCF (C3)</td><td>2</td><td>5</td><td>11</td><td>6</td><td>0</td><td>24</td></tr>
+        </tbody></table>
+      </details>
+    </div>
+    <p class="duo-note">The gap is not search speed — it is <b style="color:var(--ink)">recovery</b>: the naive roll loses calls ②–③ (revert → re-explore → half-redo), while BCF's journal entry written at the rename (<i>"local suite WILL go red; expected"</i>) makes the identical red a non-event. Naive still landed 15 real edits to BCF's 11 — effort was never the constraint; order and memory were. <b style="color:var(--ink)">A lucky naive roll passes → slide 10.</b></p>
+  </div>
+  <div class="receipt"><span><b>§4–6</b> · aggregate of the two [SIM] traces</span><span>7 / 11</span></div>
+</section>
+
+<!-- ============ 8 · WHY IT SURVIVED ============ -->
+<section class="slide" id="s8">
+  <div class="slide-inner">
+    <div class="kicker">The mechanism, not the luck</div>
+    <h2>Why the fix survived: it was written down before the red</h2>
+    <div class="term">
+      <div class="term-bar"><i></i><i></i><i></i></div>
+      <div class="term-body">
+        <span class="p">/tmp/bcf/httpx_3672/journal.md — entry t=09, written the moment the rename lands:</span><br>
+        <span class="hl">- t=09 | action: edit _parsers.py complete-&gt;reset (sync) | result: applied</span><br>
+        <span class="hl">&nbsp;&nbsp;| note: local suite WILL go red; expected — hidden tests renamed (spec: test asymmetry)</span><br>
+        <span class="out">## Ruled out</span><br>
+        <span class="out">- Keeping `complete` + adding `reset` alongside (alias): passes graded tests but duplicates the API; violates minimum-path tenet</span>
+      </div>
+    </div>
+    <div>
+      <div class="kicker" style="margin-bottom:10px">Binary gates — code, not the model, decides "done"</div>
+      <div class="gates">
+        <span class="gate">G0 spec valid ✓</span><span class="gate">G1 scope ✓</span><span class="gate">G2 applies ✓</span><span class="gate">G3 parses ✓</span><span class="gate">G4 targets ✓</span><span class="gate">G5 no-regression ✓</span><span class="gate">G6 non-empty ✓</span>
+      </div>
+    </div>
+    <ul class="plain">
+      <li><b>Preserve working code</b> — additive edits; no rewrite of reset logic → zero regressions</li>
+      <li><b>Minimum-path decomposition</b> — fix_order is a topological sort; the alias shortcut was ruled out in writing</li>
+      <li><b>Breadcrumbs</b> — the t=09 entry converts the trap from a crisis into a no-event; refuted moves are never re-derived</li>
+      <li><b>Binary done</b> — submit allowed only when the gate vector is all-true; submit_patch is free and fires last</li>
+    </ul>
+  </div>
+  <div class="receipt"><span><b>§5 · phase 4</b> + §6 tenet map · journal schema [SIM] after compendium A3</span><span>8 / 11</span></div>
+</section>
+
+<!-- ============ 9 · COMPONENT MAP ============ -->
+<section class="slide" id="s9">
+  <div class="slide-inner">
+    <div class="kicker">Every adopted component, one walkthrough <span class="chip sim" style="margin-left:8px"><span class="g">≈</span> [SIM] firing points</span></div>
+    <h2>What each piece bought on this task</h2>
+    <div class="map">
+      <div class="row"><div class="id">spec-first + G0<small>A6 · tenets 2,4</small></div><p>Traps 2–3 neutralized <b>before any file is opened</b>; localization ≤ 5 calls. <b>Ledger:</b> localization_calls, spec-valid rate</p></div>
+      <div class="row"><div class="id">classifier<small>T20 · issue-text only</small></div><p>Routes a traceback-less, loosely-worded issue to the refactor+feature template. <b>Ledger:</b> classifier accuracy vs taxonomy</p></div>
+      <div class="row"><div class="id">graph-first<small>dual-query, symbols</small></div><p>Dual tree discovered in 3 calls; honest limit logged — no cross-file callers, caller read required. <b>Ledger:</b> turn_first_graph, gold_file_hit</p></div>
+      <div class="row"><div class="id">breadcrumb journal<small>A3 · tenet 3</small></div><p><b>The decisive piece</b> — prevents the self-sabotage revert the naive roll died of. <b>Ledger:</b> repeat_action_rate, loop_rate</p></div>
+      <div class="row"><div class="id">gates G1–G6<small>A8 · tenets 1,4</small></div><p>Monotone ratchet: nothing applied is ever undone by a later red. <b>Ledger:</b> gate vectors, regression_rate</p></div>
+      <div class="row"><div class="id">verification V0–V2<small>A5</small></div><p>Only executable checks block; repro lives in /tmp so it never leaks into the patch. <b>Ledger:</b> false-approval telemetry</p></div>
+      <div class="row"><div class="id">rescue, armed<small>A2</small></div><p>3-strike + budget breakers configured, never tripped — bounded worst case at zero cost. <b>Ledger:</b> rescue_trigger_rate</p></div>
+      <div class="row"><div class="id">ledger + receipts<small>B5 · B1</small></div><p>The deck itself is auditable — the same machinery that caught the invented httpx_6821 table. <b>Ledger:</b> receipt per run</p></div>
+    </div>
+  </div>
+  <div class="receipt"><span><b>§6</b> component→benefit→ledger map · full table in the md doc</span><span>9 / 11</span></div>
+</section>
+
+<!-- ============ 10 · WHAT IT DOESN'T PROVE ============ -->
+<section class="slide" id="s10">
+  <div class="slide-inner">
+    <div class="kicker">The honesty slide</div>
+    <h2>What this walkthrough does not prove</h2>
+    <div class="warnbox">≈ Both trajectories are [SIM] — constructed, grounded in verified artifacts, zero receipts. Turn counts are design targets. This deck is a teaching example and a prompt few-shot, never a result.</div>
+    <ul class="plain">
+      <li><b>A lucky naive roll passes.</b> Keep the rename and migrate the visible tests (edits Container B discards anyway), or alias reset = complete — the graded suite accepts both. The failure shown is the modal trajectory the failure codebook predicts, not a certainty.</li>
+      <li><b>BCF can misroute.</b> The classifier's feature signal is real ("Add …"); template choice is a judgment call. Spec-first is a hypothesis until the paired experiment runs.</li>
+      <li><b>One task.</b> httpx is 1 of 129; a single-roll story on n=1 proves nothing about the other 128 — least of all the fastapi/rich multi-fault tasks where fault-masking actually chains.</li>
+      <li><b>The replacement is already scheduled:</b> Config 1 / 2 / 3 paired runs on the frozen 30-task set, seeds {0,1,2} (Sprints 1–3) — that converts slides 5–7 from [SIM] to [M].</li>
+    </ul>
+    <div class="pred">
+      <h4>Pre-registered prediction #9 (candidate)</h4>
+      <p>On rename/refactor tasks where the visible suite still targets the old API, Config 1 fails by <span style="font-family:var(--mono)">test_misread</span> (reverting correct fixes) at a higher rate than Config 3, whose spec carries the issue-text contract past the local signal. Mechanism: trap 1, which exists in the data regardless of agent design. Measured by failure_code distribution on the taxonomy's compat_or_refactor slice.</p>
+    </div>
+  </div>
+  <div class="receipt"><span><b>§7</b> what this does / does not establish · doc 01 §6.3 predictions 1–8</span><span>10 / 11</span></div>
+</section>
+
+<!-- ============ 11 · RECEIPTS ============ -->
+<section class="slide" id="s11">
+  <div class="slide-inner" style="gap:14px">
+    <div class="kicker">Everything re-checkable <span class="chip v" style="margin-left:8px"><span class="g">✓</span> verified this session</span></div>
+    <h2>Receipts</h2>
+    <div class="map">
+      <div class="row"><div class="id">get_status()<small>harness §6.1</small></div><p><b>No failing_tests field</b> — budget and patch fields only. Confirms the dossier's §4.2 suspicion: prompts must stop implying tests are readable from it.</p></div>
+      <div class="row"><div class="id">search_similar_code<small>harness §6.3</small></div><p>Offline resolver matches <b>symbol names, not prose</b>. The dual-query doctrine stands, but both queries must be symbol-flavored — a wording amendment to the Sprint-3 protocol.</p></div>
+      <div class="row"><div class="id">graph ids<small>graphs/httpx_4acf5c2….json</small></div><p>Fully qualified (<span style="font-family:var(--mono)">httpx._parsers.HTTPParser.complete</span>) — exactly the spec's target.symbol format; the prefix encodes the tree split; 239 ahttpx.* nodes.</p></div>
+      <div class="row"><div class="id">graded ≠ gold<small>harness §8.2.5</small></div><p>pytest targets derive from the test patch (one file here) while the gold patch spans 7 — gold_file_hit will understate without graded-scope awareness.</p></div>
+      <div class="row"><div class="id">files<small>this package</small></div><p><span style="font-family:var(--mono)">deliverables/2026-09-30-2/03-bcf-simulation-httpx-3672.md</span> — full walkthrough + §9 reproduction appendix · scratch: <span style="font-family:var(--mono)">scratch/bcf-sim-2026-09-30/</span></p></div>
+      <div class="row"><div class="id">one-liner<small>re-verify</small></div><p><span style="font-family:var(--mono)">grep -n "def complete" src/httpx/_parsers.py src/ahttpx/_parsers.py</span> → :378 in both trees. Every [V] claim re-derives this cheaply.</p></div>
+    </div>
+    <div class="term"><div class="term-bar"><i></i><i></i><i></i></div>
+      <div class="term-body"><span class="p">$</span> unzip gemma-4-developer-agent.zip tasks.jsonl snapshots/httpx_3672.tgz graphs/httpx_4acf5c2*.json <span class="out">&amp;&amp; tar -xzf snapshots/httpx_3672.tgz</span></div>
+    </div>
+  </div>
+  <div class="receipt"><span><b>§8–9</b> · five new harness facts + reproduction appendix</span><span>11 / 11</span></div>
+</section>
+
+</main>
+<div class="tooltip" id="tip" role="status" aria-hidden="true"></div>
+
+<script>
+(function(){
+"use strict";
+var C = {s1:"#3987e5", s2:"#d95926", s3:"#199e70", s4:"#c98500", s5:"#d55181",
+         ink:"#eef1f5", ink2:"#aab4c0", ink3:"#7a8694", deem:"#566070",
+         hair:"rgba(255,255,255,.14)", grid:"rgba(255,255,255,.08)", surface:"#151a21"};
+var CAT = {
+  orient:{c:C.s5, label:"spec & status"},
+  loc:   {c:C.s1,  label:"search & read"},
+  edit:  {c:C.s2,  label:"edits (applied)"},
+  val:   {c:C.s3,  label:"validation"},
+  rework:{c:C.s4,  label:"rework (reverts & loops)"}
+};
+
+/* ---------- data [SIM: trajectories; tool schemas real] ---------- */
+var naiveCalls = [
+ {c:1,k:"orient",free:true, tool:"get_status()", note:"free — budget check"},
+ {c:2,k:"loc",tool:"run_command: grep -rn 'complete' src/ tests/",note:"12+ hits across 14 files — dual tree doubles the list"},
+ {c:3,k:"loc",tool:"run_command: grep -rl 'complete'",note:"refining the hit list"},
+ {c:4,k:"loc",tool:"read_file: src/httpx/_parsers.py 370–425",note:"finds def complete(self) at :378"},
+ {c:5,k:"loc",tool:"read_file: src/httpx/_parsers.py (re-read)",note:"150-line cap forces windowed reads"},
+ {c:6,k:"loc",tool:"read_file: src/ahttpx/_parsers.py 370–425",note:"same method, async tree"},
+ {c:7,k:"loc",tool:"read_file: src/ahttpx/_parsers.py (re-read)",note:""},
+ {c:8,k:"edit",tool:"edit_file ×3: complete→reset (sync parser)",note:"follows the issue's most explicit line"},
+ {c:9,k:"edit",tool:"edit_file: return False",note:""},
+ {c:10,k:"edit",tool:"edit_file: return True",note:""},
+ {c:11,k:"val",tool:"run_command: pytest tests/test_parsers.py -q",note:"① 5 failed, 19 passed — AttributeError 'complete'"},
+ {c:12,k:"loc",tool:"read_file: failing tests",note:"tests 'still call the old API'"},
+ {c:13,k:"loc",tool:"run_command: git diff",note:"inspecting own changes"},
+ {c:14,k:"loc",tool:"read_file: test_parsers.py again",note:"no model of suite asymmetry"},
+ {c:15,k:"rework",tool:"edit_file: revert rename ×3",note:"② discards the fix the hidden suite would accept"},
+ {c:16,k:"rework",tool:"edit_file: revert",note:""},
+ {c:17,k:"rework",tool:"edit_file: revert",note:"baseline restored"},
+ {c:18,k:"edit",tool:"edit_file: add is_keepalive() (sync)",note:"additive route begins"},
+ {c:19,k:"loc",tool:"read_file: _server.py",note:""},
+ {c:20,k:"edit",tool:"edit_file: _server.py drain logic",note:"chases the ungraded bullets"},
+ {c:21,k:"edit",tool:"edit_file: _server.py",note:""},
+ {c:22,k:"edit",tool:"edit_file: _server.py",note:"discovers Response(code=500) TypeError mid-trace"},
+ {c:23,k:"val",tool:"run_command: pytest tests/",note:"mixed results"},
+ {c:24,k:"edit",tool:"edit_file: _network.py init fix",note:"ungraded scope"},
+ {c:25,k:"edit",tool:"edit_file: _network.py stream close",note:"ungraded scope"},
+ {c:26,k:"edit",tool:"edit_file: _network.py prune",note:"no visible effect on any test"},
+ {c:27,k:"loc",tool:"run_command: grep -rn 'complete' (repeat of call 2)",note:"③ loop begins — verbatim repeat"},
+ {c:28,k:"loc",tool:"read_file: _parsers.py (sync)",note:"re-derived, already refuted"},
+ {c:29,k:"loc",tool:"read_file: _parsers.py (async)",note:""},
+ {c:30,k:"loc",tool:"read_file: _pool.py",note:""},
+ {c:31,k:"loc",tool:"read_file: _pool.py (async)",note:""},
+ {c:32,k:"loc",tool:"read_file: _server.py",note:""},
+ {c:33,k:"loc",tool:"read_file: _network.py",note:""},
+ {c:34,k:"edit",tool:"edit_file: ahttpx parser rename",note:"half-done dual-tree rename"},
+ {c:35,k:"edit",tool:"edit_file: ahttpx returns",note:""},
+ {c:36,k:"edit",tool:"edit_file: ahttpx returns",note:""},
+ {c:37,k:"rework",tool:"edit_file: revert part of 34–36",note:"working tree inconsistent across trees"},
+ {c:38,k:"edit",tool:"edit_file: partial re-apply",note:""},
+ {c:39,k:"val",tool:"run_command: pytest (any call here)",note:"④ budget_warning in response: 40/50 used"},
+ {c:40,k:"val",tool:"run_command: pytest tests/test_parsers.py",note:"still red on old-API tests"},
+ {c:41,k:"edit",tool:"edit_file: cleanup attempt",note:""},
+ {c:42,k:"orient",free:true,tool:"get_status()",note:"free — checking what's left"},
+ {c:43,k:"orient",free:true,tool:"submit_patch()",note:"free — final action; files_changed: 5"}
+];
+var bcfCalls = [
+ {c:0,k:"orient",free:true,tool:"get_status()",note:"free — first action (protocol)"},
+ {c:1,k:"orient",tool:"run_skill_script: classify_issue(issue text)",note:"feature signal 'Add…' + rename signal → compat_or_refactor template; issue text only"},
+ {c:2,k:"orient",tool:"write_spec {task_class, bugs B1–B5, fix_order, validation_plan}",note:"schema-validated tool call; B3 (no-parens fault) written down before any file is opened"},
+ {c:3,k:"loc",tool:"search_similar_code('HTTPParser')",note:"sync + async HTTPParser nodes — dual tree in one call"},
+ {c:4,k:"loc",tool:"get_code_subgraph([HTTPParser, Connection, HTTPConnection] × both trees)",note:"mirror structure explicit"},
+ {c:5,k:"loc",tool:"get_code_neighbors('httpx._parsers.HTTPParser.complete')",note:"intra-class only — honest limit: no cross-file callers in this graph"},
+ {c:6,k:"loc",tool:"read_file: src/httpx/_server.py 85–105",note:"confirms B3: self._parser.complete without parens at :92"},
+ {c:7,k:"loc",tool:"read_file: src/httpx/_network.py 155–185",note:"confirms B4: list[NetworkStream] at :163"},
+ {c:8,k:"edit",tool:"edit_file: B1 sync _parsers.py rename + returns ×3",note:"journal t=09 written here: local red expected"},
+ {c:9,k:"edit",tool:"edit_file: B1 async _parsers.py ×3",note:""},
+ {c:10,k:"edit",tool:"edit_file: B1 sync _pool.py _complete→_reset ×2",note:""},
+ {c:11,k:"edit",tool:"edit_file: B1 async _pool.py ×2",note:""},
+ {c:12,k:"edit",tool:"edit_file: B1+B3 sync _server.py ×2",note:"rename kills the no-parens no-op as a consequence"},
+ {c:13,k:"edit",tool:"edit_file: B1+B3 async _server.py ×2",note:""},
+ {c:14,k:"edit",tool:"edit_file: B2 is_keepalive() sync",note:"naming follows is_idle/is_closed convention"},
+ {c:15,k:"edit",tool:"edit_file: B2 is_keepalive() async",note:""},
+ {c:16,k:"edit",tool:"edit_file: B4 _network.py ×3",note:"init fix + is_closed + close-on-exit; ungraded, issue bullet 4"},
+ {c:17,k:"edit",tool:"edit_file: B5 wait() KeyboardInterrupt",note:"ungraded, issue bullet 5"},
+ {c:18,k:"edit",tool:"edit_file: B5 Response(500, content=…)",note:"fixes the TypeError on the 500 path"},
+ {c:19,k:"val",tool:"write_file: /tmp/repro_reset.py",note:"outside /workspace — never leaks into the patch"},
+ {c:20,k:"val",tool:"run_command: python /tmp/repro_reset.py",note:"new-API contract: PASS"},
+ {c:21,k:"val",tool:"edit_file ×5: migrate visible tests complete()→reset()",note:"refactor hygiene; discarded in Container B — keeps G4 meaningful"},
+ {c:22,k:"val",tool:"run_command: pytest tests/test_parsers.py -q",note:"G4 targets-pass: 24 passed"},
+ {c:23,k:"val",tool:"run_command: pytest tests/test_pool.py tests/test_client.py -q",note:"G5 no-regression: pass"},
+ {c:24,k:"orient",free:true,tool:"submit_patch()",note:"free, last — gates all-true; files_changed: 8"}
+];
+
+/* ---------- svg helpers ---------- */
+var NS="http://www.w3.org/2000/svg";
+function el(n,a,p){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e}
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;")}
+
+function buildRibbon(mount,calls,opts){
+  var W=1080, topN=opts.topFlags, phases=opts.phases, rowH=30, padTop= topN?64:34, padBot= phases?58:40;
+  var H=padTop+rowH+padBot, x0=64, x1=W-16, maxCall=50;
+  var svg=el("svg",{viewBox:"0 0 "+W+" "+H,role:"img","aria-label":opts.aria});
+  var gGrid=el("g",null,svg), gTicks=el("g",null,svg), gTop=el("g",null,svg), gBot=el("g",null,svg);
+  var x=function(c){return x0+(c/maxCall)*(x1-x0)};
+  // gridlines every 10 calls + baseline
+  [0,10,20,30,40,50].forEach(function(t){
+    el("line",{x1:x(t),x2:x(t),y1:padTop-6,y2:padTop+rowH+8,stroke:C.grid,"stroke-width":1},gGrid);
+    var tx=el("text",{x:x(t),y:padTop+rowH+22,"text-anchor":"middle",fill:C.ink3,"font-size":11},gGrid);
+    tx.textContent=t===50?"budget 50":String(t);
+  });
+  el("line",{x1:x0,x2:x1,y1:padTop+rowH/2,y2:padTop+rowH/2,stroke:C.grid,"stroke-width":1},gGrid);
+  // ticks
+  calls.forEach(function(d){
+    var cx=x(d.c), col=CAT[d.k].c;
+    var t=el("rect",{x:cx-3,y:padTop+rowH/2-11,width:6,height:22,rx:2.5,fill:col,class:"tick"},gTicks);
+    if(d.free){t.setAttribute("fill",C.surface);t.setAttribute("stroke",col);t.setAttribute("stroke-width",2)}
+    t.dataset.c=d.c; t.dataset.tool=d.tool; t.dataset.note=d.note||""; t.dataset.free=!!d.free;
+    t.dataset.cat=CAT[d.k].label; t.dataset.col=col;
+    t.setAttribute("tabindex","0");
+  });
+  // top annotation flags
+  (topN||[]).forEach(function(f,i){
+    var cx=x(f.c);
+    el("circle",{cx:cx,cy:padTop-26,r:9,fill:C.surface,stroke:C.ink2,"stroke-width":1},gTop);
+    var tx=el("text",{x:cx,y:padTop-22.5,"text-anchor":"middle",fill:C.ink,"font-size":11},gTop);
+    tx.textContent=f.n;
+    el("line",{x1:cx,x2:cx,y1:padTop-16,y2:padTop-2,stroke:C.ink3,"stroke-width":1},gTop);
+  });
+  // bottom phase spans
+  (phases||[]).forEach(function(p){
+    var a=x(p.from), b=x(p.to);
+    el("line",{x1:a,x2:b,y1:padTop+rowH+34,y2:padTop+rowH+34,stroke:CAT[p.k].c,"stroke-width":2},gBot);
+    el("line",{x1:a,x2:a,y1:padTop+rowH+34,y2:padTop+rowH+28,stroke:CAT[p.k].c,"stroke-width":2},gBot);
+    el("line",{x1:b,x2:b,y1:padTop+rowH+34,y2:padTop+rowH+28,stroke:CAT[p.k].c,"stroke-width":2},gBot);
+    var tx=el("text",{x:(a+b)/2,y:padTop+rowH+50,"text-anchor":"middle",fill:C.ink2,"font-size":11},gBot);
+    tx.textContent=p.label;
+  });
+  mount.appendChild(svg);
+  return svg;
+}
+
+function buildDist(mount){
+  var data=[["fastapi",67,C.deem],["rich",48,C.deem],["requests",13,C.deem],["httpx",1,C.s1]];
+  var W=760,rowH=20,gap=10,padL=110,padR=64,H=data.length*(rowH+gap)+8;
+  var svg=el("svg",{viewBox:"0 0 "+W+" "+H,role:"img","aria-label":"Training tasks by repository: fastapi 67, rich 48, requests 13, httpx 1"});
+  var max=67,bx=padL,bw=W-padL-padR;
+  data.forEach(function(d,i){
+    var y=i*(rowH+gap)+4, w=Math.max(4,(d[1]/max)*bw);
+    var lab=el("text",{x:0,y:y+rowH/2+4,fill:C.ink2,"font-size":13},svg); lab.textContent=d[0];
+    var r=el("rect",{x:bx,y:y,width:w,height:rowH,rx:4,fill:d[2]},svg);
+    if(d[0]==="httpx")r.setAttribute("width",8);
+    var v=el("text",{x:Math.max(bx+w+10,bx+ (d[1]>=10? w+10 : 18)),y:y+rowH/2+4.5,fill:d[1]===1?C.ink:C.ink2,"font-size":13,"font-weight":600},svg);
+    v.textContent=String(d[1])+(d[1]===1?"  ← this deck":"");
+    r.dataset.c=d[1]; r.dataset.repo=d[0];
+  });
+  mount.appendChild(svg);
+}
+
+function buildAlloc(mount){
+  var rows=[["naive · C1",[["orient",2],["loc",17],["edit",15],["val",4],["rework",4]]],
+            ["BCF · C3",[["orient",2],["loc",5],["edit",11],["val",6]]]];
+  var W=760,padL=110,padR=64,rowH=24,gap=34,bw=W-padL-padR,total=42;
+  var H=2*rowH+gap+26;
+  var svg=el("svg",{viewBox:"0 0 "+W+" "+H,role:"img","aria-label":"Call allocation: naive 42 calls vs BCF 24 calls by activity"});
+  rows.forEach(function(r,i){
+    var y=i*(rowH+gap)+4, x=padL, sum=r[1].reduce(function(a,s){return a+s[1]},0);
+    var lab=el("text",{x:0,y:y+rowH/2+4,fill:C.ink2,"font-size":13},svg); lab.textContent=r[0];
+    r[1].forEach(function(s){
+      var w=(s[1]/total)*bw; if(w<=0)return;
+      var rect=el("rect",{x:x,y:y,width:Math.max(0,w-2),height:rowH,rx:3,fill:CAT[s[0]].c},svg);
+      rect.dataset.cat=CAT[s[0]].label; rect.dataset.n=s[1];
+      if(w>64){var t=el("text",{x:x+w/2,y:y+rowH/2+4.5,"text-anchor":"middle","font-size":12,"font-weight":600,fill:"#ffffff"},svg);t.textContent=s[1]}
+      x+=w;
+    });
+    var tot=el("text",{x:x+10,y:y+rowH/2+4.5,fill:C.ink,"font-size":13,"font-weight":700},svg);
+    tot.textContent=sum+" calls";
+  });
+  mount.appendChild(svg);
+}
+
+function legendHTML(cats){
+  return '<div class="legend">'+cats.map(function(k){
+    return '<span class="li"><span class="sw" style="background:'+CAT[k].c+'"></span>'+CAT[k].label+'</span>';
+  }).join("")+'</div>';
+}
+
+function traceTable(calls, mount){
+  var h='<table><thead><tr><th>call</th><th>tool</th><th>note</th></tr></thead><tbody>';
+  calls.forEach(function(d){
+    h+='<tr><td>'+(d.free?d.c+" (free)":d.c)+'</td><td>'+esc(d.tool)+'</td><td>'+esc(d.note||"")+'</td></tr>';
+  });
+  mount.innerHTML=h+'</tbody></table>';
+}
+
+/* ---------- tooltip (nearest-point) ---------- */
+var tip=document.getElementById("tip");
+function showTip(tick,ev){
+  tip.innerHTML='<div class="t-call">call '+tick.dataset.c+(tick.dataset.free==="true"?' · free':'')+
+    ' <span class="sw" style="background:'+tick.dataset.col+'"></span>'+esc(tick.dataset.cat)+'</div>'+
+    '<div class="t-tool">'+esc(tick.dataset.tool)+'</div>'+
+    (tick.dataset.note?'<div class="t-note">'+esc(tick.dataset.note)+'</div>':'');
+  tip.classList.add("on");
+  moveTip(ev);
+}
+function moveTip(ev){
+  var pad=14,w=tip.offsetWidth,h=tip.offsetHeight;
+  var x=ev.clientX+w+pad>innerWidth?ev.clientX-w-pad:ev.clientX+pad;
+  var y=Math.max(8,Math.min(innerHeight-h-8,ev.clientY-h/2));
+  tip.style.left=x+"px"; tip.style.top=y+"px";
+}
+function hideTip(){tip.classList.remove("on")}
+
+document.querySelectorAll("#ribbonNaive,#ribbonBcf").forEach(function(mount){
+  var svg=mount.getAttribute("id")?
+    (mount.id==="ribbonNaive"
+      ?buildRibbon(mount,naiveCalls,{topFlags:[{c:11,n:"①"},{c:15,n:"②"},{c:27,n:"③"},{c:39,n:"④"}],phases:null,aria:"Naive agent: 43 tool calls against the 50-call budget; annotated failure moments"})
+      :buildRibbon(mount,bcfCalls,{topFlags:null,phases:[{from:1,to:2,k:"orient",label:"spec"},{from:3,to:7,k:"loc",label:"localize"},{from:8,to:18,k:"edit",label:"patch"},{from:19,to:23,k:"val",label:"validate"}],aria:"BCF agent: 24 tool calls against the 50-call budget, grouped by phase"}))
+    :null;
+  if(!svg)return;
+  var ticks=Array.prototype.slice.call(svg.querySelectorAll(".tick"));
+  function nearest(ev){
+    var pt=svg.createSVGPoint(); pt.x=ev.clientX; pt.y=ev.clientY;
+    var p=pt.matrixTransform(svg.getScreenCTM().inverse());
+    var best=null,bd=1e9;
+    ticks.forEach(function(t){
+      var d=Math.abs((parseFloat(t.getAttribute("x"))+3)-p.x);
+      if(d<bd){bd=d;best=t}
+    });
+    return bd<26?best:null;
+  }
+  svg.addEventListener("mousemove",function(ev){
+    var t=nearest(ev);
+    if(t){ticks.forEach(function(o){o.setAttribute("opacity",o===t?"1":".45")});showTip(t,ev)}
+    else{ticks.forEach(function(o){o.removeAttribute("opacity")});hideTip()}
+  });
+  svg.addEventListener("mouseleave",function(){ticks.forEach(function(o){o.removeAttribute("opacity")});hideTip()});
+  ticks.forEach(function(t){
+    t.addEventListener("focus",function(){showTip(t,{clientX:innerWidth/2,clientY:innerHeight/2-120})});
+    t.addEventListener("blur",hideTip);
+  });
+});
+
+buildDist(document.getElementById("distChart"));
+buildAlloc(document.getElementById("allocChart"));
+document.getElementById("ribbonNaive").insertAdjacentHTML("afterbegin",legendHTML(["orient","loc","edit","val","rework"]));
+document.getElementById("ribbonBcf").insertAdjacentHTML("afterbegin",legendHTML(["orient","loc","edit","val"]));
+document.getElementById("allocChart").insertAdjacentHTML("afterbegin",legendHTML(["orient","loc","edit","val","rework"]));
+traceTable(naiveCalls,document.getElementById("tblNaive"));
+traceTable(bcfCalls,document.getElementById("tblBcf"));
+
+/* simple chart-mark tooltips (dist + alloc) */
+document.querySelectorAll("#distChart rect[data-repo],#allocChart rect[data-cat]").forEach(function(r){
+  r.addEventListener("mouseenter",function(ev){
+    tip.innerHTML='<div class="t-call">'+(r.dataset.repo?esc(r.dataset.repo):esc(r.dataset.cat))+'</div><div class="t-tool">'+(r.dataset.n?r.dataset.n+" calls":r.dataset.c+" tasks")+'</div>';
+    tip.classList.add("on"); moveTip(ev);
+  });
+  r.addEventListener("mousemove",moveTip);
+  r.addEventListener("mouseleave",hideTip);
+});
+
+/* ---------- boot sequence (slide 1) ---------- */
+var reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
+var boot=document.getElementById("bootlines");
+var lines=[
+ {cls:"p",txt:"$ swegemma eval --task-id httpx_3672 --snapshots-dir snapshots"},
+ {cls:"out",txt:"[harness] task: httpx_3672 · repo encode/httpx · base 4acf5c2"},
+ {cls:"out",txt:"[harness] snapshot extracted — zero future git history"},
+ {cls:"out",txt:"[harness] 740 graph nodes ready · 2 mirrored trees · problem: 5 bullets, 0 hints"}
+];
+if(reduced){
+  boot.innerHTML=lines.map(function(l){return '<span class="'+l.cls+'">'+esc(l.txt)+'</span>'}).join("<br>")+'<br>';
+  document.querySelectorAll(".fadein").forEach(function(e){e.classList.add("in")});
+}else{
+  var li=0,ci=0,cur=null,out="";
+  function step(){
+    if(li>=lines.length){cur=null;["heroBlock","heroChips"].forEach(function(id,i){setTimeout(function(){document.getElementById(id).classList.add("in")},120+i*260)});return}
+    var l=lines[li];
+    if(ci===0){cur='<span class="'+l.cls+'">';out+=(out?"<br>":"")+cur}
+    ci++;
+    if(ci>=l.txt.length){out+=esc(l.txt)+"</span>";li++;ci=0;boot.innerHTML=out;setTimeout(step,li===1?300:140)}
+    else{boot.innerHTML=out+esc(l.txt.slice(0,ci))+'<span class="cursor"></span>';setTimeout(step,14+Math.random()*26)}
+  }
+  step();
+}
+
+/* ---------- deck nav ---------- */
+var slides=Array.prototype.slice.call(document.querySelectorAll(".slide"));
+var railBtns=Array.prototype.slice.call(document.querySelectorAll(".rail button"));
+railBtns.forEach(function(b){b.addEventListener("click",function(){slides[+b.dataset.i].scrollIntoView({behavior:reduced?"auto":"smooth"})})});
+document.addEventListener("keydown",function(e){
+  if(e.target.tagName==="SUMMARY"||e.target.tagName==="BUTTON")return;
+  var cur=slides.findIndex(function(s){var r=s.getBoundingClientRect();return r.top>= -innerHeight/2 && r.top < innerHeight/2});
+  var go=null;
+  if(e.key==="ArrowDown"||e.key==="PageDown"||e.key===" ")go=Math.min(slides.length-1,cur+1);
+  else if(e.key==="ArrowUp"||e.key==="PageUp")go=Math.max(0,cur-1);
+  else if(e.key==="Home")go=0; else if(e.key==="End")go=slides.length-1;
+  if(go!==null){e.preventDefault();slides[go].scrollIntoView({behavior:reduced?"auto":"smooth"})}
+});
+if("IntersectionObserver" in window){
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(en){
+      if(en.isIntersecting){
+        var i=slides.indexOf(en.target);
+        railBtns.forEach(function(b){b.setAttribute("aria-current",String(+b.dataset.i===i))});
+        en.target.querySelectorAll(".fadein").forEach(function(f){f.classList.add("in")});
+      }
+    });
+  },{threshold:.55});
+  slides.forEach(function(s){io.observe(s)});
+}
+})();
+</script>
+</body>
+</html>

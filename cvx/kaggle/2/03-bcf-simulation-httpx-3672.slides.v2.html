@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>httpx_3672 — the raw training data, verbatim · v2</title>
+<style>
+  :root{
+    --page:#0e1116; --surface:#151a21; --raised:#1b222c; --sunken:#11151c;
+    --hair:rgba(255,255,255,.08); --hair-2:rgba(255,255,255,.14);
+    --ink:#eef1f5; --ink-2:#aab4c0; --ink-3:#7a8694; --deem:#566070;
+    --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181;
+    --good:#0ca30c; --warn:#fab219; --crit:#d03b3b;
+    --good-wash:rgba(12,163,12,.12); --warn-wash:rgba(250,178,25,.10); --crit-wash:rgba(208,59,59,.13);
+    --diff-del:rgba(214,79,67,.14); --diff-add:rgba(25,158,112,.15);
+    --sans:system-ui,-apple-system,"Segoe UI",sans-serif;
+    --mono:"Cascadia Code","JetBrains Mono",ui-monospace,"Consolas",monospace;
+    color-scheme:dark;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--page);color:var(--ink);font-family:var(--sans);font-size:16.5px;line-height:1.55}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto} *,*::before,*::after{animation-duration:.001s!important;transition-duration:.001s!important}}
+
+  /* ---------- deck chrome ---------- */
+  .deck{scroll-snap-type:y proximity}
+  .rail{position:fixed;left:14px;top:50%;transform:translateY(-50%);z-index:40;display:flex;flex-direction:column;gap:9px}
+  .rail button{width:12px;height:12px;border-radius:3px;border:1px solid var(--hair-2);background:transparent;padding:0;cursor:pointer;position:relative}
+  .rail button[aria-current="true"]{background:var(--s1);border-color:var(--s1)}
+  .rail button span{position:absolute;left:22px;top:50%;transform:translateY(-50%);font:500 12px/1 var(--sans);color:var(--ink-2);white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s}
+  .rail button:hover span,.rail button:focus-visible span{opacity:1}
+  .rail button:focus-visible{outline:2px solid var(--s1);outline-offset:2px}
+  @media (max-width:960px){.rail{display:none}}
+
+  .slide{min-height:100svh;scroll-snap-align:start;position:relative;display:flex;padding:48px clamp(20px,6vw,72px) 64px}
+  .slide-inner{max-width:1140px;margin:auto;width:100%;display:flex;flex-direction:column;gap:18px}
+  .receipt{position:absolute;left:clamp(20px,6vw,72px);bottom:26px;right:clamp(20px,6vw,72px);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font:400 12px/1.5 var(--mono);color:var(--ink-3)}
+  .receipt .r b{color:var(--ink-2);font-weight:600}
+  .kicker{font:600 13.5px/1.4 var(--sans);color:var(--ink-3)}
+  h2{font:650 30px/1.2 var(--sans);letter-spacing:-.01em;margin:0;max-width:26ch}
+  .sub{color:var(--ink-2);max-width:74ch;margin:0}
+
+  /* evidence chips */
+  .chip{display:inline-flex;align-items:center;gap:6px;font:600 12px/1 var(--mono);padding:5px 9px;border-radius:5px;border:1px solid var(--hair-2)}
+  .chip .g{font-family:var(--sans)}
+  .chip.v{background:var(--good-wash);border-color:rgba(12,163,12,.4)} .chip.v .g{color:var(--good)}
+  .chips{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+  /* terminal & code */
+  .term{background:var(--sunken);border:1px solid var(--hair);border-radius:10px;overflow:hidden}
+  .term-bar{display:flex;gap:6px;padding:7px 14px;border-bottom:1px solid var(--hair);background:rgba(255,255,255,.02)}
+  .term-bar i{width:10px;height:10px;border-radius:50%;background:var(--deem);opacity:.6}
+  .term-body{padding:12px 16px;font:400 13px/1.6 var(--mono);color:var(--ink-2);overflow-x:auto}
+  .term-body .p{color:var(--s1)} .term-body .out{color:var(--ink-3)} .term-body .hl{color:var(--ink)}
+  .cursor{display:inline-block;width:8px;height:15px;background:var(--ink-2);vertical-align:-2px;animation:blink 1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+  code.inline{font:500 .92em var(--mono);background:var(--raised);padding:1px 6px;border-radius:4px;color:var(--ink)}
+  .diff{font:400 12.5px/1.7 var(--mono)} .diff .del{background:var(--diff-del);color:#e8a09d} .diff .add{background:var(--diff-add);color:#8fd8b8}
+  .diff .ctx{color:var(--ink-3)} .diff .meta{color:var(--s1)}
+
+  /* stat strip */
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--hair);border:1px solid var(--hair);border-radius:10px;overflow:hidden}
+  .stat{background:var(--surface);padding:11px 16px}
+  .stat b{display:block;font:650 23px/1.15 var(--sans);letter-spacing:-.01em}
+  .stat span{font:400 12.5px/1.4 var(--sans);color:var(--ink-3)}
+
+  /* schema + data tables */
+  table.data{border-collapse:collapse;width:100%;font:400 12.5px/1.5 var(--mono)}
+  table.data th,table.data td{text-align:left;padding:7px 12px;border-bottom:1px solid var(--hair);color:var(--ink-2);font-weight:400;vertical-align:top}
+  table.data th{color:var(--ink-3);font-weight:600;white-space:nowrap}
+  table.data td.k{color:var(--ink);font-weight:600;white-space:nowrap}
+  table.data td.num{font-variant-numeric:tabular-nums}
+
+  /* panels */
+  .panel{background:var(--surface);border:1px solid var(--hair);border-radius:10px;padding:14px 18px}
+  .panel h4{margin:0 0 8px;font:650 14px/1.4 var(--sans);color:var(--ink-2)}
+  .twocol{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media (max-width:860px){.twocol{grid-template-columns:1fr}}
+
+  /* charts */
+  .chart{background:var(--surface);border:1px solid var(--hair);border-radius:10px;padding:14px 18px 10px}
+  .chart h4{margin:0 0 4px;font:650 15px/1.4 var(--sans)}
+  .chart .note{font:400 12.5px/1.5 var(--sans);color:var(--ink-3);margin:0 0 8px}
+  .chart svg{display:block;width:100%;height:auto}
+  .chart svg text{font-family:var(--mono)}
+  #filesBar svg{max-width:860px}
+  .legend{display:flex;gap:18px;flex-wrap:wrap;margin:2px 0 10px}
+  .legend .li{display:inline-flex;align-items:center;gap:7px;font:500 12.5px/1 var(--sans);color:var(--ink-2)}
+  .legend .sw{width:10px;height:10px;border-radius:3px}
+  .tooltip{position:fixed;z-index:60;pointer-events:none;background:var(--raised);border:1px solid var(--hair-2);border-radius:8px;padding:10px 12px;max-width:300px;box-shadow:0 8px 24px rgba(0,0,0,.5);opacity:0;transition:opacity .12s}
+  .tooltip.on{opacity:1}
+  .tooltip .t-call{font:650 12px/1.4 var(--mono);color:var(--ink)}
+  .tooltip .t-tool{font:500 12px/1.5 var(--mono);color:var(--ink-2);word-break:break-word}
+  details.tbl{margin-top:10px;border-top:1px solid var(--hair);padding-top:8px}
+  details.tbl summary{cursor:pointer;font:500 12.5px/1.6 var(--sans);color:var(--ink-3)}
+  details.tbl table{border-collapse:collapse;width:100%;margin-top:8px;font:400 12.5px/1.5 var(--mono)}
+  details.tbl th,details.tbl td{text-align:left;padding:5px 10px;border-bottom:1px solid var(--hair);color:var(--ink-2);font-weight:400}
+  details.tbl th{color:var(--ink-3);font-weight:600}
+
+  ul.plain{margin:0;padding-left:20px;color:var(--ink-2)} ul.plain li{margin:5px 0;font-size:14px}
+  ul.plain b{color:var(--ink);font-weight:600}
+  ul.tree{margin:0;padding-left:4px;list-style:none;font:400 12.5px/1.8 var(--mono);color:var(--ink-2)}
+  ul.tree li::before{content:"–  ";color:var(--ink-3)}
+  ul.tree b{color:var(--ink);font-weight:600}
+
+  /* hero slide */
+  .hero-id{font:700 clamp(44px,7.5vw,84px)/1.05 var(--mono);letter-spacing:-.02em;margin:6px 0 2px}
+  .hero-id .u{color:var(--ink-3)}
+  .boot{min-height:130px}
+  .fadein{opacity:0;transform:translateY(8px)}
+  .fadein.in{opacity:1;transform:none;transition:opacity .5s ease,transform .5s ease}
+  @media (prefers-reduced-motion:reduce){.fadein{opacity:1;transform:none}}
+
+  :focus-visible{outline:2px solid var(--s1);outline-offset:2px}
+</style>
+</head>
+<body>
+<nav class="rail" aria-label="Slides">
+  <button data-i="0" aria-current="true"><span>1 · the package</span></button>
+  <button data-i="1"><span>2 · the record</span></button>
+  <button data-i="2"><span>3 · problem_statement</span></button>
+  <button data-i="3"><span>4 · test_patch</span></button>
+  <button data-i="4"><span>5 · gold patch map</span></button>
+  <button data-i="5"><span>6 · traps, verbatim</span></button>
+  <button data-i="6"><span>7 · the graph</span></button>
+  <button data-i="7"><span>8 · the snapshot</span></button>
+  <button data-i="8"><span>9 · what reaches the agent</span></button>
+  <button data-i="9"><span>10 · receipts</span></button>
+</nav>
+
+<main class="deck" id="deck">
+
+<!-- ============ 1 · TITLE ============ -->
+<section class="slide" id="s1">
+  <div class="slide-inner">
+    <div class="term boot" role="img" aria-label="Terminal: extracting the competition data package for task httpx_3672">
+      <div class="term-bar"><i></i><i></i><i></i></div>
+      <div class="term-body" id="bootlines"></div>
+    </div>
+    <div class="fadein" id="heroBlock">
+      <div class="kicker">Version 2 — the raw data, verbatim · companion to the simulation deck (v1)</div>
+      <h1 class="hero-id">httpx<span class="u">_</span>3672</h1>
+      <p class="sub" style="font-size:18px">What the training set actually hands you for this task: <b style="color:var(--ink)">one JSON line, one graph file, one tarball</b>. This deck shows their contents — every byte below is quoted from the package, nothing simulated.</p>
+    </div>
+    <div class="fadein chips" id="heroChips" style="gap:14px">
+      <span class="chip v"><span class="g">✓</span> 100% [V] — verbatim from the data package, read 2026-10-01</span>
+      <span class="chip v"><span class="g">✓</span> elisions marked with “…” and labeled</span>
+    </div>
+  </div>
+  <div class="receipt"><span><b>Source</b> input/kagglecomp/kagglecomp_data_package/ → scratch/bcf-sim-2026-09-30/</span><span>1 / 10</span></div>
+</section>
+
+<!-- ============ 2 · THE RECORD ============ -->
+<section class="slide" id="s2">
+  <div class="slide-inner" style="gap:14px">
+    <div class="kicker">tasks.jsonl — one task is one line <span class="chip v" style="margin-left:8px"><span class="g">✓</span> parsed this session</span></div>
+    <h2>The whole task is 11,312 characters on one line of a 129-line file</h2>
+    <div class="stats">
+      <div class="stat"><b>129 lines</b><span>one JSON object per line — the entire training set</span></div>
+      <div class="stat"><b>8 fields</b><span>the complete schema; there is nothing else</span></div>
+      <div class="stat"><b>11,312 chars</b><span>this task's line, patches included</span></div>
+      <div class="stat"><b>0 chars</b><span>hints_text — the help channel is empty</span></div>
+    </div>
+    <div class="panel">
+      <h4>Field-by-field, in the order they appear in the raw line</h4>
+      <table class="data">
+        <thead><tr><th>field</th><th>this task's value</th><th>size</th></tr></thead>
+        <tbody>
+          <tr><td class="k">instance_id</td><td>"httpx_3672"</td><td class="num">10</td></tr>
+          <tr><td class="k">repo</td><td>"encode/httpx"</td><td class="num">12</td></tr>
+          <tr><td class="k">base_commit</td><td>"4acf5c2c37714cc63b5cf71b3e284fca83c90311"</td><td class="num">40</td></tr>
+          <tr><td class="k">patch</td><td>gold diff — 7 files, 18 hunks, the next 5 slides</td><td class="num">9,385</td></tr>
+          <tr><td class="k">test_patch</td><td>hidden test diff — 1 file, 5 hunks (slide 4)</td><td class="num">1,115</td></tr>
+          <tr><td class="k">problem_statement</td><td>the issue text — the agent's entire brief (slide 3)</td><td class="num">243</td></tr>
+          <tr><td class="k">hints_text</td><td>""</td><td class="num">0</td></tr>
+          <tr><td class="k">created_at</td><td>"2025-09-19T11:03:13Z"</td><td class="num">20</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="sub">Two of the eight fields — <code class="inline">patch</code> and <code class="inline">test_patch</code> — are the answer key. They exist only inside the harness; the agent never sees them (slide 9). Everything an agent can act on arrives through the other 243 characters.</p>
+  </div>
+  <div class="receipt"><span><b>tasks.jsonl</b> · the only httpx line of 129 · JSON.parse'd in-browser</span><span>2 / 10</span></div>
+</section>
+
+<!-- ============ 3 · PROBLEM STATEMENT ============ -->
+<section class="slide" id="s3">
+  <div class="slide-inner">
+    <div class="kicker">problem_statement — all 243 characters, verbatim</div>
+    <h2>The entire brief: a title and five bullets</h2>
+    <div class="term">
+      <div class="term-bar"><i></i><i></i><i></i></div>
+      <div class="term-body">
+        <span class="hl">Server connection handling.</span><br>
+        <br>
+        * Add <span class="hl">`HTTPParser.keep_alive`</span>.<br>
+        * Server... always read request to completion on keep alives.<br>
+        * <span class="hl">`HTTPParser.complete` -&gt; `.reset`</span><br>
+        * Close streams on server exit.<br>
+        * Don't raise <span class="hl">`KeyboardException`</span> on server exit. <span class="out">&nbsp;← [sic] — the issue says KeyboardException; the fix handles KeyboardInterrupt</span>
+      </div>
+    </div>
+    <div class="twocol">
+      <div class="panel">
+        <h4>Quirks worth knowing before you parse it</h4>
+        <ul class="plain">
+          <li><b>Mixed line endings:</b> the header uses <code class="inline">\n</code>, the five bullets carry <code class="inline">\r\n</code> — a GitHub-export artifact. Normalize before splitting.</li>
+          <li><b>No traceback, no repro, no file names.</b> Every symbol named here (<code class="inline">HTTPParser</code>) must be found in the code by the agent itself.</li>
+          <li><b>Ellipsis in the spec:</b> "Server... always read" — the literal three dots are the issue author's, not an elision.</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h4>Signal density</h4>
+        <ul class="plain">
+          <li>243 chars of brief vs. a 9,385-char answer — a <b>1:39</b> prompt-to-solution ratio.</li>
+          <li>Bullet 3 is the only line that names both APIs; it is the graded contract (slide 4).</li>
+          <li>Bullets 1, 4, 5 describe behavior no graded test exercises — real work, zero score.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="receipt"><span><b>rec.problem_statement</b> · 243 chars · CRLF check run in-browser</span><span>3 / 10</span></div>
+</section>
+
+<!-- ============ 4 · TEST PATCH ============ -->
+<section class="slide" id="s4">
+  <div class="slide-inner">
+    <div class="kicker">test_patch — 1,115 chars, 5 hunks, one file <span class="chip v" style="margin-left:8px"><span class="g">✓</span> shown in full below</span></div>
+    <h2>The graded truth is five identical renames</h2>
+    <div class="term">
+      <div class="term-bar"><i></i><i></i><i></i></div>
+      <div class="term-body diff">
+        <span class="meta">--- a/tests/test_parsers.py</span><br>
+        <span class="meta">+++ b/tests/test_parsers.py</span><br>
+        <span class="meta">@@ -67,7 +67,7 @@ def test_parser():</span><br>
+        <span class="ctx">    assert not p.is_idle()</span><br>
+        <span class="del">-    p.complete()</span><br>
+        <span class="add">+    p.reset()</span><br>
+        <span class="ctx">    assert p.is_idle()</span><br>
+        <br>
+        <span class="out">… the same two-line change, four more times …</span><br>
+        <span class="meta">@@ -113,7 +113,7 @@ def test_parser_server():</span>&nbsp;&nbsp;<span class="meta">@@ -315,7 +315,7 @@ def test_parser_repr():</span><br>
+        <span class="meta">@@ -554,7 +554,7 @@ def test_client_connection_close():</span>&nbsp;&nbsp;<span class="meta">@@ -591,7 +591,7 @@ def test_server_connection_close():</span><br>
+      </div>
+    </div>
+    <ul class="plain">
+      <li><b>Resolution = these 5 lines passing.</b> The harness resets test files to base, applies this patch in Container B, and runs pytest on the touched file — exit 0 plus valid JUnit XML is the only scoreboard.</li>
+      <li><b>The visible suite disagrees:</b> at the base commit the same file calls <code class="inline">p.complete()</code> — so the correct fix makes the tests you can run go red (5 failed, 19 passed), and the alias <code class="inline">reset = complete</code> would also pass these five lines.</li>
+      <li><b>Scope is narrower than the gold patch:</b> graded scope = 1 file; gold scope = 7 files. A submission metric built on gold-file overlap will understate (slide 9).</li>
+    </ul>
+    <details class="tbl"><summary>Full test_patch, verbatim (1,115 chars)</summary>
+      <div class="term" style="margin-top:8px"><div class="term-body diff" id="fullTestPatch"></div></div>
+    </details>
+  </div>
+  <div class="receipt"><span><b>rec.test_patch</b> · HARNESS_README §8.2.3–5 (reset → test_patch → pytest targets)</span><span>4 / 10</span></div>
+</section>
+
+<!-- ============ 5 · GOLD PATCH MAP ============ -->
+<section class="slide" id="s5">
+  <div class="slide-inner">
+    <div class="kicker">patch — the gold diff: 7 files, 18 hunks, +57 −28 <span class="chip v" style="margin-left:8px"><span class="g">✓</span> per-file stats computed from the raw diff</span></div>
+    <h2>Where the 9,385 characters live</h2>
+    <div class="chart">
+      <h4>Gold-patch size by file</h4>
+      <p class="note">Diff characters per file · hover a bar · one hue: every file is the same series (the fix)</p>
+      <div id="filesBar" aria-label="Bar chart: gold patch characters per file. httpx/_server.py 1835, ahttpx/_server.py 1702, ahttpx/_parsers.py 1288, httpx/_network.py 1243, httpx/_parsers.py 1245, ahttpx/_pool.py 963, httpx/_pool.py 890."></div>
+      <details class="tbl"><summary>Data table — hunks and ± lines per file</summary>
+        <table><thead><tr><th>file</th><th>hunks</th><th>+</th><th>−</th><th>diff chars</th></tr></thead>
+        <tbody>
+          <tr><td>src/ahttpx/_parsers.py</td><td>2</td><td>+10</td><td>−3</td><td>1,288</td></tr>
+          <tr><td>src/ahttpx/_pool.py</td><td>2</td><td>+4</td><td>−5</td><td>963</td></tr>
+          <tr><td>src/ahttpx/_server.py</td><td>3</td><td>+7</td><td>−5</td><td>1,702</td></tr>
+          <tr><td>src/httpx/_network.py</td><td>3</td><td>+11</td><td>−2</td><td>1,243</td></tr>
+          <tr><td>src/httpx/_parsers.py</td><td>2</td><td>+10</td><td>−3</td><td>1,245</td></tr>
+          <tr><td>src/httpx/_pool.py</td><td>2</td><td>+4</td><td>−5</td><td>890</td></tr>
+          <tr><td>src/httpx/_server.py</td><td>4</td><td>+11</td><td>−5</td><td>1,835</td></tr>
+        </tbody></table>
+      </details>
+    </div>
+    <p class="sub">Six of the seven files come in mirrored pairs — every change to the sync tree is made again in the async tree, file for file. The one exception is <code class="inline">src/httpx/_network.py</code>: <b style="color:var(--ink)">the sync-only file</b>, carrying the stream-lifecycle work with no async counterpart in this patch. The diff even starts with the <code class="inline">ahttpx/</code> tree — reading it top-to-bottom, you meet the mirror before the original.</p>
+  </div>
+  <div class="receipt"><span><b>rec.patch</b> · 9,385 chars · stats counted line-by-line from the raw diff</span><span>5 / 10</span></div>
+</section>
+
+<!-- ============ 6 · TRAPS VERBATIM ============ -->
+<section class="slide" id="s6">
+  <div class="slide-inner" style="gap:14px">
+    <div class="kicker">The walkthrough's four traps, in the raw gold diff <span class="chip v" style="margin-left:8px"><span class="g">✓</span> hunks quoted verbatim; “…” = elided context</span></div>
+    <h2>The answer key contains the traps</h2>
+    <div class="term">
+      <div class="term-bar"><i></i><i></i><i></i></div>
+      <div class="term-body diff" style="font-size:11px;line-height:1.5">
+        <span class="meta">src/httpx/_parsers.py @@ -375,13 +375,13 @@</span>&nbsp;&nbsp;<span class="out">the contract changes shape, not just name</span><br>
+        <span class="del">-    def complete(self):</span><br>
+        <span class="add">+    def reset(self) -&gt; bool:</span><br>
+        <span class="out">…  (- return / + return False — reset now answers yes/no)</span><br>
+        <span class="meta">src/httpx/_parsers.py @@ -397,13 +397,21 @@</span><br>
+        <span class="add">+    def is_keepalive(self) -&gt; bool:</span><br>
+        <span class="add">+        return (</span><br>
+        <span class="out">…</span><br>
+        <span class="add">+            self.send_state != State.CLOSED</span><br>
+        <span class="add">+        )</span><br>
+        <span class="meta">src/httpx/_server.py @@ -88,8 +91,8 @@</span>&nbsp;&nbsp;<span class="out">trap 3, verbatim — note the context comment</span><br>
+        <span class="ctx">     # Start it all over again...</span><br>
+        <span class="del">-    def _complete(self):</span><br>
+        <span class="del">-        self._parser.complete</span><br>
+        <span class="add">+    def _reset(self):</span><br>
+        <span class="add">+        self._parser.reset()</span><br>
+        <span class="meta">src/httpx/_server.py @@ -43,12 +43,15 @@</span>&nbsp;&nbsp;<span class="out">trap 4: the 500 path, and the drain</span><br>
+        <span class="del">-                        err = Response(code=500, content=content)</span><br>
+        <span class="add">+                        err = Response(500, content=content)</span><br>
+        <span class="out">…</span><br>
+        <span class="add">+                if self._parser.is_keepalive():</span><br>
+        <span class="add">+                    stream.read()</span><br>
+        <span class="add">+                self._reset()</span><br>
+        <span class="meta">src/httpx/_network.py @@ -160,7 +163,7 @@</span>&nbsp;&nbsp;<span class="out">trap 4: the GenericAlias</span><br>
+        <span class="del">-        self._streams = list[NetworkStream]</span><br>
+        <span class="add">+        self._streams: list[NetworkStream] = []</span>
+      </div>
+    </div>
+    <p class="sub">The gold diff is the traps' ground truth: the silent no-op (<code class="inline">self._parser.complete</code> with no parentheses — a method object evaluated and discarded) sits one line under a comment that describes exactly what it fails to do. No test reaches it; only the issue's bullet 2 points at it. Also in the diff, elided above: the <code class="inline">__exit__</code> stream-close loop (<code class="inline">_network.py</code> @@ -177,11) and <code class="inline">wait()</code>'s <code class="inline">try/except KeyboardInterrupt: break</code> (<code class="inline">_server.py</code> @@ -99,7).</p>
+  </div>
+  <div class="receipt"><span><b>rec.patch</b> · hunks at @@ -375 / -397 / -88 / -43 / -160 / -99</span><span>6 / 10</span></div>
+</section>
+
+<!-- ============ 7 · THE GRAPH ============ -->
+<section class="slide" id="s7">
+  <div class="slide-inner" style="gap:14px">
+    <div class="kicker">graphs/httpx_4acf5c2c…90311.json — the code graph <span class="chip v" style="margin-left:8px"><span class="g">✓</span> parsed this session</span></div>
+    <h2>A networkx dump with the source embedded</h2>
+    <div class="chart">
+      <h4>740 nodes by namespace prefix</h4>
+      <p class="note">One stacked bar = the whole graph · hover a segment</p>
+      <div id="prefixBar" aria-label="Stacked bar: 740 graph nodes — 357 httpx, 239 ahttpx, 144 tests."></div>
+      <details class="tbl"><summary>Data table</summary>
+        <table><thead><tr><th>prefix</th><th>nodes</th><th>share</th></tr></thead>
+        <tbody>
+          <tr><td>httpx.* (sync tree)</td><td>357</td><td>48.2%</td></tr>
+          <tr><td>ahttpx.* (async tree)</td><td>239</td><td>32.3%</td></tr>
+          <tr><td>tests.* (test files)</td><td>144</td><td>19.5%</td></tr>
+        </tbody></table>
+      </details>
+    </div>
+    <div class="twocol">
+      <div class="panel">
+        <h4>Shape of the file</h4>
+        <div class="term-body" style="padding:4px 0">
+          <span class="p">{ "directed": true, "multigraph": false,</span><br>
+          <span class="out">  "graph": [],</span><br>
+          <span class="hl">  "nodes": [ … 740 … ],</span><br>
+          <span class="hl">  "edges": [ … 1,618 … ] }</span>
+        </div>
+        <ul class="plain" style="margin-top:8px">
+          <li><b>Node:</b> <code class="inline">{ name, text, id }</code> — <code class="inline">text</code> carries the symbol's full source, so the graph doubles as an offline code index.</li>
+          <li><b>Edge:</b> <code class="inline">{ type, source, target, key }</code> — e.g. <code class="inline">type: "calls"</code>, <code class="inline">httpx._content.Content → httpx._content.Content.encode</code>.</li>
+          <li><b>Ids are fully qualified:</b> <code class="inline">httpx._parsers.HTTPParser.complete</code> — the prefix is the tree split, for free.</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h4>Sample node, verbatim (text elided)</h4>
+        <div class="term-body diff" style="padding:4px 0">
+          <span class="p">{</span><br>
+          <span class="out">&nbsp;&nbsp;"name": "httpx._parsers.HTTPParser",</span><br>
+          <span class="out">&nbsp;&nbsp;"text": "class HTTPParser:\n</span><br>
+          <span class="out">&nbsp;&nbsp;&nbsp;&nbsp;\\"\\"\\"Usage…\n\n</span><br>
+          <span class="hl">client = HTTPParser(writer, reader)</span><br>
+          <span class="out">…</span><br>
+          <span class="hl">client.complete()</span><br>
+          <span class="out">client.close()\\"\\"\\"",</span><br>
+          <span class="out">&nbsp;&nbsp;"id": "httpx._parsers.HTTPParser"</span><br>
+          <span class="p">}</span>
+        </div>
+        <p class="sub" style="font-size:13px;margin:8px 0 0">The docstring's usage example still ends <code class="inline">client.complete()</code> — the graph is built at the base commit and encodes the old API everywhere.</p>
+      </div>
+    </div>
+    <p class="sub"><b style="color:var(--ink)">The honest limit:</b> edges are symbol-level calls within the indexed modules — there are no cross-file caller edges, which is why a graph-first agent still reads <code class="inline">_server.py</code> to find who calls <code class="inline">complete</code>.</p>
+  </div>
+  <div class="receipt"><span><b>graphs/httpx_4acf5c2c37714cc63b5cf71b3e284fca83c90311.json</b> · 740 nodes · 1,618 edges</span><span>7 / 10</span></div>
+</section>
+
+<!-- ============ 8 · THE SNAPSHOT ============ -->
+<section class="slide" id="s8">
+  <div class="slide-inner">
+    <div class="kicker">snapshots/httpx_3672.tgz → the working tree <span class="chip v" style="margin-left:8px"><span class="g">✓</span> listed this session</span></div>
+    <h2>A small repo, duplicated</h2>
+    <div class="stats">
+      <div class="stat"><b>16 files</b><span>src/httpx/ — the sync tree (≈114 kB)</span></div>
+      <div class="stat"><b>16 files</b><span>src/ahttpx/ — the async mirror (≈112 kB)</span></div>
+      <div class="stat"><b>13 files</b><span>tests/ (≈53 kB) — visible to the agent, reset before grading</span></div>
+      <div class="stat"><b>.git/</b><span>pinned at the base commit — no future history to leak the fix</span></div>
+    </div>
+    <div class="twocol">
+      <div class="panel">
+        <h4>Both trees, same shape (sizes as extracted)</h4>
+        <ul class="tree">
+          <li><b>_parsers.py</b> 17.1 kB · 17.3 kB — the parser: rename target, <code class="inline">is_keepalive</code> home</li>
+          <li><b>_server.py</b> 3.9 kB · 4.1 kB — the no-parens fault, the 500 path, <code class="inline">wait()</code></li>
+          <li><b>_pool.py</b> 8.4 kB · 8.7 kB — connection pooling, <code class="inline">_complete → _reset</code></li>
+          <li><b>_network.py</b> 6.9 kB · 3.6 kB — sockets &amp; streams; sync-only in the gold patch</li>
+          <li>_urls/_urlparse 17.6/18.3 kB · _content 10.2 kB · +7 more modules each</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h4>tests/ — what you can run</h4>
+        <ul class="tree">
+          <li><b>test_parsers.py 20.3 kB</b> — 24 tests; 5 call <code class="inline">p.complete()</code> at base; the graded file</li>
+          <li>test_content.py 7.4 kB · test_urls.py 4.6 kB · test_pool.py 3.9 kB</li>
+          <li>test_headers 3.1 · test_network 2.8 · test_client 2.7 · test_streams 2.2 · test_request 2.1 · test_quickstart 1.8 · test_response 1.5 kB</li>
+          <li>Root: pyproject.toml · README.md · requirements.txt · docs/ · scripts/ · .github/</li>
+        </ul>
+      </div>
+    </div>
+    <p class="sub">A grep for <code class="inline">complete</code> across this tree returns hits in <i>both</i> trees plus the docstrings — the duplication doubles every hit-list and half of it is a mirror you must patch anyway.</p>
+  </div>
+  <div class="receipt"><span><b>snap/</b> (extracted tgz) · sizes from the file index · totals marked ≈</span><span>8 / 10</span></div>
+</section>
+
+<!-- ============ 9 · WHAT REACHES THE AGENT ============ -->
+<section class="slide" id="s9">
+  <div class="slide-inner">
+    <div class="kicker">The same data, split by container <span class="chip v" style="margin-left:8px"><span class="g">✓</span> HARNESS_README, tools &amp; lifecycle</span></div>
+    <h2>Of everything above, the agent sees two-thirds of it</h2>
+    <div class="twocol">
+      <div class="panel" style="border-top:3px solid var(--s1)">
+        <h4>Container A — the agent's world</h4>
+        <ul class="plain">
+          <li><b>The snapshot</b> (slide 8): both trees, tests at base, .git pinned — editable via 9 tools</li>
+          <li><b>The graph</b> (slide 7): searchable offline, symbol queries only</li>
+          <li><b>problem_statement</b> (slide 3): 243 chars as the task prompt; hints channel exists but is empty here</li>
+          <li><b>The tool surface:</b> run_command (300 s timeout, 5 k-char truncation) · read_file (150-line / 10 k-char caps) · 3-tier edit_file · write_file · get_code_neighbors · search_similar_code · get_code_subgraph · get_status (budget + patch fields only — no failing tests) · submit_patch (free, last)</li>
+          <li><b>Budgets:</b> 60 min default wall clock · 50 tool calls (sample) · 500 turns · 3 continuation nudges</li>
+        </ul>
+      </div>
+      <div class="panel" style="border-top:3px solid var(--s2)">
+        <h4>Never reaches the agent</h4>
+        <ul class="plain">
+          <li><b>patch</b> — the 9,385-char gold diff (slides 5–6): scoring reference only</li>
+          <li><b>test_patch</b> — the 1,115-char graded suite (slide 4): applied in Container B after the agent's test-file edits are discarded (<code class="inline">git checkout HEAD</code> + <code class="inline">git clean -f</code>)</li>
+          <li><b>The resolver's verdict logic</b> — pytest exit 0 + valid JUnit XML; no partial credit signal comes back</li>
+          <li><b>repo / created_at / base_commit</b> — harness bookkeeping, not in the prompt</li>
+        </ul>
+        <p class="sub" style="font-size:13px;margin:8px 0 0">The gap between the columns is the whole game: the contract that decides pass/fail (bullet 3 + test_patch) must be inferred from 243 characters.</p>
+      </div>
+    </div>
+  </div>
+  <div class="receipt"><span><b>HARNESS_README</b> §6 (tools) · §8.2 (two-container lifecycle) · budgets as documented</span><span>9 / 10</span></div>
+</section>
+
+<!-- ============ 10 · RECEIPTS ============ -->
+<section class="slide" id="s10">
+  <div class="slide-inner" style="gap:14px">
+    <div class="kicker">Everything re-checkable <span class="chip v" style="margin-left:8px"><span class="g">✓</span> generated 2026-10-01</span></div>
+    <h2>Receipts</h2>
+    <div class="term">
+      <div class="term-bar"><i></i><i></i><i></i></div>
+      <div class="term-body">
+        <span class="p"># every number in this deck re-derives from three files:</span><br>
+        <span class="out">scratch/bcf-sim-2026-09-30/tasks.jsonl&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# 129 lines; the httpx_3672 line = 11,312 chars</span><br>
+        <span class="out">scratch/bcf-sim-2026-09-30/graphs/httpx_4acf5c2c….json&nbsp;&nbsp;# 740 nodes / 1,618 edges</span><br>
+        <span class="out">scratch/bcf-sim-2026-09-30/snap/…&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# extracted snapshots/httpx_3672.tgz</span><br>
+        <br>
+        <span class="p">$ python -c "import json; r=[json.loads(l) for l in open('tasks.jsonl') if 'httpx_3672' in l][0]; \</span><br>
+        <span class="out">&nbsp;&nbsp;print({k: len(v) if isinstance(v,str) else v for k,v in r.items()})"</span><br>
+        <span class="out">{'instance_id': 10, 'repo': 12, 'base_commit': 40, 'patch': 9385, 'test_patch': 1115,</span><br>
+        <span class="out">&nbsp;'problem_statement': 243, 'hints_text': 0, 'created_at': 20}</span>
+      </div>
+    </div>
+    <ul class="plain">
+      <li><b>Provenance:</b> package at <code class="inline">input/kagglecomp/kagglecomp_data_package/</code> (gemma-4-developer-agent.zip + HARNESS_README.md); the three files above are the httpx_3672 extraction in the scratch workspace.</li>
+      <li><b>Method note:</b> field sizes, diff stats, graph counts, and directory listings were computed by parsing the actual files in-browser on 2026-10-01 — no figure in this deck is transcribed from memory.</li>
+      <li><b>Elisions:</b> every “…” in a quoted diff marks removed context lines; the full test_patch is behind slide 4's toggle; per-file diff stats are in slide 5's table.</li>
+      <li><b>Companion decks:</b> v1 — the BCF-vs-naive simulation on this same task (<code class="inline">03-bcf-simulation-httpx-3672.slides.html</code>); the prose walkthrough with the full component map (<code class="inline">03-bcf-simulation-httpx-3672.md</code>).</li>
+    </ul>
+  </div>
+  <div class="receipt"><span><b>QC</b> all slides verified at 1440×900 · palette inherited validated set from v1</span><span>10 / 10</span></div>
+</section>
+
+</main>
+<div class="tooltip" id="tip" role="status" aria-hidden="true"></div>
+
+<script>
+(function(){
+"use strict";
+var C = {s1:"#3987e5", s2:"#d95926", s3:"#199e70", ink:"#eef1f5", ink2:"#aab4c0", ink3:"#7a8694",
+         deem:"#566070", grid:"rgba(255,255,255,.08)", surface:"#151a21"};
+var NS="http://www.w3.org/2000/svg";
+function el(n,a,p){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e}
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;")}
+
+/* ---------- gold patch by file (chars, from the raw diff) ---------- */
+var files=[
+  ["src/httpx/_server.py",1835,"sync-only _network.py is not the only asymmetry — _server.py carries the most diff"],
+  ["src/ahttpx/_server.py",1702,"async mirror of the server work"],
+  ["src/ahttpx/_parsers.py",1288,"rename + is_keepalive (async)"],
+  ["src/httpx/_parsers.py",1245,"rename + is_keepalive (sync)"],
+  ["src/httpx/_network.py",1243,"streams cleanup — no async counterpart in the patch"],
+  ["src/ahttpx/_pool.py",963,"_complete → _reset (async)"],
+  ["src/httpx/_pool.py",890,"_complete → _reset (sync)"]
+];
+function buildFilesBar(mount){
+  var W=860,rowH=20,gap=9,padL=210,padR=88,H=files.length*(rowH+gap)+6;
+  var svg=el("svg",{viewBox:"0 0 "+W+" "+H,role:"img"},null);
+  var max=1835,bx=padL,bw=W-padL-padR;
+  files.forEach(function(d,i){
+    var y=i*(rowH+gap)+3, w=(d[1]/max)*bw;
+    var lab=el("text",{x:0,y:y+rowH/2+4,fill:C.ink2,"font-size":12},svg); lab.textContent=d[0];
+    var r=el("rect",{x:bx,y:y,width:w,height:rowH,rx:4,fill:C.s1},svg);
+    r.dataset.f=d[0]; r.dataset.n=d[1]+" diff chars"; r.dataset.note=d[2];
+    var v=el("text",{x:bx+w+8,y:y+rowH/2+4,fill:C.ink2,"font-size":12,"font-weight":600},svg);
+    v.textContent=String(d[1]).replace(/\B(?=(\d{3})+(?!\d))/g,",");
+  });
+  mount.appendChild(svg);
+}
+
+/* ---------- graph prefixes stacked bar ---------- */
+var prefs=[["httpx.* (sync)",357,C.s1],["ahttpx.* (async)",239,C.s2],["tests.*",144,C.s3]];
+function buildPrefixBar(mount){
+  var W=760,rowH=24,padL=0,padR=70,bw=W-padR,H=rowH+34;
+  var svg=el("svg",{viewBox:"0 0 "+W+" "+H},null);
+  var total=740,x=0;
+  prefs.forEach(function(p){
+    var w=(p[1]/total)*bw;
+    var r=el("rect",{x:x,y:5,width:Math.max(0,w-2),height:rowH,rx:3,fill:p[2]},svg);
+    r.dataset.cat=p[0]; r.dataset.n=p[1]+" nodes ("+Math.round(p[1]/total*1000)/10+"%)";
+    if(w>70){var t=el("text",{x:x+w/2,y:5+rowH/2+4.5,"text-anchor":"middle","font-size":12,"font-weight":600,fill:"#ffffff"},svg);t.textContent=p[1]}
+    x+=w;
+  });
+  var tot=el("text",{x:x+10,y:5+rowH/2+4.5,fill:C.ink,"font-size":12,"font-weight":700},svg);
+  tot.textContent="740 nodes";
+  mount.appendChild(svg);
+  mount.insertAdjacentHTML("afterbegin",'<div class="legend">'+prefs.map(function(p){
+    return '<span class="li"><span class="sw" style="background:'+p[2]+'"></span>'+p[0]+'</span>';
+  }).join("")+'</div>');
+}
+
+/* ---------- full test patch (verbatim) ---------- */
+var tpLines=[
+ ["meta","--- a/tests/test_parsers.py"],
+ ["meta","+++ b/tests/test_parsers.py"],
+ ["meta","@@ -67,7 +67,7 @@ def test_parser():"],
+ ["ctx","    assert terminator == b''"],
+ ["ctx"," "],
+ ["ctx","    assert not p.is_idle()"],
+ ["del","-    p.complete()"],
+ ["add","+    p.reset()"],
+ ["ctx","    assert p.is_idle()"],
+ ["ctx"," "],
+ ["ctx"," "],
+ ["meta","@@ -113,7 +113,7 @@ def test_parser_server():"],
+ ["ctx","    )"],
+ ["ctx"," "],
+ ["ctx","    assert not p.is_idle()"],
+ ["del","-    p.complete()"],
+ ["add","+    p.reset()"],
+ ["ctx","    assert p.is_idle()"],
+ ["ctx"," "],
+ ["ctx"," "],
+ ["meta","@@ -315,7 +315,7 @@ def test_parser_repr():"],
+ ["ctx","    p.recv_body()"],
+ ["ctx","    assert repr(p) == \"<HTTPParser [client DONE, server DONE]>\""],
+ ["ctx"," "],
+ ["del","-    p.complete()"],
+ ["add","+    p.reset()"],
+ ["ctx","    assert repr(p) == \"<HTTPParser [client SEND_METHOD_LINE, server WAIT]>\""],
+ ["ctx"," "],
+ ["ctx"," "],
+ ["meta","@@ -554,7 +554,7 @@ def test_client_connection_close():"],
+ ["ctx"," "],
+ ["ctx","    assert repr(p) == \"<HTTPParser [client DONE, server DONE]>\""],
+ ["ctx"," "],
+ ["del","-    p.complete()"],
+ ["add","+    p.reset()"],
+ ["ctx","    assert repr(p) == \"<HTTPParser [client CLOSED, server CLOSED]>\""],
+ ["ctx","    assert p.is_closed()"],
+ ["ctx"," "],
+ ["ctx"," "],
+ ["meta","@@ -591,7 +591,7 @@ def test_server_connection_close():"],
+ ["ctx","    assert terminator == b\"\""],
+ ["ctx"," "],
+ ["ctx","    assert repr(p) == \"<HTTPParser [client DONE, server DONE]>\""],
+ ["ctx"," "],
+ ["del","-    p.complete()"],
+ ["add","+    p.reset()"],
+ ["ctx","    assert repr(p) == \"<HTTPParser [client CLOSED, server CLOSED]>\""],
+ ["ctx"," "]
+];
+document.getElementById("fullTestPatch").innerHTML = tpLines.map(function(l){
+  return '<span class="'+l[0]+'">'+esc(l[1])+'</span>';
+}).join("<br>");
+
+buildFilesBar(document.getElementById("filesBar"));
+buildPrefixBar(document.getElementById("prefixBar"));
+
+/* ---------- tooltips ---------- */
+var tip=document.getElementById("tip");
+function moveTip(ev){
+  var pad=14,w=tip.offsetWidth,h=tip.offsetHeight;
+  var x=ev.clientX+w+pad>innerWidth?ev.clientX-w-pad:ev.clientX+pad;
+  var y=Math.max(8,Math.min(innerHeight-h-8,ev.clientY-h/2));
+  tip.style.left=x+"px";tip.style.top=y+"px";
+}
+document.querySelectorAll("#filesBar rect,#prefixBar rect").forEach(function(r){
+  r.addEventListener("mouseenter",function(ev){
+    tip.innerHTML='<div class="t-call">'+esc(r.dataset.f||r.dataset.cat)+'</div><div class="t-tool">'+esc(r.dataset.n)+'</div>'+(r.dataset.note?'<div class="t-tool" style="color:var(--ink-3);font-family:var(--sans)">'+esc(r.dataset.note)+'</div>':'');
+    tip.classList.add("on");moveTip(ev);
+  });
+  r.addEventListener("mousemove",moveTip);
+  r.addEventListener("mouseleave",function(){tip.classList.remove("on")});
+});
+
+/* ---------- boot sequence ---------- */
+var reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
+var boot=document.getElementById("bootlines");
+var lines=[
+ {cls:"p",txt:"$ unzip gemma-4-developer-agent.zip -d scratch/bcf-sim-2026-09-30"},
+ {cls:"out",txt:"[extract] tasks.jsonl · graphs/httpx_4acf5c2c…90311.json · snapshots/httpx_3672.tgz"},
+ {cls:"out",txt:"[record] httpx_3672 → 8 fields · 11,312 chars · hints_text: 0 chars"},
+ {cls:"out",txt:"[v2] every byte below is quoted verbatim — zero simulation"}
+];
+if(reduced){
+  boot.innerHTML=lines.map(function(l){return '<span class="'+l.cls+'">'+esc(l.txt)+'</span>'}).join("<br>")+'<br>';
+  document.querySelectorAll(".fadein").forEach(function(e){e.classList.add("in")});
+}else{
+  var li=0,ci=0,out="";
+  function step(){
+    if(li>=lines.length){["heroBlock","heroChips"].forEach(function(id,i){setTimeout(function(){document.getElementById(id).classList.add("in")},120+i*260)});return}
+    var l=lines[li];
+    if(ci===0){out+=(out?"<br>":"")+'<span class="'+l.cls+'">'}
+    ci++;
+    if(ci>=l.txt.length){out+=esc(l.txt)+"</span>";li++;ci=0;boot.innerHTML=out;setTimeout(step,li===1?300:140)}
+    else{boot.innerHTML=out+esc(l.txt.slice(0,ci))+'<span class="cursor"></span>';setTimeout(step,14+Math.random()*26)}
+  }
+  step();
+}
+
+/* ---------- deck nav ---------- */
+var slides=Array.prototype.slice.call(document.querySelectorAll(".slide"));
+var railBtns=Array.prototype.slice.call(document.querySelectorAll(".rail button"));
+railBtns.forEach(function(b){b.addEventListener("click",function(){slides[+b.dataset.i].scrollIntoView({behavior:reduced?"auto":"smooth"})})});
+document.addEventListener("keydown",function(e){
+  if(e.target.tagName==="SUMMARY"||e.target.tagName==="BUTTON")return;
+  var cur=slides.findIndex(function(s){var r=s.getBoundingClientRect();return r.top>= -innerHeight/2 && r.top < innerHeight/2});
+  var go=null;
+  if(e.key==="ArrowDown"||e.key==="PageDown"||e.key===" ")go=Math.min(slides.length-1,cur+1);
+  else if(e.key==="ArrowUp"||e.key==="PageUp")go=Math.max(0,cur-1);
+  else if(e.key==="Home")go=0; else if(e.key==="End")go=slides.length-1;
+  if(go!==null){e.preventDefault();slides[go].scrollIntoView({behavior:reduced?"auto":"smooth"})}
+});
+if("IntersectionObserver" in window){
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(en){
+      if(en.isIntersecting){
+        var i=slides.indexOf(en.target);
+        railBtns.forEach(function(b){b.setAttribute("aria-current",String(+b.dataset.i===i))});
+        en.target.querySelectorAll(".fadein").forEach(function(f){f.classList.add("in")});
+      }
+    });
+  },{threshold:.55});
+  slides.forEach(function(s){io.observe(s)});
+}
+})();
+</script>
+</body>
+</html>

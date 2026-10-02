@@ -1,0 +1,2712 @@
+# COMBINED MARKDOWN - combine
+
+_Generated 2026-10-02 01:40:46 | 12 files | folder: D:\stuff\docs\taylor_fv\github\rayrite.github.io\cvx\kaggle\items\combine_
+
+## Contents
+
+1. 00_README-cd_opus55.md
+2. 01_Wishlist_Coverage_Gap_and_Critical_Analysis.md
+3. 02_Independent_Research_Techniques_Tools_Papers_Books.md
+4. 03_Insights_from_Agent_Data_Analyses.md
+5. 04_Opus_Metadata_Wishlist_and_Static_Analysis_Report.md
+6. 04a_Appendix_Per_Task_Metadata.md
+7. 05_Roadmap_and_Checklist_First_Submission.md
+8. 06_Setup_Guide_WSL2_Swegemma_RTX5090.md
+9. 07_Exception_Class_Binning_Research_Roadmap.md
+10. 08_README-BCF-Scriptz_cd_opus55-.md
+11. 09_Preregistration_BCF-PREREG-001.md
+12. 10_deviations_log.md
+
+---
+
+<!-- ====================================================================== -->
+<!-- FILE: 00_README-cd_opus55.md -->
+<!-- ====================================================================== -->
+
+# 2026-10-01 — Opus 5.5 Review of the GLM-5.3 / MiniMax-M3 Metadata Work, plus Independent Static Analysis
+
+*Prepared 2026-10-01 by Claude Opus 5.5 for the BCF (Batonic Coding Framework) entry to the Google Gemma 4 Developer Agent competition.*
+
+## Reports (read in order)
+
+| # | File | Answers |
+|---:|---|---|
+| 01 | [01_Wishlist_Coverage_Gap_and_Critical_Analysis.md](01_Wishlist_Coverage_Gap_and_Critical_Analysis.md) | Task 1: coverage matrix (20 domains), decision coverage, ranked gaps, claim-by-claim verification, consistency audit, weighted scorecard (GLM 74 / MiniMax 58), merge plan |
+| 02 | [02_Independent_Research_Techniques_Tools_Papers_Books.md](02_Independent_Research_Techniques_Tools_Papers_Books.md) | Task 2: additive techniques, algorithms, FOSS tools, whitepapers and books not already in the repo's reading lists (web-verified where marked) |
+| 03 | [03_Insights_from_Agent_Data_Analyses.md](03_Insights_from_Agent_Data_Analyses.md) | Task 3: the noteworthy insights from both agents' executed data work, each verified ✅ / 🟡 / ❌ |
+| 04 | [04_Opus_Metadata_Wishlist_and_Static_Analysis_Report.md](04_Opus_Metadata_Wishlist_and_Static_Analysis_Report.md) | Task 4a: my own wishlist (fields tagged by when they are observable) and an exhaustive static analysis of the 129-task package |
+| 04a | [04a_Appendix_Per_Task_Metadata.md](04a_Appendix_Per_Task_Metadata.md) | Per-task table (129 rows) |
+| 05 | [05_Roadmap_and_Checklist_First_Submission.md](05_Roadmap_and_Checklist_First_Submission.md) | Task 4b: roadmap and checklist for before, during and after the first test-harness submission run |
+| 06 | [06_Setup_WSL2_Swegemma_RTX5090/](06_Setup_WSL2_Swegemma_RTX5090/06_Setup_Guide_WSL2_Swegemma_RTX5090.md) | Setup guide for WSL2, the swegemma wheelhouse and local vLLM on the RTX 5090 PC: Markdown, standalone HTML, and numbered setup scripts |
+| 07 | [07_Exception_Class_Binning_Research_Roadmap.md](07_Exception_Class_Binning_Research_Roadmap.md) | Applicability of the `2026-10-01_PythonExceptionClass` research to BCF; data-collection roadmap (D0–D5); pre-registered hypotheses H1–H12; what to prove or disprove about exception-class binning |
+| 08 | [08_Exception_Taxonomy_and_Preregistration/](08_Exception_Taxonomy_and_Preregistration/README.md) | `taxonomy_v1.yaml` (generated, validated, library hierarchy verified 53/53) and pre-registration BCF-PREREG-001 (H1–H12, rules PR-01…PR-13, frozen splits, SHA-256 freeze manifest) |
+
+## Analysis workspace (`analysis/`)
+
+| Path | Contents |
+|---|---|
+| `scripts/s01…s04_*.py`, `common.py` | Reproducible pipeline (stdlib + numpy), about 12 minutes end-to-end, reading the 21.9 GB ZIP in place |
+| `scripts/qc_tables.py` | Markdown table QC used on every report |
+| `out/task_metadata_master.csv` | One row per task, ~70 columns: the main data product |
+| `out/stats.json` | Every aggregate number quoted in Report 04 |
+| `out/*_features.jsonl`, `out/graph_commit_stats.jsonl` | Raw per-task and per-graph outputs |
+| `cache/` | `tasks.jsonl` copy and per-snapshot file inventories (scratch) |
+
+## Five things to act on first
+
+1. **Install WSL2 and the swegemma wheelhouse.** This PC has neither Docker nor WSL, so no local harness run is possible yet (Report 05 §1.1).
+2. **Un-throttle `eval_config.yaml`.** The sample is set to 1 min / 10 calls. Use about 5 min / 40 calls, and keep the 12-hour total under 10.5 h.
+3. **Localize lexically first.** Use statement→file BM25 plus `git log` recency (the history *is* present, despite GLM's report). Together they put the gold file in the top 5 for 105/129 tasks. Use graph tools only for expansion.
+4. **Verify by running the whole target test module.** The scorer needs every test in those files to pass: median 11 tests, and 224 for requests.
+5. **Fix local tooling.** Re-append the stripped patch newline, and add the `inline-snapshot`, `dirty-equals`, `pytest-httpbin` and `typing-inspection` wheels locally (29 tasks depend on them).
+
+## Quality check
+
+| Check | Result |
+|---|---|
+| Markdown tables (column counts, separators, blank line before each table, pipes inside code) | `qc_tables.py`: 66 tables across 7 files, **0 issues** |
+| Numbers in Reports 01, 03, 04 and 05 | Traced to `analysis/out/stats.json` or the master CSV. Forum-derived facts are labelled [forum] / ⚪ |
+| Agent claims marked FALSE | Each one re-tested on the raw ZIP data (git history over 129 snapshots; patch application of 258 patches; AST test counts) |
+| Web citations (Report 02) | Verified 2026-10-01 ([W]); items from memory marked [K] |
+| Limits | No tests were executed (no Docker/WSL). All oracle facts are structural (Report 04 §11) |
+
+
+---
+
+<!-- ====================================================================== -->
+<!-- FILE: 01_Wishlist_Coverage_Gap_and_Critical_Analysis.md -->
+<!-- ====================================================================== -->
+
+# 01 — Coverage, Gap and Critical Analysis of the Two Metadata Wishlists (GLM-5.3 vs MiniMax-M3)
+
+*Prepared 2026-10-01 by Claude Opus 5.5. Every factual claim below that I label as checked was re-verified against the competition ZIP using the scripts in `analysis/scripts/` (see Report 04). Claims I could not check locally (live Kaggle forum facts) are labelled **[forum, unverified here]**.*
+
+---
+
+## 0. Scope and method
+
+**Primary documents reviewed**
+
+| Agent | Primary wishlist | Supporting documents read |
+|---|---|---|
+| GLM-5.3 | `glm53/independent_research/2026-10-01-bcf-decision-signals-and-metadata-wishlist/03-metadata-wishlist.md` | `README.md`, `01-reverse-engineering-the-win.md`, `02-decision-map.md`, `04-sources.md`; the collection project `2026-10-01-bcf-metadata-collection/` (README, PLAN, ROADMAP, `data/*.md`, `data/deep/*.md`, tools) |
+| MiniMax-M3 | `minimaxM3/deliverables/bcf-metadata-wishlist-2026-10-01/03-metadata-wishlist.md` | `README.md`, `01-current-evidence-base.md`, `02-decisions-the-agent-must-make.md`, `07-unknowns-and-residual-risks.md`; the collection deliverable `bcf-metadata-collection-2026-10-01/` (`08`, `09`, `10`) and `scratch/` reports |
+
+**Method**
+
+1. Read both plans in full. Extract every field and every decision.
+2. Build a **coverage matrix** over 20 metadata domains that a winning agent needs (§3). Five of these domains come from my own independent wishlist (Report 04), so the matrix is not limited to what the two agents thought of.
+3. Build a **decision-coverage comparison** (§4).
+4. **Gap analysis**: what neither plan collects, ranked by decision value (§5).
+5. **Critical analysis**: each load-bearing factual claim was re-tested on the data (§6), and internal consistency was checked (§7).
+6. A weighted **scorecard** (§8) and a **merge recommendation** (§9).
+
+---
+
+## 1. Executive verdict
+
+| | GLM-5.3 | MiniMax-M3 |
+|---|---|---|
+| **What it really is** | A **project-level measurement plan**: a run ledger, a decision register over 9 weeks, statistical discipline, and a platform watch | A **per-episode instrumentation plan**: the 16 decisions the agent makes inside one task, with per-call, per-edit and per-test fields |
+| **Strongest idea** | `termination_cause` as a zero-census field. This turns every structural leak into a rate. Add the ±2.5-task noise floor, exact McNemar, and a CV↔LB pair log | Per-tool-call "wasted call" detection (empty result / repeated result hash), and the "never end with a clean tree" rule (F5) |
+| **Weakest point** | The static ground truth contains a high-impact false finding ("snapshots have no git history"). That finding then became a design constraint: **"NO git log/blame tools in the agent"** | Several factual errors in static data handling, and a v1 design that **routes at turn 0 on features derived from the hidden gold patch and test patch** |
+| **Data work quality** | Careful and mostly reproducible. One major error (history) and one internal contradiction (node ordering) | Useful coverage, but several misdiagnoses: patch "malformation", a 10-call budget, F2P counts that miss class-method tests |
+| **Score (§8, /100)** | **74** | **58** |
+| **Best use** | Adopt as the **backbone** (ledger, decision register, statistics) | Adopt its **M3/M4 per-call and per-edit fields** as the P1 layer under GLM's ledger. Discard its v1 routing design |
+
+**Bottom line.** The two plans complement each other. GLM decides *which experiments are worth running and how to read them*. MiniMax decides *what to log inside one episode*. Neither plan exploits the richest free asset in the data:
+
+- the **full git history inside every snapshot**,
+- the **static oracle structure of the test patches**: how many tests must stay green, and which tests import APIs that do not exist yet,
+- the **information content and solution-leakage of the PR-style problem statements**.
+
+Neither plan treats the private-repository test set as a **distribution shift** that has to be designed for.
+
+---
+
+## 2. What each plan contains (structure)
+
+### 2.1 GLM-5.3: tiered ledger (P0–P4), 15 project decisions (D1–D15)
+
+| Tier | Content | Field count (approx.) |
+|---|---|---:|
+| P0 Receipts | Run manifest (8), per-task outcome (12, incl. `termination_cause` with 10 values), budget telemetry, submission log (CV↔LB) | ~30 |
+| P1 Trajectory | Per-turn tool / tokens / edit result / loop detector / thinking presence / compaction / rescue / journal hash / phase transitions / forced-submit | ~11 |
+| P2 BCF internals | Classification, spec, localization arm, P@1/P@5, anchor-in-graph, fix order, gates, wrong-fix autopsy, budget transfers | ~10 |
+| P3 Corpus annotation | Taxonomy (κ ≥ 0.70), gold files and rank, async flag, oracle-asymmetry P-1 probe, test-deps, difficulty priors | ~7 |
+| P4 Platform watch | Staff-patch status, error incidence, queue times, LB deltas | ~5 |
+| Extras | W1–W10 cross-check, field→decision closure table, anti-wishlist, 10 "Monday queries" | — |
+
+### 2.2 MiniMax-M3: 6 clusters (M1–M6), 16 in-episode decisions (D-1…D-16)
+
+| Cluster | Content | Fields |
+|---|---|---:|
+| M1 Task preconditions | Statement length, named files and symbols, hints, traceback, test keywords, graph exists | 7 |
+| M2 Agent state | Turns, budget fraction, tool calls, last edit turn, first graph call, per-phase budget | 6 |
+| M3 Tool-call outcomes | Name, ok, latency, tokens, return size, empty, **wasted**, graph-waste rate, repeat rate | 9 |
+| M4 Edit / patch shape | Edit calls, final files and size, revert-within-N, parse status, line offset at edit, tree dirty, apply check | 11 |
+| M5 Test / verify | pytest exit, JUnit pass/fail/skip, target-test vector (scorer-only), regression flag, journal writes | 11 |
+| M6 Environment | KV saturation, adapter zeroing, vLLM errors, sandbox timing, compaction interval, image, thinking budget | 10 |
+| Extras | JSON Schema per task record, cost-per-field table, "what we don't measure" | — |
+
+The headline says "47 fields". The tables actually list 54 rows. The document admits the mismatch (§8 "Field count check").
+
+---
+
+## 3. Coverage analysis (20 domains × 2 plans)
+
+Legend: **●** full / **◐** partial / **○** absent. "Opus" is what my own wishlist (Report 04 §1) adds.
+
+| # | Metadata domain | Why it matters | GLM | MiniMax | Opus |
+|---:|---|---|:---:|:---:|:---:|
+| 1 | Run receipts and termination cause | Turns leaks into rates; the basis of zero-census | ● | ◐ (`agent_error`, `resolved`) | ● (adopt GLM) |
+| 2 | Per-call tool telemetry | Loops, wasted calls, edit failures | ◐ | ● | ● (adopt MiniMax) |
+| 3 | Edit integrity (match tier, escaping, revert churn) | 48/77 edit-failure anecdote [forum] | ● | ● | ● |
+| 4 | Verification signals (JUnit, skipped = fail, regression) | Matches the scorer's strict gate | ◐ | ● | ● |
+| 5 | BCF-internal provenance (class, spec, localization arm, P@k) | Ablation attribution | ● | ◐ (decisions block) | ● |
+| 6 | Statistical decision protocol (paired, McNemar, noise floor, CV↔LB) | ±2.5-task noise | ● | ○ | ● (+ CUPED covariates) |
+| 7 | Platform / environment (KV, thinking bug, wheelhouse) | Structural zeros | ● | ● | ◐ |
+| 8 | Static gold-patch shape | Size and scope priors | ● | ● | ● |
+| 9 | **Test-oracle structure** (number of tests in target files = P2P blast radius; added vs modified tests) | Every test in the target files must pass, not just the new ones | ○ | ◐ (F2P count only; misses class methods) | ● |
+| 10 | **Interface burden** (tests import symbols/modules absent at base) | "Implement exactly-named API" tasks cannot be solved without guessing names | ○ | ○ | ● |
+| 11 | **Statement information content** (PR-template boilerplate, title-only, effective characters) | Many statements carry almost no specification | ◐ (length only) | ◐ (length only) | ● |
+| 12 | **Solution leakage** (statement names the fix, the gold symbol or the file) | Main cause of CV↔LB shift if the private set differs | ○ | ○ | ● |
+| 13 | **Exception-class signature** (statement + test `pytest.raises` + gold raise/except) | BCF's core thesis; needs a measured prior | ◐ (P2 label; GLM notes ≤ 6 tracebacks) | ◐ (traceback flag) | ● |
+| 14 | **Git-history affordance** (commits available; recency prior for the gold file) | A free localization signal | ✗ (asserts there is no history, which is wrong) | ○ | ● |
+| 15 | Graph/embedding quality joined to gold (in-graph rate, hops, anisotropy, test-node share) | Should graph tools be used at all, and when | ● (async census, gold-file join) | ◐ (degeneracy claim) | ● |
+| 16 | **Offline localization baselines** (BM25 / recency / node-BM25 / embedding P@k vs gold) | Sets the bar any agent localization must beat, at zero GPU cost | ◐ (proposed as A-1, not run) | ○ | ● (measured) |
+| 17 | **Turn-0 observable signals** (graph-tools section present in the prompt; workspace layout truncation; budget lines) | What the agent can *know* before the first tool call | ○ | ◐ (says graph existence is only knowable on Dec 2, which is wrong) | ● |
+| 18 | **Hidden-set distribution shift** (private repos, no memorization, statement style) | Explains CV→LB collapse | ◐ (LORO, OOD probe) | ○ | ● |
+| 19 | Local-CV environment gaps (missing test deps, harness parity) | Dead tasks poison paired diffs | ◐ (14 tasks, added-line imports only) | ○ | ● (29 tasks, full-file imports) |
+| 20 | Retrievability of agent-side telemetry (does `/tmp` data survive?) | Container A is wiped, and Kaggle returns only a score | ○ | ○ | ● (emit via tool stdout into the trace) |
+
+**Coverage score** (● = 1, ◐ = 0.5, ✗/○ = 0):
+
+| Plan | Score | Share of the 20 domains |
+|---|---:|---:|
+| GLM | 10.5 / 20 | 53% |
+| MiniMax | 8.5 / 20 | 43% |
+| Union of the two | 13 / 20 | 65% |
+
+The seven domains neither plan covers are rows 9–14 and 16–20 in the table above (some only partly).
+
+---
+
+## 4. Decision coverage
+
+The two registers operate at different altitudes:
+
+- **GLM's D1–D15** are *project* decisions: LoRA go/no-go, caps, thinking on/off, localization doctrine, spec gate, compaction, edit path, architecture, teacher, submission cadence, CV protocol, paper, hardware, rescue parameters, scope cuts.
+- **MiniMax's D-1…D-16** are *episode* decisions: whether to spec, which template, whether to use the scout, graph vs grep, insurance edit, rescue trip, continue vs revert, submit now, what to grep, read range, edit vs read, single vs multi bug, edit tests, journal, LoRA canary, final submit.
+
+| Decision area | GLM | MiniMax | Missing in both |
+|---|---|---|---|
+| Budget (per-task caps, Σ ≤ 10.5 h) | D2 (strong) | D-5/D-8/D-16 (in-episode) | **Task-order/time allocation using static difficulty priors** at turn 0 |
+| Localization strategy | D4 (dual path) | D-3/D-4/D-9/D-10 | **Turn-0 seed choice among BM25 / recency / graph**, informed by measured hit rates |
+| Verification | D7 / G-gates | D-7/D-8/D-13 | **Which test files to run** (the target-file guess) and **whether to write a reproduction test**, gated by oracle kind |
+| Interface / API tasks | — | — | **Detect "implement a new named API" tasks and change strategy** (search the docs for names, keep the API surface minimal, follow conventions) |
+| Statement quality | D5 (Chow dispatch) | D-1/D-2 | **Low-information triage**: title-only statements should go to the cheap path with immediate exploration |
+| Distribution shift | D11 (LORO) | — | **What the private test set rewards**: robustness to statements that describe the symptom rather than the fix |
+
+---
+
+## 5. Gap analysis (ranked by decision value)
+
+| Rank | Gap | Evidence it matters (from my static analysis, Report 04) | What to collect | Cost |
+|---:|---|---|---|---|
+| 1 | **Git history is present and unused** | 128/129 snapshots carry the upstream history (fastapi median 6,356 commits; rich 4,127; requests 6,420; httpx 4). The gold file was touched within the last 20 commits in 59/122 tasks | `git_commits`, `recency_rank_of_candidate`; agent-side: a one-call `git log --name-only -n 50` prior | ≈ 0 (one tool call per task) |
+| 2 | **P2P blast radius ignored** | The scorer runs every test in the target files and needs exit code 0. The median target file holds **11** tests; **33/129 tasks have ≥ 50**; requests' median is **224** | `tests_in_target_files`; agent rule: run the whole target test file, not just one test | Static, free |
+| 3 | **Interface-burden tasks unidentified** | **9/129** tasks' tests import symbols or modules that do not exist at base and are introduced by the gold patch (e.g. `fastapi.routing.RouteContext`, `rich.cells.split_graphemes`, `scripts.prepare_release`). **40/129** gold patches add new defs | `interface_burden`; agent detector: the reproduction test hits ImportError, or the statement says "add/support" | Static, free |
+| 4 | **Statement information and solution leakage** | 34 statements are title-only; 31 carry PR templates; median *effective* text is 268 characters (rich: **61**); titles start with "Fix" in 56 tasks; the statement names a gold-enclosing symbol in **35/129** | `stmt_eff_chars`, `title_only`, `solution_phrased`, `mentions_gold_symbol` | Static, free |
+| 5 | **No offline localization bar** | Statement→file BM25 puts the gold file at **#1 in 59/129** and **top-5 in 99/129** (of a median of 739 fastapi candidates). Union with the recency prior covers top-5 in **105/129**. Node-level BM25 reaches top-5 in 62/129 | Report P@k per arm per repo; any agent localization arm must beat these | Done (Report 04) |
+| 6 | **Exception-class prior not measured** | Only **15/129** statements name an exception class; **0** contain a full traceback; **10/129** tests are `pytest.raises`-style oracles, all fastapi | `exc_signature`, `oracle_kind` per task; BCF's classes must come from a reproduction run, not from the statement | Static, free |
+| 7 | **Turn-0 observability** | The harness appends the "Code Intelligence Tools" section **only when graph and embedding files exist**. That answers MiniMax's "U4", whether hidden repos ship graphs, at turn 0 on every hidden task, not on Dec 2. The workspace layout exceeds 150 entries in **115/129** tasks, so the prompt listing is truncated | `prompt_has_graph_section`, `layout_truncated` | Free |
+| 8 | **Telemetry retrievability** | Container A is wiped after each task, and the Kaggle scorer returns only the score. `/tmp` journals are **not** retrievable unless echoed through tool output (which the ATIF trace captures, locally only) | A design rule: every P2 event is printed as a tool-call stdout line with a fixed prefix (e.g. `BCF_EVT {...}`) | Design only |
+| 9 | **Local CV environment gap understated** | Full-file import analysis: **29** tasks import packages absent from the wheelhouse (`inline_snapshot` 22, `dirty_equals` 9, …). GLM counted 14 from added lines only. requests tests also need the `pytest-httpbin` fixture plugin [forum] | Quarantine list v2, or add these wheels to the local image (the scorer evidently has them: host says gold validates 100% [forum]) | 1 h |
+| 10 | **Large-file navigation cost** | The gold edit starts beyond line 150 (the first `read_file` window) in **51/129** tasks; **65/129** gold files exceed 1,000 lines; 26 exceed 2,000 | `gold_first_line`, `gold_max_file_lines`; agent rule: `grep -n` before `read_file` | Static, free |
+
+---
+
+## 6. Critical analysis: claims re-tested against the data
+
+### 6.1 GLM-5.3
+
+| # | GLM claim | Where | My test | Verdict |
+|---:|---|---|---|---|
+| G1 | "Snapshots have NO history — synthetic single-commit exports … `git log`/`blame`/`diff-vs-base` are impossible in-sandbox" | collection README §3 finding 5; `snapshot-verify.md`; ROADMAP C4 ("NO git log/blame/show tools in the agent") | Extracted `rich_2725` and `httpx_3672`; ran `git rev-list --count HEAD` over **all 129** snapshots | **FALSE.** History is present: rich 3,787–4,449 commits, fastapi 6,016–7,353, requests 6,205–6,475, httpx 4. The SHAs are **rewritten** by `git fast-export | fast-import`, which is why the task's `base_commit` SHA is absent (0/129). GLM tested only for that SHA. The HEAD commit predates `created_at` in 129/129 tasks (median gap 4.9 h), so there is no future leak. **Consequence: ROADMAP C4 removes a useful localization tool. Reverse it.** |
+| G2 | "129/256 graph and embedding files are 0-byte in the ZIP … repair before local runs" (Leak 5; wishlist §7.5) | `01` §3 Leak 5; `03` §7 | ZIP manifest: 127 graphs + 127 npz, **0 zero-byte** entries | **Outdated inside GLM's own package.** The collection README already corrects it ("Local ZIP has zero 0-byte entries"), but the wishlist still lists it as a P0 action. It is a download-tool artifact [forum], not a property of the data |
+| G3 | "Graphs: single `calls` edge type, no import/containment edges" | `01` Leak 5 | `calls` is indeed the only type (452,588 edges), but a median **8.8%** of `calls` edges are parent→child (`Class → Class.method`), i.e. containment encoded as calls | **Partly wrong.** Containment is present, disguised as `calls`. This matters for hop-distance metrics (λ) |
+| G4 | ROADMAP C11 "Node lists are name-sorted (129/129)" vs `graph-deep-summary.md` "name-sorted in 0/129" | ROADMAP vs deep summary | — | **Internal contradiction.** Its own tool output says 0/129 |
+| G5 | "14 fastapi tasks import inline_snapshot/dirty_equals" | `testdeps-summary.md` | Full post-patch test-file import scan | **Undercount.** Only lines added by the test patch were scanned. Whole target files: **29** tasks (27 fastapi + 2 rich) |
+| G6 | "async hole: 0 first-class async nodes" | `graph-deep-summary.md` | Gold-hunk enclosing-function analysis: **20/129** tasks edit inside an `async def` (19 fastapi) | **Confirmed**, and this quantifies its task impact |
+| G7 | "Exception-class conditioning applies to ≤ 6 tasks; CLASSIFY's real input is prose" | collection README finding 1 | 15/129 name an exception class; 0 contain `Traceback (most recent call last)` | **Confirmed in substance.** Strong, honest finding |
+| G8 | "58 public LB tasks; σ ≈ 2.5 tasks; top-10 within noise" | `01` §1–2 | Not checkable locally; the arithmetic is internally consistent with binomial σ at p ≈ 0.15, n = 58 | **Plausible**, and the most decision-relevant framing in either package |
+| G9 | Forum-derived leaks (44/44 overflow patch loss, LoRA KV 46,048→7,600, thinking drop 0.35×) | `01` §3 | Not checkable locally | **[forum, unverified here].** Treat as hypotheses to re-check on the first instrumented runs. GLM's own P0/P1 fields are designed to do exactly that |
+| G10 | "P2 events written by the agent to /tmp" as a collection source | `03` §7.2 | HARNESS_README §4.1: Container A's `/tmp` is wiped at teardown; Kaggle returns only the score | **Collection gap.** Workable only if events are echoed into tool stdout, so they land in the local ATIF trace |
+
+### 6.2 MiniMax-M3
+
+| # | MiniMax claim | Where | My test | Verdict |
+|---:|---|---|---|---|
+| M1 | "Patches encode empty context lines as a bare `+` … `git apply` rejects; 9/129 malformed even for GNU patch" | `09` §Implementation caveat, §M4.11; `10` F6 | Inspected all 258 patch strings | **FALSE diagnosis.** Every `patch` and `test_patch` string was `.strip()`-ed when the dataset was built: no final newline, and a trailing blank context line `" "` disappears. After restoring the tail, **129/129 gold and 129/129 test patches pass `git apply --check`**, including all nine "malformed" ones. The recommended pre-submit gate `patch --dry-run` on the *agent's* patch is still sensible. The rule that 7% of gold patches are malformed is not |
+| M2 | "These are the actual evaluation constraints: ≤ 10 tool calls, ≤ 1 minute, ≤ 50 turns" | `08` §"What this run changes" 5; `10` F1 and the whole v1 budget | `eval_config.yaml` belongs to the sample submission; HARNESS_README §7.1 says defaults are 60 min / 100 calls and the file is competitor-controlled | **FALSE.** It reads the sample's self-throttle as a platform constraint. The entire v1 design (3–6 tool calls per task) is over-compressed as a result |
+| M3 | v1 Phase 0 routes fast/slow path on `m5.multi_bug_indicator` and `m4.final_added_lines` | `10` §6.2–6.3 | These come from `test_patch` and the gold `patch`, which the agent never sees | **Design-breaking leakage.** The router cannot run on hidden tasks. It also contradicts MiniMax's own "No FAIL_TO_PASS leakage" standard (`07` §11) |
+| M4 | "M5.5 is the secret weapon … the BCF plan-loop can emit 'the N tests that must turn green'" | `09` §M5.5 | Same as M3 | **Contradiction / leakage.** Valid only as post-hoc analysis |
+| M5 | "38% of tasks are multi-bug (F2P ≥ 2)"; "requests 12/13 have F2P = 0" | `08` §Phase 1b | AST count of collectable tests in the post-patch test files | **Wrong proxy, buggy count.** The regex `+def test_*` misses indented class methods; requests tests are mostly `TestRequests.test_*` methods. The number of added tests ≠ the number of bugs. **25** tasks add **no** new test function at all (19 only modify existing tests) |
+| M6 | "All 129 tasks have a graph file … no fallback path is needed" | `08` §"What this run changes" 4 | Async hole: 20 tasks edit inside `async def`; 54 tasks include module-level edits with no node; 15 tasks have gold edits that map to no graph node | **Overreach.** Having a graph file ≠ the graph covering the fix site |
+| M7 | "U4 [hidden graphs?] … resolvable on Dec 2 only" | `07` §1, §5 | HARNESS_README §5.2: the "Code Intelligence Tools" prompt section is appended **only** when graph and embedding files over 100 bytes exist | **Wrong.** It is observable at turn 0 of every scored task. The agent can branch on it, and a probe submission reveals it |
+| M8 | "Embeddings near-degenerate (98.6% have a > 0.99 neighbour) → `search_similar_code` is a noise source" | `01` F2; `08` §2b | Mean pairwise cosine: raw 0.79 median → **0.09 after mean-centering**. > 0.99 neighbours: 97% of sampled nodes, but for rich/requests **0** are identical text (anisotropy). For fastapi, 33% *are* literally duplicated `docs_src` tutorial code. Retrieval from statement-resolved seeds: when the seed is not the gold node itself, the median gold rank is the top **4.5%** of nodes (raw ≈ centered) | **Half right.** Strongly anisotropic, and partly true duplication in fastapi, but not pure noise: the tool carries locality signal. MiniMax's own probe report says "PARTIAL" while the deliverable says "CONFIRMED" |
+| M9 | "Sandbox resume warm = False because eval_config lacks `reuse_containers`" | `09` §M6.5 | `reuse_containers` is a harness setting (HARNESS_README §4.1), not an `eval_config` key | **Non sequitur** |
+| M10 | "docker_image_name = python:3.13-slim" | `08` §Phase 3 | That is the `FROM` base; the runtime image is `swebench-sandbox:latest` | **Mislabelled** |
+| M11 | D-14: "The agent doesn't have direct write access to `/tmp` without a skill script" | `02` D-14 | `run_command` runs arbitrary bash in the container; the README explicitly recommends `/tmp/repro.py` | **FALSE** |
+| M12 | "the 129-task SWE-bench Verified"; "textsearch/rich"; R3 "~30% by analogy to Qwen-Mistral-Nemo on SWE-bench Verified" | `07` U7, `01` §4, `07` R3 | — | **Factual slips / unsupported numbers** |
+| M13 | F3/F5 evidence: "96% of issues never name a .py file"; "never end with a clean tree" | `01` §2 | 14/129 statements mention a gold file (basename, path or module) | **Consistent.** The dirty-tree rule is sound given the harness fallback capture (HARNESS_README §8.1) |
+
+### 6.3 Shared blind spots
+
+1. **Both treat the 129 public tasks as representative of the scored set.** The Data page says the test set "was curated from a set of private repositories" and filtered so that "a larger frontier model can pass the case or get within a single test case of passing." The consequences:
+   - no memorization advantage on hidden repos,
+   - no repo-specific priors (fastapi conventions) transfer,
+   - statement style may differ,
+   - difficulty is truncated from above.
+
+   Neither wishlist has a field that measures robustness to this shift. Examples would be leave-one-repo-out deltas per feature, or performance on statements with the "fix" wording removed.
+2. **Neither defines what the agent can observe at turn 0** versus what is only available post hoc. That boundary should be a schema attribute on every field: `observable_at ∈ {turn0, runtime, post_hoc_scorer_only}`.
+3. **Neither quantifies the scoring rule's breadth.** A task resolves only if *every* test in the target files passes (exit 0, no skips). The relevant risk is collateral breakage across a whole test module, not just "the F2P tests".
+
+---
+
+## 7. Internal-consistency audit
+
+| Issue | GLM | MiniMax |
+|---|---|---|
+| Field identifiers referenced but undefined | — | D-9 uses `M3.10`, D-10/D-11 use `M3.11`; neither exists in `03` |
+| Field identifiers that mean something else | — | D-1 uses "M1.4 (spec-template eligibility)", but M1.4 = `hint_text_chars`. D-12 uses "M1.5 (and/also count)", but M1.5 = `traceback_present`. D-9 uses "M1.6 (named-symbol)", but that is M1.3 |
+| Headline numbers vs body | "Repair 0-byte copies" (wishlist) vs "zero 0-byte entries" (collection) | "47 fields" vs 54 rows; "9 of 16 decisions" vs "16 of 16 flipped" (`07` §12) |
+| Unknown numbering | — | U1–U7 in `07` ≠ U1–U14 in `01` (different questions under the same IDs) |
+| Markdown defects | none found in sampled tables | Broken row in `01` §7.1 (the tool #6 `write_file` row starts with a stray backtick instead of "6"); evidence-base link text "… no wait → absolute path" left in |
+| Self-contradicting conclusions | ROADMAP C11 vs deep summary (sorting) | "No FAIL_TO_PASS leakage" standard vs v1 router using F2P-derived features |
+
+---
+
+## 8. Weighted scorecard
+
+| Criterion | Weight | GLM (0–10) | MiniMax (0–10) | Notes |
+|---|---:|---:|---:|---|
+| Decision linkage (every field feeds a decision) | 15 | 9 | 7 | GLM's closure table is exemplary; MiniMax has dangling IDs |
+| Coverage of needed domains (§3) | 15 | 6 | 5 | — |
+| Factual accuracy of static claims | 20 | 6 | 3 | G1 is severe; M1–M5 are several severe errors |
+| Feasibility / collectability | 10 | 7 | 6 | Both miss the `/tmp` retrievability problem; MiniMax's M6 vLLM fields can't be observed on Kaggle |
+| Leakage hygiene (runtime vs post-hoc) | 10 | 9 | 3 | MiniMax's v1 router uses gold/test features |
+| Statistical rigor | 10 | 9 | 3 | — |
+| Actionability (cost, ordering, hooks) | 10 | 7 | 8 | MiniMax's ★/✦/✧ cost tiers are practical |
+| Clarity and internal consistency | 10 | 7 | 5 | — |
+| **Weighted total (/100)** | 100 | **74** | **58** | |
+
+---
+
+## 9. Merge recommendation
+
+1. **Backbone = GLM P0 ledger + D-register + statistics.** Fix G1: re-enable git history as a localization arm. Fix G2: drop the 0-byte repair task. Fix G5: use quarantine list v2 (29 tasks).
+2. **P1 layer = MiniMax M3 + M4 fields.** Keep `wasted_tool_call`, `repeat_action_rate`, `reverted_within_n_turns`, `line_offset_at_edit`, `tree_dirty_at_end`.
+3. **Discard** MiniMax's v1 Phase-0 router (M3) and the 10-call budget premise (M2). Replace them with turn-0 *observable* triage: statement information content, title verb, prompt graph section, BM25 top-k concentration.
+4. **Add the Opus static layer** (Report 04): blast radius, interface burden, solution leakage, exception signature, history recency, baseline P@k, large-file navigation, turn-0 observability, CV quarantine v2. Tag every field with `observable_at`.
+5. **Add a telemetry transport rule.** Every agent-side event is printed to stdout of a tool call with a `BCF_EVT` prefix, so it lands in the ATIF trace locally.
+
+
+---
+
+<!-- ====================================================================== -->
+<!-- FILE: 02_Independent_Research_Techniques_Tools_Papers_Books.md -->
+<!-- ====================================================================== -->
+
+# 02 — Independent Research: Techniques, Algorithms, FOSS Tools, Papers and Books to Improve BCF and Extend the Data Analysis
+
+*Prepared 2026-10-01 by Claude Opus 5.5. This adds to the reading lists already in the repo; it does not repeat them.*
+
+---
+
+## 0. How this list was built, and what it leaves out
+
+**Rule for inclusion.** Before adding an item, I searched the earlier lists for it: `2026-10-01_BCF_v1_Roadmap/02–05`, `2026-09-30_FOSS_Tools`, `2026-09-30_BCF/03`, both book catalogs, the BCF Reference Compendium, GLM-5.3's `READING.md`, and MiniMax-M3's `10-bcf-v1-roadmap.md`. Items those lists already cover are left out: SWE-agent, Agentless, OpenHands, SWE-Gym, SWE-smith, R2E-Gym, SWE-rebench, GRPO/DPO/QLoRA/Unsloth/axolotl, DSPy/GEPA, SBFL basics (Ochiai/DStar), delta debugging, LocAgent, GraphRAG, McNemar, Wilson CIs, *Why Programs Fail*, and *Working Effectively with Legacy Code*. Every item below was either missing from those lists or appeared only as a passing mention with no plan for using it.
+
+**Rule for relevance.** Each item is tied to one or more of:
+
+- a specific weakness found in the static data (Report 04),
+- a BCF phase (CLASSIFY, SPECIFY, LOCALIZE, PATCH, VERIFY, RESCUE), or
+- an analysis that is still missing (Report 01, §5).
+
+**Verification labels**
+
+| Label | Meaning |
+|---|---|
+| **[W]** | Checked on the web on 2026-10-01; the link is given. |
+| **[K]** | From my own knowledge (cutoff mid-2026). The citation is standard and well known, but I did not re-check it today. Confirm before citing in the paper. |
+
+**Sandbox constraints that limit where each item can be used.** These come from HARNESS_README and the competition Overview:
+
+- The agent sandbox is offline, with 2 vCPU and 4 GiB RAM, Python 3.13, git, and pytest.
+- The only allowed file types in a submission are `.py .md .txt .yaml .yml .json .safetensors`.
+- Skill scripts run inside the container.
+
+So anything with native extensions, model weights, or `.pyi`/`.so` files is **dev-time only** — it can't run in the sandbox. Pure-Python, stdlib-only code can be **vendored** into a skill.
+
+---
+
+## 1. Top 12 additions, ranked by expected value for the first submissions
+
+| Rank | Item | Kind | BCF phase | Why now (linked to a data finding) | Where it runs |
+|---:|---|---|---|---|---|
+| 1 | Git-history recency prior (FixCache / BugCache family) | Algorithm | LOCALIZE | The snapshots **do** contain full git history (rewritten SHAs, thousands of commits). One `git log --name-only -n 50` gives a strong prior on which files to look at (Report 04 §5) | In-sandbox (`run_command`) |
+| 2 | Observation masking: "The Complexity Trap" | Paper + technique | Context / RESCUE | It halves cost with no loss of solve rate in SWE-agent. That speaks directly to the 32k-context overflow leak that GLM documented | Prompt and agent design |
+| 3 | Issue-reproduction test generation (Otter / e-Otter++ / SWT-bench / SWE-Tester), with the counter-evidence | Papers | VERIFY | `test_patch` is hidden at run time. The agent's only executable oracle is a reproduction test it writes itself. Evidence on whether these tests help is mixed, so treat this as an ablation, not a default | In-sandbox |
+| 4 | Two-axis defect taxonomy: ODC defect type × trigger, plus Pan et al. bug-fix patterns | Taxonomy theory | CLASSIFY / SPECIFY | Only 15/129 statements name an exception class. A taxonomy built only on exception classes has almost nothing to condition on, so BCF needs a symptom × fix-pattern grid | Paper + prompt |
+| 5 | Stdlib SBFL via `sys.settrace` / `trace` (FauxPy as the reference design) | Algorithm + tool | LOCALIZE | Once a failing reproduction test exists, about 40 lines of stdlib code give an Ochiai ranking of lines and functions inside the sandbox, without coverage.py | In-sandbox (vendored skill) |
+| 6 | Stdlib-`ast` async-aware call graph (PyCG / Scalpel / pyan as design references) | Tool design | LOCALIZE | The provided graphs have **zero** first-class async nodes. A small AST pass inside a skill fills that gap | In-sandbox (vendored skill) |
+| 7 | Solution-leakage literature (SWE-Bench+) and weak-test literature (PatchDiff, UTBoost) | Papers | CLASSIFY / VERIFY + paper | The task statements are **PR descriptions** that often describe the fix itself. The private test set may or may not share this property; it is a major source of CV↔LB drift | Analysis + paper |
+| 8 | Paired-difference error bars with covariate adjustment (Miller 2024; Kohavi's CUPED) | Statistics | Experiment protocol | With noise of ±2.5 tasks, regression adjustment using the static difficulty features in Report 04 cuts the number of runs needed per decision | Dev-time |
+| 9 | BM25 retrieval as a vendored skill (`rank_bm25`-style, pure Python) | Tool | LOCALIZE | Statement→file BM25 ranks the gold file first on a large share of tasks (Report 04 §5). It is cheap and deterministic | In-sandbox |
+| 10 | SweRank / CoRNStack (CodeRankEmbed) | Papers + models | LOCALIZE (offline) | A better code retriever for offline analysis and for building LoRA training data. The provided embeddings are near-degenerate | Dev-time only |
+| 11 | Trae Agent (generate → prune → select) | Paper + tool | PATCH / VERIFY | The best-documented open test-time-scaling design. Within ~6 min per task, only a 2-candidate version is affordable | Dev-time reference |
+| 12 | Kimi-Dev ("Agentless training as skill prior") | Paper | LoRA track | If the LoRA gate opens, train workflow skills (localize, edit, self-reflect) first, then agentic behavior | Dev-time |
+
+---
+
+## 2. Techniques and algorithms, grouped by BCF phase
+
+### 2.1 CLASSIFY / SPECIFY: replace a grid built only on exception classes
+
+**The data problem.** The static analysis (Report 04 §3) found:
+
+- 15/129 statements name an exception class.
+- 6/129 contain any traceback text.
+- 34 statements are effectively title-only.
+- 31 carry PR-template boilerplate.
+
+A class grid keyed on exception types has almost nothing to condition on at turn 0. The literature offers better-founded grids.
+
+| Item | Source | What to take from it | Status |
+|---|---|---|---|
+| **Orthogonal Defect Classification (ODC)** | Chillarege et al., *IEEE TSE* 18(11), 1992, DOI 10.1109/32.177364 ([ADS](https://ui.adsabs.harvard.edu/abs/1992ITSEn..18..943C/abstract), [Wikipedia](https://en.wikipedia.org/wiki/Orthogonal_defect_classification)) | Two orthogonal attributes. **Defect type** (assignment, checking, algorithm, interface, function, timing…) tells you about the fix. **Trigger** (what exposed it) tells you about the symptom. Orthogonality and "necessary and sufficient" conditions are exactly the formal property BCF's ρ = I(R;C)/H(R) claim needs from its classes. | [W] |
+| **Bug-fix patterns** | Pan, Kim, Whitehead, "Toward an understanding of bug fix patterns", *Empirical Software Engineering* 14(3), 2009 | 27 automatically detectable fix patterns, e.g. *IF-CC* (change of if-condition), *MC-DAP* (method-call parameter change), *AS-CE* (assignment expression change). They can be mined from a diff. Report 04 shows the gold patches split into small replacements, guard additions and logic rewrites, which is the same space. | [K] |
+| **Template-based repair for Python type errors (PyTER)** | Oh & Oh, ESEC/FSE 2022, DOI 10.1145/3540250.3549130 ([PDF](https://prl.korea.ac.kr/papers/fse22.pdf)) | The best published example of **exception-class-conditioned repair**: `TypeError` traces → type-aware fault localization → typed fix templates; 48.4% fixed at 77.6% precision on 93 bugs. This is the right citation for the BCF "class narrows the search space" thesis, and it is honest about needing a failing run that *produces* the exception. | [W] |
+| **Fix templates for LLM prompts** | "Domain Knowledge Matters: Improving Prompts with Fix Templates for Repairing Python Type Errors", ICSE 2024 (cited from the PyTER result above) | Shows that templates help as **prompt context** for an LLM, which is a cheap way to ship BCF's `fix_shape` vocabulary as a skill resource. | [W] (via citation) |
+
+**Recommended design change.** Make the BCF class a **pair**:
+
+- `symptom` = ODC trigger-like. Computed from the *reproduction run*, not from the statement: `ImportError` (missing interface) / expected-exception-not-raised / unexpected exception class / wrong output / warning.
+- `fix_shape` = Pan-style pattern, predicted.
+
+The static data already supports estimating the prior for both axes (Report 04 §3.4). The symptom axis is **observable after one reproduction run**. That is when exception-class conditioning becomes real.
+
+### 2.2 LOCALIZE: cheap, deterministic signals that beat the provided graph tools
+
+| Item | Source | Use in BCF | Status |
+|---|---|---|---|
+| **FixCache / BugCache (history-based defect prediction)** | Kim, Zimmermann, Whitehead, Zeller, "Predicting Faults from Cached History", ICSE 2007; Rahman et al., "BugCache for inspections: hit or miss?", FSE 2011 | Recently changed and recently fixed files are disproportionately likely to hold the next fix. The snapshots keep the full upstream history (Report 04 §2), so `git log --name-only -n 50 -- '*.py'` is a **one-tool-call localization prior**. Report 04 §5 gives its measured hit rate on the 129 tasks. | [K] |
+| **BM25 statement→file and statement→function ranking** | Robertson & Zaragoza, "The Probabilistic Relevance Framework: BM25 and Beyond", 2009; Agentless uses it (already covered) | Not new as a method. What is new is the **measured** strength on this corpus (Report 04 §5), and the option to vendor it as a ~60-line pure-Python skill (`rank_bm25` is pure Python, Apache-2.0) | [K] |
+| **SweRank (retrieve + list-wise rerank for issue localization)** | Reddy et al., arXiv:2505.07849, ICLR 2026 ([arXiv](https://arxiv.org/abs/2505.07849), [code](https://github.com/SalesforceAIResearch/SweRank)); follow-up SweRank+ arXiv:2512.20482 | It can't run in the sandbox (model weights). Use it **offline** to build a reference localization ranking for the 129 dev tasks, as a ceiling to compare in-sandbox heuristics against, and as hard-negative mining for LoRA data | [W] |
+| **CoRNStack / CodeRankEmbed** | Suresh et al., ICLR 2025, arXiv:2412.01007 ([arXiv](https://arxiv.org/pdf/2412.01007), [model](https://huggingface.co/nomic-ai/nomic-embed-code)) | A 137M code retriever. Offline only: re-embed the 129 graphs' node texts to test how much the *provided* 256-d embeddings lose (Report 04 §6 shows they are strongly anisotropic) | [W] |
+| **Embedding post-processing: "All-but-the-Top" and whitening** | Mu & Viswanath, ICLR 2018; Su et al., "Whitening Sentence Representations…", 2021; Gao et al., "Representation Degeneration Problem", ICLR 2019 | The provided embeddings have a mean pairwise cosine near 0.85 (MiniMax measured this; I re-measured it in Report 04 §6). Mean-centering removes the common direction. The harness's `search_similar_code` can't be changed, but for **offline analysis and the paper's Code-Comprehension track** this is a cheap, citable fix | [K] |
+| **Async-aware static call graph** | PyCG (Salis et al., ICSE 2021, [GitHub](https://github.com/vitsalis/PyCG); archived Nov 2023, breaks on Python ≥ 3.12 per the [pycg-ml fork](https://github.com/smirnoffmg/pycg-ml)); Scalpel (Li et al., 2022); pyan3 | None of these document `async def`/`await` support (checked: no async in PyCG's feature list). **Recommendation:** don't vendor them. Write about 150 lines of stdlib `ast` code that emits `async def` nodes and `await` call edges for the files the agent is looking at. That fills exactly the hole the provided graphs have | [W] |
+| **Spectrum-based fault localization in stdlib** | FauxPy: Rezaalipour & Furia, arXiv:2404.18596 ([arXiv](https://arxiv.org/pdf/2404.18596), [replication](https://github.com/atom-sw/fauxpy-experiments)); the empirical study arXiv:2305.19834 on 135 BugsInPy bugs | FauxPy itself is a pytest plugin built on coverage.py, which is not in the wheelhouse, so use it dev-time. In-sandbox, `sys.settrace` + Ochiai over (reproduction test failing, nearby tests passing) gives function-level suspiciousness. It only works after a failing reproduction test exists, so it belongs in RESCUE, not the default path | [W] |
+| **Stack-trace-based localization** | CrashLocator (Wu et al., ISSTA 2014); FauxPy's stack-trace mode | When a reproduction run produces a traceback, rank the frames inside the repo by recency. Zero model cost | [K] |
+
+### 2.3 VERIFY: the agent can't see `test_patch`, so it must write its own oracle
+
+| Item | Source | Takeaway | Status |
+|---|---|---|---|
+| **Otter / Otter++** | Ahmed et al., ICML 2025, arXiv:2502.05368 ([arXiv](https://arxiv.org/pdf/2502.05368)) | Builds tests from the issue text plus repo code, with rule-based checks and repair of the generated tests. Otter++ reached 37% fail-to-pass on TDD-Bench-Verified. As a patch filter: 65–92% precision, 30–41% recall | [W] |
+| **e-Otter++** | arXiv:2508.06365 ([arXiv](https://arxiv.org/html/2508.06365)) | Adds execution feedback: 63% average fail-to-pass | [W] |
+| **SWE-Tester** | arXiv:2601.13713 ([arXiv](https://arxiv.org/pdf/2601.13713)) | Trains open LLMs for issue reproduction. Relevant if the LoRA gate opens | [W] |
+| **Counter-evidence** | SWE-Doctor, arXiv:2607.00990; "Rethinking the Value of Agent-Generated Tests for LLM-Based SWE Agents", arXiv:2602.07900 ([arXiv](https://arxiv.org/html/2602.07900v2)) | Adding generated tests to mini-SWE-agent gave **little or negative** benefit. Writing tests costs turns. **Treat reproduction tests as a paired ablation arm, gated by task type**: worth it where the oracle kind is "expects exception" or "wrong output with clear expected value", not for "implement new API" tasks | [W] |
+| **PatchDiff (differential patch testing)** | Wang, Pradel, Liu, arXiv:2503.15223, ICSE 2026 ([arXiv](https://arxiv.org/abs/2503.15223)) | 29.6% of plausible patches behave differently from the developer patch, and passing tests overstate resolution by 6.4 pp. For BCF's **paper**, this is the method to quantify your oracle-asymmetry (P-1) probe on the 129 dev tasks | [W] |
+| **UTBoost** | Yu et al., ACL 2025, arXiv:2506.09289 ([ACL](https://aclanthology.org/2025.acl-long.189/), [code](https://github.com/cuhk-shenzhen-se/utboost)) | 345 wrongly passing patches across Lite and Verified, caused by weak tests. Use its UTGenerator idea offline to label which dev tasks have **weak F2P tests**, where a wrong patch could still pass | [W] |
+| **SWE-Bench+ (solution leakage, weak tests)** | Aleithan et al., arXiv:2410.06992 ([arXiv](https://arxiv.org/abs/2410.06992)) | 32.67% of successful SWE-agent patches came from solutions already stated in the issue text. **Directly relevant here:** this corpus's statements are PR bodies whose titles and descriptions often state the fix ("Fix X by Y"). Measure leakage on the dev set (Report 04 §3.2) and do not assume the private set has the same leakage rate | [W] |
+
+### 2.4 Context management and long-horizon control (Leaks 1 and 4 in GLM's analysis)
+
+| Item | Source | Takeaway for a 32k-token, quantized 31B model | Status |
+|---|---|---|---|
+| **"The Complexity Trap"** | Lindenbauer et al., arXiv:2508.21433, DL4C @ NeurIPS 2025 ([arXiv](https://arxiv.org/abs/2508.21433), [code](https://github.com/JetBrains-Research/the-complexity-trap)) | Masking old observations (keep only the latest tool output in full) matched LLM summarization while halving cost. **In ADK YAML you can't edit history directly.** You can get a similar effect by: (a) routing exploration through an `AgentTool` sub-agent with `skip_summarization` (the harness's own Gotcha #4); (b) keeping reads narrow (≤ 60 lines); (c) a "state packet" skill that prints a ≤ 30-line summary from `/tmp` after compaction | [W] |
+| **ACON** | Kang et al., arXiv:2510.00615 ([arXiv](https://arxiv.org/abs/2510.00615), [code](https://github.com/microsoft/acon)) | Compression guidelines are *learned* from paired trajectories where the full context succeeds and the compressed one fails. 26–54% fewer peak tokens. The method fits BCF's paired-ablation culture: write compaction guidance into the system prompt, revised from failure pairs in your ledger | [W] |
+| **Systems view: "Engineering Reliable Coding Agents"** | Jarmak, arXiv:2608.13867 ([arXiv](https://arxiv.org/abs/2608.13867)) | "Repair asymmetry": many apparent model failures sit in the harness, state or oracle layers. This independently supports GLM's "measurement before cleverness" thesis and is citable in the paper | [W] |
+
+### 2.5 PATCH, selection and test-time scaling
+
+| Item | Source | Takeaway | Status |
+|---|---|---|---|
+| **Trae Agent** | arXiv:2507.23370 ([arXiv](https://arxiv.org/abs/2507.23370), [code](https://github.com/bytedance/trae-agent), MIT) | A generation → pruning → selection ensemble with +10.2% Pass@1 on average over ensemble baselines. With ~6 min per task, only a **2-candidate** variant with deterministic pruning (applies cleanly, parses, reproduction test passes) is affordable. Keep it as a late-stage ablation | [W] |
+| **Kimi-Dev** | arXiv:2509.23045 ([arXiv](https://arxiv.org/abs/2509.23045)) | Workflow ("agentless") training builds localization, edit and self-reflection priors that carry over to agent mode. If LoRA ever opens, train on **workflow-shaped** data built from the 129 dev tasks plus SWE-smith-style synthetic data, not raw agent trajectories | [W] |
+
+### 2.6 Experiment statistics: making ±2.5-task noise affordable
+
+| Item | Source | Takeaway | Status |
+|---|---|---|---|
+| **"Adding Error Bars to Evals"** | Miller (Anthropic), arXiv:2411.00640 ([arXiv](https://arxiv.org/pdf/2411.00640)); tooling [`errorbars`](https://github.com/antonsoo/errorbars) | Use paired per-task differences. Var(A−B) = Var A + Var B − 2Cov. Resample each task K times to shrink within-task variance. Power analysis tells you how many tasks × seeds a +2-task effect needs *before* you spend GPU hours | [W] |
+| **CUPED / regression adjustment** | Deng, Xu, Kohavi, Walker, "Improving the Sensitivity of Online Controlled Experiments by Utilizing Pre-Experiment Data", WSDM 2013 | Use the static per-task difficulty prior (gold size, interface burden, BM25 rank; Report 04 §8) as a covariate. When the covariate correlates with resolution (expected r ≈ 0.3–0.5), the variance reduction is equivalent to running roughly 10–25% more tasks, at no cost | [K] |
+| **Multiple comparisons** | Benjamini & Hochberg, *JRSS-B* 1995 | The ledger will run many paired A/Bs. Control the false discovery rate across the weekly "Monday queries" | [K] |
+
+---
+
+## 3. FOSS tools (new to the repo's lists)
+
+| Tool | License | Kind | Use | Where | Caveat |
+|---|---|---|---|---|---|
+| **Docker Desktop + WSL2** (or a Linux box) | Docker Desktop: subscription terms for large orgs, free for personal use; WSL2: Microsoft | Platform | **Required for local `swegemma eval`.** This machine has neither Docker nor WSL installed (checked 2026-10-01). The harness's subprocess backend also assumes `/bin/bash` | Dev-time | Highest-priority setup item (Report 05) |
+| `git` (already in the sandbox) | GPL-2.0 | VCS | Recency prior, `git log -S`, `git blame` on the target lines, `git log -p -- <file>` | In-sandbox | Snapshot SHAs are rewritten, so the task's `base_commit` cannot be looked up |
+| `rank_bm25` (pattern) | Apache-2.0 | Retrieval | Vendor a minimal BM25 into `skills/bcf-localize/scripts/bm25.py` | In-sandbox | Allowed: `.py` only |
+| Python stdlib `ast`, `tokenize`, `trace`, `sys.settrace` | PSF | Static/dynamic analysis | Async-aware mini call graph; Ochiai SBFL; enclosing-function lookup for any line | In-sandbox | 2 vCPU: cap the files analyzed |
+| `parso` (+ optionally `jedi`) | MIT | Parser / IDE engine | Go-to-definition and find-references inside a skill | In-sandbox **if** it passes the extension whitelist | Jedi ships typeshed `.pyi` stubs, which the whitelist rejects. Test whether Jedi degrades gracefully without them. parso's grammar files are `.txt`, which is allowed |
+| PyCG / pyan3 / Scalpel | Apache-2.0 / GPL-2.0 / Apache-2.0 | Call-graph generators | Dev-time reference graphs to compare against the provided `calls` graph | Dev-time | PyCG archived and broken on Python ≥ 3.12; none handle async |
+| FauxPy | open-source (see repo) | SBFL/MBFL/stack-trace FL | Dev-time: during oracle runs on the 129 tasks, compute SBFL suspiciousness of the gold function, to give an upper bound on what in-sandbox SBFL could do | Dev-time | Needs coverage.py |
+| coverage.py | Apache-2.0 | Coverage | Dev-time spectra; P2P "blast radius" analysis | Dev-time | Not in the wheelhouse |
+| tree-sitter + `ast-grep` | MIT | Structural code search | Dev-time corpus mining (fix-pattern labelling across the 129 golds) | Dev-time | Native binaries |
+| Semgrep CE | LGPL-2.1 | Pattern rules | Dev-time detection of "solution-leak phrasing" and risky patch shapes | Dev-time | — |
+| DuckDB | MIT | Embedded SQL over JSONL/Parquet | Run the "Monday queries" over the ledger JSONL in one SQL file each | Dev-time | Lightweight alternative to Langfuse |
+| statsmodels | BSD-3 | Statistics | Exact McNemar, regression adjustment, logistic models of P(resolve \| features) | Dev-time | — |
+| junitparser | Apache-2.0 | Parser | Parse `test_outputs/*.xml` into per-test vectors (skipped counts as failed) | Dev-time | — |
+| Inspect AI (UK AISI) | MIT | Eval framework | Optional: log viewer and reproducible eval runs if you mirror `swegemma` tasks | Dev-time | Not needed for v1 |
+| JetBrains `the-complexity-trap` | (see repo) | Reference implementation | Observation-masking baselines | Dev-time | — |
+| SweRank, CodeRankEmbed, nomic-embed-code | (see repos) | Retrieval models | Offline localization ceilings; re-embedding study for the paper | Dev-time (GPU) | 5090 is enough |
+
+---
+
+## 4. Whitepapers: one-line value and reading order
+
+Read in this order. The items marked ★ change a decision in Report 05.
+
+| # | Paper | Venue / ID | Why read it | Status |
+|---:|---|---|---|---|
+| 1 ★ | The Complexity Trap | arXiv:2508.21433 | Context policy for the 32k window | [W] |
+| 2 ★ | SWE-Bench+ | arXiv:2410.06992 | Solution leakage; weak tests; how to measure both | [W] |
+| 3 ★ | Are "Solved Issues" in SWE-bench Really Solved Correctly? (PatchDiff) | arXiv:2503.15223, ICSE 2026 | Oracle asymmetry in the paper; differential testing | [W] |
+| 4 ★ | Otter / e-Otter++ | arXiv:2502.05368; 2508.06365 | Reproduction-test design | [W] |
+| 5 ★ | Rethinking the Value of Agent-Generated Tests | arXiv:2602.07900 | Why reproduction tests must be ablated | [W] |
+| 6 | ODC | IEEE TSE 1992, DOI 10.1109/32.177364 | Taxonomy theory for BCF classes | [W] |
+| 7 | Bug-fix patterns (Pan, Kim, Whitehead) | EMSE 2009 | Mineable fix-shape vocabulary | [K] |
+| 8 | PyTER | ESEC/FSE 2022 | Exception-class-conditioned repair, done honestly | [W] |
+| 9 | FixCache | ICSE 2007 | History-based localization prior | [K] |
+| 10 | FauxPy + Python FL empirical study | arXiv:2404.18596; 2305.19834 | What SBFL achieves on Python | [W] |
+| 11 | SweRank (+ SweRank+) | arXiv:2505.07849; 2512.20482 | State-of-the-art localization ranking | [W] |
+| 12 | CoRNStack | arXiv:2412.01007, ICLR 2025 | Code retriever training data | [W] |
+| 13 | UTBoost | ACL 2025, arXiv:2506.09289 | Weak-test detection | [W] |
+| 14 | ACON | arXiv:2510.00615 | Learned compression guidelines | [W] |
+| 15 | Trae Agent | arXiv:2507.23370 | Generate/prune/select ensembles | [W] |
+| 16 | Kimi-Dev | arXiv:2509.23045 | Workflow → agent skill priors (LoRA) | [W] |
+| 17 | Adding Error Bars to Evals | arXiv:2411.00640 | Paired statistics, power analysis | [W] |
+| 18 | CUPED | WSDM 2013 | Variance reduction with covariates | [K] |
+| 19 | Engineering Reliable Coding Agents | arXiv:2608.13867 | Systems-level failure attribution | [W] |
+| 20 | All-but-the-Top; Whitening; Representation Degeneration | ICLR 2018; 2021; ICLR 2019 | Fixing anisotropic embeddings (paper track) | [K] |
+
+---
+
+## 5. Books (new to the repo's lists, or only mentioned in passing before)
+
+| Book | Author(s) / year | Chapters that matter | BCF link | Status |
+|---|---|---|---|---|
+| **The Debugging Book** (free online, executable Python) | A. Zeller et al., debuggingbook.org | Statistical debugging, delta debugging, dynamic slicing, repairing code, tracking failure origins | Ready-made **Python** implementations of SBFL, slicing and automated repair to adapt into skills | [K] |
+| **Debugging: The 9 Indispensable Rules** | D. Agans, 2002 | "Make it fail", "Quit thinking and look", "Change one thing at a time", "**Keep an audit trail**" | Maps one-to-one onto BCF's tenets (breadcrumbs = audit trail). Good framing for the whitepaper's introduction (mentioned once before, never used) | [K] |
+| **Effective Debugging: 66 Specific Ways** | D. Spinellis, 2016 | Hypothesis-driven debugging, differential debugging, using version control to find regressions | `git log`/`bisect` thinking for the history affordance | [K] |
+| **Trustworthy Online Controlled Experiments** | Kohavi, Tang, Xu, 2020 | Variance reduction (CUPED), sample-ratio checks, the "Twyman's law" mindset | Experiment protocol for ±2.5-task noise | [K] |
+| **Statistical Rethinking** (2nd ed.) | R. McElreath, 2020 | Beta-binomial models, partial pooling across repos | Pool per-repo resolution rates without overfitting the 1-task httpx stratum | [K] |
+| **Python Concurrency with asyncio** | M. Fowler, Manning 2022 | Coroutines, event loops, async context managers | Skill-resource knowledge for the async gap: FastAPI fixes that touch `async def` code the graph does not show | [K] |
+| **Fluent Python** (2nd ed.) | L. Ramalho, 2022 | Data model, descriptors, typing, asyncio | Background for Rich/FastAPI-style dunder and protocol fixes | [K] |
+
+---
+
+## 6. How each item extends the data analysis already done
+
+| Existing analysis (GLM / MiniMax / Report 04) | Extension enabled by the research above | Effort |
+|---|---|---|
+| Static census: statement length, tracebacks, hints | **Solution-leak labelling** (SWE-Bench+ method): does the title or body state the fix? Compare dev-set leakage with what a private-repo set may have | 0.5 day |
+| Gold-patch shape (files / lines) | **Fix-pattern mining** (Pan et al. patterns, via `ast` diff) → per-task `fix_shape` labels. This gives the prior for BCF's SPECIFY | 1 day |
+| Async-hole census (GLM) | **Async-aware mini call graph** (stdlib `ast`), so you can measure how many gold functions become reachable from statement symbols with async edges added | 1 day |
+| Embedding degeneracy (MiniMax) | **Mean-centering and whitening** re-ranking; CodeRankEmbed re-embedding; gold-node retrieval rank under each (Report 04 §6 has the centered baseline) | 1 day |
+| Localization (both agents: proposed, not measured) | **BM25 + recency prior + SBFL ceiling** measured per task (Report 04 §5); SweRank as the offline ceiling | 1–2 days |
+| P-1 oracle-asymmetry probe (GLM) | **PatchDiff / UTBoost**-style differential testing on the dev set once Docker oracle runs work | 3–4 days |
+| Paired ablation protocol (both) | **Error-bar power analysis + CUPED covariates** from Report 04's difficulty prior | 0.5 day |
+| Context overflow leak (GLM, from forum) | **Observation-masking-like policy** + ACON-style guideline revision from paired failures | 1 day prompt work + ablation |
+
+---
+
+## Sources (web-verified 2026-10-01)
+
+- [The Complexity Trap, arXiv:2508.21433](https://arxiv.org/abs/2508.21433) · [code](https://github.com/JetBrains-Research/the-complexity-trap)
+- [Otter, arXiv:2502.05368](https://arxiv.org/pdf/2502.05368) · [e-Otter++, arXiv:2508.06365](https://arxiv.org/html/2508.06365) · [SWE-Tester, arXiv:2601.13713](https://arxiv.org/pdf/2601.13713) · [SWE-Doctor, arXiv:2607.00990](https://arxiv.org/pdf/2607.00990) · [Rethinking agent-generated tests, arXiv:2602.07900](https://arxiv.org/html/2602.07900v2)
+- [SweRank, arXiv:2505.07849](https://arxiv.org/abs/2505.07849) · [SweRank+, arXiv:2512.20482](https://arxiv.org/pdf/2512.20482)
+- [SWE-Bench+, arXiv:2410.06992](https://arxiv.org/abs/2410.06992)
+- [PyCG GitHub](https://github.com/vitsalis/PyCG) · [PyCG ICSE 2021 (dblp)](https://dblp.org/rec/conf/icse/SalisSLSM21.html) · [pycg-ml fork](https://github.com/smirnoffmg/pycg-ml) · [CPyGraph](https://github.com/awen-li/CPyGraph)
+- [Kimi-Dev, arXiv:2509.23045](https://arxiv.org/abs/2509.23045)
+- [PyTER (FSE 2022)](https://2022.esec-fse.org/details/fse-2022-research-papers/52/PyTER-Effective-Program-Repair-for-Python-Type-Errors) · [PDF](https://prl.korea.ac.kr/papers/fse22.pdf)
+- [Adding Error Bars to Evals, arXiv:2411.00640](https://arxiv.org/pdf/2411.00640) · [errorbars package](https://github.com/antonsoo/errorbars)
+- [PatchDiff, arXiv:2503.15223](https://arxiv.org/abs/2503.15223)
+- [FauxPy, arXiv:2404.18596](https://arxiv.org/pdf/2404.18596) · [Python FL study, arXiv:2305.19834](https://arxiv.org/pdf/2305.19834) · [replication](https://github.com/atom-sw/fauxpy-experiments)
+- [ACON, arXiv:2510.00615](https://arxiv.org/abs/2510.00615) · [code](https://github.com/microsoft/acon)
+- [CoRNStack, arXiv:2412.01007](https://arxiv.org/pdf/2412.01007) · [nomic-embed-code](https://huggingface.co/nomic-ai/nomic-embed-code)
+- [Trae Agent, arXiv:2507.23370](https://arxiv.org/abs/2507.23370) · [code](https://github.com/bytedance/trae-agent)
+- [Engineering Reliable Coding Agents, arXiv:2608.13867](https://arxiv.org/abs/2608.13867)
+- [ODC (ADS record)](https://ui.adsabs.harvard.edu/abs/1992ITSEn..18..943C/abstract) · [ODC overview](https://en.wikipedia.org/wiki/Orthogonal_defect_classification)
+- [UTBoost, ACL 2025](https://aclanthology.org/2025.acl-long.189/) · [code](https://github.com/cuhk-shenzhen-se/utboost)
+
+
+---
+
+<!-- ====================================================================== -->
+<!-- FILE: 03_Insights_from_Agent_Data_Analyses.md -->
+<!-- ====================================================================== -->
+
+# 03 — Noteworthy Insights from the Data Analysis Done by GLM-5.3 and MiniMax-M3
+
+*Prepared 2026-10-01 by Claude Opus 5.5. This report pulls together what can be learned from the two agents' **executed** data work: GLM's `2026-10-01-bcf-metadata-collection/` (tools 00–18, `data/`) and MiniMax's `bcf-metadata-collection-2026-10-01/` (scripts in `scratch/`, reports 08–09). I re-checked each insight against my own independent extraction (Report 04).*
+
+**Verification status labels**
+
+| Label | Meaning |
+|---|---|
+| ✅ | Confirmed |
+| 🟡 | Confirmed with a correction or a nuance |
+| ❌ | Refuted |
+| ⚪ | Not checkable offline (forum or runtime facts) |
+
+---
+
+## 1. The ten insights that matter most (after verification)
+
+| # | Insight | Origin | Status | What it means for BCF |
+|---:|---|---|:---:|---|
+| 1 | **The problem statements are prose PR descriptions, not bug reports with tracebacks.** 0/129 start with a traceback, and none contain `Traceback (most recent call last)`. They are PR titles with emoji or conventional-commit prefixes (🐛, ✨, ♻️, 📝), often followed by template boilerplate | GLM (finding 1, features) | ✅ | CLASSIFY cannot be driven by exception parsing of the statement. BCF's exception-class conditioning must come from **a reproduction run** (Report 04 §3.4) |
+| 2 | **`hints_text` is empty for all 129 tasks** | Both | ✅ | Prompts must not rely on `{hints}`. Keep the template robust when the field is absent |
+| 3 | **The async gap is structural**: 0 first-class async nodes among 370,683; async code exists only *inside* the text of enclosing sync/class nodes | GLM (graph-deep) | ✅ | Graph tools are blind to async call chains. **20/129 gold patches edit inside an `async def`** (19 FastAPI). Dual-path localization (graph + AST/grep) is required |
+| 4 | **Gold patches are small and mostly single-file**: 91/129 single-file; median 1 file, +8/−2 lines (12 changed lines); 43% are one file with ≤ 5 added lines | Both | ✅ | Minimum-edit discipline is correct for most tasks. The tail is long (max 26 files / 12,714 lines), so cap and escalate |
+| 5 | **Graph nodes carry no file path**; node ids are dotted module paths. Prefixes like `docs_src.` may be stripped, and `src/` layouts collapse | MiniMax (F4), GLM (join rules) | ✅ | A deterministic id→file mapper (try suffixes of the dotted path) is needed in any skill that combines graph tools with `read_file` |
+| 6 | **The embeddings are strongly anisotropic**: nearly every node has a > 0.99 cosine neighbour | MiniMax (F2/F3), probe report | 🟡 | Real, but MiniMax over-read it as "useless". Mean pairwise cosine is 0.79 raw → **0.09 after centering**. For rich, requests and httpx, **0** of the > 0.99 pairs are identical text (geometric anisotropy). For FastAPI, **33%** are literal `docs_src` tutorial duplicates. When the statement names a symbol that resolves to a node other than the gold node, the gold node still ranks in the **top 4.5%** (median). Weak but non-zero locality signal |
+| 7 | **Test dependencies missing from the public wheelhouse** (`inline_snapshot`, `dirty_equals`) | GLM (testdeps) | 🟡 | Undercounted. GLM scanned only lines added by the test patch (14 tasks). Scanning the whole post-patch test files gives **29 tasks** (`inline_snapshot` 22, `dirty_equals` 9, plus `importlib_metadata`, `attr`). These are **local-CV** dead tasks only: the host says gold validates 100% on the scorer ⚪ |
+| 8 | **The sample `eval_config.yaml` self-throttles** (60 s / 10 calls / 1 min / 50 turns) | GLM (harness-static, C8), MiniMax | 🟡 | GLM read this correctly ("un-throttle first"). MiniMax read it as the competition's evaluation constraint and designed a 3–6-call agent around it ❌ |
+| 9 | **Two task pairs share a base commit** (rich_3882/3894, requests_6589/6629) → 127 graph and embedding payloads for 129 tasks; the ZIP has **no** 0-byte files | GLM (census), MiniMax (graph probe) | ✅ | Graph and embedding joins must use `(repo_short, base_commit)`. The forum's "0-byte files" come from download tooling, not the data ⚪ |
+| 10 | **The sample LoRA adapters are stubs**: r = 4, α = 8, `q_proj`+`o_proj`, `layers_to_transform = [0]`, ~217 KB | GLM, MiniMax | ✅ | They only check that adapter loading works. Never read anything about capability from them. The LoRA track stays gated on the platform KV-cache fix ⚪ |
+
+---
+
+## 2. Insights that turned out wrong (and the corrected fact)
+
+| Claimed insight | Origin | Corrected fact (Report 04) | Why it matters |
+|---|---|---|---|
+| "Snapshots are history-less single-commit exports; `git log`/`blame` impossible" | GLM finding 5 / ROADMAP C4 | Snapshots keep the **full upstream history with rewritten SHAs**: fastapi ≈ 6,000–7,350 commits, rich ≈ 3,800–4,450, requests ≈ 6,200–6,475, httpx 4. HEAD always predates `created_at` (median 4.9 h earlier), so there are no future commits | Restores a free localization signal. The gold file was changed within the last 20 commits in 59/122 tasks with a pre-existing gold `.py` file |
+| "Patches use bare `+` empty lines; 9/129 malformed even for GNU patch" | MiniMax 09 / 10-F6 | The dataset `.strip()`-ed all 258 patch strings (missing final newline and blank context line). With the tail restored, **129/129 + 129/129 apply with `git apply --check`** | Local CV tooling must normalize patch tails, or it will report false "corrupt patch" failures |
+| "38% multi-bug (F2P ≥ 2); requests 12/13 have F2P = 0" | MiniMax 08 | The regex missed class-method tests. AST count: requests target files hold a median of **224** tests; 25 tasks add no new test function (19 only modify existing tests). The number of tests also measures the *test*, not the number of bugs | Use `tests_in_target_files` (P2P blast radius) and `tests_added/modified`. Drop "multi-bug" as a label derived from test counts |
+| "All tasks have a graph → no fallback needed" | MiniMax 08 | Fix sites missing from the graph: 20 tasks are async; 54 tasks include module-level edits (imports, constants) that have no node; 15 tasks have gold hunks that map to no node; 11 tasks create new files | The graph exists but often does not cover the fix site |
+| "U4 unknowable until Dec 2" | MiniMax 07 | The harness prompt contains the "Code Intelligence Tools" section **iff** graph and embedding files exist | Turn-0 observable. The agent can switch strategy immediately |
+| "Graphs: no containment edges" | GLM 01 | `calls` edges include class→method containment (median 8.8% of edges) | Hop-distance metrics (λ) partly measure containment, not calls |
+
+---
+
+## 3. Insights that only emerge when both analyses are combined
+
+1. **Statement + graph combined: localization hinges on how symbols get named.** GLM showed statements are short prose (median 418 characters), and MiniMax showed `search_similar_code` needs a symbol name, not prose. My measurement: statement identifiers resolve strongly (exact, suffix or case-insensitive) to graph nodes in **52/129** tasks. In **29/129** the statement directly names a gold-enclosing node. For the other ~77 tasks the graph tools have **no reliable entry point**. **Implication:** the first localization call should be lexical (BM25 / `grep -rn`, or `git log` recency), with graph tools used for *expansion* once a symbol is in hand. GLM already argued for dual-path; the combined evidence says **lexical-first**.
+
+2. **Gold shape + test oracle combined: "small fix, big blast radius".** Both agents found median gold patches of ~1 file and ~10 lines. Neither noticed that the scorer runs **all** tests in the target files: median 11 tests, ≥ 50 in 33 tasks, median 224 for requests. A one-line fix that breaks a sibling test in the same module scores 0. **Implication:** the agent's VERIFY step must run the **entire** target test module (cheap: seconds), not just a hand-picked test.
+
+3. **Missing deps + 100% gold validity combined: local CV is a biased proxy.** GLM's dependency gap (now 29 tasks) together with the forum's host statement (100% gold-valid on the scorer ⚪) means local CV systematically **under**-scores fastapi snapshot-style tasks. That is one concrete, fixable cause of the CV↔LB disconnect GLM documented. **Implication:** add `inline-snapshot`, `dirty-equals`, `pytest-httpbin` and `typing-inspection` wheels to the *local* image, rather than quarantining 29 tasks (22% of the dev set).
+
+4. **Taxonomy v0 + fix-shape combined: BCF's class grid should be two-dimensional.** GLM's emoji-prefix taxonomy (bug/feature/refactor…) and MiniMax's four size tiers describe different axes. My fix-shape labels (small_replace 34, guard_add 10, logic_rewrite 42, rewrite_plus_new_code 35, …) only moderately track title class. "Bug" titles split almost evenly between small_replace (26) and logic_rewrite (24); "feature" titles skew to rewrite_plus_new_code (9 of 18). **Implication:** a `symptom × fix_shape` grid (Report 02 §2.1: ODC + Pan patterns) is better grounded than a single exception-class axis.
+
+5. **Embeddings + `docs_src` duplication combined: FastAPI's retrieval is polluted twice.** Test nodes are a median **61.5%** of all graph nodes (fastapi 63.6%), and FastAPI graphs are ~68% isolated nodes (mostly `docs_src` tutorial variants, a third of them textually duplicated). **Implication:** filter results to non-test, non-`docs_src` nodes. Gold patches touch `docs_src` in only 15 tasks, and only alongside library code.
+
+---
+
+## 4. Quality notes on the agents' analysis code
+
+| Aspect | GLM-5.3 tools | MiniMax-M3 scripts |
+|---|---|---|
+| Reads directly from ZIP, idempotent | ✅ | ✅ |
+| stdlib-only | ✅ | ✅ (hand-rolled YAML parser, which the agent itself flags as a hack) |
+| Bugs found and fixed during the run, then documented | n/a | ✅ (`has_graph()` extension; diff header regex) — good transparency |
+| Remaining correctness issues | Snapshot-verify heuristic (base SHA presence ≠ history); added-lines-only import scan | Patch-tail misdiagnosis; non-indented `def test_` regex; F2P→multi-bug inference |
+| Reproducibility doc | Strong (README "how to run", dataset card) | Moderate (reports, scattered scripts) |
+| Separation of runtime-observable vs scorer-only fields | Implicit (anti-wishlist) | Stated in principle; violated in the v1 design |
+
+---
+
+## 5. What to carry forward (and what to drop)
+
+**Carry forward:**
+
+- GLM's dataset card and join rules.
+- The async census.
+- The taxonomy v0 prior.
+- The difficulty-tercile idea.
+- MiniMax's per-task static record schema.
+- MiniMax's pre-submit gates idea: AST/`py_compile` + apply-check + no-test-files.
+
+**Drop or replace:**
+
+| Drop | Replace with |
+|---|---|
+| The "no history" constraint | git-based recency and context tools |
+| The 0-byte repair task | nothing (it is not a data problem) |
+| MiniMax's patch-malformation rule | patch-tail normalization in local tooling |
+| The 10-call budget assumption | a real budget derived from the 12-hour envelope |
+| The F2P-derived turn-0 router | turn-0-observable triage (Report 04 §9) |
+| The "multi-bug" label | `tests_in_target_files` + `tests_added` |
+
+
+---
+
+<!-- ====================================================================== -->
+<!-- FILE: 04_Opus_Metadata_Wishlist_and_Static_Analysis_Report.md -->
+<!-- ====================================================================== -->
+
+# 04 — Independent Metadata Wishlist and Exhaustive Static Analysis of the Training Package
+
+*Prepared 2026-10-01 by Claude Opus 5.5, working as software architect, data scientist and ML engineer. This was built independently from the GLM/MiniMax work: my own wishlist, my own extraction scripts, and a direct read of the 21.9 GB competition ZIP. Every number here can be regenerated with `analysis/scripts/s01…s04` (≈ 12 minutes on the main PC, stdlib + numpy only). The per-task table is in [04a_Appendix_Per_Task_Metadata.md](04a_Appendix_Per_Task_Metadata.md); the full ~70-column table is `analysis/out/task_metadata_master.csv`.*
+
+---
+
+## 0. Executive summary: the 15 facts that should shape the first submission
+
+| # | Finding | Number | Implication |
+|---:|---|---|---|
+| 1 | Statements are **PR descriptions** (titles with emoji or verbs; often template boilerplate) | 34/129 title-only; 31/129 contain PR templates; median *effective* text 268 chars (rich: **61**) | Most tasks are under-specified. The agent must recover intent from code and tests, not from prose |
+| 2 | **Exceptions rarely appear in the statement** | Only 15/129 name an exception class; 0 contain a full traceback | BCF exception classes must come from a **reproduction run**, not from statement parsing |
+| 3 | **Statement→file BM25 is a strong localizer** | Gold file is #1 in **59/129**, top-3 in 83, top-5 in **99**, top-10 in 106 (fastapi median 739 candidate files) | Make the first localization step **lexical**, ideally as a vendored BM25 skill or a `grep` routine |
+| 4 | **Git history is present** (GLM wrongly said absent) | fastapi ≈ 6.4k commits, rich ≈ 4.1k, requests ≈ 6.4k; HEAD always before PR creation | `git log --name-only -n 50` is a free recency prior. Union with BM25 gives top-5 in **105/129** |
+| 5 | **Graph tools have no entry point for most tasks** | Statement identifiers resolve strongly to graph nodes in 52/129; the statement names a gold node in 29/129 | Graph = expansion tool, used *after* a symbol is found, not a first step |
+| 6 | **Graph is dominated by tests and isolated nodes** | Median 61.5% of nodes are test code; fastapi graphs ≈ 68% isolated nodes | Filter graph and embedding results to non-test library nodes |
+| 7 | **Async gap affects real fixes** | 20/129 gold patches edit inside `async def` (19 fastapi) | Needs a stdlib-AST fallback for async code |
+| 8 | **Embeddings are anisotropic, not useless** | Mean pairwise cosine 0.79 → 0.09 after centering; non-trivial gold retrieval median = top 4.5% | `search_similar_code` gives weak locality hints. Never rely on it alone |
+| 9 | **Scoring needs every test in the target files to pass** | Median 11 tests per target file set; ≥ 50 in 33 tasks; requests median 224 | VERIFY must run the **whole** target test module(s) before submitting |
+| 10 | **Some tasks require inventing exactly-named APIs** | 9/129 tests import repo symbols or modules that don't exist at base; 40/129 gold patches add new defs | Detect `ImportError`/`AttributeError` in the reproduction and switch to an "API-design" mode, keeping names consistent with the statement and docs |
+| 11 | **Fixes are deep in big files** | Gold edit starts beyond line 150 in 51/129; 65/129 gold files exceed 1,000 lines | Always `grep -n` before `read_file` (150-line cap) |
+| 12 | **The initial workspace listing is truncated** | > 150 entries at depth ≤ 3 in 115/129 | The prompt listing can't be trusted to show the target file |
+| 13 | **The dataset's patch strings lost their trailing newline** | 258/258 stripped; 129/129 + 129/129 apply after the tail fix | Local CV tooling must re-append `\n` (and the trailing blank context line) |
+| 14 | **Local CV environment gap** | 29/129 tasks import packages missing from the public wheelhouse (`inline_snapshot` 22, `dirty_equals` 9) | Add these wheels to the *local* image instead of quarantining 22% of the dev set |
+| 15 | **Gold fixes are small but long-tailed** | Median 1 file / 12 changed lines; p90 4 files / 127 lines; max 26 files / 12,714 lines | Minimum-edit default with an escalation path; cap effort on the extreme tail |
+
+---
+
+## 1. My metadata wishlist (designed independently)
+
+**Design principles**
+
+1. Every field is tagged with **when it is observable**:
+   - **S** — static, computable now from the training package
+   - **T0** — observable by the agent at turn 0 on a *hidden* task
+   - **R** — runtime, per call
+   - **P** — post-hoc / scorer-only
+   - **E** — environment, per run
+2. Every field feeds a named BCF decision.
+3. Fields observable at T0 or R are the ones an agent can *act on* on the hidden set. Fields tagged S or P are for **calibration and research only**, and must never be used as agent inputs (this avoids MiniMax's leakage error).
+4. Agent-side telemetry is emitted as tool-call stdout lines with a `BCF_EVT` prefix, so it survives into the ATIF trace. `/tmp` does not survive Container A teardown.
+
+**Status column**
+
+| Status | Meaning |
+|---|---|
+| ✅ | Extracted in this report |
+| 🔜 | Needs local harness runs (Docker/WSL2) |
+| 📈 | Needs Kaggle submissions |
+
+### 1.1 Task statement (feeds CLASSIFY, triage, budget)
+
+| Field | Obs. | Decision | Status |
+|---|:---:|---|:---:|
+| `title_class` (emoji / conventional / leading verb) | T0 | Path choice: bug vs feature vs refactor | ✅ |
+| `stmt_eff_chars` (after stripping HTML comments, checklists, template headers, URLs) | T0 | Low-information triage | ✅ |
+| `title_only`, `has_pr_template`, `boilerplate_share` | T0 | Same | ✅ |
+| `exc_in_statement` | T0 | Whether exception-class conditioning applies | ✅ |
+| `identifiers` (backticks, dotted, calls, CamelCase, snake_case) + `n_strong_resolved` in graph | T0 | Graph entry point available? | ✅ |
+| `mentions_gold_file`, `mentions_gold_symbol` (solution leakage) | S | CV↔LB shift estimate | ✅ |
+| `solution_phrased_title` (Fix/Add/Handle…) | T0 | Leakage proxy on hidden tasks | ✅ (via title verb) |
+
+### 1.2 Gold patch (calibration only: S)
+
+| Field | Decision informed (as a prior) | Status |
+|---|---|:---:|
+| `gold_files`, `gold_added/removed`, `gold_hunks`, `gold_new_files` | Edit-size caps, escalation thresholds | ✅ |
+| `fix_shape` (small_replace, guard_add, insert_only, delete, logic_rewrite, rewrite_plus_new_code, new_code, new_module) | SPECIFY `fix_shape` prior | ✅ |
+| `gold_enclosing` (AST innermost def/class for every hunk), `gold_enclosing_async`, module-level edits | Graph coverage of fix sites | ✅ |
+| `gold_max_file_lines`, `gold_first_line`, read windows | Navigation policy (grep before read) | ✅ |
+| `gold_new_symbols` | API-creation frequency | ✅ |
+| `gold_raise/except added/removed` | Exception-signature prior | ✅ |
+| `gold_git_apply_ok` | Local tooling sanity | ✅ |
+
+### 1.3 Test oracle (S for structure; P for outcomes)
+
+| Field | Obs. | Decision | Status |
+|---|:---:|---|:---:|
+| `test_files`, `test_new_files` | S | Which test module the agent should run or create | ✅ |
+| `tests_in_target_files` (AST count after `test_patch`) = **P2P blast radius** | S (count at base is T0-observable if the agent guesses the module) | VERIFY scope | ✅ |
+| `tests_added`, `tests_modified` | S | Oracle-kind prior | ✅ |
+| `oracle_kind` (expects_exception / expects_warning / snapshot_equality / assert_behaviour) | S | Reproduction-test template | ✅ |
+| `interface_burden` (test imports of repo symbols/modules missing at base) | S; T0-detectable via a failing import in a reproduction | API-design mode | ✅ |
+| `third_party_missing` (full-file imports vs wheelhouse) | S/E | Local CV quarantine / image fix | ✅ |
+| `f2p_pass/fail vector`, `skipped` | P | Ablation attribution | 🔜 |
+
+### 1.4 Repository and environment
+
+| Field | Obs. | Decision | Status |
+|---|:---:|---|:---:|
+| `git_commits`, `head_gap_hours`, `base_commit_present` | T0 | Whether history tools are usable | ✅ |
+| `recency_rank` of the gold file (`git log --name-only`) | T0 (agent computes) | Localization prior | ✅ |
+| `repo_py_files`, `repo_py_loc`, `layout_entries_d3` (prompt truncation) | T0 | Exploration budget | ✅ |
+| `requires_python` | T0 | Python-version pitfalls (3.13 sandbox) | ✅ |
+| `prompt_has_graph_section` | T0 | Graph tools on/off | 🔜 (always true on dev; check on hidden via probe) |
+| Container setup seconds, test runtime per target module | E/R | Budget allocator | 🔜 |
+
+### 1.5 Graph and embeddings
+
+| Field | Obs. | Decision | Status |
+|---|:---:|---|:---:|
+| `graph_nodes`, `test_node_share`, `isolated_share`, `containment_share` | S/T0 | Filtering policy | ✅ |
+| `gold_nodes` (mapped), `gold_unmapped`, `gold_module_level_edits` | S | Graph coverage of fix sites | ✅ |
+| `gold_min_hops` from strongly resolved statement nodes | S | λ (distance-decay) for the paper; expansion depth | ✅ |
+| `bm25_node_rank` | S | Node-level lexical localization bar | ✅ |
+| `emb_rank_raw`, `emb_rank_centered`, mean pair cosine | S | Value of `search_similar_code` | ✅ |
+
+### 1.6 Localization baselines (S; these set the bar)
+
+| Field | Status |
+|---|:---:|
+| `bm25_file_rank` (full statement), `bm25_title_rank`, `bm25_path_rank` | ✅ |
+| `recency_rank`, `recency_commit_idx` | ✅ |
+| Union of BM25 and recency top-k | ✅ |
+
+### 1.7 Runtime ledger (R/P/E — adopt GLM P0 + MiniMax M3/M4, plus these)
+
+| Field | Obs. | Decision | Status |
+|---|:---:|---|:---:|
+| `termination_cause` (GLM's 10-value enum) | P | Leak census | 🔜 |
+| `first_localization_hit_turn` (turn when a gold file is first opened) | P | Localization efficiency | 🔜 |
+| `ran_full_target_module` (bool) | R | Blast-radius discipline | 🔜 |
+| `repro_test_written`, `repro_failed_at_base`, `repro_exception_class` | R | **The BCF exception class, measured** | 🔜 |
+| `api_mode_triggered` | R | Interface-burden handling | 🔜 |
+| `edit_match_tier` (exact/flexible/regex/fail) | R | Edit integrity | 🔜 |
+| `wasted_call` (empty or duplicate result hash) | R | Rescue trigger | 🔜 |
+| CV↔LB pair per submission | 📈 | Calibration | 📈 |
+
+---
+
+## 2. Pipeline and reproducibility
+
+| Script | Input | Output | Runtime |
+|---|---|---|---|
+| `s01_task_text_features.py` | `tasks.jsonl` | `task_text_features.jsonl` | < 5 s |
+| `s02_snapshot_scan.py` | streams 129 `snapshots/*.tgz` out of the ZIP; extracts `.git` temporarily; applies patches in scratch dirs | `snapshot_features.jsonl`, `cache/inventory/*.json` | ≈ 9 min |
+| `s03_graph_embedding.py` | 127 graphs + 127 npz | `graph_features.jsonl`, `graph_commit_stats.jsonl` | ≈ 2 min |
+| `s04_aggregate.py` | all of the above | `task_metadata_master.{csv,jsonl}`, `stats.json` | < 5 s |
+
+Run from `analysis/scripts/` with `PYTHONIOENCODING=utf-8 python s0N_*.py`.
+
+**Environment used:** Windows 11, Python 3.13, numpy 2.5, git 2.55, GNU patch 2.7.6. No Docker or WSL is installed (checked), so no test was *executed*.
+
+**Heuristic caveats** (also listed in §11): exception regexes, fix-shape rules, identifier extraction, and the "interface burden" check are static heuristics.
+
+---
+
+## 3. Corpus and problem-statement anatomy
+
+### 3.1 Composition
+
+| Repo | Tasks | Years | Median .py files | Median py LOC | Median BM25 candidate (non-test) files |
+|---|---:|---|---:|---:|---:|
+| fastapi | 67 | 2025: 41, 2026: 26 | 1,191 | 104,783 | 739 |
+| rich | 48 | 2023: 9, 2024: 17, 2025: 6, 2026: 16 | 190 | 39,497 | 124 |
+| requests | 13 | 2023: 1, 2024: 4, 2026: 8 | 36 | 11,206 | 21 |
+| httpx | 1 | 2025 | 45 | 9,315 | 32 |
+
+76% of tasks are from 2025–26. The hidden set is from **private** repositories, so no memorization and no repo-specific priors carry over. Recency matters less for contamination there than for the *style* of statements.
+
+### 3.2 What the agent actually reads
+
+| Metric | Value |
+|---|---|
+| Raw statement chars (min / p25 / median / p75 / p90 / max) | 42 / 146 / 418 / 1,000 / 1,801 / 10,095 |
+| **Effective** chars after removing HTML comments, checklists, template headers, URLs | 17 / 111 / **268** / 631 / 1,331 / 9,042 |
+| Effective text < 100 chars | **31/129** |
+| Boilerplate share > 50% | 36/129 |
+| Title-only statements (body adds < 20 effective chars) | **34/129** (rich 21, fastapi 12, requests 1) |
+| PR-template markers present | 31/129 |
+| AI-disclaimer / AI-authored PR mentioned | 7/129 |
+| Code block present | 18/129 |
+| Full traceback present | **0/129** |
+| Statement names an exception class | **15/129** |
+| Statement names a gold-enclosing function/class | **35/129** |
+| Statement names a gold file (basename, path or module) | 14/129 |
+| Title starts with "fix" (after stripping emoji) | 56/129 |
+
+**Reading.** These are PR titles and descriptions written *by the people who fixed the bug*, so they are often **solution-phrased** ("Fix X when Y", "Handle empty Z"). That is a mild form of the solution leakage SWE-Bench+ documented. It helps on the dev set (BM25 rank 1 in 25/35 tasks where the gold symbol is named, versus 34/94 where it is not). Whether the private-repo set was written the same way is the **largest unmeasured source of CV→LB shift**. Treat dev-set localization numbers as optimistic.
+
+### 3.3 Title class (deterministic v0) × fix shape (gold)
+
+| Title class | small_replace | guard_add | insert_only | delete | logic_rewrite | rewrite_plus_new_code | new_code | new_module |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| bug (70) | 26 | 3 | 2 | 1 | 24 | 13 | 1 | 0 |
+| feature (18) | 3 | 5 | 0 | 0 | 1 | 9 | 0 | 0 |
+| unlabeled (21) | 3 | 2 | 1 | 0 | 10 | 4 | 1 | 0 |
+| other (20: refactor 7, docs 3, deps 2, ux 2, change 2, …) | 2 | 0 | 1 | 0 | 7 | 9 | 0 | 1 |
+
+Fix-shape totals: logic_rewrite 42, rewrite_plus_new_code 35, small_replace 34, guard_add 10, insert_only 4, new_code 2, new_module 1, delete 1.
+
+**Reading.** "Bug" titles are bimodal: a one-line replacement *or* a logic rewrite. "Feature" titles mostly add code. A BCF `fix_shape` prior keyed on title class is informative but not decisive.
+
+### 3.4 The BCF exception-class question, measured
+
+| Signal | Tasks |
+|---|---:|
+| Exception class named in the statement | 15 |
+| Gold patch adds/removes `raise X` or `except X` | (part of signature) |
+| Any exception signature (statement ∪ gold raise/except ∪ added `pytest.raises`) | 33 |
+| Test oracle kind = expects_exception (added `pytest.raises`) | 10 (all fastapi) |
+| expects_warning (`pytest.warns`) | 2 |
+| snapshot_equality (`inline_snapshot`) | 12 |
+| assert_behaviour (plain asserts on output/state) | **105** |
+| Target test files that use `pytest.raises` anywhere | 55 |
+| Most frequent signature classes | ValueError 7, AssertionError 6, FastAPIError 4, HTTPException 3, TypeError 3, NameError 3, RuntimeError 3 |
+
+**Reading.** BCF's claim is that classifying errors into exception classes "limits the search space to the most probable root causes". That needs an exception to exist **at the moment of classification**. On this corpus the *statement* supplies one in ~12% of tasks, and **81%** of oracles are behavioural assertions. The defensible version of the thesis is:
+
+> *Run a minimal reproduction first; the observed failure (ImportError / AttributeError → missing interface; `pytest.raises` not triggered → missing guard; wrong value → logic; unexpected exception class → crash path) is the class. Condition localization on it.*
+
+That makes ρ = I(R;C)/H(R) measurable from runtime data (field `repro_exception_class`, §1.7). It also fits the PyTER line of work (Report 02 §2.1).
+
+---
+
+## 4. Gold-patch anatomy
+
+| Metric | Value |
+|---|---|
+| Files per patch (median / p75 / p90 / max) | 1 / 2 / 4 / 26 |
+| Single-file patches | **91/129 (70.5%)** |
+| Changed lines (added + removed): p25 / median / p75 / p90 / max | 4 / **12** / 44 / 127 / 12,714 |
+| Patches > 4 files / > 200 changed lines | 11 / 10 |
+| Patches creating a new file | 11 |
+| Patches touching `docs_src/` (always alongside library code) | 15 (all fastapi) |
+| Patches touching test-like paths | 0 |
+| Patches adding new def/class symbols | 40 |
+| Patches with any hunk at module level (imports/constants, no enclosing def) | 54 (7 are module-level only) |
+| Gold edits inside an `async def` | **20** (fastapi 19, httpx 1) |
+| Largest gold file (lines): p25 / median / p75 / p90 / max | 475 / **1,004** / 1,182 / 4,586 / 5,694 |
+| Gold files > 1,000 lines | 65 tasks; > 2,000 lines: 26 tasks |
+| First edited line: median / p75 / p90 | 82 / 343 / 804 |
+| First edit beyond line 150 (the first `read_file` window) | **51/129** |
+| Gold paths at depth ≤ 3 | 128/129 |
+| `git apply --check` after tail normalisation | **129/129** gold, **129/129** test |
+
+**Patch-string defect (important for local tooling).** All 258 `patch`/`test_patch` strings end without a newline. When the last hunk line was a blank context line, that line is missing too. `git apply` reports "corrupt patch at line N" and GNU patch reports "patch unexpectedly ends in middle of line". `common.fix_patch_tail()` re-appends `\n` and pads the final hunk with `" \n"` until the `@@` counts match. MiniMax's diagnosis ("bare `+` lines", "9 malformed") was a symptom of this. The scorer obviously handles it, since gold validates.
+
+---
+
+## 5. Localization baselines (the bar any BCF localization arm must beat)
+
+All ranks are over **non-test `.py` files** at base (median candidates: fastapi 739, rich 124, requests 21, httpx 32). Targets are the gold `.py` files that already exist at base. 7 tasks have no defined rank:
+
+- 1 task whose gold file is new.
+- 6 rich tasks whose statement shares no informative token with the gold file — all title-only or near-title-only.
+
+### 5.1 File level (hits out of 129)
+
+| Method | @1 | @3 | @5 | @10 | @20 | Median rank |
+|---|---:|---:|---:|---:|---:|---:|
+| BM25 (full cleaned statement) | **59** | 83 | **99** | 106 | 114 | 2 |
+| BM25 (title only) | 42 | 59 | 77 | 91 | 105 | 3.5 |
+| BM25 (file *path* tokens only, i.e. `find`/`ls`-style) | 26 | 39 | 43 | 47 | 56 | 3 |
+| Git recency (most recently changed `.py`, last 400 commits) | 8 | 26 | 37 | 60 | 83 | 11 |
+| **BM25 top-5 ∪ recency top-5** | — | — | **105** | — | — | — |
+
+Recency in raw commit terms: the gold file was touched in the last 5 commits for 24/122 tasks, the last 20 for 59/122, and the last 100 for 101/122.
+
+### 5.2 By repo (BM25 full statement / recency)
+
+| Repo | n | BM25 @1 / @3 / @5 / @10 | Recency @5 / @10 | Node-BM25 @5 |
+|---|---:|---|---|---:|
+| fastapi | 67 | 27 / 38 / 48 / 54 | 24 / 36 | 31 |
+| rich | 48 | 23 / 32 / 37 / 38 | 9 / 17 | 21 |
+| requests | 13 | 8 / 12 / 13 / 13 | 4 / 7 | 9 |
+| httpx | 1 | 1 / 1 / 1 / 1 | 0 / 0 | 1 |
+
+By statement type: title-only statements reach BM25 top-3 in 14/34 and top-5 in 18/34. Where the statement names the gold symbol, BM25 @1 = 25/35. Where it doesn't, @1 = 34/94 and @5 = 67/94.
+
+### 5.3 Function (node) level
+
+| Method | @1 | @3 | @5 | @10 | @20 | Median |
+|---|---:|---:|---:|---:|---:|---:|
+| Node-level BM25 over non-test graph nodes | 31 | 52 | 62 | 71 | 84 | 4 |
+| Statement names a gold node directly (strong resolver hit) | 29 | — | — | — | — | — |
+
+**Design consequence: a "LEXICAL-FIRST" localization routine**
+
+| Step | Action | Tool calls |
+|---|---|---:|
+| 1 | Run `bm25.py "<statement>"` over non-test `.py` files (vendored skill) and print the top 8 files with matching line numbers | 1 |
+| 2 | Run `git log --name-only -n 30 --format=` and intersect with the step-1 top 8 | 1 |
+| 3 | Use `grep -n` for the most specific statement identifiers inside the top 3 files, then a targeted `read_file` around the hits | 1–2 |
+| 4 | Only then: `get_code_neighbors` on the enclosing function, for callers and callees, to find secondary edit sites | 1 |
+
+Expected: the gold file is in hand within ~3 calls on ~75–80% of dev tasks. Discount this on hidden tasks for statement-style shift (§3.2).
+
+---
+
+## 6. Code graph and embeddings
+
+| Metric | Value |
+|---|---|
+| Graph payloads | 127 (129 tasks; 2 shared commits); 0 zero-byte files; embeddings ↔ nodes join 127/127 |
+| Edge types | `calls` only (452,588 edges in the unique graphs) |
+| Containment encoded as `calls` (`X → X.method`) | median **8.8%** of edges |
+| Test-code share of nodes (median) | **61.5%** (fastapi 63.6%, requests 60.4%, rich 41.7%, httpx 19.5%) |
+| Isolated nodes (no edge) | median 2,219 per graph; fastapi ≈ **68%** of nodes; rich ≈ 3% |
+| Class nodes have method bodies elided (`...`) | median 109 per graph |
+| Tasks with ≥ 1 gold-enclosing function/class mapped to a node | 117/129 |
+| Tasks where some gold hunk maps to no node | 15 |
+| Tasks with module-level gold edits (no node by construction) | 54 |
+| Statement identifiers with a strong resolver hit (exact / suffix / case-insensitive) | 52/129 tasks |
+| Gold node reached directly by statement identifiers | 29/129 |
+| Undirected hops from strongly resolved nodes to the nearest gold node | 0: 29 · 1: 5 · 2: 4 · 3: 3 · 4: 4 · ≥ 5: 3 · unreachable/no seed: 81 |
+
+### Embeddings (256-d float32, one per node)
+
+| Metric | Value |
+|---|---|
+| Mean pairwise cosine, raw (median over graphs) | **0.79** (rich 0.90, requests 0.86, httpx 0.87, fastapi 0.78) |
+| Same, after mean-centering | **0.09** (rich 0.02) |
+| Sampled nodes whose nearest neighbour has cosine > 0.99 | 97.4% |
+| Of those, identical source text | fastapi 33% (`docs_src` tutorial duplicates); rich 0; requests 0 |
+| Gold retrieval rank, querying with a statement-resolved node (n = 56; 29 trivially rank 0) | Non-trivial cases (n = 27): median rank **101 raw / 106 centered**, i.e. the top **4.5%** of nodes |
+
+**Reading.**
+
+- The provided graph is a *function-level, mostly-sync call graph polluted by tests*.
+- It is excellent for expanding from a known function (beyond the 29 tasks where the statement names a gold node, 1–2 hops reach the gold node in 9 more tasks, and ≤ 4 hops in 16 more), and poor as a search engine.
+- The embeddings encode some locality (top 4.5% versus 50% at random), but mean-centering does not improve gold retrieval. The anisotropy is cosmetic for ranking.
+- Give `search_similar_code` a low prior. Use it only with a symbol name, never prose. Exclude test results.
+
+---
+
+## 7. Test-oracle anatomy (how a patch is judged)
+
+| Metric | Value |
+|---|---|
+| Test files per task (median / p90 / max) | 1 / 3 / 29 |
+| Tasks whose `test_patch` creates a new test file | 44 |
+| Collectable tests in the target files after `test_patch` (min / p25 / median / p75 / p90 / max) | 1 / 4 / **11** / 51 / 105 / 370 |
+| Tasks with ≥ 50 tests in the target files | **33** |
+| Median tests in target files: requests / httpx / rich / fastapi | **224** / 24 / 20.5 / 6 |
+| Tests added (median / p90 / max) | 1 / 5 / 47 |
+| Tasks adding **no** new test function (only modifying or parametrizing existing ones) | 25 (19 modify-only) |
+| **Interface-burden tasks** (tests import repo symbols/modules missing at base) | **9** (fastapi 7, requests 1, rich 1) |
+| Tasks whose target tests import packages missing from the public wheelhouse | **29** (`inline_snapshot` 22, `dirty_equals` 9, `importlib_metadata` 1, `attr` 1) |
+| Tests importing `docs_src` modules | 3 (all exist at base) |
+
+**Interface-burden tasks** (an agent must guess exact names):
+
+| Task | Missing names | Added by gold |
+|---|---|:---:|
+| fastapi_14186 | `may_v1` (from `fastapi._compat`) | No |
+| fastapi_14605 | `FastAPIDeprecationWarning` | Yes |
+| fastapi_14609 | `PydanticV1NotSupportedError` | Yes |
+| fastapi_15030 | `EventSourceResponse` + module `fastapi.sse` | Yes |
+| fastapi_15661 | module `scripts.prepare_release` (whole new CLI) | Yes |
+| fastapi_15745 | `_IncludedRouter`, `_iter_included_route_candidates`, `_restore_fastapi_scope_key` | Yes |
+| fastapi_15785 | `RouteContext`, `iter_route_contexts` | Yes |
+| requests_6757 | `is_urllib3_1` (`requests.compat`) | Yes |
+| rich_3930 | `CellSpan`, `split_graphemes`, `split_text` + module `rich._unicode_data` | Yes |
+
+(`requests.packages.urllib3.*` imports were excluded as runtime `sys.modules` aliases.)
+
+**Reading.**
+
+1. **Blast radius.** The scorer requires `pytest` exit 0 over all target tests, with no skips. A correct one-line fix that breaks one of 224 sibling tests in `tests/test_requests.py` scores 0. Running the full target module costs seconds. That is the cheapest insurance in the whole design.
+2. **Interface tasks** (≈ 7%, and likely similar on the hidden set) are near-unsolvable without good guesses at names. Spend effort there only when the statement names the API.
+3. **Oracle-kind prior for reproduction tests:** 81% plain behavioural asserts. A reproduction that asserts the *expected value stated or implied in the PR text* is the right template. `pytest.raises` reproductions matter mostly for fastapi validation and deprecation tasks.
+
+---
+
+## 8. Git history and environment
+
+| Metric | Value |
+|---|---|
+| Commits reachable from HEAD (min / median / max) | fastapi 6,016 / 6,356 / 7,353 · rich 3,787 / 4,127 / 4,449 · requests 6,205 / 6,420 / 6,475 · httpx 4 |
+| Task `base_commit` SHA present in the snapshot | **0/129** (SHAs rewritten by fast-export/import) |
+| HEAD commit later than PR `created_at` | **0/129**. Gap p25 / median / p75 = 0.8 h / 4.9 h / 36 h (max 237 days) |
+| Branches | `main` + `export_ref` (same commit); 0 tags |
+| `requires-python` | fastapi ≥ 3.8 (38), ≥ 3.9 (14), ≥ 3.10 (15); requests ≥ 3.10 (8) or unset (5); rich unset (Poetry) |
+| Sandbox Python | 3.13 (shims for `imp`, `telnetlib`) |
+| Workspace layout entries at depth ≤ 3 | > 150 in **115/129**, so the prompt's listing is truncated |
+| HEAD subject (fastapi) | Typically "📝 Update release notes" or "🔖 Release version …" |
+
+**Reading.** In-sandbox history is a real affordance:
+
+- `git log -n 30 --name-only` → recency prior.
+- `git log -S'<identifier>' --oneline` → when a symbol was introduced or changed.
+- `git blame -L a,b <file>` → which recent PR touched the suspicious lines.
+- `git log -p -n 3 -- <file>` → the local coding conventions of recent fixes.
+
+None of these can leak the answer: HEAD predates the PR in every task.
+
+---
+
+## 9. Difficulty prior and tiers (for allocation, splits and CUPED)
+
+**Score** = z(log changed lines) + z(log gold files) + z(log BM25 rank, with 200 if undefined) + z(log(interface burden + new files)) − z(log effective chars). Split into terciles of 43.
+
+| Tier | Repos | Median gold lines | Single-file | BM25 @3 | Interface tasks | Median effective chars | Median tests in target | Async edits | First edit > line 150 |
+|---|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| A_easy | fastapi 22, requests 10, rich 11 | 4 | 43/43 | 39/43 | 0 | 576 | 8 | 2 | 24 |
+| B_mid | fastapi 23, requests 2, rich 18 | 13 | 32/43 | 25/43 | 0 | 195 | 7 | 8 | 18 |
+| C_hard | fastapi 22, rich 19, requests 1, httpx 1 | 55 | 16/43 | 19/43 | 9 | 145 | 25 | 10 | 9 |
+
+**Uses**
+
+1. Frozen CV splits stratified by repo × tier.
+2. A covariate in paired A/B analysis (CUPED, Report 02 §2.6).
+3. Expected-value budgeting: on dev data, tier-A tasks are where a minimal, verify-then-submit agent should collect its points. Tier C is where budget caps should bite early.
+
+**Caveat:** only the statement, title, BM25 and effective-chars components are T0-observable on hidden tasks. Gold-size components are dev-only.
+
+**T0-observable triage proxy** (usable in the system prompt / skill):
+
+| Proxy | Signal |
+|---|---|
+| `title_only` or effective chars < 100 | Expect an under-specified task. Explore by recency + BM25 and write a reproduction early |
+| Title verb ∈ {add, support, allow, implement} | Feature. Expect new code and possible interface burden |
+| Statement contains backticked identifiers that resolve in the graph | Graph expansion is available |
+| BM25 top-1 score ≫ top-2 score | High-confidence file. Go straight to `grep -n` → read → edit |
+
+---
+
+## 10. Design implications for BCF v1 (ranked by expected points per engineering hour)
+
+| # | Change | Evidence | Expected effect |
+|---:|---|---|---|
+| 1 | Un-throttle `eval_config.yaml`; set `max_time_minutes` ≈ 5–6, `max_tool_calls` ≈ 40, `max_turns` ≈ 60 | Sample = 1 min / 10 calls; 12 h ÷ ~120 tasks ≈ 6 min | Prerequisite for any score |
+| 2 | **Verify by running the full target test module(s)** before `submit_patch` | Blast radius median 11, requests 224 | Prevents silent P2P zeros |
+| 3 | **Lexical-first localization** (BM25 skill + git recency + `grep -n`) | §5: top-5 in 99–105/129 | Fewer wasted calls; earlier first edit |
+| 4 | **Grep before read**; read ±40 lines around hits | 51/129 edits beyond line 150 | Saves 1–3 calls per task |
+| 5 | Minimal-diff default; escalate only when reproduction or tests demand more | 70.5% single-file; median 12 lines | Lower regression risk |
+| 6 | Reproduction-first **only when cheap**: one-file `/tmp/repro.py` capturing the observed failure class → BCF class | 81% behavioural oracles; 15/129 exception mentions | Makes BCF classification real; ablate (Report 02 §2.3) |
+| 7 | Graph tools for **expansion only**, filtered to non-test nodes; AST fallback for `async def` | §6 | Keeps graph value, avoids noise |
+| 8 | API-design mode when the reproduction hits `ImportError`/`AttributeError` on a name from the statement | 9 interface tasks | Some partial wins on feature tasks |
+| 9 | Never edit tests, conftest or pytest.ini; scratch files only in `/tmp`; never leave a clean tree at timeout | Harness reset rules; F5 | Removes structural zeros |
+| 10 | Emit `BCF_EVT` telemetry to stdout | §1 principle 4 | Makes the ledger possible locally |
+
+---
+
+## 11. Limits of this analysis (honest list)
+
+- **No tests were executed.** There is no Docker or WSL on this machine. F2P/P2P outcomes, test runtimes and environment failures are **not** measured, and all oracle facts are structural (AST/regex).
+- Heuristic labellers can be wrong on individual tasks:
+  - fix shape uses line-pattern rules;
+  - exception signatures are found by regex;
+  - title class uses emoji, prefix or verb;
+  - interface burden comes from static import resolution.
+
+  Spot-check them before relying on any single task's label.
+- The BM25 tokenizer and stop-list are my own. An in-sandbox BM25 skill will give similar but not identical ranks.
+- The graph-node mapping uses AST qualnames on the base file. Nested functions map to their nearest graph ancestor (counted separately).
+- All figures describe the **public dev set**. The hidden set comes from private repos, with a frontier-model solvability filter. Expect weaker statement leakage and different repo conventions.
+
+---
+
+## 12. Artifact index
+
+| Path | Contents |
+|---|---|
+| `analysis/scripts/common.py` | Diff parser, BM25, tokenizer, statement cleaner, `fix_patch_tail` |
+| `analysis/scripts/s01_task_text_features.py` | Statement, gold and test text features; exception signature; fix shape; oracle kind |
+| `analysis/scripts/s02_snapshot_scan.py` | Snapshot streaming, git history, AST enclosing defs, patch application, test AST counts, interface burden, BM25/recency |
+| `analysis/scripts/s03_graph_embedding.py` | Graph stats, resolver re-implementation, hops, node BM25, embedding anisotropy and retrieval |
+| `analysis/scripts/s04_aggregate.py` | Master table, difficulty tiers, `stats.json` |
+| `analysis/out/task_metadata_master.csv` / `.jsonl` | **One row per task, ~70 columns** |
+| `analysis/out/stats.json` | Every aggregate number in this report |
+| `analysis/out/*_features.jsonl`, `graph_commit_stats.jsonl` | Raw per-task / per-graph outputs |
+| `04a_Appendix_Per_Task_Metadata.md` | Human-readable per-task table |
+
+
+---
+
+<!-- ====================================================================== -->
+<!-- FILE: 04a_Appendix_Per_Task_Metadata.md -->
+<!-- ====================================================================== -->
+
+# 04a — Appendix: Per-Task Static Metadata (129 tasks)
+
+*Generated from `analysis/out/task_metadata_master.csv` (full ~70-column version). Column meanings are in Report 04 §1. "—" = not defined (e.g. gold file is new, so no BM25 rank).*
+
+| Task | Yr | Title class | Eff. chars | Fix shape | Gold files | + | − | Async | 1st line | Tests in target | Tests added | Iface | Local-missing deps | BM25 rank | Recency rank | Hops | Tier |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| fastapi_11194 | 2025 | bug | 604 | logic_rewrite | 1 | 3 | 4 | Y | 875 | 2 | 2 | 0 |  | 12 | 3 | — | B_mid |
+| fastapi_11355 | 2025 | bug | 206 | logic_rewrite | 1 | 9 | 2 |  | 1 | 1 | 1 | 0 |  | 1 | 3 | — | A_easy |
+| fastapi_12942 | 2025 | bug | 1260 | guard_add | 1 | 3 | 0 |  | 590 | 1 | 1 | 0 | dirty_equals, inline_snapshot | 1 | 2 | 3 | A_easy |
+| fastapi_13207 | 2025 | bug | 299 | logic_rewrite | 1 | 12 | 2 |  | 184 | 2 | 0 | 0 |  | 9 | 5 | 7 | B_mid |
+| fastapi_13537 | 2025 | bug | 1575 | small_replace | 1 | 2 | 1 | Y | 906 | 2 | 2 | 0 |  | 1 | 8 | — | A_easy |
+| fastapi_13713 | 2025 | feature | 749 | guard_add | 2 | 31 | 0 |  | 488 | 6 | 0 | 0 | dirty_equals | 1 | 4 | 1 | B_mid |
+| fastapi_13786 | 2025 | bug | 4406 | rewrite_plus_new_code | 11 | 176 | 83 | Y | 1 | 67 | 0 | 0 | dirty_equals | 2 | 31 | 0 | C_hard |
+| fastapi_13920 | 2026 | feature | 178 | guard_add | 1 | 4 | 0 |  | 66 | 1 | 1 | 0 |  | 5 | 1 | — | B_mid |
+| fastapi_14077 | 2025 | deps | 625 | logic_rewrite | 3 | 5 | 6 | Y | 1 | 3 | 0 | 0 |  | 1 | 45 | — | B_mid |
+| fastapi_14099 | 2025 | bug | 631 | rewrite_plus_new_code | 5 | 346 | 131 | Y | 1 | 44 | 13 | 0 |  | 19 | 27 | — | C_hard |
+| fastapi_14186 | 2025 | bug | 632 | rewrite_plus_new_code | 10 | 266 | 98 |  | 1 | 51 | 0 | 1 |  | 1 | 13 | — | C_hard |
+| fastapi_14246 | 2025 | bug | 171 | logic_rewrite | 1 | 24 | 4 |  | 210 | 15 | 2 | 0 | inline_snapshot | 37 | 19 | — | C_hard |
+| fastapi_14258 | 2026 | feature | 268 | guard_add | 1 | 4 | 0 |  | 1393 | 1 | 1 | 0 |  | 2 | 2 | — | A_easy |
+| fastapi_14262 | 2025 | feature | 2360 | rewrite_plus_new_code | 10 | 196 | 70 | Y | 2 | 15 | 15 | 0 |  | 2 | 2 | 0 | C_hard |
+| fastapi_14266 | 2025 | bug | 145 | logic_rewrite | 1 | 8 | 10 |  | 248 | 3 | 3 | 0 | inline_snapshot | 18 | 2 | — | C_hard |
+| fastapi_14297 | 2025 | bug | 1068 | guard_add | 1 | 7 | 0 |  | 371 | 14 | 4 | 0 |  | 3 | 8 | — | A_easy |
+| fastapi_14301 | 2025 | bug | 728 | small_replace | 1 | 4 | 1 |  | 132 | 11 | 4 | 0 |  | 1 | 6 | 0 | A_easy |
+| fastapi_14303 | 2025 | bug | 2217 | logic_rewrite | 1 | 6 | 2 | Y | 906 | 6 | 2 | 0 | dirty_equals | 2 | 1 | — | A_easy |
+| fastapi_14306 | 2025 | ux | 2610 | rewrite_plus_new_code | 2 | 121 | 16 | Y | 1 | 7 | 7 | 0 |  | 1 | 16 | 0 | B_mid |
+| fastapi_14349 | 2025 | bug | 119 | logic_rewrite | 1 | 6 | 6 |  | 265 | 2 | 2 | 0 | inline_snapshot | 2 | 18 | — | B_mid |
+| fastapi_14356 | 2025 | bug | 1317 | logic_rewrite | 1 | 9 | 2 |  | 794 | 11 | 5 | 0 | dirty_equals, inline_snapshot | 2 | 1 | 3 | A_easy |
+| fastapi_14360 | 2025 | bug | 747 | small_replace | 1 | 1 | 2 |  | 790 | 6 | 6 | 0 | dirty_equals | 1 | 6 | 4 | A_easy |
+| fastapi_14361 | 2025 | bug | 95 | small_replace | 1 | 1 | 1 |  | 307 | 2 | 2 | 0 | inline_snapshot | 2 | 8 | — | B_mid |
+| fastapi_14371 | 2025 | bug | 274 | rewrite_plus_new_code | 4 | 46 | 16 | Y | 19 | 370 | 0 | 0 | dirty_equals | 3 | 2 | — | C_hard |
+| fastapi_14372 | 2025 | refactor | 1091 | logic_rewrite | 2 | 4 | 3 |  | 1 | 1 | 1 | 0 |  | 8 | 7 | 0 | B_mid |
+| fastapi_14419 | 2025 | bug | 506 | rewrite_plus_new_code | 2 | 42 | 20 | Y | 41 | 2 | 2 | 0 |  | 1 | 2 | — | B_mid |
+| fastapi_14430 | 2025 | bug | 195 | small_replace | 1 | 2 | 2 |  | 20 | 13 | 1 | 0 |  | 5 | 5 | — | B_mid |
+| fastapi_14448 | 2025 | bug | 1158 | rewrite_plus_new_code | 2 | 82 | 24 | Y | 15 | 1 | 0 | 0 |  | 4 | 2 | — | B_mid |
+| fastapi_14455 | 2025 | bug | 233 | logic_rewrite | 1 | 11 | 2 |  | 82 | 4 | 4 | 0 | inline_snapshot | 8 | 103 | — | B_mid |
+| fastapi_14458 | 2025 | bug | 533 | logic_rewrite | 1 | 6 | 1 |  | 110 | 1 | 0 | 0 |  | 1 | 4 | 0 | A_easy |
+| fastapi_14459 | 2025 | bug | 759 | rewrite_plus_new_code | 3 | 49 | 22 |  | 5 | 8 | 4 | 0 | inline_snapshot | 4 | 2 | — | C_hard |
+| fastapi_14463 | 2026 | bug | 9042 | small_replace | 1 | 2 | 1 |  | 1 | 1 | 1 | 0 |  | 1 | 121 | 1 | A_easy |
+| fastapi_14479 | 2026 | ux | 2391 | small_replace | 1 | 1 | 1 |  | 555 | 4 | 0 | 0 |  | 1 | 3 | 0 | A_easy |
+| fastapi_14482 | 2025 | bug | 160 | logic_rewrite | 1 | 25 | 7 |  | 4 | 3 | 3 | 0 | inline_snapshot | 57 | 59 | — | C_hard |
+| fastapi_14485 | 2025 | bug | 170 | rewrite_plus_new_code | 1 | 13 | 6 |  | 212 | 2 | 2 | 0 | inline_snapshot | 4 | 62 | — | B_mid |
+| fastapi_14487 | 2025 | docs | 203 | logic_rewrite | 1 | 5 | 2 | Y | 15 | 4 | 0 | 0 |  | 19 | — | — | B_mid |
+| fastapi_14492 | 2026 | docs | 158 | small_replace | 1 | 1 | 1 |  | 31 | 2 | 0 | 0 |  | 1 | 651 | — | A_easy |
+| fastapi_14512 | 2025 | bug | 187 | rewrite_plus_new_code | 1 | 48 | 4 |  | 21 | 3 | 3 | 0 | inline_snapshot | 176 | 45 | 4 | C_hard |
+| fastapi_14583 | 2025 | feature | 103 | guard_add | 2 | 24 | 0 |  | 1 | 189 | 4 | 0 | inline_snapshot | 38 | 41 | — | C_hard |
+| fastapi_14605 | 2025 | feature | 159 | rewrite_plus_new_code | 7 | 28 | 16 |  | 1 | 89 | 0 | 11 | dirty_equals, inline_snapshot | 1 | 173 | — | C_hard |
+| fastapi_14609 | 2025 | deps | 140 | logic_rewrite | 20 | 192 | 1855 | Y | 1 | 36 | 1 | 1 | inline_snapshot | 1 | 3 | — | C_hard |
+| fastapi_14616 | 2026 | bug | 1050 | rewrite_plus_new_code | 1 | 10 | 2 |  | 54 | 4 | 4 | 0 |  | 4 | 1 | 5 | A_easy |
+| fastapi_14786 | 2026 | bug | 1882 | small_replace | 1 | 1 | 1 |  | 10 | 9 | 2 | 0 |  | 14 | 414 | 0 | A_easy |
+| fastapi_14791 | 2026 | bug | 541 | insert_only | 1 | 2 | 0 |  | 49 | 107 | 0 | 0 | dirty_equals, inline_snapshot | 1 | 136 | — | A_easy |
+| fastapi_14794 | 2026 | feature | 701 | small_replace | 1 | 3 | 2 |  | 452 | 7 | 7 | 0 |  | 1 | 182 | 0 | A_easy |
+| fastapi_14851 | 2026 | refactor | 460 | rewrite_plus_new_code | 1 | 153 | 4 |  | 13 | 9 | 3 | 0 |  | 6 | 290 | 2 | B_mid |
+| fastapi_14873 | 2026 | bug | 467 | logic_rewrite | 1 | 11 | 10 |  | 955 | 10 | 1 | 0 |  | 5 | 257 | 0 | B_mid |
+| fastapi_14953 | 2026 | refactor | 1389 | rewrite_plus_new_code | 4 | 102 | 2 |  | 30 | 98 | 4 | 0 | inline_snapshot | 4 | 887 | — | C_hard |
+| fastapi_14962 | 2026 | feature | 209 | rewrite_plus_new_code | 3 | 49 | 6 | Y | 2 | 6 | 4 | 0 | inline_snapshot | 2 | 6 | — | C_hard |
+| fastapi_14964 | 2026 | deprecate | 316 | logic_rewrite | 1 | 44 | 8 |  | 1 | 9 | 4 | 0 | inline_snapshot | 1 | — | 0 | B_mid |
+| fastapi_14978 | 2026 | security | 111 | rewrite_plus_new_code | 3 | 81 | 1 | Y | 329 | 37 | 22 | 0 | inline_snapshot | 26 | 10 | — | C_hard |
+| fastapi_14986 | 2026 | refactor | 987 | rewrite_plus_new_code | 2 | 25 | 9 | Y | 5 | 7 | 7 | 0 |  | 1 | 4 | — | B_mid |
+| fastapi_15023 | 2026 | docs | 111 | rewrite_plus_new_code | 1 | 18 | 8 | Y | 25 | 2 | 0 | 0 | inline_snapshot | 4 | 4 | — | B_mid |
+| fastapi_15030 | 2026 | feature | 144 | rewrite_plus_new_code | 9 | 525 | 35 | Y | 1 | 30 | 30 | 2 | inline_snapshot | 21 | 10 | — | C_hard |
+| fastapi_15280 | 2026 | feature | 63 | rewrite_plus_new_code | 2 | 71 | 1 |  | 13 | 1 | 1 | 0 |  | 181 | 13 | — | C_hard |
+| fastapi_15588 | 2026 | refactor | 1078 | rewrite_plus_new_code | 1 | 18 | 5 |  | 36 | 19 | 1 | 0 |  | 1 | 53 | — | A_easy |
+| fastapi_15589 | 2026 | refactor | 443 | insert_only | 1 | 4 | 0 |  | 826 | 7 | 2 | 0 |  | 1 | 15 | — | A_easy |
+| fastapi_15661 | 2026 | ci | 178 | new_module | 1 | 216 | 0 |  | — | 14 | 14 | 1 |  | — | — | — | C_hard |
+| fastapi_15745 | 2026 | refactor | 3280 | rewrite_plus_new_code | 4 | 939 | 291 | Y | 1 | 34 | 31 | 3 | inline_snapshot | 1 | 20 | 0 | C_hard |
+| fastapi_15763 | 2026 | bug | 214 | logic_rewrite | 1 | 10 | 3 |  | 2438 | 34 | 3 | 0 |  | 1 | 5 | — | B_mid |
+| fastapi_15785 | 2026 | feature | 402 | rewrite_plus_new_code | 2 | 66 | 15 |  | 482 | 38 | 4 | 2 |  | 1 | 44 | — | C_hard |
+| fastapi_15800 | 2026 | feature | 432 | rewrite_plus_new_code | 8 | 649 | 5 |  | 1 | 47 | 47 | 0 |  | 4 | 5 | — | C_hard |
+| fastapi_5077 | 2025 | feature | 2501 | small_replace | 1 | 4 | 2 |  | 195 | 1 | 1 | 0 |  | 1 | 9 | 0 | A_easy |
+| fastapi_5624 | 2025 | bug | 62 | small_replace | 1 | 3 | 1 |  | 281 | 1 | 1 | 0 |  | 9 | 37 | — | B_mid |
+| fastapi_9425 | 2025 | feature | 231 | guard_add | 1 | 2 | 0 |  | 254 | 1 | 1 | 0 |  | 6 | 8 | — | B_mid |
+| fastapi_9555 | 2025 | feature | 2700 | rewrite_plus_new_code | 1 | 14 | 8 |  | 80 | 1 | 1 | 0 |  | 3 | 18 | 5 | A_easy |
+| fastapi_9753 | 2025 | feature | 625 | logic_rewrite | 1 | 5 | 2 |  | 4 | 1 | 1 | 0 |  | 1 | 7 | — | A_easy |
+| httpx_3672 | 2025 | unlabeled | 238 | rewrite_plus_new_code | 7 | 57 | 22 | Y | 36 | 24 | 0 | 0 |  | 1 | 11 | 0 | C_hard |
+| requests_6589 | 2024 | unlabeled | 233 | guard_add | 1 | 3 | 0 |  | 134 | 225 | 2 | 0 |  | 2 | 4 | 0 | A_easy |
+| requests_6592 | 2023 | unlabeled | 233 | small_replace | 1 | 1 | 1 |  | 82 | 223 | 1 | 0 |  | 5 | 21 | — | A_easy |
+| requests_6629 | 2024 | bug | 820 | new_code | 1 | 10 | 0 |  | 41 | 224 | 1 | 0 |  | 3 | 16 | 1 | A_easy |
+| requests_6644 | 2024 | unlabeled | 291 | guard_add | 1 | 3 | 0 |  | 390 | 1 | 1 | 0 |  | 1 | 11 | — | A_easy |
+| requests_6757 | 2024 | unlabeled | 267 | logic_rewrite | 2 | 16 | 1 |  | 10 | 230 | 2 | 1 |  | 1 | 4 | — | C_hard |
+| requests_7205 | 2026 | bug | 605 | small_replace | 1 | 1 | 1 |  | 234 | 63 | 1 | 0 |  | 1 | 12 | — | A_easy |
+| requests_7309 | 2026 | bug | 363 | logic_rewrite | 1 | 6 | 9 |  | 505 | 63 | 0 | 0 |  | 1 | 2 | 0 | A_easy |
+| requests_7315 | 2026 | bug | 491 | delete | 1 | 0 | 2 |  | 548 | 1 | 1 | 0 |  | 2 | 6 | 0 | A_easy |
+| requests_7328 | 2026 | bug | 576 | small_replace | 1 | 1 | 2 |  | 182 | 234 | 1 | 0 |  | 1 | 8 | 2 | A_easy |
+| requests_7427 | 2026 | unlabeled | 359 | small_replace | 1 | 4 | 2 |  | 855 | 64 | 1 | 0 |  | 2 | 19 | 4 | A_easy |
+| requests_7433 | 2026 | bug | 488 | small_replace | 1 | 3 | 3 |  | 599 | 235 | 1 | 0 |  | 1 | 18 | 0 | A_easy |
+| requests_7502 | 2026 | bug | 67 | small_replace | 1 | 3 | 1 |  | 239 | 236 | 1 | 0 |  | 1 | 7 | 0 | B_mid |
+| requests_7505 | 2026 | feature | 514 | rewrite_plus_new_code | 2 | 9 | 7 |  | 29 | 237 | 1 | 0 |  | 1 | 1 | 1 | B_mid |
+| rich_2725 | 2024 | bug | 1311 | logic_rewrite | 1 | 5 | 5 |  | 778 | 11 | 1 | 0 |  | 2 | 9 | — | A_easy |
+| rich_2943 | 2024 | unlabeled | 56 | small_replace | 1 | 1 | 1 |  | 666 | 27 | 1 | 0 |  | 1 | 62 | — | B_mid |
+| rich_3006 | 2023 | bug | 243 | small_replace | 1 | 1 | 1 |  | 79 | 8 | 0 | 0 |  | 4 | 40 | — | A_easy |
+| rich_3043 | 2023 | bug | 282 | small_replace | 1 | 1 | 1 |  | 1 | 91 | 0 | 0 |  | 2 | 20 | — | A_easy |
+| rich_3052 | 2024 | unlabeled | 417 | logic_rewrite | 1 | 29 | 5 |  | 36 | 7 | 1 | 0 |  | 1 | — | 0 | B_mid |
+| rich_3061 | 2023 | unlabeled | 319 | rewrite_plus_new_code | 1 | 67 | 24 |  | 97 | 84 | 2 | 0 |  | 1 | 8 | 3 | B_mid |
+| rich_3063 | 2023 | bug | 39 | small_replace | 1 | 3 | 1 |  | 64 | 21 | 1 | 0 |  | — | — | — | C_hard |
+| rich_3064 | 2023 | bug | 30 | logic_rewrite | 1 | 8 | 9 |  | 257 | 4 | 1 | 0 |  | 1 | 8 | — | B_mid |
+| rich_3067 | 2023 | feature | 148 | small_replace | 1 | 1 | 1 |  | 101 | 7 | 0 | 0 |  | 23 | 47 | — | B_mid |
+| rich_3105 | 2023 | bug | 19 | small_replace | 1 | 1 | 1 |  | 15 | 91 | 0 | 0 |  | — | 24 | — | C_hard |
+| rich_3130 | 2023 | bug | 443 | logic_rewrite | 1 | 5 | 7 |  | 317 | 6 | 2 | 0 |  | 1 | 5 | 0 | A_easy |
+| rich_3180 | 2023 | bug | 744 | logic_rewrite | 2 | 89 | 38 |  | 2 | 92 | 8 | 0 |  | 10 | 46 | — | C_hard |
+| rich_3278 | 2024 | unlabeled | 596 | insert_only | 1 | 1 | 0 |  | 9 | 4 | 1 | 0 |  | 3 | 71 | — | A_easy |
+| rich_3296 | 2024 | bug | 174 | small_replace | 1 | 1 | 3 |  | 622 | 24 | 1 | 0 | importlib_metadata | 1 | 15 | — | A_easy |
+| rich_3454 | 2024 | bug | 372 | small_replace | 1 | 1 | 1 |  | 101 | 7 | 0 | 0 |  | 1 | 65 | 0 | A_easy |
+| rich_3468 | 2024 | bug | 94 | rewrite_plus_new_code | 1 | 36 | 6 |  | 1388 | 93 | 1 | 0 |  | 17 | 3 | — | C_hard |
+| rich_3469 | 2024 | bug | 29 | small_replace | 1 | 1 | 1 |  | 680 | 7 | 1 | 0 |  | — | 7 | — | C_hard |
+| rich_3470 | 2024 | bug | 28 | small_replace | 1 | 1 | 1 |  | 2032 | 93 | 0 | 0 |  | 1 | 3 | — | B_mid |
+| rich_3471 | 2024 | bug | 40 | insert_only | 1 | 1 | 0 |  | 1041 | 86 | 1 | 0 |  | 4 | 26 | 0 | B_mid |
+| rich_3472 | 2024 | bug | 42 | small_replace | 1 | 3 | 1 |  | 784 | 52 | 1 | 0 | attr | 1 | 7 | — | B_mid |
+| rich_3480 | 2024 | bug | 35 | small_replace | 1 | 2 | 2 |  | 1001 | 87 | 1 | 0 |  | 11 | 3 | — | C_hard |
+| rich_3486 | 2024 | unlabeled | 97 | logic_rewrite | 3 | 74 | 24 |  | 1 | 20 | 2 | 0 |  | 2 | 20 | 4 | C_hard |
+| rich_3506 | 2024 | bug | 66 | logic_rewrite | 1 | 15 | 2 |  | 114 | 29 | 3 | 0 |  | 1 | 50 | 0 | B_mid |
+| rich_3518 | 2024 | bug | 227 | small_replace | 1 | 1 | 1 |  | 454 | 12 | 1 | 0 |  | 1 | 28 | 0 | A_easy |
+| rich_3521 | 2024 | unlabeled | 31 | logic_rewrite | 1 | 16 | 19 |  | 132 | 29 | 0 | 0 |  | 1 | 13 | 2 | B_mid |
+| rich_3535 | 2024 | unlabeled | 187 | logic_rewrite | 2 | 7 | 1 |  | 10 | 8 | 1 | 0 |  | 4 | 2 | — | B_mid |
+| rich_3675 | 2025 | unlabeled | 114 | logic_rewrite | 2 | 28 | 13 |  | 18 | 94 | 1 | 0 |  | 1 | 15 | — | B_mid |
+| rich_3676 | 2025 | unlabeled | 41 | logic_rewrite | 2 | 12 | 1 |  | 121 | 21 | 1 | 0 |  | 4 | 24 | — | C_hard |
+| rich_3718 | 2025 | bug | 320 | logic_rewrite | 1 | 3 | 4 |  | 149 | 7 | 2 | 0 |  | 18 | 29 | 1 | B_mid |
+| rich_3772 | 2025 | bug | 39 | logic_rewrite | 1 | 29 | 16 |  | 14 | 22 | 1 | 0 |  | 2 | 18 | — | C_hard |
+| rich_3777 | 2025 | unlabeled | 337 | logic_rewrite | 2 | 12 | 1 |  | 26 | 94 | 1 | 0 |  | 1 | 7 | — | B_mid |
+| rich_3782 | 2025 | unlabeled | 22 | rewrite_plus_new_code | 1 | 24 | 5 |  | 1 | 25 | 1 | 0 |  | 1 | 44 | — | C_hard |
+| rich_3882 | 2026 | bug | 189 | small_replace | 1 | 1 | 1 |  | 265 | 8 | 1 | 0 |  | 1 | 61 | 0 | A_easy |
+| rich_3894 | 2026 | bug | 851 | guard_add | 1 | 4 | 0 |  | 101 | 19 | 1 | 0 |  | 3 | 12 | 2 | A_easy |
+| rich_3905 | 2026 | change | 468 | logic_rewrite | 1 | 4 | 3 |  | 1175 | 35 | 1 | 0 |  | 1 | 1 | 0 | A_easy |
+| rich_3930 | 2026 | bug | 1128 | rewrite_plus_new_code | 26 | 12170 | 544 |  | 1 | 104 | 9 | 4 |  | 2 | 7 | — | C_hard |
+| rich_3934 | 2026 | unlabeled | 18 | rewrite_plus_new_code | 2 | 17 | 3 |  | 1 | 11 | 1 | 0 |  | 1 | 37 | — | C_hard |
+| rich_3935 | 2026 | bug | 29 | logic_rewrite | 1 | 13 | 3 |  | 485 | 14 | 1 | 0 |  | 4 | 67 | — | C_hard |
+| rich_3938 | 2026 | bug | 43 | rewrite_plus_new_code | 2 | 40 | 5 |  | 275 | 122 | 3 | 0 |  | 2 | 53 | — | C_hard |
+| rich_3942 | 2026 | change | 53 | rewrite_plus_new_code | 2 | 43 | 27 |  | 1 | 8 | 0 | 0 |  | 1 | 70 | — | C_hard |
+| rich_3944 | 2026 | bug | 17 | small_replace | 1 | 1 | 1 |  | 60 | 12 | 1 | 0 |  | — | 14 | — | C_hard |
+| rich_3953 | 2026 | bug | 38 | logic_rewrite | 1 | 16 | 10 |  | 59 | 14 | 2 | 0 |  | — | 1 | — | C_hard |
+| rich_4006 | 2026 | bug | 50 | logic_rewrite | 1 | 33 | 12 |  | 164 | 15 | 1 | 0 |  | 1 | 1 | 0 | B_mid |
+| rich_4070 | 2026 | perf | 2966 | logic_rewrite | 9 | 71 | 57 |  | 1 | 119 | 0 | 0 |  | 1 | 12 | 0 | C_hard |
+| rich_4075 | 2026 | unlabeled | 54 | logic_rewrite | 1 | 12 | 3 |  | 7 | 95 | 1 | 0 |  | 3 | 3 | — | B_mid |
+| rich_4076 | 2026 | bug | 25 | small_replace | 1 | 3 | 3 |  | 130 | 5 | 1 | 0 |  | — | — | — | C_hard |
+| rich_4077 | 2026 | unlabeled | 20 | new_code | 1 | 3 | 0 |  | 55 | 4 | 1 | 0 |  | 1 | — | — | B_mid |
+| rich_4079 | 2026 | unlabeled | 25 | logic_rewrite | 1 | 4 | 3 |  | 334 | 8 | 1 | 0 |  | 1 | 8 | — | B_mid |
+
+
+---
+
+<!-- ====================================================================== -->
+<!-- FILE: 05_Roadmap_and_Checklist_First_Submission.md -->
+<!-- ====================================================================== -->
+
+# 05 — Roadmap and Checklist: Before, During and After the First BCF Test-Harness Submission
+
+*Prepared 2026-10-01 by Claude Opus 5.5. This builds on Reports 01–04. Dates assume the first Kaggle submission targets **Tue 2026-10-06** (about 5 working days). Shift the dates if needed; the order of steps is what matters. Rules recap: **1 submission per day**, 2 final picks, final deadline Dec 2, paper deadline Nov 12.*
+
+---
+
+## 0. The first submission's job
+
+The first submission is a **measurement instrument**, not a bid for the top of the leaderboard. It must:
+
+1. **Score > 0 without a platform error.** This proves the bundle, budgets and 12-hour envelope are safe.
+2. Produce a **CV↔LB pair** with a known config hash. This is row 1 of the calibration log.
+3. Isolate the **hygiene and discipline layer** of BCF, the part with the clearest expected value, from the knowledge layer (taxonomy, spec gate, graph-first), which still has to earn its place.
+
+**Realistic target:** 0.07–0.12 public LB, i.e. 4–7 of the 58 public tasks.
+
+- Public notebooks score 0.05–0.12, and the leader is at 0.17 [forum, as of 10-01].
+- Any LB delta under about ±0.04 (≈ 2 tasks) is noise.
+
+**Success criteria for submission #1** (all must hold):
+
+| Criterion | Pass condition |
+|---|---|
+| Status | Scored (not "Notebook Threw Exception") |
+| Score | > 0 |
+| Runtime | Finished inside 12 h, with the per-task cap respected |
+| Calibration | Local dev-fast CV for the same hash recorded beforehand |
+
+---
+
+## 1. Before the first submission (Oct 1 → Oct 6)
+
+### 1.1 Environment bring-up (Day 1–2): the critical path
+
+| ✓ | Step | Detail | Done when |
+|:-:|---|---|---|
+| ☐ | **Install WSL2 + Ubuntu 24.04** on the main PC (RTX 5090) | This machine has no Docker or WSL. The swegemma subprocess sandbox needs Linux `/bin/bash` (the official notebook uses `swegemma.sandbox.subprocess`) | `wsl -l -v` shows Ubuntu, version 2 |
+| ☐ | Install the NVIDIA CUDA driver for WSL; check `nvidia-smi` inside WSL | 5090, 32 GB | GPU visible in WSL |
+| ☐ | (Optional) Docker Engine inside WSL | Needed only for the `--sandbox docker` mode (4 GiB / 2 vCPU limits = scorer parity) | `docker run hello-world` |
+| ☐ | Download the **"Gemma 4 Developer Agent Wheelhouse"** Kaggle dataset | It contains `swegemma`, `adk-submission`, `adk-eval-core` and pinned `vllm` (41 wheels per the notebook) | `python -c "import swegemma, adk_submission"` works |
+| ☐ | Download `gemma-4-31b-it-qat-w4a16-ct` from Kaggle Models | W4A16 ≈ 17 GB, so it fits a single 5090 at `max_model_len=32768` | Weights on local NVMe |
+| ☐ | Start vLLM locally with the **scorer flags**: `tool_call_parser=gemma4`, `reasoning_parser=gemma4`, `enable_thinking=True`, `max_model_len=32768`; no LoRA | Use TP=1 on the 5090 (the scorer uses TP=4 on L4s, so expect speed differences, not behavioural ones) | `curl :8000/v1/models` lists the model |
+| ☐ | Unpack the competition ZIP (21.9 GB) into WSL ext4, **not** `/mnt/d` | Keeps I/O fast and avoids CRLF and permission artefacts | `tasks.jsonl`, `snapshots/`, `graphs/`, `embeddings/`, `wheels/` present |
+| ☐ | **Patch-tail fix** in every local tool that applies `patch` or `test_patch` | All 258 strings lack the final newline (Report 04 §4). Reuse `analysis/scripts/common.py::fix_patch_tail` | `git apply --check` = 129/129 |
+| ☐ | **Add missing test wheels to the local wheelhouse**: `inline-snapshot`, `dirty-equals`, `pytest-httpbin`, `typing-inspection` (download once, then offline) | 29 tasks import them (Report 04 §7). The scorer evidently has them | The oracle run below passes on these tasks |
+
+### 1.2 Harness parity and oracle (Day 2–3)
+
+| ✓ | Step | Detail | Done when |
+|:-:|---|---|---|
+| ☐ | Smoke-test one task end-to-end with the **sample submission un-throttled** (`max_time_minutes: 10`) | `swegemma eval --task-id requests_7309 …` | `results/` has `summary.json`, `task_results.jsonl`, `patches/`, `traces/`, `test_outputs/` |
+| ☐ | **Gold oracle run** over all 129 tasks (`agent_patch = gold`, via a tiny driver around `verify_task`) | Confirms gold passes locally after the deps fix. Also records per-task **test runtime** (a budget input) | ≥ 125/129 resolved; the rest go on quarantine list v3 with reasons |
+| ☐ | **Empty-patch baseline** (`--skip-agent-patch`) over all 129 | Detects tasks that pass with no fix (forum reported 3) | Those tasks are excluded from CV |
+| ☐ | Freeze **CV splits** stratified by repo × tier (Report 04 §9): `dev-fast-15`, `dev-30`, `held-out-45` (no tuning), with the remainder for regression | Use seed 20261001 and commit the split file | `splits.json` committed |
+| ☐ | Ledger v0: one JSONL row per task per run = `task_results.jsonl` + `termination_cause` (derived from trace and log) + `config_hash` + `split` | Add the GLM P0 fields first; MiniMax M3/M4 fields later | A `ledger.py` that can be re-run |
+
+### 1.3 Build submission v1 ("BCF-Hygiene", Day 3–4)
+
+**Bundle (no adapters):**
+
+```text
+submission/
+├── agent.yaml               # single flat LlmAgent, model gemma-4-31b-it-qat-w4a16-ct
+├── eval_config.yaml         # evaluation: {max_time_minutes: 5, max_tool_calls: 40, max_turns: 60, timeout_seconds: 120}
+├── configs/sampling.yaml    # temperature 0.2, top_p 0.95, max_output_tokens 8192, thinking_budget 2048, include_thoughts true
+├── prompts/system.md        # BCF workflow below (≤ 120 lines)
+└── skills/
+    ├── bcf-localize/        # SKILL.md + scripts/bm25.py (stdlib) + scripts/recent_files.py (git log)
+    └── bcf-verify/          # SKILL.md + scripts/precheck.py (py_compile changed files, git diff sanity, no test/config paths, run target test module)
+```
+
+**Budget arithmetic for `eval_config`:**
+
+- 12 h ≈ 43,200 s, for ≈ 120 tasks run sequentially.
+- Container setup is outside the agent timer but inside the 12 h.
+- `max_time_minutes: 5` gives Σ ≤ 10 h + setup ≈ ≤ 11 h worst case, leaving a margin for the 12-h kill.
+- Raise it to 5.5 only after the first scored run shows the actual total.
+
+**System-prompt workflow (BCF v1, lexical-first, verify-whole-module):**
+
+| Step | Name | What the agent does | Calls |
+|---:|---|---|---:|
+| 0 | READ | Read the task. Note: title verb, any backticked or named identifiers, and whether a "Code Intelligence Tools" section is present | 0 |
+| 1 | LOCALIZE | `run_skill_script bcf-localize/bm25.py "<statement>"` → top-8 files with matching lines; `recent_files.py` → recently changed files; prefer the intersection | 1–2 |
+| 2 | NARROW | `grep -n` the identifiers in the top 3 files, then `read_file` ±40 lines around hits. Use `get_code_neighbors` only on a found function, to see callers and callees | 2–4 |
+| 3 | REPRODUCE (optional, cheap) | Write `/tmp/repro.py` (never inside `/workspace`) and run it. The **observed failure is the BCF class**: ImportError / AttributeError → missing API; no exception where one is expected → missing guard; wrong value → logic; exception → crash path | 1–2 |
+| 4 | PATCH | The smallest edit that addresses the class. Use `edit_file` with a short, unique `old_string` | 1–3 |
+| 5 | VERIFY | Run the **whole** test module(s) for the touched code (e.g. `pytest -q tests/test_x.py`), plus the repro. Run `bcf-verify/precheck.py` | 1–2 |
+| 6 | SUBMIT | If verification passes, or if ≥ 80% of the budget is used and an edit exists: `submit_patch`. **Never** finish with a clean tree. **Never** touch tests, conftest or pytest.ini | 0 (free) |
+| 7 | RESCUE | 3 identical calls, or 3 failed verifications → revert to the last good diff and try the next candidate file once, then submit the best | — |
+
+**Validation before upload:**
+
+| ✓ | Check |
+|:-:|---|
+| ☐ | Allowed extensions only (`.yaml .yml .md .txt .py .json .safetensors`); no symlinks; size < 3 GiB |
+| ☐ | `validate_directory` + `validate_single_declared_model` from `adk_submission` / `swegemma` pass locally |
+| ☐ | `!include` paths are relative and contain no `..` |
+| ☐ | Skill scripts are **stdlib-only** and run under Python 3.13 inside the sandbox (test them inside the local sandbox, not on the host) |
+| ☐ | Every skill script prints `BCF_EVT {json}` lines for the ledger and never writes inside `/workspace` |
+
+### 1.4 Local evaluation of v1 (Day 4–5)
+
+| ✓ | Step | Gate |
+|:-:|---|---|
+| ☐ | Run the **sample submission (un-throttled)** on `dev-30`: baseline A0 | Recorded in the ledger |
+| ☐ | Run **BCF-Hygiene v1** on the same `dev-30`, same seeds | Recorded |
+| ☐ | Paired comparison: per-task flips, exact McNemar, Δ with CI | v1 ≥ A0 (non-inferior), and no `harness_error` / `forgot_submit` / `clean_tree` terminations |
+| ☐ | **Budget projection**: per-task wall-seconds distribution (setup + agent + verify). Projected Σ over 120 tasks at the scorer's slower L4 speed: assume 1.5–2× local per-turn latency | Projected Σ ≤ 10.5 h |
+| ☐ | Termination-cause census | `ctx_overflow` < 5%, `timeout` < 30%, `no_patch` < 10% |
+| ☐ | Localization check: turn of first `read_file` on a gold file | Median ≤ 4 (the BM25 bar from Report 04 §5 suggests this is reachable) |
+| ☐ | Spot-check 5 traces by hand (one per tier, plus a failure) | No scratch files in patches; no test edits |
+
+### 1.5 Pre-registration (Day 5, 15 minutes, written before uploading)
+
+| ✓ | Field | Value |
+|:-:|---|---|
+| ☐ | Config hash and git tag of the bundle | |
+| ☐ | Local CV: `dev-30` resolved count + 95% CI; `held-out-45` *not yet touched* | |
+| ☐ | Expected public LB band | e.g. 0.07–0.12 |
+| ☐ | Decision rule after the score | See §3.3 |
+| ☐ | What would trigger an immediate rollback | Error, or 0.00 |
+
+### 1.6 Go / no-go
+
+| ✓ | Gate |
+|:-:|---|
+| ☐ | Bundle validated locally |
+| ☐ | Projected 12-h total ≤ 10.5 h, with `max_time_minutes` set |
+| ☐ | No adapter in the bundle (LoRA stays gated: KV-cache platform bug [forum]) |
+| ☐ | Platform status checked on the forum that morning: no open "submission errors" incident (e.g. the Sep 30 wheelhouse regression [forum]) |
+| ☐ | Pre-registration written |
+
+---
+
+## 2. During the submission run (Day 6)
+
+| ✓ | Step | Detail |
+|:-:|---|---|
+| ☐ | Upload `submission.zip` via the competition notebook flow | Same structure as the official Getting Started notebook |
+| ☐ | Record the submission timestamp, notebook version and config hash in `submissions.csv` | Row 1 of the CV↔LB log |
+| ☐ | **Do not** change the local bundle while it runs | Keeps attribution clean |
+| ☐ | Monitor the notebook status (queued / running / error) every few hours. Note queue time | Forum reports 4–13 h L4×4 queues [forum] |
+| ☐ | Meanwhile, run the **same bundle locally on `held-out-45`** once (first and only touch this week) | Gives an untuned CV point for the pair |
+| ☐ | Meanwhile, start the next experiment branch (one variable only), e.g. the reproduction step on/off | Prepares submission #2 |
+| ☐ | If it errors: capture the error text, check the forum, and **do not resubmit the same bundle the same day** (1 per day) | Diagnose locally with `scripts/inference.py`-style packaging |
+
+---
+
+## 3. After the submission (Day 7 onward)
+
+### 3.1 Immediate (same day the score posts)
+
+| ✓ | Step |
+|:-:|---|
+| ☐ | Record LB score, runtime and status in `submissions.csv` next to `dev-30` and `held-out-45` CV |
+| ☐ | Compute LB tasks = round(score × 58) and its binomial CI. Compare to the pre-registered band |
+| ☐ | If **0.00 or error**: treat it as a harness/budget failure. The usual suspects are an unhandled timeout over the 12 h total, a skill-script crash, or bundle validation. Fix it before any capability work |
+
+### 3.2 Analysis (within 2 days)
+
+| ✓ | Step | Output |
+|:-:|---|---|
+| ☐ | Termination-cause census on the local mirror runs (`dev-30` + `held-out-45`) | Leak table: the top cause becomes the next fix |
+| ☐ | Per-tier and per-repo resolve rates vs Report 04 tiers | Does tier A convert? (expected: most points come from tier A) |
+| ☐ | Localization funnel: BM25 top-5 hit → gold file opened → gold function edited → resolved | Where the funnel leaks |
+| ☐ | Blast-radius failures: tasks whose patch fixed the new test but broke a sibling test in the module | Count. If > 0, enforce the whole-module verify harder |
+| ☐ | Reproduction usefulness (if enabled): `repro_exception_class` distribution vs resolve | First real estimate of BCF's ρ |
+| ☐ | Update the ledger and the "Monday queries" | — |
+
+### 3.3 Decision rules for submission #2
+
+- Change **one** thing. Submit only if the paired local Δ on `dev-30` + `held-out-45` is ≥ +3 tasks with McNemar p < 0.10, *or* the change fixes a structural leak (a termination-cause rate drops by ≥ 50%).
+- LB deltas smaller than ±0.04 are **not** evidence. Decide on local paired data; use the LB only to check the CV→LB mapping.
+- Keep a **safe pick**: the best-scoring hygiene bundle remains a final-selection candidate throughout.
+
+### 3.4 Candidate experiment queue (one per submission, highest expected value first)
+
+| # | Arm | Rationale (report) | Local gate |
+|---:|---|---|---|
+| 1 | Verify-whole-module strictness (prompt + precheck enforcement) | Blast radius (04 §7) | Fewer P2P breaks |
+| 2 | Reproduction step on/off, gated by title verb and statement length | 04 §3.4; 02 §2.3 counter-evidence | Paired Δ |
+| 3 | Thinking budget 2048 vs 0 vs 4096 | Thinking-drop server bug [forum] | Paired Δ + overflow rate |
+| 4 | Async AST fallback skill (stdlib) | 20 async gold edits | Δ on the fastapi async stratum |
+| 5 | Graph expansion limited to non-test nodes vs graph off | 04 §6 | Δ + calls per task |
+| 6 | `max_time_minutes` 5 → 6 (only if the 12-h total allows) | Budget curve | Σ ≤ 10.5 h |
+| 7 | API-design mode for ImportError reproductions | 9 interface tasks | Δ on the interface stratum |
+| 8 | Spec-gate (BCF Phase 1) as a 1-turn structured plan, only for long statements | GLM D5 | Paired Δ must pay for the turn |
+
+---
+
+## 4. Milestone calendar to the finals
+
+| Date | Milestone | Exit criterion |
+|---|---|---|
+| Oct 3 | WSL2 + vLLM + swegemma running locally | One task end-to-end |
+| Oct 4 | Gold oracle + empty baseline over 129; splits frozen | Quarantine list v3 |
+| Oct 5 | BCF-Hygiene v1 vs A0 paired on dev-30 | Non-inferior, no structural zeros |
+| **Oct 6** | **Submission #1** | Scored > 0 within 12 h |
+| Oct 7–19 | Experiments 1–5, ≈ 1 submission every 1–2 days | ≥ 8 CV↔LB pairs logged by Oct 19 |
+| Oct 21–23 | LoRA gate (GLM D1: default NO-GO unless platform KV fix is live and K1/K2/K5 pass) | Written decision |
+| Oct 26 | Paper data freeze candidates: ρ from reproduction classes, λ from hops, P-1 probe | Tables with CIs |
+| Nov 10 | Paper internal freeze (deadline Nov 12) | — |
+| Nov 20 | Pick the final two: a safe hygiene build + the best measured improvement | — |
+| Dec 2 | Final deadline | — |
+
+---
+
+## 5. Risk register for the first run
+
+| Risk | Likelihood | Impact | Mitigation |
+|---|---|---|---|
+| 12-h overrun errors the whole submission [forum] | Medium | Total (score error) | `max_time_minutes` set; local Σ projection with a 1.5–2× latency factor |
+| Skill script incompatible with the sandbox (Python 3.13, no network) | Medium | Many tasks degrade | Test skills inside the local sandbox; stdlib only; wrap in try/except and print `BCF_EVT error` |
+| Context overflow discards the patch [forum] | Medium | Per task | Narrow reads (≤ 80 lines), 5k-char outputs, observation discipline; submit early when an edit exists |
+| Scratch files leak into the patch | Low (with rule) | Patch rejected or wrong | `/tmp` only; precheck rejects untracked files outside library dirs |
+| Dev-set optimism (solution-phrased statements) | High | LB < CV | Pre-registered band; compare against `held-out-45`; don't over-tune prompts on dev |
+| Platform regression on submission day [forum] | Medium | Lost day | Check the forum before uploading; keep the previous bundle as fallback |
+
+
+---
+
+<!-- ====================================================================== -->
+<!-- FILE: 06_Setup_Guide_WSL2_Swegemma_RTX5090.md -->
+<!-- ====================================================================== -->
+
+# 06 — Setup Guide: WSL2 + swegemma Wheelhouse + Local vLLM on the RTX 5090 PC
+
+*Prepared 2026-10-01 by Claude Opus 5.5 for the BCF Gemma 4 Developer Agent entry. These steps follow the official Getting Started notebook (input/kagglecomp/docs/markdown/Kaggle-03-GettingStarted.md) and HARNESS_README.md, with changes for running locally on a single GPU.*
+
+**Target machine:** PowerSpec G914 with Ryzen 9 9950X3D, 64 GB RAM, **RTX 5090 32 GB**, and Windows 11 Pro.
+
+**Do not use the laptop for the model.** The laptop (i7-8750H, GTX 1060 6 GB) cannot serve the 31B model. It is still useful for analysis and for gold-patch oracle runs, which need no model.
+
+---
+
+## Contents of this folder
+
+| File | Step | What it does |
+|---|---|---|
+| `06_Setup_Guide_WSL2_Swegemma_RTX5090.md` | — | This guide (Markdown) |
+| `06_Setup_Guide_WSL2_Swegemma_RTX5090.html` | — | The same guide as one portable HTML file with copy buttons; works offline |
+| `scripts/wslconfig.example` | 1 | WSL2 memory/CPU limits for the 5090 PC |
+| `scripts/10_ubuntu_bootstrap.sh` | 2 | apt packages, uv, Python 3.12 + 3.13, `~/g4` workspace, GPU check |
+| `scripts/20_fetch_assets.sh` | 3 | Wheelhouse, competition data (or a local ZIP), model weights |
+| `scripts/30_install_wheelhouse.sh` | 4 | The notebook's wheel install in a Python 3.12 venv, then fills missing dependencies |
+| `scripts/41_make_unthrottled_sample.sh` | 5a | Sample submission with the 1-min / 10-call throttle lifted and stub LoRAs removed |
+| `scripts/40_local_eval.py` | 5b | Starts vLLM on one GPU and runs Phase 1 + Phase 2 on chosen tasks |
+| `scripts/50_docker_sandbox.sh` | 6 | Docker Engine, missing test wheels, `swebench-sandbox:latest` image |
+| `scripts/60_verify_setup.sh` | any | Health check |
+| `build_html.py` | — | Regenerates the HTML from this Markdown |
+
+**Fastest path:**
+
+1. Do step 1 by hand.
+2. Copy this folder into WSL:
+
+   ```bash
+   cp -r "/mnt/d/<path>/06_Setup_WSL2_Swegemma_RTX5090" ~/g4-setup
+   ```
+
+3. Run the scripts in numeric order.
+
+Scripts copied from Windows can pick up CRLF line endings. If one fails with `$'\r': command not found`, fix them with:
+
+```bash
+sed -i 's/\r$//' ~/g4-setup/scripts/*.sh
+```
+
+---
+
+## 1. Windows prep (on the 5090 PC)
+
+**1.1 Virtualization.** Open Task Manager → Performance → CPU and check "Virtualization: Enabled". If it says Disabled, turn on **SVM Mode** in the MSI X870E BIOS (OC → Advanced CPU Configuration).
+
+**1.2 NVIDIA driver.** Update the **Windows** driver. Any current Game Ready or Studio driver supports the RTX 5090 and WSL CUDA. Never install a Linux NVIDIA driver inside WSL.
+
+**1.3 Install WSL2 + Ubuntu 24.04.** Run this in an admin PowerShell, reboot, and create your Linux user when prompted:
+
+```powershell
+wsl --install -d Ubuntu-24.04
+```
+
+**1.4 Give WSL enough memory.** By default WSL only gets half the RAM. Copy `scripts/wslconfig.example` to `C:\Users\<you>\.wslconfig`:
+
+```text
+[wsl2]
+memory=48GB
+processors=24
+swap=32GB
+```
+
+Then restart WSL:
+
+```powershell
+wsl --shutdown
+```
+
+---
+
+## 2. Ubuntu base (inside WSL)
+
+Script: `bash scripts/10_ubuntu_bootstrap.sh`. Manual equivalent:
+
+```bash
+sudo apt-get update && sudo apt-get install -y build-essential git patch pigz unzip curl jq protobuf-compiler
+```
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+Python 3.12 is the scorer's host interpreter (the notebook paths show `python3.12`). Python 3.13 is the test sandbox (`FROM python:3.13-slim`).
+
+```bash
+uv python install 3.12 3.13
+```
+
+```bash
+mkdir -p ~/g4/{data,wheelhouse,models,results,submissions}
+```
+
+```bash
+nvidia-smi
+```
+
+**Keep everything under `~/g4` on the WSL ext4 disk.** `/mnt/c` and `/mnt/d` are slow for snapshot extraction and git.
+
+---
+
+## 3. Kaggle access and downloads
+
+Script: `bash scripts/20_fetch_assets.sh [/mnt/d/.../gemma-4-developer-agent.zip]`
+
+**3.1 API token.** Create it yourself: kaggle.com → Settings → API → Create New Token. Copy `kaggle.json` to `~/.kaggle/kaggle.json` inside WSL. **Do not paste the token into a chat.**
+
+```bash
+chmod 600 ~/.kaggle/kaggle.json
+```
+
+```bash
+uv tool install kaggle
+```
+
+**3.2 Wheelhouse.** This holds `swegemma`, `adk-submission`, `adk-eval-core` and pinned vLLM/torch. The notebook reports 41 wheels.
+
+```bash
+kaggle datasets download -d metric/gemma-4-developer-agent-wheelhouse -p ~/g4/wheelhouse --unzip
+```
+
+**3.3 Competition data** (21.9 GB ZIP). Copying the ZIP over the LAN from the laptop is usually faster. Pass its path to the script. Otherwise download it:
+
+```bash
+kaggle competitions download -c gemma-4-developer-agent -p ~/g4
+```
+
+```bash
+unzip -q ~/g4/gemma-4-developer-agent.zip -d ~/g4/data
+```
+
+**3.4 Model weights** (about 18–20 GB). The notebook loads them from `google/gemma-4/other/gemma-4-31b-it-qat-w4a16-ct/2`.
+
+```bash
+kaggle models instances versions download google/gemma-4/other/gemma-4-31b-it-qat-w4a16-ct/2 -p ~/g4/models
+```
+
+If your Kaggle CLI version rejects that syntax, use kagglehub instead. It stores the files in its cache; symlink the printed path into `~/g4/models/`.
+
+```bash
+uvx --with kagglehub python -c "import kagglehub; print(kagglehub.model_download('google/gemma-4/other/gemma-4-31b-it-qat-w4a16-ct/2'))"
+```
+
+---
+
+## 4. Install the wheelhouse
+
+Script: `bash scripts/30_install_wheelhouse.sh`. This mirrors notebook cell 1 in a Python 3.12 venv.
+
+Check which Python the wheels target (expect `cp312`):
+
+```bash
+ls ~/g4/wheelhouse/*.whl | grep -oE 'cp3[0-9]+' | sort | uniq -c
+```
+
+```bash
+uv venv --python 3.12 ~/g4/.venv && source ~/g4/.venv/bin/activate && uv pip install pip
+```
+
+Stage the wheels exactly as the notebook does: skip `cutlass` and rename `cu128` → `+cu128`.
+
+```bash
+mkdir -p /tmp/whl && for w in ~/g4/wheelhouse/*.whl; do b=$(basename "$w"); [[ "${b,,}" == *cutlass* ]] && continue; [[ "$b" == *cu128* && "$b" != *+* ]] && b="${b/cu128/+cu128}"; ln -sf "$w" "/tmp/whl/$b"; done
+```
+
+```bash
+python -m pip install --no-deps --force-reinstall /tmp/whl/*.whl && python -m pip freeze > ~/g4/constraints.txt
+```
+
+Kaggle's image already ships torch, transformers and similar packages; a fresh venv does not. This installs only the missing dependencies, pinned to what the wheelhouse installed. Repeat until `pip check` reports nothing missing.
+
+```bash
+python -m pip install -c ~/g4/constraints.txt $(python -m pip check | sed -nE 's/.* requires ([^,]+), which is not installed\./\1/p' | sort -u) pyyaml pandas
+```
+
+Smoke test:
+
+```bash
+python -c "import swegemma, adk_submission, vllm, torch; print(torch.cuda.get_device_name(0))"
+```
+
+---
+
+## 5. First end-to-end task
+
+**5a. Make an un-throttled sample submission.** Script: `bash scripts/41_make_unthrottled_sample.sh`. It:
+
+- copies the official sample,
+- replaces its `eval_config.yaml` (60 s / 10 calls / 1 min / 50 turns) with 300 s / 60 calls / 10 min / 80 turns,
+- removes the two stub LoRA adapters (r = 4, layer 0 only). Pass `--keep-adapters` to keep them.
+
+**5b. Run one task.** Script: `scripts/40_local_eval.py`. It reuses the notebook's own calls (cells 4–5) with three local changes:
+
+| Change | Why |
+|---|---|
+| `tensor_parallel_size=1` | One GPU instead of the scorer's four L4s |
+| LoRA serving only when the submission has adapters | Preallocating 8 rank-128 slots uses most of the 5090's spare memory for context (the KV cache) |
+| Budgets read from the submission's `eval_config.yaml` | Matches how the scorer reads them |
+
+The first run spends a few minutes loading the model.
+
+```bash
+source ~/g4/.venv/bin/activate && python ~/g4-setup/scripts/40_local_eval.py ~/g4/submissions/sample_unthrottled requests_7309
+```
+
+**What success looks like:** a JSON line per task with `resolved`, `patch_chars`, `tool_calls` and `seconds`, plus a results folder `~/g4/results/sample_unthrottled_<timestamp>/` containing `summary.json`, `task_results.jsonl`, `patches/`, `traces/`, `test_outputs/` and `logs/`. Pass or fail doesn't matter for this smoke test. The point is that the pipeline runs end to end.
+
+Other ways to run it:
+
+- **Several tasks:** pass a comma-separated list, e.g. `requests_7309,rich_2725,fastapi_11355`.
+- **All 129 tasks:** pass `ALL`.
+
+---
+
+## 6. Docker sandbox for scorer parity (day 2)
+
+Script: `bash scripts/50_docker_sandbox.sh`. Run it twice: the first run installs Docker, then you restart WSL, then run it again.
+
+The `subprocess` sandbox is enough to start with. The scorer, though, runs tests in a **Python 3.13** container limited to **4 GB RAM / 2 vCPU**. For parity, install Docker Engine inside WSL (not Docker Desktop):
+
+```bash
+curl -fsSL https://get.docker.com | sudo sh && sudo usermod -aG docker $USER
+```
+
+Add the test packages that **29 dev tasks** need but the public wheelhouse lacks (see Report 04 §7):
+
+```bash
+python -m pip download --only-binary=:all: --python-version 3.13 --platform manylinux2014_x86_64 -d ~/g4/data/wheels inline-snapshot dirty-equals pytest-httpbin typing-inspection
+```
+
+Build the sandbox image:
+
+```bash
+cd ~/g4/data && cp docker/imp.py docker/telnetlib.py . && docker build -f docker/Dockerfile.public -t swebench-sandbox:latest .
+```
+
+Then run the evaluator with `--sandbox docker`.
+
+**Unverified:** I haven't confirmed whether the harness expects the image built from `Dockerfile.public` (wheels baked in) or the plain `Dockerfile.sandbox` (it may mount `/wheels` itself). Check the first Docker run's logs.
+
+---
+
+## 7. Health check
+
+Run this any time:
+
+```bash
+bash ~/g4-setup/scripts/60_verify_setup.sh
+```
+
+---
+
+## 8. Things to watch for
+
+| Symptom / risk | Cause | Fix |
+|---|---|---|
+| vLLM fails with "no kernel image is available for execution on the device" | The wheelhouse vLLM/torch were built for the scorer's L4 GPUs and may lack RTX 5090 (Blackwell) kernels | For local development only, install a recent vLLM release with Blackwell support in a **separate** venv. Agent behaviour should be the same |
+| CUDA out-of-memory at vLLM start | LoRA preallocation, or `gpu_memory_utilization` too high next to the Windows desktop | Use the adapter-free sample (5a), or `--gpu-mem 0.85` |
+| `git apply` reports "corrupt patch" on `patch` / `test_patch` from `tasks.jsonl` | All 258 strings lost their trailing newline (Report 04 §4) | Use `fix_patch_tail()` from `analysis/scripts/common.py` in any tool you write |
+| Oracle failures on fastapi snapshot tests | `inline-snapshot` / `dirty-equals` missing locally | Step 6 wheel download |
+| Very slow extraction or git | Working under `/mnt/c` or `/mnt/d` | Keep everything in `~/g4` |
+| A `kaggle models ...` or `VllmServer` / `EvalConfig` argument errors | I took these from the notebook and README but could not execute them on this machine | Send the error text and I'll adjust the script |
+
+---
+
+## 9. What this unlocks (Report 05)
+
+| Day | Milestone |
+|---|---|
+| 1 | Steps 1–4 working: `60_verify_setup.sh` all OK |
+| 2 | Step 5 on 3 tasks (one per repo); step 6 Docker parity |
+| 3 | Gold-patch oracle and empty-patch baseline over all 129 tasks; freeze CV splits |
+| 4–5 | BCF-Hygiene v1 vs the un-throttled sample, paired on dev-30 |
+| 6 | First Kaggle submission (Report 05 §1.6 go/no-go) |
+
+
+---
+
+<!-- ====================================================================== -->
+<!-- FILE: 07_Exception_Class_Binning_Research_Roadmap.md -->
+<!-- ====================================================================== -->
+
+# 07 — Exception-Class Binning for BCF: Applicability, Data-Collection Roadmap, Hypotheses, and What I Would Want to Prove or Disprove
+
+*Prepared 2026-10-02 by Claude Opus 5.5. Input: `2026-10-01_PythonExceptionClass/`, which contains three files:*
+
+- *`python-exceptions.md`: a CPython 3.14 built-in exception reference.*
+- *`root-causes-second-third-level[genspark-glm53].md`: second- and third-level root causes.*
+- *`root-code-snippet-scenarios[genspark-glm53].md`: trigger snippets and a fix ladder.*
+
+*Everything here is cross-checked against my static analysis of the 129 training tasks (Reports 04 and 04a; `analysis/out/`).*
+
+---
+
+## 0. Bottom line
+
+1. **The research is useful, but not as written.** It is a high-quality catalogue of *why built-in exceptions fire in general Python code*. The competition's tasks are *library-maintainer pull requests* (fastapi, rich, requests, httpx). In that domain:
+   - Most base failures are behavioural assertion mismatches.
+   - Half of the exception names involved are library-specific.
+   - The environment, OS, signal and memory branches of the taxonomy hardly ever apply, because the sandbox is hermetic.
+2. **Four parts carry over directly:**
+   - the **class hierarchy**, as a ready-made coarse-to-fine bin ladder for testing granularity K;
+   - the **level-2 cause lists**, as per-class diagnostic checklists (skill resources);
+   - the **blast-radius fix ladder**, which is BCF Tenet 1 ("preserve working code") turned into an escalation procedure;
+   - the **eight atomic causes**, as a second, orthogonal taxonomy axis.
+3. **The level-3 percentages are not usable as priors.** The research itself says they are "reasoned estimates… not measured", and they describe a different population of code. They must be re-estimated on this domain.
+4. **Reframe the BCF claim** from *exception-class binning of the issue* to **failure-signature binning of a run**. The bin is computed from what a reproduction or the failing tests *observe* at the base commit:
+
+   | Component | Example values |
+   |---|---|
+   | Exception class | `AssertionError`, `ImportError`, `TypeError`, … |
+   | Failure kind | did-not-raise, wrong value, crash |
+   | Top in-repo traceback frame | e.g. `fastapi/routing.py:get_request_handler` |
+
+   Only this version is *observable* for most tasks. It also separates two roles that the current BCF claim mixes together:
+   - **routing**: which strategy to use;
+   - **localization**: where the fix is.
+5. **My prior:** most of the value of exception classes on this corpus will come from **routing** (e.g. `ImportError` → implement-new-API mode; did-not-raise → add-guard mode) and from **traceback locality** for crash-type failures. Conditioning file or function localization on the class *label* alone will add little over the already-strong lexical baseline (BM25 top-5 in 99/129). The roadmap below is designed so this prior can be **disproved cheaply**.
+
+---
+
+## 1. What the research contains, and how good it is
+
+| Component | Content | Strengths | Limits for BCF |
+|---|---|---|---|
+| `python-exceptions.md` | 68 built-in classes: hierarchy, MRO, constructor and attributes, version notes, an executed example message per class (CPython 3.14.4) | Introspected and executed, so factual. Clean hierarchy (Lookup / Arithmetic / OSError families) | Built-ins only. It explicitly excludes stdlib and third-party exceptions (`json.JSONDecodeError`, pydantic `ValidationError`, fastapi `HTTPException`), which are half of this corpus's exception mentions |
+| `root-causes-second-third-level` | For each class: 3–5 second-level causes, each with 2–4 third-level sub-causes and percentages; a "convergence" section listing **8 atomic causes** | Systematic and recursive. The atomic causes resemble ODC defect types and form a usable second axis | Percentages are explicitly **heuristic, not measured**. The population is general application code (user input, files, networks, locales), not library internals. No `AssertionError`-as-behaviour-mismatch decomposition |
+| `root-code-snippet-scenarios` | 124 `# Cause:` trigger snippets and, for each class, fixes ordered **from least to most blast radius**; a 6-rung meta-ladder | The ladder (one line → call-site guard → boundary guard → contract change → tooling → environment) is a direct, citable operationalization of minimum-edit discipline | Fixes are generic. Library PRs often need *contract or behaviour* changes (rung 4) by design, e.g. features and deprecations |
+
+### 1.1 Measured fit to the 129 dev tasks
+
+| Signal (from Report 04 data) | Value | Implication |
+|---|---|---|
+| Statement names an exception class | 15/129 | Binning *the issue text* is possible for ~12% of tasks |
+| Exception signature: statement ∪ gold `raise`/`except` ∪ `pytest.raises` | 33/129 tasks; 62 mentions: **31 built-in, 31 library-specific** | Half the vocabulary is outside the research's scope |
+| Built-in classes seen | ValueError 7, AssertionError 6, TypeError 3, NameError 3, RuntimeError 3, Exception 2, one each of AttributeError, TimeoutError, OSError, PermissionError, BrokenPipeError, KeyboardInterrupt, SystemExit | Only ~6 of the 68 classes recur. The bin space is sparse |
+| Library classes seen | FastAPIError 4, HTTPException 3, ResponseValidationError 2, WebSocketRequestValidationError 2, NoMatchFound 2, JSONDecodeError 2, ValidationError, RequestValidationError, DependencyScopeError, PydanticSchemaGenerationError, ConnectError, … | BCF needs a **library-exception extension** that maps each to its built-in parent and its framework role (validation, routing, transport) |
+| Gold patch adds a `raise` / an `except` | 13 / 13 tasks | ~10% of fixes *create* exception behaviour (rung 4 contract changes) |
+| **Static prediction of the base failure mode** (before any fix, with `test_patch` applied) | `ImportError`/`AttributeError`: missing interface **9** · pytest "DID NOT RAISE"/different exception **6** · "DID NOT WARN" **1** · `AssertionError` snapshot **12** · `AssertionError`, modified assertions **17** · **needs execution 84** | Execution is required to know the class for ~65% of tasks. The predictable part is dominated by assertion-type failures |
+| Gold patches with ≥ 2 hunks / ≥ 2 files | 71 / 38 | Enough material for an empirical **fault-masking** (exposition-order) study by replaying hunk subsets |
+
+### 1.2 Applicability matrix
+
+| Research component | BCF use | Applicability | Required adaptation |
+|---|---|---|---|
+| Built-in hierarchy (Lookup, Arithmetic, OSError, Warning families) | Coarse bins for the K-granularity experiments (H5) | **High** | Add `AssertionError` subtypes and library-exception parents |
+| Level-2 causes per class | `skills/bcf-diagnose/resources/<Class>.md` checklists, loaded *after* a failure is observed | **Medium** | Re-rank by domain; add library-PR causes (contract drift, validation-schema mismatch, async/sync boundary, version-compat shims) |
+| Level-3 percentages | Priors for ordering hypotheses | **Low** | Replace with frequencies estimated from data (D1–D5 below) |
+| Eight atomic causes | Second taxonomy axis (cause type), crossed with failure signature | **Medium** | Add library-specific atoms: *contract/interface change*, *backward-compat shim*, *rendering/format logic*, *validation rule* |
+| Trigger snippets (124) | Few-shot reproduction templates: "how to make this class fire in `/tmp/repro.py`" | **Medium** | Keep only classes that recur in the domain; rewrite against library APIs |
+| **Blast-radius fix ladder** | PATCH escalation policy: start at rung 1, escalate only when verification fails; record the rung | **High** | Map to BCF `fix_shape` (Report 04 §3.3) and gate G1 scope limits |
+| OS / signal / memory / encoding branches | — | **None** (hermetic sandbox) | Drop from agent resources to save context |
+
+---
+
+## 2. The reframed object: failure signature `S`
+
+For each task, apply `test_patch` at the base commit (no fix) and run the target tests. That is exactly what the harness's "empty-patch" mode (`--skip-agent-patch`) does. From each failing test, record:
+
+| Field | Source | Example |
+|---|---|---|
+| `S.cls` | JUnit `<failure type=…>` / `<error type=…>`; root of the `__cause__` chain | `ImportError`, `AssertionError`, `Failed` (pytest DID NOT RAISE), `TypeError` |
+| `S.kind` | Derived | `collection_error` · `did_not_raise` · `did_not_warn` · `wrong_value` · `crash` · `snapshot_mismatch` |
+| `S.frame` | Top traceback frame inside the repo (not the tests, not site-packages) | `fastapi/routing.py:get_request_handler` |
+| `S.msg_shape` | Message normalized (literals → placeholders) | `'{type}' object has no attribute '{name}'` |
+| `S.n_fail` | Count of failing tests and of distinct signatures | Multi-signature hints at a compound task |
+
+The **agent-observable twin** is the same record from the agent's own `/tmp/repro.py` run (runtime field `repro_signature`). The hidden tests are never visible to the agent. BCF's claim is only useful if `repro_signature` predicts the hidden `S`, which is testable (H3).
+
+Define the relationships BCF needs:
+
+| Symbol | Meaning |
+|---|---|
+| `R_loc` | Localization target: the gold file/function, measured through **rank under a baseline localizer**. Ranks transfer across repos; raw file names don't |
+| `R_shape` | Fix shape (Report 04 taxonomy) and fix rung (blast-radius ladder) |
+| `R_route` | Best strategy: minimal edit / add guard / implement API / rewrite logic |
+
+BCF's ρ then becomes measurable as the relative entropy reduction ρ_X = I(R_X; S) / H(R_X), for X ∈ {loc, shape, route}.
+
+---
+
+## 3. Data-collection roadmap
+
+| Phase | What | Needs | Output | When |
+|---|---|---|---|---|
+| **D0** (done) | Static signals: statement exception mentions, gold raise/except, `pytest.raises`/`warns`, interface burden, multi-hunk counts | Nothing | `analysis/out/*.jsonl` | 2026-10-01 |
+| **D0b** (now, offline) | **Taxonomy v1**: built-in classes from the research + library-exception extension (map each library class to its built-in parent and framework role) + `S.kind` values + eight atomic causes + four library atoms | Desk work | `taxonomy_v1.yaml` | Oct 2–3 |
+| **D1** | **Base-failure signatures** for all 129 tasks: empty-patch run with `test_patch`; parse JUnit and pytest long reports; extract `S` per failing test. Also the gold run (should pass; it confirms the test set) | WSL2 + harness (Report 06) | `base_signatures.jsonl` (≈ 129 × failing tests) | Oct 4–5 (with the oracle run in Report 05 §1.2) |
+| **D2** | **Hunk-subset replay** (fault masking): for the 53 tasks with 2–8 gold hunks, apply every single hunk, every leave-one-out set, and, where 2^k ≤ 64, all subsets; run the target tests; record `S` after each | D1 tooling | `masking_transitions.jsonl` → empirical exposition DAG per task | Oct 6–10 (CPU only; runs on the laptop) |
+| **D3** | **Agent reproduction signatures**: every local agent run logs `repro_signature` via `BCF_EVT` stdout | Agent v1 with a repro step (Report 05 experiment 2) | Ledger field | From the first local runs |
+| **D4** | **External scale-up** for statistical power, Python only: (a) SWE-bench-style tasks with `FAIL_TO_PASS` lists, run at base to get `S`, giving thousands of samples across 12+ repos; (b) BugsInPy (real bugs with failing tests); (c) SWE-smith-style synthetic bugs, whose *known injected mutation* serves as a ground-truth cause label; (d) PyTER's type-error benchmark for the TypeError branch | 5090/3080 boxes for containers; licences checked | `external_signatures.parquet` | Oct 10–24 |
+| **D5** | **Human/LLM annotation** of the cause (level-2 + atomic) for the 129 dev tasks; double-code 30, target κ ≥ 0.70 | D0b taxonomy | `cause_labels.jsonl` | Oct 8–20 |
+
+**Collection rules:**
+
+- Never feed `S` (hidden-test signatures) to the agent. They are calibration data only.
+- Log the Python version: the sandbox runs 3.13 and the research's messages come from 3.14. Message text differs; class identity does not.
+- Keep the *root* of exception chains as well as the surface class. Pytest wraps errors, and libraries re-raise as their own types.
+
+---
+
+## 4. Hypotheses (pre-registered)
+
+Statistics:
+
+- Information measures use the Miller–Madow bias correction plus a **permutation null** (1,000 shuffles). With n = 129, uncorrected mutual information is biased upward.
+- Agent effects use paired tasks with exact McNemar tests, plus continuous mechanism metrics (rank, turns), because a resolved/unresolved flip is low-power at this n.
+- Interpret everything stratified by repo and with leave-one-repo-out (LORO).
+
+| ID | Hypothesis | Metric | Data | Pass rule (keep) | Kill rule (drop or reframe) |
+|---|---|---|---|---|---|
+| **H1 Observability** | A non-assertion failure class is observable at base in a large share of tasks | Share of tasks whose dominant `S.cls` ∉ {AssertionError, snapshot} | D1 | ≥ 35% | < 20%: exception-class binning becomes a niche router; switch BCF's main axis to `S.kind` + `S.frame` |
+| **H2 Locality** | For crash-type signatures, the gold function appears in the in-repo traceback frames | Hit@1/@3 of the gold function among the top in-repo frames | D1 + gold mapping | Hit@3 ≥ 60% of crash-type tasks | < 30%: tracebacks point at symptoms, not causes (masking or distance); rely on lexical localization |
+| **H3 Agent observability** | The agent's own reproduction reproduces the hidden signature class | Agreement `repro_signature.cls` = `S.cls` | D1 + D3 | ≥ 60% | < 40%: the agent cannot see the class it is supposed to condition on |
+| **H4 Shape conditioning** | `S` carries information about fix shape and rung | ρ_shape with permutation p; Cramér's V; LORO log-loss vs marginal | D1 + Report 04 shapes (+ D4) | ρ_shape ≥ 0.10, p < 0.05, LORO log-loss better in ≥ 3/4 folds | No gain over marginal in LORO |
+| **H5 Granularity K\*** | An intermediate granularity beats both coarse and fine bins | Cross-validated log-loss / accuracy predicting `R_shape` and `R_route` at K levels: 3 (`S.kind` only) → ~8 (family) → ~15 (class) → ~40 (class + message shape) | D1 + D4 | Interior optimum, stable under LORO | Monotone in K, or finest is best (overfitting): report K\* = coarse |
+| **H6 Incremental localization value** | `S` adds localization information beyond BM25 + git recency | Conditional MI `I(R_loc; S \| L_bm25)`; rank improvement when re-ranking BM25 top-20 by frame/class affinity | D1 + Report 04 ranks | Median gold rank improves by ≥ 1 position in crash-type tasks | No improvement (expected for assertion-type tasks) |
+| **H7 Routing value** | `S.kind` predicts the best strategy: `collection_error`→implement-API, `did_not_raise`→add guard/raise, `wrong_value`→logic edit, `crash`→fix at frame | Accuracy of the `S.kind` → `R_route` rule vs the majority baseline | D1 + D5 | ≥ +20 pp over majority | ≤ +5 pp |
+| **H8 Fault masking** | In multi-hunk tasks, signatures change in a structured order as hunks are applied (the first failure masks later ones), and that order predicts a good fix order | Fraction of multi-hunk tasks whose signature changes non-monotonically; agreement of the exposition-DAG order with the gold hunk dependency order | D2 | ≥ 25% of multi-hunk tasks show masking transitions | < 10%: masking is rare here; demote it in the paper to a theoretical section |
+| **H9 Prior validity** | The research's level-2 cause rankings match domain frequencies | Rank correlation (Kendall τ) and KL divergence of research priors vs D5 labels, per class | D5 (+ D4) | τ ≥ 0.4 for recurring classes | τ < 0.2: ship domain-estimated priors only |
+| **H10 Agent benefit** | Class-conditioned diagnosis improves the agent | Paired resolve (McNemar), turns-to-first-correct-edit, wasted calls; arms below | Local runs, dev-30 + held-out-45 | ≥ +3 tasks *or* ≥ 20% fewer turns at equal resolve, no LORO fold negative | Neutral or negative: keep only the ladder and routing |
+| **H11 Misbinning harm** | Wrong bins anchor the agent onto the wrong checklist | Resolve rate on tasks where the agent's `repro_signature` ≠ `S` (arm A2 vs A0) | Local runs | Harm ≤ 1 task | Harm > benefit: gate checklists on bin confidence |
+| **H12 Cost** | Getting `S` (writing and running a repro) costs less than it saves | Median extra calls/time of the repro step vs calls saved downstream | Local runs | Net ≥ 0 calls | Net cost > 2 calls/task: make the repro step conditional on routing triggers only |
+
+### 4.1 Agent arms for H10–H12 (one change at a time; paired, ≥ 3 seeds where affordable)
+
+| Arm | Adds on top of BCF-Hygiene v1 (Report 05 §1.3) |
+|---|---|
+| A0 | Nothing (baseline) |
+| A1 | Cheap reproduction step: log `repro_signature`, no conditioning |
+| A2 | A1 + **class-conditioned checklist** (`load_skill_resource bcf-diagnose/<Class>.md`, from the research's level-2 causes, domain-re-ranked) |
+| A3 | A1 + **frame-first localization** for crash-type signatures (read the top in-repo frame before BM25 candidates) |
+| A4 | A1 + **routing by `S.kind`** (implement-API / add-guard / logic-edit modes) |
+| A5 | A2 + A3 + A4 (full failure-signature BCF) |
+| A6 | A5 + **blast-radius ladder** enforcement (record the rung; escalate only after a verify failure) |
+
+**Power check.** On 75 paired tasks with ~15% discordance, an exact McNemar test detects about a +6-task effect. So decide arm adoption on mechanism metrics (rank of the first opened gold file, turns to first correct edit, wasted calls) plus no regression, rather than on resolve flips alone.
+
+---
+
+## 5. Estimating BCF's math from data
+
+| Quantity | Estimator | Notes |
+|---|---|---|
+| ρ_X = I(R_X; S) / H(R_X) | Plug-in MI with Miller–Madow correction. Report a bootstrap 95% CI and a permutation p-value | Compute for X ∈ {shape, route, loc-rank-bucket}. Never use raw file names as R (they don't transfer across repos) |
+| Search-space reduction | E[rank of gold \| S] / E[rank of gold] under BM25 + recency | The operational meaning of "limits the search space". Report it per `S.kind` |
+| K\* (granularity) | Argmin over K of cross-validated log-loss (LORO folds) | The empirical answer to "speed depends on the number and fidelity of categories" |
+| Fidelity | Agreement of the agent-observed signature with the hidden one (H3), and κ of the cause labels (D5) | Low fidelity caps achievable ρ: a misbinned task gets the wrong conditioning |
+| Masking DAG | From D2 transitions: an edge h_i → h_j when the signature changes only after h_i is applied | Compare its topological order with an agent's edit order (BCF `fix_order`) |
+| Expected speedup | Σ over bins of P(bin) × (turns saved \| bin) − P(misbin) × (turns lost) − repro cost | Ties the whitepaper's claim to ledger data |
+
+---
+
+## 6. What would I want to know, prove, or disprove?
+
+These are the questions I would insist on answering before claiming in the whitepaper that "binning issues by exception class makes BCF faster and more effective". Each shows my prior (an honest guess) and the evidence that would change my mind.
+
+| # | Question | Why it matters | Would **prove** | Would **disprove** | My prior |
+|---:|---|---|---|---|---|
+| 1 | **Is there an exception to bin on, at the moment BCF needs to decide?** | Statements rarely contain one (15/129). Without a run, there is no bin | H1 ≥ 35% non-assertion classes at base, *and* H3 agent reproduction agreement ≥ 60% | Most tasks fail as plain assertions, or the agent can't reproduce | Partly false. Assertion-type failures will dominate (60–75%) |
+| 2 | **Is the information in the class label, or in the traceback that comes with it?** | If the frame does all the work, "class" is the wrong abstraction | A3 (frame) and A2 (class checklist) both help, *and* their effects add up | A3 ≈ A5 and A2 ≈ A0 | The frame carries most of the localization value |
+| 3 | **Does binning beat the strong lexical baseline that already exists?** | BM25 + recency put the gold file in the top 5 for 105/129 tasks. Little headroom | H6: conditional MI > 0 and median rank gains | No incremental gain | Small gain, only on crash-type tasks |
+| 4 | **Is the main value routing rather than localization?** | Changes BCF's architecture: a class becomes a mode switch, not a search filter | H7 ≥ +20 pp, and A4 improves turns | `S.kind` doesn't predict strategy | **Yes**. `collection_error` → implement-API and `did_not_raise` → guard are near-deterministic |
+| 5 | **What is K\*, and is it interior?** | The user's thesis says effectiveness depends on "the number and fidelity of the exception categories" | Interior optimum under LORO | Monotone curve | Interior and *coarse*: about 6–10 bins (kind × family), not 68 classes |
+| 6 | **Does fidelity matter more than number?** | Mislabels may hurt more than coarse labels | H11: misbinning harm is measurable, and accuracy-weighted ρ explains results better than K | Harm ≈ 0 | Fidelity dominates. A wrong checklist anchors a 31B model |
+| 7 | **Are fault masking and chained failures real in this corpus?** | It is the paper's most novel claim (interference/masking DAG) | H8: ≥ 25% of multi-hunk tasks show masking transitions with a consistent order | Hunks fail independently | Real in a minority (~15–30% of the 71 multi-hunk tasks) |
+| 8 | **Do the research's priors transfer to library-PR bugs?** | Determines whether the catalogue can be shipped as is | H9 τ ≥ 0.4 | τ < 0.2 | They don't transfer. Env/OS/user-input causes vanish; contract and validation causes dominate |
+| 9 | **Does it generalize to private repos?** | The scored set is from unseen repos | LORO stable on dev + D4 external repos | One repo drives the effect (fastapi is 52% of dev) | Routing generalizes; the class-to-cause priors are repo-flavoured |
+| 10 | **Does the gain survive its cost on a 6-minute budget?** | A repro run costs 1–2 calls and about 30–60 s | H12 net ≥ 0 | Net cost > 2 calls | Positive only when the repro step is gated (crash words, "raise", "error", feature verbs) |
+| 11 | **Can the 31B quantized model use the bins?** | Small models may ignore or misapply a long checklist | A2 adherence (checklist items actually executed, from traces) ≥ 70% | Adherence < 40% | Mixed. Keep checklists ≤ 8 lines per class |
+| 12 | **Does exception-aware patching reduce collateral breakage?** | The blast radius is large (median 11 target tests; 224 for requests) | A6 reduces P2P breaks with no resolve loss | No change | Small positive. The ladder is mostly a discipline aid |
+
+**The claim I would put in the whitepaper if the evidence supports it** (and its fallback if it doesn't):
+
+> *Primary:* "Observing the failure signature of a minimal reproduction, and routing on its kind (missing interface / missing guard / wrong value / crash), reduces turns-to-first-correct-edit by X% at equal resolution. For crash-type failures, conditioning localization on the top in-repo frame cuts the expected gold rank by Y%. Granularity beyond ~K\* bins does not help (LORO)."
+>
+> *Fallback (if H1/H3 fail):* "On library-maintenance tasks, exception classes are observable for only Z% of issues, so exception-class binning is a niche router. The transferable mechanism is failure-kind routing plus a blast-radius-ordered patch ladder."
+
+Either outcome is publishable as a **measured** result. That is what the paper track rewards, and it is more defensible than an untested 68-class taxonomy claim.
+
+---
+
+## 7. Execution checklist (aligned with Report 05 dates)
+
+| ✓ | Item | Date |
+|:-:|---|---|
+| ☐ | Write `taxonomy_v1.yaml`: research classes + library-exception extension + `S.kind` + 8 + 4 atoms (D0b) | Oct 3 |
+| ☐ | Pre-register H1–H12 (this table) with thresholds; freeze the analysis scripts before looking at D1 outcomes | Oct 3 |
+| ☐ | Build `s10_base_signatures.py` (JUnit + longrepr parser → `S`) | Oct 4 |
+| ☐ | D1: empty-patch + gold runs on 129 tasks (together with the oracle run) | Oct 4–5 |
+| ☐ | Analyse H1, H2, H4, H5, H7 on D1 (no agent needed) | Oct 6–7 |
+| ☐ | Build `s11_hunk_replay.py`; D2 on the 53 tasks with 2–8 hunks (laptop, CPU) | Oct 6–10 |
+| ☐ | Write `skills/bcf-diagnose/resources/*.md` (≤ 8 lines per class, domain-re-ranked) **only if** H4/H7 pass | Oct 8 |
+| ☐ | Agent arms A0→A6 on dev-30 (local, paired) | Oct 9–19 |
+| ☐ | D5 annotation (double-code 30; κ) → H9 | Oct 8–20 |
+| ☐ | D4 external scale-up for H4/H5/H9 power (SWE-bench-style tasks; BugsInPy; synthetic mutations) | Oct 10–24 |
+| ☐ | Paper freeze: ρ/K\*/masking tables with CIs; choose primary or fallback claim | Nov 8 (internal), Nov 12 (deadline) |
+
+---
+
+## 8. Risks and mitigations
+
+| Risk | Mitigation |
+|---|---|
+| Pytest wraps or chains exceptions, so the surface class ≠ the root class | Record both. Parse `__cause__`/`__context__` from long reports. Classify "Failed: DID NOT RAISE" as a *kind*, not a class |
+| The local environment changes signatures (missing test deps → `ImportError` that is not part of the task) | Install the missing test wheels (Report 06 §6). Mark environment-caused signatures by matching the module against the wheelhouse gap list |
+| Small n (129; fastapi-heavy) inflates mutual information and overfits K | Miller–Madow correction + permutation null; LORO; external D4 data before any paper claim |
+| Hidden-test leakage into the agent | `S` from hidden tests is calibration-only. The agent sees only its own `repro_signature` |
+| Python 3.13 sandbox vs the research's 3.14 messages | Bin on class and kind, not message text. Use message shapes only as a sub-bin in the K experiment |
+| Over-long checklists eat context | ≤ 8 lines per class, loaded on demand via `load_skill_resource` after a signature exists |
+
+---
+
+# Amendment A (2026-10-02): new exception-class research
+
+*Sections 9–15 were added on 2026-10-02 after six new files appeared in `2026-10-01_PythonExceptionClass/`. Sections 0–8 above are unchanged.*
+
+*Scope rule: the frozen pre-registration (BCF-PREREG-001, FREEZE-1) is **not** modified here. Every proposal below is labelled with its effect on the frozen materials (§14). The three original research files hashed at FREEZE-1 are unchanged; `tools/freeze.py --check` still passes.*
+
+## 9. What was added
+
+| File | Size | Producer and method | Content |
+|---|---|---|---|
+| `2026-09-28-python-builtin-exception-problem-sets/python-builtin-exception-root-cause-problem-sets.md` ("**Set A**") | 278 KB | Claude Code deep-wide research. Three evidence legs: official docs [O], CPython source [I], community Q&A [C]. Snippets executed on CPython 3.14.7 / Windows | 68 class chapters. 224 root-cause families (219 parsed). 219 items (203 executed + 16 labelled SCENARIO). Symptom→class diagnosis map. 35-pair confusion matrix. Incidence graded High / Medium / Low by fixed rules, no percentages |
+| `2026-09-28-python-builtin-exception-problem-sets/qc-tables-report.md` | 2 KB | Table QC of Set A | 79 tables, 1 defect fixed (unescaped pipes inside code spans) |
+| `python-builtin-exception-root-cause-problem-sets-2026-09-28/python-builtin-exception-root-cause-problem-sets.md` ("**Set B**") | 491 KB | Generated report. Every item executed in a fresh subprocess on CPython 3.14.7 / Windows; three-way divergence log (Linux corpus, docs, live) | 68 chapters. 101 mechanism-level families. 260 items (213 MATCH, 47 observed, 0 mismatch). Routing tree on observable traceback features. Errno-mapping analysis (49 of 117 errnos map to a subclass). 35-row "actually raised" confusion matrix |
+| `python-builtin-exception-root-cause-problem-sets-2026-09-28/README.md` and `lint_tables.py` | 3 KB + script | Reproduction notes and a 9-rule table linter (T1–T9) | — |
+| `Crafting Production Failure Scenarios_[web-qwen38max-dr].md` ("**Set Q**") | 98 KB | Web deep-research narrative (Qwen); snippets **not executed**; cites docs plus secondary sites (GeeksforGeeks, Medium, Stack Overflow) | Production-flavoured trigger scenarios for all 68 classes |
+
+## 10. Quality assessment (with spot checks run on the sandbox's Python 3.13)
+
+I spot-checked eleven claims on CPython **3.13.15**, the sandbox's major version.
+
+| Claim | Source | Result on 3.13.15 | Verdict |
+|---|---|---|---|
+| `asyncio.run(1)` raises `ValueError` on 3.13 (`TypeError` on 3.14) | B | `ValueError: a coroutine was expected, got 1` | ✅ Confirmed: the same call changes class across minor versions |
+| `math.sqrt(-1)` message changed in 3.14 | A | 3.13: `math domain error` | ✅ Confirmed: messages drift, so bin on class, not text |
+| `int(' 42  ')` succeeds; `int(float('inf'))` raises `OverflowError` | B | Succeeds; `OverflowError` | ✅ |
+| `ExceptionGroup('g', [KeyboardInterrupt()])` raises `TypeError` at construction | A, B | `TypeError: Cannot nest BaseExceptions in an ExceptionGroup` | ✅ |
+| `asyncio.CancelledError`, `FrozenInstanceError`, `io.UnsupportedOperation`, `subprocess.TimeoutExpired` hierarchies | B | MROs as stated (CancelledError bypasses `except Exception`) | ✅ |
+| `b'a' == 'a'` emits **no** `BytesWarning` on 3.13/3.14 ("dormant class") | B | Under `python -b`: `BytesWarning: Comparison between bytes and string` | ❌ **Refuted.** The class has a live emitter behind the `-b` flag |
+| `[(10, 20) (30, 40)]` gives a `SyntaxWarning` | Q | `SyntaxWarning: 'tuple' object is not callable; perhaps you missed a comma?` | ✅ |
+| Using `async` as a variable name "triggers a warning" | Q | `SyntaxError: invalid syntax` | ❌ Wrong since 3.7 |
+| `BytesWarning` only fires "in Python versions prior to 3.0" | Q | Fires on 3.13 under `-b` | ❌ Wrong |
+| Set B tables "92 tables, 0 defects" | B (README) | §10.4 confusion matrix has a blank line between every row, so GFM renders a header with no rows plus 34 loose lines. B's own linter passes it | ❌ Linter blind spot |
+| B's linter as a QC tool | B | Also flags valid GFM: `:-:` separators (it requires ≥ 3 dashes) and empty header cells | ⚠️ Stricter than GFM in T4/T9, blind in T5 |
+
+**Grades for BCF use:**
+
+| Set | Grade | Why |
+|---|---|---|
+| A | **High** | The best source of *causal* families, community incidence and "why not the neighbour" discriminators |
+| B | **High** | The best source of *mechanism* facts, execution-verified class behaviour and a routing tree. One refuted dormancy claim |
+| Q | **Low** | Unexecuted, secondary citations, three factual errors in a small sample. Use only as narrative inspiration for synthetic scenarios, never as evidence |
+
+## 11. Value-added findings for BCF
+
+### 11.1 Family granularity is a modelling choice, so K\* must be measured
+
+Two careful, independent efforts with the same inputs produced **219 vs 101** families for the same 68 classes (2.2×):
+
+- **Set A** splits by *cause in the application*.
+- **Set B** splits by *raise mechanism*.
+
+| Class (domain-relevant) | Set A families (High) | Set B families (High) |
+|---|---|---|
+| TypeError | 9 (6) | 7 (3) |
+| ValueError | 6 (4) | 5 (2) |
+| AttributeError | 6 (3) | 4 (1) |
+| KeyError | 5 (3) | 2 (2) |
+| IndexError | 5 (1) | 2 (1) |
+| ImportError / ModuleNotFoundError | 4 (4) / 5 (3) | 2 (1) / 2 (1) |
+| NameError / UnboundLocalError | 4 (2) / 4 (2) | 3 (3) / 1 (1) |
+| RuntimeError | 6 (2) | 4 (3) |
+| AssertionError | 3 (2) | 1 (1) |
+| DeprecationWarning | 2 (2) | 2 (1) |
+
+**Implications:**
+
+- **For BCF:** there is no single "true" family list to bin on. The claim that effectiveness depends on "the number and fidelity of the categories" is exactly what H5 (K\*) measures. The paper should report ρ for more than one granularity, not one number.
+- **New question (Q13, §15):** do classes where A and B disagree most (KeyError 5 vs 2, UnboundLocalError 4 vs 1) carry *less* routing information? More causal diversity per class should mean a weaker class→fix mapping.
+
+### 11.2 Cause distance: when the traceback frame is the symptom, not the fix
+
+Set A repeatedly marks families where *"the failing line is a symptom; the cause is upstream"*. This gives BCF a new, testable attribute: **cause distance**.
+
+| Cause distance | Meaning | Representative families (Set A) | Implied BCF route |
+|---|---|---|---|
+| `local` | The fix is at or next to the raising frame | F-UNB-1/2 (scope/branch binding), F-RT-1 (mutation during iteration), F-REC-1 (missing base case), F-TYP-3 (signature mismatch), F-IDX-1 (off-by-one) | `fix_at_frame` (as in taxonomy v1) |
+| `upstream` | The raising frame consumes a bad value produced elsewhere | F-ATTR-1 and F-TYP-4 (`None` from an upstream producer), F-KEY-3 (JSON shape assumption), F-VAL-3 (unpacking arity from upstream records) | **New** `trace_producer`: walk back to whatever produced the value (callers via `get_code_neighbors`) |
+| `cross_module` | Import-time structure | F-IMP-1 (circular import, e.g. FastAPI schema↔model), F-ATTR-5 (shadowing / partially initialised module) | `implement_api` / import-graph inspection |
+| `environment` | Interpreter, path or installation, not code | F-MNF-1/2/3, F-IMP-4 | Excluded as `env_error` (PR-05) or not fixable by a patch |
+| `contract` | The fix changes an API or behaviour by design | F-NI-1 (abstract stubs), F-DPW-2 (deprecation migrations), F-EGRP-1 (TaskGroup wrapping) | `implement_api` / `deprecation_shim` |
+
+**Prediction for H2 (frame locality):** hit@3 should be high for `local` families and low for `upstream` ones. Since `'NoneType' object has no attribute` and `'NoneType' object is not subscriptable` are High-incidence, a pooled H2 estimate can hide two very different populations.
+
+**Proposal:** add cause distance as an *exploratory* stratifier of H2 and H6 (no confirmatory change, see §14). Taxonomy v1 already marks the `no_attribute_on_none` and `not_subscriptable` shapes with the `assumed_shape_violation` atom, so the stratifier can be derived mechanically from the message shape.
+
+### 11.3 Message-shape gaps in taxonomy v1 (evidence-backed)
+
+Set A quotes the exact message stems of its High families. Twelve high-incidence stems have no dedicated `message_shapes` entry in `taxonomy_v1.yaml`, so they fall into `other`. One of them, `can only concatenate str`, already did so in our own parser self-test.
+
+| Proposed shape id | Message stem (pattern) | Class | Cause atom | Source |
+|---|---|---|---|---|
+| `concat_str` | `can only concatenate str (not .+) to str` | TypeError | assumed_shape_violation | A F-TYP-2 |
+| `wrong_arg_count` | `takes \d+ positional arguments? but \d+ (was\|were) given` | TypeError | contract_or_interface_change | A F-TYP-3, B TE-2 |
+| `not_supported_between` | `not supported between instances of` | TypeError | assumed_shape_violation | A F-TYP-6 |
+| `list_indices_type` | `list indices must be integers or slices` | TypeError | assumed_shape_violation | A F-TYP-7 |
+| `bytes_like_required` | `a bytes-like object is required` | TypeError | assumed_shape_violation | A F-TYP-5 |
+| `unpack_arity` | `(not enough\|too many) values to unpack` | ValueError | assumed_shape_violation | A F-VAL-3 |
+| `changed_size_iter` | `changed size during iteration` | RuntimeError | concurrency_lifetime_race | A F-RT-1 |
+| `generator_raised_stopiteration` | `generator raised StopIteration` | RuntimeError | copy_paste_unadapted | A F-RT-2, B RT-2 |
+| `event_loop_state` | `(event loop is (closed\|already running)\|no running event loop)` | RuntimeError | resource_lifecycle | A F-RT-3 |
+| `partially_initialized` | `partially initialized module` | ImportError / AttributeError | contract_or_interface_change | A F-IMP-1, F-ATTR-5 |
+| `coroutine_never_awaited` | `coroutine .+ was never awaited` | RuntimeWarning | concurrency_lifetime_race | A executive summary (383k-view thread) |
+| `abstract_instantiation` | `Can't instantiate abstract class` | TypeError | contract_or_interface_change | B NI-3 |
+
+**Effect:** these shapes only affect `msg_shape`, which feeds K_D in H5 (exploratory). No confirmatory hypothesis uses `msg_shape`. See §14.
+
+### 11.4 Exception groups: a High-incidence family that the parser drops
+
+Set A rates F-EGRP-1 (asyncio TaskGroup wrapping child failures) High. Starlette/AnyIO request handling uses task groups, so this matters for the 67 FastAPI dev tasks and for any async hidden repo.
+
+**Executed check (2026-10-02, Python 3.13.15, pytest 9.1.1).** A `KeyError` raised inside a `TaskGroup` child is reported by pytest as:
+
+- **JUnit message:** `KeyError('user_id') [single exception in ExceptionGroup]`
+- **Traceback:** the native group tree (`| ExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)`, `+-+---- 1 ----`, `| KeyError: 'user_id'`).
+
+`bcf_signature_parser` currently returns **`cls=None`, `frame=None`, `kind=crash`**. Every such task would lose its class, family and frame, biasing H1, H2, H4 and H6.
+
+**Action (priority 1, before FREEZE-2, no deviation needed because the parser is not yet frozen):** teach the parser to:
+
+1. read the member class from the JUnit message pattern `<Cls>(...) [single exception in ExceptionGroup]`, or from the `| <Cls>: ...` lines of the first sub-exception block;
+2. set `cls` to the innermost member, plus a new field `cls_group = ExceptionGroup` (or `BaseExceptionGroup`);
+3. take frames from the member's sub-traceback (`|   File "…", line N, in f` lines).
+
+Add a TaskGroup case to `selftest_parser.py`.
+
+### 11.5 Classes that bypass `except Exception`, plus taxonomy library candidates
+
+Five built-ins (`BaseException`, `BaseExceptionGroup`, `GeneratorExit`, `KeyboardInterrupt`, `SystemExit`) and `asyncio.CancelledError` bypass `except Exception`. All were verified on 3.13. Two consequences:
+
+1. The agent's reproduction scripts must catch `BaseException`, not `Exception`, when they classify their own failures. Otherwise a cancellation or exit inside the repro script escapes the `BCF_EVT` emitter.
+2. Library classes for **taxonomy v1.1** (exploratory use only), with MROs verified on 3.13.15:
+
+| Class | Bases | Family (via first built-in ancestor) | Why it matters here |
+|---|---|---|---|
+| `asyncio.CancelledError` | BaseException | control | AnyIO/Starlette cancellation; bypasses `except Exception` |
+| `dataclasses.FrozenInstanceError` | AttributeError | attribute | Frozen models/configs; looks like a type problem but is an attribute one |
+| `io.UnsupportedOperation` | OSError, ValueError | os_io (MRO) / type_value (BFS) | Dual base: shows that "first built-in ancestor" needs a stated rule (taxonomy v1 uses BFS order of declared parents) |
+| `subprocess.TimeoutExpired` | SubprocessError → Exception | control | **Not** a `TimeoutError`; `except TimeoutError` misses it |
+| `re.PatternError` (`re.error` before 3.13) | Exception | control | Same object on 3.13 (`re.error is re.PatternError`) |
+| `json.JSONDecodeError` | ValueError | type_value | Already in v1 (verified) |
+
+### 11.6 Confusion matrices: misbinning predictions and confusion-aware coarse bins
+
+The pairs most relevant to library-PR tasks, with their effect on BCF bins:
+
+| Confusable pair | Discriminator (Sets A/B) | Same K_B family? | Consequence |
+|---|---|---|---|
+| TypeError ↔ ValueError | Does the operation accept the *type*? If yes, the value is out of domain | Yes (`type_value`) | Misbinning is harmless at K_B, harmful only at K_C |
+| AttributeError ↔ NameError | Which side of the `.`? Dotted → AttributeError | No (`attribute` vs `name_binding`) | Candidate merge for a coarse bin "binding" |
+| NameError ↔ UnboundLocalError | Is there a later assignment in the same function? | Yes (`name_binding`) | Harmless at K_B |
+| KeyError ↔ TypeError | `d.get('b', {})['x']` reads; `l['3']` on a list is TypeError | No (`lookup` vs `type_value`) | Route differs (guard vs logic) |
+| ImportError ↔ AttributeError | Circular import shows both faces (import time vs use time) | No (`import` vs `attribute`) | Same root cause in two bins: a merge candidate when `msg_shape = partially_initialized` |
+| StopIteration → RuntimeError | PEP 479 conversion inside generators | Yes (`runtime_state`) | Harmless at K_B |
+| NotImplementedError ↔ TypeError | Abstract instantiation is TypeError | No (`runtime_state` vs `type_value`) | Route `implement_api` either way |
+
+**Proposal (exploratory):**
+
+- **H11:** report misbinning per confusable pair. It should concentrate on the cross-family pairs above.
+- **H5:** add a confusion-aware coarse level K_B′ = K_B with {attribute, name_binding} merged, and import/attribute merged when `msg_shape = partially_initialized`. It's a cheap test of whether merging the known confusions improves cross-validated log-loss.
+
+### 11.7 Observe, don't predict
+
+Set B reports that about **30 of 260** expectations written from memory (≈ 12%) were wrong when executed, despite a careful research process with docs at hand. Our own spot checks found one more wrong "verified" claim in B and three in Q.
+
+This is independent support for the reproduction-first reframe (§0 point 4): BCF should **classify the failure it observes, not the failure it predicts**. It also supports the frozen rule PR-13: bin on class identity and kind, never on message text. Messages drift (`math domain error` → `expected a nonnegative input…`), and classes can change too (`asyncio.run(1)` between 3.13 and 3.14).
+
+### 11.8 Warnings in the harness: route on the filter
+
+Set B's rule "warnings are routed by the filter stack, not the class" interacts with the harness in a way neither set could see:
+
+- The dataset's `sandbox/setup.py` writes `pytest.ini` with `filterwarnings = ignore::DeprecationWarning` and `ignore::UserWarning`.
+- `fastapi.exceptions.FastAPIDeprecationWarning` subclasses `UserWarning` (verified, PR-07).
+
+**Consequence:** inside the harness, deprecation-type tasks can only fail as `did_not_warn` (via `pytest.warns` / `deprecated_call`), never as a raised warning. This is a concrete prediction for the D1 kind distribution (H1). It is also a rule for the agent: don't expect `-W error` behaviour, and verify deprecation fixes with `pytest.warns`.
+
+### 11.9 Better priors for H9 than the frozen heuristic percentages
+
+The frozen H9 tests the *listing order* of the original GLM research file, whose percentages are self-declared heuristics. Sets A and B provide **evidence-graded** ordinal incidence (High/Medium/Low with stated evidence legs and fixed ranking rules).
+
+**Proposal:** an exploratory **H9b**. Compute Kendall τ between Set A's (and separately Set B's) High/Medium/Low ranks and the D5 domain frequencies for classes with ≥ 8 labelled instances, alongside the frozen H9. This needs a deviations-log entry ("addition, exploratory"). It is **not** made here (§14).
+
+### 11.10 Skill-resource raw material
+
+Each executed item in A/B carries a "why this class, not the neighbour" line, ordered diagnosis steps and a short remediation. Filter them to the domain-relevant High families (§11.1, §11.2), keep only executed items (`LIVE-VERIFIED` / `MATCH`), and compress them into the planned `skills/bcf-diagnose/resources/<Class>.md`. That stays ≤ 8 lines per class and is loaded only after a signature exists, gated by H4/H7 as before.
+
+**The most reusable piece is Set B's routing tree (its §10.1).** It routes on observable traceback features (dotted vs bare name, keyed vs positional, `errno` present, BaseException check, numeric). That is the decision procedure the agent's reproduction classifier (`BCF_EVT` emitter) should implement, and it matches `bcf_signature_parser`'s kinds.
+
+### 11.11 Low-relevance content (recorded so it is not re-mined)
+
+- **OSError errno mapping** (49 of 117 errnos map to a subclass; Windows/POSIX divergences): the sandbox is offline Linux, and network failures in requests/httpx tests come from mocked transports. Keep the `os_io` family as environment noise.
+- **Set Q production scenarios** (DB-sourced zero denominators, missing config at deploy, JWT claim → KeyError, API shape change → AttributeError): usable only as narrative seeds for synthetic bug-injection prompts (D4 / SWE-smith-style data), after execution-verifying each snippet.
+- **Table QC:** adopt B's **T5** (no blank line inside a table) and **T7** (escape pipes inside code spans) in `analysis/scripts/qc_tables.py`. Do **not** adopt its ≥ 3-dash separator rule or the empty-header rule, which are stricter than GFM.
+
+## 12. Revised taxonomy proposal (v1.1, exploratory only)
+
+| Change | Count | Feeds |
+|---|---:|---|
+| New message shapes (§11.3) | 12 | `msg_shape`, K_D (H5), exploratory stratifications |
+| New attribute `cause_distance` per message shape / family (`local`, `upstream`, `cross_module`, `environment`, `contract`) | 1 | Exploratory H2/H6 strata |
+| New route `trace_producer` (upstream None-flow) | 1 | Exploratory routing comparison vs `fix_at_frame` |
+| New library classes (§11.5) | 5 | `family` of observed library classes |
+| New parser field `cls_group` + ExceptionGroup unwrapping (§11.4) | 1 | All D1 signatures (parser fix, pre-FREEZE-2) |
+| Explicit "first built-in ancestor" rule for multiply-inherited classes (BFS over declared parents, as implemented in v1; MRO reported alongside) | 1 | `family` |
+
+## 13. Updated execution checklist (additions)
+
+| ✓ | Item | Date | Freeze effect |
+|:---:|---|---|---|
+| ☐ | **Parser: unwrap ExceptionGroup / BaseExceptionGroup** (JUnit message pattern + `\|` sub-traceback), add `cls_group`, add a TaskGroup self-test | Before FREEZE-2 (Oct 3) | None (parser not yet frozen) |
+| ☐ | Agent reproduction classifier: implement Set B's routing tree; catch `BaseException` in repro scripts | Oct 3–8 | None (agent code) |
+| ☐ | Build `taxonomy_v1_1.yaml` (§12) with its own SHA-256; keep v1 for confirmatory analyses | Oct 4 | Deviations entry #3 ("addition, exploratory") |
+| ☐ | Add exploratory strata: cause distance for H2/H6; confusable-pair misbinning for H11; K_B′ for H5 | Oct 6–7 | Same entry #3 |
+| ☐ | Exploratory H9b with Set A/B evidence-graded priors | With D5 (Oct 20) | Same entry #3 |
+| ☐ | Distil `bcf-diagnose` resources from executed A/B items (≤ 8 lines per class), only if H4/H7 pass | Oct 8 | None |
+| ☐ | Add T5/T7 checks to `qc_tables.py` | Any time | None |
+
+## 14. Effect on the frozen pre-registration
+
+| Frozen component | Changed? | Note |
+|---|:---:|---|
+| `taxonomy_v1.yaml` (FREEZE-1) | No | v1.1 is a separate file used only in exploratory analyses |
+| Confirmatory hypotheses H1, H2, H4, H7, H8, H10 and their thresholds | No | Cause-distance and confusion analyses are added as exploratory strata only |
+| `bcf_signature_parser.py` | Fix before FREEZE-2 | ExceptionGroup unwrapping is pre-freeze development. If the fix landed after FREEZE-2 it would be a non-clerical deviation affecting H1/H2/H4/H6 |
+| H5, H9, H11 (exploratory) | Additions | K_B′, K_D with v1.1 shapes, H9b, per-pair misbinning: logged as deviations entry #3 when implemented |
+| Research inputs hashed at FREEZE-1 | No | The new files are additional inputs; the three original files are byte-identical |
+
+## 15. Additions to "What would I want to know, prove, or disprove?" (§6)
+
+| # | Question | Would prove | Would disprove | My prior |
+|---:|---|---|---|---|
+| 13 | **Does family-granularity disagreement predict weak routing?** (Classes where Set A splits much finer than Set B) | Lower per-class routing accuracy (H7 confusion table) for high-disagreement classes | No relation | Weak positive relation |
+| 14 | **Does cause distance explain frame locality?** | H2 hit@3 high for `local`, low for `upstream`; the pooled estimate hides the split | Similar hit rates | Strong split (≈ 0.7 vs ≈ 0.2) |
+| 15 | **How much of D1 is exception-group-wrapped?** | A material share of FastAPI crash-type tasks have `cls_group` set; unwrapping changes S_dom for them | Rare (< 3 tasks) | A few tasks, concentrated in async/streaming fixes |
+| 16 | **Do warnings ever surface as raised exceptions in the harness?** | Some D1 tasks show `*Warning` as `cls` | All deprecation tasks are `did_not_warn` | All `did_not_warn` (the filter predicts it) |
+| 17 | **Is predicting the class from code alone as unreliable for the 31B agent as for the research process (~12% wrong)?** | The agent's pre-run class guess disagrees with its own reproduction ≥ 10% of the time | < 5% | Higher than 12% for a quantized 31B model |
+
+
+---
+
+<!-- ====================================================================== -->
+<!-- FILE: 08_README-BCF-Scriptz_cd_opus55-.md -->
+<!-- ====================================================================== -->
+
+# 08 — Exception Taxonomy v1 and Pre-registration BCF-PREREG-001
+
+*Created 2026-10-02 by Claude Opus 5.5. This implements Report 07 §7, items 1–2: the D0b taxonomy and the pre-registration of H1–H12.*
+
+## Files
+
+| File | Role | Frozen? |
+|---|---|:---:|
+| `08_Preregistration_BCF-PREREG-001.md` | Human-readable pre-registration, rendered from the YAML | ✅ |
+| `preregistration_v1.yaml` | **Authoritative** pre-registration: 13 global rules, 12 hypotheses, variables, agent arms, decision matrix, timeline | ✅ |
+| `taxonomy_v1.yaml` | Failure-signature taxonomy, generated (68 built-in + 53 library classes, 12 families, 9 signature kinds, 23 message shapes, 12 cause atoms, 9 fix shapes, 6 blast-radius rungs, 6 routes, 4 K levels) | ✅ |
+| `splits_v1.json` | Deterministic stratified splits (seed 20261001): held_out_45 / dev_30 (incl. dev_fast_15) / remainder_54 (incl. pilot_10) | ✅ |
+| `library_parents_verification.json` | PR-07 evidence: 38 classes checked by import (rich 15.0.0, requests 2.34.2, httpx 0.28.1, anyio 4.14.2, starlette 1.6.0, pytest 9.1.1, stdlib) | ✅ |
+| `library_parents_verification_static.json` | PR-07 evidence: 15 classes checked by source parse (fastapi 0.141.1, pydantic 2.13.4, pydantic_core 2.46.4) | ✅ |
+| `FREEZE_MANIFEST.txt` | SHA-256 of every frozen file, including the research inputs and the analysis tables it depends on | — |
+| `deviations_log.md` | Append-only log of any post-freeze change (rule PR-10) | — |
+| `tools/build_taxonomy.py` | Regenerates the taxonomy from the research files, the hand spec and the corpus counts | ✅ |
+| `tools/validate_taxonomy.py` | Structural and cross-reference checks (taxonomy ↔ pre-registration) | ✅ |
+| `tools/verify_library_parents.py` / `_static.py` | Runtime and static checks of library exception hierarchies | ✅ |
+| `tools/make_splits.py` / `render_prereg.py` / `freeze.py` | Split generator, Markdown renderer, freeze/check tool | ✅ / ✅ / — |
+
+## Verify integrity at any time
+
+```bash
+python tools/freeze.py --check
+```
+
+```bash
+python tools/validate_taxonomy.py
+```
+
+## Corrections made before the freeze (not deviations)
+
+1. **Library hierarchy corrected by verification.** Two entries I had written from memory were wrong:
+   - `fastapi.exceptions.FastAPIDeprecationWarning` subclasses **`UserWarning`**, not `DeprecationWarning`.
+   - `pydantic.errors.PydanticUserError` subclasses **(`PydanticErrorMixin`, `RuntimeError`)**, not `TypeError`.
+
+   This changes their family in K_B (`warning` stays `warning`; `PydanticUserError` and `PydanticSchemaGenerationError` move to `runtime_state`). All 53 library classes now match their source.
+2. **Thresholds refined relative to Report 07:**
+   - H4's leave-one-repo-out rule is "≥ 2 of 3 dev folds", because the dev data has only 3 repo folds: {fastapi}, {rich}, {requests + httpx}. Report 07 said "3 of 4".
+   - H6, H11 and H12 got numeric thresholds that Report 07 left qualitative.
+   - Explicit `min_n` and an INCONCLUSIVE outcome were added for every hypothesis.
+3. **One assumption is declared, not hidden.** H9 treats the research's level-2 listing order as its intended frequency rank.
+
+## What happens next
+
+| Step | When | Rule |
+|---|---|---|
+| ~~Write `s10_base_signatures.py` and `s11_hunk_replay.py`~~ **Done 2026-10-02** → [`pipeline/`](pipeline/README.md). Next: pilot runs on the 5090 PC, **only on `pilot_10`** | Oct 3–4 | PR-02 |
+| ~~Write the H1–H8 analysis~~ **Done 2026-10-02**: `pipeline/s12_analyze_h1_h8.py` + `bcf_stats.py`; static D0 inputs in `results/d0/`; all 5 self-tests pass; decision-rule clarification logged as deviations entry #1 (clerical) | — | PR-03, PR-06 |
+| ~~Write the H10–H12 analysis~~ **Done 2026-10-02**: `pipeline/s13_analyze_h10_h12.py` (ledger extraction from swegemma traces + H10/H11/H12 decisions; held-out guard + access log); 6 self-tests pass; clarifications logged as deviations entry #2 (clerical) | — | PR-06, PR-08 |
+| Record FREEZE-2: `python tools/freeze.py --freeze-2 <path>/s10_base_signatures.py <path>/s11_hunk_replay.py` (+ s12–s15 analysis scripts) | Before looking at D1 beyond the pilot | PR-03 |
+| D1 run over all 129 tasks (once, ≤ 1 infrastructure re-run per task) | Oct 4–5 | PR-12 |
+| Blind D5 annotation (statement + gold + test patch only; 30 double-coded, κ ≥ 0.70) | Oct 8–20 | PR-09 |
+| Analysis report: every hypothesis reported as PASS / KILL / INCONCLUSIVE | Oct 26 | PR-06, PR-11 |
+
+**Optional external timestamp:** to make the freeze date provable to paper reviewers, send or commit `FREEZE_MANIFEST.txt` somewhere dated (a git commit, an email to yourself, or an OSF registration). Publishing it externally is your call; nothing has been posted anywhere.
+
+
+---
+
+<!-- ====================================================================== -->
+<!-- FILE: 09_Preregistration_BCF-PREREG-001.md -->
+<!-- ====================================================================== -->
+
+# 08 — Pre-registration BCF-PREREG-001: Failure-signature (exception-class) binning in the Batonic Coding Framework: observability, informativeness, routing, granularity, masking and agent benefit
+
+*Version 1.0.0 · FREEZE-1 2026-10-02 · Authors: Cooly (BCF owner), Claude Opus 5.5 (drafting). Rendered from `preregistration_v1.yaml` (authoritative) by `tools/render_prereg.py`; integrity hashes in `FREEZE_MANIFEST.txt`.*
+
+**Status.** FREEZE-1: hypotheses, variables, thresholds, splits and taxonomy fixed. No harness outcome (D1-D5) has been observed by anyone at freeze time.
+
+## 1. Background
+
+Report 07 reframes BCF's claim 'classifying errors into exception classes limits the search space to the most probable root causes' as failure-signature binning of an observed run. Static analysis of the 129 public dev tasks (Report 04) shows only 15/129 statements name an exception class and that most predictable base failures are assertion-type. This pre-registration fixes, before data collection, what will count as evidence for and against the claim.
+
+**Declared priors (drafting author).** Drafting author's priors (declared to make later reasoning auditable): assertion-type failures dominate (60-75%); most localization value of exceptions comes from the traceback frame, not the class label; the main value of the signature is routing (strategy choice); optimal granularity is coarse (6-12 bins); masking occurs in a minority (15-30%) of multi-hunk tasks; research priors do not transfer to library-PR bugs.
+
+## 2. Frozen materials
+
+| Artifact | Content |
+|---|---|
+| `taxonomy_v1.yaml` | Taxonomy v1.0.0: 68 built-in classes in 12 families, 53 library classes, 9 signature kinds, 23 message shapes, 12 cause atoms, 9 fix shapes, 6 blast-radius rungs, 6 routes, 4 K levels |
+| `splits_v1.json` | Seed 20261001, strata repo x difficulty_tier (Report 04 s9): held_out_45 n=45, dev_30 n=30, remainder_54 n=54, dev_fast_15 n=15, pilot_10 n=10 |
+| `library_parents_verification*.json` | PR-07 evidence: 53/53 library exception hierarchies verified |
+
+## 3. Data sources
+
+| ID | Description | Produced by | Status |
+|---|---|---|---|
+| D0 | Static features of 129 tasks (Report 04): fix_shape, gold enclosing symbols, BM25/recency ranks, interface burden | — | collected 2026-10-01 (pre-freeze; outcome-independent of S) |
+| D1 | Base-failure signatures: test_patch applied at base, no fix (harness --skip-agent-patch / empty patch); plus gold run | s10_base_signatures.py (to be written; FREEZE-2) | not collected |
+| D2 | Hunk-subset replay on tasks with 2..8 gold hunks: every single hunk, every leave-one-out set, all subsets when 2^k <= 64 | s11_hunk_replay.py (FREEZE-2) | not collected |
+| D3 | Agent reproduction signatures (repro_signature via BCF_EVT stdout) from local agent runs | — | not collected |
+| D4 | External Python tasks with failing tests (SWE-bench-style FAIL_TO_PASS sets, BugsInPy, synthetic-mutation tasks) for power | — | optional; not collected |
+| D5 | Blind annotation of route (R_route) and cause atoms for 129 tasks from statement + gold patch, WITHOUT seeing S; 30 double-coded | — | not collected |
+
+## 4. Variables
+
+| Variable | Definition |
+|---|---|
+| `S_dom` | Dominant base-failure signature per task (taxonomy signature.dominant_rule) with fields cls, kind, frame, msg_shape |
+| `exception_bearing` | S_dom.kind in {collection_error, crash, did_not_raise, did_not_warn} |
+| `crash_type` | S_dom.kind in {crash, collection_error} |
+| `R_shape_fine` | Report 04 fix_shape of the gold patch (9 values; taxonomy fix_shapes) |
+| `R_shape_coarse` | minimal={small_replace,delete,signature_change}; insert={guard_add,insert_only}; rewrite={logic_rewrite}; new={rewrite_plus_new_code,new_code,new_module} |
+| `R_route` | D5 annotated best strategy (taxonomy routes ids; explore_lexical not allowed as a label) |
+| `R_loc_rank` | Rank of the first gold .py file under statement BM25 (Report 04 s5; 200 if undefined) |
+| `gold_functions` | AST innermost enclosing def/class qualnames of gold hunks at base (s02 gold.files[].enclosing) |
+| `in_repo_frames` | Traceback frames inside the repository excluding test files and site-packages, innermost first |
+| `repro_signature` | Signature computed by the same parser on the agent's /tmp reproduction run (D3) |
+
+## 5. Global rules
+
+| ID | Rule |
+|---|---|
+| PR-01 | Unit of analysis is the task. Eligible set E = 129 tasks minus PR-05 exclusions. Every hypothesis states its population as a subset of E. |
+| PR-02 | Parser development (s10/s11) may look at D1/D2 outputs ONLY for splits.pilot_10. Outputs for all other tasks are not inspected until FREEZE-2 is recorded in FREEZE_MANIFEST.txt. |
+| PR-03 | Two-stage freeze. FREEZE-1 (this file): hypotheses, variables, thresholds, splits, taxonomy. FREEZE-2 (before unblinding D1 beyond the pilot): SHA-256 of the analysis scripts s10-s15 appended to FREEZE_MANIFEST.txt. |
+| PR-04 | Statistics: proportions with Wilson 95% CI; mutual information plug-in with Miller-Madow correction, p-value from 10,000 label permutations (seed 20261001); bootstrap CIs with 2,000 resamples (seed 20261001); paired binary outcomes exact McNemar; paired continuous outcomes Wilcoxon signed-rank; leave-one-repo-out (LORO) folds on dev data = {fastapi}, {rich}, {requests+httpx}. |
+| PR-05 | Mechanical exclusions, recorded with ids: (a) gold run does not resolve the task locally after the env-gap fix; (b) empty-patch run resolves the task (no failing target test); (c) S_dom.kind = env_error. A sensitivity analysis re-includes (c) where the hypothesis allows. |
+| PR-06 | Confirmatory family = {H1, H2, H4, H7, H8, H10}. Where a hypothesis has a p-value, Holm-Bonferroni at family-wise alpha 0.05. Each hypothesis resolves to PASS, KILL or INCONCLUSIVE: PASS/KILL by its rules on the point estimate; INCONCLUSIVE if between thresholds, if the 95% CI spans both thresholds, or if the minimum n is not met. |
+| PR-07 | Library-class hierarchy in the taxonomy must be verified before D1 analysis. SATISFIED at freeze: 53/53 classes verified (38 by import, 15 by static source parse of fastapi 0.141.1 / pydantic 2.13.4 / pydantic_core 2.46.4); see library_parents_verification*.json. |
+| PR-08 | Leakage control: D1 signatures (hidden tests) are calibration data only and are never shown to the agent. Confirmatory agent comparisons (H10-H12) use splits.held_out_45 only; tuning uses dev_30; remainder_54 is for regression/tooling. |
+| PR-09 | D5 blinding: annotators see problem statement + gold patch + test_patch, never D1/D2 signatures. 30 tasks double-coded (random sample, seed 20261001); Cohen's kappa >= 0.70 on R_route required, else one adjudication round and re-measure; report kappa either way. |
+| PR-10 | Deviations after FREEZE-1 are logged in deviations_log.md (date, change, reason, affected hypotheses). Affected confirmatory hypotheses are downgraded to exploratory unless the change is purely clerical (typo, path). |
+| PR-11 | All 12 hypotheses are reported with their outcome category, including KILL and INCONCLUSIVE (no selective reporting). |
+| PR-12 | D1 is run once over all 129 tasks; at most one re-run per task for infrastructure failures (harness/container error, not test failure). D2 likewise. |
+| PR-13 | Execution environment: sandbox Python 3.13 (Dockerfile.public parity, Report 06 step 6) with the env-gap test wheels installed. Bins use class identity and kind; message text only via message_shapes. |
+
+## 6. Hypotheses — summary
+
+| ID | Name | Role | Pass rule | Kill rule | Min n |
+|---|---|---|---|---|---:|
+| H1 | Observability | confirmatory | p1 >= 0.35 | p1 < 0.20 | 100 |
+| H2 | Traceback locality | confirmatory | hit3 >= 0.60 | hit3 < 0.30 | 12 |
+| H3 | Agent observability | exploratory | agreement_kind >= 0.60 | agreement_kind < 0.40 | 30 |
+| H4 | Fix-shape informativeness | confirmatory | rho_shape >= 0.10 AND permutation p < 0.05 (Holm) AND LORO log-loss better than marginal in >= 2 of 3 dev folds | LORO log-loss not better than marginal in any fold, OR rho_shape < 0.03 | 100 |
+| H5 | Granularity K* | exploratory | Best level is K_B or K_C and its CI excludes 0 against both K_A and K_D | Log-loss monotone non-increasing in K (finest best) or monotone non-decreasing (coarsest best with K_B/K_C CIs including 0) | 100 |
+| H6 | Incremental localization value | exploratory | median delta_rank >= 1 AND p < 0.05 | median delta_rank <= 0 | 12 |
+| H7 | Routing value | confirmatory | gain >= 0.20 AND CI lower bound > 0 AND McNemar p < 0.05 (Holm) | gain <= 0.05 | 100 |
+| H8 | Fault masking | confirmatory | p8 >= 0.25 | p8 < 0.10 | 30 |
+| H9 | Research prior validity | exploratory | mean tau >= 0.40 | mean tau < 0.20 | 3 |
+| H10 | Agent benefit | confirmatory | [(a) >= +3 tasks with McNemar p < 0.05] OR [(b) >= 20% lower median turns with p < 0.05 AND (a) >= -1]; AND no LORO fold worse by > 1 task | (a) <= 0 AND (b) < 5% improvement | 40 |
+| H11 | Misbinning harm | exploratory | harm <= 1 | harm > 1 AND harm exceeds the A2 gain on correctly binned tasks | 8 |
+| H12 | Cost | exploratory | net_calls(A5) >= 0 | A1 adds > 2 calls (median) with no resolve gain in A5 | 40 |
+
+Outcome categories (PR-06): **PASS**, **KILL**, or **INCONCLUSIVE** (between thresholds, CI spanning both thresholds, or min n not met).
+
+## 7. Hypotheses — full specification
+
+### H1 — Observability (confirmatory)
+
+| Field | Specification |
+|---|---|
+| Statement | An exception-bearing failure signature is observable at the base commit for a substantial share of tasks. |
+| Population | E |
+| Data | D1 |
+| Metric | p1 = share of E with exception_bearing(S_dom); secondary p1b = share with crash_type(S_dom) |
+| Test | Wilson 95% CI on p1; one-sided binomial test of p1 > 0.20 (enters Holm family) |
+| Pass rule | p1 >= 0.35 |
+| Kill rule | p1 < 0.20 |
+| Min n | 100 |
+| Consequence | PASS: exception-class binning is a main BCF axis. KILL: BCF's main axis becomes S.kind + S.frame; exception classes are a niche router (fallback paper claim). |
+
+### H2 — Traceback locality (confirmatory)
+
+| Field | Specification |
+|---|---|
+| Statement | For crash-type signatures, a gold function appears among the top in-repo traceback frames. |
+| Population | tasks in E with crash_type(S_dom) and >= 1 gold function mapped |
+| Data | D1, D0 |
+| Metric | hit3 = share of population where any gold function (qualname match, or frame line inside a gold function span) is among the first 3 in_repo_frames; secondary hit1 |
+| Test | Wilson 95% CI; one-sided binomial test of hit3 > 0.30 |
+| Pass rule | hit3 >= 0.60 |
+| Kill rule | hit3 < 0.30 |
+| Min n | 12 |
+| Consequence | PASS: frame-first localization (arm A3, route fix_at_frame) is justified. KILL: tracebacks point at symptoms; keep lexical-first localization for crashes too. If n < 12: deferred to D4 pooled data (reported INCONCLUSIVE on dev). |
+
+### H3 — Agent observability (exploratory)
+
+| Field | Specification |
+|---|---|
+| Statement | The agent's own reproduction observes the same signature kind as the hidden tests. |
+| Population | agent runs (D3) on dev_30 + held_out_45 tasks in E where a reproduction was executed |
+| Data | D1, D3 |
+| Metric | agreement_kind = share with repro_signature.kind == S_dom.kind; secondary agreement_family on K_B family |
+| Test | Wilson 95% CI |
+| Pass rule | agreement_kind >= 0.60 |
+| Kill rule | agreement_kind < 0.40 |
+| Min n | 30 |
+| Consequence | KILL: the agent cannot see the bin it is supposed to condition on; conditioning arms A2-A5 are dropped. |
+
+### H4 — Fix-shape informativeness (confirmatory)
+
+| Field | Specification |
+|---|---|
+| Statement | The base-failure signature carries information about the fix shape. |
+| Population | E |
+| Data | D1, D0 |
+| Metric | rho_shape = I(R_shape_coarse; K_A(S_dom)) / H(R_shape_coarse), Miller-Madow corrected; secondary with R_shape_fine and with K_B; LORO log-loss of a Laplace-smoothed conditional table vs the marginal |
+| Test | Permutation p (10,000) for I; LORO comparison per fold |
+| Pass rule | rho_shape >= 0.10 AND permutation p < 0.05 (Holm) AND LORO log-loss better than marginal in >= 2 of 3 dev folds |
+| Kill rule | LORO log-loss not better than marginal in any fold, OR rho_shape < 0.03 |
+| Min n | 100 |
+| Consequence | PASS: SPECIFY may condition fix_shape priors on the signature. KILL: fix-shape priors stay unconditional (marginal from Report 04). |
+
+### H5 — Granularity K* (exploratory)
+
+| Field | Specification |
+|---|---|
+| Statement | An intermediate granularity predicts fix shape and route better than both the coarsest and the finest binning. |
+| Population | E (plus D4 if collected) |
+| Data | D1, D0, D5 |
+| Metric | LORO cross-validated log-loss (Laplace alpha=1) predicting R_shape_coarse and R_route at K_A (kind), K_B (family), K_C (15 classes + OTHER), K_D (class x message shape, back-off < 3) |
+| Test | Bootstrap 95% CI of the log-loss difference between the best level and each extreme |
+| Pass rule | Best level is K_B or K_C and its CI excludes 0 against both K_A and K_D |
+| Kill rule | Log-loss monotone non-increasing in K (finest best) or monotone non-decreasing (coarsest best with K_B/K_C CIs including 0) |
+| Min n | 100 |
+| Consequence | Reports K* for the whitepaper's 'number and fidelity of categories' claim; BCF ships bins at K*. |
+
+### H6 — Incremental localization value (exploratory)
+
+| Field | Specification |
+|---|---|
+| Statement | For crash-type tasks the signature adds localization information beyond statement BM25. |
+| Population | tasks in E with crash_type(S_dom) and a defined R_loc_rank |
+| Data | D1, D0 |
+| Metric | delta_rank = R_loc_rank - rank after re-ranking BM25 top-20 so that files in in_repo_frames move to the top (stable order); secondary conditional MI I(R_loc_rank bucket; frame-hit \| BM25 bucket) |
+| Test | One-sided Wilcoxon signed-rank on delta_rank |
+| Pass rule | median delta_rank >= 1 AND p < 0.05 |
+| Kill rule | median delta_rank <= 0 |
+| Min n | 12 |
+| Consequence | PASS: BCF localization = BM25 + frame re-rank for crashes. KILL: frames add nothing beyond lexical search. |
+
+### H7 — Routing value (confirmatory)
+
+| Field | Specification |
+|---|---|
+| Statement | The signature kind predicts the best repair strategy via the fixed rule kind -> default_route (taxonomy routes). |
+| Population | tasks in E with an adjudicated D5 R_route label |
+| Data | D1, D5 |
+| Metric | acc_rule = accuracy of taxonomy default_route(S_dom.kind) vs R_route; baseline acc_major = accuracy of always predicting the most frequent R_route; gain = acc_rule - acc_major |
+| Test | Exact McNemar between rule and majority predictions; bootstrap 95% CI of gain |
+| Pass rule | gain >= 0.20 AND CI lower bound > 0 AND McNemar p < 0.05 (Holm) |
+| Kill rule | gain <= 0.05 |
+| Min n | 100 |
+| Consequence | PASS: routing by S.kind (arm A4) is BCF's primary use of exception information. KILL: routing rule dropped. |
+
+### H8 — Fault masking (confirmatory)
+
+| Field | Specification |
+|---|---|
+| Statement | Applying gold hunks incrementally reveals masked failures in a meaningful share of multi-hunk tasks. |
+| Population | tasks in E with 2..8 gold hunks (53 before exclusions) |
+| Data | D2 |
+| Metric | p8 = share of population with >= 1 masking event; masking event = hunk sets A subset-of B where some target test fails under B but passed under A, OR a test failing under both A and B changes signature (cls or kind) between A and B |
+| Test | Wilson 95% CI; one-sided binomial test of p8 > 0.10 |
+| Pass rule | p8 >= 0.25 |
+| Kill rule | p8 < 0.10 |
+| Min n | 30 |
+| Consequence | PASS: exposition-DAG / fix-order math is empirically grounded (paper section). KILL: masking demoted to a theoretical note. |
+
+### H9 — Research prior validity (exploratory)
+
+| Field | Specification |
+|---|---|
+| Statement | The research's level-2 cause ordering matches observed frequencies in this domain. |
+| Population | builtin classes with >= 8 D5-labelled instances (dev + D4 pooled) |
+| Data | D5, D4 |
+| Metric | Kendall tau between research listing order (taxonomy level2_causes_research_order; ASSUMPTION: listing order = intended frequency rank) and observed frequency order, averaged over qualifying classes |
+| Test | Mean tau with bootstrap 95% CI |
+| Pass rule | mean tau >= 0.40 |
+| Kill rule | mean tau < 0.20 |
+| Min n | 3 |
+| Consequence | KILL: ship only domain-estimated priors in bcf-diagnose resources; research lists used as unordered checklists. |
+
+### H10 — Agent benefit (confirmatory)
+
+| Field | Specification |
+|---|---|
+| Statement | Failure-signature conditioning improves the agent relative to the BCF-Hygiene baseline. |
+| Population | splits.held_out_45 tasks in E; arms A0 (baseline) vs A5 (signature routing + checklists + frame-first) primary; A1-A4, A6 secondary |
+| Data | D3, local agent runs |
+| Metric | Co-primary: (a) resolved count difference A5-A0; (b) turns to first edit touching a gold function (censored at budget). Guard: resolve non-inferiority (A5-A0 >= -1 task) |
+| Test | (a) exact McNemar; (b) Wilcoxon signed-rank on paired turns; Holm across arms for secondary comparisons |
+| Pass rule | [(a) >= +3 tasks with McNemar p < 0.05] OR [(b) >= 20% lower median turns with p < 0.05 AND (a) >= -1]; AND no LORO fold worse by > 1 task |
+| Kill rule | (a) <= 0 AND (b) < 5% improvement |
+| Min n | 40 |
+| Consequence | PASS: ship A5 (or the best secondary arm meeting the rule). KILL: ship BCF-Hygiene + blast-radius ladder only. |
+
+### H11 — Misbinning harm (exploratory)
+
+| Field | Specification |
+|---|---|
+| Statement | Wrong bins (agent signature != hidden signature) do not cost more than they gain. |
+| Population | held_out_45 tasks in E where repro_signature.kind != S_dom.kind |
+| Data | D1, D3 |
+| Metric | harm = (# resolved by A0 not A2) - (# resolved by A2 not A0) on the misbinned subset |
+| Test | Descriptive with exact McNemar |
+| Pass rule | harm <= 1 |
+| Kill rule | harm > 1 AND harm exceeds the A2 gain on correctly binned tasks |
+| Min n | 8 |
+| Consequence | KILL: checklists only loaded when bin confidence is high (signature kind exception_bearing and frame in repo). |
+
+### H12 — Cost (exploratory)
+
+| Field | Specification |
+|---|---|
+| Statement | Obtaining the signature (reproduction step) pays for itself in tool calls. |
+| Population | held_out_45 tasks in E, arms A0 vs A1 and A0 vs A5 |
+| Data | local agent runs |
+| Metric | net_calls = median paired difference in total tool calls (A0 - arm); repro_cost = median calls spent before the first reproduction completes |
+| Test | Wilcoxon signed-rank |
+| Pass rule | net_calls(A5) >= 0 |
+| Kill rule | A1 adds > 2 calls (median) with no resolve gain in A5 |
+| Min n | 40 |
+| Consequence | KILL: the reproduction step becomes conditional on routing triggers (crash words, feature verbs, 'raise'/'error' in the statement). |
+
+## 8. Agent arms (H10–H12)
+
+| Arm | Definition |
+|---|---|
+| A0 | BCF-Hygiene v1 (Report 05 s1.3): lexical-first localization, whole-module verify, no reproduction |
+| A1 | A0 + cheap reproduction in /tmp; signature logged, not used |
+| A2 | A1 + class-conditioned checklist (skills/bcf-diagnose/resources/<Class>.md, <= 8 lines, domain re-ranked) |
+| A3 | A1 + frame-first localization for crash-type signatures |
+| A4 | A1 + routing by signature kind (taxonomy routes) |
+| A5 | A2 + A3 + A4 |
+| A6 | A5 + blast-radius ladder enforcement (record rung; escalate only after a verify failure) |
+
+## 9. Decision matrix
+
+| If | Then |
+|---|---|
+| H1 PASS and H7 PASS | Primary whitepaper claim: failure-signature routing; ship A4/A5 if H10 PASS |
+| H1 KILL | Fallback claim: exception classes are a niche router on library-maintenance tasks; ship A0 + ladder; report H2/H8 as mechanism studies |
+| H2 PASS and H6 PASS | Frame-first localization for crashes enters BCF LOCALIZE |
+| H8 PASS | Exposition-DAG / fault-masking section kept in the paper with measured prevalence |
+| H5 resolves | Report K* and ship bins at K* |
+| H3 KILL | All conditioning arms dropped regardless of H4/H7 (the agent cannot observe the bin) |
+
+## 10. Timeline
+
+| Milestone | Date |
+|---|---|
+| freeze 1 | 2026-10-02 (this document) |
+| freeze 2 | before unblinding D1 beyond pilot_10 (target 2026-10-05) |
+| d1 | 2026-10-04 to 2026-10-05 |
+| d2 | 2026-10-06 to 2026-10-10 |
+| d5 | 2026-10-08 to 2026-10-20 |
+| agent arms | 2026-10-09 to 2026-10-19 |
+| analysis report | 2026-10-26 |
+| paper freeze | 2026-11-08 (internal), deadline 2026-11-12 |
+
+## 11. Taxonomy quick reference (frozen)
+
+### 11.1 Signature kinds and default routes
+
+| Kind | Exception-bearing | Default route | Description |
+|---|:---:|---|---|
+| `collection_error` | yes | implement_api | Target tests cannot even be collected/imported (ImportError, AttributeError on import, SyntaxError in repo). |
+| `crash` | yes | fix_at_frame | Test body raises an unexpected exception (not AssertionError, not a pytest outcome). |
+| `did_not_raise` | yes | add_guard_or_raise | pytest.raises(E) block completed without E (expected class E is recorded as S.cls with prefix 'expected:'). |
+| `did_not_warn` | yes | deprecation_shim | pytest.warns(W) / deprecated_call() block completed without W (S.cls = 'expected:W'). |
+| `wrong_value` | no | logic_edit | AssertionError from a plain assert (value/behaviour mismatch). |
+| `snapshot_mismatch` | no | logic_edit | AssertionError raised by inline-snapshot / snapshot comparison. |
+| `timeout` | no | fix_at_frame | Hang / harness TimeoutExceeded / pytest-timeout. |
+| `env_error` | no | — | Failure caused by the local environment, not the task (e.g. ModuleNotFoundError for a test dependency missing from the wheelhouse). EXCLUDED from confirmatory analyses (prereg PR-05). |
+| `pass` | no | — | Test passed (no signature). |
+
+**Dominant rule.** Per task, S_dom is the signature of the failing target tests with the most frequent kind; ties are broken by lowest severity_rank (collection_error first). Within the chosen kind, S_dom.cls is the most frequent class, ties broken alphabetically. env_error and pass never become dominant unless they are the only kinds.
+
+### 11.2 Families (K_B) with domain relevance
+
+| Family | Members (relevance) |
+|---|---|
+| `assertion` | AssertionError (high) |
+| `import` | ImportError (high), ModuleNotFoundError (medium) |
+| `name_binding` | NameError (high), UnboundLocalError (medium) |
+| `attribute` | AttributeError (high), ReferenceError (none) |
+| `type_value` | TypeError (high), ValueError (high), UnicodeError (medium), UnicodeDecodeError (medium), UnicodeEncodeError (medium), UnicodeTranslateError (none) |
+| `lookup` | LookupError (medium), KeyError (high), IndexError (medium) |
+| `arithmetic` | ArithmeticError (low), ZeroDivisionError (low), OverflowError (low), FloatingPointError (none) |
+| `runtime_state` | RuntimeError (high), NotImplementedError (medium), RecursionError (medium), PythonFinalizationError (none), MemoryError (low), StopIteration (medium), StopAsyncIteration (medium), GeneratorExit (medium), BufferError (none), SystemError (none) |
+| `os_io` | OSError (medium), EOFError (low), TimeoutError (medium), ConnectionError (medium), BrokenPipeError (low), ConnectionAbortedError (low), ConnectionRefusedError (low), ConnectionResetError (low), FileExistsError (low), FileNotFoundError (low), InterruptedError (none), IsADirectoryError (none), NotADirectoryError (none), PermissionError (low), ProcessLookupError (none), ChildProcessError (none), BlockingIOError (none) |
+| `syntax` | SyntaxError (low), IndentationError (low), TabError (none) |
+| `warning` | Warning (medium), BytesWarning (none), DeprecationWarning (high), EncodingWarning (none), FutureWarning (medium), ImportWarning (none), PendingDeprecationWarning (low), ResourceWarning (low), RuntimeWarning (medium), SyntaxWarning (low), UnicodeWarning (none), UserWarning (medium) |
+| `control` | BaseException (low), Exception (high), KeyboardInterrupt (low), SystemExit (medium), BaseExceptionGroup (none), ExceptionGroup (medium) |
+
+### 11.3 K levels
+
+| Level | Definition | Values |
+|---|---|---|
+| `K_A_kind` | S.kind only (exception-bearing + assertion kinds) | collection_error, crash, did_not_raise, did_not_warn, wrong_value, snapshot_mismatch, timeout |
+| `K_B_family` | Family of S.cls (library classes mapped via their first built-in ancestor; 'expected:' classes use the expected class) | assertion, import, name_binding, attribute, type_value, lookup, arithmetic, runtime_state, os_io, syntax, warning, control |
+| `K_C_class` | Fixed list of 15 classes chosen a priori by domain relevance (NOT from D1 counts) + OTHER | AssertionError, AttributeError, TypeError, ValueError, KeyError, IndexError, ImportError, ModuleNotFoundError, NameError, RuntimeError, NotImplementedError, StopIteration, DeprecationWarning, pydantic_core.ValidationError, starlette.exceptions.HTTPException, OTHER |
+| `K_D_class_x_shape` | K_C crossed with message_shape id; any cell with < 3 training examples backs off to its K_C value (cap 40 cells) | derived |
+
+### 11.4 Cause atoms
+
+| Atom | Source | Description |
+|---|---|---|
+| `human_text_entry` | research | Typos, misspellings, case errors. |
+| `copy_paste_unadapted` | research | Pasted code, wrong-context snippets, half-finished refactors. |
+| `environment_mismatch` | research | Wrong interpreter/venv/CWD/locale/OS/permissions. Near-absent in the hermetic sandbox. |
+| `assumed_shape_violation` | research | Code assumes data is present/non-empty/of a type/structured when it is not. |
+| `missing_boundary_guard` | research | Unchecked external input/config; failure surfaces one call after the boundary. |
+| `concurrency_lifetime_race` | research | TOCTOU, iteration mutation, shared iterators, lifetime races (incl. async task/stream lifetimes). |
+| `resource_lifecycle` | research | Unclosed files/sockets/streams, missing timeouts, unbounded growth. |
+| `version_drift` | research | Dependencies, interpreters, docs and code out of sync (incl. pydantic v1/v2, deprecations). |
+| `contract_or_interface_change` | bcf_extension | The fix creates or changes a public API: new function/class/param, new behaviour flag, new response type. |
+| `backward_compat_shim` | bcf_extension | The fix adds compatibility code: deprecation warnings, fallbacks, version branches. |
+| `rendering_format_logic` | bcf_extension | Output formatting/rendering/serialisation logic is wrong (rich layout, OpenAPI schema, headers). |
+| `validation_rule` | bcf_extension | A validation/acceptance rule is too strict, too lax or wrong (pydantic models, request parsing, URL/header checks). |
+
+### 11.5 Library classes seen in the dev corpus
+
+| Class | Parents | Built-in ancestor | Family | Role | Corpus counts |
+|---|---|---|---|---|---|
+| `fastapi.exceptions.FastAPIError` | RuntimeError | RuntimeError | runtime_state | usage_or_config | gold_raise_added 2, test_pytest_raises 3 |
+| `fastapi.exceptions.RequestValidationError` | fastapi.exceptions.ValidationException | Exception | control | validation | statement 1 |
+| `fastapi.exceptions.ResponseValidationError` | fastapi.exceptions.ValidationException | Exception | control | validation | statement 1, gold_raise_added 1 |
+| `fastapi.exceptions.WebSocketRequestValidationError` | fastapi.exceptions.ValidationException | Exception | control | validation | statement 1, gold_raise_added 1 |
+| `fastapi.exceptions.HTTPException` | starlette.exceptions.HTTPException | Exception | control | http_status | gold_raise_added 3, gold_except_added 1 |
+| `fastapi.exceptions.DependencyScopeError` | fastapi.exceptions.FastAPIError | RuntimeError | runtime_state | usage_or_config | gold_raise_added 1 |
+| `fastapi.exceptions.PydanticV1NotSupportedError` | fastapi.exceptions.FastAPIError | RuntimeError | runtime_state | compat | gold_raise_added 1, test_pytest_raises 1 |
+| `fastapi.exceptions.FastAPIDeprecationWarning` | UserWarning | UserWarning | warning | deprecation | statement 1, test_pytest_warns 2 |
+| `starlette.exceptions.HTTPException` | Exception | Exception | control | http_status | gold_raise_added 3, gold_except_added 1 |
+| `starlette.routing.NoMatchFound` | Exception | Exception | control | routing | gold_raise_added 2, gold_except_added 1, test_pytest_raises 2 |
+| `pydantic_core.ValidationError` | ValueError | ValueError | type_value | validation | statement 1 |
+| `pydantic.errors.PydanticSchemaGenerationError` | pydantic.errors.PydanticUserError | RuntimeError | runtime_state | usage_or_config | gold_except_added 1 |
+| `anyio.EndOfStream` | Exception | Exception | control | stream | gold_except_added 1 |
+| `json.JSONDecodeError` | ValueError | ValueError | type_value | parsing | statement 1, gold_except_added 1 |
+| `netrc.NetrcParseError` | Exception | Exception | control | parsing | statement 1 |
+| `requests.exceptions.JSONDecodeError` | requests.exceptions.InvalidJSONError, json.JSONDecodeError | ValueError | type_value | parsing | statement 1, gold_except_added 1 |
+| `httpx.ConnectError` | httpx.NetworkError | Exception | control | transport | gold_except_added 1 |
+
+
+---
+
+<!-- ====================================================================== -->
+<!-- FILE: 10_deviations_log.md -->
+<!-- ====================================================================== -->
+
+# Deviations log — BCF-PREREG-001
+
+Append-only (rule PR-10). Record every change made after FREEZE-1 to a frozen file, threshold, variable or procedure. Confirmatory hypotheses affected by a non-clerical change are downgraded to exploratory.
+
+| # | Date (UTC) | File / rule changed | Change | Reason | Affected hypotheses | Clerical? |
+|---:|---|---|---|---|---|:---:|
+| 1 | 2026-10-02 | PR-06 (outcome rule), operationalised in `pipeline/bcf_stats.outcome` and `s12_analyze_h1_h8.decide` | **Clarification, no threshold changed.** (a) For confirmatory hypotheses with a p-value, PASS additionally requires Holm-adjusted p < 0.05; a met pass rule with Holm p ≥ 0.05 resolves to INCONCLUSIVE. (b) The Holm family always has m = 6 (H1, H2, H4, H7, H8, H10); missing p-values count as 1.0. (c) H4's bootstrap 95% CI of ρ is used for the "CI spans both thresholds" rule (0.03 / 0.10). (d) In CondTable / LORO, a predictor value unseen in training backs off to the training marginal. | PR-06 and H4 did not state these points explicitly. Each is the conservative reading and is fixed before any D1 data exist (s12 is hashed at FREEZE-2) | H1, H2, H4, H7, H8 (decision procedure only) | Yes (clarification) |
+| 2 | 2026-10-02 | H10–H12 operationalised in `pipeline/s13_analyze_h10_h12.py` | **Clarification, no threshold changed.** (a) With several seeds per arm, each task's resolution is the majority vote over seeds (resolve rate ≥ 0.5); tool calls are averaged and turns take the median. (b) H10's two co-primaries are Bonferroni-combined (2 × min p) into the single p-value that enters Holm (m = 6, using s12's p-values for H1/H2/H4/H7/H8 when available, else 1.0); the internal "p < 0.05" conditions use the within-H10 Bonferroni-adjusted p-values. (c) "Turn" = 1-based index of the tool call. An edit "touches a gold function" if an `edit_file` diff hunk intersects a gold span (file-level match when no diff is available; `write_file` of a gold file counts). Edits made through `run_command` are not detected. Censored value = budget + 1. (d) H11 uses A2's own reproduction signature (fallback A1); tasks without one are excluded. (e) H12's pass and kill rules can both hold; KILL takes precedence. | The prereg left these unspecified; each is the conservative or literal reading, fixed before any agent run exists | H10, H11, H12 (decision procedure only) | Yes (clarification) |
+

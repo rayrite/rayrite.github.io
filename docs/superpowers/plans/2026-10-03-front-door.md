@@ -1862,3 +1862,9 @@ git commit -m "docs: rollout verification screenshots"
 - **Spec coverage:** §2 tokens → Task 5; §3 portal → Task 6; §4 reader → Tasks 7–8; §5 stubs → Tasks 3+9; §6 contracts → Tasks 2+4; §7 script → Tasks 1–3; §8 bat → Task 4; §9 agent doc → Task 10; §10 rollout → Tasks 4, 9; §11 testing → Tasks 1–3, 8, 11. §12 deferred by spec. No gaps.
 - **Placeholder scan:** Task 4 Step 1 contains one marked removal note (`img: null_removed_note_see_skip`) with explicit instruction — intentional, resolved in-place. No TBDs.
 - **Type consistency:** `scan_tree/discover_entries/classify/merge_summaries/write_if_changed/build_stub/main` signatures consistent across tasks; JSON keys match spec §6; localStorage keys match Global Constraints.
+
+> **Execution amendment (2026-10-03, ruling 5):** Task 3 additionally fixes `changed` semantics
+> in `main()` — collect actual writes (return values of `write_if_changed`; byte-compare results
+> in dry-run) instead of listing all targets; remove the dead `report["changed"]` seeding in
+> `build_site_json`; extend tests to assert a second identical run reports `changed` without
+> `site-data/site.json` (refresh-report.json legitimately self-reports via generatedAt).

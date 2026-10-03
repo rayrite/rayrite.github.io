@@ -102,14 +102,20 @@ def iter_tree_files(section_dir):
             yield p
 
 
-def discover_entries(section_dir, root):
+def discover_entries(section_dir, root, config):
     """Entry pages: section-root *.html + index.html in child dirs (<=2 levels)."""
     entries = []
     for p in sorted(section_dir.glob("*.html")):
+        if is_skipped_file(p.name, config):
+            continue
         entries.append({"path": p.relative_to(root).as_posix(), "title": file_title(p) or p.stem})
     for p in sorted(section_dir.glob("*/*/index.html")):
+        if is_skipped_file(p.name, config):
+            continue
         entries.append({"path": p.relative_to(root).as_posix(), "title": file_title(p) or p.parent.name})
     for p in sorted(section_dir.glob("*/index.html")):
+        if is_skipped_file(p.name, config):
+            continue
         entries.append({"path": p.relative_to(root).as_posix(), "title": file_title(p) or p.parent.name})
     # order: index pages shallow-first, then other html; dedupe
     seen, ordered = set(), []
@@ -152,7 +158,7 @@ def scan_tree(root, config):
     for d in sorted(p for p in root.iterdir() if p.is_dir()):
         if is_skipped_dir(d.name, config):
             continue
-        entries = discover_entries(d, root)
+        entries = discover_entries(d, root, config)
         if not entries:
             continue
         sec_id = d.name

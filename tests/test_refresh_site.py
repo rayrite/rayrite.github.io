@@ -29,6 +29,7 @@ class TestScan(unittest.TestCase):
         self.root = make_tree({
             "aws2/index.html": "<html><head><title>AWS Study Kit</title></head><body>x</body></html>",
             "aws2/exam/index.html": "<title>AWS  Practice</title>",
+            "aws2/index_01.html": "<title>old</title>",
             "dukr/opensource/1/index.html": "<title>FOSS Explorer</title>",
             "dukr/dukr01.html": "<title>DUKR</title>",
             "md/items/a.md": "# Doc A\n\nfirst para",
@@ -81,6 +82,12 @@ class TestScan(unittest.TestCase):
         self.assertEqual(md["docCount"], 1)
         self.assertGreaterEqual(md["fileCount"], 3)
         self.assertTrue(md["lastModified"].endswith("Z"))
+
+    def test_skip_files_excluded_from_entries(self):
+        sections = {s["id"]: s for s in rs.scan_tree(self.root, self.config)}
+        paths = [e["path"] for e in sections["aws2"]["entries"]]
+        self.assertNotIn("aws2/index_01.html", paths)  # skipFiles pattern applies
+        self.assertIn("aws2/index.html", paths)        # real entry unaffected
 
 
 class TestClassifyMergeEmit(unittest.TestCase):

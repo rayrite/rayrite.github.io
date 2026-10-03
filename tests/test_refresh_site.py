@@ -1,5 +1,5 @@
 # tests/test_refresh_site.py
-import json, sys, tempfile, time, unittest
+import contextlib, io, json, sys, tempfile, time, unittest
 import unittest.mock
 from pathlib import Path
 
@@ -203,6 +203,52 @@ class TestReportChangedSemantics(unittest.TestCase):
             (self.root / "site-data" / "refresh-report.json").read_text(encoding="utf-8"))
         self.assertNotIn("site-data/site.json", rep2["changed"])
         self.assertNotIn("md/index.html", rep2["changed"])  # stub idempotent too
+
+
+class TestGeneratedAtStability(unittest.TestCase):
+    """Ruling 6 / spec §10 step 6: run twice → second run reports no changes."""
+
+    def setUp(self):
+        self.root = make_tree({
+            "aws2/index.html": "<title>AWS Study Kit</title>",
+            "site-data/config.json": json.dumps(
+                {"skip": [], "skipFiles": [], "sections": {},
+                 "readerFolders": {"md": "md/items"}}),
+        })
+        items = self.root / "md" / "items"
+        items.mkdir(parents=True, exist_ok=True)
+        (items / "a.md").write_text("# Doc A", encoding="utf-8")
+        # Steady state (as in TestReportChangedSemantics): pre-seed the reader
+        # stub so run 1's bootstrap does not add the md section afterwards —
+        # otherwise run 2 differs from run 1 for reasons ruling 6 doesn't cover.
+        (self.root / "md").mkdir(exist_ok=True)
+        (self.root / "md" / "index.html").write_bytes(
+            rs.build_stub("md/items").encode("utf-8"))
+
+    def tearDown(self):
+        self.root._tmp.cleanup()
+
+    @staticmethod
+    def run_capture(argv):
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            rs.main(argv)
+        return buf.getvalue()
+
+    def test_timestamp_reused_and_runs_converge(self):
+        stamps = ["2026-10-03T10:00:00Z", "2026-10-03T10:00:05Z", "2026-10-03T10:00:09Z"]
+        with unittest.mock.patch.object(rs, "utcnow_iso", side_effect=stamps):
+            out1 = self.run_capture(["--root", str(self.root)])   # bootstrap
+            out2 = self.run_capture(["--root", str(self.root)])   # clock moved, content didn't
+            out3 = self.run_capture(["--root", str(self.root)])   # fully converged
+        site = json.loads((self.root / "site-data" / "site.json").read_text(encoding="utf-8"))
+        self.assertEqual(site["generatedAt"], stamps[0])          # kept, not bumped
+        rep = json.loads((self.root / "site-data" / "refresh-report.json").read_text(encoding="utf-8"))
+        self.assertEqual(rep["generatedAt"], stamps[0])
+        self.assertEqual(rep["changed"], [])                      # second run reports no changes
+        self.assertIn("wrote: site-data/site.json", out1)
+        self.assertNotIn("wrote: site-data/site.json", out2)      # stable despite new stamp
+        self.assertNotIn("wrote:", out3)                          # third run: nothing at all
 
 
 if __name__ == "__main__":

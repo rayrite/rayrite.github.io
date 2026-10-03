@@ -276,6 +276,14 @@ def build_site_json(root, config):
         "bytes": sum(s["bytes"] for s in sections),
     }
     site = {"version": 1, "generatedAt": utcnow_iso(), "stats": stats, "sections": sections}
+    # Idempotency (spec §10 step 6): when nothing but the timestamp would change,
+    # keep the existing generatedAt so back-to-back runs stay byte-identical.
+    existing = load_json(root / "site-data" / "site.json", None)
+    if isinstance(existing, dict) and "generatedAt" in existing:
+        prior = {k: v for k, v in existing.items() if k != "generatedAt"}
+        fresh = {k: v for k, v in site.items() if k != "generatedAt"}
+        if prior == fresh:
+            site["generatedAt"] = existing["generatedAt"]
     return site, report
 
 

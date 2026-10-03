@@ -1,5 +1,6 @@
 # tests/test_refresh_site.py
 import json, sys, tempfile, time, unittest
+import unittest.mock
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -153,6 +154,55 @@ class TestClassifyMergeEmit(unittest.TestCase):
         self.assertIn("sections", data)
         rep = json.loads((self.root / "site-data" / "refresh-report.json").read_text(encoding="utf-8"))
         self.assertIn("needsSummary", rep)
+
+
+class TestStub(unittest.TestCase):
+    def test_stub_content_and_stability(self):
+        s1 = rs.build_stub("md/items")
+        s2 = rs.build_stub("md/items")
+        self.assertIn('url=/reader/?src=md/items', s1)
+        self.assertIn('location.replace("/reader/?src=md/items")', s1)
+        self.assertEqual(s1, s2)  # deterministic → idempotent writes
+
+    def test_stub_escapes_src(self):
+        s = rs.build_stub('x"y')
+        self.assertNotIn('src=x"y', s)  # no raw quote injection into attribute
+
+
+class TestReportChangedSemantics(unittest.TestCase):
+    def setUp(self):
+        self.root = make_tree({
+            "aws2/index.html": "<title>AWS Study Kit</title>",
+        })
+        self.config = {"skip": [], "skipFiles": [], "sections": {},
+                       "readerFolders": {"md": "md/items"}}
+        (self.root / "site-data").mkdir(exist_ok=True)
+        (self.root / "site-data" / "config.json").write_text(
+            json.dumps(self.config), encoding="utf-8")
+        # Steady-state tree: the reader index is already the stub, so neither
+        # its bytes nor site.json's view of the md section change between runs.
+        # Written as bytes so write_if_changed sees identical content (no
+        # newline translation) and the file's mtime stays put.
+        (self.root / "md").mkdir(exist_ok=True)
+        (self.root / "md" / "index.html").write_bytes(
+            rs.build_stub("md/items").encode("utf-8"))
+
+    def tearDown(self):
+        self.root._tmp.cleanup()
+
+    def test_changed_lists_actual_writes_only(self):
+        fixed = "2026-10-03T00:00:00Z"  # pin generatedAt so bytes are comparable
+        with unittest.mock.patch.object(rs, "utcnow_iso", lambda: fixed):
+            rs.main(["--root", str(self.root)])  # run 1: site.json really written
+        rep1 = json.loads(
+            (self.root / "site-data" / "refresh-report.json").read_text(encoding="utf-8"))
+        self.assertIn("site-data/site.json", rep1["changed"])
+        with unittest.mock.patch.object(rs, "utcnow_iso", lambda: fixed):
+            rs.main(["--root", str(self.root)])  # run 2: site.json + stub unchanged
+        rep2 = json.loads(
+            (self.root / "site-data" / "refresh-report.json").read_text(encoding="utf-8"))
+        self.assertNotIn("site-data/site.json", rep2["changed"])
+        self.assertNotIn("md/index.html", rep2["changed"])  # stub idempotent too
 
 
 if __name__ == "__main__":

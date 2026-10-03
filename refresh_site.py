@@ -173,8 +173,23 @@ def scan_tree(root, config):
 
 
 def build_stub(items):
-    # Temporary stub — the real reader-stub generator arrives in Task 3.
-    return ""
+    """Deterministic redirect page: viewer folder → /reader/?src=<items>."""
+    src = items.replace('"', "%22").replace("<", "%3C").replace(">", "%3E")
+    target = f"/reader/?src={src}"
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Redirecting to the unified reader…</title>
+<meta http-equiv="refresh" content="0; url={target}">
+<script>location.replace({json.dumps(target)});</script>
+</head>
+<body style="font-family:system-ui,sans-serif;background:#0b0f14;color:#d7dee6;display:grid;place-items:center;min-height:100vh;margin:0">
+<p>Redirecting to the unified reader… <a style="color:hsl(158,72%,56%)" href="{target}">continue</a></p>
+</body>
+</html>
+"""
 
 
 # --- classification, summaries, emit (Task 2) ---
@@ -249,7 +264,7 @@ def write_if_changed(path, text):
 def build_site_json(root, config):
     sections = scan_tree(root, config)
     summaries = load_json(root / "site-data" / "summaries.json", {})
-    report = {"needsSummary": [], "staleSummary": [], "changed": [], "warnings": []}
+    report = {"needsSummary": [], "staleSummary": [], "warnings": []}
     for s in sections:
         s["family"] = classify(s, config)
     merge_summaries(sections, summaries, root, report)
@@ -274,28 +289,37 @@ def main(argv=None):
     config = load_json(root / "site-data" / "config.json", DEFAULT_CONFIG)
     site, report = build_site_json(root, config)
 
-    targets = [(root / "site-data" / "site.json",
-                json.dumps(site, indent=2, ensure_ascii=False) + "\n")]
+    verb = "would write" if args.dry_run else "wrote"
+    changed = []
+
+    def commit(path, text):
+        """Write one target (dry-run: compare only); record it if it changed."""
+        rel = path.relative_to(root).as_posix()
+        if args.dry_run:
+            try:
+                differs = path.read_bytes() != text.encode("utf-8")
+            except OSError:  # missing (or unreadable) file counts as changed
+                differs = True
+            if differs:
+                changed.append(rel)
+                print(f"  dry-run: {verb} {rel}")
+        elif write_if_changed(path, text):
+            changed.append(rel)
+            print(f"  {verb}: {rel}")
+
+    commit(root / "site-data" / "site.json",
+           json.dumps(site, indent=2, ensure_ascii=False) + "\n")
     for viewer, items in config.get("readerFolders", {}).items():
-        targets.append((root / viewer / "index.html", build_stub(items)))
+        commit(root / viewer / "index.html", build_stub(items))
+
     report_text = json.dumps({
         "generatedAt": site["generatedAt"],
         "needsSummary": report["needsSummary"],
         "staleSummary": report["staleSummary"],
-        "changed": [str(t.relative_to(root)).replace("\\", "/") for t, _ in targets],
+        "changed": changed,
         "warnings": report["warnings"],
     }, indent=2) + "\n"
-    targets.append((root / "site-data" / "refresh-report.json", report_text))
-
-    verb = "would write" if args.dry_run else "wrote"
-    for path, text in targets:
-        if args.dry_run:
-            existing = read_text_capped(path)
-            if existing != text:
-                print(f"  dry-run: {verb} {path.relative_to(root).as_posix()}")
-        else:
-            if write_if_changed(path, text):
-                print(f"  {verb}: {path.relative_to(root).as_posix()}")
+    commit(root / "site-data" / "refresh-report.json", report_text)
     print(f"\nSections: {site['stats']['sections']}  "
           f"needs summary: {len(report['needsSummary'])}  "
           f"stale: {len(report['staleSummary'])}")

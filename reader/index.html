@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>reader</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" integrity="sha384-wFjoQjtV1y5jVHbt0p35Ui8aV8GVpEZkyF99OXWqP/eNJDU93D3Ugxkoyh6Y2I4A" crossorigin="anonymous">
+<link rel="stylesheet" href="../site-assets/shell.css">
+<style>
+  .shell { display: grid; grid-template-columns: 220px minmax(0,1fr) 180px; min-height: calc(100vh - 53px); }
+  .side { border-right: 1px solid var(--bd); background: var(--bg2); padding: var(--pad) 8px; overflow-y: auto; max-height: calc(100vh - 53px); position: sticky; top: 53px; }
+  .side h4, .toc h4 { font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--tx2); margin: 6px 6px 8px; }
+  .side .searchpill { flex-basis: 100%; margin: 0 0 8px; padding: 6px 10px; }
+  .file {
+    display: flex; align-items: center; gap: 7px; width: 100%; text-align: left;
+    background: none; border: 0; color: var(--tx2); font: inherit; font-size: 0.78rem;
+    padding: 8px 9px; border-radius: calc(var(--radius) * 0.6); cursor: pointer; min-height: 36px;
+  }
+  .file .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--bd); flex: none; }
+  .file span.nm { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .file:hover { background: var(--bg3); color: var(--tx); }
+  .file.on { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+  .file.on .dot { background: var(--accent); }
+  .main { padding: var(--pad) 22px 60px; min-width: 0; }
+  .crumb { font-family: var(--font-mono); font-size: 0.7rem; color: var(--tx2); margin-bottom: 10px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .crumb b { color: var(--accent); font-weight: 600; }
+  .article { max-width: 72ch; margin: 0 auto; }
+  .article h1 { font-size: 1.5rem; letter-spacing: -0.01em; margin: 0 0 4px; }
+  .byline { color: var(--tx2); font-size: 0.74rem; font-family: var(--font-mono); margin-bottom: 16px; }
+  .article pre { background: var(--bg3); border: 1px solid var(--bd); border-radius: var(--radius); padding: 10px 12px; overflow-x: auto; font-size: 0.8rem; }
+  .article code { font-family: var(--font-mono); font-size: 0.85em; background: var(--bg3); border-radius: 4px; padding: 1px 5px; }
+  .article pre code { background: none; padding: 0; }
+  .article blockquote { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 var(--radius) var(--radius) 0; padding: 8px 12px; margin: 12px 0; }
+  .article table { border-collapse: collapse; width: 100%; font-size: 0.8rem; display: block; overflow-x: auto; }
+  .article th, .article td { border: 1px solid var(--bd); padding: 5px 9px; text-align: left; }
+  .article th { background: var(--bg3); }
+  .article img { max-width: 100%; border-radius: var(--radius); }
+  .article h2, .article h3 { scroll-margin-top: 70px; letter-spacing: -0.01em; }
+  .toc { border-left: 1px solid var(--bd); padding: var(--pad) 8px; position: sticky; top: 53px; max-height: calc(100vh - 53px); overflow-y: auto; }
+  .toc a { display: block; font-size: 0.72rem; color: var(--tx2); padding: 4px 0 4px 10px; border-left: 2px solid transparent; }
+  .toc a.on { color: var(--accent); border-left-color: var(--accent); font-weight: 600; }
+  .toc a.l3 { padding-left: 22px; }
+  .prog { position: fixed; top: 53px; left: 0; height: 3px; width: 0; z-index: 60; background: linear-gradient(90deg, var(--accent), hsl(158 68% 40%)); transition: width .1s linear; }
+  .navbar { display: flex; gap: 8px; align-items: center; justify-content: space-between; margin-top: 28px; border-top: 1px solid var(--bd); padding-top: 12px; }
+  .navbar .pos { font-family: var(--font-mono); font-size: 0.72rem; color: var(--tx2); }
+  .iframe-doc { width: 100%; min-height: calc(100vh - 140px); border: 1px solid var(--bd); border-radius: var(--radius); background: #fff; }
+  .searchbox { margin: 6px; }
+  .results { max-height: 300px; overflow-y: auto; border: 1px solid var(--bd); border-radius: var(--radius); background: var(--bg2); margin: 0 6px 8px; }
+  .result { display: block; width: 100%; text-align: left; background: none; border: 0; border-bottom: 1px solid var(--bd); padding: 8px 10px; cursor: pointer; color: var(--tx); font: inherit; }
+  .result:last-child { border-bottom: 0; }
+  .result .f { font-family: var(--font-mono); font-size: 0.68rem; color: var(--accent); }
+  .result .s { font-size: 0.74rem; color: var(--tx2); margin-top: 2px; }
+  .result:hover { background: var(--bg3); }
+  .result mark { background: var(--accent-soft); color: var(--accent); border-radius: 2px; padding: 0 2px; }
+  .bottombar { display: none; }
+  .state-msg { color: var(--tx2); text-align: center; padding: 60px 20px; font-size: 0.9rem; }
+  @media (max-width: 900px) {
+    .shell { grid-template-columns: 200px minmax(0,1fr); }
+    .toc { display: none; }
+    .toc.drawer { display: block; position: fixed; right: 0; top: 53px; bottom: 60px; width: min(260px, 80vw); background: var(--bg2); border-left: 1px solid var(--bd); z-index: 70; max-height: none; padding: var(--pad); }
+  }
+  @media (max-width: 768px) {
+    .shell { grid-template-columns: minmax(0,1fr); }
+    .side { position: fixed; left: 0; top: 53px; bottom: 60px; max-height: none; width: min(280px, 85vw); z-index: 70; transform: translateX(-100%); transition: transform .2s ease; border-right: 1px solid var(--bd); }
+    .side.open { transform: translateX(0); }
+    .bottombar {
+      display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; position: fixed; left: 0; right: 0; bottom: 0;
+      background: color-mix(in srgb, var(--bg2) 92%, transparent); backdrop-filter: blur(8px);
+      border-top: 1px solid var(--bd); padding: 8px 10px calc(8px + env(safe-area-inset-bottom)); z-index: 65;
+    }
+    .bottombar .btn { min-height: 44px; }
+    .main { padding-bottom: 90px; }
+    .prog { top: 53px; }
+  }
+  @media print {
+    .side, .toc, .bottombar, .hdr, .navbar, .prog { display: none !important; }
+    .shell { display: block; }
+    body { background: #fff; color: #000; }
+  }
+</style>
+</head>
+<body>
+<header class="hdr">
+  <button class="icon-btn" id="menuBtn" title="Files" aria-label="Toggle file list">☰</button>
+  <div class="mark">r</div>
+  <div class="wordmark" id="wm">reader<small id="wmsub">…</small></div>
+  <label class="searchpill">
+    <span aria-hidden="true">🔍</span>
+    <input id="q" type="search" placeholder="Filter / search files…" aria-label="Filter files">
+    <kbd>/</kbd>
+  </label>
+  <button class="icon-btn" id="tocBtn" title="Contents" aria-label="Toggle table of contents" hidden>≡</button>
+  <button class="icon-btn" id="fontBtn" title="Font size" aria-label="Cycle font size">A±</button>
+  <button class="icon-btn" id="themeBtn" title="Toggle theme (t)" aria-label="Toggle theme">◐</button>
+</header>
+<div class="prog" id="prog"></div>
+
+<div class="shell">
+  <aside class="side" id="side">
+    <label class="searchpill searchbox">
+      <span aria-hidden="true">⌕</span>
+      <input id="fq" type="search" placeholder="Filter files…" aria-label="Filter file list">
+    </label>
+    <h4 id="fileCount">files</h4>
+    <div id="fileList"></div>
+    <div class="results" id="results" hidden></div>
+  </aside>
+  <main class="main" id="main">
+    <div class="crumb" id="crumb"></div>
+    <div class="article" id="article"><div class="state-msg">Loading library…</div></div>
+    <div class="navbar">
+      <button class="btn" id="prevBtn">← Prev</button>
+      <span class="pos" id="pos"></span>
+      <button class="btn" id="nextBtn">Next →</button>
+    </div>
+  </main>
+  <nav class="toc" id="toc" aria-label="On this page"><h4>On this page</h4><div id="tocList"></div></nav>
+</div>
+
+<nav class="bottombar">
+  <button class="btn" id="mPrev">←</button>
+  <button class="btn" id="mToc">≡ Contents</button>
+  <button class="btn" id="mNext">→</button>
+</nav>
+
+<script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js" integrity="sha384-zbcZAIxlvJtNE3Dp5nxLXdXtXyxwOdnILY1TDPVmKFhl4r4nSUG1r8bcFXGVa4Te" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js" integrity="sha384-cwS6YdhLI7XS60eoDiC+egV0qHp8zI+Cms46R0nbn8JrmoAzV9uFL60etMZhAnSu" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha384-06z5D//U/xpvxZHuUz92xBvq3DqBBFi7Up53HRrbV7Jlv7Yvh/MZ7oenfUe9iCEt" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js" integrity="sha384-Uq05+JLko69eOiPr39ta9bh7kld5PKZoU+fF7g0EXTAriEollhZ+DrN8Q/Oi8J2Q" crossorigin="anonymous"></script>
+<script>
+'use strict';
+/* ---------- config & state ---------- */
+const qs = new URLSearchParams(location.search);
+const SRC = (qs.get('src') || '').replace(/\/+$/, '');
+if (!SRC) { document.getElementById('article').innerHTML =
+  '<div class="state-msg">Missing <code>?src=</code> — open this reader from the portal.</div>'; }
+const cache = new Map();      // filename -> {text, words}
+let FILES = [];               // [{filename}]
+let current = null;
+
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g,
+  (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+/* ---------- theme (shared with portal) ---------- */
+function applyTheme(t) { document.documentElement.dataset.theme = t; localStorage.setItem('rr-theme', t); }
+applyTheme(localStorage.getItem('rr-theme')
+  || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'));
+$('themeBtn').onclick = () => applyTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark');
+
+/* ---------- font size ---------- */
+const FONT_SIZES = [12, 13, 14, 15, 16, 18, 20, 22, 24];
+function applyFont(px) { document.documentElement.style.setProperty('--fs', px + 'px'); localStorage.setItem('rr-reader-font', px); }
+applyFont(+localStorage.getItem('rr-reader-font') || 14);
+$('fontBtn').onclick = () => {
+  const cur = +localStorage.getItem('rr-reader-font') || 14;
+  applyFont(FONT_SIZES[(FONT_SIZES.indexOf(cur) + 1) % FONT_SIZES.length]);
+};
+
+/* ---------- github fallback ---------- */
+function ghBase() {
+  const host = location.hostname;
+  if (!host.endsWith('.github.io')) return null;
+  const owner = host.split('.')[0];
+  return { owner, repo: owner };
+}
+async function listViaGithubAPI() {
+  const gh = ghBase();
+  if (!gh || location.protocol === 'file:') return null;
+  for (const branch of ['main', 'master', 'gh-pages']) {
+    try {
+      const r = await fetch(`https://api.github.com/repos/${gh.owner}/${gh.repo}/contents/${SRC}?ref=${branch}`);
+      if (!r.ok) continue;
+      const items = await r.json();
+      const names = items.filter(i => i.type === 'file' && /\.(md|html)$/i.test(i.name)).map(i => i.filename = i.name);
+      if (names.length) return { branch, names };
+    } catch (e) { /* try next branch */ }
+  }
+  return null;
+}
+function fileUrl(name) {
+  if (location.protocol !== 'file:' && !ghBase()) return `${SRC}/${name}`;
+  const gh = ghBase();
+  if (gh && ghBranch) return `https://raw.githubusercontent.com/${gh.owner}/${gh.repo}/${ghBranch}/${SRC}/${name}`;
+  return `${SRC}/${name}`;
+}
+let ghBranch = null;
+
+/* ---------- listing ---------- */
+async function scanItems() {
+  let names = null;
+  try {
+    const r = await fetch(`${SRC}/manifest.json`, { cache: 'no-store' });
+    if (r.ok) {
+      const m = await r.json();
+      const arr = Array.isArray(m) ? m : (m.files || []);
+      names = arr.map(e => typeof e === 'string' ? e : (e.filename || e.originalPath)).filter(Boolean);
+    }
+  } catch (e) { /* fall through */ }
+  if (!names) {
+    const gh = await listViaGithubAPI();
+    if (gh) { ghBranch = gh.branch; names = gh.names; }
+  }
+  if (!names) {
+    $('article').innerHTML = `<div class="state-msg">
+      <p><strong>Couldn't list <code class="mono">${esc(SRC)}</code>.</strong></p>
+      <p style="font-size:.8rem;margin-top:8px">No manifest.json and GitHub API fallback unavailable.
+      Serve over HTTP (<code class="mono">python -m http.server 8000</code>) or check the path.</p></div>`;
+    names = [];
+  }
+  FILES = names.filter(n => /\.(md|html)$/i.test(n)).sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+  $('fileCount').textContent = `${FILES.length} document${FILES.length === 1 ? '' : 's'}`;
+  renderFileList();
+  const last = localStorage.getItem(`rr-reader-last:${SRC}`);
+  const initial = qs.get('file') || (FILES.includes(last) ? last : FILES[0]);
+  if (initial) loadFile(initial);
+}
+
+function renderFileList() {
+  const f = $('fq').value.trim().toLowerCase();
+  $('fileList').innerHTML = FILES.filter(n => !f || n.toLowerCase().includes(f))
+    .map(n => `<button class="file${n === current ? ' on' : ''}" data-n="${esc(n)}">
+                 <span class="dot"></span><span class="nm" title="${esc(n)}">${esc(n)}</span>
+               </button>`).join('');
+  $('fileList').querySelectorAll('.file').forEach(b =>
+    b.onclick = () => { loadFile(b.dataset.n); closeDrawers(); });
+}
+
+/* ---------- rendering ---------- */
+async function loadFile(name, keepScroll = false) {
+  current = name;
+  localStorage.setItem(`rr-reader-last:${SRC}`, name);
+  renderFileList();
+  const idx = FILES.indexOf(name);
+  $('pos').textContent = `${idx + 1} / ${FILES.length}`;
+  $('prevBtn').disabled = $('mPrev').disabled = idx <= 0;
+  $('nextBtn').disabled = $('mNext').disabled = idx >= FILES.length - 1;
+  $('crumb').innerHTML = `<b>library</b> / <span>${esc(SRC)}</span> / <span>${esc(name)}</span>`;
+  document.title = `${name} — reader`;
+
+  const entry = cache.get(name);
+  let text = entry ? entry.text : null;
+  if (text === null) {
+    try {
+      const r = await fetch(fileUrl(name), { cache: 'no-store' });
+      if (!r.ok) throw new Error(r.status);
+      text = await r.text();
+    } catch (e) {
+      $('article').innerHTML = `<div class="state-msg"><p>Failed to load <code class="mono">${esc(name)}</code> (${esc(e.message)}).</p>
+        <p style="margin-top:10px"><button class="btn primary" onclick="loadFile(${JSON.stringify(name)})">Retry</button></p></div>`;
+      return;
+    }
+    cache.set(name, { text, words: (text.match(/\S+/g) || []).length });
+  }
+  const words = cache.get(name).words;
+  const isHtml = /\.html?$/i.test(name);
+
+  if (isHtml) {
+    $('article').innerHTML =
+      `<span class="badge" style="--fc:var(--fam-research)">HTML document</span>
+       <iframe class="iframe-doc" sandbox="allow-same-origin" src="${esc(fileUrl(name))}" title="${esc(name)}"></iframe>`;
+    buildToc([]); updateProgress();
+  } else {
+    marked.setOptions({ breaks: true, gfm: true });
+    const body = DOMPurify.sanitize(marked.parse(text), {
+      ADD_TAGS: ['details', 'summary'], ADD_ATTR: ['id', 'class', 'align', 'target'],
+    });
+    $('article').innerHTML =
+      `<h1>${esc(name.replace(/\.(md|html?)$/i, ''))}</h1>
+       <div class="byline">${words.toLocaleString()} words · ~${Math.max(1, Math.round(words / 220))} min read</div>
+       ${body}`;
+    buildToc();
+    if (window.Prism) Prism.highlightAllUnder($('article'));
+  }
+  if (!keepScroll) {
+    const saved = +localStorage.getItem(`rr-reader-pos:${SRC}:${name}`) || 0;
+    scrollTo({ top: saved });
+  }
+}
+
+/* ---------- TOC + scroll ---------- */
+let headings = [];
+function buildToc(list) {
+  headings = list || [...$('article').querySelectorAll('h2, h3')];
+  headings.forEach((h, i) => { if (!h.id) h.id = 'h-' + i; });
+  const hasToc = headings.length > 0;
+  $('tocBtn').hidden = !hasToc || innerWidth > 900;
+  $('tocList').innerHTML = headings.map(h =>
+    `<a href="#${h.id}" class="${h.tagName === 'H3' ? 'l3' : ''}" data-id="${h.id}">${esc(h.textContent)}</a>`).join('');
+  $('tocList').querySelectorAll('a').forEach(a =>
+    a.onclick = (e) => { e.preventDefault(); document.getElementById(a.dataset.id).scrollIntoView({ behavior: 'smooth' }); closeDrawers(); });
+  watchHeadings();
+}
+const spy = new IntersectionObserver((entries) => {
+  entries.forEach(en => {
+    if (en.isIntersecting) {
+      $('tocList').querySelectorAll('a').forEach(a => a.classList.toggle('on', a.dataset.id === en.target.id));
+    }
+  });
+}, { rootMargin: '-60px 0px -70% 0px' });
+function watchHeadings() { headings.forEach(h => spy.observe(h)); }
+
+function updateProgress() {
+  const h = document.documentElement;
+  const max = h.scrollHeight - h.clientHeight;
+  $('prog').style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + '%';
+}
+addEventListener('scroll', () => {
+  updateProgress();
+  if (current) localStorage.setItem(`rr-reader-pos:${SRC}:${current}`, scrollY);
+}, { passive: true });
+
+/* ---------- full-text search (Task 8 augments) ---------- */
+let searched = false;
+async function ensureAllLoaded() {
+  if (searched) return;
+  searched = true;
+  for (const n of FILES.filter(n => /\.md$/i.test(n))) {
+    if (!cache.has(n)) {
+      try {
+        const r = await fetch(fileUrl(n), { cache: 'no-store' });
+        if (r.ok) { const t = await r.text(); cache.set(n, { text: t, words: (t.match(/\S+/g) || []).length }); }
+      } catch (e) { /* skip */ }
+      $('fileCount').textContent = `indexing… ${cache.size}/${FILES.length}`;
+    }
+  }
+  $('fileCount').textContent = `${FILES.length} documents`;
+}
+function runSearch(q) {
+  const box = $('results');
+  const query = q.trim().toLowerCase();
+  if (query.length < 2) { box.hidden = true; return; }
+  ensureAllLoaded().then(() => {
+    const hits = [];
+    for (const n of FILES) {
+      const c = cache.get(n);
+      if (!c) continue;
+      const text = c.text.toLowerCase();
+      const at = text.indexOf(query);
+      if (at === -1) continue;
+      const start = Math.max(0, at - 40);
+      const snippet = esc(c.text.slice(start, at + query.length + 60).replace(/\s+/g, ' '));
+      hits.push({ n, snippet, at, start });
+      if (hits.length >= 30) break;
+    }
+    box.hidden = false;
+    box.innerHTML = hits.length ? hits.map(h =>
+      `<button class="result" data-n="${esc(h.n)}">
+         <div class="f">${esc(h.n)}</div>
+         <div class="s">…${h.snippet.replace(new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'i'), '<mark>$1</mark>')}…</div>
+       </button>`).join('')
+      : '<div class="result"><div class="s">No matches.</div></div>';
+    box.querySelectorAll('.result[data-n]').forEach(b =>
+      b.onclick = () => { loadFile(b.dataset.n); box.hidden = true; closeDrawers(); });
+  });
+}
+
+/* ---------- drawers, keys, controls ---------- */
+function closeDrawers() { $('side').classList.remove('open'); $('toc').classList.remove('drawer'); }
+$('menuBtn').onclick = () => { $('toc').classList.remove('drawer'); $('side').classList.toggle('open'); };
+$('tocBtn').onclick = () => { $('side').classList.remove('open'); $('toc').classList.toggle('drawer'); };
+$('mToc').onclick = () => $('toc').classList.toggle('drawer');
+
+function goto(delta) {
+  const i = FILES.indexOf(current) + delta;
+  if (i >= 0 && i < FILES.length) loadFile(FILES[i]);
+}
+$('prevBtn').onclick = $('mPrev').onclick = () => goto(-1);
+$('nextBtn').onclick = $('mNext').onclick = () => goto(1);
+$('fq').addEventListener('input', (e) => renderFileList());
+$('fq').addEventListener('keydown', (e) => { if (e.key === 'Enter') { runSearch(e.target.value); } });
+$('q').addEventListener('input', (e) => runSearch(e.target.value));
+document.addEventListener('keydown', (e) => {
+  const typing = /INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName);
+  if (e.key === '/' && !typing) { e.preventDefault(); $('q').focus(); }
+  if (e.key === 'Escape') closeDrawers();
+  if (e.key === 't' && !typing) $('themeBtn').click();
+  if (e.key === 'ArrowLeft' && !typing) goto(-1);
+  if (e.key === 'ArrowRight' && !typing) goto(1);
+});
+
+$('wmsub').textContent = SRC || 'reader';
+if (SRC) scanItems();
+</script>
+</body>
+</html>

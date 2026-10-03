@@ -172,5 +172,140 @@ def scan_tree(root, config):
     return sections
 
 
+def build_stub(items):
+    # Temporary stub — the real reader-stub generator arrives in Task 3.
+    return ""
+
+
+# --- classification, summaries, emit (Task 2) ---
+
+def classify(section, config):
+    sec_cfg = config.get("sections", {}).get(section["id"], {})
+    if sec_cfg.get("family"):
+        return sec_cfg["family"]
+    if section["id"] in config.get("readerFolders", {}):
+        return "library"
+    hay = (section["title"] + " " + section["path"] + " " +
+           " ".join(e["title"] for e in section["entries"])).lower()
+    for fam, pattern in FAMILY_RULES:
+        if re.search(pattern, hay):
+            return fam
+    return "data"
+
+
+TAG_RE = re.compile(r"<(script|style)[^>]*>.*?</\1>", re.IGNORECASE | re.DOTALL)
+ANY_TAG_RE = re.compile(r"<[^>]+>")
+
+
+def strip_tags(text):
+    text = TAG_RE.sub(" ", text)
+    text = ANY_TAG_RE.sub(" ", text)
+    return re.sub(r"\s+", " ", htmllib.unescape(text)).strip()
+
+
+def heuristic_summary(root, section):
+    """Title + first meaningful text (from primary HTML, or first .md)."""
+    source = root / section["primary"]
+    text = read_text_capped(source)
+    if section["id"] in DEFAULT_CONFIG["readerFolders"] or not text:
+        md_dir = root / DEFAULT_CONFIG["readerFolders"].get(section["id"], section["path"])
+        mds = sorted(md_dir.glob("*.md")) if md_dir.is_dir() else []
+        if mds:
+            text = read_text_capped(mds[0])
+    body = strip_tags(text)
+    summary = f"{section['title']}. {body}" if body else section["title"]
+    return summary[:297] + "…" if len(summary) > 300 else summary
+
+
+def merge_summaries(sections, summaries, root, report):
+    sec_summaries = summaries.get("sections", {})
+    for s in sections:
+        entry = sec_summaries.get(s["id"])
+        if entry and entry.get("text"):
+            s["summary"] = entry["text"]
+            s["summarySource"] = "agent"
+            based = entry.get("basedOn", "")
+            if not based or (s["lastModified"] and s["lastModified"] > based):
+                report["staleSummary"].append(s["id"])
+        else:
+            s["summary"] = heuristic_summary(root, s)
+            s["summarySource"] = "heuristic"
+            report["needsSummary"].append(s["id"])
+    return sections
+
+
+def write_if_changed(path, text):
+    data = text.encode("utf-8")
+    try:
+        if path.read_bytes() == data:
+            return False
+    except OSError:
+        pass
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(data)
+    return True
+
+
+def build_site_json(root, config):
+    sections = scan_tree(root, config)
+    summaries = load_json(root / "site-data" / "summaries.json", {})
+    report = {"needsSummary": [], "staleSummary": [], "changed": [], "warnings": []}
+    for s in sections:
+        s["family"] = classify(s, config)
+    merge_summaries(sections, summaries, root, report)
+    stats = {
+        "sections": len(sections),
+        "pages": sum(1 for s in sections for e in s["entries"] if e["path"].endswith(".html")),
+        "documents": sum(s["docCount"] for s in sections),
+        "images": sum(s["imageCount"] for s in sections),
+        "bytes": sum(s["bytes"] for s in sections),
+    }
+    site = {"version": 1, "generatedAt": utcnow_iso(), "stats": stats, "sections": sections}
+    return site, report
+
+
+def main(argv=None):
+    ap = argparse.ArgumentParser(description="Refresh front-door site data")
+    ap.add_argument("--dry-run", action="store_true", help="report without writing")
+    ap.add_argument("--verbose", action="store_true")
+    ap.add_argument("--root", default=str(Path(__file__).resolve().parent))
+    args = ap.parse_args(argv)
+    root = Path(args.root).resolve()
+    config = load_json(root / "site-data" / "config.json", DEFAULT_CONFIG)
+    site, report = build_site_json(root, config)
+
+    targets = [(root / "site-data" / "site.json",
+                json.dumps(site, indent=2, ensure_ascii=False) + "\n")]
+    for viewer, items in config.get("readerFolders", {}).items():
+        targets.append((root / viewer / "index.html", build_stub(items)))
+    report_text = json.dumps({
+        "generatedAt": site["generatedAt"],
+        "needsSummary": report["needsSummary"],
+        "staleSummary": report["staleSummary"],
+        "changed": [str(t.relative_to(root)).replace("\\", "/") for t, _ in targets],
+        "warnings": report["warnings"],
+    }, indent=2) + "\n"
+    targets.append((root / "site-data" / "refresh-report.json", report_text))
+
+    verb = "would write" if args.dry_run else "wrote"
+    for path, text in targets:
+        if args.dry_run:
+            existing = read_text_capped(path)
+            if existing != text:
+                print(f"  dry-run: {verb} {path.relative_to(root).as_posix()}")
+        else:
+            if write_if_changed(path, text):
+                print(f"  {verb}: {path.relative_to(root).as_posix()}")
+    print(f"\nSections: {site['stats']['sections']}  "
+          f"needs summary: {len(report['needsSummary'])}  "
+          f"stale: {len(report['staleSummary'])}")
+    if args.verbose:
+        for sid in report["needsSummary"]:
+            print(f"  NEEDS_SUMMARY: {sid}")
+        for sid in report["staleSummary"]:
+            print(f"  STALE_SUMMARY: {sid}")
+    return 0
+
+
 if __name__ == "__main__":
-    print("scanner core only — emitter added in Task 2")
+    sys.exit(main())

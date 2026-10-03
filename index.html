@@ -1,166 +1,254 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Responsive Image Gallery</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <style>
-        body {
-            background-color: lightblue;
-            font-family: 'Poppins', sans-serif;
-            margin: 0;
-            padding: 20px;
-            box-sizing: border-box;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-        }
-        .header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .logo {
-            width: 50px;
-            height: 50px;
-            background-color: #3498db;
-            border-radius: 50%;
-            margin-right: 15px;
-        }
-        .company-name {
-            font-size: 24px;
-            font-weight: 600;
-            color: #2c3e50;
-        }
-        .gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-        }
-        .gallery img {
-            width: 100%;
-            height: auto;
-            object-fit: cover;
-            aspect-ratio: 1 / 1;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease-in-out;
-            cursor: pointer;
-        }
-        .gallery img:hover {
-            transform: scale(1.05);
-        }
-        .links {
-            margin-bottom: 20px;
-        }
-        .links a {
-            color: #4a4a4a;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 18px;
-            transition: color 0.3s ease;
-        }
-        .links a:hover {
-            color: #2c3e50;
-        }
-        .back-btn {
-            display: none;
-            margin-bottom: 20px;
-            background-color: #3498db;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        .back-btn:hover {
-            background-color: #2980b9;
-        }
-        /* Modal styling */
-        #imageModal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(173, 216, 230, 0.95); /* Light blue background */
-            justify-content: center;
-            align-items: center;
-        }
-        #imageModal img {
-            max-width: 90%;
-            max-height: 90%;
-            object-fit: contain;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>rayrite — lab bench &amp; publishing hub</title>
+<meta name="description" content="Front door to study tools, research corpora, dataset apps and WebGL experiments.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site-assets/shell.css">
+<style>
+  .toolbar { display: flex; align-items: center; gap: 10px; padding: 0 var(--pad) 10px; flex-wrap: wrap; }
+  .count { color: var(--tx2); font-size: 0.78rem; font-family: var(--font-mono); margin-left: auto; }
+  select.sort {
+    font: inherit; font-size: 0.85rem; padding: 7px 10px; min-height: 34px;
+    background: var(--bg2); color: var(--tx); border: 1px solid var(--bd); border-radius: var(--radius);
+  }
+  .grid {
+    display: grid; gap: var(--gap); padding: 0 var(--pad) var(--pad);
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 640px)  { .grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1024px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (min-width: 1280px) { .grid { grid-template-columns: repeat(4, 1fr); } }
+  .card { padding-left: calc(var(--cardpad) + 4px); }
+  .card .top { display: flex; align-items: center; gap: 10px; }
+  .card h3 { font-size: 1rem; margin: 0; letter-spacing: -0.01em; }
+  .card p { margin: 0; color: var(--tx2); font-size: 0.84rem; }
+  details.entries { border-top: 1px dashed var(--bd); padding-top: 8px; }
+  details.entries summary {
+    cursor: pointer; color: var(--accent); font-size: 0.75rem; font-family: var(--font-mono);
+    list-style: none; min-height: 34px; display: flex; align-items: center;
+  }
+  details.entries summary::before { content: '▸'; margin-right: 6px; transition: transform .15s; }
+  details.entries[open] summary::before { transform: rotate(90deg); }
+  .entry-list { display: flex; flex-direction: column; gap: 2px; margin: 4px 0; }
+  .entry-list a {
+    display: flex; gap: 8px; align-items: baseline; padding: 6px 8px; border-radius: 4px;
+    font-size: 0.8rem; color: var(--tx2);
+  }
+  .entry-list a:hover { background: var(--bg3); color: var(--tx); }
+  .entry-list a .p { font-family: var(--font-mono); font-size: 0.72rem; opacity: 0.7; }
+  .state {
+    grid-column: 1 / -1; text-align: center; color: var(--tx2); padding: 40px var(--pad);
+    font-size: 0.9rem;
+  }
+  .error-card { border: 1px solid var(--bd); border-radius: var(--radius); background: var(--bg2); padding: var(--cardpad); }
+</style>
 </head>
 <body>
-    <div class="header">
-        <img src="dukr.png" alt="dukr">
+<header class="hdr">
+  <div class="mark">r</div>
+  <div class="wordmark">rayrite<small>lab bench &amp; publishing hub</small></div>
+  <label class="searchpill">
+    <span aria-hidden="true">🔍</span>
+    <input id="q" type="search" placeholder="Search sections…" aria-label="Search sections">
+    <kbd>/</kbd>
+  </label>
+  <button class="icon-btn" id="themeBtn" title="Toggle theme (t)" aria-label="Toggle theme">◐</button>
+</header>
+
+<nav class="chips" id="chips" aria-label="Filter by family"></nav>
+
+<div class="toolbar">
+  <select class="sort" id="sort" aria-label="Sort sections">
+    <option value="updated">Sort: Updated</option>
+    <option value="name">Sort: Name</option>
+    <option value="size">Sort: Size</option>
+  </select>
+  <button class="btn" id="clearBtn" hidden>Clear filters</button>
+  <span class="count" id="count"></span>
+</div>
+
+<main class="grid" id="grid" aria-live="polite"></main>
+
+<footer class="foot" id="foot">loading…</footer>
+
+<script>
+'use strict';
+const FAMS = [
+  ['all', 'All'], ['study', 'Study'], ['research', 'Research'],
+  ['data', 'Data'], ['creative', 'Creative'], ['library', 'Library'],
+];
+const FAM_LABEL = Object.fromEntries(FAMS);
+const FAM_ICON = { study: '🎓', research: '📄', data: '📊', creative: '✦', library: '📚' };
+const state = { query: '', family: 'all', sort: 'updated' };
+let SECTIONS = [];
+
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g,
+  (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+/* theme */
+function applyTheme(t) {
+  document.documentElement.dataset.theme = t;
+  localStorage.setItem('rr-theme', t);
+}
+applyTheme(localStorage.getItem('rr-theme')
+  || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'));
+$('themeBtn').onclick = () =>
+  applyTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark');
+
+/* chips */
+for (const [key, label] of FAMS) {
+  const b = document.createElement('button');
+  b.className = 'fchip' + (key === 'all' ? ' on' : '');
+  b.dataset.fam = key;
+  b.setAttribute('aria-pressed', key === 'all');
+  b.innerHTML = key === 'all' ? label : `<span class="dot" style="--fc:var(--fam-${key})"></span>${label}`;
+  b.onclick = () => {
+    state.family = key;
+    document.querySelectorAll('.fchip').forEach(c => {
+      c.classList.toggle('on', c.dataset.fam === key);
+      c.setAttribute('aria-pressed', c.dataset.fam === key);
+    });
+    render();
+  };
+  $('chips').appendChild(b);
+}
+
+/* data */
+async function loadSite() {
+  skeletons();
+  try {
+    const res = await fetch(`site-data/site.json?v=${Date.now()}`, { cache: 'no-store' });
+    if (!res.ok) throw new Error(res.status);
+    const data = await res.json();
+    SECTIONS = data.sections;
+    $('foot').textContent =
+      `generated by refresh_site.py · ${data.generatedAt} · ${data.stats.sections} sections`;
+    render();
+  } catch (e) {
+    $('grid').innerHTML = `
+      <div class="state error-card">
+        <p><strong>Couldn't load the site catalog.</strong></p>
+        <p class="mono" style="font-size:.75rem">${esc(e.message)}</p>
+        <p style="margin-top:10px">
+          <button class="btn primary" onclick="loadSite()">Retry</button>
+          <a class="btn" href="https://github.com/rayrite/rayrite.github.io">Open repo</a>
+        </p>
+        <p style="margin-top:10px;font-size:.78rem">Serving over HTTP? (<code class="mono">python -m http.server 8000</code>)</p>
+      </div>`;
+    $('foot').textContent = 'catalog unavailable';
+  }
+}
+
+function skeletons() {
+  $('grid').innerHTML = Array.from({ length: 8 }, () =>
+    `<div class="skeleton" style="height:150px"></div>`).join('');
+}
+
+function fmtBytes(n) {
+  if (n > 1e9) return (n / 1e9).toFixed(1) + ' GB';
+  if (n > 1e6) return (n / 1e6).toFixed(0) + ' MB';
+  if (n > 1e3) return (n / 1e3).toFixed(0) + ' KB';
+  return n + ' B';
+}
+function fmtDate(iso) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+}
+
+function visible() {
+  const q = state.query.trim().toLowerCase();
+  let list = SECTIONS.filter(s => {
+    if (state.family !== 'all' && s.family !== state.family) return false;
+    if (!q) return true;
+    return (s.title + ' ' + s.summary + ' ' + s.entries.map(e => e.title).join(' '))
+      .toLowerCase().includes(q);
+  });
+  const sorters = {
+    updated: (a, b) => (b.lastModified || '').localeCompare(a.lastModified || ''),
+    name: (a, b) => a.title.localeCompare(b.title),
+    size: (a, b) => b.bytes - a.bytes,
+  };
+  return list.sort(sorters[state.sort]);
+}
+
+function card(s) {
+  const fam = s.family || 'data';
+  const extra = s.entries.length > 1 ? `
+    <details class="entries">
+      <summary>${s.entries.length} entries</summary>
+      <div class="entry-list">
+        ${s.entries.slice(0, 10).map(e => `
+          <a href="${esc(e.path)}">
+            <span class="p">${esc(e.path)}</span>
+            <span>${esc(e.title)}</span>
+          </a>`).join('')}
+        ${s.entries.length > 10 ? `<span class="p" style="padding:4px 8px">+${s.entries.length - 10} more…</span>` : ''}
+      </div>
+    </details>` : '';
+  return `
+  <a class="card" href="${esc(s.primary)}" style="--fc:var(--fam-${fam})">
+    <span class="fam-bar"></span>
+    <div class="top">
+      <div class="fam-ico">${FAM_ICON[fam] || '◈'}</div>
+      <h3>${esc(s.title)}</h3>
+      <span class="badge">${FAM_LABEL[fam] || fam}</span>
     </div>
-    <div class="links">
-        <a href="pricing.html">Pricing</a>
+    <p>${esc(s.summary)}</p>
+    <div class="meta">
+      <span>${s.entries.length} app${s.entries.length === 1 ? '' : 's'}</span>
+      <span>${s.fileCount} files</span>
+      <span>${fmtBytes(s.bytes)}</span>
+      <span>${fmtDate(s.lastModified)}</span>
+      <span class="go">Open →</span>
     </div>
-    <button class="back-btn" onclick="goBack()">Back</button>
-    <div class="gallery">
-        <img src="image1.jpg" alt="Image 1" onclick="openModal('image1.jpg')">
-        <img src="image2.jpg" alt="Image 2" onclick="openModal('image2.jpg')">
-        <img src="image3.jpg" alt="Image 3" onclick="openModal('image3.jpg')">
-        <img src="image4.jpg" alt="Image 4" onclick="openModal('image4.jpg')">
-        <img src="image5.jpg" alt="Image 5" onclick="openModal('image5.jpg')">
-        <img src="image6.jpg" alt="Image 6" onclick="openModal('image6.jpg')">
-        <img src="image7.jpg" alt="Image 7" onclick="openModal('image7.jpg')">
-        <img src="image8.jpg" alt="Image 8" onclick="openModal('image8.jpg')">
-        <img src="image9.jpg" alt="Image 9" onclick="openModal('image9.jpg')">
-        <img src="image10.jpg" alt="Image 10" onclick="openModal('image10.jpg')">
-        <img src="image11.jpg" alt="Image 11" onclick="openModal('image11.jpg')">
-    </div>
+    ${extra}
+  </a>`;
+}
 
-    <!-- Modal Structure -->
-    <div id="imageModal" onclick="closeModal()">
-        <img id="modalImage" src="" alt="">
-    </div>
+function render() {
+  const list = visible();
+  const active = state.query.trim() !== '' || state.family !== 'all';
+  $('clearBtn').hidden = !active;
+  $('count').textContent = `${list.length} / ${SECTIONS.length} sections`;
+  $('grid').innerHTML = list.length
+    ? list.map(card).join('')
+    : `<div class="state">
+         <p>No sections match <strong>${esc(state.query)}</strong>.</p>
+         <p style="margin-top:10px"><button class="btn primary" id="resetBtn">Clear filters</button></p>
+       </div>`;
+  const rb = $('resetBtn');
+  if (rb) rb.onclick = clearFilters;
+}
+function clearFilters() {
+  state.query = ''; state.family = 'all';
+  $('q').value = '';
+  document.querySelector('.fchip[data-fam="all"]').click();
+}
 
-    <script>
-        function goBack() {
-            window.history.back();
-        }
+/* controls */
+let debounce;
+$('q').addEventListener('input', (e) => {
+  clearTimeout(debounce);
+  debounce = setTimeout(() => { state.query = e.target.value; render(); }, 100);
+});
+$('sort').addEventListener('change', (e) => { state.sort = e.target.value; render(); });
+$('clearBtn').onclick = clearFilters;
+document.addEventListener('keydown', (e) => {
+  if (e.key === '/' && !/INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName)) {
+    e.preventDefault(); $('q').focus();
+  }
+  if (e.key === 't' && !/INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName)) {
+    $('themeBtn').click();
+  }
+});
 
-        // Show back button if there's a previous page
-        if (window.history.length > 1) {
-            document.querySelector('.back-btn').style.display = 'block';
-        }
-
-        // Open the modal with the clicked image
-        function openModal(imageSrc) {
-            const modal = document.getElementById('imageModal');
-            const modalImage = document.getElementById('modalImage');
-            modalImage.src = imageSrc;
-            modalImage.alt = "Full-size Image";
-            modal.style.display = 'flex';
-        }
-
-        // Close the modal
-        function closeModal() {
-            const modal = document.getElementById('imageModal');
-            modal.style.display = 'none';
-            // Clear the image source when closing the modal
-            const modalImage = document.getElementById('modalImage');
-            modalImage.src = "";
-        }
-
-        // Ensure the modal is hidden on page load
-        window.onload = function() {
-            const modal = document.getElementById('imageModal');
-            modal.style.display = 'none';
-        };
-    </script>
+loadSite();
+</script>
 </body>
 </html>

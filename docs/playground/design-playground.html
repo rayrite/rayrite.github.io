@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>rayrite.github.io — Front Door Design Playground</title>
+<style>
+  /* ===== Playground chrome (dark, per playground spec) ===== */
+  :root {
+    --pg-bg: #0d1117; --pg-panel: #161b22; --pg-border: #30363d;
+    --pg-text: #e6edf3; --pg-muted: #8b949e; --pg-accent: #58a6ff;
+    --pg-mono: ui-monospace, 'Cascadia Code', Consolas, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--pg-bg); color: var(--pg-text);
+    font-family: -apple-system, 'Segoe UI', system-ui, sans-serif;
+    font-size: 13px; min-height: 100vh;
+    display: grid; grid-template-columns: 330px 1fr; grid-template-rows: auto 1fr;
+  }
+  header.pg {
+    grid-column: 1 / -1; padding: 10px 16px; border-bottom: 1px solid var(--pg-border);
+    display: flex; align-items: center; gap: 10px; background: var(--pg-panel);
+  }
+  header.pg h1 { font-size: 14px; font-weight: 600; }
+  header.pg .sub { color: var(--pg-muted); }
+  .controls {
+    border-right: 1px solid var(--pg-border); background: var(--pg-panel);
+    padding: 14px; overflow-y: auto; max-height: calc(100vh - 41px);
+  }
+  .group { margin-bottom: 16px; }
+  .group > h2 {
+    font-size: 11px; text-transform: uppercase; letter-spacing: .08em;
+    color: var(--pg-muted); margin-bottom: 8px; font-weight: 600;
+  }
+  .row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+  .row label { flex: 1; }
+  .val { font-family: var(--pg-mono); color: var(--pg-accent); font-size: 12px; }
+  input[type=range] { width: 130px; accent-color: var(--pg-accent); }
+  select, button {
+    background: #0d1117; color: var(--pg-text); border: 1px solid var(--pg-border);
+    border-radius: 6px; padding: 4px 8px; font-size: 12px; cursor: pointer;
+    font-family: inherit;
+  }
+  select:focus, button:focus { outline: 1px solid var(--pg-accent); }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    border: 1px solid var(--pg-border); border-radius: 999px; padding: 3px 10px;
+    cursor: pointer; font-size: 11px; color: var(--pg-muted); user-select: none;
+  }
+  .chip.on { border-color: var(--pg-accent); color: var(--pg-accent); }
+  .switch { position: relative; width: 34px; height: 18px; flex: none; }
+  .switch input { opacity: 0; width: 100%; height: 100%; position: absolute; cursor: pointer; z-index: 2; margin: 0; }
+  .switch .track { position: absolute; inset: 0; background: #30363d; border-radius: 999px; transition: .15s; }
+  .switch .track::after {
+    content: ''; position: absolute; width: 14px; height: 14px; border-radius: 50%;
+    background: #8b949e; top: 2px; left: 2px; transition: .15s;
+  }
+  .switch input:checked + .track { background: #1f6feb44; }
+  .switch input:checked + .track::after { left: 18px; background: var(--pg-accent); }
+  main { display: flex; flex-direction: column; min-width: 0; }
+  .preview-wrap { flex: 1; padding: 16px; overflow: auto; }
+  .device {
+    margin: 0 auto; width: 100%; max-width: 780px; height: 620px;
+    border: 1px solid var(--pg-border); border-radius: 12px; overflow: hidden;
+    position: relative; background: #fff; box-shadow: 0 8px 30px rgba(0,0,0,.4);
+  }
+  .device .bar {
+    height: 26px; background: var(--pg-panel); border-bottom: 1px solid var(--pg-border);
+    display: flex; align-items: center; gap: 6px; padding: 0 10px; position: relative; z-index: 5;
+  }
+  .device .bar i { width: 9px; height: 9px; border-radius: 50%; background: #30363d; display: block; }
+  .device .bar .url {
+    flex: 1; text-align: center; font-family: var(--pg-mono); font-size: 10px; color: var(--pg-muted);
+  }
+  .frame { height: calc(100% - 26px); overflow-y: auto; }
+  .prompt-box { border-top: 1px solid var(--pg-border); background: var(--pg-panel); padding: 12px 16px; }
+  .prompt-box .label { font-size: 11px; color: var(--pg-muted); margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; }
+  #prompt {
+    font-family: var(--pg-mono); font-size: 11.5px; line-height: 1.55; color: var(--pg-text);
+    background: #0d1117; border: 1px solid var(--pg-border); border-radius: 8px;
+    padding: 10px; white-space: pre-wrap; max-height: 130px; overflow-y: auto;
+  }
+  #copyBtn { float: right; }
+
+  /* ================================================================
+     PREVIEW — the design under test. All tokens driven by JS state.
+     ================================================================ */
+  .site {
+    --hue: 239;
+    --acc: hsl(var(--hue) 72% 56%);
+    --acc-soft: hsl(var(--hue) 72% 56% / .12);
+    --acc-deep: hsl(var(--hue) 68% 46%);
+    --r: 12px;
+    --pad: 14px; --gap: 14px; --cardpad: 16px;
+    --fs: 15px;
+    font-size: var(--fs);
+    font-family: -apple-system, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg); color: var(--tx); min-height: 100%;
+    --fam-study: #3b82f6; --fam-research: #8b5cf6; --fam-data: #14b8a6;
+    --fam-creative: #ec4899; --fam-reader: #f59e0b;
+  }
+  .site.dark {
+    --bg: #0f1117; --bg2: #161b22; --bg3: #1c2330; --tx: #e6edf3; --tx2: #9aa4b2;
+    --bd: #2a313c; --card: #161b22;
+  }
+  .site.light {
+    --bg: #f6f8fb; --bg2: #ffffff; --bg3: #eef1f6; --tx: #171c26; --tx2: #5b6472;
+    --bd: #e3e7ee; --card: #ffffff;
+  }
+  .site.mono-fam {
+    --fam-study: hsl(var(--hue) 60% 58%); --fam-research: hsl(var(--hue) 45% 66%);
+    --fam-data: hsl(calc(var(--hue) + 18) 55% 52%); --fam-creative: hsl(calc(var(--hue) - 20) 62% 60%);
+    --fam-reader: hsl(var(--hue) 70% 68%);
+  }
+  .hdr {
+    position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--bg2) 88%, transparent);
+    backdrop-filter: blur(8px); border-bottom: 1px solid var(--bd);
+    display: flex; align-items: center; gap: 12px; padding: 10px var(--pad);
+  }
+  .mark {
+    width: 28px; height: 28px; border-radius: 8px; flex: none;
+    background: linear-gradient(135deg, var(--acc), var(--acc-deep));
+    display: grid; place-items: center; color: #fff; font-weight: 700; font-size: 13px;
+  }
+  .wordmark { font-weight: 700; letter-spacing: -.01em; }
+  .wordmark small { display: block; font-weight: 400; color: var(--tx2); font-size: .72em; letter-spacing: 0; }
+  .search {
+    margin-left: auto; display: flex; align-items: center; gap: 8px;
+    background: var(--bg3); border: 1px solid var(--bd); border-radius: 999px;
+    padding: 6px 12px; color: var(--tx2); min-width: 130px; font-size: .85em;
+  }
+  .search kbd {
+    margin-left: auto; font-family: var(--pg-mono); font-size: .85em; border: 1px solid var(--bd);
+    border-radius: 4px; padding: 0 5px; background: var(--bg2);
+  }
+  .icon-btn {
+    width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--bd);
+    background: var(--bg2); color: var(--tx); display: grid; place-items: center; cursor: pointer;
+  }
+  .hero {
+    padding: var(--pad) var(--pad) 4px;
+  }
+  .hero h2 { font-size: 1.45em; letter-spacing: -.02em; margin-bottom: 4px; }
+  .hero p { color: var(--tx2); margin-bottom: 10px; }
+  .stats { display: flex; gap: 8px; flex-wrap: wrap; }
+  .stat {
+    background: var(--acc-soft); color: var(--acc-deep); border-radius: 999px;
+    padding: 3px 11px; font-size: .8em; font-weight: 600;
+    font-family: var(--pg-mono);
+  }
+  .site.dark .stat { color: var(--acc); }
+  .filters { display: flex; gap: 8px; padding: 10px var(--pad); overflow-x: auto; }
+  .fchip {
+    border: 1px solid var(--bd); border-radius: 999px; padding: 5px 13px; font-size: .82em;
+    cursor: pointer; white-space: nowrap; color: var(--tx2); background: var(--bg2);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .fchip .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--fc, var(--tx2)); }
+  .fchip.on { border-color: var(--acc); color: var(--acc); background: var(--acc-soft); font-weight: 600; }
+  .grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap); padding: 4px var(--pad) var(--pad);
+  }
+  .card {
+    background: var(--card); border-radius: var(--r); padding: var(--cardpad);
+    border: 1px solid var(--bd); cursor: pointer; transition: transform .15s ease, box-shadow .15s ease;
+    display: flex; flex-direction: column; gap: 8px; position: relative; overflow: hidden;
+  }
+  .card.style-flat { border-color: transparent; background: var(--bg3); }
+  .card.style-elevated { border-color: transparent; box-shadow: 0 4px 16px rgba(2,6,23,.14); }
+  .site.dark .card.style-elevated { box-shadow: 0 4px 16px rgba(0,0,0,.45); }
+  .card:hover { transform: translateY(-2px); }
+  .card.style-elevated:hover { box-shadow: 0 8px 24px rgba(2,6,23,.2); }
+  .fam-bar { position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--fc); }
+  .card .top { display: flex; align-items: center; gap: 10px; }
+  .fam-ico {
+    width: 34px; height: 34px; border-radius: calc(var(--r) * .6); flex: none;
+    background: color-mix(in srgb, var(--fc) 16%, transparent); color: var(--fc);
+    display: grid; place-items: center; font-size: 15px;
+  }
+  .card h3 { font-size: 1em; letter-spacing: -.01em; }
+  .badge {
+    font-size: .68em; font-weight: 700; text-transform: uppercase; letter-spacing: .07em;
+    color: var(--fc); background: color-mix(in srgb, var(--fc) 13%, transparent);
+    padding: 2px 8px; border-radius: 999px; margin-left: auto; white-space: nowrap;
+  }
+  .card p { color: var(--tx2); font-size: .84em; line-height: 1.5; }
+  .meta {
+    display: flex; gap: 10px; color: var(--tx2); font-size: .72em;
+    font-family: var(--pg-mono); margin-top: auto; align-items: center;
+  }
+  .meta .go { margin-left: auto; color: var(--acc); font-weight: 600; }
+  .foot {
+    text-align: center; color: var(--tx2); font-size: .72em; padding: 10px var(--pad) 16px;
+    font-family: var(--pg-mono);
+  }
+
+  /* Reader preview */
+  .rd { display: grid; grid-template-columns: 190px 1fr 130px; min-height: 100%; }
+  .rd-side { border-right: 1px solid var(--bd); background: var(--bg2); padding: var(--pad) 10px; }
+  .rd-side h4 { font-size: .7em; text-transform: uppercase; letter-spacing: .08em; color: var(--tx2); margin: 4px 4px 8px; }
+  .rd-file {
+    padding: 7px 9px; border-radius: calc(var(--r) * .5); font-size: .78em; color: var(--tx2);
+    cursor: pointer; display: flex; gap: 7px; align-items: center; margin-bottom: 2px;
+  }
+  .rd-file .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--bd); flex: none; }
+  .rd-file.on { background: var(--acc-soft); color: var(--acc); font-weight: 600; }
+  .rd-file.on .dot { background: var(--acc); }
+  .rd-main { padding: var(--pad) 22px; min-width: 0; }
+  .rd-crumb { font-size: .72em; color: var(--tx2); font-family: var(--pg-mono); margin-bottom: 10px; display: flex; gap: 8px; }
+  .rd-crumb b { color: var(--acc); }
+  .rd-main h2 { font-size: 1.3em; letter-spacing: -.01em; margin-bottom: 6px; }
+  .rd-main .byline { color: var(--tx2); font-size: .76em; margin-bottom: 14px; font-family: var(--pg-mono); }
+  .rd-main p { font-size: .86em; line-height: 1.65; margin-bottom: 10px; }
+  .rd-main pre {
+    background: var(--bg3); border: 1px solid var(--bd); border-radius: var(--r);
+    padding: 10px 12px; font-family: var(--pg-mono); font-size: .76em; margin: 10px 0; overflow-x: auto;
+  }
+  .rd-main blockquote {
+    border-left: 3px solid var(--acc); background: var(--acc-soft);
+    border-radius: 0 var(--r) var(--r) 0; padding: 8px 12px; font-size: .84em; margin: 10px 0;
+  }
+  .rd-toc { border-left: 1px solid var(--bd); padding: var(--pad) 10px; }
+  .rd-toc h4 { font-size: .7em; text-transform: uppercase; letter-spacing: .08em; color: var(--tx2); margin-bottom: 8px; }
+  .rd-toc a { display: block; font-size: .72em; color: var(--tx2); padding: 3px 0 3px 10px; border-left: 2px solid transparent; }
+  .rd-toc a.on { color: var(--acc); border-left-color: var(--acc); font-weight: 600; }
+  .prog { position: sticky; top: 0; height: 3px; background: linear-gradient(90deg, var(--acc), var(--acc-deep)); width: 62%; z-index: 20; }
+</style>
+</head>
+<body>
+<header class="pg">
+  <h1>Front Door Design Playground</h1>
+  <span class="sub">rayrite.github.io — tune the design, copy the prompt back to the agent</span>
+</header>
+
+<nav class="controls">
+  <div class="group">
+    <h2>Preset</h2>
+    <select id="preset" style="width:100%">
+      <option value="indigo">Indigo Lab (default)</option>
+      <option value="terminal">Terminal Dark</option>
+      <option value="editorial">Editorial Light</option>
+      <option value="midnight">Midnight Violet</option>
+    </select>
+  </div>
+
+  <div class="group">
+    <h2>Identity</h2>
+    <div class="row"><label>Accent hue</label><input type="range" id="hue" min="0" max="360" step="1"><span class="val" id="hueV"></span></div>
+    <div class="row"><label>Preview theme</label>
+      <div class="chips"><span class="chip" data-theme="light">Light</span><span class="chip" data-theme="dark">Dark</span></div>
+    </div>
+    <div class="row"><label>Family colors</label>
+      <div class="chips"><span class="chip" data-fam="coded">Coded</span><span class="chip" data-fam="mono">Mono</span></div>
+    </div>
+  </div>
+
+  <div class="group">
+    <h2>Layout &amp; shape</h2>
+    <div class="row"><label>Card density</label>
+      <div class="chips"><span class="chip" data-density="compact">Compact</span><span class="chip" data-density="comfort">Cozy</span><span class="chip" data-density="airy">Airy</span></div>
+    </div>
+    <div class="row"><label>Corner radius</label><input type="range" id="radius" min="0" max="22" step="1"><span class="val" id="radiusV"></span></div>
+    <div class="row"><label>Card style</label>
+      <div class="chips"><span class="chip" data-card="flat">Flat</span><span class="chip" data-card="bordered">Bordered</span><span class="chip" data-card="elevated">Elevated</span></div>
+    </div>
+    <div class="row"><label>Header</label>
+      <div class="chips"><span class="chip" data-header="compact">Compact</span><span class="chip" data-header="hero">Hero band</span></div>
+    </div>
+  </div>
+
+  <div class="group">
+    <h2>Typography</h2>
+    <div class="row"><label>Base size</label><input type="range" id="fs" min="13" max="18" step="1"><span class="val" id="fsV"></span></div>
+  </div>
+
+  <div class="group">
+    <h2>Screen</h2>
+    <div class="row"><label>Preview</label>
+      <div class="chips"><span class="chip" data-view="portal">Portal</span><span class="chip" data-view="reader">Reader</span></div>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <div class="preview-wrap">
+    <div class="device">
+      <div class="bar"><i></i><i></i><i></i><span class="url" id="urlBar">rayrite.github.io/</span></div>
+      <div class="frame" id="frame">
+        <div class="site" id="site"></div>
+      </div>
+    </div>
+  </div>
+  <div class="prompt-box">
+    <div class="label">
+      <span>Generated design prompt</span>
+      <button id="copyBtn">Copy</button>
+    </div>
+    <div id="prompt"></div>
+  </div>
+</main>
+
+<script>
+'use strict';
+const DEFAULTS = {
+  hue: 239, theme: 'light', fam: 'coded', density: 'comfort', radius: 12,
+  card: 'elevated', header: 'compact', fs: 15, view: 'portal'
+};
+const state = { ...DEFAULTS };
+const PRESETS = {
+  indigo:    { ...DEFAULTS },
+  terminal:  { hue: 158, theme: 'dark',  fam: 'mono',  density: 'compact', radius: 6,  card: 'bordered', header: 'compact', fs: 14 },
+  editorial: { hue: 212, theme: 'light', fam: 'mono',  density: 'airy',    radius: 4,  card: 'flat',     header: 'hero',    fs: 17 },
+  midnight:  { hue: 268, theme: 'dark',  fam: 'coded', density: 'comfort', radius: 16, card: 'elevated', header: 'hero',    fs: 15 }
+};
+const DENSITY = { compact: [10, 10, 12], comfort: [14, 14, 16], airy: [20, 18, 22] };
+const FAMNAME = { study: 'Study', research: 'Research', data: 'Data', creative: 'Creative', reader: 'Library' };
+const SECTIONS = [
+  { fam: 'study',    ico: '🎓', t: 'AWS Study Kit',            s: 'Three certification tracks — CLF-C02, AIF-C01, SAA-C03 — with 82 comparison tables, a 979-entry glossary and 122 annotated figures.', m: '6 apps · 190 files' },
+  { fam: 'research', ico: '📄', t: 'BCF Whitepapers',          s: 'Specification-driven methodology for autonomous SWE agents on the Gemma-4 competition: graph-first localization plus a 129-task labeled taxonomy.', m: '2 drafts' },
+  { fam: 'data',     ico: '📊', t: 'Product Hunt Viewer',      s: '11,872 launches, Jun–Sep 2026. Month-colored browsing, tag filters, favorites and JSON export.', m: '3 viewers' },
+  { fam: 'creative', ico: '✦',  t: 'CVX Splash',              s: '28+ animated background studies across cloud, ocean, abyss and constellation families — WebGL, PixiJS and canvas 2D.', m: '48 files' },
+  { fam: 'reader',   ico: '📚', t: 'Markdown Libraries',       s: 'Research corpora read through the unified reader: Kaggle roundups, ScamShield venture docs, FOSS deep-dives.', m: '5 libraries' },
+  { fam: 'data',     ico: '💹', t: 'Investor Watchlists',      s: 'DRAM shortage and IoT / physical-AI thesis dashboards: 254 tickers with sentiment and supply-chain tabs.', m: '2 dashboards' },
+];
+const FILES = ['00_opus55_research.md', '03_sonnet55_research.md', '10_bcf_whitepaper_v3.md', '19_gemma4_masterplan.md', '25_metadata_wishlist.md', '31_data_anal_roundup.md'];
+
+const $ = (s) => document.querySelector(s);
+const $$ = (s) => [...document.querySelectorAll(s)];
+
+function chip(group, val) {
+  $$(`[data-${group}]`).forEach(c => c.classList.toggle('on', c.dataset[group] === String(val)));
+}
+
+function syncControls() {
+  $('#hue').value = state.hue; $('#hueV').textContent = state.hue + '°';
+  $('#radius').value = state.radius; $('#radiusV').textContent = state.radius + 'px';
+  $('#fs').value = state.fs; $('#fsV').textContent = state.fs + 'px';
+  chip('theme', state.theme); chip('fam', state.fam); chip('density', state.density);
+  chip('card', state.card); chip('header', state.header); chip('view', state.view);
+}
+
+function renderPreview() {
+  const site = $('#site');
+  const [pad, gap, cardpad] = DENSITY[state.density];
+  site.className = `site ${state.theme}${state.fam === 'mono' ? ' mono-fam' : ''}`;
+  site.style.setProperty('--hue', state.hue);
+  site.style.setProperty('--r', state.radius + 'px');
+  site.style.setProperty('--pad', pad + 'px');
+  site.style.setProperty('--gap', gap + 'px');
+  site.style.setProperty('--cardpad', cardpad + 'px');
+  site.style.setProperty('--fs', state.fs + 'px');
+  $('#urlBar').textContent = state.view === 'reader' ? 'rayrite.github.io/reader/?src=cvx/kaggle/items' : 'rayrite.github.io/';
+
+  if (state.view === 'portal') {
+    const cards = SECTIONS.map(s => `
+      <div class="card style-${state.card}">
+        <span class="fam-bar" style="--fc:var(--fam-${s.fam})"></span>
+        <div class="top">
+          <div class="fam-ico" style="--fc:var(--fam-${s.fam})">${s.ico}</div>
+          <h3>${s.t}</h3>
+          <span class="badge" style="--fc:var(--fam-${s.fam})">${FAMNAME[s.fam]}</span>
+        </div>
+        <p>${s.s}</p>
+        <div class="meta"><span>${s.m}</span><span class="go">Open →</span></div>
+      </div>`).join('');
+    site.innerHTML = `
+      <div class="hdr">
+        <div class="mark">r</div>
+        <div class="wordmark">rayrite<small>lab bench &amp; publishing hub</small></div>
+        <div class="search">🔍 Search sections… <kbd>/</kbd></div>
+        <div class="icon-btn">◐</div>
+      </div>
+      ${state.header === 'hero' ? `
+      <div class="hero">
+        <h2>Everything on the bench</h2>
+        <p>Study tools, research corpora, dataset apps and WebGL experiments — one front door.</p>
+        <div class="stats"><span class="stat">23 sections</span><span class="stat">146 pages</span><span class="stat">136 docs</span><span class="stat">refreshed 2026-10-03</span></div>
+      </div>` : ''}
+      <div class="filters">
+        <span class="fchip on">All</span>
+        ${Object.entries(FAMNAME).map(([k, n]) => `<span class="fchip" style="--fc:var(--fam-${k})"><span class="dot"></span>${n}</span>`).join('')}
+      </div>
+      <div class="grid">${cards}</div>
+      <div class="foot">generated by refresh_site.py · 2026-10-03T14:22Z</div>`;
+  } else {
+    const toc = ['Abstract', '1 Methodology', '2 Graph Protocol', '3 Taxonomy', '4 Case Studies', '5 References'];
+    site.innerHTML = `
+      <div class="prog"></div>
+      <div class="hdr">
+        <div class="mark">r</div>
+        <div class="wordmark">reader<small>cvx/kaggle/items</small></div>
+        <div class="search">🔍 Filter files… <kbd>/</kbd></div>
+        <div class="icon-btn">◐</div>
+      </div>
+      <div class="rd">
+        <div class="rd-side">
+          <h4>6 documents</h4>
+          ${FILES.map((f, i) => `<div class="rd-file${i === 2 ? ' on' : ''}"><span class="dot"></span>${f}</div>`).join('')}
+          <h4 style="margin-top:14px">← prev · next →</h4>
+        </div>
+        <div class="rd-main">
+          <div class="rd-crumb"><b>Library</b> / cvx/kaggle/items / <span>10_bcf_whitepaper_v3.md</span></div>
+          <h2>BCF: Specification-Driven Graph Reasoning for Autonomous SWE Agents</h2>
+          <div class="byline">3,412 words · 8 min read · updated 2026-09-30</div>
+          <p>We propose the Batonic Coding Framework, a four-phase methodology that replaces exhaustive file exploration with targeted graph queries over a 256-dimensional embedding index.</p>
+          <blockquote>Methodological transparency: results are framed as expectations, not measurements, pending the 8-week experimental protocol.</blockquote>
+          <p>The graph protocol issues dual <code>search_similar_code</code> queries, expands context via <code>get_code_subgraph</code>, then follows <code>called_by</code> edges to the true root cause.</p>
+          <pre>phase_1 = issue_spec.parse(title, body)
+hits   = search_similar_code(embed(issue), k=8)
+sub    = get_code_subgraph(hits, depth=2)</pre>
+          <p>A minimum-viable patch is then validated against the reproduction harness before submission, under a 12-hour budget.</p>
+        </div>
+        <div class="rd-toc">
+          <h4>On this page</h4>
+          ${toc.map((t, i) => `<a class="${i === 1 ? 'on' : ''}">${t}</a>`).join('')}
+        </div>
+      </div>`;
+  }
+}
+
+function renderPrompt() {
+  const p = [];
+  const d = (k) => state[k] !== DEFAULTS[k];
+  const themeName = state.theme === 'dark' ? 'dark-mode-first' : 'light-mode-first (with a full dark theme)';
+  p.push(`Build the rayrite.github.io front door and unified reader as one cohesive design system: ${themeName}, accent hsl(${state.hue} 72% 56%).`);
+  if (state.fam === 'mono') p.push(`Derive the five family accents (Study/Research/Data/Creative/Library) from the accent hue instead of using distinct hues.`);
+  else p.push(`Color-code the five content families (Study blue, Research violet, Data teal, Creative pink, Library amber) and echo each card's family color as a left edge bar plus tinted icon chip.`);
+  const densityWord = { compact: 'compact', comfort: 'comfortable', airy: 'airy' }[state.density];
+  if (d('density')) p.push(`${densityWord} density: ${DENSITY[state.density].join('/')}px page/grid/card padding.`);
+  if (d('radius')) p.push(`${state.radius}px corner radius throughout (cards, chips, code blocks).`);
+  const cardWord = { flat: 'flat surface-tinted cards with no border', bordered: '1px bordered cards with no shadow', elevated: 'borderless elevated cards with a soft shadow that deepens on hover' }[state.card];
+  p.push(`Use ${cardWord}${state.card === 'elevated' ? ', plus a subtle translateY(-2px) hover lift' : ''}.`);
+  p.push(state.header === 'hero'
+    ? `Open the portal with a hero band: title, one-liner and mono stat pills (sections/pages/docs/refresh date).`
+    : `Keep a compact sticky header (blurred backdrop, search pill with "/" shortcut, theme toggle) and skip the hero band.`);
+  if (d('fs')) p.push(`Base font size ${state.fs}px.`);
+  p.push(`The markdown reader shares the same header, tokens and radius: left file sidebar with active-dot states, ~72ch reading column, right TOC rail with scroll-spy, thin reading-progress bar, prev/next navigation, persisted theme+font+position.`);
+  $('#prompt').textContent = p.join(' ');
+}
+
+function updateAll() { syncControls(); renderPreview(); renderPrompt(); }
+
+$('#preset').addEventListener('change', e => { Object.assign(state, PRESETS[e.target.value]); updateAll(); });
+$('#hue').addEventListener('input', e => { state.hue = +e.target.value; updateAll(); });
+$('#radius').addEventListener('input', e => { state.radius = +e.target.value; updateAll(); });
+$('#fs').addEventListener('input', e => { state.fs = +e.target.value; updateAll(); });
+['theme', 'fam', 'density', 'card', 'header', 'view'].forEach(g => {
+  $$(`[data-${g}]`).forEach(c => c.addEventListener('click', () => { state[g] = c.dataset[g]; updateAll(); }));
+});
+$('#copyBtn').addEventListener('click', async () => {
+  try { await navigator.clipboard.writeText($('#prompt').textContent); }
+  catch { const ta = document.createElement('textarea'); ta.value = $('#prompt').textContent; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); }
+  const b = $('#copyBtn'); b.textContent = 'Copied!'; setTimeout(() => b.textContent = 'Copy', 1200);
+});
+
+updateAll();
+</script>
+</body>
+</html>

@@ -1533,6 +1533,7 @@ function buildToc(list) {
     `<a href="#${h.id}" class="${h.tagName === 'H3' ? 'l3' : ''}" data-id="${h.id}">${esc(h.textContent)}</a>`).join('');
   $('tocList').querySelectorAll('a').forEach(a =>
     a.onclick = (e) => { e.preventDefault(); document.getElementById(a.dataset.id).scrollIntoView({ behavior: 'smooth' }); closeDrawers(); });
+  watchHeadings();
 }
 const spy = new IntersectionObserver((entries) => {
   entries.forEach(en => {

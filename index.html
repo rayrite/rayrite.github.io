@@ -26,7 +26,8 @@
   .card .top { display: flex; align-items: center; gap: 10px; }
   .card h3 { font-size: 1rem; margin: 0; letter-spacing: -0.01em; }
   .card p { margin: 0; color: var(--tx2); font-size: 0.84rem; }
-  details.entries { border-top: 1px dashed var(--bd); padding-top: 8px; }
+  .card .cover { position: absolute; inset: 0; z-index: 1; border-radius: var(--radius); }
+  details.entries { border-top: 1px dashed var(--bd); padding-top: 8px; position: relative; z-index: 2; }
   details.entries summary {
     cursor: pointer; color: var(--accent); font-size: 0.75rem; font-family: var(--font-mono);
     list-style: none; min-height: 34px; display: flex; align-items: center;
@@ -192,7 +193,8 @@ function card(s) {
       </div>
     </details>` : '';
   return `
-  <a class="card" href="${esc(s.primary)}" style="--fc:var(--fam-${fam})">
+  <article class="card" style="--fc:var(--fam-${fam})">
+    <a class="cover" href="${esc(s.primary)}" aria-label="Open ${esc(s.title)}"></a>
     <span class="fam-bar"></span>
     <div class="top">
       <div class="fam-ico">${FAM_ICON[fam] || '◈'}</div>
@@ -208,7 +210,7 @@ function card(s) {
       <span class="go">Open →</span>
     </div>
     ${extra}
-  </a>`;
+  </article>`;
 }
 
 function render() {

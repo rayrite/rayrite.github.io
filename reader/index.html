@@ -181,7 +181,7 @@ async function listViaGithubAPI() {
   return null;
 }
 function fileUrl(name) {
-  if (location.protocol !== 'file:' && !ghBase()) return `${SRC}/${name}`;
+  if (location.protocol !== 'file:' && !ghBase()) return `/${SRC}/${name}`;
   const gh = ghBase();
   if (gh && ghBranch) return `https://raw.githubusercontent.com/${gh.owner}/${gh.repo}/${ghBranch}/${SRC}/${name}`;
   return `${SRC}/${name}`;
@@ -192,7 +192,7 @@ let ghBranch = null;
 async function scanItems() {
   let names = null;
   try {
-    const r = await fetch(`${SRC}/manifest.json`, { cache: 'no-store' });
+    const r = await fetch(`/${SRC}/manifest.json`, { cache: 'no-store' });
     if (r.ok) {
       const m = await r.json();
       const arr = Array.isArray(m) ? m : (m.files || []);

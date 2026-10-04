@@ -1083,6 +1083,82 @@ a:hover{
   #notes-body{padding:4px 12px 14px}
 }
 
+/* === Combined Explorer mobile layout (2026-10-03) === */
+@media (max-width:768px){
+  /* 1. stat chips: auto-width wrap (was 2-col full-width grid) */
+  .stat-bar{display:flex;flex-wrap:wrap;gap:4px}
+  .stat{padding:3px 7px;font-size:10.5px;text-align:left}
+  .hdr-actions .btn{min-height:32px}
+
+  /* 2. stacked table rows (kills the 820px horizontal scroll).
+     display:block on the table escapes table-box fixup: grid tr's inside a
+     live table pick up anonymous row/cell wrappers (~21px stray overflow). */
+  #content table{display:block;min-width:0!important;width:100%!important;table-layout:auto}
+  #content tbody{display:block}
+  #content thead{display:none}
+  #content td{display:block;border-top:none;padding:1px 2px;min-width:0}
+  #content tr.repo-row{
+    display:grid;
+    grid-template-columns:auto auto auto minmax(0,1fr) auto auto;
+    gap:2px 8px;
+    padding:9px 10px;
+    border-top:1px solid var(--border);
+  }
+  #content tr.repo-row td.col-yt{grid-row:1;grid-column:1;text-align:center}
+  #content tr.repo-row td.col-num{grid-row:1;grid-column:2;text-align:left}
+  #content tr.repo-row td.col-bm{grid-row:1;grid-column:3;text-align:center}
+  #content tr.repo-row td.col-name{
+    grid-row:1;grid-column:4;font-size:13px;line-height:1.3;
+    display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;
+  }
+  #content tr.repo-row td.col-www{grid-row:1;grid-column:5;text-align:center}
+  #content tr.repo-row td.col-stars{grid-row:1;grid-column:6;text-align:right;white-space:nowrap}
+  #content tr.repo-row td.col-cat{grid-row:2;grid-column:1/-1}
+  #content tr.repo-row td.col-cat .cat-badge{
+    display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;
+  }
+  /* meta line: language chip left (86px slot), license mid (167px slot -
+     NOASSERTION / GPL-3.0-or-later fit without breaking), date right */
+  #content tr.repo-row td.col-lang{grid-row:3;grid-column:1/4}
+  #content tr.repo-row td.col-lic{grid-row:3;grid-column:4/6;font-size:10px;color:var(--muted);word-break:normal}
+  #content tr.repo-row td.col-ts{grid-row:3;grid-column:6/7;text-align:right}
+  #content tr.repo-row td.col-syn{grid-row:4;grid-column:1/-1}
+  #content tr.repo-row td.col-syn .syn-wrap{
+    display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden;
+  }
+  #content tr.repo-row td.col-kw{grid-row:5;grid-column:1/-1}
+  #content tr.repo-row td.col-kw .kw-tags-wrap{max-height:42px;overflow:hidden}
+
+  /* virtual-scroll spacer rows: keep exact inline pixel height */
+  #content tr.vs-pad{display:block;padding:0;border:none}
+  #content tr.vs-pad td{display:none}
+
+  /* rows are block-fit now: no horizontal scrolling anywhere. 'clip' (not
+     'hidden') so the box stops being a scroll container entirely — hidden
+     still reports a phantom scrollWidth via the emulation gutters. */
+  #tbl-wrap,.vid-group div[style*="overflow-x"]{overflow-x:clip!important}
+
+  /* 3. keyword dropdown above content, thumb-reachable */
+  #kw-dd-panel{top:auto;bottom:12px;max-height:52vh}
+
+  /* group-view header meta (filename · date) wraps instead of overflowing */
+  .vid-meta{white-space:normal;word-break:break-word}
+}
+
+/* 4. narrow phones: search scope select gets its own row, input the next */
+@media (max-width:480px){
+  .search-box-group{flex-wrap:wrap}
+  #fbar select#sel-search-target{flex:1 1 100%;min-width:0;max-width:none}
+  .search-input-wrap{flex:1 1 100%;min-width:0}
+  #fbar input[type=search]#search-input{width:100%;min-width:0}
+}
+
+/* 5. tablets 769-1180: let the filter bar wrap so #sel-sort etc stay visible
+   (pre-existing clip: five selects + search group exceed one nowrap row) */
+@media (max-width:1180px){
+  #fbar{flex-wrap:wrap}
+}
+
 </style>
 </head>
 <body>
@@ -1240,7 +1316,7 @@ for (const doc of DATA) {
 }
 
 // ── Virtual scroll state ──────────────────────────────────────────────────
-const VS_ROW_H = 110;   // estimated px per table row (synopsis-driven heights vary)
+const VS_ROW_H = (window.innerWidth <= 768) ? 170 : 110; /* cmbVsRow: mobile stacked cards are taller */   // estimated px per table row (synopsis-driven heights vary)
 const VS_BUFFER = 20;   // extra rows to render above/below the visible window
 const VS_CHUNK = 5;     // hysteresis chunk size to prevent boundary jitter
 let _vsItems = [];

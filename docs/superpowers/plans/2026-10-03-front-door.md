@@ -1533,6 +1533,7 @@ function buildToc(list) {
     `<a href="#${h.id}" class="${h.tagName === 'H3' ? 'l3' : ''}" data-id="${h.id}">${esc(h.textContent)}</a>`).join('');
   $('tocList').querySelectorAll('a').forEach(a =>
     a.onclick = (e) => { e.preventDefault(); document.getElementById(a.dataset.id).scrollIntoView({ behavior: 'smooth' }); closeDrawers(); });
+  watchHeadings();
 }
 const spy = new IntersectionObserver((entries) => {
   entries.forEach(en => {
@@ -1728,7 +1729,7 @@ Expected: `wrote:` lines for the 10 stubs + site.json + refresh-report.json; `ne
 
 - [ ] **Step 4: Idempotency check**
 
-Run: `python refresh_site.py` again → Expected: no `wrote:` lines (nothing changed); `git status` shows no modifications from the script.
+Run: `python refresh_site.py` again → Expected: at most one `wrote:` line — `site-data/refresh-report.json` converging its own `changed` list (ruling 6). Run once more → no `wrote:` lines at all; `git status` shows no modifications from the script.
 
 - [ ] **Step 5: Commit**
 
@@ -1808,7 +1809,7 @@ date with the current contents of the repository. You modify exactly one file:
 
 ## Verification checklist (all must be true before you finish)
 
-- [ ] `python refresh_site.py` runs clean twice in a row with no writes the second time
+- [ ] `python refresh_site.py` re-run reports no changes (`refresh-report.json` `changed: []`; a further run writes nothing — ruling 6)
 - [ ] `refresh-report.json` shows `needsSummary: []`
 - [ ] `git status` shows changes only under `site-data/`
 - [ ] Summaries are ≤320 chars and factual
@@ -1861,3 +1862,34 @@ git commit -m "docs: rollout verification screenshots"
 - **Spec coverage:** §2 tokens → Task 5; §3 portal → Task 6; §4 reader → Tasks 7–8; §5 stubs → Tasks 3+9; §6 contracts → Tasks 2+4; §7 script → Tasks 1–3; §8 bat → Task 4; §9 agent doc → Task 10; §10 rollout → Tasks 4, 9; §11 testing → Tasks 1–3, 8, 11. §12 deferred by spec. No gaps.
 - **Placeholder scan:** Task 4 Step 1 contains one marked removal note (`img: null_removed_note_see_skip`) with explicit instruction — intentional, resolved in-place. No TBDs.
 - **Type consistency:** `scan_tree/discover_entries/classify/merge_summaries/write_if_changed/build_stub/main` signatures consistent across tasks; JSON keys match spec §6; localStorage keys match Global Constraints.
+
+> **Execution amendment (2026-10-03, ruling 5):** Task 3 additionally fixes `changed` semantics
+> in `main()` — collect actual writes (return values of `write_if_changed`; byte-compare results
+> in dry-run) instead of listing all targets; remove the dead `report["changed"]` seeding in
+> `build_site_json`; extend tests to assert a second identical run reports `changed` without
+> `site-data/site.json` (refresh-report.json legitimately self-reports via generatedAt).
+>
+> **Execution amendment (2026-10-03, ruling 6):** Spec §10 step 6 ("run script twice → second
+> run reports no changes") was unachievable as built: `generatedAt` (1-second granularity) made
+> site.json differ on every run ≥1 s apart. `build_site_json` now reuses the existing site.json's
+> `generatedAt` when the rest of the payload is unchanged (both compared with the timestamp key
+> removed); a fresh timestamp is stamped only when content actually changed. This also stabilizes
+> refresh-report.json's `generatedAt`. Residual, by design: the report embeds the per-run
+> `changed` list (spec §6 mandates the field), so the run AFTER a run that wrote something
+> rewrites the report once to converge its own `changed` to `[]`; the run after that writes
+> nothing — idempotency checks therefore require the FINAL run to write nothing (Task 9 Step 4
+> and the Task 10 agent checklist are worded accordingly). Note for the ruling-5 test: its
+> steady-state fixture (stub bytes pre-written) is what lets its literal wording pass; on a naive
+> fixture, run 1's stub bootstrap legitimately appears in run 2's report when content changed
+> between runs. New test: three runs with three distinct mocked timestamps — run 1 bootstraps,
+> run 2 keeps run 1's timestamp and reports `changed: []`, run 3 writes nothing.
+>
+> **Execution amendment (2026-10-03, ruling 16):** the rollout run converges one run LATER than
+> the ruling-6 wording predicts: the script scans the tree BEFORE writing its targets, so the
+> real run's site.json is built from the pre-stub state (legacy viewer sizes/mtimes); the first
+> re-run's scan then sees the stubs for the first time — a real content change that rewrites
+> site.json once more; the second re-run converges the report's `changed` list; the third writes
+> nothing. Observed at rollout: wrote-lines 2 / 1 / 0 across the three post-rollout runs, with
+> `git status` clean after the final one. The acceptance criterion remains "a further run writes
+> nothing"; only the number of runs needed to reach it grows by one after any run whose writes
+> change what the next scan sees.

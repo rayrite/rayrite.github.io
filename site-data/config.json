@@ -1,0 +1,35 @@
+{
+  "skip": [".git", "docs", "site-data", "reader", "files", "fonts", "img"],
+  "skipFiles": ["index_0*.html", "index_basic.html", "index_test.html", "index_old.html", "index?old*.html",
+    "updated-index-html.html", "index-gallery-legacy.html", "*.zip", "dukr.png", "image*.jpg",
+    "LAUNCH_WEB_SERVER.bat", "create_manifest.*", "combine_md.*", "refresh_site.py", "REFRESH_SITE.bat"],
+  "sections": {
+    "aws2": {"title": "AWS Study Kit", "family": "study"},
+    "aws": {"title": "AWS Study Tools (Gen 1)", "family": "study"},
+    "exam": {"title": "CLF-C02 Exam Simulator", "family": "study"},
+    "bcf": {"title": "BCF Whitepapers", "family": "research"},
+    "cvx": {"title": "CVX Research Hub", "family": "research"},
+    "bsh": {"title": "BSH Game & Docs", "family": "creative"},
+    "ph": {"title": "Product Hunt Viewers", "family": "data"},
+    "devh": {"title": "DevHunt Viewers", "family": "data"},
+    "ur": {"title": "Bluesky Reviews Browser", "family": "data"},
+    "fs": {"title": "Media Archive Showcases", "family": "data"},
+    "money": {"title": "Investor Watchlists", "family": "data"},
+    "da": {"title": "DeepAgent Winners Showcase", "family": "data"},
+    "demo": {"title": "CVX Splash Demos", "family": "creative"},
+    "bleum": {"title": "ChronoSync Timelines", "family": "creative"},
+    "dukr": {"title": "DUKR Platform", "family": "data", "extraEntries": ["pricing.html"]},
+    "gjl": {"title": "GJL Consulting", "family": "data"},
+    "md": {"title": "Markdown Library"},
+    "md-dxc": {"title": "Internal Work Docs"},
+    "scam": {"title": "ScamShield Venture Docs"},
+    "mdh": {"title": "AWS & AI Study Pages"}
+  },
+  "readerFolders": {
+    "md": "md/items", "md-dxc": "md-dxc/items", "scam": "scam/items",
+    "dukr/opensource/1": "dukr/opensource/1/items", "mdh": "mdh/items",
+    "bsh/docs": "bsh/docs/index", "cvx/advertising/2": "cvx/advertising/2/items",
+    "cvx/companal": "cvx/companal/items", "cvx/kaggle": "cvx/kaggle/items",
+    "cvx/plan": "cvx/plan/items"
+  }
+}

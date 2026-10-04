@@ -59,7 +59,7 @@ date with the current contents of the repository. You modify exactly one file:
 
 ## Verification checklist (all must be true before you finish)
 
-- [ ] `python refresh_site.py` re-run reports no changes (`refresh-report.json` `changed: []`; a further run writes nothing — ruling 6)
+- [ ] `python refresh_site.py` re-run reports no changes (`refresh-report.json` `changed: []`; a further run writes nothing)
 - [ ] `refresh-report.json` shows `needsSummary: []`
 - [ ] `git status` shows changes only under `site-data/`
 - [ ] Summaries are ≤320 chars and factual

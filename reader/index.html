@@ -214,7 +214,8 @@ async function scanItems() {
   $('fileCount').textContent = `${FILES.length} document${FILES.length === 1 ? '' : 's'}`;
   renderFileList();
   const last = localStorage.getItem(`rr-reader-last:${SRC}`);
-  const initial = qs.get('file') || (FILES.includes(last) ? last : FILES[0]);
+  const want = qs.get('file');
+  const initial = FILES.includes(want) ? want : (FILES.includes(last) ? last : FILES[0]);
   if (initial) loadFile(initial);
 }
 
@@ -249,7 +250,9 @@ async function loadFile(name, keepScroll = false) {
       text = await r.text();
     } catch (e) {
       $('article').innerHTML = `<div class="state-msg"><p>Failed to load <code class="mono">${esc(name)}</code> (${esc(e.message)}).</p>
-        <p style="margin-top:10px"><button class="btn primary" onclick="loadFile(${JSON.stringify(name)})">Retry</button></p></div>`;
+        <p style="margin-top:10px"><button class="btn primary" id="retryBtn">Retry</button></p></div>`;
+      const retryBtn = document.getElementById('retryBtn');
+      if (retryBtn) retryBtn.onclick = () => loadFile(name);
       return;
     }
     cache.set(name, { text, words: (text.match(/\S+/g) || []).length });

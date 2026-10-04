@@ -1883,3 +1883,13 @@ git commit -m "docs: rollout verification screenshots"
 > fixture, run 1's stub bootstrap legitimately appears in run 2's report when content changed
 > between runs. New test: three runs with three distinct mocked timestamps — run 1 bootstraps,
 > run 2 keeps run 1's timestamp and reports `changed: []`, run 3 writes nothing.
+>
+> **Execution amendment (2026-10-03, ruling 16):** the rollout run converges one run LATER than
+> the ruling-6 wording predicts: the script scans the tree BEFORE writing its targets, so the
+> real run's site.json is built from the pre-stub state (legacy viewer sizes/mtimes); the first
+> re-run's scan then sees the stubs for the first time — a real content change that rewrites
+> site.json once more; the second re-run converges the report's `changed` list; the third writes
+> nothing. Observed at rollout: wrote-lines 2 / 1 / 0 across the three post-rollout runs, with
+> `git status` clean after the final one. The acceptance criterion remains "a further run writes
+> nothing"; only the number of runs needed to reach it grows by one after any run whose writes
+> change what the next scan sees.

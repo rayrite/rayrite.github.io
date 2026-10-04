@@ -29,7 +29,7 @@ date with the current contents of the repository. You modify exactly one file:
 2. For every id in `needsSummary` (no agent summary) and `staleSummary`
    (documents newer than the summary's `basedOn`):
    a. Deep-read that section's entry documents (the HTML pages and/or first
-      markdown items the report's section `entries` point to).
+      markdown items the section `entries` in `site-data/site.json` point to).
    b. Write a 2–3 sentence executive summary into
       `site-data/summaries.json` under `sections.<id>`:
       - ≤320 characters, factual, present tense.

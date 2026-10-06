@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" integrity="sha384-wFjoQjtV1y5jVHbt0p35Ui8aV8GVpEZkyF99OXWqP/eNJDU93D3Ugxkoyh6Y2I4A" crossorigin="anonymous">
 <link rel="stylesheet" href="../site-assets/shell.css">
 <style>
-  .shell { display: grid; grid-template-columns: 220px minmax(0,1fr) 180px; min-height: calc(100vh - 53px); }
+  .shell { display: grid; grid-template-columns: var(--side-w, 220px) minmax(0,1fr) var(--toc-w, 180px); min-height: calc(100vh - 53px); }
   .side { border-right: 1px solid var(--bd); background: var(--bg2); padding: var(--pad) 8px; overflow-y: auto; max-height: calc(100vh - 53px); position: sticky; top: 53px; }
   .side h4, .toc h4 { font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--tx2); margin: 6px 6px 8px; }
   .side .searchpill { flex-basis: 100%; margin: 0 0 8px; padding: 6px 10px; }
@@ -57,9 +57,19 @@
   .bottombar { display: none; }
   .state-msg { color: var(--tx2); text-align: center; padding: 60px 20px; font-size: 0.9rem; }
   @media (max-width: 900px) {
-    .shell { grid-template-columns: 200px minmax(0,1fr); }
+    .shell { grid-template-columns: var(--side-w, 200px) minmax(0,1fr); }
     .toc { display: none; }
     .toc.drawer { display: block; position: fixed; right: 0; top: 53px; bottom: 60px; width: min(260px, 80vw); background: var(--bg2); border-left: 1px solid var(--bd); z-index: 70; max-height: none; padding: var(--pad); }
+  }
+  /* desktop collapse: hamburgers fold the side/toc grid columns away.
+     Guarded by min-width so the classes never affect mobile drawers. */
+  @media (min-width: 769px) {
+    body.side-closed { --side-w: 0; }
+    body.side-closed .side { display: none; }
+  }
+  @media (min-width: 901px) {
+    body.toc-closed { --toc-w: 0; }
+    body.toc-closed .toc { display: none; }
   }
   @media (max-width: 768px) {
     .shell { grid-template-columns: minmax(0,1fr); }
@@ -288,7 +298,7 @@ function buildToc(list) {
   headings = list || [...$('article').querySelectorAll('h2, h3')];
   headings.forEach((h, i) => { if (!h.id) h.id = 'h-' + i; });
   const hasToc = headings.length > 0;
-  $('tocBtn').hidden = !hasToc || innerWidth > 900;
+  $('tocBtn').hidden = !hasToc;  // shown at every width: desktop collapse, mobile drawer
   $('tocList').innerHTML = headings.map(h =>
     `<a href="#${h.id}" class="${h.tagName === 'H3' ? 'l3' : ''}" data-id="${h.id}">${esc(h.textContent)}</a>`).join('');
   $('tocList').querySelectorAll('a').forEach(a =>
@@ -361,8 +371,21 @@ function runSearch(q) {
 
 /* ---------- drawers, keys, controls ---------- */
 function closeDrawers() { $('side').classList.remove('open'); $('toc').classList.remove('drawer'); }
-$('menuBtn').onclick = () => { $('toc').classList.remove('drawer'); $('side').classList.toggle('open'); };
-$('tocBtn').onclick = () => { $('side').classList.remove('open'); $('toc').classList.toggle('drawer'); };
+/* Persisted desktop collapse (grid columns), drawer behavior below those widths. */
+if (localStorage.getItem('rr-reader-side') === '1') document.body.classList.add('side-closed');
+if (localStorage.getItem('rr-reader-toc') === '1') document.body.classList.add('toc-closed');
+$('menuBtn').onclick = () => {
+  if (innerWidth > 768) {
+    const closed = document.body.classList.toggle('side-closed');
+    localStorage.setItem('rr-reader-side', closed ? '1' : '0');
+  } else { $('toc').classList.remove('drawer'); $('side').classList.toggle('open'); }
+};
+$('tocBtn').onclick = () => {
+  if (innerWidth > 900) {
+    const closed = document.body.classList.toggle('toc-closed');
+    localStorage.setItem('rr-reader-toc', closed ? '1' : '0');
+  } else { $('side').classList.remove('open'); $('toc').classList.toggle('drawer'); }
+};
 $('mToc').onclick = () => $('toc').classList.toggle('drawer');
 
 function goto(delta) {

@@ -33,12 +33,17 @@
   .article code { font-family: var(--font-mono); font-size: 0.85em; background: var(--bg3); border-radius: 4px; padding: 1px 5px; }
   .article pre code { background: none; padding: 0; }
   .article blockquote { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 var(--radius) var(--radius) 0; padding: 8px 12px; margin: 12px 0; }
-  .article table { border-collapse: collapse; width: calc(100% - 20px); font-size: 0.8rem; display: block; overflow-x: auto; margin: 10px; }
-  .article table:focus { outline: 2px solid var(--accent); outline-offset: 3px; }
+  /* tables live in a scroll wrapper: wide ones pan horizontally, tall ones
+     scroll vertically with the header row stuck to the wrapper's top */
+  .tbl-wrap { overflow: auto; max-height: 75vh; margin: 10px; border: 1px solid var(--bd); border-radius: var(--radius); }
+  .tbl-wrap:focus { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .article table { border-collapse: separate; border-spacing: 0; width: 100%; font-size: 0.8rem; }
   /* cap any column at ~80 characters; longer content wraps instead of
      stretching the table (shorter cells never reach the cap) */
-  .article th, .article td { border: 1px solid var(--bd); padding: 5px 9px; text-align: left; vertical-align: top; max-width: 80ch; }
-  .article th { background: var(--bg3); }
+  .article th, .article td { padding: 5px 9px; text-align: left; vertical-align: top; max-width: 80ch; border-bottom: 1px solid var(--bd); border-right: 1px solid var(--bd); }
+  .article th:last-child, .article td:last-child { border-right: 0; }
+  .article tr:last-child td { border-bottom: 0; }
+  .article th { background: var(--bg3); position: sticky; top: 0; z-index: 1; }
   .article img { max-width: 100%; border-radius: var(--radius); }
   .article h2, .article h3 { scroll-margin-top: 70px; letter-spacing: -0.01em; }
   .toc { border-left: 1px solid var(--bd); padding: var(--pad) 8px; position: sticky; top: 53px; max-height: calc(100vh - 53px); overflow-y: auto; }
@@ -96,6 +101,7 @@
   @media print {
     .side, .toc, .bottombar, .hdr, .navbar, .prog { display: none !important; }
     .shell { display: block; }
+    .tbl-wrap { max-height: none; overflow: visible; }  /* don't clip long tables on paper */
     body { background: #fff; color: #000; }
   }
 </style>
@@ -302,19 +308,27 @@ async function loadFile(name, keepScroll = false) {
   }
 }
 
-/* ---------- focused-table wheel panning ---------- */
-/* Click a table to focus it; while focused, the scroll wheel pans it
-   horizontally. At either edge (or unfocused) the wheel scrolls the
-   page normally. */
+/* ---------- table scroll wrappers + wheel panning ---------- */
+/* Each table gets a .tbl-wrap scroll container (wide tables pan, tall ones
+   scroll with a sticky header). Click a wrapper to focus it; while focused,
+   the scroll wheel pans it horizontally. At either edge (or unfocused) the
+   wheel scrolls the page normally. */
 function enhanceTables() {
   $('article').querySelectorAll('table').forEach(t => {
-    t.tabIndex = 0;
-    t.title = 'Click to focus, then scroll to pan left/right';
+    let w = t.parentElement;
+    if (!w.classList.contains('tbl-wrap')) {
+      w = document.createElement('div');
+      w.className = 'tbl-wrap';
+      t.replaceWith(w);
+      w.appendChild(t);
+    }
+    w.tabIndex = 0;
+    w.title = 'Click to focus, then scroll to pan left/right';
   });
 }
 document.addEventListener('wheel', (e) => {
   const t = document.activeElement;
-  if (!t || t.tagName !== 'TABLE' || !t.contains(e.target)) return;
+  if (!t || !t.classList.contains('tbl-wrap') || !t.contains(e.target)) return;
   if (t.scrollWidth <= t.clientWidth) return;              // nothing to pan
   const dir = e.deltaY > 0 ? 1 : -1;
   const canGo = dir > 0

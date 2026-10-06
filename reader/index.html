@@ -23,10 +23,10 @@
   .file:hover { background: var(--bg3); color: var(--tx); }
   .file.on { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
   .file.on .dot { background: var(--accent); }
-  .main { padding: var(--pad) 22px 60px; min-width: 0; }
+  .main { padding: var(--pad) 0 60px; min-width: 0; }
   .crumb { font-family: var(--font-mono); font-size: 0.7rem; color: var(--tx2); margin-bottom: 10px; display: flex; gap: 8px; flex-wrap: wrap; }
   .crumb b { color: var(--accent); font-weight: 600; }
-  .article { max-width: 72ch; margin: 0 auto; }
+  .article { max-width: none; }  /* full available width, no side margins */
   .article h1 { font-size: 1.5rem; letter-spacing: -0.01em; margin: 0 0 4px; }
   .byline { color: var(--tx2); font-size: 0.74rem; font-family: var(--font-mono); margin-bottom: 16px; }
   .article pre { background: var(--bg3); border: 1px solid var(--bd); border-radius: var(--radius); padding: 10px 12px; overflow-x: auto; font-size: 0.8rem; }

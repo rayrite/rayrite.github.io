@@ -10,6 +10,7 @@ site-data/summaries.json (heuristic fallback for missing ones), and writes:
   site-data/site.json            portal catalog (consumed by index.html)
   site-data/refresh-report.json  machine-readable report for the agent
   <readerFolders>/index.html     redirect stubs into /reader/?src=...
+  <readerFolders items>/manifest.json   document lists for the unified reader
 
 Writes are byte-compared first (idempotent). Never deletes. Stdlib only.
 """
@@ -67,6 +68,10 @@ def is_skipped_dir(name, config):
 
 
 def is_skipped_file(name, config):
+    # manifest.json is pipeline-generated reader metadata, never content:
+    # this script writes it, so it must not count toward stats/entries either.
+    if name == "manifest.json":
+        return True
     return any(fnmatch.fnmatch(name, pat) for pat in config.get("skipFiles", []))
 
 
@@ -133,6 +138,8 @@ def section_stats(section_dir):
     total_bytes = 0
     latest = 0.0
     for p in iter_tree_files(section_dir):
+        if p.name == "manifest.json":
+            continue  # pipeline-generated reader metadata (see is_skipped_file)
         files += 1
         try:
             st = p.stat()
@@ -176,6 +183,20 @@ def scan_tree(root, config):
         s.update(section_stats(d))
         sections.append(s)
     return sections
+
+
+def build_manifest(root, items_dir):
+    """manifest.json for a reader items dir: every top-level .md/.html file,
+    sorted. The reader lists documents from this file first and only falls
+    back to the GitHub API when it is absent."""
+    d = root / items_dir
+    names = sorted(
+        p.name for p in d.iterdir()
+        if p.is_file() and p.suffix.lower() in (".md", ".html")
+    ) if d.is_dir() else []
+    return json.dumps(
+        {"files": [{"filename": n, "originalPath": n} for n in names]},
+        indent=2) + "\n"
 
 
 def build_stub(items):
@@ -325,6 +346,7 @@ def main(argv=None):
            json.dumps(site, indent=2, ensure_ascii=False) + "\n")
     for viewer, items in config.get("readerFolders", {}).items():
         commit(root / viewer / "index.html", build_stub(items))
+        commit(root / items / "manifest.json", build_manifest(root, items))
 
     report_text = json.dumps({
         "generatedAt": site["generatedAt"],

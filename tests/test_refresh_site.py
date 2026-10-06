@@ -33,7 +33,7 @@ class TestScan(unittest.TestCase):
             "dukr/opensource/1/index.html": "<title>FOSS Explorer</title>",
             "dukr/dukr01.html": "<title>DUKR</title>",
             "md/items/a.md": "# Doc A\n\nfirst para",
-            "md/items/manifest.json": "{}",  # non-doc file: fileCount >= 3 with docCount == 1
+            "md/items/notes.txt": "not a doc",  # non-doc file: fileCount >= 3 with docCount == 1
             "md/index.html": "<title>Markdown Viewer</title>",
             ".git/config": "x",
             "docs/spec.md": "skip me",
@@ -54,6 +54,7 @@ class TestScan(unittest.TestCase):
         self.assertFalse(rs.is_skipped_dir("aws2", self.config))
         self.assertTrue(rs.is_skipped_file("image1.jpg", self.config))
         self.assertTrue(rs.is_skipped_file("index_01.html", self.config))
+        self.assertTrue(rs.is_skipped_file("manifest.json", self.config))  # generated metadata
         self.assertFalse(rs.is_skipped_file("REFRESH_SITE.bat", self.config))
 
     def test_sections_discovered(self):
@@ -174,6 +175,44 @@ class TestStub(unittest.TestCase):
     def test_stub_escapes_src(self):
         s = rs.build_stub('x"y')
         self.assertNotIn('src=x"y', s)  # no raw quote injection into attribute
+
+
+class TestManifest(unittest.TestCase):
+    def setUp(self):
+        self.root = make_tree({
+            "md/index.html": "<title>Markdown Viewer</title>",
+            "md/items/b.md": "# B",
+            "md/items/a.md": "# A",
+            "md/items/c.html": "<title>C</title>",
+            "md/items/notes.txt": "not a doc",
+            "md/items/manifest.json": '{"files": []}',  # stale hand-made content
+        })
+        self.config = {"skip": [], "skipFiles": [], "sections": {},
+                       "readerFolders": {"md": "md/items"}}
+
+    def tearDown(self):
+        self.root._tmp.cleanup()
+
+    def test_manifest_lists_docs_sorted(self):
+        with contextlib.redirect_stdout(io.StringIO()):
+            rs.main(["--root", str(self.root)])
+        m = json.loads((self.root / "md" / "items" / "manifest.json")
+                       .read_text(encoding="utf-8"))
+        self.assertEqual([f["filename"] for f in m["files"]],
+                         ["a.md", "b.md", "c.html"])  # .txt excluded, sorted
+        for f in m["files"]:
+            self.assertEqual(f["originalPath"], f["filename"])
+
+    def test_manifest_idempotent(self):
+        with contextlib.redirect_stdout(io.StringIO()):
+            rs.main(["--root", str(self.root)])
+        first = (self.root / "md" / "items" / "manifest.json").read_bytes()
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            rs.main(["--root", str(self.root)])
+        self.assertEqual(
+            (self.root / "md" / "items" / "manifest.json").read_bytes(), first)
+        self.assertNotIn("manifest.json", out.getvalue())
 
 
 class TestReportChangedSemantics(unittest.TestCase):

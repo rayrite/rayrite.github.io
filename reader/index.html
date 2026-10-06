@@ -62,8 +62,14 @@
     .toc.drawer { display: block; position: fixed; right: 0; top: 53px; bottom: 60px; width: min(260px, 80vw); background: var(--bg2); border-left: 1px solid var(--bd); z-index: 70; max-height: none; padding: var(--pad); }
   }
   /* desktop collapse: hamburgers fold the side/toc grid columns away.
-     Guarded by min-width so the classes never affect mobile drawers. */
+     Guarded by min-width so the classes never affect mobile drawers.
+     Explicit track placement keeps .main on the 1fr track when a
+     display:none sibling would otherwise let auto-placement drop it
+     into the collapsed 0px column. */
   @media (min-width: 769px) {
+    .side { grid-column: 1; }
+    .main { grid-column: 2; }
+    .toc { grid-column: 3; }
     body.side-closed { --side-w: 0; }
     body.side-closed .side { display: none; }
   }

@@ -35,7 +35,9 @@
   .article blockquote { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 var(--radius) var(--radius) 0; padding: 8px 12px; margin: 12px 0; }
   .article table { border-collapse: collapse; width: calc(100% - 20px); font-size: 0.8rem; display: block; overflow-x: auto; margin: 10px; }
   .article table:focus { outline: 2px solid var(--accent); outline-offset: 3px; }
-  .article th, .article td { border: 1px solid var(--bd); padding: 5px 9px; text-align: left; white-space: nowrap; }
+  /* cap any column at ~80 characters; longer content wraps instead of
+     stretching the table (shorter cells never reach the cap) */
+  .article th, .article td { border: 1px solid var(--bd); padding: 5px 9px; text-align: left; vertical-align: top; max-width: 80ch; }
   .article th { background: var(--bg3); }
   .article img { max-width: 100%; border-radius: var(--radius); }
   .article h2, .article h3 { scroll-margin-top: 70px; letter-spacing: -0.01em; }

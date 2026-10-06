@@ -181,10 +181,9 @@ async function listViaGithubAPI() {
   return null;
 }
 function fileUrl(name) {
-  if (location.protocol !== 'file:' && !ghBase()) return `/${SRC}/${name}`;
-  const gh = ghBase();
-  if (gh && ghBranch) return `https://raw.githubusercontent.com/${gh.owner}/${gh.repo}/${ghBranch}/${SRC}/${name}`;
-  return `${SRC}/${name}`;
+  /* Root-absolute on every http(s) host (local server and github.io alike —
+     the site serves the items dirs as-is). Relative only for file:// opens. */
+  return location.protocol === 'file:' ? `${SRC}/${name}` : `/${SRC}/${name}`;
 }
 let ghBranch = null;
 

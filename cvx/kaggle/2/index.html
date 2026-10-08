@@ -56,6 +56,7 @@
   .chip.v{background:var(--good-wash);border-color:rgba(12,163,12,.4)} .chip.v .g{color:var(--good)}
   .chip.sim{background:var(--warn-wash);border-color:rgba(250,178,25,.35)} .chip.sim .g{color:var(--warn)}
   .chip.est{background:rgba(255,255,255,.04);border-color:var(--hair-2);border-style:dashed} .chip.est .g{color:var(--ink-2)}
+  .chip.r{background:rgba(201,133,0,.10);border-color:rgba(201,133,0,.4)} .chip.r .g{color:#c98500}
   .count{font:500 12px/1.4 var(--mono);color:var(--ink-3)}
   .count b{color:var(--ink-2);font-weight:600}
   .key{font:600 11.5px/1 var(--mono);color:var(--ink-2);border:1px solid var(--hair-2);border-bottom-width:2px;border-radius:5px;padding:4px 7px;background:var(--sunken)}
@@ -77,11 +78,11 @@
 <main>
   <div>
     <div class="kicker">deliverables/2026-09-30-2 · companion decks to doc 03 — the real-data BCF case study</div>
-    <h1>httpx<span class="u">_</span>3672 <span class="u">· three decks</span></h1>
-    <p class="sub">The dataset's only httpx task (1 of 129), seen three ways: <b>the matchup</b>, <b>the raw data</b>, and <b>the run itself</b>. Every deck is a single standalone HTML file — no build step, nothing to install.</p>
+    <h1>httpx<span class="u">_</span>3672 <span class="u">· four decks</span></h1>
+    <p class="sub">The dataset's only httpx task (1 of 129), seen four ways: <b>the matchup</b>, <b>the raw data</b>, <b>the run itself</b>, and <b>the decisions behind it</b>. Every deck is a single standalone HTML file — no build step, nothing to install. v4 ships in the sibling package <b>deliverables/2026-10-06/</b> with its research, hypothesis, and data-wishlist companions.</p>
   </div>
 
-  <div class="term" role="img" aria-label="Terminal: listing the three deck files">
+  <div class="term" role="img" aria-label="Terminal: listing the four deck files">
     <div class="term-bar"><i></i><i></i><i></i></div>
     <div class="term-body" id="bootlines"></div>
   </div>
@@ -134,12 +135,30 @@
         <span class="count"><b>13</b> slides</span>
       </span>
     </a>
+
+    <a class="deck" href="../2026-10-06/03-bcf-simulation-httpx-3672.slides.v4.html" target="_blank" rel="noopener" data-key="4">
+      <span class="ver">v4<small>the decisions</small></span>
+      <span>
+        <h2>The decision engine — and the next accuracy tier</h2>
+        <p class="desc">Each of the eight steps gets a DECISION panel (the rule that picked the next call, and the alternative it rejected) and a GAIN panel (what the result buys) — plus the five-question loop, the naive→BCF→tier-2 ladder, hypotheses H1–H8, the D1–D12 data wishlist, and two glossaries, grounded in 26 sources.</p>
+        <span class="chips">
+          <span class="chip sim"><span class="g">≈</span> [SIM] trajectory</span>
+          <span class="chip v"><span class="g">✓</span> [V] harness facts</span>
+          <span class="chip est"><span class="g">±</span> [EST] durations</span>
+          <span class="chip r"><span class="g">R</span> [R] 26 research sources</span>
+        </span>
+      </span>
+      <span class="meta">
+        <span class="key">press 4</span>
+        <span class="count"><b>19</b> slides</span>
+      </span>
+    </a>
   </nav>
 </main>
 
 <footer>
-  <span><b>Companions</b> <a href="03-bcf-simulation-httpx-3672.md">03-bcf-simulation-httpx-3672.md</a> (prose walkthrough + reproduction appendix) · <a href="00-README.md">00-README.md</a> (package guide)</span>
-  <span>↑↓ select · <b>1–3</b> open · generated 2026-10-01</span>
+  <span><b>Companions</b> <a href="03-bcf-simulation-httpx-3672.md">03-bcf-simulation-httpx-3672.md</a> (prose walkthrough + reproduction appendix) · <a href="00-README.md">00-README.md</a> (package guide) · <b>v4 package</b> <a href="../2026-10-06/00-README.md">00-README</a> · <a href="../2026-10-06/01-research-evidence.md">01 research evidence</a> · <a href="../2026-10-06/02-hypotheses-and-test-plans.md">02 hypotheses H1–H8</a> · <a href="../2026-10-06/03-data-wishlist.md">03 data wishlist D1–D12</a></span>
+  <span>↑↓ select · <b>1–4</b> open · generated 2026-10-01 · updated 2026-10-06</span>
 </footer>
 
 <script>
@@ -151,10 +170,11 @@ function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;")}
 var reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
 var boot=document.getElementById("bootlines");
 var lines=[
- {cls:"p",txt:"$ cd deliverables/2026-09-30-2 && ls -1 03-*.html"},
+ {cls:"p",txt:"$ cd deliverables/2026-09-30-2 && ls -1 03-*.html ../2026-10-06/03-*.html"},
  {cls:"out",txt:"03-bcf-simulation-httpx-3672.slides.html      # v1 — the matchup"},
  {cls:"out",txt:"03-bcf-simulation-httpx-3672.slides.v2.html   # v2 — the raw data"},
- {cls:"hl", txt:"03-bcf-simulation-httpx-3672.slides.v3.html   # v3 — the run, step by step"}
+ {cls:"out",txt:"03-bcf-simulation-httpx-3672.slides.v3.html   # v3 — the run, step by step"},
+ {cls:"hl", txt:"../2026-10-06/03-bcf-simulation-httpx-3672.slides.v4.html  # v4 — the decisions + next tier"}
 ];
 if(reduced){
   boot.innerHTML=lines.map(function(l){return '<span class="'+l.cls+'">'+esc(l.txt)+'</span>'}).join("<br>");
@@ -171,11 +191,11 @@ if(reduced){
   step();
 }
 
-/* keyboard: 1–3 open, arrows roam focus */
+/* keyboard: 1–4 open, arrows roam focus */
 var decks=Array.prototype.slice.call(document.querySelectorAll(".deck"));
 document.addEventListener("keydown",function(e){
   if(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA")return;
-  if(e.key>="1"&&e.key<="3"){
+  if(e.key>="1"&&e.key<="4"){
     var d=decks[+e.key-1];
     if(d){e.preventDefault();window.open(d.href,"_blank","noopener")}
   }else if(e.key==="ArrowDown"||e.key==="ArrowUp"){

@@ -12,6 +12,12 @@ site-data/summaries.json (heuristic fallback for missing ones), and writes:
   <readerFolders>/index.html     redirect stubs into /reader/?src=...
   <readerFolders items>/manifest.json   document lists for the unified reader
 
+Reader collections are the configured readerFolders plus any auto-discovered
+folder whose `items` subfolder holds non-skipped .md/.html files. For every
+reader collection the script checks that index.html is its own stub and that
+manifest.json lists exactly the non-skipped items — regenerating either when
+they drift (hand-authored index.html pages are reported, never overwritten).
+
 Writes are byte-compared first (idempotent). Never deletes. Stdlib only.
 """
 import argparse
@@ -25,6 +31,8 @@ from pathlib import Path
 
 IMAGE_EXTS = {".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg", ".ico"}
 MAX_READ = 2 * 1024 * 1024
+DOC_EXTS = (".md", ".html")
+STUB_SIGNATURE = "Redirecting to the unified reader"
 
 DEFAULT_CONFIG = {
     "skip": [".git", "docs", "site-data", "reader", "files", "fonts", "img"],
@@ -185,14 +193,53 @@ def scan_tree(root, config):
     return sections
 
 
-def build_manifest(root, items_dir):
-    """manifest.json for a reader items dir: every top-level .md/.html file,
-    sorted. The reader lists documents from this file first and only falls
-    back to the GitHub API when it is absent."""
+def find_reader_folders(root, config):
+    """Reader collections to stub: the configured readerFolders plus every
+    auto-discovered folder with an `items` subfolder holding non-skipped
+    .md/.html files. Config entries win; discovery only adds."""
+    found = dict(config.get("readerFolders", {}))
+    skip = set(config.get("skip", []))
+    for items_dir in sorted(root.rglob("items")):
+        if not items_dir.is_dir() or items_dir.name != "items":
+            continue
+        rel = items_dir.relative_to(root)
+        if len(rel.parts) < 2 or any(part in skip for part in rel.parts):
+            continue
+        if any(p.is_file() and p.suffix.lower() in DOC_EXTS
+               and not is_skipped_file(p.name, config)
+               for p in items_dir.iterdir()):
+            found.setdefault(rel.parent.as_posix(), rel.as_posix())
+    return found
+
+
+def is_generated_stub(path):
+    """True when path is one of this script's redirect stubs (or missing —
+    only an existing hand-authored page must not be replaced)."""
+    try:
+        return STUB_SIGNATURE in path.read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return True
+
+
+def manifest_filenames(path):
+    """Sorted filenames a manifest.json currently lists, or None when the
+    file is absent or not a readable manifest."""
+    data = load_json(path, None)
+    if not isinstance(data, dict) or not isinstance(data.get("files"), list):
+        return None
+    return sorted(f.get("filename", "") for f in data["files"] if isinstance(f, dict))
+
+
+def build_manifest(root, items_dir, config):
+    """manifest.json for a reader items dir: every top-level non-skipped
+    .md/.html file, sorted, so all non-skipped contents stay reachable from
+    the reader. The reader lists documents from this file first and only
+    falls back to the GitHub API when it is absent."""
     d = root / items_dir
     names = sorted(
         p.name for p in d.iterdir()
-        if p.is_file() and p.suffix.lower() in (".md", ".html")
+        if p.is_file() and p.suffix.lower() in DOC_EXTS
+        and not is_skipped_file(p.name, config)
     ) if d.is_dir() else []
     return json.dumps(
         {"files": [{"filename": n, "originalPath": n} for n in names]},
@@ -344,14 +391,47 @@ def main(argv=None):
 
     commit(root / "site-data" / "site.json",
            json.dumps(site, indent=2, ensure_ascii=False) + "\n")
-    for viewer, items in config.get("readerFolders", {}).items():
-        commit(root / viewer / "index.html", build_stub(items))
-        commit(root / items / "manifest.json", build_manifest(root, items))
+    reader_folders = find_reader_folders(root, config)
+    configured = set(config.get("readerFolders", {}))
+    report["discoveredReaderFolders"] = sorted(v for v in reader_folders
+                                               if v not in configured)
+    for viewer in sorted(reader_folders):
+        items = reader_folders[viewer]
+        if viewer not in configured:
+            report["warnings"].append(f"readerFolderDiscovered: {viewer} -> {items}")
+            if args.verbose:
+                print(f"  NEW_READER_FOLDER: {viewer} -> {items}")
+        # index.html: (re)generate our stub, but never replace a hand-authored page.
+        index_path = root / viewer / "index.html"
+        if index_path.is_file() and not is_generated_stub(index_path):
+            report["warnings"].append(
+                f"readerIndexNotStub: {viewer}/index.html is hand-authored; left untouched")
+            if args.verbose:
+                print(f"  READER_INDEX_NOT_STUB: {viewer}/index.html")
+        else:
+            commit(index_path, build_stub(items))
+        # manifest.json: regenerate whenever it no longer lists exactly the
+        # non-skipped items, so every doc stays reachable from the reader.
+        manifest_path = root / items / "manifest.json"
+        desired = build_manifest(root, items, config)
+        listed = manifest_filenames(manifest_path)
+        expected = [f["filename"] for f in json.loads(desired)["files"]]
+        if listed is None:
+            report["warnings"].append(f"manifestMissing: {items}/manifest.json (generated)")
+            if args.verbose:
+                print(f"  MANIFEST_MISSING: {items}/manifest.json")
+        elif listed != expected:
+            report["warnings"].append(
+                f"manifestOutOfDate: {items}/manifest.json (rewritten to match items/)")
+            if args.verbose:
+                print(f"  MANIFEST_OUT_OF_DATE: {items}/manifest.json")
+        commit(manifest_path, desired)
 
     report_text = json.dumps({
         "generatedAt": site["generatedAt"],
         "needsSummary": report["needsSummary"],
         "staleSummary": report["staleSummary"],
+        "discoveredReaderFolders": report.get("discoveredReaderFolders", []),
         "changed": changed,
         "warnings": report["warnings"],
     }, indent=2) + "\n"

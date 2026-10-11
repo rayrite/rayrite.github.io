@@ -74,7 +74,7 @@ window.CHRONOSYNC = (function () {
         id:       'drake',
         name:     'Drake',
         fullName: 'Aubrey Drake Graham',
-        file:     'chronosync-drake-timeline-v1.3.0.html',       // <-- filename
+        file:     'chronosync-drake-timeline-v1.3.1.html',       // <-- filename
         portrait: 'assets/portraits/drake.jpg',
         focus:    '45% 20%',
         accent:   '#fb923c',
@@ -86,7 +86,7 @@ window.CHRONOSYNC = (function () {
         id:       'elon-musk',
         name:     'Elon Musk',
         fullName: 'Elon Musk',
-        file:     'chronosync-elon-musk-timeline-v1.3.0.html',   // <-- filename
+        file:     'chronosync-elon-musk-timeline-v1.3.1.html',   // <-- filename
         portrait: 'assets/portraits/elon-musk.jpg',
         focus:    '50% 28%',
         accent:   '#38bdf8',
@@ -98,7 +98,7 @@ window.CHRONOSYNC = (function () {
         id:       'kendrick-lamar',
         name:     'Kendrick Lamar',
         fullName: 'Kendrick Lamar Duckworth',
-        file:     'chronosync-kendrick-lamar-timeline-v1.6.1.html', // <-- filename
+        file:     'chronosync-kendrick-lamar-timeline-v1.6.3.html', // <-- filename
         portrait: 'assets/portraits/kendrick-lamar.jpg',
         focus:    '50% 30%',
         accent:   '#eab308',

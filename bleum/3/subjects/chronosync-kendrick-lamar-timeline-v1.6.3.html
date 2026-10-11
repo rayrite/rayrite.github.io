@@ -1,10 +1,48 @@
 <!DOCTYPE html>
 <!--
 ================================================================================
- ChronoSync - Kendrick Lamar Timeline | v1.6.1 (2026-10-11) | current head build
+ ChronoSync - Kendrick Lamar Timeline | v1.6.3 (2026-10-11) | current head build
 ================================================================================
  FLOWERBOX - CHANGE HISTORY FROM v1.3.1 (2026-10-08) ONWARD
 
+ v1.6.3 - 2026-10-11 - UX polish: themed scrollbars, THE BEEF capsule hidden, rail clearance
+   [UI] All scrollbars now match the dark glass theme (native light gutters
+   clashed everywhere): 9px rounded pink-tinted thumb on a faint slate track,
+   hover brightens; webkit pseudo-elements + Firefox scrollbar-width/color.
+   Fixes the #breadcrumb trail-chips strip (horizontal) and the exhibit
+   sheet's vertical gutter uniformly across all six scroll containers.
+   [BEACON] THE BEEF canvas capsule is hidden - it obscured lane headers,
+   category text and cards wherever it floated (corner-docked or over the
+   anchor). The app-bar "The Beef" chip remains the always-visible entry;
+   trendBeacon() is retained but no longer called from the stage render
+   chain (Tl.end() hides the pooled capsule; no trend hit-rect is pushed).
+   [TOUR] The Beef Tour rail no longer covers the open event card's text:
+   while the rail is up, body.btRailOn pads #textPane (150px desktop /
+   230px <=760px) so the connections chips and SOURCES line always end
+   above the rail. The middle pill / home button round trip now closes the
+   event card first (tt()) - the card (z 60) used to keep covering the
+   exhibit sheet (z 41) it just opened.
+   [HUD] Yw -> "1.6.3".
+ v1.6.2 - 2026-10-11 - The Beef exhibit tour rail; new beef-tour IIFE only
+   [TOUR] A way to browse the exhibit's event cards back and forth without
+   bouncing out of (and back into) the vignette for every stop: a glass
+   pager rail (#beefTour, beacon glass language, z 13, bottom-center)
+   appears whenever the current event sheet belongs to a Beef vignette
+   stop - however it was opened (the vignette's "Open on the timeline",
+   a beef card clicked on the canvas, search, a connection chip: the rail
+   polls the shared breadcrumb trail H, which every open path funnels
+   through). Prev/next step through all 30 event-linked stops in curated
+   wing order with wrap-around; each step is the app-native jt() jump
+   (camera centers that card, event sheet opens/updates, breadcrumb trail
+   records the stop) and marks the exhibit room visited (trendVisit - the
+   exhibit's "Explored N of M" meter advances from the canvas side too).
+   The middle pill and the home button round-trip INTO the exhibit at the
+   current stop (De('trend') + trendGoto scrolls to and opens that row).
+   '[' / ']' keys step as well (never inside inputs; the app's arrow keys
+   are untouched). Rail fades out when a non-exhibit event is chosen or
+   the selection leaves the vignette set. window.__BEEFTOUR QA hook
+   (stops / idx). Vignette sheet and app-main logic untouched.
+   [HUD] Yw -> "1.6.2".
  v1.6.1 - 2026-10-11 - Beacon UAT fixes (uat201.png); beacon module only
    [BEACONS] L/R + U/D visibility rules replaced; the v1.4.x density-tier
    machine (and its glyph compact mode) is retired - visibility is now
@@ -1017,6 +1055,43 @@ button.on {
    each start a new trail). Click an earlier chip to go back to it, which
    also discards everything after it, same as browser history back. Closing
    the sheet clears it outright. */
+/* v1.6.3: themed scrollbars — the native gutters (light track/thumb) clashed
+   with the dark glass UI. One global treatment: slim rounded pink-tinted
+   thumb on a faint slate track; covers #breadcrumb (trail chips) and every
+   overflow-y scroller (exhibit sheet, panels) uniformly. */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(236, 72, 153, .45) rgba(148, 163, 184, .08)
+}
+
+::-webkit-scrollbar {
+    width: 9px;
+    height: 9px
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(148, 163, 184, .08);
+    border-radius: 8px
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(236, 72, 153, .45);
+    background-clip: padding-box;
+    border: 2px solid transparent;
+    border-radius: 8px
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(236, 72, 153, .7);
+    background-clip: padding-box;
+    border: 2px solid transparent;
+    border-radius: 8px
+}
+
+::-webkit-scrollbar-corner {
+    background: transparent
+}
+
 #breadcrumb {
     display: none;
     align-items: center;
@@ -4494,7 +4569,10 @@ function K1() {
             a = Qt[i + 1] - Qt[i];
         o > s.rulerY || o + a < 0 || Ww(n, o, a)
     }
-    qw(s), trendBeacon(s), Kw(s), zw(s), ta.end(), ea.end(), ra.end(), Tl.end(), sa.end(), yt.objects = ta.used + ea.used + ra.used + Tl.used + sa.used
+    qw(s), /* v1.6.3: trendBeacon(s) — THE BEEF canvas capsule hidden by request (it
+       obscured lane headers / cards wherever it floated); the app-bar "The Beef"
+       chip remains the always-visible entry. The pooled capsule is hidden by
+       Tl.end() later in this same chain, and no trend hit-rect is pushed. */ Kw(s), zw(s), ta.end(), ea.end(), ra.end(), Tl.end(), sa.end(), yt.objects = ta.used + ea.used + ra.used + Tl.used + sa.used
 }
 
 function jw(s, t) {
@@ -4968,7 +5046,7 @@ var X = {
 };
 var W = s => document.getElementById(s),
     z1 = W("stagewrap"),
-    Yw = "1.6.1";
+    Yw = "1.6.3";
 // M2.2: two spans, CSS picks per breakpoint — the full name for the desktop
 // subtitle, first name only for the mobile h1-scale line. The full legal name
 // at 17px/800/uppercase measures 338px in a 250px slot and pushes the badge
@@ -5848,7 +5926,139 @@ new ResizeObserver(() => {
         })
     }
     w - Qs > 140 && (Qs = w, me("fps", Math.round(he) + "", he < 50 ? "warn" : "good"), me("ms", pr.toFixed(2), pr > 6 ? "warn" : ""), me("scale", tr()), me("rows", Ne(yt.rows)), me("win", Ne(yt.considered)), me("cards", Ne(yt.cards)), me("clusters", Ne(yt.clusters)), me("objects", Ne(yt.objects)), me("draws", String(X.drawCalls), X.drawCalls > 12 ? "warn" : "good"), me("total", Ne(X.EV.n)))
-})
+});
+/* ===== v1.6.2: The Beef exhibit tour rail — browse the vignette's event cards
+   back and forth on the canvas without bouncing in and out of the exhibit sheet.
+   Stop order = payload wing order (curated narrative); only nodes whose `ev`
+   resolves to a real event become stops. A step is the app-native jt() jump
+   (camera centers that card, event sheet opens, breadcrumb trail records it)
+   plus trendVisit() so the exhibit's explored-meter advances from the canvas.
+   Sync polls the shared trail H (card clicks, search, connection chips and the
+   vignette's "Open on the timeline" ALL funnel through pt/Ut/jt/Gt), so the
+   rail always reflects — and can continue from — whatever beef card is open.
+   Progressive disclosure: the rail exists only while the current event belongs
+   to the exhibit. Charter: no arrow-key rebinding (brackets step, never inside
+   inputs; motion is app-owned, RM users get the same instant G() snap). */
+(function () {
+  'use strict';
+  if (!trendData) return;
+  var stage = document.getElementById('stagewrap');
+  if (!stage) return;
+
+  var styleEl = document.createElement('style');
+  styleEl.textContent =
+    '#beefTour{position:absolute;left:50%;transform:translateX(-50%);bottom:84px;z-index:13;' +
+      'display:flex;align-items:center;gap:2px;height:44px;padding:0 6px;border-radius:13px;' +
+      'background:rgba(15,23,42,.74);backdrop-filter:blur(10px);border:1px solid rgba(236,72,153,.42);' +
+      'box-shadow:0 0 18px rgba(236,72,153,.16),inset 0 1px 0 rgba(255,255,255,.08);' +
+      'opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s;pointer-events:none}' +
+    '#beefTour.on{opacity:1;visibility:visible;pointer-events:auto;z-index:61}' +
+    '#beefTour .btBtn{width:38px;height:36px;flex:none;display:inline-flex;align-items:center;justify-content:center;' +
+      'border:0;border-radius:9px;background:transparent;color:#e2e8f0;font-size:19px;line-height:1;cursor:pointer;padding:0}' +
+    '#beefTour .btBtn:hover,#beefTour .btBtn:focus-visible{background:rgba(236,72,153,.18);outline:none}' +
+    '#beefTour .btMid{display:flex;flex-direction:column;justify-content:center;gap:1px;min-width:150px;max-width:240px;' +
+      'height:38px;padding:0 8px;border:0;border-radius:9px;background:transparent;cursor:pointer;text-align:left;font-family:inherit}' +
+    '#beefTour .btMid:hover,#beefTour .btMid:focus-visible{background:rgba(236,72,153,.14);outline:none}' +
+    '#beefTour .btWing{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;' +
+      'white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#ec4899}' +
+    '#beefTour .btTitle{font-size:11.5px;font-weight:600;color:#e2e8f0;font-variant-numeric:tabular-nums;' +
+      'white-space:nowrap;overflow:hidden;text-overflow:ellipsis}' +
+    '#beefTour .btTitle b{color:#fff;font-weight:700}' +
+    '#beefTour .btTitle .d{color:#64748b;font-weight:500}' +
+    '#beefTour .btEx{border-left:1px solid rgba(255,255,255,.14);border-radius:0 9px 9px 0;margin-left:2px;font-size:15px}' +
+    '@media (max-width:760px){#beefTour{bottom:172px;max-width:calc(100% - 24px)}#beefTour .btMid{max-width:170px;min-width:120px}}' +
+    /* v1.6.3: while the rail is up, reserve space under the open event card's
+       scrollable text column so chips/sources text never sits behind it */
+    'body.btRailOn #textPane{padding-bottom:150px}' +
+    '@media (max-width:760px){body.btRailOn #textPane{padding-bottom:230px}}';
+  document.head.appendChild(styleEl);
+
+  var rail = document.createElement('div');
+  rail.id = 'beefTour';
+  rail.setAttribute('role', 'group');
+  rail.innerHTML =
+    '<button type="button" class="btBtn" data-bt="prev" aria-label="Previous Beef exhibit event" title="Previous Beef event  [">‹</button>' +
+    '<button type="button" class="btMid" data-bt="mid" aria-label="Open The Beef exhibit at this stop" title="Open The Beef exhibit at this stop">' +
+      '<span class="btWing" data-bt="wing"></span>' +
+      '<span class="btTitle"><b data-bt="count"></b><span class="d" data-bt="title"></span></span>' +
+    '</button>' +
+    '<button type="button" class="btBtn" data-bt="next" aria-label="Next Beef exhibit event" title="Next Beef event  ]">›</button>' +
+    '<button type="button" class="btBtn btEx" data-bt="ex" aria-label="Open The Beef exhibit" title="The Beef exhibit">⌂</button>';
+  stage.appendChild(rail);
+  var elWing = rail.querySelector('[data-bt=wing]'), elCount = rail.querySelector('[data-bt=count]'),
+      elTitle = rail.querySelector('[data-bt=title]');
+
+  var stops = null, curIdx = -1;
+  function buildStops() {
+    stops = [];
+    var titleMap = new Map;
+    for (var i = 0; i < X.EV.n; i++) titleMap.set(X.EV.title[i], i);
+    for (var w2 = 0; w2 < trendData.wings.length; w2++) {
+      var wing = trendData.wings[w2], nodes = wing.nodes;
+      for (var n2 = 0; n2 < nodes.length; n2++) {
+        if (nodes[n2].ev === undefined) continue;
+        var eid = titleMap.get(nodes[n2].ev);
+        if (eid !== undefined) stops.push({ nid: nodes[n2].id, wing: wing, eid: eid });
+      }
+    }
+  }
+
+  function refresh() {
+    var stop = stops[curIdx];
+    elWing.textContent = stop.wing.glyph + ' ' + stop.wing.name;
+    elWing.style.color = stop.wing.accent;
+    elCount.textContent = (curIdx + 1) + '/' + stops.length;
+    elTitle.textContent = ' · ' + X.EV.title[stop.eid];
+    rail.setAttribute('aria-label', 'The Beef tour, stop ' + (curIdx + 1) + ' of ' + stops.length + ': ' + X.EV.title[stop.eid]);
+  }
+
+  function step(d) {
+    if (!stops || !stops.length) return;
+    curIdx = (curIdx + d + stops.length) % stops.length;
+    var stop = stops[curIdx];
+    jt(stop.eid);
+    trendVisit(stop.nid);
+    refresh();
+  }
+  rail.querySelector('[data-bt=prev]').addEventListener('click', function () { step(-1); });
+  rail.querySelector('[data-bt=next]').addEventListener('click', function () { step(1); });
+  function openExhibit() {
+    if (curIdx < 0 || !stops) return;
+    tt(); // v1.6.3: the open event card (z 60) was covering the exhibit sheet (z 41) — close it first so the round trip actually lands in the exhibit
+    De('trend');
+    trendGoto(stops[curIdx].nid);
+  }
+  rail.querySelector('[data-bt=mid]').addEventListener('click', openExhibit);
+  rail.querySelector('[data-bt=ex]').addEventListener('click', openExhibit);
+  window.addEventListener('keydown', function (e) {
+    if (e.defaultPrevented || e.ctrlKey || e.metaKey || e.altKey) return;
+    if (e.key !== '[' && e.key !== ']') return;
+    if (!rail.classList.contains('on')) return;
+    var tg = e.target && e.target.tagName;
+    if (tg === 'INPUT' || tg === 'TEXTAREA' || tg === 'SELECT') return;
+    step(e.key === '[' ? -1 : 1);
+    e.preventDefault();
+  });
+
+  function poll() {
+    requestAnimationFrame(poll);
+    if (!St || !X || !X.EV || !X.EV.n) return; // pre-boot
+    if (!stops) buildStops();
+    var cur = H.length ? H[H.length - 1] : -1, idx = -1;
+    for (var i = 0; i < stops.length; i++) if (stops[i].eid === cur) { idx = i; break; }
+    if (idx >= 0 && !document.querySelector('.sheet.open')) { // dial sheets (tracks/more/find/trend/cluster) cover the canvas — stand down
+      if (idx !== curIdx) { curIdx = idx; refresh(); }
+      rail.classList.add('on');
+      document.body.classList.add('btRailOn');
+    } else {
+      curIdx = -1;
+      rail.classList.remove('on');
+      document.body.classList.remove('btRailOn');
+    }
+  }
+  requestAnimationFrame(poll);
+  window.__BEEFTOUR = { stops: function () { return stops; }, idx: function () { return curIdx; } };
+})();
 }
 /* ===== v1.4.1: Lightship spatial beacons - spec: deliverables/2026-10-10-chronosync-anim-beacons/DESIGN-SPEC.md ===== */
 (function () {
@@ -6262,6 +6472,7 @@ new ResizeObserver(() => {
     cam: function () { return { center: F.center, panY: F.panY, msPerPx: F.msPerPx, w: dt, h: _o, rail: ns, rows: Array.prototype.slice.call(Qt) }; },
     jump: function (iso, mpp) { F.center = Date.parse(iso); if (mpp) F.msPerPx = mpp; Oe(); } };
 })();
+
 })();
 </script>
 </body>

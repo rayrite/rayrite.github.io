@@ -1,10 +1,25 @@
 <!DOCTYPE html>
 <!--
 ================================================================================
- ChronoSync - Elon Musk Timeline | v1.3.0 (2026-10-10) | current head build
+ ChronoSync - Elon Musk Timeline | v1.3.1 (2026-10-11) | current head build
 ================================================================================
  FLOWERBOX - CHANGE HISTORY
 
+ v1.3.1 - 2026-10-11 - Non-exhibit parity port from Kendrick v1.6.3 (UX polish)
+   [UI] Themed scrollbars app-wide (the native light gutters clashed
+   everywhere): 9px rounded pink-tinted thumb on a faint slate track, hover
+   brightens; webkit pseudo-elements + Firefox scrollbar-width/color.
+   Covers the #breadcrumb trail-chips strip and every overflow scroller
+   uniformly.
+   [BEACON] Trending canvas capsule call removed from the stage render
+   chain. On this build the trending module is dormant (no
+   CHRONOSYNC_TRENDING payload, no chip), so the capsule never rendered;
+   this future-proofs the chain against a payload activation resurrecting
+   an obscuring capsule (Tl.end() still hides the pooled capsule; no trend
+   hit-rect is pushed).
+   (The Kendrick v1.6.2 Beef Tour rail is exhibit-specific and has no Musk
+   counterpart — nothing to port there.)
+   [HUD] Yw -> "1.3.1".
  v1.3.0 - 2026-10-10 - Kendrick v1.5.0 feature set ported
    Port of the Kendrick Lamar v1.5.0 platform changes onto v1.2.0
    (image candidate pool pipeline v3 build, one-line comment below).
@@ -963,6 +978,43 @@ button.on {
    each start a new trail). Click an earlier chip to go back to it, which
    also discards everything after it, same as browser history back. Closing
    the sheet clears it outright. */
+/* v1.3.1: themed scrollbars — the native gutters (light track/thumb) clashed
+   with the dark glass UI. One global treatment: slim rounded pink-tinted
+   thumb on a faint slate track; covers #breadcrumb (trail chips) and every
+   overflow-y scroller (sheets, panels) uniformly. */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(236, 72, 153, .45) rgba(148, 163, 184, .08)
+}
+
+::-webkit-scrollbar {
+    width: 9px;
+    height: 9px
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(148, 163, 184, .08);
+    border-radius: 8px
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(236, 72, 153, .45);
+    background-clip: padding-box;
+    border: 2px solid transparent;
+    border-radius: 8px
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(236, 72, 153, .7);
+    background-clip: padding-box;
+    border: 2px solid transparent;
+    border-radius: 8px
+}
+
+::-webkit-scrollbar-corner {
+    background: transparent
+}
+
 #breadcrumb {
     display: none;
     align-items: center;
@@ -4357,7 +4409,12 @@ function K1() {
             a = Qt[i + 1] - Qt[i];
         o > s.rulerY || o + a < 0 || Ww(n, o, a)
     }
-    qw(s), trendBeacon(s), Kw(s), zw(s), ta.end(), ea.end(), ra.end(), Tl.end(), sa.end(), yt.objects = ta.used + ea.used + ra.used + Tl.used + sa.used
+    qw(s), /* v1.3.1: trendBeacon(s) — trending canvas capsule call removed. On this
+       build the trending module is dormant (no CHRONOSYNC_TRENDING payload and
+       no chip), so the capsule never rendered anyway; dropping the call
+       future-proofs the stage chain so a future payload activation cannot
+       resurrect an obscuring capsule. Tl.end() later in this same chain still
+       hides the pooled capsule, and no trend hit-rect is pushed. */ Kw(s), zw(s), ta.end(), ea.end(), ra.end(), Tl.end(), sa.end(), yt.objects = ta.used + ea.used + ra.used + Tl.used + sa.used
 }
 
 function jw(s, t) {
@@ -4831,7 +4888,7 @@ var X = {
 };
 var W = s => document.getElementById(s),
     z1 = W("stagewrap"),
-    Yw = "1.3.0";
+    Yw = "1.3.1";
 // M2.2: two spans, CSS picks per breakpoint — the full name for the desktop
 // subtitle, first name only for the mobile h1-scale line. The full legal name
 // at 17px/800/uppercase measures 338px in a 250px slot and pushes the badge

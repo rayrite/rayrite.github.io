@@ -98,7 +98,7 @@ window.CHRONOSYNC = (function () {
         id:       'kendrick-lamar',
         name:     'Kendrick Lamar',
         fullName: 'Kendrick Lamar Duckworth',
-        file:     'chronosync-kendrick-lamar-timeline-v1.6.0.html', // <-- filename
+        file:     'chronosync-kendrick-lamar-timeline-v1.6.1.html', // <-- filename
         portrait: 'assets/portraits/kendrick-lamar.jpg',
         focus:    '50% 30%',
         accent:   '#eab308',

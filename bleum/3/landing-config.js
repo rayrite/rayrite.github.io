@@ -62,7 +62,7 @@ window.CHRONOSYNC = (function () {
         id:       'beyonce',
         name:     'Beyoncé',
         fullName: 'Beyoncé Giselle Knowles-Carter',
-        file:     'chronosync-beyonce-timeline-v1.8.0.html',     // <-- filename
+        file:     'chronosync-beyonce-timeline-v2.0.1.html',     // <-- filename
         portrait: 'assets/portraits/beyonce.jpg',
         focus:    '50% 22%',                                     // crop focus (object-position)
         accent:   '#f472b6',

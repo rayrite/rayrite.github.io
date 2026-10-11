@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="DUKR ChronoSync: pick a life and scrub through time with interactive timelines.">
+<meta name="theme-color" content="#070b1f">
+<link rel="canonical" href="https://rayrite.github.io/bleum/3/index.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="DUKR ChronoSync">
+<meta property="og:title" content="DUKR ChronoSync">
+<meta property="og:description" content="Pick a life. Scrub through time.">
+<meta property="og:url" content="https://rayrite.github.io/bleum/3/index.html">
+<meta property="og:image" content="https://rayrite.github.io/bleum/3/assets/og-image.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="DUKR ChronoSync: portraits orbiting a glowing core">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="DUKR ChronoSync">
+<meta name="twitter:description" content="Pick a life. Scrub through time.">
+<meta name="twitter:image" content="https://rayrite.github.io/bleum/3/assets/og-image.jpg">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='32' fill='%23070b1f'/%3E%3Ccircle cx='32' cy='32' r='22' fill='none' stroke='%239fb0dd' stroke-width='2' stroke-dasharray='4 4'/%3E%3Ccircle cx='32' cy='32' r='11' fill='%23f5c451'/%3E%3Ccircle cx='54' cy='32' r='5' fill='%23f472b6'/%3E%3C/svg%3E">
+<title>DUKR ChronoSync</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
+<style>
+  /* Colours below are the "starfield" defaults; landing-backgrounds.js overrides them
+     per background preset so text, core and name tags stay readable on every one. */
+  :root{
+    --bg-a:#0d1540; --bg-b:#070b1f; --ink:#eaf0ff; --mute:#9fb0dd; --title-a:#ffffff; --title-b:#c9d6ff;
+    --core-a:#fff6cf; --core-b:#f5c451; --core-c:#b9801b; --core-ink:#4a3000;
+    --pill-bg:rgba(7,11,31,.7); --pill-bd:rgba(159,176,221,.22); --path:rgba(159,176,221,.28); --halo:rgba(7,11,31,.7); --focus:#f5c451;
+    --font:"Nunito","Varela Round","Arial Rounded MT Bold","Segoe UI",system-ui,sans-serif;
+    --size:clamp(280px,min(62vmin,100vh - 340px),620px);
+    --cs-font:var(--font); --cs-panel-bg:#10173a; --cs-panel-fg:var(--ink); --cs-radius:28px; --cs-on-accent:#14110a;
+  }
+  *{box-sizing:border-box;margin:0}
+  html,body{height:100%}
+  body{font-family:var(--font);color:var(--ink);background:radial-gradient(120% 90% at 50% 45%,var(--bg-a),var(--bg-b) 70%);
+    min-height:100vh;display:flex;flex-direction:column;overflow-x:hidden}
+  #bg{position:fixed;inset:0;z-index:0}
+  header,main,footer{position:relative;z-index:1}
+  header{text-align:center;padding:clamp(22px,5vh,52px) 20px 0}
+  h1{font-weight:900;font-size:clamp(2.4rem,7vw,4.6rem);line-height:1;letter-spacing:.01em;
+    background:linear-gradient(180deg,var(--title-a),var(--title-b));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .tag{margin-top:10px;color:var(--mute);font-size:clamp(1rem,2.2vw,1.2rem);font-weight:600}
+
+  main{flex:1;display:grid;place-items:center;padding:clamp(70px,11vmin,100px) 16px clamp(60px,9vmin,90px)}
+  .orbit{position:relative;width:var(--size);height:var(--size)}
+  .path{position:absolute;inset:0;border-radius:50%;border:1.5px dashed var(--path)}
+  .path.inner{inset:22%;border-style:solid;border-color:color-mix(in srgb,var(--path) 50%,transparent)}
+  .core{position:absolute;left:50%;top:50%;width:26%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;
+    background:radial-gradient(circle at 38% 34%,var(--core-a),var(--core-b) 45%,var(--core-c) 100%);
+    box-shadow:0 0 60px 18px color-mix(in srgb,var(--core-b) 45%,transparent),0 0 140px 50px color-mix(in srgb,var(--core-b) 18%,transparent);
+    display:grid;place-items:center;color:var(--core-ink);font-weight:900;font-size:clamp(.9rem,2.6vmin,1.4rem);letter-spacing:.08em;
+    animation:pulse calc(5s / var(--cs-i,1)) ease-in-out infinite}
+  @keyframes pulse{50%{box-shadow:0 0 80px 26px color-mix(in srgb,var(--core-b) 55%,transparent),0 0 170px 70px color-mix(in srgb,var(--core-b) 20%,transparent)}}
+
+  .ring{position:absolute;inset:0;animation:spin calc(120s / var(--cs-i,1)) linear infinite}
+  .slot{position:absolute;left:50%;top:50%;width:0;height:0;transform:rotate(var(--a)) translateY(calc(var(--size) / -2))}
+  .fix1{transform:rotate(calc(var(--a) * -1))}
+  .fix2{animation:spin calc(120s / var(--cs-i,1)) linear infinite reverse}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .ring:hover,.ring:hover .fix2,.ring:has(a:focus-visible),.ring:has(a:focus-visible) .fix2{animation-play-state:paused}
+
+  .planet{position:absolute;left:0;top:0;translate:-50% -50%;display:flex;flex-direction:column;align-items:center;gap:10px;
+    text-decoration:none;color:var(--ink);width:max-content;max-width:150px;text-align:center}
+  .photo{width:clamp(84px,17vmin,150px);aspect-ratio:1;border-radius:50%;overflow:hidden;border:3px solid var(--c);
+    box-shadow:0 0 0 6px var(--halo),0 0 28px color-mix(in srgb,var(--c) 55%,transparent);
+    transition:transform .25s cubic-bezier(.2,.9,.3,1.3),box-shadow .25s}
+  .photo>*{width:100%;height:100%;display:block}
+  .name{font-weight:800;font-size:clamp(.85rem,2vmin,1.05rem);padding:4px 12px;border-radius:999px;background:var(--pill-bg);border:1px solid var(--pill-bd)}
+  .planet:hover .photo,.planet:focus-visible .photo{transform:scale(1.14);box-shadow:0 0 0 6px var(--halo),0 0 46px var(--c)}
+  .planet:focus-visible{outline:none}.planet:focus-visible .name{outline:3px solid var(--focus);outline-offset:2px}
+
+  footer{padding:14px 20px 22px;text-align:center;color:var(--mute);font-size:.9rem}
+  .bg-label{position:fixed;left:12px;bottom:12px;z-index:5;padding:4px 12px;border-radius:999px;background:var(--pill-bg);border:1px solid var(--pill-bd);color:var(--mute);font-size:.74rem;font-weight:600}
+
+  /* Phones: keep the orbit, scale it to fit the screen width */
+  @media (max-width:700px){
+    :root{--size:clamp(168px,min(100vw - 160px,100svh - 380px),420px)}
+    main{padding:clamp(84px,13svh,110px) 12px clamp(96px,14svh,120px)}
+    .photo{width:clamp(66px,19vw,84px);border-width:2px;box-shadow:0 0 0 4px var(--halo),0 0 20px color-mix(in srgb,var(--c) 55%,transparent)}
+    .name{font-size:.78rem;padding:3px 9px}
+    .planet{gap:7px;max-width:112px}
+    .core{font-size:.8rem}
+    .path.inner{inset:20%}
+    .bg-label{left:8px;bottom:8px}
+  }
+  @media (max-width:360px){
+    .photo{width:58px}
+    .name{font-size:.72rem;padding:2px 7px}
+    .core{width:22%}
+  }
+</style>
+</head>
+<body>
+<noscript><p style="position:relative;z-index:2;text-align:center;padding:40px 20px">DUKR ChronoSync needs JavaScript to show the timelines. Please enable it and reload.</p></noscript>
+<canvas id="bg" aria-hidden="true"></canvas>
+<header>
+  <h1 data-cs-title>DUKR ChronoSync</h1>
+  <p class="tag" data-cs-tagline></p>
+</header>
+<main>
+  <nav class="orbit" aria-label="Timelines">
+    <div class="path"></div><div class="path inner"></div>
+    <div class="core" aria-hidden="true">DUKR</div>
+    <div class="ring" id="ring"></div>
+  </nav>
+</main>
+<footer><p data-cs-footer></p></footer>
+
+<script src="./landing-config.js"></script>
+<script src="./landing-core.js"></script>
+<script src="./landing-backgrounds.js"></script>
+<script>
+  CS.fill();
+  var ring = document.getElementById('ring'), n = CS.subjects.length;
+  CS.subjects.forEach(function (s, i) {
+    var slot = document.createElement('div'); slot.className = 'slot'; slot.style.setProperty('--a', (i / n * 360 - 30) + 'deg');
+    var f1 = document.createElement('div'); f1.className = 'fix1';
+    var f2 = document.createElement('div'); f2.className = 'fix2';
+    var a = document.createElement('a'); a.className = 'planet'; a.href = '#/subject/' + s.id; a.style.setProperty('--c', s.accent);
+    a.setAttribute('aria-label', s.name + ': ' + s.tagline);
+    var ph = document.createElement('span'); ph.className = 'photo'; var im = document.createElement('img'); ph.appendChild(im); CS.img(im, s, '');
+    var nm = document.createElement('span'); nm.className = 'name'; nm.textContent = s.name;
+    a.append(ph, nm); f2.appendChild(a); f1.appendChild(f2); slot.appendChild(f1); ring.appendChild(slot);
+  });
+
+  /* pick a background (config: landing-config.js -> background) and start it */
+  CSBG.start(document.getElementById('bg'));
+</script>
+</body>
+</html>

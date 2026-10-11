@@ -297,5 +297,93 @@ class TestGeneratedAtStability(unittest.TestCase):
         self.assertNotIn("wrote:", out3)                          # third run: nothing at all
 
 
+class TestReaderFolderRegistration(unittest.TestCase):
+    """Discovered reader folders are registered in config.json and stubbed."""
+
+    def setUp(self):
+        # cvx/games is NOT in readerFolders: discovery must register it,
+        # write its index.html stub and its manifest.
+        self.root = make_tree({
+            "md/index.html": "<title>Markdown Viewer</title>",
+            "md/items/a.md": "# Doc A",
+            "cvx/games/items/01_game.md": "# Game doc",
+            "site-data/config.json": json.dumps({
+                "skip": [], "skipFiles": [], "sections": {},
+                "readerFolders": {"md": "md/items"},
+            }, indent=2) + "\n",
+        })
+
+    def tearDown(self):
+        self.root._tmp.cleanup()
+
+    def run_main(self, *extra):
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            rs.main(["--root", str(self.root), *extra])
+        return buf.getvalue()
+
+    def config(self):
+        return json.loads(
+            (self.root / "site-data" / "config.json").read_text(encoding="utf-8"))
+
+    def report(self):
+        return json.loads(
+            (self.root / "site-data" / "refresh-report.json").read_text(encoding="utf-8"))
+
+    def test_discovery_registers_and_stubs(self):
+        out = self.run_main("--verbose")
+        cfg = self.config()
+        self.assertEqual(cfg["readerFolders"]["cvx/games"], "cvx/games/items")
+        self.assertEqual(cfg["readerFolders"]["md"], "md/items")  # untouched
+        rep = self.report()
+        self.assertEqual(rep["registeredReaderFolders"], ["cvx/games"])
+        self.assertEqual(rep["discoveredReaderFolders"], ["cvx/games"])
+        self.assertIn("site-data/config.json", rep["changed"])
+        self.assertIn("REGISTERED_READER_FOLDER: cvx/games -> cvx/games/items", out)
+        # the newly registered folder gets its index.html stub …
+        stub = (self.root / "cvx" / "games" / "index.html").read_text(encoding="utf-8")
+        self.assertIn("url=/reader/?src=cvx/games/items", stub)
+        # … and its manifest
+        m = json.loads((self.root / "cvx" / "games" / "items" / "manifest.json")
+                       .read_text(encoding="utf-8"))
+        self.assertEqual([f["filename"] for f in m["files"]], ["01_game.md"])
+
+    def test_second_run_fully_quiet(self):
+        self.run_main()
+        before = (self.root / "site-data" / "config.json").read_bytes()
+        self.run_main()
+        self.assertEqual((self.root / "site-data" / "config.json").read_bytes(), before)
+        rep = self.report()
+        self.assertEqual(rep["discoveredReaderFolders"], [])
+        self.assertNotIn("site-data/config.json", rep["changed"])
+        self.assertEqual([w for w in rep["warnings"] if "readerFolder" in w], [])
+
+    def test_dry_run_leaves_config_alone(self):
+        before = (self.root / "site-data" / "config.json").read_bytes()
+        out = self.run_main("--dry-run")
+        self.assertEqual((self.root / "site-data" / "config.json").read_bytes(), before)
+        self.assertIn("dry-run: would write site-data/config.json", out)
+
+    def test_render_config_preserves_layout(self):
+        hand = ('{\n  "skip": [],\n  "readerFolders": {\n'
+                '    "md": "md/items", "md-dxc": "md-dxc/items", "scam": "scam/items",\n'
+                '    "dukr/opensource/1": "dukr/opensource/1/items", "mdh": "mdh/items",\n'
+                '    "cvx/plan": "cvx/plan/items"\n  }\n}\n')
+        out = rs.render_config(hand, {"zz/new": "zz/new/items"})
+        # earlier lines untouched (dukr/mdh/plan join at exactly 100 cols);
+        # the appended pair wraps onto a new line, the old last gets a comma
+        self.assertIn('"md": "md/items", "md-dxc": "md-dxc/items", "scam": "scam/items",\n'
+                      '    "dukr/opensource/1": "dukr/opensource/1/items", "mdh": "mdh/items", '
+                      '"cvx/plan": "cvx/plan/items",\n'
+                      '    "zz/new": "zz/new/items"\n  }', out)
+        json.loads(out)  # still valid JSON
+        self.assertIsNone(rs.render_config(out, {"zz/new": "zz/new/items"}))
+
+    def test_render_config_fallback_without_block(self):
+        plain = json.dumps({"skip": [], "sections": {}}) + "\n"
+        out = rs.render_config(plain, {"md": "md/items"})
+        self.assertEqual(json.loads(out)["readerFolders"], {"md": "md/items"})
+
+
 if __name__ == "__main__":
     unittest.main()

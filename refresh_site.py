@@ -12,11 +12,13 @@ site-data/summaries.json (heuristic fallback for missing ones), and writes:
   <readerFolders>/index.html     redirect stubs into /reader/?src=...
   <readerFolders items>/manifest.json   document lists for the unified reader
 
-Reader collections are the configured readerFolders plus any auto-discovered
-folder whose `items` subfolder holds non-skipped .md/.html files. For every
-reader collection the script checks that index.html is its own stub and that
-manifest.json lists exactly the non-skipped items — regenerating either when
-they drift (hand-authored index.html pages are reported, never overwritten).
+Reader collections start from the configured readerFolders; any further
+folder whose `items` subfolder holds non-skipped .md/.html files is
+auto-discovered and written back into config.json (auto-registration), so
+the config stays the source of truth. For every reader collection —
+configured or just discovered — the script writes an index.html redirect
+stub (hand-authored pages are reported, never overwritten) and keeps
+manifest.json listing exactly the non-skipped items.
 
 Writes are byte-compared first (idempotent). Never deletes. Stdlib only.
 """
@@ -212,6 +214,55 @@ def find_reader_folders(root, config):
     return found
 
 
+def reader_block_lines(pairs):
+    """readerFolders entry lines: `"key": "value"` pairs joined and wrapped
+    at 100 columns — the layout site-data/config.json is hand-maintained in,
+    so a re-render of unchanged content is byte-identical."""
+    lines, line = [], ""
+    for key, value in pairs:
+        item = f"{json.dumps(key)}: {json.dumps(value)}"
+        if line and len(f"    {line}, {item}") > 100:
+            lines.append(f"    {line},")
+            line = item
+        else:
+            line = f"{line}, {item}" if line else item
+    lines.append(f"    {line}")
+    return lines
+
+
+def render_config(existing_text, additions):
+    """config.json text with `additions` merged into its readerFolders block.
+    Preserves the file's layout by splicing a re-wrapped block in place;
+    falls back to a plain indent-2 rewrite when the block is absent. Returns
+    None when the additions add nothing (nothing to write)."""
+    data = json.loads(existing_text)
+    current = data.get("readerFolders") or {}
+    if all(k in current for k in additions):
+        return None
+    pairs = list(current.items()) + sorted(additions.items())
+    i = existing_text.find('"readerFolders"')
+    if i == -1:
+        data["readerFolders"] = dict(pairs)
+        return json.dumps(data, indent=2, ensure_ascii=False) + "\n"
+    start = existing_text.index("{", i)
+    depth = 0
+    end = -1
+    for j in range(start, len(existing_text)):
+        if existing_text[j] == "{":
+            depth += 1
+        elif existing_text[j] == "}":
+            depth -= 1
+            if depth == 0:
+                end = j
+                break
+    if end == -1:
+        raise ValueError("unbalanced readerFolders block")
+    block = "{\n" + "\n".join(reader_block_lines(pairs)) + "\n  }"
+    new_text = existing_text[:start] + block + existing_text[end + 1:]
+    json.loads(new_text)  # sanity: never emit a broken config
+    return new_text
+
+
 def is_generated_stub(path):
     """True when path is one of this script's redirect stubs (or missing —
     only an existing hand-authored page must not be replaced)."""
@@ -393,15 +444,35 @@ def main(argv=None):
            json.dumps(site, indent=2, ensure_ascii=False) + "\n")
     reader_folders = find_reader_folders(root, config)
     configured = set(config.get("readerFolders", {}))
-    report["discoveredReaderFolders"] = sorted(v for v in reader_folders
-                                               if v not in configured)
+    discovered = sorted(v for v in reader_folders if v not in configured)
+    report["discoveredReaderFolders"] = discovered
+    # Auto-register discoveries back into config.json, keeping the config the
+    # source of truth: later runs see the folders as configured (no re-report).
+    config_path = root / "site-data" / "config.json"
+    if discovered:
+        additions = {v: reader_folders[v] for v in discovered}
+        new_text = None
+        if config_path.is_file():
+            try:
+                new_text = render_config(
+                    config_path.read_text(encoding="utf-8"), additions)
+            except (OSError, ValueError):
+                new_text = None
+        if new_text is None:
+            report["warnings"].append(
+                f"readerFoldersNotRegistered: {len(discovered)} discovered; "
+                "config.json left unchanged")
+        else:
+            commit(config_path, new_text)
+            config.setdefault("readerFolders", {}).update(additions)
+            report["registeredReaderFolders"] = discovered
+            if args.verbose:
+                for v in discovered:
+                    print(f"  REGISTERED_READER_FOLDER: {v} -> {reader_folders[v]}")
     for viewer in sorted(reader_folders):
         items = reader_folders[viewer]
-        if viewer not in configured:
-            report["warnings"].append(f"readerFolderDiscovered: {viewer} -> {items}")
-            if args.verbose:
-                print(f"  NEW_READER_FOLDER: {viewer} -> {items}")
-        # index.html: (re)generate our stub, but never replace a hand-authored page.
+        # index.html: every reader collection — configured or just discovered —
+        # gets its redirect stub; hand-authored pages are never replaced.
         index_path = root / viewer / "index.html"
         if index_path.is_file() and not is_generated_stub(index_path):
             report["warnings"].append(
@@ -432,6 +503,7 @@ def main(argv=None):
         "needsSummary": report["needsSummary"],
         "staleSummary": report["staleSummary"],
         "discoveredReaderFolders": report.get("discoveredReaderFolders", []),
+        "registeredReaderFolders": report.get("registeredReaderFolders", []),
         "changed": changed,
         "warnings": report["warnings"],
     }, indent=2) + "\n"

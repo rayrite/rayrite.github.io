@@ -38,8 +38,11 @@
   }
   *{box-sizing:border-box;margin:0}
   html,body{height:100%}
-  body{font-family:var(--font);color:var(--ink);background:radial-gradient(120% 90% at 50% 45%,var(--bg-a),var(--bg-b) 70%);
+  body{font-family:var(--font);color:var(--ink);background:var(--bg-b);
     min-height:100vh;display:flex;flex-direction:column;overflow-x:hidden}
+  /* backdrop pinned to the viewport so it never scrolls; body stays a flat colour for overscroll */
+  body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+    background:radial-gradient(120% 90% at 50% 45%,var(--bg-a),var(--bg-b) 70%)}
   #bg{position:fixed;inset:0;z-index:0}
   header,main,footer{position:relative;z-index:1}
   header{text-align:center;padding:clamp(22px,5vh,52px) 20px 0}
@@ -78,10 +81,15 @@
   footer{padding:14px 20px 22px;text-align:center;color:var(--mute);font-size:.9rem}
   .bg-label{position:fixed;left:12px;bottom:12px;z-index:5;padding:4px 12px;border-radius:999px;background:var(--pill-bg);border:1px solid var(--pill-bd);color:var(--mute);font-size:.74rem;font-weight:600}
 
-  /* Phones: keep the orbit, scale it to fit the screen width */
+  /* Phones: fit title + orbit + copyright inside the on-screen viewport (dvh, not the
+     URL-bar-hidden 100vh) so the footer shows on initial load, and drop the dead space */
   @media (max-width:700px){
-    :root{--size:clamp(168px,min(100vw - 160px,100svh - 380px),420px)}
-    main{padding:clamp(84px,13svh,110px) 12px clamp(96px,14svh,120px)}
+    html,body{height:auto}
+    body{min-height:100dvh}
+    :root{--size:clamp(168px,min(100vw - 140px,100svh - 350px),420px)}
+    header{padding:16px 20px 0}
+    main{padding:12px}
+    footer{padding:10px 20px 14px}
     .photo{width:clamp(66px,19vw,84px);border-width:2px;box-shadow:0 0 0 4px var(--halo),0 0 20px color-mix(in srgb,var(--c) 55%,transparent)}
     .name{font-size:.78rem;padding:3px 9px}
     .planet{gap:7px;max-width:112px}

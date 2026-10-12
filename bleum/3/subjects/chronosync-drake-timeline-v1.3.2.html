@@ -1,10 +1,26 @@
 <!DOCTYPE html>
 <!--
 ================================================================================
- ChronoSync - Drake Timeline | v1.3.1 (2026-10-11) | current head build
+ ChronoSync - Drake Timeline | v1.3.2 (2026-10-11) | current head build
 ================================================================================
  FLOWERBOX - CHANGE HISTORY
 
+ v1.3.2 - 2026-10-11 - Beef Tour rail redesigned as an in-card footer band (uat301)
+   [TOUR] The floating stage-anchored rail (absolute, bottom 84px desktop /
+   172px mobile) could always be scrolled under: the v1.6.3 #textPane
+   padding only cleared the END of the scroll content, so mid-scroll the
+   description/chips text passed behind the rail (uat301.jpg, mobile).
+   The rail is now the event card's own footer: appended INSIDE #card as
+   an in-flow flex-none band under #cardInner, shown only while a Beef
+   card is open (display none<->flex on .on). #card is persistent and the
+   engine only rewrites its inner text nodes, so the append is safe; the
+   v1.6.3 padding hack (body.btRailOn #textPane 150px/230px) is removed —
+   the class is still toggled by the poll as a hook. Text can never sit
+   behind the rail at any scroll position, viewport, or pinch-zoom, on
+   desktop or mobile. Behavior unchanged: prev/next wrap, [/] keys,
+   middle pill and home button round-trip into the exhibit, visited
+   marks, window.__BEEFTOUR.
+   [HUD] Yw -> "1.3.2".
  v1.3.1 - 2026-10-11 - Parity port from Kendrick v1.6.2/v1.6.3: Beef Tour rail + UX polish
    [TOUR] The Beef exhibit tour rail (#beefTour, new beef-tour IIFE spliced
    inside the boot function after the ticker registration, ASI-safe seam):
@@ -4983,7 +4999,7 @@ var X = {
 };
 var W = s => document.getElementById(s),
     z1 = W("stagewrap"),
-    Yw = "1.3.1";
+    Yw = "1.3.2";
 // M2.2: two spans, CSS picks per breakpoint — the full name for the desktop
 // subtitle, first name only for the mobile h1-scale line. The full legal name
 // at 17px/800/uppercase measures 338px in a 250px slot and pushes the badge
@@ -5884,12 +5900,13 @@ new ResizeObserver(() => {
 
   var styleEl = document.createElement('style');
   styleEl.textContent =
-    '#beefTour{position:absolute;left:50%;transform:translateX(-50%);bottom:84px;z-index:13;' +
-      'display:flex;align-items:center;gap:2px;height:44px;padding:0 6px;border-radius:13px;' +
-      'background:rgba(15,23,42,.74);backdrop-filter:blur(10px);border:1px solid rgba(236,72,153,.42);' +
-      'box-shadow:0 0 18px rgba(236,72,153,.16),inset 0 1px 0 rgba(255,255,255,.08);' +
-      'opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s;pointer-events:none}' +
-    '#beefTour.on{opacity:1;visibility:visible;pointer-events:auto;z-index:61}' +
+    /* v1.6.4: in-card footer band, not a floating pager — see the appendChild
+       site below. In-flow layout child of #card: text can never scroll or
+       pinch-zoom behind it. Hidden (display:none) unless .on. */
+    '#beefTour{position:relative;flex:none;display:none;align-items:center;justify-content:center;gap:2px;height:44px;padding:0 6px;' +
+      'background:rgba(15,23,42,.78);backdrop-filter:blur(10px);border-top:1px solid rgba(236,72,153,.42);' +
+      'box-shadow:inset 0 1px 0 rgba(255,255,255,.08);pointer-events:auto}' +
+    '#beefTour.on{display:flex}' +
     '#beefTour .btBtn{width:38px;height:36px;flex:none;display:inline-flex;align-items:center;justify-content:center;' +
       'border:0;border-radius:9px;background:transparent;color:#e2e8f0;font-size:19px;line-height:1;cursor:pointer;padding:0}' +
     '#beefTour .btBtn:hover,#beefTour .btBtn:focus-visible{background:rgba(236,72,153,.18);outline:none}' +
@@ -5903,11 +5920,10 @@ new ResizeObserver(() => {
     '#beefTour .btTitle b{color:#fff;font-weight:700}' +
     '#beefTour .btTitle .d{color:#64748b;font-weight:500}' +
     '#beefTour .btEx{border-left:1px solid rgba(255,255,255,.14);border-radius:0 9px 9px 0;margin-left:2px;font-size:15px}' +
-    '@media (max-width:760px){#beefTour{bottom:172px;max-width:calc(100% - 24px)}#beefTour .btMid{max-width:170px;min-width:120px}}' +
-    /* v1.6.3: while the rail is up, reserve space under the open event card's
-       scrollable text column so chips/sources text never sits behind it */
-    'body.btRailOn #textPane{padding-bottom:150px}' +
-    '@media (max-width:760px){body.btRailOn #textPane{padding-bottom:230px}}';
+    /* v1.6.4: the v1.6.3 #textPane padding hack is GONE — the band reserves its
+       own layout space, nothing floats. body.btRailOn is still toggled by the
+       poll, kept as a hook. */
+    '@media (max-width:760px){#beefTour .btMid{max-width:170px;min-width:120px}}';
   document.head.appendChild(styleEl);
 
   var rail = document.createElement('div');
@@ -5921,7 +5937,10 @@ new ResizeObserver(() => {
     '</button>' +
     '<button type="button" class="btBtn" data-bt="next" aria-label="Next Beef exhibit event" title="Next Beef event  ]">›</button>' +
     '<button type="button" class="btBtn btEx" data-bt="ex" aria-label="Open The Beef exhibit" title="The Beef exhibit">⌂</button>';
-  stage.appendChild(rail);
+  /* v1.6.4: dock the rail INSIDE the event card as its footer band. #card is a
+     persistent element and the engine only rewrites its inner text nodes, so
+     the appended child survives every card open/close. */
+  (document.getElementById('card') || stage).appendChild(rail);
   var elWing = rail.querySelector('[data-bt=wing]'), elCount = rail.querySelector('[data-bt=count]'),
       elTitle = rail.querySelector('[data-bt=title]');
 

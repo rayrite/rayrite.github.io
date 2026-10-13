@@ -9,7 +9,7 @@
     --page:#0e1116; --surface:#151a21; --raised:#1b222c; --sunken:#11151c;
     --hair:rgba(255,255,255,.08); --hair-2:rgba(255,255,255,.14);
     --ink:#eef1f5; --ink-2:#aab4c0; --ink-3:#7a8694; --deem:#566070;
-    --s1:#3987e5;
+    --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181;
     --good:#0ca30c; --warn:#fab219;
     --good-wash:rgba(12,163,12,.12); --warn-wash:rgba(250,178,25,.10);
     --sans:system-ui,-apple-system,"Segoe UI",sans-serif;
@@ -42,7 +42,7 @@
   .deck{display:grid;grid-template-columns:64px 1fr auto;gap:16px;align-items:center;
         background:var(--surface);border:1px solid var(--hair);border-left:3px solid var(--ink-3);
         border-radius:10px;padding:15px 18px;text-decoration:none;color:var(--ink);
-        transition:border-color .15s,background .15s}
+        transition:border-color .15s,background .15s;cursor:pointer}
   .deck:hover,.deck:focus-visible{border-left-color:var(--s1);background:var(--raised)}
   .deck:focus-visible{outline:2px solid var(--s1);outline-offset:2px}
   .ver{font:700 17px/1.15 var(--mono);color:var(--ink)}
@@ -66,29 +66,211 @@
     .meta{grid-row:2}
   }
 
-  footer{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font:400 12px/1.6 var(--mono);color:var(--ink-3);max-width:980px;margin:0 auto;width:100%}
+  footer{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font:400 12px/1.6 var(--mono);color:var(--ink-3);max-width:980px;margin:24px auto 0;width:100%}
   footer b{color:var(--ink-2);font-weight:600}
   footer a{color:var(--s1);text-decoration:none}
   footer a:hover,footer a:focus-visible{text-decoration:underline}
   :focus-visible{outline:2px solid var(--s1);outline-offset:2px}
+
+  /* ================= SPA VIEWPORT OVERLAY ================= */
+  .spa-viewport{
+    position:fixed;
+    inset:0;
+    z-index:9999;
+    background:var(--page);
+    display:flex;
+    flex-direction:column;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .18s ease;
+  }
+  .spa-viewport.active{
+    opacity:1;
+    pointer-events:auto;
+  }
+  .spa-bar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:8px 16px;
+    background:var(--surface);
+    border-bottom:1px solid var(--hair-2);
+    gap:12px;
+    flex-wrap:wrap;
+    min-height:50px;
+    flex:none;
+  }
+  .spa-left{
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .spa-back-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    background:var(--raised);
+    color:var(--ink);
+    border:1px solid var(--hair-2);
+    border-radius:6px;
+    padding:6px 12px;
+    font:600 12px/1 var(--mono);
+    cursor:pointer;
+    text-decoration:none;
+    transition:all .15s;
+  }
+  .spa-back-btn:hover{
+    background:var(--s1);
+    border-color:var(--s1);
+    color:#fff;
+  }
+  .spa-breadcrumb{
+    font:600 13px/1 var(--mono);
+    color:var(--ink-2);
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+  }
+  .spa-breadcrumb .badge{
+    font:700 11px/1 var(--mono);
+    color:var(--s1);
+    background:rgba(57,135,229,.12);
+    border:1px solid rgba(57,135,229,.35);
+    padding:3px 7px;
+    border-radius:4px;
+  }
+  .spa-tabs{
+    display:flex;
+    align-items:center;
+    gap:5px;
+    overflow-x:auto;
+  }
+  .spa-tab{
+    font:600 11.5px/1 var(--mono);
+    padding:6px 10px;
+    border-radius:5px;
+    border:1px solid var(--hair-2);
+    background:var(--sunken);
+    color:var(--ink-2);
+    text-decoration:none;
+    cursor:pointer;
+    transition:all .15s;
+    white-space:nowrap;
+  }
+  .spa-tab:hover{
+    color:var(--ink);
+    border-color:var(--ink-3);
+  }
+  .spa-tab.active{
+    background:var(--s1);
+    border-color:var(--s1);
+    color:#fff;
+  }
+  .spa-actions{
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .spa-action-btn{
+    font:500 11.5px/1 var(--mono);
+    color:var(--ink-3);
+    border:1px solid var(--hair-2);
+    border-radius:5px;
+    padding:5px 9px;
+    background:transparent;
+    text-decoration:none;
+    cursor:pointer;
+    transition:all .15s;
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+  }
+  .spa-action-btn:hover{
+    color:var(--ink);
+    border-color:var(--ink-2);
+  }
+  .spa-frame-container{
+    flex:1;
+    position:relative;
+    width:100%;
+    height:calc(100% - 50px);
+    overflow:hidden;
+    background:var(--page);
+  }
+  .spa-frame{
+    width:100%;
+    height:100%;
+    border:none;
+    display:block;
+    background:var(--page);
+  }
+  .spa-doc-panel{
+    position:absolute;
+    inset:0;
+    overflow-y:auto;
+    padding:36px clamp(20px,6vw,72px);
+    background:var(--page);
+    display:none;
+  }
+  .spa-doc-panel.active{
+    display:block;
+  }
+  .spa-doc-inner{
+    max-width:960px;
+    margin:0 auto;
+    font-family:var(--sans);
+    color:var(--ink);
+    line-height:1.65;
+  }
+  .spa-doc-inner h1{
+    font:700 28px/1.2 var(--mono);
+    margin:0 0 16px;
+    border-bottom:1px solid var(--hair-2);
+    padding-bottom:12px;
+  }
+  .spa-doc-inner pre{
+    background:var(--sunken);
+    border:1px solid var(--hair);
+    border-radius:8px;
+    padding:16px;
+    font:400 12.5px/1.65 var(--mono);
+    color:var(--ink-2);
+    overflow-x:auto;
+    white-space:pre-wrap;
+    word-break:break-word;
+  }
+  .spa-loader{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    display:none;
+    font:600 13px/1 var(--mono);
+    color:var(--ink-3);
+  }
+  .spa-loader.active{
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
 </style>
 </head>
 <body>
 
-<main>
+<main id="indexMain">
   <div>
     <div class="kicker">deliverables/2026-09-30-2 · companion decks to doc 03 — the real-data BCF case study</div>
-    <h1>httpx<span class="u">_</span>3672 <span class="u">· four decks</span></h1>
-    <p class="sub">The dataset's only httpx task (1 of 129), seen four ways: <b>the matchup</b>, <b>the raw data</b>, <b>the run itself</b>, and <b>the decisions behind it</b>. Every deck is a single standalone HTML file — no build step, nothing to install. v4 ships in the sibling package <b>deliverables/2026-10-06/</b> with its research, hypothesis, and data-wishlist companions.</p>
+    <h1>httpx<span class="u">_</span>3672 <span class="u">· five decks</span></h1>
+    <p class="sub">The dataset's only httpx task (1 of 129), seen five ways: <b>the matchup</b>, <b>the raw data</b>, <b>the run itself</b>, <b>the decisions behind it</b>, and <b>the multi-source forensic data harvest</b>. Every deck is a standalone HTML file — now browsable seamlessly right in the viewport like a Single Page Application.</p>
   </div>
 
-  <div class="term" role="img" aria-label="Terminal: listing the four deck files">
+  <div class="term" role="img" aria-label="Terminal: listing the five deck files">
     <div class="term-bar"><i></i><i></i><i></i></div>
     <div class="term-body" id="bootlines"></div>
   </div>
 
   <nav class="menu" aria-label="Slide decks">
-    <a class="deck" href="03-bcf-simulation-httpx-3672.slides.html" target="_blank" rel="noopener" data-key="1">
+    <a class="deck" href="03-bcf-simulation-httpx-3672.slides.html" data-key="1" data-deck="v1">
       <span class="ver">v1<small>the matchup</small></span>
       <span>
         <h2>BCF vs a naive agent</h2>
@@ -104,7 +286,7 @@
       </span>
     </a>
 
-    <a class="deck" href="03-bcf-simulation-httpx-3672.slides.v2.html" target="_blank" rel="noopener" data-key="2">
+    <a class="deck" href="03-bcf-simulation-httpx-3672.slides.v2.html" data-key="2" data-deck="v2">
       <span class="ver">v2<small>the raw data</small></span>
       <span>
         <h2>The training data, verbatim</h2>
@@ -119,7 +301,7 @@
       </span>
     </a>
 
-    <a class="deck" href="03-bcf-simulation-httpx-3672.slides.v3.html" target="_blank" rel="noopener" data-key="3">
+    <a class="deck" href="03-bcf-simulation-httpx-3672.slides.v3.html" data-key="3" data-deck="v3">
       <span class="ver">v3<small>the run</small></span>
       <span>
         <h2>The BCF run, step by step</h2>
@@ -136,7 +318,7 @@
       </span>
     </a>
 
-    <a class="deck" href="03-bcf-simulation-httpx-3672.slides.v4.html" target="_blank" rel="noopener" data-key="4">
+    <a class="deck" href="03-bcf-simulation-httpx-3672.slides.v4.html" data-key="4" data-deck="v4">
       <span class="ver">v4<small>the decisions</small></span>
       <span>
         <h2>The decision engine — and the next accuracy tier</h2>
@@ -153,57 +335,317 @@
         <span class="count"><b>19</b> slides</span>
       </span>
     </a>
+
+    <a class="deck" href="03-bcf-simulation-httpx-3672.slides.v5.html" data-key="5" data-deck="v5">
+      <span class="ver">v5<small>side-by-side</small></span>
+      <span>
+        <h2>Side-by-side simulation: Naive agent vs BCF proposal</h2>
+        <p class="desc">A turn-by-turn simulation matchup on httpx_3672: Naive agent (Config 1, 43 calls, Trap 1 panic revert, repeat loop, fail) vs. BCF proposal (Config 3, 24 calls, breadcrumb journal, ratchet, exit 0 pass). Visually inspect where each improvement occurs across all sequence steps.</p>
+        <span class="chips">
+          <span class="chip bad"><span class="g">✗</span> [SIM] Naive 43 calls (fail)</span>
+          <span class="chip v"><span class="g">✓</span> [SIM] BCF 24 calls (pass)</span>
+          <span class="chip sim"><span class="g">⇄</span> 8 sequence steps compared</span>
+          <span class="chip est"><span class="g">★</span> 8 visual improvement levers</span>
+        </span>
+      </span>
+      <span class="meta">
+        <span class="key">press 5</span>
+        <span class="count"><b>15</b> slides</span>
+      </span>
+    </a>
   </nav>
 </main>
 
 <footer>
-  <span><b>Companions</b> <a href="03-bcf-simulation-httpx-3672.md">03-bcf-simulation-httpx-3672.md</a> (prose walkthrough + reproduction appendix) · <a href="00-README.md">00-README.md</a> (package guide) · <b>v4 package</b> <a href="../2026-10-06/00-README.md">00-README</a> · <a href="../2026-10-06/01-research-evidence.md">01 research evidence</a> · <a href="../2026-10-06/02-hypotheses-and-test-plans.md">02 hypotheses H1–H8</a> · <a href="../2026-10-06/03-data-wishlist.md">03 data wishlist D1–D12</a></span>
-  <span>↑↓ select · <b>1–4</b> open · generated 2026-10-01 · updated 2026-10-06</span>
+  <span><b>Companions</b> <a href="03-bcf-simulation-httpx-3672.md" class="spa-link">03-bcf-simulation-httpx-3672.md</a> (prose walkthrough) · <a href="00-README.md" class="spa-link">00-README.md</a> · <a href="../deep-research-handoff-multisource-harvest-bcf-brain.md" class="spa-link">deep-research-handoff-multisource-harvest-bcf-brain.md</a> · <b>v4 package</b> <a href="../2026-10-06/00-README.md" class="spa-link">00-README</a> · <a href="../2026-10-06/01-research-evidence.md" class="spa-link">01 research evidence</a> · <a href="../2026-10-06/02-hypotheses-and-test-plans.md" class="spa-link">02 hypotheses H1–H8</a> · <a href="../2026-10-06/03-data-wishlist.md" class="spa-link">03 data wishlist D1–D12</a></span>
+  <span>↑↓ select · <b>1–5</b> open deck · <b>Esc</b> back to index · updated 2026-10-13</span>
 </footer>
+
+<!-- ================= SPA IN-VIEWPORT OVERLAY CONTAINER ================= -->
+<div id="spaViewport" class="spa-viewport" role="region" aria-label="SPA Presentation and Document Viewer">
+  <div class="spa-bar">
+    <div class="spa-left">
+      <button id="spaCloseBtn" class="spa-back-btn" title="Back to Decks Menu (Esc)">
+        <span>← Back to Menu</span>
+      </button>
+      <div class="spa-breadcrumb">
+        <span>httpx_3672</span>
+        <span id="spaActiveBadge" class="badge">v1</span>
+        <span id="spaActiveTitle" style="color:var(--ink)">the matchup</span>
+      </div>
+    </div>
+
+    <div class="spa-tabs" role="tablist" aria-label="Switch slide deck">
+      <button class="spa-tab" data-deck="v1" onclick="openDeck('v1')">1 · v1 matchup</button>
+      <button class="spa-tab" data-deck="v2" onclick="openDeck('v2')">2 · v2 raw data</button>
+      <button class="spa-tab" data-deck="v3" onclick="openDeck('v3')">3 · v3 the run</button>
+      <button class="spa-tab" data-deck="v4" onclick="openDeck('v4')">4 · v4 decisions</button>
+      <button class="spa-tab" data-deck="v5" onclick="openDeck('v5')">5 · v5 side-by-side</button>
+    </div>
+
+    <div class="spa-actions">
+      <a id="spaExternalLink" class="spa-action-btn" href="#" target="_blank" rel="noopener" title="Open current deck in standalone browser window">
+        <span>↗ Standalone</span>
+      </a>
+      <button class="spa-action-btn" onclick="closeSpa()" title="Close viewport viewer (Esc)">✕</button>
+    </div>
+  </div>
+
+  <div class="spa-frame-container">
+    <div id="spaLoader" class="spa-loader">Loading slide deck...</div>
+    <iframe id="spaFrame" class="spa-frame" src="about:blank" title="Slide Deck Viewer"></iframe>
+    <div id="spaDocPanel" class="spa-doc-panel">
+      <div class="spa-doc-inner">
+        <h1 id="spaDocTitle">Document Viewer</h1>
+        <div id="spaDocBody"></div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
 (function(){
 "use strict";
+
 function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;")}
 
 /* boot typing */
-var reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
-var boot=document.getElementById("bootlines");
-var lines=[
- {cls:"p",txt:"$ cd deliverables/2026-09-30-2 && ls -1 03-*.html ../2026-10-06/03-*.html"},
- {cls:"out",txt:"03-bcf-simulation-httpx-3672.slides.html      # v1 — the matchup"},
- {cls:"out",txt:"03-bcf-simulation-httpx-3672.slides.v2.html   # v2 — the raw data"},
- {cls:"out",txt:"03-bcf-simulation-httpx-3672.slides.v3.html   # v3 — the run, step by step"},
- {cls:"hl", txt:"../2026-10-06/03-bcf-simulation-httpx-3672.slides.v4.html  # v4 — the decisions + next tier"}
+var reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+var boot = document.getElementById("bootlines");
+var lines = [
+  {cls:"p",txt:"$ cd deliverables/2026-09-30-2 && ls -1 03-*.html"},
+  {cls:"out",txt:"03-bcf-simulation-httpx-3672.slides.html      # v1 — the matchup"},
+  {cls:"out",txt:"03-bcf-simulation-httpx-3672.slides.v2.html   # v2 — the raw data"},
+  {cls:"out",txt:"03-bcf-simulation-httpx-3672.slides.v3.html   # v3 — the run, step by step"},
+  {cls:"out",txt:"03-bcf-simulation-httpx-3672.slides.v4.html   # v4 — the decisions + next tier"},
+  {cls:"hl", txt:"03-bcf-simulation-httpx-3672.slides.v5.html   # v5 — naive vs BCF side-by-side simulation"}
 ];
+
 if(reduced){
-  boot.innerHTML=lines.map(function(l){return '<span class="'+l.cls+'">'+esc(l.txt)+'</span>'}).join("<br>");
+  boot.innerHTML = lines.map(function(l){return '<span class="'+l.cls+'">'+esc(l.txt)+'</span>'}).join("<br>");
 }else{
-  var li=0,ci=0,out="";
+  var li=0, ci=0, out="";
   function step(){
     if(li>=lines.length)return;
-    var l=lines[li];
-    if(ci===0){out+=(out?"<br>":"")+'<span class="'+l.cls+'">'}
+    var l = lines[li];
+    if(ci===0){out += (out?"<br>":"")+'<span class="'+l.cls+'">'}
     ci++;
-    if(ci>=l.txt.length){out+=esc(l.txt)+"</span>";li++;ci=0;boot.innerHTML=out;setTimeout(step,li===1?260:120)}
-    else{boot.innerHTML=out+esc(l.txt.slice(0,ci))+'<span class="cursor"></span>';setTimeout(step,12+Math.random()*20)}
+    if(ci>=l.txt.length){
+      out += esc(l.txt)+"</span>";
+      li++; ci=0;
+      boot.innerHTML = out;
+      setTimeout(step, li===1?240:110);
+    }else{
+      boot.innerHTML = out+esc(l.txt.slice(0,ci))+'<span class="cursor"></span>';
+      setTimeout(step, 10+Math.random()*18);
+    }
   }
   step();
 }
 
-/* keyboard: 1–4 open, arrows roam focus */
-var decks=Array.prototype.slice.call(document.querySelectorAll(".deck"));
-document.addEventListener("keydown",function(e){
-  if(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA")return;
-  if(e.key>="1"&&e.key<="4"){
-    var d=decks[+e.key-1];
-    if(d){e.preventDefault();window.open(d.href,"_blank","noopener")}
-  }else if(e.key==="ArrowDown"||e.key==="ArrowUp"){
-    var cur=decks.indexOf(document.activeElement);
-    var next=e.key==="ArrowDown"?(cur+1)%decks.length:(cur-1+decks.length)%decks.length;
-    e.preventDefault();decks[next].focus();
+/* ================= SPA VIEWPORT CONTROLLER ================= */
+var deckMap = {
+  "v1": {
+    file: "03-bcf-simulation-httpx-3672.slides.html",
+    title: "v1 · BCF vs naive agent (the matchup)",
+    badge: "v1"
+  },
+  "v2": {
+    file: "03-bcf-simulation-httpx-3672.slides.v2.html",
+    title: "v2 · The training data, verbatim (the raw data)",
+    badge: "v2"
+  },
+  "v3": {
+    file: "03-bcf-simulation-httpx-3672.slides.v3.html",
+    title: "v3 · The BCF run, step by step (the run)",
+    badge: "v3"
+  },
+  "v4": {
+    file: "03-bcf-simulation-httpx-3672.slides.v4.html",
+    title: "v4 · The decision engine & next tier (the decisions)",
+    badge: "v4"
+  },
+  "v5": {
+    file: "03-bcf-simulation-httpx-3672.slides.v5.html",
+    title: "v5 · Naive vs BCF Side-by-Side Simulation (the matchup)",
+    badge: "v5"
+  }
+};
+
+var spaViewport = document.getElementById("spaViewport");
+var spaFrame = document.getElementById("spaFrame");
+var spaDocPanel = document.getElementById("spaDocPanel");
+var spaDocTitle = document.getElementById("spaDocTitle");
+var spaDocBody = document.getElementById("spaDocBody");
+var spaActiveBadge = document.getElementById("spaActiveBadge");
+var spaActiveTitle = document.getElementById("spaActiveTitle");
+var spaExternalLink = document.getElementById("spaExternalLink");
+var spaCloseBtn = document.getElementById("spaCloseBtn");
+var spaLoader = document.getElementById("spaLoader");
+var currentView = null;
+
+window.openDeck = function(deckKey, pushHash){
+  var info = deckMap[deckKey];
+  if(!info) return;
+
+  currentView = deckKey;
+  spaViewport.classList.add("active");
+  spaDocPanel.classList.remove("active");
+  spaFrame.style.display = "block";
+
+  // Update tabs
+  document.querySelectorAll(".spa-tab").forEach(function(tab){
+    tab.classList.toggle("active", tab.dataset.deck === deckKey);
+  });
+
+  // Update headers
+  spaActiveBadge.textContent = info.badge;
+  spaActiveTitle.textContent = info.title;
+  spaExternalLink.href = info.file;
+
+  // Load into iframe if not already loaded
+  if(spaFrame.getAttribute("data-loaded-deck") !== deckKey){
+    spaLoader.classList.add("active");
+    spaFrame.src = info.file;
+    spaFrame.setAttribute("data-loaded-deck", deckKey);
+    spaFrame.onload = function(){
+      spaLoader.classList.remove("active");
+    };
+  }
+
+  if(pushHash !== false){
+    history.pushState(null, "", "#" + deckKey);
+  }
+};
+
+window.openDoc = function(url, pushHash){
+  currentView = "doc";
+  spaViewport.classList.add("active");
+  spaFrame.style.display = "none";
+  spaDocPanel.classList.add("active");
+
+  var filename = url.split("/").pop();
+  spaActiveBadge.textContent = "doc";
+  spaActiveTitle.textContent = filename;
+  spaDocTitle.textContent = filename;
+  spaExternalLink.href = url;
+
+  // Update tabs
+  document.querySelectorAll(".spa-tab").forEach(function(tab){
+    tab.classList.remove("active");
+  });
+
+  spaDocBody.innerHTML = '<div style="color:var(--ink-3);font-family:var(--mono)">Loading companion document...</div>';
+
+  fetch(url)
+    .then(function(res){
+      if(!res.ok) throw new Error("HTTP " + res.status);
+      return res.text();
+    })
+    .then(function(text){
+      spaDocBody.innerHTML = '<pre>' + esc(text) + '</pre>';
+    })
+    .catch(function(err){
+      spaDocBody.innerHTML = '<div class="term" style="margin-top:16px"><div class="term-bar"><i></i><i></i><i></i></div><div class="term-body">' +
+        '<span class="out"># Companion Document: ' + esc(filename) + '</span><br>' +
+        '<span class="p">File path: ' + esc(url) + '</span><br>' +
+        '<span class="out">Note: When viewed via local file:// protocol, local cross-file fetch is restricted by browser security policies.</span><br>' +
+        '<span class="hl">You can open this file directly: </span><a href="' + esc(url) + '" target="_blank" style="color:var(--s1)">' + esc(url) + '</a>' +
+        '</div></div>';
+    });
+
+  if(pushHash !== false){
+    history.pushState(null, "", "#doc=" + encodeURIComponent(url));
+  }
+};
+
+window.closeSpa = function(pushHash){
+  spaViewport.classList.remove("active");
+  currentView = null;
+  if(pushHash !== false && location.hash){
+    history.pushState(null, "", location.pathname + location.search);
+  }
+};
+
+spaCloseBtn.addEventListener("click", function(e){
+  e.preventDefault();
+  closeSpa();
+});
+
+// Intercept deck clicks in menu
+var decks = Array.prototype.slice.call(document.querySelectorAll(".deck"));
+decks.forEach(function(deckLink){
+  deckLink.addEventListener("click", function(e){
+    e.preventDefault();
+    var dk = deckLink.dataset.deck;
+    if(dk){
+      openDeck(dk);
+    }
+  });
+});
+
+// Intercept companion links in footer
+document.querySelectorAll(".spa-link").forEach(function(link){
+  link.addEventListener("click", function(e){
+    e.preventDefault();
+    openDoc(link.getAttribute("href"));
+  });
+});
+
+// Route based on URL hash
+function routeHash(){
+  var hash = location.hash.replace(/^#/, "");
+  if(!hash){
+    closeSpa(false);
+    return;
+  }
+  if(deckMap[hash]){
+    openDeck(hash, false);
+  } else if(hash.indexOf("doc=") === 0){
+    var docUrl = decodeURIComponent(hash.substring(4));
+    openDoc(docUrl, false);
+  }
+}
+
+window.addEventListener("hashchange", routeHash);
+
+// Initial route
+routeHash();
+
+/* Keyboard shortcuts: 1–5 open deck in SPA, Escape closes SPA */
+document.addEventListener("keydown", function(e){
+  if(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA") return;
+
+  if(e.key === "Escape"){
+    if(spaViewport.classList.contains("active")){
+      e.preventDefault();
+      closeSpa();
+    }
+  } else if(e.key >= "1" && e.key <= "5"){
+    var targetKey = "v" + e.key;
+    if(deckMap[targetKey]){
+      e.preventDefault();
+      openDeck(targetKey);
+    }
+  } else if(!spaViewport.classList.contains("active")){
+    if(e.key === "ArrowDown" || e.key === "ArrowUp"){
+      var cur = decks.indexOf(document.activeElement);
+      var next = e.key === "ArrowDown" ? (cur + 1) % decks.length : (cur - 1 + decks.length) % decks.length;
+      e.preventDefault();
+      decks[next].focus();
+    }
   }
 });
+
+// Listen for message from iframe (e.g. child deck notifying loaded)
+window.addEventListener("message", function(e){
+  if(e.data && e.data.type === "DECK_LOADED"){
+    if(deckMap[e.data.deck]){
+      spaActiveBadge.textContent = deckMap[e.data.deck].badge;
+    }
+  }
+});
+
 })();
 </script>
 </body>

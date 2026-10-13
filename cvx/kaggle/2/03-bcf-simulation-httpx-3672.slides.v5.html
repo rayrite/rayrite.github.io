@@ -1,0 +1,1457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>httpx_3672 — Naive vs BCF Full Call-by-Call Simulation · v5</title>
+<style>
+  :root{
+    --page:#0e1116; --surface:#151a21; --raised:#1b222c; --sunken:#11151c;
+    --hair:rgba(255,255,255,.08); --hair-2:rgba(255,255,255,.14);
+    --ink:#eef1f5; --ink-2:#aab4c0; --ink-3:#7a8694; --deem:#566070;
+    --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181;
+    --good:#0ca30c; --warn:#fab219; --crit:#d03b3b;
+    --good-wash:rgba(12,163,12,.12); --warn-wash:rgba(250,178,25,.10); --crit-wash:rgba(208,59,59,.13);
+    --diff-del:rgba(214,79,67,.14); --diff-add:rgba(25,158,112,.15);
+    --sans:system-ui,-apple-system,"Segoe UI",sans-serif;
+    --mono:"Cascadia Code","JetBrains Mono",ui-monospace,"Consolas",monospace;
+    color-scheme:dark;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--page);color:var(--ink);font-family:var(--sans);font-size:16.5px;line-height:1.55}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto} *,*::before,*::after{animation-duration:.001s!important;transition-duration:.001s!important}}
+
+  /* ---------- deck chrome ---------- */
+  .deck{scroll-snap-type:y proximity}
+  .rail{position:fixed;left:14px;top:50%;transform:translateY(-50%);z-index:40;display:flex;flex-direction:column;gap:8px}
+  .rail button{width:12px;height:12px;border-radius:3px;border:1px solid var(--hair-2);background:transparent;padding:0;cursor:pointer;position:relative}
+  .rail button[aria-current="true"]{background:var(--s1);border-color:var(--s1)}
+  .rail button span{position:absolute;left:22px;top:50%;transform:translateY(-50%);font:500 12px/1 var(--sans);color:var(--ink-2);white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s;background:var(--raised);padding:3px 7px;border-radius:4px;border:1px solid var(--hair-2);box-shadow:0 4px 12px rgba(0,0,0,.4)}
+  .rail button:hover span,.rail button:focus-visible span{opacity:1}
+  .rail button:focus-visible{outline:2px solid var(--s1);outline-offset:2px}
+  @media (max-width:960px){.rail{display:none}}
+
+  .slide{min-height:100svh;scroll-snap-align:start;position:relative;display:flex;padding:44px clamp(20px,6vw,72px) 60px}
+  .slide-inner{max-width:1220px;margin:auto;width:100%;display:flex;flex-direction:column;gap:12px}
+  .receipt{position:absolute;left:clamp(20px,6vw,72px);bottom:20px;right:clamp(20px,6vw,72px);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font:400 12px/1.5 var(--mono);color:var(--ink-3)}
+  .receipt b{color:var(--ink-2);font-weight:600}
+  .kicker{font:600 13px/1.4 var(--sans);color:var(--ink-3);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  h2{font:650 26px/1.2 var(--sans);letter-spacing:-.01em;margin:0;max-width:44ch}
+  .sub{color:var(--ink-2);max-width:86ch;margin:0;font-size:14.5px}
+  .sub b{color:var(--ink);font-weight:600}
+
+  /* evidence chips */
+  .chip{display:inline-flex;align-items:center;gap:5px;font:600 11px/1 var(--mono);padding:4px 8px;border-radius:5px;border:1px solid var(--hair-2)}
+  .chip .g{font-family:var(--sans)}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .chip.v{background:var(--good-wash);border-color:rgba(12,163,12,.4)} .chip.v .g{color:var(--good)}
+  .chip.sim{background:var(--warn-wash);border-color:rgba(250,178,25,.35)} .chip.sim .g{color:var(--warn)}
+  .chip.bad{background:var(--crit-wash);border-color:rgba(208,59,59,.4)} .chip.bad .g{color:#ef8686}
+  .chip.bcf{background:rgba(57,135,229,.12);border-color:rgba(57,135,229,.4)} .chip.bcf .g{color:var(--s1)}
+
+  /* stat strip */
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--hair);border:1px solid var(--hair);border-radius:10px;overflow:hidden}
+  .stat{background:var(--surface);padding:10px 14px}
+  .stat b{display:block;font:650 21px/1.15 var(--sans);letter-spacing:-.01em;color:var(--ink)}
+  .stat span{font:400 11.5px/1.4 var(--sans);color:var(--ink-3)}
+
+  /* terminal & code */
+  .term{background:var(--sunken);border:1px solid var(--hair);border-radius:8px;overflow:hidden}
+  .term-bar{display:flex;gap:6px;padding:6px 12px;border-bottom:1px solid var(--hair);background:rgba(255,255,255,.02)}
+  .term-bar i{width:9px;height:9px;border-radius:50%;background:var(--deem);opacity:.6}
+  .term-body{padding:10px 14px;font:400 12px/1.55 var(--mono);color:var(--ink-2);overflow-x:auto}
+  .term-body .p{color:var(--s1)} .term-body .out{color:var(--ink-3)} .term-body .hl{color:var(--ink)}
+  .cursor{display:inline-block;width:7px;height:14px;background:var(--ink-2);vertical-align:-2px;animation:blink 1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+  code.inline{font:500 .9em var(--mono);background:var(--raised);padding:1px 5px;border-radius:4px;color:var(--ink)}
+
+  /* ================= SIDE-BY-SIDE COMPARISON SYSTEM ================= */
+  .sbs-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:stretch}
+  @media (max-width:920px){.sbs-grid{grid-template-columns:1fr}}
+
+  .sbs-card{background:var(--surface);border:1px solid var(--hair);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;position:relative}
+  .sbs-card.naive{border-left:3px solid var(--crit)}
+  .sbs-card.bcf{border-left:3px solid var(--good)}
+
+  .sbs-header{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;border-bottom:1px solid var(--hair);padding-bottom:8px}
+  .sbs-title{font:650 14px/1.3 var(--sans);display:flex;align-items:center;gap:7px}
+  .sbs-card.naive .sbs-title{color:#f56c6c}
+  .sbs-card.bcf .sbs-title{color:#5ec95e}
+  .sbs-calls{font:600 11.5px/1 var(--mono);color:var(--ink-3);background:var(--sunken);border:1px solid var(--hair-2);border-radius:4px;padding:3px 7px}
+
+  .call-list{display:flex;flex-direction:column;gap:7px;font:400 11.5px/1.55 var(--mono);max-height:430px;overflow-y:auto;padding-right:4px}
+  .call-list::-webkit-scrollbar{width:5px}
+  .call-list::-webkit-scrollbar-track{background:var(--sunken)}
+  .call-list::-webkit-scrollbar-thumb{background:var(--hair-2);border-radius:3px}
+  .call-list::-webkit-scrollbar-thumb:hover{background:var(--s1)}
+  .call-item{background:var(--sunken);border:1px solid var(--hair);border-radius:6px;padding:7px 11px}
+  .call-item .cnum{font-weight:700;color:var(--ink)}
+  .call-item .cmd{color:var(--s1)}
+  .call-item .del{color:#e8a09d}
+  .call-item .add{color:#8fd8b8}
+  .call-item .warn{color:var(--warn)}
+  .call-item .note{display:block;font-size:11px;color:var(--ink-3);margin-top:2px}
+
+  .sbs-pitfall{font:400 12.5px/1.55 var(--sans);color:var(--ink-2);background:rgba(208,59,59,.07);border:1px solid rgba(208,59,59,.25);border-radius:6px;padding:8px 11px}
+  .sbs-pitfall b{color:#f56c6c}
+
+  .sbs-safeguard{font:400 12.5px/1.55 var(--sans);color:var(--ink-2);background:rgba(12,163,12,.07);border:1px solid rgba(12,163,12,.25);border-radius:6px;padding:8px 11px}
+  .sbs-safeguard b{color:#5ec95e}
+
+  .sbs-meta{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:8px;font:500 11.5px/1.3 var(--mono);padding-top:6px;border-top:1px dashed var(--hair)}
+  .sbs-meta .status-fail{color:#ef8686;font-weight:700}
+  .sbs-meta .status-pass{color:#5ec95e;font-weight:700}
+
+  /* ================= IMPROVEMENT DELTA BANNER ================= */
+  .gain-banner{
+    display:grid;
+    grid-template-columns:auto 1fr auto;
+    gap:14px;
+    align-items:center;
+    background:linear-gradient(90deg, rgba(12,163,12,.10), rgba(57,135,229,.10));
+    border:1px solid rgba(12,163,12,.35);
+    border-radius:9px;
+    padding:11px 16px;
+  }
+  @media (max-width:800px){.gain-banner{grid-template-columns:1fr;gap:8px}}
+  .gain-badge{
+    font:700 12px/1 var(--mono);
+    color:#5ec95e;
+    background:var(--surface);
+    border:1px solid rgba(12,163,12,.4);
+    padding:6px 10px;
+    border-radius:6px;
+    white-space:nowrap;
+  }
+  .gain-text{font:400 13px/1.5 var(--sans);color:var(--ink-2)}
+  .gain-text b{color:var(--ink);font-weight:600}
+  .gain-tenet{
+    font:600 11.5px/1 var(--mono);
+    color:var(--s1);
+    background:var(--sunken);
+    border:1px solid var(--hair-2);
+    padding:5px 9px;
+    border-radius:5px;
+    white-space:nowrap;
+  }
+
+  /* step header */
+  .stephead{display:flex;gap:12px;align-items:flex-start}
+  .stepno{font:700 14px/1 var(--mono);color:var(--ink);border:1px solid var(--hair-2);border-left:3px solid var(--s1);border-radius:7px;padding:9px 11px;background:var(--surface);flex:none}
+  .stephead h2{font-size:23px}
+
+  /* route ribbon */
+  .route{display:flex;gap:7px;flex-wrap:wrap}
+  .route a{display:inline-flex;align-items:center;gap:6px;font:600 11.5px/1 var(--mono);color:var(--ink-2);text-decoration:none;border:1px solid var(--hair-2);border-radius:6px;padding:6px 9px;background:var(--surface);transition:all .15s}
+  .route a:hover,.route a:focus-visible{border-color:var(--s1);color:var(--ink);background:var(--raised)}
+  .route .dot{width:7px;height:7px;border-radius:2px;flex:none}
+  .route a small{color:var(--ink-3);font-weight:500}
+
+  /* hero slide */
+  .hero-id{font:700 clamp(44px,7.5vw,78px)/1.05 var(--mono);letter-spacing:-.02em;margin:4px 0 2px}
+  .hero-id .u{color:var(--ink-3)}
+  .hero-id .ver-badge{display:inline-block;font:650 clamp(16px,2.2vw,24px) var(--mono);color:var(--s1);vertical-align:middle;margin-left:12px;border:1px solid rgba(57,135,229,.4);background:rgba(57,135,229,.12);padding:4px 10px;border-radius:6px}
+  .boot{min-height:120px}
+  .fadein{opacity:0;transform:translateY(8px)}
+  .fadein.in{opacity:1;transform:none;transition:opacity .5s ease,transform .5s ease}
+  @media (prefers-reduced-motion:reduce){.fadein{opacity:1;transform:none}}
+
+  table.data{border-collapse:collapse;width:100%;font:400 12px/1.5 var(--mono)}
+  table.data th,table.data td{text-align:left;padding:6px 9px;border-bottom:1px solid var(--hair);color:var(--ink-2);font-weight:400;vertical-align:top}
+  table.data th{color:var(--ink-3);font-weight:600;white-space:nowrap}
+  table.data td.k{color:var(--ink);font-weight:600;white-space:nowrap}
+
+  :focus-visible{outline:2px solid var(--s1);outline-offset:2px}
+</style>
+</head>
+<body>
+
+<nav class="rail" aria-label="Slides">
+  <button data-i="0" aria-current="true"><span>1 · side-by-side title</span></button>
+  <button data-i="1"><span>2 · trajectory ribbons</span></button>
+  <button data-i="2"><span>3 · step 1 boot &amp; meters</span></button>
+  <button data-i="3"><span>4 · step 2 framing &amp; G0</span></button>
+  <button data-i="4"><span>5 · step 3 spec formulation</span></button>
+  <button data-i="5"><span>6 · step 4 dual-tree discovery</span></button>
+  <button data-i="6"><span>7 · step 5 rename &amp; trap 1</span></button>
+  <button data-i="7"><span>8 · step 6 topological DAG</span></button>
+  <button data-i="8"><span>9 · step 7 loop prevention</span></button>
+  <button data-i="9"><span>10 · step 8 /tmp validation</span></button>
+  <button data-i="10"><span>11 · step 9 container B verdict</span></button>
+  <button data-i="11"><span>12 · full 43 vs 24 trace matrix</span></button>
+  <button data-i="12"><span>13 · eight levers summary</span></button>
+  <button data-i="13"><span>14 · budget &amp; token spend</span></button>
+  <button data-i="14"><span>15 · interactive inspector</span></button>
+</nav>
+
+<main class="deck" id="deck">
+
+<!-- ============ 1 · TITLE ============ -->
+<section class="slide" id="s1">
+  <div class="slide-inner">
+    <div class="term boot" role="img" aria-label="Terminal: loading side-by-side simulation matchup between naive agent and BCF proposal">
+      <div class="term-bar"><i></i><i></i><i></i></div>
+      <div class="term-body" id="bootlines"></div>
+    </div>
+    <div class="fadein" id="heroBlock">
+      <div class="kicker">Version 5 — the full call-by-call simulation matchup · companion to v1 matchup, v2 raw data, v3 the run, v4 decisions</div>
+      <h1 class="hero-id">httpx<span class="u">_</span>3672 <span class="ver-badge">v5 · full trace</span></h1>
+      <p class="sub" style="font-size:17.5px">A complete call-by-call breakdown for the entire simulation: <b style="color:#ef8686">Naive Agent (Config 1, 43 calls)</b> vs. <b style="color:#5ec95e">BCF Proposal (Config 3, 24 calls)</b> on task httpx_3672. Inspect every turn and action in sequence to see exactly <b style="color:var(--ink)">where the improvements occur</b>, which traps were neutralized, and how BCF reaches <code class="inline">resolved = True</code> in 24 calls while Naive fails.</p>
+    </div>
+    <div class="fadein chips" id="heroChips" style="gap:12px">
+      <span class="chip bad"><span class="g">✗</span> Naive: 43 calls · 3 reverts · fatal Trap 1 misread · resolved = False</span>
+      <span class="chip v"><span class="g">✓</span> BCF: 24 calls · 0 reverts · breadcrumb journal · resolved = True</span>
+      <span class="chip sim"><span class="g">≈</span> [SIM] Paired simulation on verified competition harness snapshot</span>
+    </div>
+  </div>
+  <div class="receipt"><span><b>Source</b> deliverables/2026-09-30-2/03-bcf-simulation-httpx-3672.md §4–§6</span><span>1 / 15</span></div>
+</section>
+
+<!-- ============ 2 · TRAJECTORY RIBBONS ============ -->
+<section class="slide" id="s2">
+  <div class="slide-inner" style="gap:11px">
+    <div class="kicker">The complete trajectories compared on the 50-call budget</div>
+    <h2>Two simulations, one budget: the macro timeline</h2>
+    <div class="stats">
+      <div class="stat"><b>43 vs 24 calls</b><span>Naive exhausts 86% of budget; BCF uses 48% (-44% calls)</span></div>
+      <div class="stat"><b>3 vs 0 reverts</b><span>Naive unwinds the correct fix; BCF ratchet never reverses</span></div>
+      <div class="stat"><b>12 vs 0 rework calls</b><span>Naive trapped in verbatim loop; BCF journal prevents repeat reads</span></div>
+      <div class="stat"><b>False vs True</b><span>Container B verdict: Naive fails tests; BCF exit 0 all-pass</span></div>
+    </div>
+    <div class="term" style="padding:4px 0">
+      <div class="term-body" style="font-size:11.5px;line-height:1.7">
+        <span style="color:#f56c6c;font-weight:700">NAIVE AGENT (43 calls):</span><br>
+        [c1] Status check ➔ [c2..c7] Grep flood &amp; windowed reads ➔ [c8..c10] Sync-only rename ➔ <span style="color:#f56c6c;font-weight:700">[c11..c17] Pytest red &amp; panic revert ×3</span> ➔ [c18..c26] Unguided sync edits ➔ <span style="color:#f56c6c;font-weight:700">[c27..c38] Verbatim repeat loop (12 calls)</span> ➔ [c39..c43] Budget warning &amp; failed submit<br>
+        <br>
+        <span style="color:#5ec95e;font-weight:700">BCF PROPOSAL (24 calls):</span><br>
+        [c0] Status meter ➔ [c1] Classify ➔ [c2] Spec + Gate 0 lock ➔ [c3..c7] AST graph localization ➔ <span style="color:#5ec95e;font-weight:700">[c8..c13] Rename + Journal t=09 (ratchet holds)</span> ➔ [c14..c18] Topological DAG ➔ [c19..c23] /tmp validation ➔ [c24] submit_patch (PASS)
+      </div>
+    </div>
+    <div>
+      <div class="kicker" style="margin-bottom:6px">Direct links to sequence steps</div>
+      <div class="route">
+        <a href="#s3"><span class="dot" style="background:var(--s1)"></span>1 Boot (c0)</a>
+        <a href="#s4"><span class="dot" style="background:var(--s1)"></span>2 Framing (c1)</a>
+        <a href="#s5"><span class="dot" style="background:var(--s5)"></span>3 Spec (c2)</a>
+        <a href="#s6"><span class="dot" style="background:var(--s1)"></span>4 Discovery (c3–7)</a>
+        <a href="#s7"><span class="dot" style="background:var(--crit)"></span>5 Rename (c8–13)</a>
+        <a href="#s8"><span class="dot" style="background:var(--s2)"></span>6 DAG (c14–18)</a>
+        <a href="#s9"><span class="dot" style="background:var(--warn)"></span>7 Loop Breaker</a>
+        <a href="#s10"><span class="dot" style="background:var(--s3)"></span>8 /tmp Repro</a>
+        <a href="#s11"><span class="dot" style="background:var(--good)"></span>9 Verdict (c24)</a>
+      </div>
+    </div>
+  </div>
+  <div class="receipt"><span><b>Macro Overview</b> Paired Trajectories · HARNESS_README §6</span><span>2 / 15</span></div>
+</section>
+
+<!-- ============ 3 · STEP 1: BOOT & METERS ============ -->
+<section class="slide" id="s3">
+  <div class="slide-inner">
+    <div class="stephead">
+      <div class="stepno">01</div>
+      <div>
+        <div class="kicker">Sequence Step 1 · Turn 0 · Environment Initialization</div>
+        <h2>Meter baseline vs. ungrounded execution</h2>
+      </div>
+    </div>
+    <div class="sbs-grid">
+      <div class="sbs-card naive">
+        <div class="sbs-header">
+          <span class="sbs-title">✗ Naive Agent: Unmanaged Start</span>
+          <span class="sbs-calls">Turn 0 · Call 1</span>
+        </div>
+        <div class="call-list">
+          <div class="call-item">
+            <span class="cnum">Call 1:</span> <span class="cmd">get_status()</span> [free]<br>
+            <span class="out">→ {"tool_calls_remaining": 50, "time_elapsed": 4s, "patch": null}</span>
+            <span class="note">Naive calls status once but logs nothing, calculates no pacing budget, and sets no force-submit threshold. Dives immediately into ad-hoc search.</span>
+          </div>
+        </div>
+        <div class="sbs-pitfall">
+          <b>Pitfall: Unmanaged Horizon</b> — The agent has no mental model of its call budget. It treats 50 calls as infinite, making later budget exhaustion warnings (Call 39) sudden emergencies.
+        </div>
+        <div class="sbs-meta">
+          <span>Budget Arithmetic: None</span>
+          <span class="status-fail">Ungrounded execution</span>
+        </div>
+      </div>
+
+      <div class="sbs-card bcf">
+        <div class="sbs-header">
+          <span class="sbs-title">✓ BCF Proposal: Baseline Anchoring</span>
+          <span class="sbs-calls">Turn 0 · Call 0 (Free)</span>
+        </div>
+        <div class="call-list">
+          <div class="call-item">
+            <span class="cnum">Call 0:</span> <span class="cmd">get_status()</span> [free]<br>
+            <span class="out">→ {"tool_calls_used": 0, "tool_calls_remaining": 50, "time_elapsed": 4s, "patch": null}</span>
+            <span class="note">Initializes ledger Turn 0: anchors force_submit_turn = 42, sets localization cap = 10 calls, rescue trigger at 3 strikes / 25% budget.</span>
+          </div>
+        </div>
+        <div class="sbs-safeguard">
+          <b>Safeguard: Budget Baseline</b> — Anchors pacing arithmetic on harness reality, not assumptions. Utilizes the rule that get_status is 100% free to verify container health at t=0.
+        </div>
+        <div class="sbs-meta">
+          <span>Budget Arithmetic: force_submit @ turn 42</span>
+          <span class="status-pass">Ledger Turn 0 anchored</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="gain-banner">
+      <span class="gain-badge">IMPROVEMENT LEVER #1</span>
+      <div class="gain-text">
+        <b>Baseline Grounding:</b> BCF polls harness meters for free before modifying state, preventing mid-run budget panic.
+      </div>
+      <span class="gain-tenet">Tenet: Auditability</span>
+    </div>
+  </div>
+  <div class="receipt"><span><b>Step 1</b> Call 0 vs Call 1 · HARNESS_README §6.1</span><span>3 / 15</span></div>
+</section>
+
+<!-- ============ 4 · STEP 2: TASK FRAMING & GATE 0 ============ -->
+<section class="slide" id="s4">
+  <div class="slide-inner">
+    <div class="stephead">
+      <div class="stepno">02</div>
+      <div>
+        <div class="kicker">Sequence Step 2 · Turn 1 · Task Classification</div>
+        <h2>Gate 0 file-lock vs. chasing un-graded bullets</h2>
+      </div>
+    </div>
+    <div class="sbs-grid">
+      <div class="sbs-card naive">
+        <div class="sbs-header">
+          <span class="sbs-title">✗ Naive Agent: 2 Unfocused Searches</span>
+          <span class="sbs-calls">Turns 1–2 · Calls 2–3</span>
+        </div>
+        <div class="call-list">
+          <div class="call-item">
+            <span class="cnum">Call 2:</span> <span class="cmd">run_command("grep -rn 'complete' src/ tests/")</span><br>
+            <span class="out">→ 12+ matches across 14 files (dual sync/async tree doubles the list)</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Call 3:</span> <span class="cmd">run_command("grep -rl 'complete'")</span><br>
+            <span class="out">→ Refines list of file paths; context is flooded with unrelated hits</span>
+          </div>
+        </div>
+        <div class="sbs-pitfall">
+          <b>Pitfall: Unconstrained Browsing</b> — Without a task hypothesis, the model is pulled toward the 4 ungraded issue bullets (e.g. server exit streams, KeyboardException) rather than the scored defect.
+        </div>
+        <div class="sbs-meta">
+          <span>Phase: Free exploration</span>
+          <span class="status-fail">2 exploratory calls spent</span>
+        </div>
+      </div>
+
+      <div class="sbs-card bcf">
+        <div class="sbs-header">
+          <span class="sbs-title">✓ BCF Proposal: Issue Classification</span>
+          <span class="sbs-calls">Turn 1 · Call 1</span>
+        </div>
+        <div class="call-list">
+          <div class="call-item">
+            <span class="cnum">Call 1:</span> <span class="cmd">run_skill_script("classify_issue", problem_statement)</span><br>
+            <span class="out">→ task_type: compat_or_refactor · cues: "Add...", ".complete -> .reset"</span>
+            <span class="note">Classifies task using issue text only; routes to refactor template. Engages Gate 0 (locks all file tools).</span>
+          </div>
+        </div>
+        <div class="sbs-safeguard">
+          <b>Safeguard: Gate 0 Engaged</b> — File reading and editing tools are physically locked by policy until a valid specification is written. The agent cannot wander into code.
+        </div>
+        <div class="sbs-meta">
+          <span>Phase: G0 file access locked</span>
+          <span class="status-pass">Zero stray reads allowed</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="gain-banner">
+      <span class="gain-badge">IMPROVEMENT LEVER #2</span>
+      <div class="gain-text">
+        <b>Gate 0 Lock:</b> Model is barred from opening or editing workspace files until issue classification completes, stopping exploratory churn.
+      </div>
+      <span class="gain-tenet">Tenet: Spec-First</span>
+    </div>
+  </div>
+  <div class="receipt"><span><b>Step 2</b> Classifier &amp; Gate 0 Lock</span><span>4 / 15</span></div>
+</section>
+
+<!-- ============ 5 · STEP 3: SPEC FORMULATION ============ -->
+<section class="slide" id="s5">
+  <div class="slide-inner">
+    <div class="stephead">
+      <div class="stepno">03</div>
+      <div>
+        <div class="kicker">Sequence Step 3 · Turn 2 · Specification Formulation</div>
+        <h2>Pre-computing the five traps vs. unguided grep</h2>
+      </div>
+    </div>
+    <div class="sbs-grid">
+      <div class="sbs-card naive">
+        <div class="sbs-header">
+          <span class="sbs-title">✗ Naive Agent: 4 Heavy File Reads</span>
+          <span class="sbs-calls">Turns 3–6 · Calls 4–7</span>
+        </div>
+        <div class="call-list">
+          <div class="call-item">
+            <span class="cnum">Call 4:</span> <span class="cmd">read_file("src/httpx/_parsers.py", 370, 425)</span><br>
+            <span class="out">→ Finds def complete(self) at line 378</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Call 5:</span> <span class="cmd">read_file("src/httpx/_parsers.py", 425, 480)</span><br>
+            <span class="out">→ Reads next chunk due to 150-line window cap</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Call 6:</span> <span class="cmd">read_file("src/ahttpx/_parsers.py", 370, 425)</span><br>
+            <span class="out">→ Same method in async parser</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Call 7:</span> <span class="cmd">read_file("src/ahttpx/_parsers.py", 425, 480)</span><br>
+            <span class="out">→ Continues reading parser without understanding callers</span>
+          </div>
+        </div>
+        <div class="sbs-pitfall">
+          <b>Pitfall: Context Saturation</b> — Dumps 220+ lines into context; completely blind to Trap 1 (test asymmetry) and Trap 3 (silent call at _server.py:92).
+        </div>
+        <div class="sbs-meta">
+          <span>Tokens: +4,200 churn</span>
+          <span class="status-fail">Blind to test asymmetry</span>
+        </div>
+      </div>
+
+      <div class="sbs-card bcf">
+        <div class="sbs-header">
+          <span class="sbs-title">✓ BCF Proposal: Structured Spec Contract</span>
+          <span class="sbs-calls">Turn 2 · Call 2</span>
+        </div>
+        <div class="call-list">
+          <div class="call-item">
+            <span class="cnum">Call 2:</span> <span class="cmd">write_spec {task_class, bugs: [B1..B5], fix_order, plan}</span><br>
+            <span class="out">→ Defines B1 (rename), B2 (keepalive), B3 (no-parens silent call), B4 (GenericAlias), B5 (server exit).</span>
+            <span class="note">Identifies Trap 1: local test suite targets old API; hidden test_patch renames it. Pre-registers that visible tests will fail upon the rename.</span>
+          </div>
+        </div>
+        <div class="sbs-safeguard">
+          <b>Safeguard: Trap Anticipation</b> — Neutralizes Traps 1 &amp; 3 before opening code. Establishes topological fix_order DAG: B1 ➔ B2 ➔ B4 ➔ B5.
+        </div>
+        <div class="sbs-meta">
+          <span>Specification: Validated ✓</span>
+          <span class="status-pass">Unlocks G0 with clear obligations</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="gain-banner">
+      <span class="gain-badge">IMPROVEMENT LEVER #3</span>
+      <div class="gain-text">
+        <b>Traps Neutralized Ahead of Time:</b> Defining sub-bugs B1–B5 in writing prepares the agent for the local test failure, neutralizing Trap 1 before execution.
+      </div>
+      <span class="gain-tenet">Tenet: Minimum-Path</span>
+    </div>
+  </div>
+  <div class="receipt"><span><b>Step 3</b> Spec schema vs grep flood · doc 03 §5</span><span>5 / 15</span></div>
+</section>
+
+<!-- ============ 6 · STEP 4: DUAL-TREE DISCOVERY ============ -->
+<section class="slide" id="s6">
+  <div class="slide-inner">
+    <div class="stephead">
+      <div class="stepno">04</div>
+      <div>
+        <div class="kicker">Sequence Step 4 · Turns 3–7 · Localization &amp; Topology</div>
+        <h2>AST graph dual-tree discovery vs. 8 disjoint greps</h2>
+      </div>
+    </div>
+    <div class="sbs-grid">
+      <div class="sbs-card naive">
+        <div class="sbs-header">
+          <span class="sbs-title">✗ Naive Agent: 3 Blind Reads &amp; Edits</span>
+          <span class="sbs-calls">Turns 7–10 · Calls 8–10</span>
+        </div>
+        <div class="call-list">
+          <div class="call-item">
+            <span class="cnum">Call 8:</span> <span class="cmd">edit_file("src/httpx/_parsers.py", complete -> reset)</span><br>
+            <span class="out">→ Edits sync parser only; has not localized callers or checked connection pools!</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Call 9:</span> <span class="cmd">edit_file("src/httpx/_parsers.py", return False)</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Call 10:</span> <span class="cmd">edit_file("src/httpx/_parsers.py", return True)</span><br>
+            <span class="out">→ Applies rename in isolation without updating caller sites</span>
+          </div>
+        </div>
+        <div class="sbs-pitfall">
+          <b>Pitfall: Premature Edits</b> — Starts editing the sync parser before discovering caller sites (`_pool.py`, `_server.py`) and leaves the async tree unmapped.
+        </div>
+        <div class="sbs-meta">
+          <span>Calls spent: 3 blind edits</span>
+          <span class="status-fail">Async tree entirely undiscovered</span>
+        </div>
+      </div>
+
+      <div class="sbs-card bcf">
+        <div class="sbs-header">
+          <span class="sbs-title">✓ BCF Proposal: 5 Graph &amp; Window Calls</span>
+          <span class="sbs-calls">Turns 3–7 · Calls 3–7</span>
+        </div>
+        <div class="call-list">
+          <div class="call-item">
+            <span class="cnum">Call 3:</span> <span class="cmd">search_similar_code('HTTPParser')</span><br>
+            <span class="out">→ Surfaces httpx._parsers.HTTPParser &amp; ahttpx._parsers.HTTPParser in 1 call!</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Call 4:</span> <span class="cmd">get_code_subgraph([HTTPParser, Connection] × both trees)</span><br>
+            <span class="out">→ Dual-tree mirror topology mapped explicitly</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Call 5:</span> <span class="cmd">get_code_neighbors('httpx._parsers.HTTPParser.complete')</span><br>
+            <span class="out">→ Intra-class neighbors: close, is_idle, recv_body</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Call 6:</span> <span class="cmd">read_file("src/httpx/_server.py", 85, 105)</span><br>
+            <span class="hl">→ Line 92: self._parser.complete (B3 confirmed: no parens!)</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Call 7:</span> <span class="cmd">read_file("src/httpx/_network.py", 155, 185)</span><br>
+            <span class="hl">→ Line 163: self._streams = list[NetworkStream] (B4 confirmed)</span>
+          </div>
+        </div>
+        <div class="sbs-safeguard">
+          <b>Safeguard: Dual-Tree Graph Hop</b> — Discovers both sync &amp; async trees in 1 call. 20-line window reads confirm B3 &amp; B4 with zero token waste.
+        </div>
+        <div class="sbs-meta">
+          <span>Calls spent: 5 calls</span>
+          <span class="status-pass">100% mirror discovered &amp; mapped</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="gain-banner">
+      <span class="gain-badge">IMPROVEMENT LEVER #4</span>
+      <div class="gain-text">
+        <b>Instant Dual-Tree Mapping:</b> Graph symbol search surfaces both sync and async packages in call 3; targeted 20-line read windows save 85% context tokens.
+      </div>
+      <span class="gain-tenet">Tenet: Graph-First</span>
+    </div>
+  </div>
+  <div class="receipt"><span><b>Step 4</b> Graph tools vs Grep · NetworkX 740 nodes</span><span>6 / 15</span></div>
+</section>
+
+<!-- ============ 7 · STEP 5: THE RENAME & TRAP 1 ============ -->
+<section class="slide" id="s7">
+  <div class="slide-inner">
+    <div class="stephead">
+      <div class="stepno">05</div>
+      <div>
+        <div class="kicker">Sequence Step 5 · Turns 8–13 vs 11–17 · THE CRITICAL TURNING POINT</div>
+        <h2>The decisive moment: Trap 1 &amp; the self-sabotage revert</h2>
+      </div>
+    </div>
+    <div class="sbs-grid">
+      <div class="sbs-card naive">
+        <div class="sbs-header">
+          <span class="sbs-title">✗ Naive Agent: 7 Calls to Self-Sabotage</span>
+          <span class="sbs-calls">Turns 11–17 · Calls 11–17</span>
+        </div>
+        <div class="call-list">
+          <div class="call-item">
+            <span class="cnum">Call 11:</span> <span class="cmd">run_command("pytest tests/test_parsers.py -q")</span><br>
+            <span class="del">① 5 FAILED, 19 passed: AttributeError: 'HTTPParser' has no attribute 'complete'</span>
+            <span class="note">Lines 70, 116, 318, 557, 594 of test_parsers.py still call complete()</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Call 12:</span> <span class="cmd">read_file("tests/test_parsers.py", 60, 120)</span><br>
+            <span class="out">→ Reads line 70: p.complete(); assumes rename broke existing tests</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Call 13:</span> <span class="cmd">run_command("git diff")</span><br>
+            <span class="out">→ Inspects own changes; panics at visible red</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Call 14:</span> <span class="cmd">read_file("tests/test_parsers.py", 310, 330)</span><br>
+            <span class="out">→ Reads line 318; stalls: "Tests are calling .complete()! I broke the suite."</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Calls 15–17:</span> <span class="del">REVERTS RENAME ACROSS 3 EDITS:</span><br>
+            <span class="del">• Call 15: edit_file revert hunk 1 (method header)</span><br>
+            <span class="del">• Call 16: edit_file revert hunk 2 (state reset)</span><br>
+            <span class="del">• Call 17: edit_file revert hunk 3 (return flag)</span><br>
+            <span class="del">→ Original broken baseline fully restored!</span>
+          </div>
+        </div>
+        <div class="sbs-pitfall">
+          <b>FATAL MISTAKE: Panicked Self-Sabotage</b> — The agent treats local red tests as proof its edit was wrong. It undoes the exact rename the hidden test_patch requires! The run is doomed from this moment.
+        </div>
+        <div class="sbs-meta">
+          <span>Patch status: Reverted to broken base</span>
+          <span class="status-fail">FATAL FAILURE · Trap 1 sprung</span>
+        </div>
+      </div>
+
+      <div class="sbs-card bcf">
+        <div class="sbs-header">
+          <span class="sbs-title">✓ BCF Proposal: 6 Disciplined Ratchet Edits</span>
+          <span class="sbs-calls">Turns 8–13 · Calls 8–13</span>
+        </div>
+        <div class="call-list">
+          <div class="call-item">
+            <span class="cnum">Call 8:</span> <span class="cmd">edit_file("src/httpx/_parsers.py")</span> ×3 hunks<br>
+            <span class="add">def reset(self) -> bool: + return True/False</span><br>
+            <span class="out">Logs Journal t=09: "local suite WILL go red; expected — hidden tests renamed (spec: test asymmetry)"</span><br>
+            <span class="out">Ruled out: alias reset = complete (violates min-path)</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Call 9:</span> <span class="cmd">edit_file("src/ahttpx/_parsers.py")</span> ×3 hunks<br>
+            <span class="add">Mirrors rename in async parser in lockstep.</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Call 10:</span> <span class="cmd">edit_file("src/httpx/_pool.py")</span> ×2 call sites<br>
+            <span class="add">Updates sync pool caller: _complete -> _reset.</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Call 11:</span> <span class="cmd">edit_file("src/ahttpx/_pool.py")</span> ×2 call sites<br>
+            <span class="add">Updates async pool caller: _complete -> _reset.</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Call 12:</span> <span class="cmd">edit_file("src/httpx/_server.py")</span> ×2 call sites<br>
+            <span class="add">Kills Trap 3! self._parser.complete ➔ self._parser.reset()</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Call 13:</span> <span class="cmd">edit_file("src/ahttpx/_server.py")</span> ×2 call sites<br>
+            <span class="add">Mirrors server update in async server.</span>
+          </div>
+        </div>
+        <div class="sbs-safeguard">
+          <b>Safeguard: The Breadcrumb Journal + Symmetry</b> — Because test asymmetry was written down in advance, local pytest red is a non-event. Both trees are 100% synchronized, and Trap 3 dies as a structural consequence!
+        </div>
+        <div class="sbs-meta">
+          <span>Patch status: 6 files cleanly patched</span>
+          <span class="status-pass">RATCHET LOCKED · Revert prevented</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="gain-banner">
+      <span class="gain-badge">IMPROVEMENT LEVER #5 (DECISIVE)</span>
+      <div class="gain-text">
+        <b>Breadcrumb Journal Prevents Fatal Revert:</b> Journal entry t=09 anticipated the visible test failure, preventing the catastrophic undo that destroyed the naive run.
+      </div>
+      <span class="gain-tenet">Tenet: Breadcrumbs</span>
+    </div>
+  </div>
+  <div class="receipt"><span><b>Step 5</b> Calls 8–13 (BCF) vs Calls 11–17 (Naive) · doc 03 §5 · Trap 1</span><span>7 / 15</span></div>
+</section>
+
+<!-- ============ 8 · STEP 6: TOPOLOGICAL DAG ============ -->
+<section class="slide" id="s8">
+  <div class="slide-inner">
+    <div class="stephead">
+      <div class="stepno">06</div>
+      <div>
+        <div class="kicker">Sequence Step 6 · Turns 14–18 vs 18–26 · Secondary Edits</div>
+        <h2>Topological DAG execution vs. chaotic chasing</h2>
+      </div>
+    </div>
+    <div class="sbs-grid">
+      <div class="sbs-card naive">
+        <div class="sbs-header">
+          <span class="sbs-title">✗ Naive Agent: 9 Chaotic Edits</span>
+          <span class="sbs-calls">Turns 18–26 · Calls 18–26</span>
+        </div>
+        <div class="call-list">
+          <div class="call-item">
+            <span class="cnum">Call 18:</span> <span class="cmd">edit_file("src/httpx/_parsers.py", add is_keepalive)</span><br>
+            <span class="out">→ Adds def is_keepalive(self) -> bool to sync parser only; leaves async parser unpatched.</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Call 19:</span> <span class="cmd">read_file("src/httpx/_server.py", 70, 130)</span><br>
+            <span class="out">→ Reads server connection lifecycle, notices stream close loops and shutdown handlers.</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Call 20:</span> <span class="cmd">edit_file("src/httpx/_server.py") [Hunk 1]</span><br>
+            <span class="out">→ Edits socket drain logic on server shutdown (ungraded issue bullet 5).</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Call 21:</span> <span class="cmd">edit_file("src/httpx/_server.py") [Hunk 2]</span><br>
+            <span class="del">→ Discovers Response(status_code=500, content=...) TypeError during execution trace.</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Call 22:</span> <span class="cmd">edit_file("src/httpx/_server.py") [Hunk 3]</span><br>
+            <span class="out">→ Patches 500 Response constructor; forgets to check or update async server counterpart.</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Call 23:</span> <span class="cmd">run_command("pytest tests/test_server.py -q")</span><br>
+            <span class="out">→ Mixed results: sync tests pass, but server hangs on shutdown in 2 teardown tests.</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Call 24:</span> <span class="cmd">edit_file("src/httpx/_network.py") [Hunk 1]</span><br>
+            <span class="out">→ Attempts stream list initialization fix in NetworkStream; touches ungraded scope.</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Call 25:</span> <span class="cmd">edit_file("src/httpx/_network.py") [Hunk 2]</span><br>
+            <span class="out">→ Adds explicit stream close on exit; has zero effect on test assertions.</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Call 26:</span> <span class="cmd">edit_file("src/httpx/_network.py") [Hunk 3]</span><br>
+            <span class="del">→ Adds active stream pruning; leaves ahttpx/_network.py completely untouched.</span>
+          </div>
+        </div>
+        <div class="sbs-pitfall">
+          <b>Pitfall: Asymmetric Drift &amp; Bullet Chasing</b> — Sync and async codebases diverge. Changes to _network.py fail to address the core defect, while async packages remain broken.
+        </div>
+        <div class="sbs-meta">
+          <span>Hygiene: Stray edits in patch</span>
+          <span class="status-fail">Asymmetric sync/async</span>
+        </div>
+      </div>
+
+      <div class="sbs-card bcf">
+        <div class="sbs-header">
+          <span class="sbs-title">✓ BCF Proposal: 5 Ordered DAG Edits</span>
+          <span class="sbs-calls">Turns 14–18 · Calls 14–18</span>
+        </div>
+        <div class="call-list">
+          <div class="call-item">
+            <span class="cnum">Call 14:</span> <span class="cmd">edit_file("src/httpx/_parsers.py")</span><br>
+            <span class="add">→ Implements B2: def is_keepalive(self) -> bool matching is_idle() semantics.</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Call 15:</span> <span class="cmd">edit_file("src/ahttpx/_parsers.py")</span><br>
+            <span class="add">→ Paired mirror edit: implements B2 is_keepalive() in async parser in lockstep.</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Call 16:</span> <span class="cmd">edit_file("src/httpx/_network.py")</span> ×3 hunks<br>
+            <span class="add">→ Implements B4: GenericAlias + stream list tracking + safe exit cleanup.</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Call 17:</span> <span class="cmd">edit_file("src/httpx/_server.py")</span> [Hunk 1]<br>
+            <span class="add">→ Implements B5: wait() KeyboardInterrupt handler for graceful shutdown.</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Call 18:</span> <span class="cmd">edit_file("src/httpx/_server.py")</span> [Hunk 2]<br>
+            <span class="add">→ Implements B5: Response(500, content=...) signature fix eliminates TypeError.</span>
+          </div>
+        </div>
+        <div class="sbs-safeguard">
+          <b>Safeguard: Lockstep Symmetry</b> — Every edit to src/httpx/ is immediately paired with its mirror in src/ahttpx/. All 5 sub-faults addressed in dependency order.
+        </div>
+        <div class="sbs-meta">
+          <span>Hygiene: Clean gold diff</span>
+          <span class="status-pass">100% symmetric DAG pass</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="gain-banner">
+      <span class="gain-badge">IMPROVEMENT LEVER #6</span>
+      <div class="gain-text">
+        <b>Topological Sort Order:</b> Resolving parser renames before connection callers and patching both trees in pairs guarantees clean diff hygiene without stray files.
+      </div>
+      <span class="gain-tenet">Tenet: Minimum-Path</span>
+    </div>
+  </div>
+  <div class="receipt"><span><b>Step 6</b> B1–B5 Topological DAG · doc 03 §5</span><span>8 / 15</span></div>
+</section>
+
+<!-- ============ 9 · STEP 7: LOOP PREVENTION ============ -->
+<section class="slide" id="s9">
+  <div class="slide-inner">
+    <div class="stephead">
+      <div class="stepno">07</div>
+      <div>
+        <div class="kicker">Sequence Step 7 · Turns 27–38 · Rework vs Zero Waste</div>
+        <h2>Memory-driven loop breaking vs. 12 wasted repeat calls</h2>
+      </div>
+    </div>
+    <div class="sbs-grid">
+      <div class="sbs-card naive">
+        <div class="sbs-header">
+          <span class="sbs-title">✗ Naive Agent: 12 Repeat Calls</span>
+          <span class="sbs-calls">Turns 27–38 · 12 Calls Burned</span>
+        </div>
+        <div class="call-list">
+          <div class="call-item">
+            <span class="cnum">Call 27:</span> <span class="cmd">run_command("grep -rn 'complete' src/")</span><br>
+            <span class="warn">③ LOOP BEGINS: Verbatim repeat of Call 2! Floods context with identical 12+ matches.</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Call 28:</span> <span class="cmd">read_file("src/httpx/_parsers.py", 370, 410)</span><br>
+            <span class="del">→ Circular re-read of parser method lines already inspected in Call 4.</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Call 29:</span> <span class="cmd">read_file("src/httpx/_pool.py", 100, 150)</span><br>
+            <span class="del">→ Circular re-read of connection pool handler lines with no new hypothesis.</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Call 30:</span> <span class="cmd">read_file("src/httpx/_server.py", 80, 120)</span><br>
+            <span class="del">→ Circular re-read of server dispatch chunk already seen in Call 19.</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Call 31:</span> <span class="cmd">read_file("src/httpx/_network.py", 150, 190)</span><br>
+            <span class="del">→ Circular re-read of network stream lines already edited in Calls 24–26.</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Call 32:</span> <span class="cmd">read_file("src/ahttpx/_parsers.py", 370, 410)</span><br>
+            <span class="out">→ Belated realization: agent notices async package after 31 calls spent!</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Call 33:</span> <span class="cmd">read_file("src/ahttpx/_pool.py", 100, 150)</span><br>
+            <span class="out">→ Belated inspection of async connection pool handler.</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Call 34:</span> <span class="cmd">edit_file("src/ahttpx/_parsers.py", complete -> reset)</span><br>
+            <span class="out">→ Belated attempt to rename async parser method.</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Call 35:</span> <span class="cmd">edit_file("src/ahttpx/_pool.py", complete -> reset)</span><br>
+            <span class="out">→ Belated caller update in async pool.</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Call 36:</span> <span class="cmd">edit_file("src/ahttpx/_server.py", complete -> reset)</span><br>
+            <span class="out">→ Belated caller update in async server.</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Call 37:</span> <span class="cmd">edit_file("src/ahttpx/_parsers.py", revert hunk 1)</span><br>
+            <span class="del">→ Panics at memory of Call 11 test failure: "Tests failed on rename! Revert!"</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Call 38:</span> <span class="cmd">edit_file("src/ahttpx/_parsers.py", partial re-edit)</span><br>
+            <span class="del">→ Circular thrashing without clear direction; 12 calls burned in oscillation.</span>
+          </div>
+        </div>
+        <div class="sbs-pitfall">
+          <b>Pitfall: The Memoryless Loop</b> — The agent has no journal of previous attempts. It repeats identical greps and circular reads, burning 25% of its total budget on rework.
+        </div>
+        <div class="sbs-meta">
+          <span>Rework calls: 12 calls</span>
+          <span class="status-fail">Trapped in repeat loop</span>
+        </div>
+      </div>
+
+      <div class="sbs-card bcf">
+        <div class="sbs-header">
+          <span class="sbs-title">✓ BCF Proposal: Zero Rework Calls</span>
+          <span class="sbs-calls">Turns 18–19 · 0 Calls Burned</span>
+        </div>
+        <div class="call-list">
+          <div class="call-item">
+            <span class="cnum">Decision Rule:</span> <span class="hl">Question 4: "Have I tried this and failed?"</span><br>
+            <span class="add">Journal lookup checks previous attempts before every single action.</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Turn 18–19 Check:</span> <span class="add">Action history verifies B1–B5 already completed and committed.</span><br>
+            <span class="note">No tool call repeats a journaled action (BCF Tenet 3). Ratchet moves forward only.</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Closed Hypotheses:</span> <span class="add">Refuted paths permanently closed; zero circular greps.</span><br>
+            <span class="note">Loop detector active: verbatim tool hash collision triggers instant block.</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Status:</span> <span class="add">Strikes remain 0/3; rescue protocol never tripped. 12 calls saved!</span>
+          </div>
+        </div>
+        <div class="sbs-safeguard">
+          <b>Safeguard: Monotone Ratchet</b> — BCF Tenet 3 dictates that what has been proven red is never queried again. 3-strike rescue is armed but never tripped because loops cannot form.
+        </div>
+        <div class="sbs-meta">
+          <span>Rework calls: 0 calls</span>
+          <span class="status-pass">Loop rate: 0.0% · 12 calls saved</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="gain-banner">
+      <span class="gain-badge">IMPROVEMENT LEVER #7</span>
+      <div class="gain-text">
+        <b>Loop-Breaking Journal:</b> Question 4 checks the action journal before every invocation, eliminating 12 wasted tool calls and preventing circular oscillation.
+      </div>
+      <span class="gain-tenet">Tenet: Breadcrumbs</span>
+    </div>
+  </div>
+  <div class="receipt"><span><b>Step 7</b> Repeat loop analysis · HV-05</span><span>9 / 15</span></div>
+</section>
+
+<!-- ============ 10 · STEP 8: /TMP VALIDATION ============ -->
+<section class="slide" id="s10">
+  <div class="slide-inner">
+    <div class="stephead">
+      <div class="stepno">08</div>
+      <div>
+        <div class="kicker">Sequence Step 8 · Turns 19–23 vs 39–41 · Validation Strategy</div>
+        <h2>Isolated /tmp reproduction vs. panic pytest</h2>
+      </div>
+    </div>
+    <div class="sbs-grid">
+      <div class="sbs-card naive">
+        <div class="sbs-header">
+          <span class="sbs-title">✗ Naive Agent: 3 Desperate Calls</span>
+          <span class="sbs-calls">Turns 39–41 · Calls 39–41</span>
+        </div>
+        <div class="call-list">
+          <div class="call-item">
+            <span class="cnum">Call 39:</span> <span class="cmd">run_command("pytest")</span><br>
+            <span class="warn">④ Harness warning in response: "40/50 used — finalize and submit"</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Call 40:</span> <span class="cmd">run_command("pytest tests/test_parsers.py")</span><br>
+            <span class="del">Still red on old-API tests; agent panics with 8 calls remaining.</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Call 41:</span> <span class="cmd">edit_file("cleanup attempt")</span><br>
+            <span class="out">Attempts hasty cleanup without understanding failure cause.</span>
+          </div>
+        </div>
+        <div class="sbs-pitfall">
+          <b>Pitfall: Stale Local Assertion Trap</b> — The agent cannot distinguish whether failures come from broken code or outdated local test calls.
+        </div>
+        <div class="sbs-meta">
+          <span>Validation: Red &amp; unresolved</span>
+          <span class="status-fail">Budget warning triggers</span>
+        </div>
+      </div>
+
+      <div class="sbs-card bcf">
+        <div class="sbs-header">
+          <span class="sbs-title">✓ BCF Proposal: 5 Clean Validation Calls</span>
+          <span class="sbs-calls">Turns 19–23 · Calls 19–23</span>
+        </div>
+        <div class="call-list">
+          <div class="call-item">
+            <span class="cnum">Call 19:</span> <span class="cmd">write_file("/tmp/repro_reset.py")</span><br>
+            <span class="add">Repro script lives outside /workspace; never leaks into patch!</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Call 20:</span> <span class="cmd">run_command("python /tmp/repro_reset.py")</span><br>
+            <span class="add">New-API contract test: PASS!</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Call 21:</span> <span class="cmd">edit_file ×5: migrate visible tests complete() -> reset()</span><br>
+            <span class="note">Keeps Gate G4 meaningful (Container B discards test edits anyway).</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Call 22:</span> <span class="cmd">run_command("pytest tests/test_parsers.py -q")</span><br>
+            <span class="add">Gate G4 targets-pass: 24 passed!</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Call 23:</span> <span class="cmd">run_command("pytest tests/test_pool.py tests/test_client.py -q")</span><br>
+            <span class="add">Gate G5 no-regression: all pass!</span>
+          </div>
+        </div>
+        <div class="sbs-safeguard">
+          <b>Safeguard: Isolated Repro + Migration</b> — Repro in /tmp never leaks into git patch. Migrating local test call sites confirms logic passes G4; Container B discards test edits anyway.
+        </div>
+        <div class="sbs-meta">
+          <span>Validation: G4 targets pass ✓</span>
+          <span class="status-pass">G5 regression pass ✓</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="gain-banner">
+      <span class="gain-badge">IMPROVEMENT LEVER #8</span>
+      <div class="gain-text">
+        <b>Isolated Verification Protocol:</b> Repro scripts live in /tmp so they cannot contaminate the patch, while migrating visible tests keeps Gate G4 meaningful and verified.
+      </div>
+      <span class="gain-tenet">Tenet: Verification V0–V2</span>
+    </div>
+  </div>
+  <div class="receipt"><span><b>Step 8</b> /tmp repro &amp; G4–G5 gates · HARNESS_README §8.2</span><span>10 / 15</span></div>
+</section>
+
+<!-- ============ 11 · STEP 9: CONTAINER B VERDICT ============ -->
+<section class="slide" id="s11">
+  <div class="slide-inner">
+    <div class="stephead">
+      <div class="stepno">09</div>
+      <div>
+        <div class="kicker">Sequence Step 9 · Submission &amp; Graded Container Truth</div>
+        <h2>Container B evaluation: resolved = False vs. True</h2>
+      </div>
+    </div>
+    <div class="sbs-grid">
+      <div class="sbs-card naive">
+        <div class="sbs-header">
+          <span class="sbs-title">✗ Naive Agent: 2 Panic Calls &amp; FAIL</span>
+          <span class="sbs-calls">Turns 42–43 · Calls 42–43</span>
+        </div>
+        <div class="call-list">
+          <div class="call-item">
+            <span class="cnum">Call 42:</span> <span class="cmd">get_status()</span> [free]<br>
+            <span class="out">→ Checks remaining budget in panic (8 calls remaining)</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Call 43:</span> <span class="cmd">submit_patch()</span> [free]<br>
+            <span class="out">→ Submits patch with reverted rename and partial sync edits (5 files changed).</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Container B Run:</span><br>
+            <span class="del">1. git checkout HEAD + git clean -f (discards agent test edits)</span><br>
+            <span class="del">2. Applies hidden test_patch: p.complete() ➔ p.reset()</span><br>
+            <span class="del">3. Runs pytest ➔ AttributeError: 'HTTPParser' has no attribute 'reset'</span><br>
+            <span class="del">→ Exit Code 1 · resolved = False</span>
+          </div>
+        </div>
+        <div class="sbs-pitfall">
+          <b>Final Verdict: resolved = False</b> — The hidden test_patch calls <code class="inline">p.reset()</code>. Because the naive agent reverted the rename in Step 5, Container B crashes on the very first test.
+        </div>
+        <div class="sbs-meta">
+          <span>Total Calls: 43 charged</span>
+          <span class="status-fail">SCORE: FAIL (0.0%)</span>
+        </div>
+      </div>
+
+      <div class="sbs-card bcf">
+        <div class="sbs-header">
+          <span class="sbs-title">✓ BCF Proposal: 1 Free Submit &amp; PASS</span>
+          <span class="sbs-calls">Turn 24 · Call 24 (Free)</span>
+        </div>
+        <div class="call-list">
+          <div class="call-item">
+            <span class="cnum">Call 24:</span> <span class="cmd">submit_patch()</span> [free, last]<br>
+            <span class="add">Gates G0–G6 all true. 8 files changed in gold diff.</span>
+          </div>
+          <div class="call-item">
+            <span class="cnum">Container B Run:</span><br>
+            <span class="add">1. git checkout HEAD + git clean -f (clean environment reset)</span><br>
+            <span class="add">2. Applies hidden test_patch: p.complete() ➔ p.reset()</span><br>
+            <span class="add">3. Runs pytest ➔ 5/5 fail-to-pass PASS · 24/24 pass-to-pass PASS</span><br>
+            <span class="add">→ Exit Code 0 · resolved = True</span>
+          </div>
+        </div>
+        <div class="sbs-safeguard">
+          <b>Final Verdict: resolved = True</b> — Exit code 0. Clean JUnit XML all-pass. Task resolved in 24 calls and ≈12 minutes wall clock.
+        </div>
+        <div class="sbs-meta">
+          <span>Total Calls: 22 charged (2 free)</span>
+          <span class="status-pass">SCORE: RESOLVED (100.0%)</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="gain-banner">
+      <span class="gain-badge">FINAL OUTCOME</span>
+      <div class="gain-text">
+        <b>Binary Gate Enforcement:</b> BCF submits only when the gate vector is all-true, guaranteeing Container B test suite resolution on the first attempt.
+      </div>
+      <span class="gain-tenet">Tenet: Binary Done</span>
+    </div>
+  </div>
+  <div class="receipt"><span><b>Step 9</b> Container B Evaluation · Exit 0 vs 1</span><span>11 / 15</span></div>
+</section>
+
+<!-- ============ 12 · FULL TRACE MATRIX ============ -->
+<section class="slide" id="s12">
+  <div class="slide-inner" style="gap:10px">
+    <div class="kicker">Exhaustive Call-by-Call Comparison Trace</div>
+    <h2>All 43 Naive Calls vs. All 24 BCF Calls</h2>
+    <div class="term" style="max-height:440px;overflow-y:auto">
+      <table class="data">
+        <thead>
+          <tr><th>Turn</th><th>Naive Call (43 total)</th><th>Outcome / Trap</th><th>BCF Call (24 total)</th><th>Advantage Lever</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="k">0</td><td>c1: get_status() [free]</td><td>No baseline logged</td><td>c0: get_status() [free]</td><td>Anchors force_submit @ turn 42</td></tr>
+          <tr><td class="k">1</td><td>c2: grep -rn 'complete'</td><td>12+ hits in 14 files</td><td>c1: classify_issue()</td><td>Engages G0 file tool lock</td></tr>
+          <tr><td class="k">2</td><td>c3: grep -rl 'complete'</td><td>Context flooded</td><td>c2: write_spec {B1..B5}</td><td>Anticipates Trap 1 &amp; Trap 3</td></tr>
+          <tr><td class="k">3</td><td>c4: read _parsers.py 370–425</td><td>Finds complete()</td><td>c3: search_similar('HTTPParser')</td><td>Dual tree mapped in 1 call</td></tr>
+          <tr><td class="k">4</td><td>c5: read _parsers.py (cont)</td><td>350 lines in context</td><td>c4: get_code_subgraph</td><td>Mirror topology explicit</td></tr>
+          <tr><td class="k">5</td><td>c6: read ahttpx/_parsers.py</td><td>Async method read</td><td>c5: get_code_neighbors</td><td>Intra-class caller checked</td></tr>
+          <tr><td class="k">6</td><td>c7: read ahttpx (cont)</td><td>Unfocused read</td><td>c6: read _server.py 85–105</td><td>Confirms B3 line 92 (no parens)</td></tr>
+          <tr><td class="k">7</td><td>c8: edit sync complete->reset</td><td>Premature edit</td><td>c7: read _network.py 155–185</td><td>Confirms B4 line 163</td></tr>
+          <tr><td class="k">8</td><td>c9: edit return False</td><td>Sync only</td><td>c8: edit sync _parsers + t=09</td><td>Journal commits: red expected</td></tr>
+          <tr><td class="k">9</td><td>c10: edit return True</td><td>Missing async</td><td>c9: edit async _parsers.py</td><td>Mirror tree synchronized</td></tr>
+          <tr><td class="k">10</td><td>c11: pytest test_parsers</td><td><b style="color:#ef8686">5 FAILED (Trap 1)</b></td><td>c10: edit sync _pool.py</td><td>Caller layer 1 updated</td></tr>
+          <tr><td class="k">11</td><td>c12: read failing tests</td><td>Sees old API calls</td><td>c11: edit async _pool.py</td><td>Async caller layer updated</td></tr>
+          <tr><td class="k">12</td><td>c13: git diff</td><td>Panics at local red</td><td>c12: edit sync _server.py</td><td>Kills Trap 3 line 92!</td></tr>
+          <tr><td class="k">13</td><td>c14: read test_parsers again</td><td>Stalls in confusion</td><td>c13: edit async _server.py</td><td>Step 5 complete (6 files)</td></tr>
+          <tr><td class="k">14</td><td>c15: revert hunk 1</td><td><b style="color:#ef8686">Self-sabotage begins</b></td><td>c14: edit B2 is_keepalive sync</td><td>Topological sort B2</td></tr>
+          <tr><td class="k">15</td><td>c16: revert hunk 2</td><td>Undoing gold fix</td><td>c15: edit B2 is_keepalive async</td><td>Paired mirror edit</td></tr>
+          <tr><td class="k">16</td><td>c17: revert hunk 3</td><td><b style="color:#ef8686">Gold fix discarded!</b></td><td>c16: edit B4 _network.py ×3</td><td>Stream cleanup</td></tr>
+          <tr><td class="k">17</td><td>c18: add is_keepalive sync</td><td>Additive route</td><td>c17: edit B5 wait()</td><td>Clean server exit</td></tr>
+          <tr><td class="k">18</td><td>c19: read _server.py</td><td>Chasing bullets</td><td>c18: edit B5 Response(500)</td><td>Fixes 500 TypeError</td></tr>
+          <tr><td class="k">19</td><td>c20: edit _server drain</td><td>Ungraded scope</td><td>c19: write /tmp/repro_reset.py</td><td>Repro outside git diff</td></tr>
+          <tr><td class="k">20</td><td>c21: edit _server.py</td><td>Sync only</td><td>c20: python /tmp/repro_reset.py</td><td>New API verified: PASS</td></tr>
+          <tr><td class="k">21</td><td>c22: edit Response(500)</td><td>Discovers TypeError</td><td>c21: migrate visible tests ×5</td><td>Gate G4 targets meaningful</td></tr>
+          <tr><td class="k">22</td><td>c23: pytest tests/</td><td>Mixed results</td><td>c22: pytest test_parsers -q</td><td>G4 passed: 24/24</td></tr>
+          <tr><td class="k">23</td><td>c24: edit _network init</td><td>Ungraded scope</td><td>c23: pytest regression -q</td><td>G5 regression passed</td></tr>
+          <tr><td class="k">24</td><td>c25: edit _network.py [stream close]</td><td>No test assertion effect</td><td>c24: submit_patch() [free]</td><td><b style="color:#5ec95e">Container B: PASS (Exit 0)</b></td></tr>
+          <tr><td class="k">25</td><td>c26: edit _network.py [stream prune]</td><td>Creates dirty git status diff</td><td>— (Task Resolved)</td><td>Clean diff hygiene maintained</td></tr>
+          <tr><td class="k">26</td><td>c27: grep -rn 'complete' src/</td><td><b style="color:#ef8686">Loop starts: repeat of c2</b></td><td>—</td><td>Question 4 journal check blocks loop</td></tr>
+          <tr><td class="k">27</td><td>c28: read _parsers.py 370–410</td><td>Circular re-read of c4 chunk</td><td>—</td><td>Refuted hypotheses closed</td></tr>
+          <tr><td class="k">28</td><td>c29: read _pool.py 100–150</td><td>Circular re-read of pool chunk</td><td>—</td><td>No repeat tool invocations</td></tr>
+          <tr><td class="k">29</td><td>c30: read _server.py 80–120</td><td>Circular re-read of server chunk</td><td>—</td><td>Audit ledger tracks past reads</td></tr>
+          <tr><td class="k">30</td><td>c31: read _network.py 150–190</td><td>Circular re-read of network chunk</td><td>—</td><td>Zero redundant context load</td></tr>
+          <tr><td class="k">31</td><td>c32: read ahttpx/_parsers.py</td><td>Belated notice of async package</td><td>—</td><td>Dual tree mapped in c3</td></tr>
+          <tr><td class="k">32</td><td>c33: read ahttpx/_pool.py</td><td>Belated async caller check</td><td>—</td><td>Callers mapped in c4</td></tr>
+          <tr><td class="k">33</td><td>c34: edit ahttpx/_parsers complete->reset</td><td>Late async rename attempt</td><td>—</td><td>Async rename committed in c9</td></tr>
+          <tr><td class="k">34</td><td>c35: edit ahttpx/_pool caller</td><td>Late async pool update</td><td>—</td><td>Async pool committed in c11</td></tr>
+          <tr><td class="k">35</td><td>c36: edit ahttpx/_server caller</td><td>Late async server update</td><td>—</td><td>Async server committed in c13</td></tr>
+          <tr><td class="k">36</td><td>c37: revert ahttpx/_parsers</td><td><b style="color:#ef8686">Panics &amp; reverts async rename!</b></td><td>—</td><td>Ratchet holds forward only</td></tr>
+          <tr><td class="k">37</td><td>c38: edit ahttpx partial tweak</td><td>Circular thrash without direction</td><td>—</td><td>Zero rework calls burned</td></tr>
+          <tr><td class="k">38</td><td>c39: pytest (all suites)</td><td><b style="color:#fab219">Harness warning: 40/50 calls!</b></td><td>—</td><td>26 calls remaining in budget</td></tr>
+          <tr><td class="k">39</td><td>c40: pytest test_parsers.py</td><td>Stale test failure panic</td><td>—</td><td>Visible tests migrated in c21</td></tr>
+          <tr><td class="k">40</td><td>c41: edit _parsers cleanup</td><td>Hasty cosmetic whitespace edit</td><td>—</td><td>Logic verified in /tmp repro</td></tr>
+          <tr><td class="k">41</td><td>c42: get_status() [free]</td><td>Checks budget in panic (8 left)</td><td>—</td><td>Anchored pacing from c0</td></tr>
+          <tr><td class="k">42</td><td>c43: submit_patch() [free]</td><td><b style="color:#ef8686">Container B: FAIL (Exit 1)</b></td><td>—</td><td>Container B: 100% PASS (Exit 0)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="receipt"><span><b>Matrix</b> Full 43 vs 24 Trace Matrix · doc 03 §4–§6</span><span>12 / 15</span></div>
+</section>
+
+<!-- ============ 13 · EIGHT LEVERS SUMMARY ============ -->
+<section class="slide" id="s13">
+  <div class="slide-inner" style="gap:11px">
+    <div class="kicker">Synthesis of architectural improvements</div>
+    <h2>The eight levers that produced the victory</h2>
+    <div class="stats" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">
+      <div class="stat"><b>1. Meter Grounding</b><span>get_status() at call 0 anchors turn arithmetic for free.</span></div>
+      <div class="stat"><b>2. Gate 0 Spec Lock</b><span>Locks file access until issue classification completes.</span></div>
+      <div class="stat"><b>3. Spec Contract</b><span>Identifies sub-bugs B1–B5 and Trap 3 before file reads.</span></div>
+      <div class="stat"><b>4. Graph Discovery</b><span>Surfaces dual sync/async mirror trees in a single query.</span></div>
+      <div class="stat"><b>5. Breadcrumb Journal</b><span>Journal entry t=09 stops the fatal Trap 1 revert.</span></div>
+      <div class="stat"><b>6. Topological DAG</b><span>Strict hunk ordering maintains dual-tree symmetry.</span></div>
+      <div class="stat"><b>7. Loop Prevention</b><span>Journal history eliminates 12 rework repeat calls.</span></div>
+      <div class="stat"><b>8. /tmp Validation</b><span>Isolated repro script avoids polluting git patch.</span></div>
+    </div>
+    <div class="gain-banner" style="margin-top:4px">
+      <span class="gain-badge">CORE TAKEAWAY</span>
+      <div class="gain-text">
+        The difference between failure and success was not model IQ or search speed — it was <b>governance, memory, and verification discipline</b>.
+      </div>
+      <span class="gain-tenet">Batonic Framework</span>
+    </div>
+  </div>
+  <div class="receipt"><span><b>Synthesis</b> 8 Levers · BCF Architecture Overview</span><span>13 / 15</span></div>
+</section>
+
+<!-- ============ 14 · BUDGET & TOKEN SPEND ============ -->
+<section class="slide" id="s14">
+  <div class="slide-inner" style="gap:12px">
+    <div class="kicker">Quantitative comparison of resource consumption</div>
+    <h2>Head-to-head budget &amp; token spend</h2>
+    <div class="stats">
+      <div class="stat"><b>Calls Charged</b><span>Naive 42 vs BCF 22 (-48% budget consumption)</span></div>
+      <div class="stat"><b>Tokens Consumed</b><span>Naive ≈28,400 vs BCF ≈11,200 (-60% context churn)</span></div>
+      <div class="stat"><b>Wall Clock Time</b><span>Naive ≈34 min vs BCF ≈12 min (2.8× faster)</span></div>
+      <div class="stat"><b>Rework Penalty</b><span>Naive 28% of turns on repeat vs BCF 0%</span></div>
+    </div>
+    <div class="sbs-grid">
+      <div class="panel">
+        <h4><span class="tag">calls</span>Call Allocation by Category</h4>
+        <table class="data">
+          <thead><tr><th>Category</th><th>Naive Agent</th><th>BCF Proposal</th><th>Delta</th></tr></thead>
+          <tbody>
+            <tr><td class="k">Spec &amp; Orient</td><td>2</td><td>2</td><td>0</td></tr>
+            <tr><td class="k">Search &amp; Read</td><td>17</td><td>5</td><td><span style="color:#5ec95e">-12 calls (-70%)</span></td></tr>
+            <tr><td class="k">Code Edits</td><td>15</td><td>11</td><td><span style="color:#5ec95e">-4 calls (-27%)</span></td></tr>
+            <tr><td class="k">Validation</td><td>4</td><td>6</td><td><span style="color:#fab219">+2 calls (+50%)</span></td></tr>
+            <tr><td class="k">Rework &amp; Reverts</td><td>4</td><td>0</td><td><span style="color:#5ec95e">-4 calls (-100%)</span></td></tr>
+            <tr><td class="k">Total Charged</td><td>42</td><td>22</td><td><span style="color:#5ec95e">-20 calls (-48%)</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="panel">
+        <h4><span class="tag">tokens</span>Context Window Management</h4>
+        <ul class="plain">
+          <li><b>Naive Saturation:</b> Reading 350-line file blocks triggered early context compaction, losing earlier tool outputs and prompting repeat greps.</li>
+          <li><b>BCF Windowing:</b> Reading 20-line targeted windows preserved context headroom throughout all 24 calls, keeping the compaction threshold (14k tokens) untouched.</li>
+          <li><b>Ratchet Safety:</b> With 28 calls remaining, BCF had ample budget buffer for automated rescue had any unexpected test failed.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="receipt"><span><b>Budget Metrics</b> Call counts &amp; token telemetry · doc 03 §7</span><span>14 / 15</span></div>
+</section>
+
+<!-- ============ 15 · INTERACTIVE INSPECTOR ============ -->
+<section class="slide" id="s15">
+  <div class="slide-inner" style="gap:12px">
+    <div class="stephead">
+      <div class="stepno">★</div>
+      <div>
+        <div class="kicker">Interactive Inspector · Step-by-Step Simulation Stepper</div>
+        <h2>Inspect the simulation turn-by-turn</h2>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <button class="chip" onclick="setStep(1)" id="btnStep1">Step 1: Boot</button>
+      <button class="chip" onclick="setStep(2)" id="btnStep2">Step 2: Framing</button>
+      <button class="chip" onclick="setStep(3)" id="btnStep3">Step 3: Spec</button>
+      <button class="chip" onclick="setStep(4)" id="btnStep4">Step 4: Discovery</button>
+      <button class="chip" onclick="setStep(5)" id="btnStep5">Step 5: Rename</button>
+      <button class="chip" onclick="setStep(6)" id="btnStep6">Step 6: DAG</button>
+      <button class="chip" onclick="setStep(7)" id="btnStep7">Step 7: Loop Breaker</button>
+      <button class="chip" onclick="setStep(8)" id="btnStep8">Step 8: Validation</button>
+      <button class="chip" onclick="setStep(9)" id="btnStep9">Step 9: Verdict</button>
+    </div>
+
+    <div id="inspectorDisplay" class="sbs-grid">
+      <!-- dynamically populated by JS -->
+    </div>
+
+    <div class="gain-banner" id="inspectorBanner">
+      <span class="gain-badge" id="inspectorGainBadge">LEVER</span>
+      <div class="gain-text" id="inspectorGainText">Select a step above to inspect the side-by-side simulation comparison.</div>
+      <span class="gain-tenet" id="inspectorGainTenet">Tenet</span>
+    </div>
+  </div>
+  <div class="receipt"><span><b>Inspector</b> Dynamic Step-by-Step Viewer · Slide 15 / 15</span><span>15 / 15</span></div>
+</section>
+
+</main>
+
+<script>
+(function(){
+"use strict";
+
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;")}
+
+/* boot typing */
+var reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+var boot = document.getElementById("bootlines");
+var lines = [
+  {cls:"p", txt:"$ swegemma matchup --task httpx_3672 --config-a naive --config-b bcf"},
+  {cls:"out", txt:"[trace] Loading paired simulations: Naive (43 calls) vs BCF (24 calls)"},
+  {cls:"out", txt:"[trap-1] Test asymmetry identified: visible suite targets old API"},
+  {cls:"hl",  txt:"[matchup] Full call-by-call breakdown loaded · 15 slides"}
+];
+
+if(reduced){
+  boot.innerHTML = lines.map(function(l){return '<span class="'+l.cls+'">'+esc(l.txt)+'</span>'}).join("<br>")+'<br>';
+  document.querySelectorAll(".fadein").forEach(function(e){e.classList.add("in")});
+}else{
+  var li=0, ci=0, out="";
+  function step(){
+    if(li>=lines.length){
+      ["heroBlock","heroChips"].forEach(function(id,i){
+        setTimeout(function(){var el=document.getElementById(id); if(el) el.classList.add("in")}, 120+i*240);
+      });
+      return;
+    }
+    var l = lines[li];
+    if(ci===0){out += (out?"<br>":"")+'<span class="'+l.cls+'">'}
+    ci++;
+    if(ci>=l.txt.length){
+      out += esc(l.txt)+"</span>";
+      li++; ci=0;
+      boot.innerHTML = out;
+      setTimeout(step, li===1?260:110);
+    }else{
+      boot.innerHTML = out+esc(l.txt.slice(0,ci))+'<span class="cursor"></span>';
+      setTimeout(step, 10+Math.random()*20);
+    }
+  }
+  step();
+}
+
+/* deck nav */
+var slides = Array.prototype.slice.call(document.querySelectorAll(".slide"));
+var railBtns = Array.prototype.slice.call(document.querySelectorAll(".rail button"));
+
+railBtns.forEach(function(b){
+  b.addEventListener("click", function(){
+    var idx = +b.dataset.i;
+    if(slides[idx]){
+      slides[idx].scrollIntoView({behavior: reduced?"auto":"smooth"});
+    }
+  });
+});
+
+document.addEventListener("keydown", function(e){
+  if(e.target.tagName==="SUMMARY"||e.target.tagName==="BUTTON"||e.target.tagName==="A"||e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA") return;
+  var cur = slides.findIndex(function(s){
+    var r = s.getBoundingClientRect();
+    return r.top >= -innerHeight/2 && r.top < innerHeight/2;
+  });
+  var go = null;
+  if(e.key==="ArrowDown"||e.key==="PageDown"||e.key===" ") go = Math.min(slides.length-1, cur+1);
+  else if(e.key==="ArrowUp"||e.key==="PageUp") go = Math.max(0, cur-1);
+  else if(e.key==="Home") go = 0;
+  else if(e.key==="End") go = slides.length-1;
+  if(go!==null){
+    e.preventDefault();
+    slides[go].scrollIntoView({behavior: reduced?"auto":"smooth"});
+  }
+});
+
+if("IntersectionObserver" in window){
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(en){
+      if(en.isIntersecting){
+        var i = slides.indexOf(en.target);
+        railBtns.forEach(function(b){b.setAttribute("aria-current", String(+b.dataset.i===i))});
+        en.target.querySelectorAll(".fadein").forEach(function(f){f.classList.add("in")});
+      }
+    });
+  },{threshold:.52});
+  slides.forEach(function(s){io.observe(s)});
+}
+
+/* ================= INTERACTIVE STEPPER DATA & LOGIC ================= */
+var stepData = {
+  1: {
+    naiveTitle: "✗ Naive Turn 0: Call 1 (Unmanaged)",
+    naiveAction: "Call 1: get_status() [free]\nCalls status once but logs nothing; sets no pacing cap.",
+    naivePitfall: "Has zero baseline of calls remaining or elapsed time. Budget panic strikes later.",
+    naiveMeta: "1 call charged · Status unmanaged",
+    bcfTitle: "✓ BCF Turn 0: Call 0 (Baseline Grounding)",
+    bcfAction: "Call 0: get_status() [free]\n→ {\"tool_calls_remaining\": 50, \"time_elapsed\": 4s, \"patch\": null}",
+    bcfSafeguard: "Anchors pacing: localization capped at 10 calls, force-submit at turn 42.",
+    bcfMeta: "0 calls charged (FREE) · Auditable baseline",
+    badge: "LEVER 1: METER BASELINE",
+    text: "Polling harness meters for free anchors the entire run before touching workspace files.",
+    tenet: "Auditability"
+  },
+  2: {
+    naiveTitle: "✗ Naive Turns 1–2: Calls 2–3 (Grep Flood)",
+    naiveAction: "Call 2: grep -rn 'complete' src/ tests/\nCall 3: grep -rl 'complete'\nFloods context with 12+ matches across 14 files.",
+    naivePitfall: "Pulled into un-scored issue bullets (KeyboardException, stream close).",
+    naiveMeta: "Phase: Free exploration · 2 calls spent",
+    bcfTitle: "✓ BCF Turn 1: Call 1 (Issue Classification)",
+    bcfAction: "Call 1: run_skill_script('classify_issue', problem_statement)\n→ task_type: compat_or_refactor; template selected.",
+    bcfSafeguard: "Gate 0 physically locks file reading/editing tools until spec exists.",
+    bcfMeta: "Phase: G0 file lock engaged",
+    badge: "LEVER 2: GATE 0 SPEC LOCK",
+    text: "Barring file access until issue classification completes stops premature browsing.",
+    tenet: "Spec-First"
+  },
+  3: {
+    naiveTitle: "✗ Naive Turns 3–6: Calls 4–7 (Context Churn)",
+    naiveAction: "Call 4: read_file(src/httpx/_parsers.py 370–425)\nCall 5: read_file(src/httpx/_parsers.py 425–480)\nCall 6: read_file(src/ahttpx/_parsers.py 370–425)\nCall 7: read_file(src/ahttpx/_parsers.py 425–480)",
+    naivePitfall: "Dumps 220+ lines into context; blind to test asymmetry & Trap 3.",
+    naiveMeta: "+4,200 token churn · Misidentifies targets",
+    bcfTitle: "✓ BCF Turn 2: Call 2 (Machine-Readable Spec)",
+    bcfAction: "Call 2: write_spec {task_class, bugs: [B1..B5], fix_order, plan}\nDefines B1–B5; anticipates Trap 1 (test asymmetry) & Trap 3 (silent call).",
+    bcfSafeguard: "Pre-registers that visible tests will fail upon the rename.",
+    bcfMeta: "Spec Validated ✓ · G0 unlocked",
+    badge: "LEVER 3: TRAP ANTICIPATION",
+    text: "Pre-computing the five sub-bugs and test asymmetry prepares the model for local red tests.",
+    tenet: "Minimum-Path"
+  },
+  4: {
+    naiveTitle: "✗ Naive Turns 7–10: Calls 8–10 (Premature Edits)",
+    naiveAction: "Call 8: edit_file(src/httpx/_parsers.py complete->reset)\nCall 9: edit_file(src/httpx/_parsers.py return False)\nCall 10: edit_file(src/httpx/_parsers.py return True)",
+    naivePitfall: "Starts editing sync parser before checking callers or async tree.",
+    naiveMeta: "3 blind edits · Async tree missed",
+    bcfTitle: "✓ BCF Turns 3–7: Calls 3–7 (Graph Localization)",
+    bcfAction: "Call 3: search_similar_code('HTTPParser') [sync+async in 1 call!]\nCall 4: get_code_subgraph([HTTPParser, Connection] × both trees)\nCall 5: get_code_neighbors('complete')\nCall 6: read_file(_server.py 85–105, line 92 B3 confirmed!)\nCall 7: read_file(_network.py 155–185, line 163 B4 confirmed!)",
+    bcfSafeguard: "Uncovers both sync and async mirror trees in call 3; saves 85% tokens.",
+    bcfMeta: "5 calls spent · 100% mirror discovered",
+    badge: "LEVER 4: GRAPH DISCOVERY",
+    text: "Graph symbol search discovers the duplicated async package in a single query.",
+    tenet: "Graph-First"
+  },
+  5: {
+    naiveTitle: "✗ Naive Turns 11–17: Calls 11–17 (THE FATAL REVERT)",
+    naiveAction: "Call 11: pytest → 5 FAILED (AttributeError in tests)\nCall 12: read_file(test_parsers.py line 70)\nCall 13: git diff (panics at local red)\nCall 14: read_file(test_parsers.py line 318)\nCalls 15–17: REVERTS RENAME ACROSS 3 EDITS!\n→ Broken baseline fully restored",
+    naivePitfall: "Treats local red as failure; undoes the gold fix required by hidden tests.",
+    naiveMeta: "FATAL MISTAKE · Trap 1 sprung · 7 calls wasted",
+    bcfTitle: "✓ BCF Turns 8–13: Calls 8–13 (Ratchet Edits)",
+    bcfAction: "Call 8: edit sync _parsers.py + Journal t=09: red expected\nCall 9: edit async _parsers.py (mirror)\nCall 10: edit sync _pool.py (caller)\nCall 11: edit async _pool.py (caller)\nCall 12: edit sync _server.py (kills Trap 3 line 92!)\nCall 13: edit async _server.py (caller)",
+    bcfSafeguard: "Breadcrumb journal t=09 neutralizes Trap 1. Sync & async trees locked in step.",
+    bcfMeta: "Ratchet Locked · Gold rename preserved across 6 files",
+    badge: "LEVER 5: BREADCRUMB JOURNAL (TURNING POINT)",
+    text: "Journal entry t=09 anticipated the test red, preventing the catastrophic revert that destroyed the naive run.",
+    tenet: "Breadcrumbs"
+  },
+  6: {
+    naiveTitle: "✗ Naive Turns 18–26: Calls 18–26 (9 Chaotic Edits)",
+    naiveAction: "Call 18: edit_file(src/httpx/_parsers.py add is_keepalive) [sync only]\nCall 19: read_file(src/httpx/_server.py 70–130) [reads server drain]\nCall 20: edit_file(src/httpx/_server.py hunk 1) [socket drain logic]\nCall 21: edit_file(src/httpx/_server.py hunk 2) [discovers Response(500) TypeError]\nCall 22: edit_file(src/httpx/_server.py hunk 3) [patches 500 Response constructor]\nCall 23: run_command(pytest tests/test_server.py) [server hangs on shutdown]\nCall 24: edit_file(src/httpx/_network.py hunk 1) [stream list init; ungraded]\nCall 25: edit_file(src/httpx/_network.py hunk 2) [stream close on exit]\nCall 26: edit_file(src/httpx/_network.py hunk 3) [stream prune; dirty git status]",
+    naivePitfall: "Asymmetric drift: touches ungraded scopes while leaving src/ahttpx/ async tree completely unpatched.",
+    naiveMeta: "Stray files in patch · Inconsistent state",
+    bcfTitle: "✓ BCF Turns 14–18: Calls 14–18 (Topological DAG)",
+    bcfAction: "Call 14: edit_file(src/httpx/_parsers.py) [B2 is_keepalive sync]\nCall 15: edit_file(src/ahttpx/_parsers.py) [B2 is_keepalive async mirror]\nCall 16: edit_file(src/httpx/_network.py) [B4 GenericAlias + stream tracking]\nCall 17: edit_file(src/httpx/_server.py) [B5 wait() KeyboardInterrupt]\nCall 18: edit_file(src/httpx/_server.py) [B5 Response(500) signature fix]",
+    bcfSafeguard: "Strict topological order B2 ➔ B4 ➔ B5. Sync and async trees patched in paired lockstep.",
+    bcfMeta: "100% symmetric DAG pass · Clean diff",
+    badge: "LEVER 6: TOPOLOGICAL DAG",
+    text: "Patching both trees in pairs according to dependency order ensures clean diff hygiene.",
+    tenet: "Minimum-Path"
+  },
+  7: {
+    naiveTitle: "✗ Naive Turns 27–38: Calls 27–38 (12 Rework Calls Burned)",
+    naiveAction: "Call 27: run_command(grep -rn 'complete' src/) [VERBATIM REPEAT OF CALL 2!]\nCall 28: read_file(src/httpx/_parsers.py 370–410) [re-reads Call 4 chunk]\nCall 29: read_file(src/httpx/_pool.py 100–150) [re-reads pool handler]\nCall 30: read_file(src/httpx/_server.py 80–120) [re-reads server chunk]\nCall 31: read_file(src/httpx/_network.py 150–190) [re-reads network chunk]\nCall 32: read_file(src/ahttpx/_parsers.py 370–410) [belated async check!]\nCall 33: read_file(src/ahttpx/_pool.py 100–150) [belated async pool read]\nCall 34: edit_file(src/ahttpx/_parsers.py rename complete->reset) [late async]\nCall 35: edit_file(src/ahttpx/_pool.py complete->reset) [late async pool]\nCall 36: edit_file(src/ahttpx/_server.py complete->reset) [late async server]\nCall 37: edit_file(src/ahttpx/_parsers.py revert hunk 1) [panic revert again!]\nCall 38: edit_file(src/ahttpx/_parsers.py partial re-edit) [circular thrashing]",
+    naivePitfall: "Memoryless loop burns 25% of total budget repeating identical greps and circular re-reads.",
+    naiveMeta: "12 rework calls burned · 25% budget penalty",
+    bcfTitle: "✓ BCF Turns 18–19: Zero Rework Calls",
+    bcfAction: "Question 4: 'Have I tried this and failed?' checks journal before every call.\nTurn 18–19 check: verifies B1–B5 already completed and committed.\nClosed hypotheses: refuted paths permanently closed; zero circular greps.\nStrikes remain 0/3; rescue protocol never tripped. 12 calls saved!",
+    bcfSafeguard: "Action journal prevents repeat tool calls. Ratchet moves forward only.",
+    bcfMeta: "0 rework calls · 0 loops · 12 calls saved",
+    badge: "LEVER 7: LOOP BREAKING",
+    text: "Action journal checks eliminate 12 wasted tool calls and stop circular oscillation.",
+    tenet: "Breadcrumbs"
+  },
+  8: {
+    naiveTitle: "✗ Naive Turns 39–41: Calls 39–41 (Panic Pytest & Warning)",
+    naiveAction: "Call 39: run_command(pytest) → Harness warning: 40/50 tool calls used!\nCall 40: run_command(pytest tests/test_parsers.py -q) → Stale test failure panic\nCall 41: edit_file(src/httpx/_parsers.py) → Hasty cosmetic whitespace edit",
+    naivePitfall: "Stale local assertion trap: agent cannot distinguish broken code from outdated test calls.",
+    naiveMeta: "Red & unresolved · Budget exhausted",
+    bcfTitle: "✓ BCF Turns 19–23: Calls 19–23 (/tmp Repro & Clean Gates)",
+    bcfAction: "Call 19: write_file('/tmp/repro_reset.py') [standalone test outside workspace]\nCall 20: run_command(python /tmp/repro_reset.py) → PASS! Logic verified\nCall 21: edit_file(tests/test_parsers.py ×5) [migrates visible calls complete->reset]\nCall 22: run_command(pytest tests/test_parsers.py -q) → G4 PASS (24 passed)\nCall 23: run_command(pytest tests/test_pool.py tests/test_client.py -q) → G5 PASS",
+    bcfSafeguard: "Repro in /tmp never leaks into git patch. Migrated visible tests keep Gate G4 verified.",
+    bcfMeta: "G4 targets pass ✓ · G5 regression pass ✓",
+    badge: "LEVER 8: /TMP ISOLATED VALIDATION",
+    text: "Isolating repro scripts outside the repo avoids diff pollution while validating new API logic.",
+    tenet: "Verification"
+  },
+  9: {
+    naiveTitle: "✗ Naive Turns 42–43: Calls 42–43 (Container B FAIL)",
+    naiveAction: "Call 42: get_status() [free, 8 calls left, 34m elapsed]\nCall 43: submit_patch() [free, submits 5 incomplete files]\nContainer B Run:\n1. git checkout HEAD + git clean -f (wipes workspace)\n2. Applies hidden test_patch: p.complete() ➔ p.reset()\n3. Runs pytest ➔ AttributeError: 'HTTPParser' has no attribute 'reset'!\n→ Exit Code 1 · resolved = False",
+    naivePitfall: "FINAL VERDICT: resolved = False. Score 0.0%. Test suite fails on test 1 due to Step 5 revert.",
+    naiveMeta: "43 calls charged · SCORE: FAIL (0.0%)",
+    bcfTitle: "✓ BCF Turn 24: Call 24 (Container B PASS)",
+    bcfAction: "Call 24: submit_patch() [free, final call]\nGates G0–G6 all true. 8 files changed in clean gold diff.\nContainer B Run:\n1. git checkout HEAD + git clean -f (clean environment reset)\n2. Applies hidden test_patch: p.complete() ➔ p.reset()\n3. Runs pytest ➔ 5/5 Fail-to-Pass PASS · 24/24 Pass-to-Pass PASS!\n→ Exit Code 0 · resolved = True",
+    bcfSafeguard: "FINAL VERDICT: resolved = True. Score 100.0%. 22 charged calls (28 under budget), ≈12 minutes.",
+    bcfMeta: "22 calls charged · SCORE: PASS (100.0%)",
+    badge: "LEVER 9: BINARY GATES ALL-TRUE",
+    text: "Submitting only when the binary gate vector is all-true guarantees first-attempt container pass.",
+    tenet: "Binary Done"
+  }
+};
+
+window.setStep = function(stepNum){
+  for(var i=1; i<=9; i++){
+    var btn = document.getElementById("btnStep" + i);
+    if(btn) btn.classList.toggle("bcf", i===stepNum);
+  }
+  var d = stepData[stepNum];
+  if(!d) return;
+
+  var html = '<div class="sbs-card naive">' +
+    '<div class="sbs-header"><span class="sbs-title">' + esc(d.naiveTitle) + '</span></div>' +
+    '<div class="call-list"><div class="call-item"><pre style="margin:0;font-family:var(--mono);white-space:pre-wrap">' + esc(d.naiveAction) + '</pre></div></div>' +
+    '<div class="sbs-pitfall">' + esc(d.naivePitfall) + '</div>' +
+    '<div class="sbs-meta"><span class="status-fail">' + esc(d.naiveMeta) + '</span></div>' +
+    '</div>' +
+    '<div class="sbs-card bcf">' +
+    '<div class="sbs-header"><span class="sbs-title">' + esc(d.bcfTitle) + '</span></div>' +
+    '<div class="call-list"><div class="call-item"><pre style="margin:0;font-family:var(--mono);white-space:pre-wrap">' + esc(d.bcfAction) + '</pre></div></div>' +
+    '<div class="sbs-safeguard">' + esc(d.bcfSafeguard) + '</div>' +
+    '<div class="sbs-meta"><span class="status-pass">' + esc(d.bcfMeta) + '</span></div>' +
+    '</div>';
+
+  document.getElementById("inspectorDisplay").innerHTML = html;
+  document.getElementById("inspectorGainBadge").textContent = d.badge;
+  document.getElementById("inspectorGainText").textContent = d.text;
+  document.getElementById("inspectorGainTenet").textContent = d.tenet;
+};
+
+// Default to Step 5 (The turning point)
+setStep(5);
+
+/* notify parent SPA if embedded */
+window.addEventListener("load", function(){
+  if(window.parent && window.parent !== window){
+    window.parent.postMessage({type:"DECK_LOADED", title:document.title, deck:"v5"}, "*");
+  }
+});
+
+})();
+</script>
+</body>
+</html>

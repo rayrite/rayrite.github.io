@@ -1,0 +1,1380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>httpx_3672 — the BCF run, decided · v4</title>
+<style>
+  :root{
+    --page:#0e1116; --surface:#151a21; --raised:#1b222c; --sunken:#11151c;
+    --hair:rgba(255,255,255,.08); --hair-2:rgba(255,255,255,.14);
+    --ink:#eef1f5; --ink-2:#aab4c0; --ink-3:#7a8694; --deem:#566070;
+    --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181;
+    --good:#0ca30c; --warn:#fab219; --crit:#d03b3b;
+    --good-wash:rgba(12,163,12,.12); --warn-wash:rgba(250,178,25,.10); --crit-wash:rgba(208,59,59,.13);
+    --diff-del:rgba(214,79,67,.14); --diff-add:rgba(25,158,112,.15);
+    --sans:system-ui,-apple-system,"Segoe UI",sans-serif;
+    --mono:"Cascadia Code","JetBrains Mono",ui-monospace,"Consolas",monospace;
+    color-scheme:dark;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--page);color:var(--ink);font-family:var(--sans);font-size:16.5px;line-height:1.55}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto} *,*::before,*::after{animation-duration:.001s!important;transition-duration:.001s!important}}
+
+  /* ---------- deck chrome (inherited v3 system) ---------- */
+  .deck{scroll-snap-type:y proximity}
+  .rail{position:fixed;left:14px;top:50%;transform:translateY(-50%);z-index:40;display:flex;flex-direction:column;gap:8px}
+  .rail button{width:12px;height:12px;border-radius:3px;border:1px solid var(--hair-2);background:transparent;padding:0;cursor:pointer;position:relative}
+  .rail button[aria-current="true"]{background:var(--s1);border-color:var(--s1)}
+  .rail button span{position:absolute;left:22px;top:50%;transform:translateY(-50%);font:500 12px/1 var(--sans);color:var(--ink-2);white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s}
+  .rail button:hover span,.rail button:focus-visible span{opacity:1}
+  .rail button:focus-visible{outline:2px solid var(--s1);outline-offset:2px}
+  @media (max-width:960px){.rail{display:none}}
+
+  .slide{min-height:100svh;scroll-snap-align:start;position:relative;display:flex;padding:44px clamp(20px,6vw,72px) 60px}
+  .slide-inner{max-width:1180px;margin:auto;width:100%;display:flex;flex-direction:column;gap:13px}
+  .receipt{position:absolute;left:clamp(20px,6vw,72px);bottom:22px;right:clamp(20px,6vw,72px);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font:400 12px/1.5 var(--mono);color:var(--ink-3)}
+  .receipt b{color:var(--ink-2);font-weight:600}
+  .kicker{font:600 13.5px/1.4 var(--sans);color:var(--ink-3)}
+  h2{font:650 28px/1.22 var(--sans);letter-spacing:-.01em;margin:0;max-width:34ch}
+  .sub{color:var(--ink-2);max-width:82ch;margin:0;font-size:15px}
+  .sub b{color:var(--ink);font-weight:600}
+
+  /* evidence chips — four tiers (v4 adds [R]) */
+  .chip{display:inline-flex;align-items:center;gap:6px;font:600 12px/1 var(--mono);padding:5px 9px;border-radius:5px;border:1px solid var(--hair-2)}
+  .chip .g{font-family:var(--sans)}
+  .chips{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .chip.v{background:var(--good-wash);border-color:rgba(12,163,12,.4)} .chip.v .g{color:var(--good)}
+  .chip.sim{background:var(--warn-wash);border-color:rgba(250,178,25,.35)} .chip.sim .g{color:var(--warn)}
+  .chip.est{background:rgba(255,255,255,.04);border-color:var(--hair-2);border-style:dashed} .chip.est .g{color:var(--ink-2)}
+  .chip.r{background:rgba(201,133,0,.10);border-color:rgba(201,133,0,.45)} .chip.r .g{color:#e3a92a}
+
+  /* terminal & code */
+  .term{background:var(--sunken);border:1px solid var(--hair);border-radius:10px;overflow:hidden}
+  .term-bar{display:flex;gap:6px;padding:7px 14px;border-bottom:1px solid var(--hair);background:rgba(255,255,255,.02)}
+  .term-bar i{width:10px;height:10px;border-radius:50%;background:var(--deem);opacity:.6}
+  .term-body{padding:11px 15px;font:400 12.5px/1.6 var(--mono);color:var(--ink-2);overflow-x:auto}
+  .term-body.tight{font-size:11.5px;line-height:1.55}
+  .term-body .p{color:var(--s1)} .term-body .out{color:var(--ink-3)} .term-body .hl{color:var(--ink)}
+  .cursor{display:inline-block;width:8px;height:15px;background:var(--ink-2);vertical-align:-2px;animation:blink 1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+  code.inline{font:500 .9em var(--mono);background:var(--raised);padding:1px 6px;border-radius:4px;color:var(--ink)}
+  .diff{font:400 12px/1.65 var(--mono)} .diff .del{background:var(--diff-del);color:#e8a09d} .diff .add{background:var(--diff-add);color:#8fd8b8}
+  .diff .ctx{color:var(--ink-3)} .diff .meta{color:var(--s1)}
+
+  /* stat strip */
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--hair);border:1px solid var(--hair);border-radius:10px;overflow:hidden}
+  .stat{background:var(--surface);padding:10px 15px}
+  .stat b{display:block;font:650 22px/1.15 var(--sans);letter-spacing:-.01em}
+  .stat span{font:400 12px/1.4 var(--sans);color:var(--ink-3)}
+
+  /* step slides */
+  .stephead{display:flex;gap:14px;align-items:flex-start}
+  .stepno{font:700 15px/1 var(--mono);color:var(--ink);border:1px solid var(--hair-2);border-left:3px solid var(--pc,var(--s1));border-radius:8px;padding:11px 12px;background:var(--surface);flex:none}
+  .stephead h2{font-size:24px}
+  .tchip{flex:none;display:inline-flex;align-items:center;gap:7px;font:600 12px/1.3 var(--mono);padding:7px 11px;border-radius:6px;border:1px dashed var(--hair-2);color:var(--ink-2);background:rgba(255,255,255,.02);margin-top:3px}
+  .tchip .g{color:var(--ink-3);font-family:var(--sans)}
+  .statebar{font:500 12px/1.5 var(--mono);color:var(--ink-3);border:1px solid var(--hair);border-radius:8px;background:var(--sunken);padding:7px 13px}
+  .statebar b{color:var(--ink-2);font-weight:600}
+  .stepgrid{display:grid;grid-template-columns:1.18fr .92fr;gap:14px;align-items:start}
+  @media (max-width:920px){.stepgrid{grid-template-columns:1fr}}
+  .ba-col{display:flex;flex-direction:column;gap:12px}
+  .panel{background:var(--surface);border:1px solid var(--hair);border-radius:10px;padding:13px 16px}
+  .panel h4{margin:0 0 7px;font:650 13.5px/1.4 var(--sans);color:var(--ink-2)}
+  .panel h4 .tag{font:600 11px/1 var(--mono);color:var(--ink-3);border:1px solid var(--hair-2);border-radius:4px;padding:3px 6px;margin-right:7px;vertical-align:1px}
+  .panel.dec{border-left:3px solid var(--s1)}
+  .panel.gain{border-left:3px solid var(--s3)}
+  .twocol{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media (max-width:860px){.twocol{grid-template-columns:1fr}}
+
+  ul.plain{margin:0;padding-left:18px;color:var(--ink-2)} ul.plain li{margin:4px 0;font-size:13px;line-height:1.5}
+  ul.plain b{color:var(--ink);font-weight:600}
+  .panel ul.plain li{font-size:12.5px}
+  ol.plain{margin:0;padding-left:20px;color:var(--ink-2)} ol.plain li{margin:5px 0;font-size:13px;line-height:1.5}
+  ol.plain b{color:var(--ink);font-weight:600}
+
+  /* teachable moments */
+  .tm{border:1px solid rgba(217,81,129,.38);background:rgba(217,81,129,.07);border-radius:10px;padding:11px 15px;font:400 13px/1.6 var(--sans);color:var(--ink-2)}
+  .tm .tmh{display:inline-flex;align-items:center;gap:7px;font:700 12px/1 var(--sans);color:#e37ba6;margin-bottom:5px}
+  .tm b{color:var(--ink);font-weight:600}
+  .tm i{color:var(--ink-2);font-style:italic}
+
+  /* gates + verdict */
+  .gates{display:flex;gap:7px;flex-wrap:wrap}
+  .gate{font:600 12px/1 var(--mono);padding:7px 10px;border-radius:6px;background:var(--good-wash);border:1px solid rgba(12,163,12,.35);color:#5ec95e}
+  .stamp{display:inline-flex;align-items:center;gap:9px;font:700 14px/1 var(--sans);padding:9px 14px;border-radius:8px;border:1px solid}
+  .stamp.pass{background:var(--good-wash);border-color:rgba(12,163,12,.45);color:#5ec95e}
+  .stamp .mono{font:600 13px var(--mono)}
+
+  /* charts */
+  .chart{background:var(--surface);border:1px solid var(--hair);border-radius:10px;padding:13px 17px 9px}
+  .chart h4{margin:0 0 3px;font:650 15px/1.4 var(--sans)}
+  .chart .note{font:400 12.5px/1.5 var(--sans);color:var(--ink-3);margin:0 0 7px}
+  .chart svg{display:block;width:100%;height:auto}
+  .chart svg text{font-family:var(--mono)}
+  #timeChart svg{max-width:900px}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;margin:2px 0 8px}
+  .legend .li{display:inline-flex;align-items:center;gap:7px;font:500 12.5px/1 var(--sans);color:var(--ink-2)}
+  .legend .sw{width:10px;height:10px;border-radius:3px}
+  .tooltip{position:fixed;z-index:60;pointer-events:none;background:var(--raised);border:1px solid var(--hair-2);border-radius:8px;padding:10px 12px;max-width:300px;box-shadow:0 8px 24px rgba(0,0,0,.5);opacity:0;transition:opacity .12s}
+  .tooltip.on{opacity:1}
+  .tooltip .t-call{font:650 12px/1.4 var(--mono);color:var(--ink)}
+  .tooltip .t-tool{font:500 12px/1.5 var(--mono);color:var(--ink-2);word-break:break-word}
+  .tooltip .t-note{font:400 12px/1.5 var(--sans);color:var(--ink-3);margin-top:3px}
+  .tooltip .sw{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:6px}
+  details.tbl{margin-top:8px;border-top:1px solid var(--hair);padding-top:7px}
+  details.tbl summary{cursor:pointer;font:500 12.5px/1.6 var(--sans);color:var(--ink-3)}
+  details.tbl table,details.tbl div table{border-collapse:collapse;width:100%;margin-top:7px;font:400 12px/1.5 var(--mono)}
+  details.tbl th,details.tbl td{text-align:left;padding:4px 9px;border-bottom:1px solid var(--hair);color:var(--ink-2);font-weight:400}
+  details.tbl th{color:var(--ink-3);font-weight:600}
+
+  /* route strip */
+  .route{display:flex;gap:8px;flex-wrap:wrap}
+  .route a{display:inline-flex;align-items:center;gap:8px;font:600 12.5px/1 var(--mono);color:var(--ink-2);text-decoration:none;border:1px solid var(--hair-2);border-radius:7px;padding:8px 11px;background:var(--surface)}
+  .route a:hover,.route a:focus-visible{border-color:var(--ink-3);color:var(--ink)}
+  .route .dot{width:8px;height:8px;border-radius:2px;flex:none}
+  .route a small{color:var(--ink-3);font-weight:500}
+
+  .warnbox{border:1px solid rgba(250,178,25,.35);background:var(--warn-wash);border-radius:10px;padding:11px 15px;font:500 13px/1.55 var(--sans);color:var(--ink-2)}
+
+  /* hero */
+  .hero-id{font:700 clamp(44px,7.5vw,84px)/1.05 var(--mono);letter-spacing:-.02em;margin:6px 0 2px}
+  .hero-id .u{color:var(--ink-3)}
+  .boot{min-height:130px}
+  .fadein{opacity:0;transform:translateY(8px)}
+  .fadein.in{opacity:1;transform:none;transition:opacity .5s ease,transform .5s ease}
+  @media (prefers-reduced-motion:reduce){.fadein{opacity:1;transform:none}}
+
+  table.data{border-collapse:collapse;width:100%;font:400 12.5px/1.5 var(--mono)}
+  table.data th,table.data td{text-align:left;padding:6px 11px;border-bottom:1px solid var(--hair);color:var(--ink-2);font-weight:400;vertical-align:top}
+  table.data th{color:var(--ink-3);font-weight:600;white-space:nowrap}
+  table.data td.k{color:var(--ink);font-weight:600;white-space:nowrap}
+
+  /* glossary */
+  .defs{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media (max-width:920px){.defs{grid-template-columns:1fr}}
+  .def{background:var(--surface);border:1px solid var(--hair);border-radius:10px;padding:12px 15px}
+  .def dt{font:700 14px/1.4 var(--mono);color:var(--ink)}
+  .def dt .src{font:600 11px var(--mono);color:#e3a92a;border:1px solid rgba(201,133,0,.45);border-radius:4px;padding:2px 6px;margin-left:8px;vertical-align:1px}
+  .def dd{margin:6px 0 0;color:var(--ink-2);font-size:13px;line-height:1.55}
+  .def dd b{color:var(--ink)}
+  .def dd .huh{display:block;margin-top:5px;font-size:12.5px;color:var(--ink-3)}
+  .def dd .huh b{color:var(--ink-2)}
+
+  /* hypothesis cards */
+  .hypgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media (max-width:920px){.hypgrid{grid-template-columns:1fr}}
+  .hyp{background:var(--surface);border:1px solid var(--hair);border-radius:10px;padding:12px 15px}
+  .hyp .hid{font:700 13px var(--mono);color:var(--ink)}
+  .hyp .hid .tier{font:600 11px var(--sans);color:var(--ink-3);margin-left:8px}
+  .hyp p{margin:6px 0 0;font-size:12.5px;line-height:1.55;color:var(--ink-2)}
+  .hyp p b{color:var(--ink)}
+  .hyp .pred{margin-top:7px;font:500 12px/1.5 var(--mono);color:#8fd8b8}
+  .hyp .ground{margin-top:5px;font:500 11.5px/1.4 var(--mono);color:#e3a92a}
+
+  :focus-visible{outline:2px solid var(--s1);outline-offset:2px}
+</style>
+</head>
+<body>
+<nav class="rail" aria-label="Slides">
+  <button data-i="0" aria-current="true"><span>1 · the run, decided</span></button>
+  <button data-i="1"><span>2 · how to read</span></button>
+  <button data-i="2"><span>3 · at a glance</span></button>
+  <button data-i="3"><span>4 · the decision engine</span></button>
+  <button data-i="4"><span>5 · step 1 boot</span></button>
+  <button data-i="5"><span>6 · step 2 classify</span></button>
+  <button data-i="6"><span>7 · step 3 spec</span></button>
+  <button data-i="7"><span>8 · step 4 localize</span></button>
+  <button data-i="8"><span>9 · step 5 rename</span></button>
+  <button data-i="9"><span>10 · step 6 fix_order</span></button>
+  <button data-i="10"><span>11 · step 7 validate</span></button>
+  <button data-i="11"><span>12 · step 8 verdict</span></button>
+  <button data-i="12"><span>13 · time budget</span></button>
+  <button data-i="13"><span>14 · three tiers</span></button>
+  <button data-i="14"><span>15 · hypotheses</span></button>
+  <button data-i="15"><span>16 · data wishlist</span></button>
+  <button data-i="16"><span>17 · glossary I</span></button>
+  <button data-i="17"><span>18 · glossary II</span></button>
+  <button data-i="18"><span>19 · receipts</span></button>
+</nav>
+
+<main class="deck" id="deck">
+
+<!-- ============ 1 · TITLE ============ -->
+<section class="slide" id="s1">
+  <div class="slide-inner">
+    <div class="term boot" role="img" aria-label="Terminal: launching the v4 deep walkthrough of the BCF run on task httpx_3672">
+      <div class="term-bar"><i></i><i></i><i></i></div>
+      <div class="term-body" id="bootlines"></div>
+    </div>
+    <div class="fadein" id="heroBlock">
+      <div class="kicker">Version 4 — the deeper walkthrough · v1 the matchup, v2 the raw data, v3 the step-by-step run, v4 the <b style="color:var(--ink-2)">decisions and the research</b></div>
+      <h1 class="hero-id">httpx<span class="u">_</span>3672</h1>
+      <p class="sub" style="font-size:17.5px">One BCF run, 8 steps, 24 tool calls — this time with the two questions v3 left implicit answered for every single call: <b style="color:var(--ink)">how was this next step determined</b> (the decision rule and its inputs), and <b style="color:var(--ink)">what was its result meant to buy</b> (the state change and the knowledge change). Then: naive vs BCF vs the next accuracy tier, eight testable hypotheses, the data they need, and a glossary that defines every term at first use.</p>
+    </div>
+    <div class="fadein chips" id="heroChips" style="gap:14px">
+      <span class="chiprow-label" style="font:500 13px/1 var(--sans);color:var(--ink-3)">Four evidence tiers in this deck:</span>
+      <span class="chip v"><span class="g">✓</span> [V]&nbsp;harness facts — budgets, tool schemas, traps, lifecycle</span>
+      <span class="chip sim"><span class="g">≈</span> [SIM]&nbsp;the trajectory — design target, not measurement</span>
+      <span class="chip est"><span class="g">±</span> [EST]&nbsp;durations — estimates from stated assumptions</span>
+      <span class="chip r"><span class="g">R</span> [R]&nbsp;research-grounded — cited, fetched 2026-10-06</span>
+    </div>
+  </div>
+  <div class="receipt"><span><b>Source</b> deliverables/2026-10-06/ · research evidence in 01-research-evidence.md</span><span>1 / 19</span></div>
+</section>
+
+<!-- ============ 2 · HOW TO READ ============ -->
+<section class="slide" id="s2">
+  <div class="slide-inner" style="gap:12px">
+    <div class="kicker">A note before the walkthrough — what you are looking at, and how much to trust it</div>
+    <h2>How to read this deck</h2>
+    <div class="twocol">
+      <div class="panel">
+        <h4><span class="tag">tiers</span>Every claim carries its evidence class</h4>
+        <ul class="plain">
+          <li><b>[V] verified</b> — read out of the actual data package this session or the 2026-09-30 sessions: the task, the four traps, tool schemas, the graph's node ids, the two-container lifecycle. Re-checkable from doc-03 §9's commands.</li>
+          <li><b>[SIM] simulated</b> — the 24-call trajectory itself. Grounded in [V] artifacts; the turn sequence is a design target. Nobody has run this yet.</li>
+          <li><b>[EST] estimated</b> — every duration. Anchored to the harness's own numbers (60 min, 50 calls, 300 s cap); assumptions A1–A4 on slide 13 are the entire model.</li>
+          <li><b>[R] research-grounded</b> — new in v4. Claims about <i>why</i> these mechanisms should work, each tied to a fetched source: S# ids resolve in <code class="inline">01-research-evidence.md</code>. Where research disagrees or transfers only approximately, the deck says so.</li>
+        </ul>
+      </div>
+      <div class="ba-col">
+        <div class="panel">
+          <h4><span class="tag">v4 only</span>What this deck adds over v3</h4>
+          <ul class="plain">
+            <li><b>DECISION panels</b> — for each step: the rule that selected the next tool call, the inputs it consumed, and the alternative it rejected.</li>
+            <li><b>GAIN panels</b> — what the result was <i>for</i>: the world-state change, the knowledge change, and the downstream step it unlocked.</li>
+            <li><b>Teachable moments</b> — pink boxes. A term being defined, a misconception being pre-empted, or a piece of jargon decoded. Nothing is beneath spelling out; that is the point.</li>
+            <li><b>The tier ladder + H1–H8</b> — what the next level of accuracy is, in the literature's own vocabulary, and how to test it.</li>
+          </ul>
+        </div>
+        <div class="tm">
+          <span class="tmh">◆ teachable moment — why a “mentor tone” deck at all?</span>
+          This competition's object is a <b>post-trained model</b> (slide 18 defines that precisely). Everything BCF does with prompts, gates, and journals is <i>knowledge captured outside the weights</i>; everything H6 does is the same doctrine <i>captured inside them</i>. If the doctrine is worth teaching the model, it is worth teaching you — the two are the same curriculum.
+        </div>
+      </div>
+    </div>
+    <div class="warnbox">≈ The honest caveat, inherited and unchanged from v3: one task, one simulated roll each. The naive agent <i>passes</i> on a lucky roll (keep the rename, migrate or alias the tests); BCF <i>fails</i> on a misrouted spec. The measured Config 1/2/3 runs on the frozen 30-task set are what convert [SIM] to [M] — this deck is the design argument for why those runs are worth their GPU hours.</div>
+  </div>
+  <div class="receipt"><span><b>Conventions</b> doc-03 §0 provenance · c0–c24 call ids · G0–G6 gates</span><span>2 / 19</span></div>
+</section>
+
+<!-- ============ 3 · AT A GLANCE ============ -->
+<section class="slide" id="s3">
+  <div class="slide-inner" style="gap:12px">
+    <div class="kicker">The whole run on one ribbon <span class="chip sim" style="margin-left:8px"><span class="g">≈</span> [SIM] Config 3, flat — spec-first, gates, journal</span></div>
+    <h2>Twenty-four calls, eight steps, four phases</h2>
+    <div class="stats">
+      <div class="stat"><b>24 calls · 2 free</b><span>22 of the 50-call budget charged — status + submit cost nothing</span></div>
+      <div class="stat"><b>0 reverts · 0 loops</b><span>[SIM] design target — the ratchet never unwinds</span></div>
+      <div class="stat"><b>≈ 8–17 min</b><span>[EST] of the 60-min wall clock — 13–28%</span></div>
+      <div class="stat"><b>resolved = True</b><span>[SIM] Container B verdict — exit 0, JUnit all-pass</span></div>
+    </div>
+    <div class="chart">
+      <h4>Every tool call against the 50-call budget</h4>
+      <p class="note">Hover any tick · hollow ticks are free calls (get_status, submit_patch) · phase brackets underneath</p>
+      <div id="ribbonBcf" aria-label="BCF run: 24 tool calls against the 50-call budget, grouped into spec, localize, patch, validate phases, ending in a free submit_patch"></div>
+    </div>
+    <div>
+      <div class="kicker" style="margin-bottom:8px">The eight steps — each gets its own slide, each with its decision rule and its payoff</div>
+      <div class="route">
+        <a href="#s5"><span class="dot" style="background:var(--s5)"></span>1 boot <small>c0</small></a>
+        <a href="#s6"><span class="dot" style="background:var(--s5)"></span>2 classify <small>c1</small></a>
+        <a href="#s7"><span class="dot" style="background:var(--s5)"></span>3 spec + G0 <small>c2</small></a>
+        <a href="#s8"><span class="dot" style="background:var(--s1)"></span>4 localize <small>c3–7</small></a>
+        <a href="#s9"><span class="dot" style="background:var(--s2)"></span>5 the rename <small>c8–13</small></a>
+        <a href="#s10"><span class="dot" style="background:var(--s2)"></span>6 fix_order <small>c14–18</small></a>
+        <a href="#s11"><span class="dot" style="background:var(--s3)"></span>7 validate <small>c19–23</small></a>
+        <a href="#s12"><span class="dot" style="background:var(--s4)"></span>8 verdict <small>c24 + B</small></a>
+      </div>
+    </div>
+  </div>
+  <div class="receipt"><span><b>md §5</b> phases 1–4 · call numbers from the canonical trace</span><span>3 / 19</span></div>
+</section>
+
+<!-- ============ 4 · DECISION ENGINE ============ -->
+<section class="slide" id="s4">
+  <div class="slide-inner" style="gap:11px">
+    <div class="kicker">The frame for every DECISION panel in this deck <span class="chip r" style="margin-left:8px"><span class="g">R</span> S1–S3 · sequential diagnosis is a named, studied problem</span></div>
+    <h2>The decision engine: five questions before every call</h2>
+    <p class="sub">An agent that picks tool calls one at a time, observes, and picks again is solving a <b>sequential decision problem under partial observability</b>. The formal object is a <b>POMDP</b> (glossary I) — and the classical result is that the <i>optimal</i> next-test policy is computationally out of reach, so practical systems use structured heuristics [S1]. BCF is one such heuristic: before each of the 24 calls, the same five questions run, in order, and the first one that changes the answer wins.</p>
+    <div class="stepgrid">
+      <div class="panel">
+        <h4><span class="tag">loop</span>The five questions, in priority order</h4>
+        <ol class="plain">
+          <li><b>Which phase am I in?</b> — spec / localize / patch / validate. The phase <i>is</i> the permission set: in spec, file tools are locked (G0); in patch, exploration reads require a plan. Tool permissions enforce the ladder; prompts merely describe it.</li>
+          <li><b>What is the next unmet obligation?</b> — an explicit checklist: hypotheses B1–B5 unconfirmed (localize) · next node in the <code class="inline">fix_order</code> DAG (patch) · next gate in G1–G6 (validate). One obligation per call, by design.</li>
+          <li><b>Can I afford it?</b> — <code class="inline">budget_plan</code> arithmetic: localization capped at 10 calls, force-submit at turn 42, rescue armed at 3 strikes / 25% budget. A call that busts the plan is not a candidate.</li>
+          <li><b>Have I tried this and failed?</b> — journal lookup: no tool call repeats a journaled failed action (tenet 3). This is the loop-breaker.</li>
+          <li><b>Is there a cheaper tool answering the same question?</b> — graph before grep (ids are pre-resolved); symbol queries before prose [V §8.2]; a 150-line read window before a whole-file read.</li>
+        </ol>
+      </div>
+      <div class="ba-col">
+        <div class="panel">
+          <h4><span class="tag">POMDP</span>The same loop, in the formal vocabulary [R]</h4>
+          <table class="data">
+            <tbody>
+              <tr><td class="k">hidden state</td><td>the graded truth: hidden test patch, full fault set, gold diff</td></tr>
+              <tr><td class="k">observations</td><td>tool outputs (search results, file lines, pytest exits)</td></tr>
+              <tr><td class="k">belief state</td><td>spec + journal + ledger — written down, not just felt</td></tr>
+              <tr><td class="k">policy</td><td>the five questions (this slide)</td></tr>
+              <tr><td class="k">stopping rule</td><td>gate vector all-true ⇔ submit (tenet 4)</td></tr>
+            </tbody>
+          </table>
+          <p class="sub" style="font-size:12.5px;margin-top:8px">Sequential-diagnosis research computes <i>optimal</i> test orderings by expected information gain and shows they beat fixed heuristics [S1]; troubleshooting-as-POMDP is a standing framework [S2, S3]. BCF's fixed ladder is the heuristic version — hypothesis <b>H2</b> (slide 15) is the upgrade.</p>
+        </div>
+        <div class="panel">
+          <h4><span class="tag">[V]</span>The environment has its own loop rules</h4>
+          <ul class="plain">
+            <li>Context window 32,768 tokens; auto-compaction at 14,336; context cache TTL 1,800 s (HARNESS_README §7.2).</li>
+            <li>Text-only turns earn a nudge; >3 consecutive nudges = termination (§5.3). BCF's journal complements this: the harness stops <i>stalls</i>, the journal stops <i>repeats</i>.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="tm">
+      <span class="tmh">◆ teachable moment — “policy” and “heuristic” are compliments, not insults</span>
+      A <b>policy</b> is any rule mapping what-you-know to what-you-do. A greedy reactive loop is a policy; the five questions are a policy; the computed-optimal VOI ordering is a policy. <b>Heuristic</b> just means “good-enough substitute for the optimum.” Calling BCF a heuristic policy <i>places</i> it in the literature rather than diminishing it — and it names exactly what H2 tries to improve.
+    </div>
+  </div>
+  <div class="receipt"><span><b>[R]</b> S1 arXiv 1506.08915 · S2 DECIDE-Lab · S3 IEEE 8721636 · [V] HARNESS_README §5.3, §7.2</span><span>4 / 19</span></div>
+</section>
+
+<!-- ============ 5 · STEP 1 BOOT ============ -->
+<section class="slide" id="s5">
+  <div class="slide-inner" style="gap:12px">
+    <div class="stephead" style="--pc:var(--s5)">
+      <div class="stepno">01</div>
+      <div style="flex:1;min-width:0">
+        <div class="kicker">Specification phase · call 0 of 24 · free</div>
+        <h2>Boot — read the meters before touching anything</h2>
+      </div>
+      <span class="tchip"><span class="g">±</span> step ≈ 10–20 s</span>
+    </div>
+    <div class="statebar">entering&nbsp;· <b>0/50 calls charged · t ≈ 0:00</b> · G0 blocking file access · no spec, no journal yet</div>
+    <div class="stepgrid">
+      <div>
+        <div class="term">
+          <div class="term-bar"><i></i><i></i><i></i></div>
+          <div class="term-body">
+            <span class="p">$ get_status()</span><br>
+            <span class="out">→ {"tool_calls_used": 0, "tool_calls_remaining": 50,</span><br>
+            <span class="out">&nbsp;&nbsp;&nbsp;"time_elapsed_seconds": 4, "patch": null}</span><br>
+            <span class="hl">&nbsp;&nbsp;# budget + patch fields ONLY — no failing_tests field exists [V]</span>
+          </div>
+        </div>
+        <div class="panel dec" style="margin-top:10px">
+          <h4><span class="tag">DECISION</span>How the next call was chosen</h4>
+          <ul class="plain">
+            <li><b>Rule:</b> question 1 (phase) says spec-phase entry; question 2's first obligation is <i>establish the budget baseline</i> — a fixed protocol step, not curiosity.</li>
+            <li><b>Inputs:</b> none yet — that is the point. This call <i>creates</i> the inputs every later budget decision consumes.</li>
+            <li><b>Alternatives rejected:</b> exploring first (grep something) — spends budget before the plan exists; and skipping status — legal, but then <code class="inline">force_submit_turn: 42</code> is arithmetic against an unverified denominator.</li>
+          </ul>
+        </div>
+        <div class="panel gain">
+          <h4><span class="tag">GAIN</span>What the result buys</h4>
+          <ul class="plain">
+            <li><b>State:</b> ledger turn 0 exists — the run is auditable end-to-end from its first second.</li>
+            <li><b>Knowledge:</b> the budget arithmetic is anchored on harness-reported numbers, not assumed ones. Cheap insurance: if the environment misreports, you learn it at call 0, not call 45.</li>
+            <li><b>Unlock:</b> nothing — deliberately. The next move is classification, not exploration. The engine refuses to let “I could look at files” outrank “I haven't classified the issue.”</li>
+          </ul>
+        </div>
+      </div>
+      <div class="ba-col">
+        <div class="panel">
+          <h4><span class="tag">[V]</span>Why free, precisely</h4>
+          <ul class="plain">
+            <li>The harness doesn't count get_status or submit_patch against the 50-call budget — so an agent <i>managing</i> a budget may poll it without spending the resource it manages.</li>
+            <li>The schema's honesty matters: no <code class="inline">failing_tests</code> field exists. Any design that expected tests-for-free from status was built on a fiction (doc-03 §8.1).</li>
+          </ul>
+        </div>
+        <div class="tm">
+          <span class="tmh">◆ teachable moment — baseline before intervention</span>
+          This is the debugging cousin of a doctor taking vitals before prescribing: the number is only meaningful later, <i>in contrast</i> to something. Every [EST] chip in this deck is similarly anchored — a duration estimate without a stated assumption is a number wearing a lab coat.
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="receipt"><span><b>md §5 · phase 1</b> · get_status schema [V] HARNESS_README §6.1</span><span>5 / 19</span></div>
+</section>
+
+<!-- ============ 6 · STEP 2 CLASSIFY ============ -->
+<section class="slide" id="s6">
+  <div class="slide-inner" style="gap:12px">
+    <div class="stephead" style="--pc:var(--s5)">
+      <div class="stepno">02</div>
+      <div style="flex:1;min-width:0">
+        <div class="kicker">Specification phase · call 1 of 24 · T20 classification gate</div>
+        <h2>Classify — 243 characters in, a route out</h2>
+      </div>
+      <span class="tchip"><span class="g">±</span> step ≈ 20–35 s</span>
+    </div>
+    <div class="statebar">entering&nbsp;· <b>0/50 calls charged · t ≈ 0:10–0:20 [EST]</b> · G0 still blocking · bcf-spec skill loaded (A7)</div>
+    <div class="stepgrid">
+      <div>
+        <div class="term">
+          <div class="term-bar"><i></i><i></i><i></i></div>
+          <div class="term-body">
+            <span class="p">$ run_skill_script("classify_issue", &lt;problem_statement&gt;)</span><br>
+            <span class="out">&nbsp;&nbsp;# issue text ONLY — the test-time rule: no file peeking before routing</span><br>
+            <span class="out">→ signals:&nbsp;&nbsp;feature&nbsp;&nbsp;"Add `HTTPParser.keep_alive`."</span><br>
+            <span class="out">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;refactor&nbsp;"`HTTPParser.complete` -> `.reset`"</span><br>
+            <span class="out">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;traceback none · expected/got none</span><br>
+            <span class="hl">→ route: compat_or_refactor template + feature sub-spec</span><br>
+            <span class="out">→ anchors: HTTPParser · keep_alive · complete · reset · KeyboardException [sic]</span>
+          </div>
+        </div>
+        <div class="panel dec" style="margin-top:10px">
+          <h4><span class="tag">DECISION</span>How the next call was chosen</h4>
+          <ul class="plain">
+            <li><b>Rule:</b> question 2 — the spec-phase checklist starts with routing. T20's constraint: <b>issue text only</b>. G0 physically backs this (file tools locked), so the rule and the permissions agree.</li>
+            <li><b>Inputs:</b> the 243-char problem statement. That is all the issue is — five loose bullets, no traceback, no repro, no file names.</li>
+            <li><b>Compute placement (T11):</b> signal extraction is deterministic script code — the model's 24 calls buy <i>decisions</i>, not parsing. One call, whole classification.</li>
+            <li><b>Alternatives rejected:</b> “read the code first, then decide” — that is the naive agent's opening move, and it lets the code's surface (two trees, 12 grep hits) shape the mental model before the issue's contract does. Ordering is the defense.</li>
+          </ul>
+        </div>
+        <div class="panel gain">
+          <h4><span class="tag">GAIN</span>What the result buys</h4>
+          <ul class="plain">
+            <li><b>Knowledge:</b> a template choice with both signals first-class (refactor spine + feature sub-spec) — neither bullet demoted. And the anchor set, which becomes the literal query vocabulary of phase 2.</li>
+            <li><b>State:</b> the routing decision is ledgered. A later misroute is <i>visible</i> — you can count them (H1's endpoint) instead of hand-waving “bad prompt.”</li>
+            <li><b>The [sic] is load-bearing:</b> the classifier records <code class="inline">KeyboardException</code> as-written. The spec must bind hypotheses to what the code contains; “correcting” the typo here would silently drop an anchor that later finds a real bug (B5: the code handles KeyboardInterrupt).</li>
+          </ul>
+        </div>
+      </div>
+      <div class="ba-col">
+        <div class="panel">
+          <h4><span class="tag">naive</span>The same moment, Config 1</h4>
+          <ul class="plain">
+            <li>Calls 2–3: <code class="inline">grep -rn 'complete'</code> — 12+ hits across 14 files, both trees, plus an unrelated parameter named <code class="inline">complete</code>. Trap 2 fires immediately: hit list doubles, no model of why.</li>
+            <li>No routing concept exists — every later decision inherits an unexamined frame.</li>
+          </ul>
+        </div>
+        <div class="tm">
+          <span class="tmh">◆ teachable moment — issue-as-contract, tests-as-evidence</span>
+          Why forbid file peeking? Not secrecy — G0 is a <i>discipline</i> device. The literature's version of the lesson: agents that lean on observable tests overfit them [S10, S11]; the only artifact guaranteed to describe the <b>graded</b> behavior is the issue text. Reading code first isn't wrong; believing code-shaped impressions over the issue <i>is</i>. The gate fixes the order of trust.
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="receipt"><span><b>md §5 · phase 1</b> · T20 / A7 / T11 per doc-01 integration map · [R] S10 SpecBench, S11 test overfitting</span><span>6 / 19</span></div>
+</section>
+<!-- ============ 7 · STEP 3 SPEC ============ -->
+<section class="slide" id="s7">
+  <div class="slide-inner" style="gap:11px">
+    <div class="stephead" style="--pc:var(--s5)">
+      <div class="stepno">03</div>
+      <div style="flex:1;min-width:0">
+        <div class="kicker">Specification phase · call 2 of 24 · A6 + G0 — the pivotal step</div>
+        <h2>Write the spec — pay for the whole run here</h2>
+      </div>
+      <span class="tchip"><span class="g">±</span> step ≈ 25–60 s</span>
+    </div>
+    <div class="statebar">entering&nbsp;· <b>1/50 calls charged · t ≈ 0:30–0:55 [EST]</b> · template + anchors in hand · zero files read</div>
+    <div class="stepgrid">
+      <div>
+        <div class="term">
+          <div class="term-bar"><i></i><i></i><i></i></div>
+          <div class="term-body tight">
+            <span class="p">$ write_spec({ "task_class": "compat_or_refactor",</span><br>
+            <span class="out">&nbsp;&nbsp;"anchors": {"identifiers": ["HTTPParser","keep_alive","complete","reset","KeyboardException"]},</span><br>
+            <span class="out">&nbsp;&nbsp;"bugs": [</span><br>
+            <span class="out">&nbsp;&nbsp;&nbsp;&nbsp;{"id":"B1","hypothesis":"API rename: HTTPParser.complete -> reset … BOTH trees",</span><br>
+            <span class="out">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"target_symbol":"httpx._parsers.HTTPParser.complete","fix_shape":"replace","depends_on":[]},</span><br>
+            <span class="out">&nbsp;&nbsp;&nbsp;&nbsp;{"id":"B2","hypothesis":"new predicate is_keepalive() (is_idle/is_closed convention)",</span><br>
+            <span class="out">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"target_symbol":"httpx._parsers.HTTPParser","fix_shape":"new_code","depends_on":["B1"]},</span><br>
+            <span class="out">&nbsp;&nbsp;&nbsp;&nbsp;{"id":"B3","hypothesis":"server loop never resets parser: no-parens call + no drain",</span><br>
+            <span class="out">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"target_symbol":"httpx._server.HTTPConnection._complete","fix_shape":"check_add","depends_on":["B1","B2"]},</span><br>
+            <span class="out">&nbsp;&nbsp;&nbsp;&nbsp;{"id":"B4","hypothesis":"_streams assigned GenericAlias, not a list; never closed",</span><br>
+            <span class="out">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"target_symbol":"httpx._network.NetworkServer.__init__","fix_shape":"guard_add","depends_on":[]},</span><br>
+            <span class="out">&nbsp;&nbsp;&nbsp;&nbsp;{"id":"B5","hypothesis":"wait() propagates KeyboardInterrupt; Response(code=500) TypeError",</span><br>
+            <span class="out">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"target_symbol":"httpx._server.HTTPServer.wait","fix_shape":"guard_add","depends_on":[]}],</span><br>
+            <span class="out">&nbsp;&nbsp;"fix_order": ["B1","B2","B3","B4","B5"],</span><br>
+            <span class="out">&nbsp;&nbsp;"validation_plan": {"repro":"/tmp/repro_reset.py","tests_to_run":["tests/test_parsers.py"],</span><br>
+            <span class="out">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"regression_scope":"module"},</span><br>
+            <span class="out">&nbsp;&nbsp;"budget_plan": {"localization_max_calls":10,"force_submit_turn":42} })</span><br>
+            <span class="hl">→ spec accepted · schema valid · fix_order is a DAG · G0 PASSES — file tools unblock</span><br>
+            <span class="out">→ symbol_in_graph: true&nbsp;&nbsp;# httpx._parsers.HTTPParser.complete is a real node id [V]</span>
+          </div>
+        </div>
+      </div>
+      <div class="ba-col">
+        <div class="panel dec">
+          <h4><span class="tag">DECISION</span>How the spec's content was determined</h4>
+          <ul class="plain">
+            <li><b>Rule:</b> the template's slots demand filling — each anchor becomes a hypothesis; each hypothesis gets a target symbol, a fix shape, and its <code class="inline">depends_on</code> edges. B3 depends on B1+B2 because its drain code <i>names</i> <code class="inline">is_keepalive()</code> — the DAG is causal, not stylistic.</li>
+            <li><b>Inputs:</b> issue bullets ↔ taxonomy knowledge. Bullet 3 is the only unambiguous instruction (rename) → B1 is the root. Bullet 2's “always read to completion on keep alives” is server behavior → B3, hypothesized from mechanism, before any file is read.</li>
+            <li><b>Emission (A6):</b> the spec goes out as a schema-validated tool call — malformed specs bounce at the gate, so “spec with a typo” cannot silently become “run without a plan.”</li>
+            <li><b>Alternatives rejected:</b> the alias (<code class="inline">reset = complete</code>) passes graded tests — rejected here for duplicating the API (minimum-path tenet); logged under “Ruled out” so the choice is auditable, not vibes.</li>
+          </ul>
+        </div>
+        <div class="panel gain">
+          <h4><span class="tag">GAIN</span>What the result buys — the whole run's shape</h4>
+          <ul class="plain">
+            <li><b>State:</b> G0 passes; file tools unblock; journal opens at <code class="inline">/tmp/bcf/httpx_3672/journal.md</code> (outside the patch, forever); ledger rows gain <code class="inline">spec_ref: sha1:…</code>.</li>
+            <li><b>Knowledge:</b> traps 2 and 3 are neutralized <i>pre-exploration</i> — B1 says BOTH trees; B3 names the no-parens fault no test reaches. Phase 2's job drops from “find the bugs” to “confirm and pin what is already written.”</li>
+            <li><b>Downstream unlocks:</b> fix_order → phase 3's edit order; validation_plan → phase 4's gates; budget_plan → every question-3 check for the rest of the run.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="tm">
+      <span class="tmh">◆ teachable moment — the spec is pre-registration, and that is not a metaphor</span>
+      <b>Pre-registration</b> (glossary I): commit your predictions to a fixed, timestamped artifact <i>before</i> seeing the data, so the data can prove you wrong. A registered clinical trial and the BCF spec do the same job: the spec pins down hypotheses, order, and validation <i>before any file is opened</i>, so later observations (like a scary local red) are <b>scored against the spec</b> instead of rewriting it after the fact. The self-sabotage revert of the naive run is exactly what pre-registration exists to prevent. The paper track should say this out loud — it is the project's cleanest conceptual bridge to experimental methodology.
+    </div>
+  </div>
+  <div class="receipt"><span><b>md §5 · phase 1</b> · spec schema after dossier Appendix A · symbols real [V]</span><span>7 / 19</span></div>
+</section>
+
+<!-- ============ 8 · STEP 4 LOCALIZE ============ -->
+<section class="slide" id="s8">
+  <div class="slide-inner" style="gap:11px">
+    <div class="stephead" style="--pc:var(--s1)">
+      <div class="stepno">04</div>
+      <div style="flex:1;min-width:0">
+        <div class="kicker">Localization phase · calls 3–7 of 24 · graph-first, capped at 10 by the spec</div>
+        <h2>Localize — five calls, five targets pinned, five named questions answered</h2>
+      </div>
+      <span class="tchip"><span class="g">±</span> step ≈ 1.5–3 min</span>
+    </div>
+    <div class="statebar">entering&nbsp;· <b>2/50 calls charged · t ≈ 0:55–1:55 [EST]</b> · G0 passed · localization budget 5 of 10</div>
+    <div class="stepgrid">
+      <div>
+        <div class="term">
+          <div class="term-bar"><i></i><i></i><i></i></div>
+          <div class="term-body">
+            <span class="p">$ search_similar_code("HTTPParser")</span>&nbsp;&nbsp;<span class="out"># symbol query, not prose [V §8.2]</span><br>
+            <span class="out">→ httpx._parsers.HTTPParser · ahttpx._parsers.HTTPParser · httpx._server.HTTPConnection …</span><br>
+            <span class="p">$ get_code_subgraph(["httpx._parsers.HTTPParser", "ahttpx._parsers.HTTPParser",</span><br>
+            <span class="p">&nbsp;&nbsp;&nbsp;"httpx._server.HTTPConnection", "httpx._pool.Connection"])</span><br>
+            <span class="out">→ mirror structure explicit: two HTTPParser classes, two Connections — trap 2 defused in one call</span><br>
+            <span class="p">$ get_code_neighbors("httpx._parsers.HTTPParser.complete")</span><br>
+            <span class="out">→ intra-class only: close · is_idle · recv_body …&nbsp;&nbsp;← honest limit: no cross-file callers</span><br>
+            <span class="p">$ read_file("src/httpx/_server.py", 85, 105)</span><br>
+            <span class="hl">→ :92&nbsp;&nbsp;self._parser.complete&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# no parentheses — B3 confirmed by reading</span><br>
+            <span class="p">$ read_file("src/httpx/_network.py", 155, 185)</span><br>
+            <span class="hl">→ :163 self._streams = list[NetworkStream]&nbsp;&nbsp;# B4 confirmed</span>
+          </div>
+        </div>
+        <div class="panel dec" style="margin-top:10px">
+          <h4><span class="tag">DECISION</span>How each next call was chosen — one named open question per call</h4>
+          <table class="data">
+            <tbody>
+              <tr><td class="k">c3 search</td><td>“Where do my anchors live?” — cheapest namespace-level answer; symbol language because the resolver matches node keys [V §8.2]</td></tr>
+              <tr><td class="k">c4 subgraph</td><td>“What is the shape around them?” — one call replaces four greps; the ids themselves encode the tree split</td></tr>
+              <tr><td class="k">c5 neighbors</td><td>“Who calls <code class="inline">complete</code>?” — the graph's cheap answer first (question 5)</td></tr>
+              <tr><td class="k">c6 read _server</td><td>Graph answered honestly: <i>no cross-file callers exist in it</i> [V §8.4] → the question transfers to the next-cheapest tool: read the caller the issue implies</td></tr>
+              <tr><td class="k">c7 read _network</td><td>B4 is still unconfirmed — question 2's checklist has one item left; the read pins it</td></tr>
+            </tbody>
+          </table>
+          <p class="sub" style="font-size:12px;margin-top:7px">This ladder <i>is</i> a hand-coded information-gain ordering [R S1–S3] — each call buys the most uncertainty-reduction per call the doctrine knows how to name. H2 makes the scoring explicit.</p>
+        </div>
+      </div>
+      <div class="ba-col">
+        <div class="panel gain">
+          <h4><span class="tag">GAIN</span>What the five results buy</h4>
+          <ul class="plain">
+            <li><b>Knowledge:</b> all five hypotheses confirmed with file:line receipts; the dual-tree map; and a <i>calibration datum</i> — the graph's honest limit, recorded at journal t=07 instead of resented later.</li>
+            <li><b>State:</b> <code class="inline">graph_calls=3 · turn_first_graph=4</code> ledgered; localization closed at 5 of 10 allowed calls.</li>
+            <li><b>The 5 saved calls are the point:</b> they are what makes a later retry or a spec-revision affordable. Budget headroom is bought here, in the phase designed to be cheap.</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h4><span class="tag">naive</span>The same phase, Config 1</h4>
+          <ul class="plain">
+            <li>Calls 4–7: reads the same 55-line window twice per tree — no checklist, so “am I done?” has no answer and reads repeat.</li>
+            <li>Calls 27–33 (later): re-greps, re-reads, one call repeated <i>verbatim</i>. Without a journal, the agent cannot distinguish “new question” from “old question.”</li>
+          </ul>
+        </div>
+        <div class="tm">
+          <span class="tmh">◆ teachable moment — information gain, in one paragraph</span>
+          <b>Entropy</b> (glossary I) measures uncertainty about an answer — “which of these five hypotheses is true?” has more entropy before localization than after. A call has high <b>information gain</b> if the entropy you expect <i>after</i> seeing its result is much lower than now. A call that cannot change any belief — re-running the same grep — has zero gain no matter how productive it feels. The whole phase-2 ladder, and H2's upgrade, is just: <b>spend calls where uncertainty actually drops.</b>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="receipt"><span><b>md §5 · phase 2</b> · graph node ids real [V] · resolver behavior verified §8.2 · [R] S1–S3</span><span>8 / 19</span></div>
+</section>
+
+<!-- ============ 9 · STEP 5 RENAME ============ -->
+<section class="slide" id="s9">
+  <div class="slide-inner" style="gap:11px">
+    <div class="stephead" style="--pc:var(--s2)">
+      <div class="stepno">05</div>
+      <div style="flex:1;min-width:0">
+        <div class="kicker">Patch phase · calls 8–13 of 24 · fix_order root: B1 across both trees</div>
+        <h2>The rename lands — and the journal takes the hit</h2>
+      </div>
+      <span class="tchip"><span class="g">±</span> step ≈ 2–4.5 min</span>
+    </div>
+    <div class="statebar">entering&nbsp;· <b>7/50 calls charged · t ≈ 2:20–4:35 [EST]</b> · B1 due first · alias alternative weighed and journaled</div>
+    <div class="stepgrid">
+      <div>
+        <div class="term">
+          <div class="term-bar"><i></i><i></i><i></i></div>
+          <div class="term-body tight diff">
+            <span class="p">$ edit_file("src/httpx/_parsers.py", "def complete(self):", "def reset(self) -> bool:")</span>&nbsp;<span class="out">×3, + return False / True</span><br>
+            <span class="out">→ applied · journal entry written the same moment:</span><br>
+            <span class="hl">- t=09 | action: edit _parsers.py complete-&gt;reset (sync) | result: applied</span><br>
+            <span class="hl">&nbsp;&nbsp;| note: local suite WILL go red; expected — hidden tests renamed (spec: test asymmetry)</span><br>
+            <span class="out">## Ruled out</span><br>
+            <span class="out">- Keeping `complete` + adding `reset` alongside (alias): passes graded tests</span><br>
+            <span class="out">&nbsp;&nbsp;but duplicates the API; violates minimum-path tenet</span><br>
+            <span class="p">$ edit_file("src/ahttpx/_parsers.py", …)</span>&nbsp;<span class="out">×3 → applied (mirror)</span><br>
+            <span class="p">$ edit_file("src/httpx/_pool.py"…)</span>&nbsp;<span class="out">×2 · ahttpx mirror ×2 → _complete -&gt; _reset</span><br>
+            <span class="p">$ edit_file("src/httpx/_server.py"…)</span>&nbsp;<span class="out">×2 · ahttpx ×2 → and the no-parens line dies:</span><br>
+            <span class="del">-        self._parser.complete</span>&nbsp;&nbsp;<span class="out"># attribute access, discarded</span><br>
+            <span class="add">+        self._parser.reset()</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="out"># called — trap 3 dies as a consequence</span>
+          </div>
+        </div>
+        <div class="panel dec" style="margin-top:10px">
+          <h4><span class="tag">DECISION</span>How the next edits were chosen</h4>
+          <ul class="plain">
+            <li><b>Rule:</b> question 2 — the DAG's only root is B1 (nothing depends on nothing else first); the spec's BOTH-trees obligation expands it into an ordered edit list (sync parser → async parser → pools → servers), one <code class="inline">edit_file</code> per file batch, smallest change per step (tenet 1 keeps the regression surface near zero).</li>
+            <li><b>The journal write is part of the decision, not afterthought:</b> the moment the riskiest edit applies, the <i>prediction</i> “local red is coming and it is correct” is committed — before any test can produce it.</li>
+            <li><b>Alternatives rejected:</b> alias (journaled, slide 7); half-tree rename (spec forbids; the naive agent tries it at calls 34–38 and ends inconsistent).</li>
+          </ul>
+        </div>
+        <div class="panel gain">
+          <h4><span class="tag">GAIN</span>What the results buy</h4>
+          <ul class="plain">
+            <li><b>State:</b> <code class="inline">reset()</code> exists in both trees; pools and servers call it; 6 of the eventual 8 files changed.</li>
+            <li><b>Knowledge:</b> trap 3 is <b>structurally dead</b> — a rename cannot leave a no-parens statement calling the old name; the silent no-op must become a call or fail loudly. This is the quiet elegance of root-first order: one class of latent fault becomes impossible, for free.</li>
+            <li><b>The journal entry buys the future:</b> the red that is one pytest away is already <i>pre-annotated as expected</i> — the agent cannot later “discover” it and revert. This single line is the difference between the two trajectories (H8 automates it).</li>
+          </ul>
+        </div>
+      </div>
+      <div class="ba-col">
+        <div class="panel">
+          <h4><span class="tag">naive</span>The moment of death, Config 1</h4>
+          <ul class="plain">
+            <li>Calls 8→9: same edit, then pytest → <b>5 failed</b> (<code class="inline">AttributeError: no attribute 'complete'</code> — in the <i>tests</i>).</li>
+            <li>Calls 10–13: reads failing tests, git diff, concludes “my fix broke the suite” → <b>reverts the correct fix</b>. The graded suite would have accepted it.</li>
+            <li>Same information, opposite conclusion — the difference is having a pre-committed interpretation. [R] This is test overfitting's mirror image: not passing bad code, but <i>failing good code</i> because a visible signal was trusted over the contract [S10, S11].</li>
+          </ul>
+        </div>
+        <div class="tm">
+          <span class="tmh">◆ teachable moment — the ratchet, or why BCF almost never reverts</span>
+          A <b>ratchet</b> lets motion in one direction only. In code: <i>nothing applied gets undone</i>; failures route forward (fix, micro-check, rescue), never backward (revert). Why is that right here? Because reverting only pays when the <i>hypothesis</i> was wrong — and the spec already paid to test hypotheses. When the hypothesis is right and the <i>signal</i> is misleading (Trap 1), reverting is self-sabotage. The ratchet encodes that asymmetry as a rule instead of a mood.
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="receipt"><span><b>md §5 · phase 3</b> · journal t=09 verbatim · two edit payloads real [V]</span><span>9 / 19</span></div>
+</section>
+
+<!-- ============ 10 · STEP 6 FIX_ORDER ============ -->
+<section class="slide" id="s10">
+  <div class="slide-inner" style="gap:11px">
+    <div class="stephead" style="--pc:var(--s2)">
+      <div class="stepno">06</div>
+      <div style="flex:1;min-width:0">
+        <div class="kicker">Patch phase · calls 14–18 of 24 · B2 → B3 → B4 → B5, topological</div>
+        <h2>The rest of fix_order — predicate, drain, cleanup</h2>
+      </div>
+      <span class="tchip"><span class="g">±</span> step ≈ 2–4 min</span>
+    </div>
+    <div class="statebar">entering&nbsp;· <b>13/50 calls charged · t ≈ 4:20–9:05 [EST]</b> · B1 done · strikes 0/3 · rescue armed</div>
+    <div class="stepgrid">
+      <div>
+        <div class="term">
+          <div class="term-bar"><i></i><i></i><i></i></div>
+          <div class="term-body tight diff">
+            <span class="p">$ edit_file: B2 is_keepalive() → src/httpx/_parsers.py (before is_idle) · ahttpx mirror</span><br>
+            <span class="out">→ applied · naming follows is_idle/is_closed, not the issue's literal "keep_alive"</span><br>
+            <span class="p">$ edit_file: B3 drain → _server.py ×2 (integrates once B2 exists)</span><br>
+            <span class="add">+        if self._parser.is_keepalive():</span><br>
+            <span class="add">+            stream.read()</span><br>
+            <span class="add">+        self._reset()</span><br>
+            <span class="p">$ edit_file: B4 → src/httpx/_network.py ×3 · init fix · is_closed() · close-on-exit</span><br>
+            <span class="del">-        self._streams = list[NetworkStream]</span><br>
+            <span class="add">+        self._streams: list[NetworkStream] = []</span><br>
+            <span class="p">$ edit_file: B5 → wait() gains try/except KeyboardInterrupt: break · Response(500, content=…)</span><br>
+            <span class="out">→ 14 edits applied · 0 reverted · strikes 0/3 · journal t=12: "ungraded per validation_plan; issue bullet 4"</span>
+          </div>
+        </div>
+        <div class="panel dec" style="margin-top:10px">
+          <h4><span class="tag">DECISION</span>How the next edits were chosen</h4>
+          <ul class="plain">
+            <li><b>Rule:</b> question 2 again — but the checklist is now the <i>topological order</i>: B2 before B3 because the drain's code references the predicate; B4/B5 anytime (independent). Order is forced by <code class="inline">depends_on</code>, not by what looks interesting next.</li>
+            <li><b>Naming judgment inside B2:</b> the issue says <code class="inline">keep_alive</code>, the codebase convention says <code class="inline">is_keepalive()</code>. The spec chose convention — and journaled it. Anchors stay literal (slide 6); <i>emitted code</i> follows the codebase. Two different rules, both correct.</li>
+            <li><b>Why do ungraded bugs at all (B4/B5)?</b> The task is “resolve the issue,” not “pass the tests” — five bullets, and bullets 4–5 name real, verified faults [V Trap 4]. The anti-gaming stance is deliberate [R S10].</li>
+          </ul>
+        </div>
+        <div class="panel gain">
+          <h4><span class="tag">GAIN</span>What the results buy</h4>
+          <ul class="plain">
+            <li><b>State:</b> all five bugs closed; 14 total edits; every edit additive or mechanical.</li>
+            <li><b>Knowledge:</b> the rescue state machine (A2: 3-strike, 25%-budget trips) sat armed through every edit and never fired — bounded worst case at zero cost. Patch complete <i>on paper</i>; only executable evidence may call it done (tenet 4, next slide).</li>
+          </ul>
+        </div>
+      </div>
+      <div class="ba-col">
+        <div class="panel">
+          <h4><span class="tag">naive</span>The same phase, Config 1</h4>
+          <ul class="plain">
+            <li>Calls 14–26: chases the four ungraded bullets <i>without a spec</i> — discovers <code class="inline">Response(code=500)</code> TypeError mid-trace, pokes <code class="inline">_network.py</code>, sees “no visible effect on any test,” keeps poking. Ungraded work with no checklist has no stopping rule.</li>
+          </ul>
+        </div>
+        <div class="tm">
+          <span class="tmh">◆ teachable moment — why a DAG beats a to-do list</span>
+          A <b>directed acyclic graph</b> (DAG): nodes are bugs, edges are “must exist before.” A checklist says <i>do these</i>; a DAG says <i>these orders work, all others don't</i>. Writing B3's drain before B2 exists doesn't just waste a call — it produces code that cannot run, which looks like a wrong hypothesis and corrupts the belief state. Dependency order is belief protection, not bookkeeping aesthetics.
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="receipt"><span><b>md §5 · phase 3</b> · hunk shapes mirror the verified gold diff [V]</span><span>10 / 19</span></div>
+</section>
+
+<!-- ============ 11 · STEP 7 VALIDATE ============ -->
+<section class="slide" id="s11">
+  <div class="slide-inner" style="gap:11px">
+    <div class="stephead" style="--pc:var(--s3)">
+      <div class="stepno">07</div>
+      <div style="flex:1;min-width:0">
+        <div class="kicker">Validation phase · calls 19–23 of 24 · tenet 4 — code decides “done”</div>
+        <h2>Validate — the feared red never happens, because it was scheduled around</h2>
+      </div>
+      <span class="tchip"><span class="g">±</span> step ≈ 2–4 min</span>
+    </div>
+    <div class="statebar">entering&nbsp;· <b>18/50 calls charged · t ≈ 6:00–12:50 [EST]</b> · patch complete · gates pending · model judgment grants nothing</div>
+    <div class="stepgrid">
+      <div>
+        <div class="term">
+          <div class="term-bar"><i></i><i></i><i></i></div>
+          <div class="term-body tight">
+            <span class="p">$ write_file("/tmp/repro_reset.py", …)</span>&nbsp;&nbsp;<span class="out"># /tmp, never /workspace — gotcha #3: scratch leaks into patches</span><br>
+            <span class="p">$ run_command("python /tmp/repro_reset.py")</span><br>
+            <span class="out">→ reset() / is_keepalive() new-API contract: PASS&nbsp;&nbsp;(V2b repro, outside the patch)</span><br>
+            <span class="p">$ edit_file("tests/test_parsers.py", "p.complete()", "p.reset()")</span>&nbsp;<span class="out">×5</span><br>
+            <span class="out">→ visible suite migrated — hygiene; Container B discards these edits, but local G4/G5 become meaningful</span><br>
+            <span class="p">$ run_command("python -m pytest tests/test_parsers.py -q")</span><br>
+            <span class="hl">→ 24 passed · G4 targets-pass ✓&nbsp;&nbsp;(journal predicted a red pre-migration; there is none post-migration)</span><br>
+            <span class="p">$ run_command("python -m pytest tests/test_pool.py tests/test_client.py -q")</span><br>
+            <span class="hl">→ pass · G5 no-regression ✓</span>
+          </div>
+        </div>
+        <div style="margin-top:10px">
+          <div class="kicker" style="margin-bottom:7px">Gate vector — all six checked by code, not vibes (G0 already passed at step 3)</div>
+          <div class="gates">
+            <span class="gate">G1 scope ✓</span><span class="gate">G2 applies ✓</span><span class="gate">G3 parses ✓</span><span class="gate">G4 targets ✓</span><span class="gate">G5 no-regression ✓</span><span class="gate">G6 non-empty ✓</span>
+          </div>
+        </div>
+        <div class="panel dec" style="margin-top:10px">
+          <h4><span class="tag">DECISION</span>How the order within validation was chosen</h4>
+          <ul class="plain">
+            <li><b>Rule:</b> A5's verification hierarchy — cheapest decisive evidence first: contract repro (does the <i>new</i> API behave?) before any pytest; and <b>migration before the first pytest run</b>. That ordering is the trap-1 countermeasure: the red exists right now, one call away, in five old-API call sites — the plan steps over the rake instead of suppressing or discovering it.</li>
+            <li><b>Why migrate tests you know are discarded?</b> Not sentiment: after migration, G4/G5 measure <i>your actual change</i>; before it, they would measure the rename's shadow. Five throwaway edits buy meaningful local evidence.</li>
+            <li><b>Gates are orchestrator code:</b> G1 scope (files ∈ allowed), G2 <code class="inline">git apply --check</code>, G3 <code class="inline">ast.parse</code> per changed file — no model in the loop can grant approval. [R] This is the ACI guardrail pattern with measured double-digit value [S13].</li>
+          </ul>
+        </div>
+      </div>
+      <div class="ba-col">
+        <div class="panel gain">
+          <h4><span class="tag">GAIN</span>What the results buy</h4>
+          <ul class="plain">
+            <li><b>Knowledge:</b> the new contract demonstrably works (repro), the migrated suite is green, adjacent modules unregressed — three independent evidence classes, none solely reliant on the suite that was about to lie.</li>
+            <li><b>State:</b> gate vector G1–G6 all-true → <b>submit unlocks</b>. “Done” is a boolean computed from the vector, not a feeling (tenet 4).</li>
+            <li><b>Cleanliness:</b> the repro lives in /tmp — the patch stays exactly the 8 intended files.</li>
+          </ul>
+        </div>
+        <div class="tm">
+          <span class="tmh">◆ teachable moment — tests are evidence, not truth</span>
+          The suite the agent can run is <i>one instrument</i>, with a known failure mode here (it targets the old API). Good experimental method doesn't discard a miscalibrated instrument — it recalibrates (migration), cross-checks (repro, adjacent suites), and keeps the specification as the reference standard. SpecBench builds an entire benchmark on this exact distinction between visible and held-out evidence [S10]; BCF's validation order is the same idea at run time.
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="receipt"><span><b>md §5 · phase 4</b> · A5 verification hierarchy · gate defs per dossier A8 · [R] S13</span><span>11 / 19</span></div>
+</section>
+
+<!-- ============ 12 · STEP 8 VERDICT ============ -->
+<section class="slide" id="s12">
+  <div class="slide-inner" style="gap:11px">
+    <div class="stephead" style="--pc:var(--s4)">
+      <div class="stepno">08</div>
+      <div style="flex:1;min-width:0">
+        <div class="kicker">Submit + Container B · call 24 of 24 · free, last — then the part the agent never sees</div>
+        <h2>Submit — and the harness takes over</h2>
+      </div>
+      <span class="tchip"><span class="g">±</span> agent ≈ 10–20 s · Container B ≈ 0.5–2 min</span>
+    </div>
+    <div class="statebar">entering&nbsp;· <b>23/50 calls charged · t ≈ 8:00–16:30 [EST]</b> · gates all-true · submit_patch is free and must be final</div>
+    <div class="stepgrid">
+      <div>
+        <div class="term">
+          <div class="term-bar"><i></i><i></i><i></i></div>
+          <div class="term-body tight">
+            <span class="p">$ submit_patch()</span><br>
+            <span class="hl">→ {"status": "ok", "files_changed": 8, "patch_size": 9631}</span>&nbsp;&nbsp;<span class="out"># free · last action</span><br>
+            <span class="out">────────&nbsp;&nbsp;the agent's run ends here; Container B takes over&nbsp;&nbsp;────────</span><br>
+            <span class="out">[harness] git checkout HEAD -- tests/ + git clean -f&nbsp;&nbsp;# agent test edits discarded [V §8.2.3]</span><br>
+            <span class="out">[harness] apply test_patch: 5 × p.complete() → p.reset()&nbsp;&nbsp;# now consistent with the library</span><br>
+            <span class="out">[harness] python -m pytest tests/test_parsers.py&nbsp;&nbsp;# exit 0</span><br>
+            <span class="out">[harness] JUnit XML: all-pass → <span class="hl">resolved = True</span></span>
+          </div>
+        </div>
+        <div class="chips" style="margin-top:10px">
+          <span class="stamp pass">✓ PASS <span class="mono">resolved = True</span></span>
+          <span class="chip sim"><span class="g">≈</span> 24 calls · 0 wrong edits · 0 reverts · 0 loops</span>
+          <span class="chip est"><span class="g">±</span> total ≈ 8–17 min of 60</span>
+        </div>
+        <div class="panel dec" style="margin-top:10px">
+          <h4><span class="tag">DECISION</span>How the exit was chosen</h4>
+          <ul class="plain">
+            <li><b>Rule:</b> tenet 4 — submit <i>iff</i> the gate vector is all-true. Partial patches are structurally impossible (G6 non-empty); premature ones are blocked by G4/G5. The decision is a lookup, not a judgment call.</li>
+            <li><b>“Free and final”:</b> submit costs no budget — there is no reason to hoard it once the vector is green, and no second chance after (immediate termination on submit [V §5.3]).</li>
+            <li><b>What the agent believes will happen:</b> the spec predicted Container B's behavior (tests reset → hidden patch applies → renamed suite passes). The verdict scores that prediction too.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="ba-col">
+        <div class="panel gain">
+          <h4><span class="tag">GAIN</span>What the verdict buys</h4>
+          <ul class="plain">
+            <li><b>State:</b> Container B ≈ 0.5–2 min [EST], off-budget; <code class="inline">resolved = True</code>; the ledger row closes: <code class="inline">run_id, C3, httpx_3672, PASS, 24, loc=5, graph_calls=3, turn_first_graph=4, edits=14, edits_not_in_final=0, fix_order_error=0</code>.</li>
+            <li><b>Knowledge:</b> the audit trail — spec sha, journal, gate vectors — is the run's receipt. This deck <i>is</i> that receipt, typeset.</li>
+          </ul>
+        </div>
+        <div class="tm">
+          <span class="tmh">◆ teachable moment — grading happens where you cannot see</span>
+          The agent's world ends at submit. Everything after — reset, hidden patch, pytest, JUnit — is the environment scoring a <b>fixed prediction</b> against evidence the agent never saw. That is why every upstream mechanism (spec, journal, gates) is about making the agent's <i>commitments</i> maximally aligned with the issue: at submit time, commitment is all that is left.
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="receipt"><span><b>md §5 · phase 4 + Container B</b> · lifecycle mechanism [V] HARNESS_README §8.2</span><span>12 / 19</span></div>
+</section>
+<!-- ============ 13 · TIME BUDGET ============ -->
+<section class="slide" id="s13">
+  <div class="slide-inner" style="gap:12px">
+    <div class="kicker">All the chips, summed <span class="chip est" style="margin-left:8px"><span class="g">±</span> [EST] — anchors [V] 60 min / 50 calls / 300 s; assumptions A1–A4 below</span></div>
+    <h2>The run against its clock</h2>
+    <div class="chart">
+      <h4>Estimated duration by phase — ranges, on the 60-minute budget</h4>
+      <p class="note">Each bar spans the phase's min–max estimate · the pale band marks the total (≈ 8–17 min) · hover a bar</p>
+      <div id="timeChart" aria-label="Range chart: estimated minutes per phase — spec 1 to 2, localize 1.5 to 3, patch 4 to 8, validate 2 to 4, submit about 10 to 20 seconds — against a 60-minute budget"></div>
+      <details class="tbl"><summary>Assumptions A1–A4 — the whole time model, falsifiable by one measured run</summary>
+        <table><thead><tr><th>id</th><th>assumption</th><th>value</th></tr></thead>
+        <tbody>
+          <tr><td>A1</td><td>model turn, mid-size agentic model, growing context</td><td>15–45 s — the dominant cost everywhere</td></tr>
+          <tr><td>A2</td><td>local tools (read/edit/search/graph) — in-container</td><td>&lt; 1 s</td></tr>
+          <tr><td>A3</td><td>pytest on this small pure-Python suite (24 tests)</td><td>3–15 s per run</td></tr>
+          <tr><td>A4</td><td>repro script execution</td><td>1–3 s</td></tr>
+        </tbody></table>
+      </details>
+      <details class="tbl"><summary>Data table — phase rollups</summary>
+        <table><thead><tr><th>phase</th><th>calls</th><th>turns [EST]</th><th>tool exec [EST]</th><th>total</th></tr></thead>
+        <tbody>
+          <tr><td>spec (c0–c2)</td><td>2 + 1 free</td><td>50–110 s</td><td>1–3 s</td><td>≈ 1–2 min</td></tr>
+          <tr><td>localize (c3–c7)</td><td>5</td><td>80–160 s</td><td>&lt; 1 s</td><td>≈ 1.5–3 min</td></tr>
+          <tr><td>patch (c8–c18)</td><td>11</td><td>220–495 s</td><td>&lt; 11 s</td><td>≈ 4–8 min</td></tr>
+          <tr><td>validate (c19–c23)</td><td>5</td><td>105–215 s</td><td>7–33 s</td><td>≈ 2–4 min</td></tr>
+          <tr><td>submit (c24, free)</td><td>1 free</td><td>10–20 s</td><td>&lt; 1 s</td><td>≈ 10–20 s</td></tr>
+          <tr><td><b>agent total</b></td><td><b>24</b></td><td><b>465–1000 s</b></td><td><b>8–36 s</b></td><td><b>≈ 8–17 min · 13–28%</b></td></tr>
+          <tr><td>Container B (harness-side)</td><td>—</td><td>—</td><td>reset + apply + pytest</td><td>≈ 0.5–2 min, off-budget</td></tr>
+        </tbody></table>
+      </details>
+      <details class="tbl"><summary>Per-call estimate table — all 24 calls</summary>
+        <div id="callTimes"></div>
+      </details>
+    </div>
+    <p class="sub"><b style="color:var(--ink)">The reading that matters:</b> even the worst case leaves ≈ 43 min and 28 calls of headroom — that margin is what the rescue machine, a spec-retry, and the Tier-2 mechanisms of slide 14 spend. And the naive trace's 43 calls at the same assumptions land ≈ 15–30 min — <b style="color:var(--ink)">wall clock was never its problem; test_misread was</b>. Minutes don't separate these agents; order, memory, and evidence discipline do.</p>
+  </div>
+  <div class="receipt"><span><b>[EST]</b> per-call table sums to the total · phases rounded independently</span><span>13 / 19</span></div>
+</section>
+
+<!-- ============ 14 · THREE TIERS ============ -->
+<section class="slide" id="s14">
+  <div class="slide-inner" style="gap:11px">
+    <div class="kicker">Naive → BCF → next <span class="chip r" style="margin-left:8px"><span class="g">R</span> each tier jump has a research-grounded name</span></div>
+    <h2>What separates the tiers — and what the next one costs</h2>
+    <div class="stepgrid">
+      <div class="chart">
+        <h4>Calls used per run, by tier — the budget axis</h4>
+        <p class="note">Bars: naive 43 [SIM] · BCF 24 [SIM design target] · Tier-2 24–30 (adds ≤ 6 mechanism calls, keeps ≥ 20 headroom) · hollow = range</p>
+        <div id="ladderChart" aria-label="Bar chart: naive agent uses about 43 of 50 calls, BCF 24, the proposed tier-2 bundle 24 to 30"></div>
+        <div class="legend">
+          <span class="li"><span class="sw" style="background:var(--s2)"></span>naive · reactive</span>
+          <span class="li"><span class="sw" style="background:var(--s1)"></span>BCF today · structured</span>
+          <span class="li"><span class="sw" style="background:var(--s3)"></span>tier 2 · calibrated (proposed)</span>
+        </div>
+      </div>
+      <div class="panel">
+        <h4><span class="tag">compare</span>Policy class · trust · optimization · remaining failure</h4>
+        <table class="data">
+          <tbody>
+            <tr><td class="k">policy class</td><td><b>Naive:</b> reactive — act on the latest observation<br><b>BCF:</b> structured heuristic — phase ladder + gates + journal<br><b>Tier 2:</b> calibrated — explicit belief scoring + trained per-turn competence</td></tr>
+            <tr><td class="k">trusts</td><td>Naive: the local test signal · BCF: the spec · Tier 2: spec <i>plus synthesized held-out-style evidence</i>, with conflict rules</td></tr>
+            <tr><td class="k">optimizes</td><td>Naive: nothing deliberate · BCF: turns &amp; decisions (24 vs 43, 0 reverts) · Tier 2: accuracy per task (spec validity, recall, edit survival)</td></tr>
+            <tr><td class="k">dies of</td><td>Naive: test_misread [SIM modal] · BCF: spec misroute, hypothesis omission, wrong-edit-right-idea, unencoded asymmetry (F1–F4) · Tier 2: those are its targets</td></tr>
+            <tr><td class="k">anchor [R]</td><td>Naive→BCF: guardrailed interfaces +10.7 pp [S13]; episodic memory [S14] · BCF→Tier 2: self-consistency [S23], VOI ordering [S1–S3], spec-vs-tests [S10, S11], RFT [S18]</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="tm">
+      <span class="tmh">◆ teachable moment — “discipline, then calibration, then competence”</span>
+      Tier 0→1 was <b>discipline</b>: structure the policy, pre-commit, check done mechanically — no statistics needed to believe it, just the traps [V]. Tier 1→2 is different in kind: each mechanism makes a <i>quantitative</i> claim (recall up, error rate down), so it must be measured — which is why the tier's first deliverable is not a mechanism at all but the measurement protocol itself (H7). Sequence matters: <b>measure first, calibrate second, train last</b> — training on a scaffold you are about to change wastes the run (that is H6's sequencing rule).
+    </div>
+  </div>
+  <div class="receipt"><span><b>[R]</b> S13, S14, S23, S1–S3, S10–S11, S18 · full plans in 02-hypotheses-and-test-plans.md</span><span>14 / 19</span></div>
+</section>
+
+<!-- ============ 15 · HYPOTHESES ============ -->
+<section class="slide" id="s15">
+  <div class="slide-inner" style="gap:11px">
+    <div class="kicker">Eight testable hypotheses <span class="chip r" style="margin-left:8px"><span class="g">R</span> grounding sources in 01-research-evidence.md</span></div>
+    <h2>The next accuracy tier, one falsifiable claim at a time</h2>
+    <p class="sub">Each card: mechanism in one line · the prediction that decides it (green) · the research anchor (gold). Full designs — sample sizes, seeds, statistics, decision rules, threats — are in <b>02-hypotheses-and-test-plans.md</b>; the data they need is slide 16. Sequencing: measure (H7) → offline (H1, H8, H5a) → live scaffold batch (H2+H4+H5b) → evidence batch (H3) → train (H6, last).</p>
+    <div class="hypgrid">
+      <div class="hyp"><span class="hid">H1 · spec ensemble<span class="tier">calibration</span></span>
+        <p>Sample <b>k=3 spec drafts</b>, vote per field, merge anchors — self-consistency applied to the spec, not just the answer.</p>
+        <p class="pred">▸ template misroutes ↓ ≥ 25% rel., cost ≤ +2 calls</p>
+        <p class="ground">[R] S23 self-consistency · [F1]</p></div>
+      <div class="hyp"><span class="hid">H2 · VOI-ranked localization<span class="tier">calibration</span></span>
+        <p>Replace the fixed graph-first ladder with an explicit <b>expected-information-gain-per-call</b> score over open spec questions — the classical optimal-test idea, heuristically approximated.</p>
+        <p class="pred">▸ same recall, ≤ 4 calls avg (≥ 1.5 saved on large repos)</p>
+        <p class="ground">[R] S1–S3 sequential diagnosis · [F2]</p></div>
+      <div class="hyp"><span class="hid">H3 · proxy-test synthesis<span class="tier">evidence</span></span>
+        <p>The spec's validation_plan must include <b>agent-written tests derived from the issue</b>, incl. a composition case the visible suite lacks; visible-test greening is necessary, never sufficient.</p>
+        <p class="pred">▸ test_misread failures ↓ ≥ 50% on the refactor slice</p>
+        <p class="ground">[R] S10 SpecBench · S11 test overfitting · [F4]</p></div>
+      <div class="hyp"><span class="hid">H4 · post-edit micro-verification<span class="tier">competence</span></span>
+        <p>After every edit batch: ast-parse, import, and symbol-contract check <i>immediately</i> (1 call), not 10 calls later at validation.</p>
+        <p class="pred">▸ edits_not_in_final ↓ ≥ 30% rel., late gate failures ↓ ≥ 40%</p>
+        <p class="ground">[R] S13 ACI guardrails (+10.7 pp) · [F3]</p></div>
+      <div class="hyp"><span class="hid">H5 · caller-closure rule<span class="tier">calibration</span></span>
+        <p>Renames audit <b>every caller</b>: graph view <i>and</i> word-bounded grep, reconciled, each caller read once — closes the verified no-cross-file-callers gap.</p>
+        <p class="pred">▸ call-site latent-fault recall 0 → ≥ 80%, cost +2–4 calls</p>
+        <p class="ground">[V] §8.4 graph limit · co-change strand doc-02 · [F2]</p></div>
+      <div class="hyp"><span class="hid">H6 · doctrine-distilled LoRA<span class="tier">trained</span></span>
+        <p><b>Rejection-sampling fine-tuning</b> on resolved Config-3 trajectories (QLoRA on the 4×L4 rig, canary-gated) — the doctrine, moved from prompts into weights.</p>
+        <p class="pred">▸ resolve +≥ 4 pp paired; per-turn edit/spec rates ↑; canary set within 2 pp</p>
+        <p class="ground">[R] S18 SWE-smith 40.2% · S16/S17 LoRA-QLoRA · [F1–F3]</p></div>
+      <div class="hyp"><span class="hid">H7 · measurement upgrade<span class="tier">meta</span></span>
+        <p>Every comparison: same 30 frozen tasks × seeds {0,1,2}, paired by task×seed, <b>McNemar exact + bootstrap CI</b>, analyses pre-registered before runs.</p>
+        <p class="pred">▸ null-flag control passes p&gt;0.05 ≥ 95% (offline calibration check)</p>
+        <p class="ground">[R] S25/S26 · LB variance ±0.04 [V] · [F5]</p></div>
+      <div class="hyp"><span class="hid">H8 · asymmetry detector<span class="tier">evidence</span></span>
+        <p>A mechanical rule: local red whose signatures hit <b>old symbols the spec renamed</b>, while repro/proxy tests pass ⇒ asymmetry-expected — journal it, never revert. The t=09 entry, automated.</p>
+        <p class="pred">▸ fires before the naive revert in ≥ 90% of replayed episodes; FP ≤ 10%</p>
+        <p class="ground">[R] S10, S11 · Trap 1 [V] · [F4]</p></div>
+    </div>
+    <div class="warnbox">Pre-registered honesty: at n = 30 tasks × 3 seeds, McNemar detects ≈ ≥ 10–12 pp paired differences — several true-but-small effects (H3, H4 alone) are sub-detectable by design. The answer is mechanism-level endpoints (per-turn/per-edit rates, continuous and paired), the H3+H4 bundle where mechanisms align, and reporting CIs instead of verdicts for the small ones. This box exists so no one six weeks from now reads noise as a result.</div>
+  </div>
+  <div class="receipt"><span><b>02-hypotheses-and-test-plans.md</b> F1–F5 failure modes · sequencing DAG §3</span><span>15 / 19</span></div>
+</section>
+
+<!-- ============ 16 · DATA WISHLIST ============ -->
+<section class="slide" id="s16">
+  <div class="slide-inner" style="gap:11px">
+    <div class="kicker">No data, no hypotheses <span class="chip r" style="margin-left:8px"><span class="g">R</span> mechanism-level endpoints are where a 30-task study gets its power</span></div>
+    <h2>The data wishlist — twelve feeds, five of them unretrofittable</h2>
+    <p class="sub">Full field-by-field schemas live in <b>03-data-wishlist.md</b>. The design rule: if a datum exists only at decision time (a prediction, a belief, a micro-check result), it must be emitted live or it never exists. Instrumentation cost ≈ 5 days across Sprints 1–3 — less than one submission-day of L4 queue time [V], and it converts every later run into evidence for H1–H8 <i>and</i> the paper.</p>
+    <div class="stepgrid">
+      <div class="panel">
+        <h4><span class="tag">D1–D12</span>The twelve feeds at a glance</h4>
+        <table class="data">
+          <tbody>
+            <tr><td class="k">D1</td><td>per-turn telemetry — tool, phase, wall time, tokens, <b>context length, compaction events</b></td><td>H2,H4,H6,H7</td></tr>
+            <tr><td class="k">D2</td><td>belief log — hypotheses open, predicted-vs-actual per call (the VOI calibration set)</td><td>H2 ★</td></tr>
+            <tr><td class="k">D3</td><td>spec artifacts — k drafts, votes, schema errors, symbol_in_graph checks</td><td>H1</td></tr>
+            <tr><td class="k">D4</td><td>edit ledger — bug id, tree, micro-check result, fate (survived / fixed / discarded)</td><td>H4,H6</td></tr>
+            <tr><td class="k">D5</td><td>caller maps — callers by graph vs grep, reconciled, vs gold</td><td>H5</td></tr>
+            <tr><td class="k">D6</td><td>test-signal logs — per pytest run, error signatures, old/new symbol attribution</td><td>H3,H8</td></tr>
+            <tr><td class="k">D7</td><td>trajectory exports — SWE-smith-format transcripts (the RFT corpus)</td><td>H6 ★</td></tr>
+            <tr><td class="k">D8</td><td>run rollups — resolved, failure_code, loc/graph/edit counters (extends results.csv)</td><td>H7,all</td></tr>
+            <tr><td class="k">D9</td><td>environment lineage — model alias, <b>adapter hash, vLLM build, KV tokens</b>, sampling, thinking flag</td><td>H6 ★</td></tr>
+            <tr><td class="k">D10</td><td>asymmetry events — red signatures, detector verdicts, actions taken</td><td>H3,H8</td></tr>
+            <tr><td class="k">D11</td><td>classifier eval set — issue→template gold labels, double-labeled 20%</td><td>H1</td></tr>
+            <tr><td class="k">D12</td><td>budget &amp; rescue events — trips, force-submits, harness nudges</td><td>audit</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="ba-col">
+        <div class="panel">
+          <h4><span class="tag">★ lose-if-late</span>The five that cannot be reconstructed</h4>
+          <ol class="plain">
+            <li><b>D2 belief predictions</b> — exist only at decision time; H2's calibration endpoint dies without them.</li>
+            <li><b>D7 session transcripts</b> — the RFT corpus is collectible only live; SWE-smith's 50k scale came from trajectories-as-first-class-artifacts [S18].</li>
+            <li><b>D9 KV observations + adapter hashes</b> — with the adapter-bug trio [V], a run whose serving environment isn't self-describing is uninterpretable.</li>
+            <li><b>D4 micro-check results</b> — retroactive “would it have caught it” overestimates; the live signal is the honest one.</li>
+            <li><b>failure_code, assigned promptly</b> — codebook judgments drift; assign within a day, log the judge.</li>
+          </ol>
+        </div>
+        <div class="tm">
+          <span class="tmh">◆ teachable moment — why per-turn data beats per-run data</span>
+          A run gives you one bit per task (pass/fail); thirty tasks give thirty bits — enough for big effects only. Each turn inside the run is another paired observation of the <i>same mechanism</i> (did the edit land? did the call confirm?). Hundreds of turns make small improvements visible. This is why H7's power analysis says “mechanism endpoints first” — statistics is not about more confidence, it is about <b>where the information actually is</b>.
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="receipt"><span><b>03-data-wishlist.md</b> build order §6 · priorities P0/P1/P2 · formats JSONL</span><span>16 / 19</span></div>
+</section>
+
+<!-- ============ 17 · GLOSSARY I ============ -->
+<section class="slide" id="s17">
+  <div class="slide-inner" style="gap:11px">
+    <div class="kicker">Every term this deck used, defined properly — decision &amp; evidence vocabulary first</div>
+    <h2>Glossary I — decisions, evidence, experiments</h2>
+    <dl class="defs">
+      <div class="def"><dt>POMDP <span class="src">S1–S3</span></dt><dd>A <b>partially observable Markov decision process</b>: a tuple (S, A, T, O, r, γ) — states S, actions A, transition function T(s'|s,a), observation function O(o|s',a), reward r, discount γ — where the agent never sees s directly, only o. <span class="huh"><b>In this project:</b> the hidden state is the graded truth; tool outputs are o; BCF's five questions are the policy that maps beliefs to actions.</span></dd></div>
+      <div class="def"><dt>belief state <span class="src">S1</span></dt><dd>The probability distribution over hidden states given all observations so far; the sufficient statistic for acting optimally in a POMDP. <span class="huh"><b>Here:</b> externalized as spec + journal + ledger — written down so it can be audited instead of merely felt.</span></dd></div>
+      <div class="def"><dt>policy</dt><dd>A rule π mapping belief states to actions (or action distributions). Reactive loops, checklists, and computed-optimal controllers are all policies. <span class="huh"><b>Here:</b> slide 4's five questions = BCF's π; H2 proposes upgrading π's localization branch.</span></dd></div>
+      <div class="def"><dt>entropy</dt><dd>Shannon uncertainty of a distribution: H(X) = −Σ p(x) log p(x), in bits (log₂) — 0 when the answer is certain, maximal when all options are equally likely. <span class="huh"><b>Here:</b> “which hypothesis is true?” before vs after a tool call.</span></dd></div>
+      <div class="def"><dt>information gain · value of information <span class="src">S1–S3</span></dt><dd><b>IG:</b> expected entropy reduction from an observation: H(belief) − E[H(belief | result)]. <b>VOI:</b> the same idea priced — expected improvement in decision quality minus test cost. <span class="huh"><b>Here:</b> the localization ladder is a hand-coded IG ordering; H2 makes the score explicit; zero-IG calls (repeats) are budget waste by definition.</span></dd></div>
+      <div class="def"><dt>sequential diagnosis / multi-hypothesis testing <span class="src">S1</span></dt><dd>The problem of choosing tests one at a time, updating beliefs after each, to identify a hidden cause at least cost; optimal policies are computable only for structured cases (low-dimensional belief manifolds) and beat fixed heuristics there. <span class="huh"><b>Here:</b> the formal ancestor of “which tool call next.”</span></dd></div>
+      <div class="def"><dt>SBFL — spectrum-based fault localization <span class="src">S4–S8</span></dt><dd>Ranking program elements by suspiciousness scores computed from pass/fail spectra (e.g., Ochiai, Tarantula formulas over failed/passed test coverage). Established result: accuracy <b>decays as fault count grows</b> [S4]. <span class="huh"><b>Here:</b> the baseline paradigm BCF's spec-first localization replaces when no failing tests exist to build a spectrum from.</span></dd></div>
+      <div class="def"><dt>reward hacking · specification gaming · test overfitting <span class="src">S10–S12</span></dt><dd><b>Reward hacking / spec gaming:</b> scoring well by exploiting the evaluation process rather than doing the intended task. <b>Test overfitting:</b> its testing-instance — code that passes the observed tests while violating the specification [S11]. <span class="huh"><b>Here:</b> why BCF treats the issue text, not the visible suite, as the contract — and why H3 synthesizes its own held-out-style tests.</span></dd></div>
+      <div class="def"><dt>self-consistency <span class="src">S23</span></dt><dd>Sample a diverse set of reasoning paths (temperature &gt; 0), then take the answer most consistent across paths — marginalizing out the paths. <span class="huh"><b>Here:</b> H1 applies it to the spec itself: three drafts, per-field votes.</span></dd></div>
+      <div class="def"><dt>pre-registration</dt><dd>Committing hypotheses, procedures, and analysis to a fixed, timestamped artifact <i>before</i> data collection, so outcomes can falsify rather than merely illustrate. <span class="huh"><b>Here:</b> the BCF spec is pre-registration for the run; this package is pre-registration for the experiments (predictions marked [P]).</span></dd></div>
+    </dl>
+  </div>
+  <div class="receipt"><span><b>[R]</b> definitions per cited sources · official wording preserved where quoted</span><span>17 / 19</span></div>
+</section>
+
+<!-- ============ 18 · GLOSSARY II ============ -->
+<section class="slide" id="s18">
+  <div class="slide-inner" style="gap:11px">
+    <div class="kicker">The machine-learning vocabulary — defined at first use, collected here · official definitions from the primary papers</div>
+    <h2>Glossary II — parameters, LoRA, fine-tuning, and friends</h2>
+    <dl class="defs">
+      <div class="def"><dt>parameters (weights)</dt><dd>The learned numbers of a model — for a transformer, the entries of its weight matrices (plus biases). “31B” in <code class="inline">gemma-4-31b-it-qat-w4a16-ct</code> counts them. Training = adjusting parameters to lower a loss.</dd></div>
+      <div class="def"><dt>fine-tuning · full fine-tuning</dt><dd>Continuing training of a pretrained model on a narrower dataset. <b>Full</b> fine-tuning updates every parameter — powerful, but for a 31B model it means optimizer state for 31B numbers.</dd></div>
+      <div class="def"><dt>PEFT — parameter-efficient fine-tuning</dt><dd>The family of methods that update a small trainable addition while freezing the base weights — LoRA is the flagship member.</dd></div>
+      <div class="def"><dt>LoRA — Low-Rank Adaptation <span class="src">S16</span></dt><dd>Freeze the pretrained weight W₀ ∈ R^(d×k); learn only a low-rank update <b>ΔW = B·A</b>, with A ∈ R^(r×k), B ∈ R^(d×r), and rank <b>r ≪ min(d,k)</b>; the layer computes W₀x + BAx. Reported: up to 10,000× fewer trainable parameters and 3× less GPU memory than full fine-tuning of GPT-3 175B, on-par-or-better quality, and <i>no added inference latency</i> (merge the update into W₀). <span class="huh"><b>In this project:</b> the competition's sanctioned adaptation mechanism, served via vLLM multi-LoRA (§3.4) — with the standing canary-gate rule from the 2026-09-30 bug trio.</span></dd></div>
+      <div class="def"><dt>rank (r) · adapter</dt><dd><b>Rank r:</b> the width of the bottleneck in ΔW = BA — how many directions of change you buy; small r trains fewer numbers but expresses less. <b>Adapter:</b> the saved, mergeable artifact of adaptation (here: the LoRA delta, submitted per the multi-LoRA layout).</dd></div>
+      <div class="def"><dt>quantization · NF4 · QAT · W4A16 <span class="src">S24</span></dt><dd><b>Quantization:</b> storing/computing numbers at lower precision than 16/32-bit floats to save memory. <b>NF4:</b> QLoRA's 4-bit NormalFloat dtype, information-theoretically matched to normally distributed weights. <b>QAT — quantization-aware training:</b> training with simulated low-precision arithmetic so parameters learn to survive the later integer conversion. <b>W4A16:</b> weights 4-bit, activations 16-bit — the base model's serving format (hence “qat-w4a16” in its name). <span class="huh"><b>Teachable nuance:</b> QAT happens <i>before</i> deployment (Google did it); QLoRA happens <i>after</i>, adapting an already-quantized model.</span></dd></div>
+      <div class="def"><dt>QLoRA <span class="src">S17</span></dt><dd>Backpropagating gradients <i>through a frozen, 4-bit quantized</i> base model into LoRA adapters — fine-tuning reaches 16-bit-quality results at a fraction of the memory (a 65B model on one 48 GB GPU). <span class="huh"><b>Here:</b> the reason H6 fits the 4×L4 (96 GB) rig.</span></dd></div>
+      <div class="def"><dt>SFT — supervised fine-tuning</dt><dd>Training on demonstration sequences with the standard next-token loss, masked to the assistant's turns — “learn to behave like these transcripts.”</dd></div>
+      <div class="def"><dt>RFT — rejection-sampling fine-tuning <span class="src">S18</span></dt><dd>Sample many attempts per task, keep only the successes (rejection sampling), fine-tune on those. <span class="huh"><b>Here:</b> H6's engine — resolved Config-3 trajectories are, by construction, doctrine-following trajectories. SWE-smith used RFT to reach 40.2% Pass@1 with SWE-agent-LM-32B.</span></dd></div>
+      <div class="def"><dt>Pass@1</dt><dd>The fraction of tasks solved by a single sampled attempt (versus Pass@k's best-of-k) — the metric SWE-bench leaderboards report and this competition's resolve rate mirrors.</dd></div>
+      <div class="def"><dt>GRPO — Group Relative Policy Optimization <span class="src">S19–S20</span></dt><dd>A reinforcement-learning algorithm (from DeepSeekMath) that samples a <i>group</i> of rollouts per prompt, computes each rollout's advantage as its reward standardized within the group, and optimizes the policy against that — dropping PPO's separate value network. <span class="huh"><b>Here:</b> the plausible <i>next-next</i> lever (RL on resolve signal) once H6's SFT plateau lands; not scheduled this window.</span></dd></div>
+      <div class="def"><dt>catastrophic forgetting <span class="src">S21–S22</span></dt><dd>New-task training degrading old capabilities — for LoRA, updates interfering with the dominant singular directions that carry pretrained knowledge. Mitigations: replay data, regularization, orthogonal projection. <span class="huh"><b>Here:</b> why H6 mixes general-instruction data and why P3 (the canary set within 2 pp) is a gate, not a nicety.</span></dd></div>
+    </dl>
+  </div>
+  <div class="receipt"><span><b>[R]</b> S16 LoRA 2106.09685 · S17 QLoRA 2305.14314 · S18 SWE-smith 2504.21798 · S19–S22 as cited</span><span>18 / 19</span></div>
+</section>
+
+<!-- ============ 19 · RECEIPTS ============ -->
+<section class="slide" id="s19">
+  <div class="slide-inner" style="gap:12px">
+    <div class="kicker">Everything re-checkable <span class="chip v" style="margin-left:8px"><span class="g">✓</span> generated 2026-10-06</span></div>
+    <h2>Receipts, tiers, and what would change the answer</h2>
+    <div class="twocol">
+      <div class="panel">
+        <h4>The four tiers, one last time</h4>
+        <ul class="plain">
+          <li><b>[V] — verified:</b> harness schemas and budgets (§6–7), two-container lifecycle and anti-tamper reset (§8.2), graph node ids, the snapshot's four traps, gold and test patches. Re-derivable from doc-03 §9's commands.</li>
+          <li><b>[SIM] — simulated:</b> the 24-call trajectory; design targets grounded in [V] artifacts. Replacement: measured Config 1/2/3 runs, seeds {0,1,2}.</li>
+          <li><b>[EST] — estimated:</b> all durations; anchors 60 min / 50 calls / 300 s; assumptions A1–A4 (slide 13) are the whole model. No per-turn latency data existed for this harness — none was invented.</li>
+          <li><b>[R] — research-grounded:</b> 26 sources fetched/surfaced 2026-10-06, keyless engines only (research-toolkit; tavily-free allowance + DDG; zero MCP quota). Transcripts in <code class="inline">scratch/research-bcf-accuracy-2026-10/</code>; every S# resolves in 01-research-evidence.md. Transfer caveats are flagged there (SpecBench's domain, single-source items, the routing-vs-reflection disagreement).</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h4>What would move the numbers</h4>
+        <ul class="plain">
+          <li><b>Slower turns (A1 violated):</b> at 60 s/turn the total ≈ 26 min — still 43% of budget; the design degrades gracefully. Tier-2's ≤ 6 extra calls keep worst case ≈ 30 min.</li>
+          <li><b>Harness fixes:</b> the adapter-bug trio and Q3 thinking-drop [V] gate H6 and sampling choices respectively — re-probe before locking either.</li>
+          <li><b>A harder task:</b> read windows and subgraphs grow toward the 5k/10k caps; H2's savings grow with repo size while the fixed ladder's cost grows linearly — the tier gap widens.</li>
+          <li><b>Falsified mechanisms:</b> any H that clears mechanism endpoints but not task-level resolve redirects effort to H6-or-bust + the paper track (02-hypotheses §4) — a finding either way.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="term">
+      <div class="term-bar"><i></i><i></i><i></i></div>
+      <div class="term-body">
+        <span class="p"># companions:</span><br>
+        <span class="out">01-research-evidence.md&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# six themes, 26 sources, disagreements flagged (S# ids resolve here)</span><br>
+        <span class="out">02-hypotheses-and-test-plans.md&nbsp;# H1–H8: mechanisms, predictions, stats, decision rules, sequencing</span><br>
+        <span class="out">03-data-wishlist.md&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# D1–D12 feeds, build order, the five unretrofittable data points</span><br>
+        <span class="out">../2026-09-30-2/…slides.v3.html&nbsp;# v3: the same run, before/during/after per step — v4's factual base</span><br>
+        <span class="p">$ python scratch/qc-tables.py deliverables/2026-10-06/*.md&nbsp;&nbsp;# QC: all tables pass</span>
+      </div>
+    </div>
+    <div class="warnbox">QC performed on this deck: rendered and screenshot-checked at 1440×900 and 1280×900 — all 19 slides, nav rail, tooltips, ribbon/ladder/time charts verified; no horizontal overflow. Palette and chart grammar inherited from the validated v3 system.</div>
+  </div>
+  <div class="receipt"><span><b>QC</b> slides verified 1440×900 &amp; 1280×900 · tables via qc-tables.py</span><span>19 / 19</span></div>
+</section>
+
+</main>
+<div class="tooltip" id="tip" role="status" aria-hidden="true"></div>
+
+<script>
+(function(){
+"use strict";
+var C = {s1:"#3987e5", s2:"#d95926", s3:"#199e70", s4:"#c98500", s5:"#d55181",
+         ink:"#eef1f5", ink2:"#aab4c0", ink3:"#7a8694", deem:"#566070",
+         hair:"rgba(255,255,255,.14)", grid:"rgba(255,255,255,.08)", surface:"#151a21"};
+var PH = {
+  spec:{c:C.s5,label:"spec"}, loc:{c:C.s1,label:"localize"},
+  edit:{c:C.s2,label:"patch"}, val:{c:C.s3,label:"validate"}, sub:{c:C.s4,label:"verdict"}
+};
+
+/* ---------- the canonical 24-call trace [SIM] ---------- */
+var bcfCalls = [
+ {c:0,k:"spec",free:true, tool:"get_status()",note:"free — budgets confirmed; no failing_tests field exists"},
+ {c:1,k:"spec",tool:"run_skill_script: classify_issue(issue text)",note:"feature + refactor signals → compat_or_refactor template"},
+ {c:2,k:"spec",tool:"write_spec {B1–B5, fix_order, validation_plan}",note:"G0 passes — file tools unblock; B3 written before any file opened"},
+ {c:3,k:"loc",tool:"search_similar_code('HTTPParser')",note:"sync + async parser nodes — dual tree in one call"},
+ {c:4,k:"loc",tool:"get_code_subgraph([parsers, connections] × both trees)",note:"mirror structure explicit"},
+ {c:5,k:"loc",tool:"get_code_neighbors('…HTTPParser.complete')",note:"intra-class only — no cross-file callers in this graph"},
+ {c:6,k:"loc",tool:"read_file: _server.py 85–105",note:"B3 confirmed: no-parens call at :92"},
+ {c:7,k:"loc",tool:"read_file: _network.py 155–185",note:"B4 confirmed: GenericAlias at :163"},
+ {c:8,k:"edit",tool:"edit_file: B1 sync _parsers.py ×3",note:"journal t=09 written here — local red expected"},
+ {c:9,k:"edit",tool:"edit_file: B1 async _parsers.py ×3",note:"mirror"},
+ {c:10,k:"edit",tool:"edit_file: B1 sync _pool.py ×2",note:"_complete → _reset"},
+ {c:11,k:"edit",tool:"edit_file: B1 async _pool.py ×2",note:"mirror"},
+ {c:12,k:"edit",tool:"edit_file: B1+B3 sync _server.py ×2",note:"rename kills the no-parens no-op"},
+ {c:13,k:"edit",tool:"edit_file: B1+B3 async _server.py ×2",note:"mirror"},
+ {c:14,k:"edit",tool:"edit_file: B2 is_keepalive() sync",note:"is_idle/is_closed naming convention"},
+ {c:15,k:"edit",tool:"edit_file: B2 is_keepalive() async",note:"mirror"},
+ {c:16,k:"edit",tool:"edit_file: B4 _network.py ×3",note:"init fix · is_closed · close-on-exit — ungraded"},
+ {c:17,k:"edit",tool:"edit_file: B5 wait() KeyboardInterrupt",note:"ungraded, issue bullet 5"},
+ {c:18,k:"edit",tool:"edit_file: B5 Response(500, content=…)",note:"fixes the 500-path TypeError"},
+ {c:19,k:"val",tool:"write_file: /tmp/repro_reset.py",note:"outside /workspace — never leaks into the patch"},
+ {c:20,k:"val",tool:"run_command: python /tmp/repro_reset.py",note:"new-API contract: PASS"},
+ {c:21,k:"val",tool:"edit_file ×5: migrate visible tests",note:"refactor hygiene; discarded in Container B"},
+ {c:22,k:"val",tool:"run_command: pytest tests/test_parsers.py",note:"G4: 24 passed"},
+ {c:23,k:"val",tool:"run_command: pytest test_pool + test_client",note:"G5: no regression"},
+ {c:24,k:"sub",free:true,tool:"submit_patch()",note:"free, last — gates all-true; files_changed: 8"}
+];
+
+/* ---------- svg helpers ---------- */
+var NS="http://www.w3.org/2000/svg";
+function el(n,a,p){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e}
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;")}
+
+function buildRibbon(mount){
+  var W=1080, phases=[{from:1,to:2,k:"spec"},{from:3,to:7,k:"loc"},{from:8,to:18,k:"edit"},{from:19,to:23,k:"val"}];
+  var rowH=30, padTop=34, padBot=58, H=padTop+rowH+padBot, x0=64, x1=W-16, maxCall=50;
+  var svg=el("svg",{viewBox:"0 0 "+W+" "+H,role:"img"},null);
+  var gGrid=el("g",null,svg), gTicks=el("g",null,svg), gBot=el("g",null,svg);
+  var x=function(c){return x0+(c/maxCall)*(x1-x0)};
+  [0,10,20,30,40,50].forEach(function(t){
+    el("line",{x1:x(t),x2:x(t),y1:padTop-6,y2:padTop+rowH+8,stroke:C.grid,"stroke-width":1},gGrid);
+    var tx=el("text",{x:x(t),y:padTop+rowH+22,"text-anchor":"middle",fill:C.ink3,"font-size":11},gGrid);
+    tx.textContent=t===50?"budget 50":String(t);
+  });
+  el("line",{x1:x0,x2:x1,y1:padTop+rowH/2,y2:padTop+rowH/2,stroke:C.grid,"stroke-width":1},gGrid);
+  bcfCalls.forEach(function(d){
+    var cx=x(d.c), col=PH[d.k].c;
+    var t=el("rect",{x:cx-3,y:padTop+rowH/2-11,width:6,height:22,rx:2.5,fill:col,class:"tick"},gTicks);
+    if(d.free){t.setAttribute("fill",C.surface);t.setAttribute("stroke",col);t.setAttribute("stroke-width",2)}
+    t.dataset.c=d.c; t.dataset.tool=d.tool; t.dataset.note=d.note||""; t.dataset.free=!!d.free;
+    t.dataset.cat=PH[d.k].label; t.dataset.col=col;
+    t.setAttribute("tabindex","0");
+  });
+  phases.forEach(function(p){
+    var a=x(p.from), b=x(p.to);
+    el("line",{x1:a,x2:b,y1:padTop+rowH+34,y2:padTop+rowH+34,stroke:PH[p.k].c,"stroke-width":2},gBot);
+    el("line",{x1:a,x2:a,y1:padTop+rowH+34,y2:padTop+rowH+28,stroke:PH[p.k].c,"stroke-width":2},gBot);
+    el("line",{x1:b,x2:b,y1:padTop+rowH+34,y2:padTop+rowH+28,stroke:PH[p.k].c,"stroke-width":2},gBot);
+    var tx=el("text",{x:(a+b)/2,y:padTop+rowH+50,"text-anchor":"middle",fill:C.ink2,"font-size":11},gBot);
+    tx.textContent=PH[p.k].label;
+  });
+  mount.appendChild(svg);
+  mount.insertAdjacentHTML("afterbegin",'<div class="legend">'+["spec","loc","edit","val","sub"].map(function(k){
+    return '<span class="li"><span class="sw" style="background:'+PH[k].c+'"></span>'+PH[k].label+'</span>';
+  }).join("")+'<span class="li" style="color:var(--ink-3)">hollow tick = free call</span></div>');
+  return svg;
+}
+
+/* ---------- time range chart [EST] ---------- */
+var timeRows=[
+ ["spec",1,2,"spec","c0–c2 · 3 turns, light tools","≈ 1–2 min"],
+ ["localize",1.5,3,"loc","c3–c7 · 3 graph calls + 2 reads","≈ 1.5–3 min"],
+ ["patch",4,8,"edit","c8–c18 · 11 edit turns","≈ 4–8 min"],
+ ["validate",2,4,"val","c19–c23 · repro + 2 pytest runs","≈ 2–4 min"],
+ ["submit",0.17,0.33,"sub","c24 · free, one short turn","≈ 10–20 s"]
+];
+function buildTime(mount){
+  var W=900,rowH=18,gap=11,padL=96,padR=118,bw=W-padL-padR,max=60;
+  var H=timeRows.length*(rowH+gap)+40;
+  var svg=el("svg",{viewBox:"0 0 "+W+" "+H,role:"img"},null);
+  var x=function(m){return padL+(m/max)*bw};
+  var top=8, bot=H-24;
+  el("rect",{x:x(8),y:top,width:x(17)-x(8),height:bot-top,fill:"rgba(255,255,255,.05)"},svg);
+  var bt=el("text",{x:x(12.5),y:top-1,"text-anchor":"middle",fill:C.ink3,"font-size":11},svg);
+  bt.textContent="total ≈ 8–17 min";
+  [0,10,20,30,40,50,60].forEach(function(t){
+    el("line",{x1:x(t),x2:x(t),y1:top,y2:bot,stroke:C.grid,"stroke-width":1},svg);
+    var tx=el("text",{x:x(t),y:bot+16,"text-anchor":"middle",fill:C.ink3,"font-size":11},svg);
+    tx.textContent=t===60?"60":"";
+    if(t===60){tx.setAttribute("fill",C.ink2);tx.textContent="60-min budget"}
+  });
+  timeRows.forEach(function(d,i){
+    var y=top+10+i*(rowH+gap);
+    var lab=el("text",{x:0,y:y+rowH/2+4,fill:C.ink2,"font-size":12},svg); lab.textContent=d[0];
+    var a=x(d[1]), b=Math.max(x(d[2]),x(d[1])+6);
+    var r=el("rect",{x:a,y:y,width:b-a,height:rowH,rx:4,fill:PH[d[3]].c},svg);
+    r.dataset.ph=d[0]; r.dataset.calls=d[4]; r.dataset.rng=d[5]; r.dataset.col=PH[d[3]].c;
+    var v=el("text",{x:b+8,y:y+rowH/2+4,fill:C.ink2,"font-size":12,"font-weight":600},svg);
+    v.textContent=d[5];
+  });
+  mount.appendChild(svg);
+  mount.insertAdjacentHTML("afterbegin",'<div class="legend">'+["spec","loc","edit","val","sub"].map(function(k){
+    return '<span class="li"><span class="sw" style="background:'+PH[k].c+'"></span>'+PH[k].label+'</span>';
+  }).join("")+'</div>');
+}
+
+/* ---------- tier ladder chart [SIM/R] ---------- */
+var ladderRows=[
+ {label:"naive",v:43,rng:null,col:C.s2,note:"43 calls [SIM] · reactive · dies of test_misread"},
+ {label:"BCF today",v:24,rng:null,col:C.s1,note:"24 calls [SIM design target] · spec-first + gates + journal"},
+ {label:"tier 2 (proposed)",v:24,rng:30,col:C.s3,note:"24–30 calls · H1–H5 add ≤ 6 mechanism calls; H6 trains them in"}
+];
+function buildLadder(mount){
+  var W=720,rowH=24,gap=14,padL=150,padR=36,bw=W-padL-padR,max=50;
+  var H=ladderRows.length*(rowH+gap)+30;
+  var svg=el("svg",{viewBox:"0 0 "+W+" "+H,role:"img"},null);
+  var x=function(c){return padL+(c/max)*bw};
+  var top=6, bot=H-22;
+  [0,10,20,30,40,50].forEach(function(t){
+    el("line",{x1:x(t),x2:x(t),y1:top,y2:bot,stroke:C.grid,"stroke-width":1},svg);
+    var tx=el("text",{x:x(t),y:bot+15,"text-anchor":"middle",fill:C.ink3,"font-size":11},svg);
+    tx.textContent=t===50?"budget 50":String(t);
+  });
+  ladderRows.forEach(function(d,i){
+    var y=top+6+i*(rowH+gap);
+    var lab=el("text",{x:0,y:y+rowH/2+4,fill:C.ink2,"font-size":12},svg); lab.textContent=d.label;
+    var a=x(0), b=x(d.v);
+    var r=el("rect",{x:a,y:y,width:b-a,height:rowH,rx:4,fill:d.col},svg);
+    r.dataset.ph=d.label; r.dataset.calls=d.note; r.dataset.rng="calls: "+d.v+(d.rng?("–"+d.rng):""); r.dataset.col=d.col;
+    if(d.rng){
+      el("rect",{x:b,y:y,width:x(d.rng)-b,height:rowH,rx:4,fill:C.surface,stroke:d.col,"stroke-width":2,"stroke-dasharray":"3 3"},svg);
+    }
+    var v=el("text",{x:x(d.rng?d.rng:d.v)+8,y:y+rowH/2+4,fill:C.ink2,"font-size":12,"font-weight":600},svg);
+    v.textContent=d.rng?(d.v+"–"+d.rng):String(d.v);
+  });
+  mount.appendChild(svg);
+}
+
+/* ---------- per-call estimate table ---------- */
+var callTimes=[
+ ["0 (free)","get_status()","10–20","<0.1"],
+ ["1","classify_issue script","15–30","1–3"],
+ ["2","write_spec (longest single turn)","25–60","<1"],
+ ["3","search_similar_code","15–30","<1"],
+ ["4","get_code_subgraph (big payload)","20–40","<1"],
+ ["5","get_code_neighbors","15–30","<1"],
+ ["6","read_file _server.py","15–30","<0.1"],
+ ["7","read_file _network.py","15–30","<0.1"],
+ ["8–18","edit_file ×11 (exact old/new strings)","20–45 each","<1 each"],
+ ["19","write_file /tmp/repro_reset.py","20–40","<1"],
+ ["20","run repro script","15–25","1–3"],
+ ["21","migrate visible tests ×5 (one turn)","40–90","<1"],
+ ["22","pytest test_parsers.py","15–30","3–15"],
+ ["23","pytest test_pool + test_client","15–30","3–15"],
+ ["24 (free)","submit_patch()","10–20","<1"]
+];
+document.getElementById("callTimes").innerHTML =
+ '<table><thead><tr><th>call</th><th>tool</th><th>turn [EST] s</th><th>exec [EST] s</th></tr></thead><tbody>'+
+ callTimes.map(function(r){return '<tr><td>'+esc(r[0])+'</td><td>'+esc(r[1])+'</td><td>'+esc(r[2])+'</td><td>'+esc(r[3])+'</td></tr>'}).join("")+
+ '</tbody></table>';
+
+buildTime(document.getElementById("timeChart"));
+buildLadder(document.getElementById("ladderChart"));
+
+/* ---------- tooltips ---------- */
+var tip=document.getElementById("tip");
+function moveTip(ev){
+  var pad=14,w=tip.offsetWidth,h=tip.offsetHeight;
+  var x=ev.clientX+w+pad>innerWidth?ev.clientX-w-pad:ev.clientX+pad;
+  var y=Math.max(8,Math.min(innerHeight-h-8,ev.clientY-h/2));
+  tip.style.left=x+"px";tip.style.top=y+"px";
+}
+function showTip(html,ev){tip.innerHTML=html;tip.classList.add("on");moveTip(ev)}
+function hideTip(){tip.classList.remove("on")}
+
+var rbSvg=buildRibbon(document.getElementById("ribbonBcf"));
+var ticks=Array.prototype.slice.call(rbSvg.querySelectorAll(".tick"));
+function nearest(ev){
+  var pt=rbSvg.createSVGPoint(); pt.x=ev.clientX; pt.y=ev.clientY;
+  var p=pt.matrixTransform(rbSvg.getScreenCTM().inverse());
+  var best=null,bd=1e9;
+  ticks.forEach(function(t){
+    var d=Math.abs((parseFloat(t.getAttribute("x"))+3)-p.x);
+    if(d<bd){bd=d;best=t}
+  });
+  return bd<26?best:null;
+}
+rbSvg.addEventListener("mousemove",function(ev){
+  var t=nearest(ev);
+  if(t){ticks.forEach(function(o){o.setAttribute("opacity",o===t?"1":".45")});
+    showTip('<div class="t-call">call '+t.dataset.c+(t.dataset.free==="true"?' · free':'')+
+      ' <span class="sw" style="background:'+t.dataset.col+'"></span>'+esc(t.dataset.cat)+'</div>'+
+      '<div class="t-tool">'+esc(t.dataset.tool)+'</div>'+
+      (t.dataset.note?'<div class="t-note">'+esc(t.dataset.note)+'</div>':''),ev)}
+  else{ticks.forEach(function(o){o.removeAttribute("opacity")});hideTip()}
+});
+rbSvg.addEventListener("mouseleave",function(){ticks.forEach(function(o){o.removeAttribute("opacity")});hideTip()});
+ticks.forEach(function(t){
+  t.addEventListener("focus",function(){showTip('<div class="t-call">call '+t.dataset.c+'</div><div class="t-tool">'+esc(t.dataset.tool)+'</div>',{clientX:innerWidth/2,clientY:innerHeight/2-120})});
+  t.addEventListener("blur",hideTip);
+});
+document.querySelectorAll("#timeChart rect[data-ph],#ladderChart rect[data-ph]").forEach(function(r){
+  r.addEventListener("mouseenter",function(ev){
+    showTip('<div class="t-call">'+esc(r.dataset.ph)+' <span class="sw" style="background:'+r.dataset.col+'"></span></div>'+
+      '<div class="t-tool">'+esc(r.dataset.calls)+'</div><div class="t-note">'+esc(r.dataset.rng||'')+'</div>',ev);
+  });
+  r.addEventListener("mousemove",moveTip);
+  r.addEventListener("mouseleave",hideTip);
+});
+
+/* ---------- boot sequence ---------- */
+var reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
+var boot=document.getElementById("bootlines");
+var lines=[
+ {cls:"p",txt:"$ swegemma eval --task-id httpx_3672 --config 3 --seed 0"},
+ {cls:"out",txt:"[harness] Container A up · 9 tools · budgets: 50 calls / 60 min / 500 turns"},
+ {cls:"out",txt:"[bcf] G0 engaged — file access blocked until a valid spec exists"},
+ {cls:"out",txt:"[v4] 8 steps, 24 calls — and the decision rule behind every one of them"}
+];
+if(reduced){
+  boot.innerHTML=lines.map(function(l){return '<span class="'+l.cls+'">'+esc(l.txt)+'</span>'}).join("<br>")+'<br>';
+  document.querySelectorAll(".fadein").forEach(function(e){e.classList.add("in")});
+}else{
+  var li=0,ci=0,out="";
+  function step(){
+    if(li>=lines.length){["heroBlock","heroChips"].forEach(function(id,i){setTimeout(function(){document.getElementById(id).classList.add("in")},120+i*260)});return}
+    var l=lines[li];
+    if(ci===0){out+=(out?"<br>":"")+'<span class="'+l.cls+'">'}
+    ci++;
+    if(ci>=l.txt.length){out+=esc(l.txt)+"</span>";li++;ci=0;boot.innerHTML=out;setTimeout(step,li===1?300:140)}
+    else{boot.innerHTML=out+esc(l.txt.slice(0,ci))+'<span class="cursor"></span>';setTimeout(step,14+Math.random()*26)}
+  }
+  step();
+}
+
+/* ---------- deck nav ---------- */
+var slides=Array.prototype.slice.call(document.querySelectorAll(".slide"));
+var railBtns=Array.prototype.slice.call(document.querySelectorAll(".rail button"));
+railBtns.forEach(function(b){b.addEventListener("click",function(){slides[+b.dataset.i].scrollIntoView({behavior:reduced?"auto":"smooth"})})});
+document.addEventListener("keydown",function(e){
+  if(e.target.tagName==="SUMMARY"||e.target.tagName==="BUTTON"||e.target.tagName==="A")return;
+  var cur=slides.findIndex(function(s){var r=s.getBoundingClientRect();return r.top>= -innerHeight/2 && r.top < innerHeight/2});
+  var go=null;
+  if(e.key==="ArrowDown"||e.key==="PageDown"||e.key===" ")go=Math.min(slides.length-1,cur+1);
+  else if(e.key==="ArrowUp"||e.key==="PageUp")go=Math.max(0,cur-1);
+  else if(e.key==="Home")go=0; else if(e.key==="End")go=slides.length-1;
+  if(go!==null){e.preventDefault();slides[go].scrollIntoView({behavior:reduced?"auto":"smooth"})}
+});
+if("IntersectionObserver" in window){
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(en){
+      if(en.isIntersecting){
+        var i=slides.indexOf(en.target);
+        railBtns.forEach(function(b){b.setAttribute("aria-current",String(+b.dataset.i===i))});
+        en.target.querySelectorAll(".fadein").forEach(function(f){f.classList.add("in")});
+      }
+    });
+  },{threshold:.55});
+  slides.forEach(function(s){io.observe(s)});
+}
+})();
+</script>
+</body>
+</html>

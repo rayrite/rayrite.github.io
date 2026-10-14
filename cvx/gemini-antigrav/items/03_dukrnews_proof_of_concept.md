@@ -3,7 +3,7 @@
 **Classification**: CVX Unified Research Collection  
 **Source Deliverable**: `2026-10-12-dukrnews-proof-of-concept`  
 **Constituent Files**: 2 documents  
-**Generated**: 2026-10-14 01:10:49  
+**Generated**: 2026-10-14 03:18:38  
 
 ---
 

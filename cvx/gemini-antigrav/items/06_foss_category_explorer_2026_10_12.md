@@ -1,9 +1,9 @@
-# Foss Category Explorer
+# FOSS Category Explorer (2026-10-12 Edition)
 
 **Classification**: CVX Unified Research Collection  
 **Source Deliverable**: `2026-10-12-foss-category-explorer`  
 **Constituent Files**: 12 documents  
-**Generated**: 2026-10-14 03:18:38  
+**Generated**: 2026-10-14 03:57:27  
 
 ---
 

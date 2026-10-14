@@ -3,7 +3,7 @@
 **Classification**: CVX Unified Research Collection  
 **Source Deliverable**: `2026-10-13-game-engine-ide-automation-agentic-roundup`  
 **Constituent Files**: 8 documents  
-**Generated**: 2026-10-14 03:18:39  
+**Generated**: 2026-10-14 03:57:28  
 
 ---
 

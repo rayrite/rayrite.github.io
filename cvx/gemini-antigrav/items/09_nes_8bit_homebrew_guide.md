@@ -3,7 +3,7 @@
 **Classification**: CVX Unified Research Collection  
 **Source Deliverable**: `2026-10-12-nes-8bit-homebrew-guide`  
 **Constituent Files**: 2 documents  
-**Generated**: 2026-10-14 03:18:39  
+**Generated**: 2026-10-14 03:57:28  
 
 ---
 

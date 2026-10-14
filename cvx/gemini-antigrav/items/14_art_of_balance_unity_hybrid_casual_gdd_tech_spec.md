@@ -3,7 +3,7 @@
 **Classification**: CVX Unified Research Collection  
 **Source Deliverable**: `2026-10-13-art-of-balance-unity-hybrid-casual-gdd-tech-spec`  
 **Constituent Files**: 11 documents  
-**Generated**: 2026-10-14 03:18:39  
+**Generated**: 2026-10-14 03:57:28  
 
 ---
 

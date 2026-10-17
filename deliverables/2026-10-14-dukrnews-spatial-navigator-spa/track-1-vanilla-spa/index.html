@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DukrNews Spatial Navigator — Track 1 (Vanilla SPA)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="theme-obsidian">
+
+  <!-- TOP HUD -->
+  <header class="hud-header">
+    <div class="logo-cluster">
+      <div class="logo-badge">D</div>
+      <div>
+        <div class="logo-text">DukrNews Spatial</div>
+      </div>
+      <div class="logo-tag">Track 1: Vanilla SPA</div>
+    </div>
+
+    <!-- PRIMARY UNIFIED VIEW SWITCHER -->
+    <div class="view-switcher-group">
+      <div class="primary-mode-tabs">
+        <button class="primary-tab-btn active" id="tabSpatialMode">
+          <span>🌌 Dual-Mode Spatial Canvas</span>
+        </button>
+        <button class="primary-tab-btn" id="tabKineticMode">
+          <span>📰 Kinetic Column Wire</span>
+        </button>
+      </div>
+
+      <!-- Spatial Sub-Toggle -->
+      <div class="spatial-sub-toggle" id="spatialSubToggle">
+        <button class="sub-btn active" id="subBtnConstellation">Force Constellation</button>
+        <button class="sub-btn" id="subBtnGeospatial">Geospatial World</button>
+      </div>
+    </div>
+
+    <!-- THEMES (Obsidian, Swiss, Sci-Fi) -->
+    <div class="theme-selector">
+      <span style="font-size: 11px; color: var(--text-muted); font-family: var(--font-mono);">THEME:</span>
+      <button class="theme-btn active" data-theme="theme-obsidian">Obsidian</button>
+      <button class="theme-btn" data-theme="theme-swiss">Swiss</button>
+      <button class="theme-btn" data-theme="theme-scifi">Sci-Fi</button>
+    </div>
+  </header>
+
+  <!-- MAIN WORKSPACE -->
+  <main class="workspace">
+    <!-- Telemetry HUD Badge -->
+    <div class="telemetry-badge">
+      <span>FPS: <strong id="fpsVal" class="fps-good">60</strong></span>
+      <span>VIEW: <strong id="activeViewLabel" style="color: var(--accent);">Spatial / Constellation</strong></span>
+      <span style="color: rgba(255,255,255,0.4);">[Tab] Toggle Wire | [Space] Reset | [j/k] Scroll</span>
+    </div>
+
+    <!-- Interactive Canvas Stage (Spatial Universe) -->
+    <canvas id="stage"></canvas>
+
+    <!-- Kinetic Column Wire View (Bloomberg / TweetDeck Style) -->
+    <div class="kinetic-wire-container" id="kineticWireContainer">
+      <div class="feed-column">
+        <div class="feed-header">
+          <span>Harvested Story Feed</span>
+          <span style="color: var(--accent);">276 Stories</span>
+        </div>
+        <div class="feed-scroll" id="feedStoriesList"></div>
+      </div>
+
+      <div class="feed-column">
+        <div class="feed-header">
+          <span>Multi-Perspective Coverage</span>
+          <span style="font-family: var(--font-mono); color: var(--text-muted);">Left / Center / Right</span>
+        </div>
+        <div class="feed-scroll" id="feedPerspectivesList">
+          <div style="color: var(--text-muted); font-size: 13px; text-align: center; margin-top: 50px;">
+            Select any story on the left to compare publisher framing and bias angles.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live Floating Micro-Radar for Kinetic Columns -->
+    <div class="micro-radar-box" id="microRadarBox">
+      <div class="radar-header">
+        <span>Story Entity Radar</span>
+        <span id="radarActiveStoryLabel" style="color: var(--text-muted);">Active Node</span>
+      </div>
+      <canvas id="radarCanvas"></canvas>
+    </div>
+
+    <!-- Bottom Filter HUD (Shared across views) -->
+    <div class="filter-hud">
+      <button class="filter-chip active" data-filter="all">All Entities</button>
+      <button class="filter-chip" data-filter="person"><span class="dot" style="background: var(--entity-person);"></span>People</button>
+      <button class="filter-chip" data-filter="topic"><span class="dot" style="background: var(--entity-topic);"></span>Topics</button>
+      <button class="filter-chip" data-filter="place"><span class="dot" style="background: var(--entity-place);"></span>Places</button>
+      <button class="filter-chip" data-filter="thing"><span class="dot" style="background: var(--entity-thing);"></span>Things</button>
+      <button class="filter-chip" data-filter="story"><span class="dot" style="background: var(--entity-story);"></span>Stories</button>
+      <button class="filter-chip" id="btnResetView" style="margin-left: 8px; color: var(--accent);">⟲ Reset Camera</button>
+    </div>
+
+    <!-- Slide-Out Intelligence Drawer (Shared across views) -->
+    <aside class="intel-drawer" id="intelDrawer">
+      <div class="drawer-header">
+        <div>
+          <span class="drawer-type-badge" id="drawerTypeBadge" style="background: rgba(56, 189, 248, 0.2); color: var(--accent);">Story</span>
+          <h2 class="drawer-title" id="drawerTitle">Loading Intelligence...</h2>
+        </div>
+        <button class="drawer-close-btn" id="drawerCloseBtn">✕</button>
+      </div>
+      <div class="drawer-content">
+        <!-- Summary / Overview -->
+        <div>
+          <div class="drawer-section-title">Context & Overview</div>
+          <p id="drawerSummary" style="font-size: 13px; line-height: 1.5; color: var(--text-muted);"></p>
+        </div>
+
+        <!-- Bias Spectrum Breakdown -->
+        <div id="drawerBiasSection">
+          <div class="drawer-section-title">Political Bias Distribution</div>
+          <div class="bias-spectrum-meter">
+            <div class="bias-legend">
+              <span style="color: var(--bias-left);">Left: <strong id="biasLeftVal">0%</strong></span>
+              <span style="color: var(--bias-center);">Center: <strong id="biasCenterVal">0%</strong></span>
+              <span style="color: var(--bias-right);">Right: <strong id="biasRightVal">0%</strong></span>
+            </div>
+            <div class="bias-bar-wrap">
+              <div class="bias-bar-left" id="biasBarLeft" style="width: 25%;"></div>
+              <div class="bias-bar-center" id="biasBarCenter" style="width: 50%;"></div>
+              <div class="bias-bar-right" id="biasBarRight" style="width: 25%;"></div>
+            </div>
+            <div style="font-size: 11px; color: var(--text-muted); font-family: var(--font-mono); text-align: center;" id="sourceCountBadge">
+              Based on reporting news sources
+            </div>
+          </div>
+        </div>
+
+        <!-- Entity Hop Navigation -->
+        <div>
+          <div class="drawer-section-title">Connected Entities (Click to Hop)</div>
+          <div class="entity-hop-grid" id="drawerHopTags"></div>
+        </div>
+
+        <!-- Multi-Perspective Headlines -->
+        <div id="drawerHeadlinesSection">
+          <div class="drawer-section-title">Publisher Headlines</div>
+          <div class="headlines-list" id="drawerHeadlinesList"></div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Hover Tooltip -->
+    <div id="tooltip"></div>
+  </main>
+
+  <!-- Offline Data Bundle Fallback -->
+  <script src="data/bundle.js"></script>
+
+  <!-- Modular Vanilla Architecture -->
+  <script src="js/data.js"></script>
+  <script src="js/physics.js"></script>
+  <script src="js/engine.js"></script>
+  <script src="js/navigation.js"></script>
+  <script src="js/wire.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

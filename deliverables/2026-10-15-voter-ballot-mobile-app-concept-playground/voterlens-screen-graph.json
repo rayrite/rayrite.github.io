@@ -1,0 +1,950 @@
+{
+  "$schema": "ScreenFlowGraph",
+  "description": "Complete navigation and interaction graph for VoterLens Michigan 2026 Mobile Application",
+  "appMeta": {
+    "name": "VoterLens: Michigan 2026 Civic Intelligence & Interactive Ballot",
+    "version": "1.0.0-rc2",
+    "platforms": [
+      "ios-native",
+      "android-native",
+      "web-responsive",
+      "pwa"
+    ],
+    "analyzedDate": "2026-10-15",
+    "totalScreens": 14,
+    "totalFlows": 6
+  },
+  "screens": [
+    {
+      "id": "splash-onboarding",
+      "name": "Precision Precinct Setup & Welcome",
+      "category": "onboarding",
+      "mockupRef": "index.html#splash",
+      "purpose": "Locate voter's precinct via address, ZIP code, or GPS; set notification preferences for early voting deadlines.",
+      "entryPoints": [
+        "app-launch",
+        "settings-switch-precinct"
+      ],
+      "exits": [
+        {
+          "targetScreenId": "civic-reel-feed",
+          "trigger": "tap",
+          "triggerElement": "Continue to VoterLens",
+          "transitionType": "push",
+          "transitionDurationMs": 280,
+          "gestureDetails": {
+            "direction": "left",
+            "edge": "none",
+            "fingers": 1
+          },
+          "accessibilityLabel": "Save precinct and proceed to live feed"
+        }
+      ],
+      "states": [
+        {
+          "stateName": "empty",
+          "description": "Blank address input with sample MI ZIPs (e.g. 48226, 49503, 48104)",
+          "entryCondition": "First app launch"
+        },
+        {
+          "stateName": "loading",
+          "description": "Precinct geocoding and ballot certification fetch",
+          "entryCondition": "Address submitted"
+        },
+        {
+          "stateName": "success",
+          "description": "Precinct confirmed (e.g., Oakland County, White Lake Twp, Ward 2 / Wayne County, Detroit Precinct 142)",
+          "entryCondition": "Match found"
+        }
+      ],
+      "inputDevices": {
+        "touch": {
+          "supported": true,
+          "notes": "Large tap targets (min 48pt) for easy typing and ZIP auto-complete."
+        },
+        "mouse": {
+          "supported": true,
+          "notes": "Hover feedback on precinct chips."
+        },
+        "keyboard": {
+          "supported": true,
+          "notes": "Full tab ordering and Enter to submit."
+        },
+        "stylus": {
+          "supported": true,
+          "notes": "Direct touch coordinate selection."
+        },
+        "gyroscope": {
+          "supported": false,
+          "notes": "Not utilized."
+        }
+      },
+      "accessibility": {
+        "screenReaderOrder": [
+          "app-logo",
+          "welcome-heading",
+          "address-input",
+          "location-detect-btn",
+          "continue-btn"
+        ],
+        "dynamicTypeSupported": true,
+        "colorIndependent": true,
+        "notes": "Meets WCAG 2.1 AA with high contrast text against dark background."
+      },
+      "gestureMap": [
+        {
+          "gesture": "tap",
+          "target": "ZIP chip",
+          "action": "Auto-populates county/precinct",
+          "platform": "universal"
+        }
+      ],
+      "dataDependencies": [
+        "Michigan Secretary of State Qualified Voter File (QVF) API",
+        "Geocoding Service"
+      ],
+      "critiqueNotes": "Streamlined from standard 5-step civic onboardings into a single 15-second flow with optional skip."
+    },
+    {
+      "id": "civic-reel-feed",
+      "name": "Civic Reel & Campaign Pulse Wire",
+      "category": "feed",
+      "mockupRef": "index.html#reel",
+      "purpose": "Provide a high-velocity, fact-checked stream of candidate soundbites, rally appearances, TV ads, and debate moments.",
+      "entryPoints": [
+        "splash-onboarding",
+        "bottom-nav-reel"
+      ],
+      "exits": [
+        {
+          "targetScreenId": "candidate-profile-drawer",
+          "trigger": "tap",
+          "triggerElement": "Candidate Avatar / Name Badge",
+          "transitionType": "bottom-sheet",
+          "transitionDurationMs": 320,
+          "accessibilityLabel": "Open full candidate dossier"
+        },
+        {
+          "targetScreenId": "soundbite-audio-modal",
+          "trigger": "tap",
+          "triggerElement": "Audio Waveform Play Button",
+          "transitionType": "modal",
+          "transitionDurationMs": 250,
+          "accessibilityLabel": "Play verified debate soundbite audio"
+        },
+        {
+          "targetScreenId": "decision-matrix",
+          "trigger": "tap",
+          "triggerElement": "Compare in Decision Matrix CTA",
+          "transitionType": "slide",
+          "transitionDurationMs": 300,
+          "accessibilityLabel": "Switch to side-by-side policy matrix"
+        }
+      ],
+      "states": [
+        {
+          "stateName": "loading",
+          "description": "Shimmer skeleton loading cards",
+          "entryCondition": "Initial feed load"
+        },
+        {
+          "stateName": "success",
+          "description": "Active feed sorted by chronological campaign events",
+          "entryCondition": "Data fetched"
+        },
+        {
+          "stateName": "filtered",
+          "description": "Filtered by topic (Auto/EV, Healthcare, Line 5, Residency)",
+          "entryCondition": "Pill filter selected"
+        }
+      ],
+      "inputDevices": {
+        "touch": {
+          "supported": true,
+          "notes": "Vertical swipe to scroll, pull to refresh, horizontal swipe on topic pills."
+        },
+        "mouse": {
+          "supported": true,
+          "notes": "Smooth scroll wheel, pointer hover glow."
+        },
+        "keyboard": {
+          "supported": true,
+          "notes": "Arrow keys to step through cards, Space to play/pause audio."
+        },
+        "stylus": {
+          "supported": true,
+          "notes": "Precision tap on fact-check expandable pills."
+        },
+        "gyroscope": {
+          "supported": false,
+          "notes": "Not utilized."
+        }
+      },
+      "accessibility": {
+        "screenReaderOrder": [
+          "category-filters",
+          "story-card-title",
+          "speaker-badge",
+          "audio-player",
+          "fact-check-badge",
+          "action-buttons"
+        ],
+        "dynamicTypeSupported": true,
+        "colorIndependent": true,
+        "notes": "Audio clips include verbatim real-time synchronized text captions."
+      },
+      "gestureMap": [
+        {
+          "gesture": "swipe",
+          "target": "Feed Container",
+          "action": "Scrolls through verified story cards",
+          "platform": "universal"
+        },
+        {
+          "gesture": "tap",
+          "target": "Play Icon",
+          "action": "Simulates audio playback with animated waveform",
+          "platform": "universal"
+        }
+      ],
+      "dataDependencies": [
+        "Campaign Trail Docket",
+        "Verified Audio Transcripts",
+        "Ad Registry"
+      ],
+      "critiqueNotes": "Card hierarchy elevates verified quotes above partisan spin, offering instant fact-check context."
+    },
+    {
+      "id": "decision-matrix",
+      "name": "Side-by-Side Candidate Decision Matrix",
+      "category": "search",
+      "mockupRef": "index.html#matrix",
+      "purpose": "Compare Abdul El-Sayed (D) and Mike Rogers (R) across 18 verified federal policy domains with neutral factual contrasts.",
+      "entryPoints": [
+        "civic-reel-feed",
+        "bottom-nav-matrix"
+      ],
+      "exits": [
+        {
+          "targetScreenId": "candidate-profile-drawer",
+          "trigger": "tap",
+          "triggerElement": "Candidate Header Card",
+          "transitionType": "modal",
+          "transitionDurationMs": 300,
+          "accessibilityLabel": "Inspect complete candidate dossier"
+        },
+        {
+          "targetScreenId": "ballot-navigator",
+          "trigger": "tap",
+          "triggerElement": "Select for My Ballot Plan",
+          "transitionType": "push",
+          "transitionDurationMs": 300,
+          "accessibilityLabel": "Record voter preference to digital ballot"
+        }
+      ],
+      "states": [
+        {
+          "stateName": "all-domains",
+          "description": "All 18 policy domains visible in scrolling comparison",
+          "entryCondition": "Default"
+        },
+        {
+          "stateName": "filtered-domain",
+          "description": "Single domain focused (e.g. EV Mandates & Auto)",
+          "entryCondition": "Category pill tapped"
+        },
+        {
+          "stateName": "voter-stance-active",
+          "description": "Voter indicates personal preference to highlight matching stances",
+          "entryCondition": "My Stance toggle tapped"
+        }
+      ],
+      "inputDevices": {
+        "touch": {
+          "supported": true,
+          "notes": "Sticky candidate comparison header while scrolling down domains."
+        },
+        "mouse": {
+          "supported": true,
+          "notes": "Hover highlights matching rows in opposing columns."
+        },
+        "keyboard": {
+          "supported": true,
+          "notes": "Tab through comparison cards; 'M' shortcut to toggle stance match."
+        },
+        "stylus": {
+          "supported": true,
+          "notes": "Highlight and annotate policy summaries."
+        },
+        "gyroscope": {
+          "supported": false,
+          "notes": "Not utilized."
+        }
+      },
+      "accessibility": {
+        "screenReaderOrder": [
+          "candidate-a-header",
+          "candidate-b-header",
+          "policy-topic-selector",
+          "side-by-side-row-a",
+          "side-by-side-row-b",
+          "neutral-contrast-summary"
+        ],
+        "dynamicTypeSupported": true,
+        "colorIndependent": true,
+        "notes": "Clear ARIA tables and column headers ensure screen reader users hear candidate names before each stance."
+      },
+      "gestureMap": [
+        {
+          "gesture": "tap",
+          "target": "Policy Pill",
+          "action": "Filters matrix to selected issue",
+          "platform": "universal"
+        },
+        {
+          "gesture": "long-press",
+          "target": "Policy Card",
+          "action": "Opens source citation modal with dossier links",
+          "platform": "universal"
+        }
+      ],
+      "dataDependencies": [
+        "Michigan Senate 18-Point Policy Dossier",
+        "Congressional Voting Records",
+        "Campaign White Papers"
+      ],
+      "critiqueNotes": "Sticky header solves the classic matrix scrolling issue where users forget which column represents which nominee."
+    },
+    {
+      "id": "ballot-navigator",
+      "name": "Precision Ballot Navigator & Plan",
+      "category": "create",
+      "mockupRef": "index.html#ballot",
+      "purpose": "Provide a certified digital replica of the voter's precinct ballot; enable selection of candidates and proposals into an exportable offline plan.",
+      "entryPoints": [
+        "bottom-nav-ballot",
+        "decision-matrix"
+      ],
+      "exits": [
+        {
+          "targetScreenId": "offline-ballot-pass",
+          "trigger": "tap",
+          "triggerElement": "Export Booth Reference Pass",
+          "transitionType": "modal",
+          "transitionDurationMs": 280,
+          "accessibilityLabel": "Generate printable / offline voting pass"
+        },
+        {
+          "targetScreenId": "voter-logistics-modal",
+          "trigger": "tap",
+          "triggerElement": "Voting Rules & Polling Place",
+          "transitionType": "bottom-sheet",
+          "transitionDurationMs": 320,
+          "accessibilityLabel": "Open polling location and ID rules"
+        }
+      ],
+      "states": [
+        {
+          "stateName": "unselected",
+          "description": "Candidate radio circles unchecked",
+          "entryCondition": "Initial view"
+        },
+        {
+          "stateName": "partial",
+          "description": "Senate race selected; down-ballot pending",
+          "entryCondition": "Voter selects candidate"
+        },
+        {
+          "stateName": "completed",
+          "description": "All certified races reviewed; Export Pass button pulses green",
+          "entryCondition": "All races addressed"
+        }
+      ],
+      "inputDevices": {
+        "touch": {
+          "supported": true,
+          "notes": "Generous 56pt touch targets for ballot checkboxes; haptic tick on selection."
+        },
+        "mouse": {
+          "supported": true,
+          "notes": "Click to toggle selection."
+        },
+        "keyboard": {
+          "supported": true,
+          "notes": "Radio group keyboard navigation (Arrow Up/Down, Space to select)."
+        },
+        "stylus": {
+          "supported": true,
+          "notes": "Direct pen-tap selection mimics paper voting."
+        },
+        "gyroscope": {
+          "supported": false,
+          "notes": "Not utilized."
+        }
+      },
+      "accessibility": {
+        "screenReaderOrder": [
+          "ballot-contest-header",
+          "candidate-option-dem",
+          "candidate-option-rep",
+          "minor-party-group",
+          "save-selection-button"
+        ],
+        "dynamicTypeSupported": true,
+        "colorIndependent": true,
+        "notes": "Semantic HTML form inputs with aria-checked, explicit labels, and high-contrast indicators."
+      },
+      "gestureMap": [
+        {
+          "gesture": "tap",
+          "target": "Candidate Row",
+          "action": "Selects candidate and updates live ballot summary",
+          "platform": "universal"
+        }
+      ],
+      "dataDependencies": [
+        "Michigan Bureau of Elections Certified General Ballot",
+        "Statewide Proposal Registry"
+      ],
+      "critiqueNotes": "Explicitly includes certified minor-party candidates (Green, Libertarian, U.S. Taxpayers) to prevent exclusion bias."
+    },
+    {
+      "id": "district-radar-explorer",
+      "name": "Civic Radar & District Explorer",
+      "category": "feed",
+      "mockupRef": "index.html#radar",
+      "purpose": "Visualize candidate alignment across 5 axes and examine Michigan's 13 Congressional Districts with Trump favorability and polling trends.",
+      "entryPoints": [
+        "bottom-nav-radar"
+      ],
+      "exits": [
+        {
+          "targetScreenId": "district-detail-sheet",
+          "trigger": "tap",
+          "triggerElement": "District Selector Pill",
+          "transitionType": "bottom-sheet",
+          "transitionDurationMs": 280,
+          "accessibilityLabel": "Show deep district polling breakdown"
+        }
+      ],
+      "states": [
+        {
+          "stateName": "statewide",
+          "description": "Statewide average polling (El-Sayed 48.4% vs Rogers 45.6%)",
+          "entryCondition": "Default"
+        },
+        {
+          "stateName": "district-focused",
+          "description": "Selected district crosstabs highlighted with key issue drivers",
+          "entryCondition": "District pill tapped"
+        },
+        {
+          "stateName": "trump-slider-adjusted",
+          "description": "Dynamic modeling of Trump endorsement influence",
+          "entryCondition": "Gravity slider moved"
+        }
+      ],
+      "inputDevices": {
+        "touch": {
+          "supported": true,
+          "notes": "Horizontal pill scroll; slider thumb drag."
+        },
+        "mouse": {
+          "supported": true,
+          "notes": "Click to select district; hover on radar points."
+        },
+        "keyboard": {
+          "supported": true,
+          "notes": "Arrow keys to adjust slider and cycle through districts."
+        },
+        "stylus": {
+          "supported": true,
+          "notes": "Fine touch on radar nodes."
+        },
+        "gyroscope": {
+          "supported": false,
+          "notes": "Not utilized."
+        }
+      },
+      "accessibility": {
+        "screenReaderOrder": [
+          "radar-heading",
+          "district-selector",
+          "margin-display",
+          "trump-favorability-stat",
+          "key-issue-driver-text"
+        ],
+        "dynamicTypeSupported": true,
+        "colorIndependent": true,
+        "notes": "Radar visual data is mirrored in accessible semantic tabular text below the graphic."
+      },
+      "gestureMap": [
+        {
+          "gesture": "drag",
+          "target": "Trump Gravity Slider",
+          "action": "Simulates electoral shift across suburban vs rural districts",
+          "platform": "universal"
+        }
+      ],
+      "dataDependencies": [
+        "District-Level Polling Crosstabs (Marist, Mitchell, Emerson)",
+        "FEC Donor Data"
+      ],
+      "critiqueNotes": "Contextualizes how presidential endorsements influence distinct regions (e.g., Macomb blue-collar vs. Oakland suburban women)."
+    },
+    {
+      "id": "candidate-profile-drawer",
+      "name": "Candidate Comprehensive Dossier Drawer",
+      "category": "profile",
+      "mockupRef": "index.html#candidate-drawer",
+      "purpose": "Inspect deep background: education, past public offices, fundraising totals, outside PAC support, controversies, and personal financial disclosures.",
+      "entryPoints": [
+        "civic-reel-feed",
+        "decision-matrix",
+        "ballot-navigator"
+      ],
+      "exits": [
+        {
+          "targetScreenId": "civic-reel-feed",
+          "trigger": "tap",
+          "triggerElement": "Close Button / Drag Down",
+          "transitionType": "modal-dismiss",
+          "transitionDurationMs": 250,
+          "accessibilityLabel": "Dismiss candidate profile drawer"
+        }
+      ],
+      "states": [
+        {
+          "stateName": "bio-overview",
+          "description": "Candidate summary, education, and career milestones",
+          "entryCondition": "Default"
+        },
+        {
+          "stateName": "financial-breakdown",
+          "description": "FEC Q3 receipts, small-dollar vs PAC dependency, super PAC spending",
+          "entryCondition": "Finances tab tapped"
+        },
+        {
+          "stateName": "scrutiny-tab",
+          "description": "Unvarnished analysis of residency, controversies, and vulnerabilities",
+          "entryCondition": "Scrutiny tab tapped"
+        }
+      ],
+      "inputDevices": {
+        "touch": {
+          "supported": true,
+          "notes": "Swipe down to dismiss sheet; segmented control tab switcher."
+        },
+        "mouse": {
+          "supported": true,
+          "notes": "Click tabs, scroll body."
+        },
+        "keyboard": {
+          "supported": true,
+          "notes": "Escape key dismisses drawer; 1-3 keys switch tabs."
+        },
+        "stylus": {
+          "supported": true,
+          "notes": "Tap tabs and links."
+        },
+        "gyroscope": {
+          "supported": false,
+          "notes": "Not utilized."
+        }
+      },
+      "accessibility": {
+        "screenReaderOrder": [
+          "candidate-name",
+          "party-badge",
+          "drawer-tabs",
+          "tab-content-area",
+          "close-drawer-btn"
+        ],
+        "dynamicTypeSupported": true,
+        "colorIndependent": true,
+        "notes": "Includes full alt-text for financial comparison bar graphs."
+      },
+      "gestureMap": [
+        {
+          "gesture": "swipe-down",
+          "target": "Drawer Handle",
+          "action": "Dismisses drawer",
+          "platform": "ios|android"
+        }
+      ],
+      "dataDependencies": [
+        "FEC Q3 Disclosures",
+        "Candidate Dossier Profiles",
+        "Ethics Filings"
+      ],
+      "critiqueNotes": "Presents both sides with absolute balance: highlights El-Sayed's health achievements and socialist attacks; highlights Rogers' FBI/intelligence service and defense contracting ties."
+    },
+    {
+      "id": "voter-logistics-modal",
+      "name": "Michigan Voter Action & Rules Hub",
+      "category": "system",
+      "mockupRef": "index.html#logistics",
+      "purpose": "Provide verified non-partisan logistics: polling hours, photo ID rules, affidavit exceptions, absentee deadlines, and clerk contact.",
+      "entryPoints": [
+        "ballot-navigator",
+        "top-bar-logistics-icon"
+      ],
+      "exits": [
+        {
+          "targetScreenId": "ballot-navigator",
+          "trigger": "tap",
+          "triggerElement": "Back to Ballot",
+          "transitionType": "modal-dismiss",
+          "transitionDurationMs": 250,
+          "accessibilityLabel": "Return to ballot"
+        }
+      ],
+      "states": [
+        {
+          "stateName": "active",
+          "description": "Countdown timer to Nov 3, 2026; interactive ID checklist",
+          "entryCondition": "Modal open"
+        }
+      ],
+      "inputDevices": {
+        "touch": {
+          "supported": true,
+          "notes": "Checklist toggle for required documents."
+        },
+        "mouse": {
+          "supported": true,
+          "notes": "Click links to open official SOS portal."
+        },
+        "keyboard": {
+          "supported": true,
+          "notes": "Escape to close."
+        },
+        "stylus": {
+          "supported": true,
+          "notes": "Tap links."
+        },
+        "gyroscope": {
+          "supported": false,
+          "notes": "Not utilized."
+        }
+      },
+      "accessibility": {
+        "screenReaderOrder": [
+          "election-countdown",
+          "polling-location-address",
+          "hours-notice",
+          "id-requirements-list",
+          "absentee-deadline-warning"
+        ],
+        "dynamicTypeSupported": true,
+        "colorIndependent": true,
+        "notes": "Plain language reading level (Grade 7) for critical voting rights instructions."
+      },
+      "gestureMap": [
+        {
+          "gesture": "tap",
+          "target": "ID Item",
+          "action": "Checks off items voter possesses (e.g. MI Driver's License)",
+          "platform": "universal"
+        }
+      ],
+      "dataDependencies": [
+        "Michigan Election Law (Act 116 of 1954)",
+        "SOS Polling Place Directory"
+      ],
+      "critiqueNotes": "Clarifies Michigan's photo ID affidavit law to prevent eligible voters without state ID from being disenfranchised."
+    }
+  ],
+  "flows": [
+    {
+      "id": "onboarding-to-ballot",
+      "name": "New Voter Quick Onboarding to Certified Ballot",
+      "category": "primary",
+      "objective": "First-time registered voter finds their precinct and sees their exact 2026 U.S. Senate candidates.",
+      "entryPoint": "splash-onboarding",
+      "exitPoint": "ballot-navigator",
+      "estimatedDurationSec": 35,
+      "steps": [
+        {
+          "stepNumber": 1,
+          "screenId": "splash-onboarding",
+          "userAction": "Select sample precinct (Oakland / White Lake)",
+          "systemResponse": "Renders verified precinct badge",
+          "transition": "fade",
+          "durationMs": 150,
+          "inputOptimization": "Single tap ZIP pill"
+        },
+        {
+          "stepNumber": 2,
+          "screenId": "splash-onboarding",
+          "userAction": "Tap 'Continue to VoterLens'",
+          "systemResponse": "Initializes live civic feed",
+          "transition": "push",
+          "durationMs": 280,
+          "inputOptimization": "Large prominent button"
+        },
+        {
+          "stepNumber": 3,
+          "screenId": "civic-reel-feed",
+          "userAction": "Tap 'Ballot' icon on bottom navigation",
+          "systemResponse": "Loads certified digital ballot",
+          "transition": "slide",
+          "durationMs": 250,
+          "inputOptimization": "Bottom thumb zone"
+        }
+      ],
+      "frictionPoints": [
+        {
+          "point": "Address entry friction",
+          "severity": "Low",
+          "fix": "Provided 1-tap quick pills for major Michigan counties (Wayne, Oakland, Kent, Ingham)."
+        }
+      ]
+    },
+    {
+      "id": "issue-comparison-flow",
+      "name": "Head-to-Head Policy & Fact-Check Exploration",
+      "category": "primary",
+      "objective": "Undecided voter compares El-Sayed and Rogers on EV mandates, healthcare, and taxes with audio soundbites.",
+      "entryPoint": "civic-reel-feed",
+      "exitPoint": "decision-matrix",
+      "estimatedDurationSec": 90,
+      "steps": [
+        {
+          "stepNumber": 1,
+          "screenId": "civic-reel-feed",
+          "userAction": "Listen to 20-second Grand Rapids debate soundbite",
+          "systemResponse": "Plays audio waveform with synchronized transcript",
+          "transition": "inline",
+          "durationMs": 0,
+          "inputOptimization": "Large touch play target"
+        },
+        {
+          "stepNumber": 2,
+          "screenId": "civic-reel-feed",
+          "userAction": "Tap 'Compare in Decision Matrix'",
+          "systemResponse": "Pivots directly into Automotive & EV Mandates matrix row",
+          "transition": "slide",
+          "durationMs": 300,
+          "inputOptimization": "Direct deep link"
+        },
+        {
+          "stepNumber": 3,
+          "screenId": "decision-matrix",
+          "userAction": "Toggle 'Healthcare' pill filter",
+          "systemResponse": "Filters side-by-side view to Medicare for All vs Market Reform",
+          "transition": "crossfade",
+          "durationMs": 200,
+          "inputOptimization": "Pill carousel"
+        }
+      ],
+      "frictionPoints": [
+        {
+          "point": "Information density overwhelm",
+          "severity": "Medium",
+          "fix": "Sticky candidate headers with bulleted key takeaways and collapsible deep text."
+        }
+      ]
+    },
+    {
+      "id": "build-voting-plan-flow",
+      "name": "Create & Export Booth Reference Pass",
+      "category": "primary",
+      "objective": "Voter locks in their selections, reviews polling location, and exports a phone-friendly offline voting pass.",
+      "entryPoint": "ballot-navigator",
+      "exitPoint": "offline-ballot-pass",
+      "estimatedDurationSec": 45,
+      "steps": [
+        {
+          "stepNumber": 1,
+          "screenId": "ballot-navigator",
+          "userAction": "Tap radio circle for preferred candidate",
+          "systemResponse": "Checks candidate, increments ballot progress counter",
+          "transition": "scale-bounce",
+          "durationMs": 180,
+          "inputOptimization": "Haptic feedback"
+        },
+        {
+          "stepNumber": 2,
+          "screenId": "ballot-navigator",
+          "userAction": "Tap 'Review & Export Booth Pass'",
+          "systemResponse": "Generates clean printable card with precinct hours",
+          "transition": "bottom-sheet",
+          "durationMs": 300,
+          "inputOptimization": "Prominent sticky CTA"
+        }
+      ],
+      "frictionPoints": [
+        {
+          "point": "Booth phone restrictions",
+          "severity": "Major",
+          "fix": "App includes 1-tap Apple Wallet / Google Wallet pass and printable 3x5 card format."
+        }
+      ]
+    },
+    {
+      "id": "district-sentiment-exploration",
+      "name": "Geospatial Polling & Trump Alignment Analysis",
+      "category": "secondary",
+      "objective": "Voter investigates how their congressional district leans and simulates presidential endorsement gravity.",
+      "entryPoint": "civic-reel-feed",
+      "exitPoint": "district-radar-explorer",
+      "estimatedDurationSec": 60,
+      "steps": [
+        {
+          "stepNumber": 1,
+          "screenId": "civic-reel-feed",
+          "userAction": "Tap 'Radar' on bottom navigation",
+          "systemResponse": "Displays 5-axis policy radar and district selector",
+          "transition": "slide",
+          "durationMs": 280,
+          "inputOptimization": "Bottom nav"
+        },
+        {
+          "stepNumber": 2,
+          "screenId": "district-radar-explorer",
+          "userAction": "Tap 'MI-11 (Oakland Suburbs)'",
+          "systemResponse": "Updates crosstab card: El-Sayed +11%, Trump Net -15%",
+          "transition": "fade",
+          "durationMs": 150,
+          "inputOptimization": "Horizontally scrollable pills"
+        },
+        {
+          "stepNumber": 3,
+          "screenId": "district-radar-explorer",
+          "userAction": "Adjust Trump Gravity Slider",
+          "systemResponse": "Models sentiment shift across suburban vs rural counties",
+          "transition": "real-time-60fps",
+          "durationMs": 16,
+          "inputOptimization": "Touch slider thumb"
+        }
+      ],
+      "frictionPoints": []
+    },
+    {
+      "id": "candidate-vetting-deep-dive",
+      "name": "Candidate Financial & Vulnerability Scrutiny",
+      "category": "secondary",
+      "objective": "Voter audits campaign donations, super PAC spending, and residency scrutiny for both nominees.",
+      "entryPoint": "decision-matrix",
+      "exitPoint": "candidate-profile-drawer",
+      "estimatedDurationSec": 75,
+      "steps": [
+        {
+          "stepNumber": 1,
+          "screenId": "decision-matrix",
+          "userAction": "Tap Mike Rogers header",
+          "systemResponse": "Opens Rogers profile drawer",
+          "transition": "bottom-sheet",
+          "durationMs": 320,
+          "inputOptimization": "Thumb tap"
+        },
+        {
+          "stepNumber": 2,
+          "screenId": "candidate-profile-drawer",
+          "userAction": "Tap 'Finances' tab",
+          "systemResponse": "Displays $10.9M raised, 28% small dollar, SLF outside PACs",
+          "transition": "crossfade",
+          "durationMs": 200,
+          "inputOptimization": "Segmented tab"
+        },
+        {
+          "stepNumber": 3,
+          "screenId": "candidate-profile-drawer",
+          "userAction": "Tap 'Scrutiny' tab",
+          "systemResponse": "Displays neutral breakdown of Florida property & Aegis contracts",
+          "transition": "crossfade",
+          "durationMs": 200,
+          "inputOptimization": "Segmented tab"
+        }
+      ],
+      "frictionPoints": []
+    },
+    {
+      "id": "voting-rules-assistance",
+      "name": "Voter ID & Absentee Rules Lookup",
+      "category": "system",
+      "objective": "Voter verifies whether their out-of-state ID or student ID qualifies at Michigan polls.",
+      "entryPoint": "ballot-navigator",
+      "exitPoint": "voter-logistics-modal",
+      "estimatedDurationSec": 30,
+      "steps": [
+        {
+          "stepNumber": 1,
+          "screenId": "ballot-navigator",
+          "userAction": "Tap 'ID Rules & Polling Info'",
+          "systemResponse": "Opens Michigan voter guide modal",
+          "transition": "bottom-sheet",
+          "durationMs": 300,
+          "inputOptimization": "Info icon"
+        },
+        {
+          "stepNumber": 2,
+          "screenId": "voter-logistics-modal",
+          "userAction": "Review photo ID requirements checklist",
+          "systemResponse": "Shows accepted IDs and statutory affidavit option",
+          "transition": "none",
+          "durationMs": 0,
+          "inputOptimization": "High legibility list"
+        }
+      ],
+      "frictionPoints": []
+    }
+  ],
+  "stateMachine": {
+    "appLevel": {
+      "initialState": "GUEST_UNLOCATED",
+      "states": {
+        "GUEST_UNLOCATED": {
+          "on": {
+            "SELECT_PRECINCT": "PRECINCT_ACTIVE",
+            "GEO_LOCATE": "PRECINCT_ACTIVE"
+          }
+        },
+        "PRECINCT_ACTIVE": {
+          "on": {
+            "SWITCH_VIEW": "VIEW_CHANGED",
+            "OPEN_BALLOT": "BALLOT_INTERACTION",
+            "OFFLINE_MODE": "CACHED_OFFLINE"
+          }
+        },
+        "BALLOT_INTERACTION": {
+          "on": {
+            "SELECT_CANDIDATE": "BALLOT_PARTIAL",
+            "EXPORT_PASS": "PASS_GENERATED"
+          }
+        },
+        "CACHED_OFFLINE": {
+          "on": {
+            "RECONNECT": "PRECINCT_ACTIVE"
+          }
+        }
+      }
+    },
+    "screenLevel": {
+      "civic-reel-feed": [
+        "loading",
+        "active",
+        "filtered",
+        "audio-playing",
+        "offline"
+      ],
+      "decision-matrix": [
+        "all-domains",
+        "filtered-issue",
+        "my-stance-active",
+        "citation-expanded"
+      ],
+      "ballot-navigator": [
+        "unselected",
+        "candidate-selected",
+        "complete-ready-to-export"
+      ],
+      "district-radar-explorer": [
+        "statewide",
+        "district-selected",
+        "slider-active"
+      ]
+    }
+  }
+}

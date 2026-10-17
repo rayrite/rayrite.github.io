@@ -1,0 +1,40 @@
+stateMachine
+    [*] --> GUEST_UNINITIALIZED
+
+    state GUEST_UNINITIALIZED {
+        [*] --> AwaitingPrecinct
+        AwaitingPrecinct --> LocatingGPS : Auto-Detect
+        AwaitingPrecinct --> ManualZipInput : Enter ZIP
+        LocatingGPS --> PrecinctActive : Certified QVF Match
+        ManualZipInput --> PrecinctActive : Valid MI Precinct
+    }
+
+    state PRECINCT_ACTIVE {
+        [*] --> CivicReelView
+        CivicReelView --> DecisionMatrixView : Switch Tab
+        DecisionMatrixView --> BallotNavView : Switch Tab
+        BallotNavView --> DistrictRadarView : Switch Tab
+        DistrictRadarView --> CivicReelView : Switch Tab
+
+        state CivicReelView {
+            [*] --> FeedIdle
+            FeedIdle --> PlayingSoundbite : Tap Waveform
+            PlayingSoundbite --> FeedIdle : Audio Complete
+        }
+
+        state DecisionMatrixView {
+            [*] --> AllIssues
+            AllIssues --> FilteredIssue : Tap Category Pill
+            FilteredIssue --> AllIssues : Clear Filter
+        }
+
+        state BallotNavView {
+            [*] --> IncompleteBallot
+            IncompleteBallot --> CandidateSelected : Tap Nominee
+            CandidateSelected --> BallotComplete : All Contests Addressed
+            BallotComplete --> PassGenerated : Export Pass
+        }
+    }
+
+    PRECINCT_ACTIVE --> OFFLINE_CACHED : Network Disconnected
+    OFFLINE_CACHED --> PRECINCT_ACTIVE : Reconnected

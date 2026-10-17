@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ground News: Multi-Platform UI Mockup Showcase & Architecture Demonstration</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #0F1117;
+      --bg-secondary: #171A23;
+      --bg-card: #1E222D;
+      --bg-card-hover: #262B38;
+      --text-primary: #F3F4F6;
+      --text-secondary: #9CA3AF;
+      --text-muted: #6B7280;
+      --border-color: #2D3343;
+      
+      --color-left: #2980DF;
+      --color-center: #8C949E;
+      --color-right: #E03838;
+      --color-success: #10B981;
+      --color-warning: #F59E0B;
+      --color-accent: #6366F1;
+      
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --radius-full: 9999px;
+      
+      --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.2);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.45);
+      --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    [data-theme="light"] {
+      --bg-primary: #F8FAFC;
+      --bg-secondary: #FFFFFF;
+      --bg-card: #FFFFFF;
+      --bg-card-hover: #F1F5F9;
+      --text-primary: #0F172A;
+      --text-secondary: #475569;
+      --text-muted: #94A3B8;
+      --border-color: #E2E8F0;
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+      --shadow-md: 0 4px 10px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 12px 28px rgba(0, 0, 0, 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.5;
+      overflow-x: hidden;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* Top Control Bar */
+    header.showcase-header {
+      background-color: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+      padding: 14px 24px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .logo-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 800;
+      font-size: 1.25rem;
+      letter-spacing: -0.02em;
+    }
+
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--color-left), var(--color-right));
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 900;
+      font-size: 16px;
+    }
+
+    .badge-tag {
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: var(--radius-full);
+      background-color: rgba(99, 102, 241, 0.15);
+      color: var(--color-accent);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .controls-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .view-switcher {
+      display: flex;
+      background-color: var(--bg-primary);
+      padding: 4px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      gap: 4px;
+    }
+
+    .view-btn {
+      background: none;
+      border: none;
+      padding: 6px 14px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .view-btn.active {
+      background-color: var(--bg-card);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .theme-toggle-btn {
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 7px 12px;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: var(--transition-smooth);
+    }
+
+    .theme-toggle-btn:hover {
+      background-color: var(--bg-card-hover);
+    }
+
+    /* Main Showcase Container */
+    main.showcase-stage {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 24px;
+      min-height: calc(100vh - 70px);
+    }
+
+    /* View Containers */
+    .view-panel {
+      display: none;
+      animation: fadeIn 0.3s ease forwards;
+    }
+
+    .view-panel.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ==========================================================================
+       DESKTOP VIEWPORT STYLES
+       ========================================================================== */
+    .desktop-app-wrapper {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+    }
+
+    /* App Internal Header */
+    .app-nav {
+      background-color: var(--bg-card);
+      border-bottom: 1px solid var(--border-color);
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 20px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .nav-item {
+      color: var(--text-secondary);
+      text-decoration: none;
+      padding-bottom: 4px;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      position: relative;
+    }
+
+    .nav-item.active {
+      color: var(--text-primary);
+    }
+
+    .nav-item.active::after {
+      content: '';
+      position: absolute;
+      bottom: -15px;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background-color: var(--color-left);
+      border-radius: var(--radius-full);
+    }
+
+    .search-bar {
+      display: flex;
+      align-items: center;
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-full);
+      padding: 8px 16px;
+      width: 320px;
+      gap: 10px;
+    }
+
+    .search-bar input {
+      background: none;
+      border: none;
+      outline: none;
+      color: var(--text-primary);
+      font-size: 0.88rem;
+      width: 100%;
+    }
+
+    /* Feed Layout */
+    .feed-layout {
+      display: grid;
+      grid-template-columns: 2.2fr 1fr;
+      gap: 24px;
+      padding: 24px;
+    }
+
+    /* Main Story Cluster Hero Card */
+    .cluster-hero-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .cluster-meta-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .tag-pill {
+      background-color: rgba(41, 128, 223, 0.12);
+      color: var(--color-left);
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+    }
+
+    .cluster-headline {
+      font-size: 1.65rem;
+      font-weight: 800;
+      line-height: 1.28;
+      letter-spacing: -0.02em;
+    }
+
+    .cluster-summary {
+      color: var(--text-secondary);
+      font-size: 0.98rem;
+      line-height: 1.55;
+    }
+
+    /* Visual Bias Meter */
+    .bias-meter-box {
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .bias-meter-title {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .bias-bar {
+      height: 12px;
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      display: flex;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.3);
+    }
+
+    .bar-segment {
+      height: 100%;
+      transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+
+    .segment-left { background-color: var(--color-left); }
+    .segment-center { background-color: var(--color-center); }
+    .segment-right { background-color: var(--color-right); }
+
+    .bias-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .bias-labels span.label-left { color: var(--color-left); }
+    .bias-labels span.label-center { color: var(--color-center); }
+    .bias-labels span.label-right { color: var(--color-right); }
+
+    /* Metadata Chips Bar */
+    .metadata-chips-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding-top: 6px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .meta-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: var(--radius-full);
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .meta-chip:hover {
+      background-color: var(--bg-card-hover);
+      color: var(--text-primary);
+    }
+
+    .meta-chip .indicator-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    /* Side-by-Side Perspectives Columns */
+    .perspectives-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 10px;
+    }
+
+    .perspective-col {
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .col-header {
+      font-size: 0.8rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .col-header.left-hdr { color: var(--color-left); }
+    .col-header.center-hdr { color: var(--color-center); }
+    .col-header.right-hdr { color: var(--color-right); }
+
+    .article-item-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .article-item-card:hover {
+      border-color: var(--color-left);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .pub-info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.74rem;
+      font-weight: 700;
+    }
+
+    .pub-name {
+      color: var(--text-primary);
+    }
+
+    .lock-tag {
+      font-size: 0.68rem;
+      background-color: rgba(239, 68, 68, 0.15);
+      color: #EF4444;
+      padding: 2px 6px;
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+    }
+
+    .free-tag {
+      font-size: 0.68rem;
+      background-color: rgba(16, 185, 129, 0.15);
+      color: #10B981;
+      padding: 2px 6px;
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+    }
+
+    .article-title-text {
+      font-size: 0.86rem;
+      font-weight: 600;
+      line-height: 1.35;
+      color: var(--text-primary);
+    }
+
+    /* Right Sidebar: Blindspot Radar & Diet Widget */
+    .sidebar-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .sidebar-widget {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .widget-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .blindspot-mini-card {
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .blindspot-skew-indicator {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .skew-badge {
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      font-size: 0.72rem;
+    }
+
+    .skew-badge.for-left {
+      background-color: rgba(224, 56, 56, 0.15);
+      color: var(--color-right);
+      border: 1px solid rgba(224, 56, 56, 0.3);
+    }
+
+    .skew-badge.for-right {
+      background-color: rgba(41, 128, 223, 0.15);
+      color: var(--color-left);
+      border: 1px solid rgba(41, 128, 223, 0.3);
+    }
+
+    /* Reading Diet Radial Progress Simulation */
+    .diet-chart-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 10px 0;
+    }
+
+    .diet-stats-col {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 0.8rem;
+    }
+
+    .diet-stat-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+    }
+
+    /* ==========================================================================
+       MOBILE DEVICE FRAME STYLES
+       ========================================================================== */
+    .mobile-frame-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px 0;
+    }
+
+    .phone-chassis {
+      width: 390px;
+      height: 820px;
+      background-color: #000000;
+      border-radius: 52px;
+      padding: 12px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), 0 0 0 2px #333333;
+      position: relative;
+    }
+
+    .phone-screen {
+      width: 100%;
+      height: 100%;
+      background-color: var(--bg-primary);
+      border-radius: 40px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* Mobile Status Bar & Dynamic Island */
+    .mobile-notch-bar {
+      height: 44px;
+      width: 100%;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background-color: var(--bg-primary);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .dynamic-island {
+      width: 110px;
+      height: 24px;
+      background-color: #000000;
+      border-radius: var(--radius-full);
+      margin: 0 auto;
+    }
+
+    .mobile-app-header {
+      padding: 10px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+      background-color: var(--bg-card);
+    }
+
+    .mobile-feed-body {
+      flex: 1;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .mobile-cluster-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .mobile-cluster-headline {
+      font-size: 1.05rem;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    /* Mobile Bottom Navigation Bar */
+    .mobile-bottom-nav {
+      height: 64px;
+      background-color: var(--bg-card);
+      border-top: 1px solid var(--border-color);
+      position: sticky;
+      bottom: 0;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding-bottom: 10px;
+      z-index: 100;
+    }
+
+    .nav-tab-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .nav-tab-item.active {
+      color: var(--color-left);
+    }
+
+    /* ==========================================================================
+       IOT / E-INK AMBIENT GADGET VIEWPORT
+       ========================================================================== */
+    .iot-stage-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 30px;
+      padding: 20px 0;
+    }
+
+    .eink-bezel {
+      width: 640px;
+      background-color: #2B2A27;
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+      border: 3px solid #1C1B19;
+    }
+
+    .eink-display {
+      background-color: #ECEAE4;
+      color: #1A1A1A;
+      border-radius: 6px;
+      padding: 20px;
+      min-height: 380px;
+      font-family: 'JetBrains Mono', monospace;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border: 1px solid #D5D2C9;
+    }
+
+    .eink-header {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 2px solid #1A1A1A;
+      padding-bottom: 8px;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .eink-headline {
+      font-size: 1.45rem;
+      font-weight: 800;
+      line-height: 1.3;
+      margin: 16px 0;
+    }
+
+    .eink-bias-bar {
+      height: 20px;
+      border: 2px solid #1A1A1A;
+      display: flex;
+      margin: 10px 0;
+    }
+
+    .eink-seg-left { background-color: #1A1A1A; color: #ECEAE4; }
+    .eink-seg-center { background-color: #888888; color: #ECEAE4; }
+    .eink-seg-right { background-color: #ECEAE4; color: #1A1A1A; }
+
+    /* Modal Styles */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background-color: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(6px);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-dialog {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      width: 90%;
+      max-width: 560px;
+      padding: 28px;
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      position: relative;
+    }
+
+    .modal-close-btn {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.3rem;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body data-theme="dark">
+
+  <!-- TOP SHOWCASE CONTROL BAR -->
+  <header class="showcase-header">
+    <div class="brand-group">
+      <div class="logo-badge">
+        <div class="logo-icon">G</div>
+        <span>Ground News</span>
+      </div>
+      <span class="badge-tag">FOSS Reconstruction Showcase</span>
+    </div>
+
+    <div class="controls-group">
+      <div class="view-switcher">
+        <button class="view-btn active" onclick="switchView('desktop')">Desktop Newsroom</button>
+        <button class="view-btn" onclick="switchView('mobile')">Mobile Client</button>
+        <button class="view-btn" onclick="switchView('iot')">IoT Ambient E-Ink</button>
+      </div>
+
+      <button class="theme-toggle-btn" onclick="toggleTheme()">
+        <span id="theme-icon">☀️</span>
+        <span id="theme-text">Light Mode</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN STAGE -->
+  <main class="showcase-stage">
+
+    <!-- ========================================================================
+         VIEW 1: DESKTOP NEWSROOM DASHBOARD VIEW
+         ======================================================================== -->
+    <div id="view-desktop" class="view-panel active">
+      <div class="desktop-app-wrapper">
+        
+        <!-- App Navigation Header -->
+        <nav class="app-nav">
+          <div class="nav-links">
+            <span class="nav-item active" onclick="setFeedCategory(this, 'all')">Top Stories</span>
+            <span class="nav-item" onclick="setFeedCategory(this, 'blindspot')">Blindspots</span>
+            <span class="nav-item" onclick="setFeedCategory(this, 'local')">Local News</span>
+            <span class="nav-item" onclick="setFeedCategory(this, 'tech')">Technology</span>
+            <span class="nav-item" onclick="setFeedCategory(this, 'world')">World</span>
+          </div>
+
+          <div class="search-bar">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input type="text" placeholder="Search news topics, outlets, or URLs..." onkeyup="filterHeadlines(this.value)">
+          </div>
+        </nav>
+
+        <!-- Main Feed Layout -->
+        <div class="feed-layout">
+          
+          <!-- Left Column: Story Cluster Detail -->
+          <div class="main-column">
+            <article class="cluster-hero-card">
+              
+              <div class="cluster-meta-header">
+                <span class="tag-pill">Congressional Consensus</span>
+                <span>Updated 12 mins ago &bull; 48 Sources Reporting</span>
+              </div>
+
+              <h1 class="cluster-headline" id="main-headline-text">
+                Congress Passes Landmark Bipartisan Clean Energy & Power Grid Modernization Package
+              </h1>
+
+              <p class="cluster-summary">
+                A coalition of Senate lawmakers passed a $42B authorization bill aimed at upgrading high-voltage transmission lines, fast-tracking federal permitting for regional energy grids, and funding next-generation battery storage pilot projects.
+              </p>
+
+              <!-- Dynamic Interactive Bias Meter -->
+              <div class="bias-meter-box">
+                <div class="bias-meter-title">
+                  <span>Political Coverage Distribution</span>
+                  <span id="sources-counter">48 Outlets Analyzed</span>
+                </div>
+
+                <div class="bias-bar">
+                  <div class="bar-segment segment-left" id="bar-left" style="width: 35.4%;"></div>
+                  <div class="bar-segment segment-center" id="bar-center" style="width: 41.7%;"></div>
+                  <div class="bar-segment segment-right" id="bar-right" style="width: 22.9%;"></div>
+                </div>
+
+                <div class="bias-labels">
+                  <span class="label-left" id="pct-left">35% Left</span>
+                  <span class="label-center" id="pct-center">42% Center</span>
+                  <span class="label-right" id="pct-right">23% Right</span>
+                </div>
+              </div>
+
+              <!-- Metadata Audit Chips -->
+              <div class="metadata-chips-row">
+                <div class="meta-chip" onclick="openOwnershipModal()">
+                  <span class="indicator-dot" style="background-color: var(--color-accent);"></span>
+                  <span>Ownership: 18 Conglomerates, 12 Independent</span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                </div>
+
+                <div class="meta-chip">
+                  <span class="indicator-dot" style="background-color: var(--color-success);"></span>
+                  <span>Factuality: 86% High / Very High Reliability</span>
+                </div>
+
+                <div class="meta-chip">
+                  <span class="indicator-dot" style="background-color: var(--color-warning);"></span>
+                  <span>Paywalls: 14 Locked / 34 Free Outlets</span>
+                </div>
+              </div>
+
+              <!-- Side-by-Side Perspectives Columns -->
+              <div class="perspectives-grid">
+                
+                <!-- Left Leaning Column -->
+                <div class="perspective-col">
+                  <div class="col-header left-hdr">
+                    <span>Left Outlets (17)</span>
+                  </div>
+
+                  <div class="article-item-card">
+                    <div class="pub-info-row">
+                      <span class="pub-name">The Guardian</span>
+                      <span class="free-tag">Free</span>
+                    </div>
+                    <div class="article-title-text">
+                      Senate green-lights historic renewable investment, creating thousands of clean energy union jobs.
+                    </div>
+                  </div>
+
+                  <div class="article-item-card">
+                    <div class="pub-info-row">
+                      <span class="pub-name">MSNBC News</span>
+                      <span class="free-tag">Free</span>
+                    </div>
+                    <div class="article-title-text">
+                      Climate champions secure major funding victory despite conservative permitting carve-outs.
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Center Column -->
+                <div class="perspective-col">
+                  <div class="col-header center-hdr">
+                    <span>Center Outlets (20)</span>
+                  </div>
+
+                  <div class="article-item-card">
+                    <div class="pub-info-row">
+                      <span class="pub-name">Reuters Wire</span>
+                      <span class="free-tag">Free</span>
+                    </div>
+                    <div class="article-title-text">
+                      US lawmakers approve bipartisan $42 bln infrastructure deal to upgrade aging power grid.
+                    </div>
+                  </div>
+
+                  <div class="article-item-card">
+                    <div class="pub-info-row">
+                      <span class="pub-name">Associated Press</span>
+                      <span class="free-tag">Free</span>
+                    </div>
+                    <div class="article-title-text">
+                      Bipartisan Senate vote clears transmission modernization package in rare compromise.
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Right Leaning Column -->
+                <div class="perspective-col">
+                  <div class="col-header right-hdr">
+                    <span>Right Outlets (11)</span>
+                  </div>
+
+                  <div class="article-item-card">
+                    <div class="pub-info-row">
+                      <span class="pub-name">Wall Street Journal</span>
+                      <span class="lock-tag">Paywalled</span>
+                    </div>
+                    <div class="article-title-text">
+                      Permitting overhaul inside energy bill trims bureaucratic hurdles for interstate pipeline approvals.
+                    </div>
+                  </div>
+
+                  <div class="article-item-card">
+                    <div class="pub-info-row">
+                      <span class="pub-name">National Review</span>
+                      <span class="free-tag">Free</span>
+                    </div>
+                    <div class="article-title-text">
+                      Fiscally minded senators extract crucial environmental review limits in spending compromise.
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+            </article>
+          </div>
+
+          <!-- Right Column: Sidebar Radar & My Bias Dashboard -->
+          <aside class="sidebar-wrapper">
+            
+            <!-- Blindspot Radar Widget -->
+            <div class="sidebar-widget">
+              <div class="widget-title">
+                <span>Blindspot Radar</span>
+                <span class="badge-tag" style="font-size: 0.65rem;">Asymmetry</span>
+              </div>
+
+              <!-- Item 1: Blindspot for the Left -->
+              <div class="blindspot-mini-card">
+                <div class="blindspot-skew-indicator">
+                  <span class="skew-badge for-left">Blindspot for Left</span>
+                  <span>78% Right Coverage</span>
+                </div>
+                <div style="font-size: 0.88rem; font-weight: 700; line-height: 1.35;">
+                  State Audit Identifies $1.4B in Erroneous Unemployment Overpayments
+                </div>
+                <div style="font-size: 0.74rem; color: var(--text-muted);">
+                  Covered by 22 conservative outlets, 2 center, 1 liberal outlet.
+                </div>
+              </div>
+
+              <!-- Item 2: Blindspot for the Right -->
+              <div class="blindspot-mini-card">
+                <div class="blindspot-skew-indicator">
+                  <span class="skew-badge for-right">Blindspot for Right</span>
+                  <span>82% Left Coverage</span>
+                </div>
+                <div style="font-size: 0.88rem; font-weight: 700; line-height: 1.35;">
+                  Corporate Water Diversion Violations Trigger Federal Clean Water Fines
+                </div>
+                <div style="font-size: 0.74rem; color: var(--text-muted);">
+                  Covered by 28 liberal outlets, 4 center, 2 conservative outlets.
+                </div>
+              </div>
+
+            </div>
+
+            <!-- "My Bias" Diet Widget -->
+            <div class="sidebar-widget">
+              <div class="widget-title">
+                <span>My Media Diet</span>
+                <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">Last 30 Days</span>
+              </div>
+
+              <div class="diet-chart-box">
+                <svg width="90" height="90" viewBox="0 0 36 36">
+                  <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="var(--border-color)" stroke-width="4"/>
+                  <!-- Left: 42% -->
+                  <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="var(--color-left)" stroke-width="4" stroke-dasharray="42, 100"/>
+                  <!-- Center: 38% -->
+                  <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="var(--color-center)" stroke-width="4" stroke-dasharray="38, 100" stroke-dashoffset="-42"/>
+                  <!-- Right: 20% -->
+                  <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="var(--color-right)" stroke-width="4" stroke-dasharray="20, 100" stroke-dashoffset="-80"/>
+                </svg>
+
+                <div class="diet-stats-col">
+                  <div class="diet-stat-row"><span style="color: var(--color-left);">&bull;</span> Left: 42%</div>
+                  <div class="diet-stat-row"><span style="color: var(--color-center);">&bull;</span> Center: 38%</div>
+                  <div class="diet-stat-row"><span style="color: var(--color-right);">&bull;</span> Right: 20%</div>
+                </div>
+              </div>
+
+              <div style="font-size: 0.78rem; color: var(--text-muted); text-align: center;">
+                Your reading balance is <strong>moderately balanced</strong> with healthy center anchoring.
+              </div>
+            </div>
+
+          </aside>
+
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ========================================================================
+         VIEW 2: MOBILE CLIENT SIMULATOR VIEW (IPHONE 16 PRO FRAME)
+         ======================================================================== -->
+    <div id="view-mobile" class="view-panel">
+      <div class="mobile-frame-wrapper">
+        <div class="phone-chassis">
+          <div class="phone-screen">
+            
+            <!-- Status Bar -->
+            <div class="mobile-notch-bar">
+              <span>9:41</span>
+              <div class="dynamic-island"></div>
+              <span>5G 􀛨</span>
+            </div>
+
+            <!-- Mobile App Header -->
+            <div class="mobile-app-header">
+              <div style="font-weight: 800; font-size: 1.15rem; display: flex; align-items: center; gap: 6px;">
+                <span style="color: var(--color-left);">Ground</span>News
+              </div>
+              <div style="display: flex; gap: 10px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+              </div>
+            </div>
+
+            <!-- Mobile Feed Cards -->
+            <div class="mobile-feed-body">
+              
+              <!-- Card 1 -->
+              <div class="mobile-cluster-card">
+                <div style="display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text-muted);">
+                  <span style="color: var(--color-left); font-weight: 700;">ENERGY & POLICY</span>
+                  <span>48 Sources</span>
+                </div>
+                <div class="mobile-cluster-headline">
+                  Congress Passes Landmark Clean Energy Infrastructure Overhaul
+                </div>
+                <!-- Bias Bar -->
+                <div class="bias-bar" style="height: 8px;">
+                  <div style="width: 35%; background: var(--color-left);"></div>
+                  <div style="width: 42%; background: var(--color-center);"></div>
+                  <div style="width: 23%; background: var(--color-right);"></div>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 0.68rem; font-weight: 700;">
+                  <span style="color: var(--color-left);">35% L</span>
+                  <span style="color: var(--color-center);">42% C</span>
+                  <span style="color: var(--color-right);">23% R</span>
+                </div>
+              </div>
+
+              <!-- Card 2: Blindspot Highlight -->
+              <div class="mobile-cluster-card" style="border-left: 3px solid var(--color-right);">
+                <div style="display: flex; justify-content: space-between; font-size: 0.72rem;">
+                  <span class="skew-badge for-left" style="font-size: 0.65rem;">Blindspot for Left</span>
+                  <span style="color: var(--text-muted);">25 Sources</span>
+                </div>
+                <div class="mobile-cluster-headline">
+                  State Audit Uncovers $1.4B in Improper Pandemic Unemployment Outlays
+                </div>
+                <div class="bias-bar" style="height: 8px;">
+                  <div style="width: 8%; background: var(--color-left);"></div>
+                  <div style="width: 14%; background: var(--color-center);"></div>
+                  <div style="width: 78%; background: var(--color-right);"></div>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 0.68rem; font-weight: 700;">
+                  <span style="color: var(--color-left);">8% L</span>
+                  <span style="color: var(--color-center);">14% C</span>
+                  <span style="color: var(--color-right);">78% R</span>
+                </div>
+              </div>
+
+              <!-- Card 3 -->
+              <div class="mobile-cluster-card">
+                <div style="display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text-muted);">
+                  <span style="color: var(--color-accent); font-weight: 700;">AI REGULATION</span>
+                  <span>31 Sources</span>
+                </div>
+                <div class="mobile-cluster-headline">
+                  International Consortium Agrees on Unified AI Safety Audit Framework
+                </div>
+                <div class="bias-bar" style="height: 8px;">
+                  <div style="width: 32%; background: var(--color-left);"></div>
+                  <div style="width: 48%; background: var(--color-center);"></div>
+                  <div style="width: 20%; background: var(--color-right);"></div>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 0.68rem; font-weight: 700;">
+                  <span style="color: var(--color-left);">32% L</span>
+                  <span style="color: var(--color-center);">48% C</span>
+                  <span style="color: var(--color-right);">20% R</span>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Mobile Bottom Nav -->
+            <nav class="mobile-bottom-nav">
+              <div class="nav-tab-item active">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+                <span>Home</span>
+              </div>
+              <div class="nav-tab-item">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                <span>Blindspot</span>
+              </div>
+              <div class="nav-tab-item">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>
+                <span>Local</span>
+              </div>
+              <div class="nav-tab-item">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                <span>My Bias</span>
+              </div>
+            </nav>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================================
+         VIEW 3: AMBIENT IOT / E-INK HARDWARE DISPLAY VIEWPORT
+         ======================================================================== -->
+    <div id="view-iot" class="view-panel">
+      <div class="iot-stage-wrapper">
+        
+        <div style="text-align: center; max-width: 600px;">
+          <h2 style="font-size: 1.4rem; font-weight: 800; margin-bottom: 6px;">ESP32 Ambient E-Paper Desk Ticker Simulator</h2>
+          <p style="font-size: 0.88rem; color: var(--text-secondary);">
+            Emulates a low-power 4.2" E-Ink hardware gadget waking every 15 minutes to fetch the latest breaking Blindspot via low-power Wi-Fi deep-sleep routines.
+          </p>
+        </div>
+
+        <div class="eink-bezel">
+          <div class="eink-display">
+            
+            <div>
+              <div class="eink-header">
+                <span>[GROUND NEWS // AMBIENT TICKER]</span>
+                <span>BAT: 94% | 10:28 AM</span>
+              </div>
+
+              <div class="eink-headline">
+                BLINDSPOT (RIGHT): Corporate Water Diversion Fines Trigger Federal Clean Water Action
+              </div>
+
+              <div style="font-size: 0.85rem; line-height: 1.4; margin-bottom: 14px;">
+                Coverage Analysis: 28 Liberal outlets reporting, 4 Center outlets, only 2 Conservative publications covered this enforcement action.
+              </div>
+            </div>
+
+            <div>
+              <div style="font-size: 0.78rem; font-weight: 700; text-transform: uppercase;">
+                Coverage Skew Meter:
+              </div>
+
+              <div class="eink-bias-bar">
+                <div class="eink-seg-left" style="width: 82%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700;">82% LEFT</div>
+                <div class="eink-seg-center" style="width: 12%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700;">12%</div>
+                <div class="eink-seg-right" style="width: 6%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700;">6%</div>
+              </div>
+
+              <div style="display: flex; justify-content: space-between; font-size: 0.75rem; border-top: 1px dashed #1A1A1A; padding-top: 6px;">
+                <span>Sources: 34 Outlets</span>
+                <span>Next Wake: 15m</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- MODAL: OWNERSHIP TRANSPARENCY KNOWLEDGE DRAWER -->
+  <div id="ownership-modal" class="modal-overlay" onclick="closeModalOnBackdrop(event)">
+    <div class="modal-dialog">
+      <button class="modal-close-btn" onclick="closeOwnershipModal()">&times;</button>
+      
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <span class="badge-tag">Knowledge Graph</span>
+        <h2 style="font-size: 1.25rem; font-weight: 800;">Media Ownership Breakdown</h2>
+      </div>
+
+      <p style="font-size: 0.9rem; color: var(--text-secondary);">
+        Ground News tracks and hand-codes corporate parentage across 2,276+ publications to reveal how commercial consolidation shapes media coverage.
+      </p>
+
+      <div style="display: flex; flex-direction: column; gap: 10px; font-size: 0.85rem;">
+        <div style="background-color: var(--bg-primary); padding: 12px; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+          <div style="font-weight: 700; color: var(--color-left); margin-bottom: 2px;">Media Conglomerate (18 Outlets)</div>
+          <div style="color: var(--text-muted); font-size: 0.8rem;">Major corporate networks formed via multi-station mergers (e.g., Nexstar, Gannett, News Corp).</div>
+        </div>
+
+        <div style="background-color: var(--bg-primary); padding: 12px; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+          <div style="font-weight: 700; color: var(--color-accent); margin-bottom: 2px;">Independent Publishers (12 Outlets)</div>
+          <div style="color: var(--text-muted); font-size: 0.8rem;">Journalist cooperatives, reader-supported trusts, or non-corporate private mastheads.</div>
+        </div>
+
+        <div style="background-color: var(--bg-primary); padding: 12px; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+          <div style="font-weight: 700; color: var(--color-warning); margin-bottom: 2px;">Billionaire Proprietor (10 Outlets)</div>
+          <div style="color: var(--text-muted); font-size: 0.8rem;">Directly controlled by wealthy high-net-worth individuals or family offices.</div>
+        </div>
+      </div>
+
+      <button style="background-color: var(--color-left); color: white; border: none; padding: 10px; border-radius: var(--radius-md); font-weight: 700; cursor: pointer;" onclick="closeOwnershipModal()">
+        Got it, Back to Newsroom
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // Tab View Switcher
+    function switchView(viewId) {
+      document.querySelectorAll('.view-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.view-panel').forEach(panel => panel.classList.remove('active'));
+
+      event.target.classList.add('active');
+      document.getElementById('view-' + viewId).classList.add('active');
+    }
+
+    // Theme Switcher
+    function toggleTheme() {
+      const body = document.body;
+      const themeIcon = document.getElementById('theme-icon');
+      const themeText = document.getElementById('theme-text');
+
+      if (body.getAttribute('data-theme') === 'dark') {
+        body.setAttribute('data-theme', 'light');
+        themeIcon.textContent = '🌙';
+        themeText.textContent = 'Dark Mode';
+      } else {
+        body.setAttribute('data-theme', 'dark');
+        themeIcon.textContent = '☀️';
+        themeText.textContent = 'Light Mode';
+      }
+    }
+
+    // Modal Handlers
+    function openOwnershipModal() {
+      document.getElementById('ownership-modal').classList.add('active');
+    }
+
+    function closeOwnershipModal() {
+      document.getElementById('ownership-modal').classList.remove('active');
+    }
+
+    function closeModalOnBackdrop(e) {
+      if (e.target.id === 'ownership-modal') {
+        closeOwnershipModal();
+      }
+    }
+
+    // Category Filter Simulation
+    function setFeedCategory(el, cat) {
+      document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+      el.classList.add('active');
+
+      const headline = document.getElementById('main-headline-text');
+      const barLeft = document.getElementById('bar-left');
+      const barCenter = document.getElementById('bar-center');
+      const barRight = document.getElementById('bar-right');
+      const pctLeft = document.getElementById('pct-left');
+      const pctCenter = document.getElementById('pct-center');
+      const pctRight = document.getElementById('pct-right');
+
+      if (cat === 'blindspot') {
+        headline.textContent = "State Audit Identifies $1.4B in Improper Pandemic Unemployment Outlays";
+        barLeft.style.width = '8%';
+        barCenter.style.width = '14%';
+        barRight.style.width = '78%';
+        pctLeft.textContent = '8% Left';
+        pctCenter.textContent = '14% Center';
+        pctRight.textContent = '78% Right';
+      } else if (cat === 'tech') {
+        headline.textContent = "Global Artificial Intelligence Safety Summit Reaches Consensus on Frontier Testing";
+        barLeft.style.width = '33%';
+        barCenter.style.width = '47%';
+        barRight.style.width = '20%';
+        pctLeft.textContent = '33% Left';
+        pctCenter.textContent = '47% Center';
+        pctRight.textContent = '20% Right';
+      } else {
+        headline.textContent = "Congress Passes Landmark Bipartisan Clean Energy & Power Grid Modernization Package";
+        barLeft.style.width = '35.4%';
+        barCenter.style.width = '41.7%';
+        barRight.style.width = '22.9%';
+        pctLeft.textContent = '35% Left';
+        pctCenter.textContent = '42% Center';
+        pctRight.textContent = '23% Right';
+      }
+    }
+
+    // Dynamic Filter
+    function filterHeadlines(val) {
+      if (val.trim().length > 0) {
+        console.log("Filtering headlines for:", val);
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+flowchart TD
+    START([Voter Starts Candidate Evaluation]) --> Q1{Primary Voter Concern?}
+    
+    Q1 -->|Jobs & Automotive Transition| D_AUTO{Stance on EPA EV Standards?}
+    Q1 -->|Healthcare Costs & Coverage| D_HEALTH{Stance on Single-Payer?}
+    Q1 -->|National Security & China| D_NATSEC{Foreign Policy Posture?}
+    Q1 -->|Abortion & Judicial Power| D_REPRO{Stance on Reproductive Rights?}
+
+    %% Auto Branch
+    D_AUTO -->|Protect Union Battery Jobs & Subsidies| R_ELSAYED_AUTO[Aligns: Abdul El-Sayed - Dem]
+    D_AUTO -->|Oppose Mandates, Defend Gas Engines| R_ROGERS_AUTO[Aligns: Mike Rogers - Rep]
+
+    %% Healthcare Branch
+    D_HEALTH -->|Universal Medicare for All, No Deductibles| R_ELSAYED_HLTH[Aligns: Abdul El-Sayed - Dem]
+    D_HEALTH -->|Market Competition, HSAs, Preserve Private| R_ROGERS_HLTH[Aligns: Mike Rogers - Rep]
+
+    %% NatSec Branch
+    D_NATSEC -->|Condition Foreign Aid, Gaza Ceasefire| R_ELSAYED_FP[Aligns: Abdul El-Sayed - Dem]
+    D_NATSEC -->|Hawkish Deterrence, Unconditional Israel Aid| R_ROGERS_FP[Aligns: Mike Rogers - Rep]
+
+    %% Repro Branch
+    D_REPRO -->|Codify Roe in Federal Law, Repeal Hyde| R_ELSAYED_ABORT[Aligns: Abdul El-Sayed - Dem]
+    D_REPRO -->|Leave to States via Prop 3, Oppose Federal Ban| R_ROGERS_ABORT[Aligns: Mike Rogers - Rep]
+
+    %% Secondary Check: Minor Parties
+    R_ELSAYED_AUTO -.-> MINOR_CHECK{Consider Minor Parties?}
+    R_ROGERS_AUTO -.-> MINOR_CHECK
+    
+    MINOR_CHECK -->|Immediate Fossil Fuel Ban| M_GREEN[Douglas Marsh - Green]
+    MINOR_CHECK -->|Abolish Income Tax & Surveillance| M_LIB[Lydia Christensen - Libertarian]
+    MINOR_CHECK -->|Strict Constitutional Gold Standard| M_USTP[Timothy Long - U.S. Taxpayers]
+    MINOR_CHECK -->|Major-Party Nominees Only| FINAL_CHOICE[Proceed to Ballot Navigator]

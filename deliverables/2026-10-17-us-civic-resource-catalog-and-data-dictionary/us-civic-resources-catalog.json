@@ -1,0 +1,873 @@
+[
+  {
+    "resource_id": "FED-LEG-CONGRESS-API",
+    "resource_name": "Congress.gov REST API",
+    "provider_name": "Library of Congress",
+    "provider_type": "Government",
+    "primary_category": "Legislation and government action",
+    "secondary_categories": [
+      "Federal bills",
+      "Roll-call votes",
+      "Committee activity",
+      "Nominations"
+    ],
+    "government_level": "Federal",
+    "jurisdiction_ids": [
+      "US"
+    ],
+    "geographic_coverage": "United States nationwide (Federal Congress)",
+    "product_url": "https://www.congress.gov/",
+    "search_or_portal_url": "https://api.congress.gov/",
+    "executive_summary": "Authoritative federal legislative API providing structured JSON/XML endpoints for bills, amendments, member profiles, committee reports, roll-call floor votes, and nominations.",
+    "content_types": [
+      "Bills",
+      "Resolutions",
+      "Amendments",
+      "Committee Reports",
+      "Floor Votes",
+      "Nominations"
+    ],
+    "entity_types": [
+      "Bills",
+      "People (Members)",
+      "Committees",
+      "Votes",
+      "Nominations"
+    ],
+    "historical_coverage": "1973 (93rd Congress) to present; selected historical backfill",
+    "update_frequency": "Continuous during legislative session; hourly synchronization",
+    "content_formats": [
+      "JSON",
+      "XML",
+      "HTML"
+    ],
+    "languages": [
+      "English"
+    ],
+    "content_access": "Free",
+    "pricing_summary": "Free public service; no fees",
+    "developer_access": [
+      "API",
+      "Bulk download"
+    ],
+    "developer_docs_url": "https://github.com/LibraryOfCongress/api.congress.gov",
+    "api_or_feed_urls": [
+      "https://api.congress.gov/v3/bill",
+      "https://api.congress.gov/v3/member"
+    ],
+    "authentication": "API key passed via X-Api-Key header or query parameter",
+    "developer_constraints": "Standard 5,000 requests per hour; rate limit tracked in X-RateLimit headers",
+    "license_and_reuse": "Public domain (17 U.S.C. \u00a7 105). Unrestricted redistribution, storage, and commercial use.",
+    "terms_and_license_urls": [
+      "https://www.congress.gov/help/using-data-offsite"
+    ],
+    "recommended_integration": "Poll /v3/bill endpoint using updateDate parameters; cache responses in relational store",
+    "monitoring_support": "HTTP ETag, update timestamps on records, GitHub issue changelog",
+    "coverage_limitations": "Committee hearing transcripts occasionally lag live testimony by several weeks",
+    "accessibility_and_offline": "Digital API; bound Congressional Record volumes held in Federal Depository Libraries",
+    "verification_status": "Verified live",
+    "last_verified_at": "2026-10-17T03:58:24Z",
+    "evidence_urls": [
+      "https://api.congress.gov/",
+      "https://github.com/LibraryOfCongress/api.congress.gov"
+    ],
+    "confidence": "High",
+    "notes": "Primary system of record for all federal legislative applications."
+  },
+  {
+    "resource_id": "FED-CAM-OPENFEC",
+    "resource_name": "OpenFEC REST API",
+    "provider_name": "Federal Election Commission",
+    "provider_type": "Government",
+    "primary_category": "Ballots, candidates, and officeholders",
+    "secondary_categories": [
+      "Campaign finance",
+      "Independent expenditures",
+      "PAC filings"
+    ],
+    "government_level": "Federal",
+    "jurisdiction_ids": [
+      "US"
+    ],
+    "geographic_coverage": "United States nationwide (Federal elections)",
+    "product_url": "https://www.fec.gov/",
+    "search_or_portal_url": "https://api.open.fec.gov/developers/",
+    "executive_summary": "Official REST API and bulk data service providing candidate receipts, disbursements, committee registrations, PAC independent expenditures, and donor disclosures.",
+    "content_types": [
+      "Campaign Finance Filings",
+      "Contributions",
+      "Disbursements",
+      "Candidate Registrations"
+    ],
+    "entity_types": [
+      "Candidates",
+      "Committees",
+      "Donors",
+      "PACs",
+      "Filings"
+    ],
+    "historical_coverage": "1979\u20131980 election cycle to present",
+    "update_frequency": "Nightly bulk processing; daily transaction updates",
+    "content_formats": [
+      "JSON",
+      "CSV"
+    ],
+    "languages": [
+      "English"
+    ],
+    "content_access": "Free",
+    "pricing_summary": "Free public access; no fees",
+    "developer_access": [
+      "API",
+      "Bulk download"
+    ],
+    "developer_docs_url": "https://api.open.fec.gov/swagger/",
+    "api_or_feed_urls": [
+      "https://api.open.fec.gov/v1/candidates/",
+      "https://api.open.fec.gov/v1/schedules/schedule_a/"
+    ],
+    "authentication": "api.data.gov API key passed via query parameter or header",
+    "developer_constraints": "1,000 req/hr default; 7,200 req/hr upon email application; 100 results per page",
+    "license_and_reuse": "Public domain, BUT STRICTLY RESTRICTED by 52 U.S.C. \u00a7 30111(a)(4): donor names/addresses CANNOT be used for commercial solicitation or fundraising.",
+    "terms_and_license_urls": [
+      "https://www.fec.gov/legal-resources/regulations/"
+    ],
+    "recommended_integration": "Use REST API for candidate and committee summaries; use nightly bulk CSVs for transaction-level analysis",
+    "monitoring_support": "Daily updated timestamps; RSS feeds for new committee registrations",
+    "coverage_limitations": "Does not cover state or local campaign finance",
+    "accessibility_and_offline": "Digital database; historical microfilm reports available at FEC Public Records Office",
+    "verification_status": "Verified live",
+    "last_verified_at": "2026-10-17T03:58:29Z",
+    "evidence_urls": [
+      "https://api.open.fec.gov/developers/",
+      "https://github.com/fecgov/openFEC"
+    ],
+    "confidence": "High",
+    "notes": "Strict statutory ban on commercial solicitation using donor data must be architecturally enforced."
+  },
+  {
+    "resource_id": "FED-PUB-GOVINFO",
+    "resource_name": "GovInfo API",
+    "provider_name": "U.S. Government Publishing Office",
+    "provider_type": "Government",
+    "primary_category": "Legislation and government action",
+    "secondary_categories": [
+      "Codified statutes",
+      "Code of Federal Regulations",
+      "Congressional Record"
+    ],
+    "government_level": "Federal",
+    "jurisdiction_ids": [
+      "US"
+    ],
+    "geographic_coverage": "United States nationwide",
+    "product_url": "https://www.govinfo.gov/",
+    "search_or_portal_url": "https://api.govinfo.gov/docs",
+    "executive_summary": "Automated repository providing digitally signed, authenticated electronic publications of official federal documents including the United States Code and Federal Register.",
+    "content_types": [
+      "Statutes",
+      "Regulations",
+      "Court Opinions",
+      "Hearing Transcripts",
+      "Presidential Docs"
+    ],
+    "entity_types": [
+      "Documents",
+      "Packages",
+      "Granules",
+      "Committees"
+    ],
+    "historical_coverage": "1994 to present; historical retro-digitization back to 1789 for select collections",
+    "update_frequency": "Continuous / Multiple releases daily",
+    "content_formats": [
+      "JSON",
+      "XML",
+      "PDF",
+      "MODS"
+    ],
+    "languages": [
+      "English"
+    ],
+    "content_access": "Free",
+    "pricing_summary": "Free public access",
+    "developer_access": [
+      "API",
+      "Bulk download"
+    ],
+    "developer_docs_url": "https://api.govinfo.gov/docs",
+    "api_or_feed_urls": [
+      "https://api.govinfo.gov/collections",
+      "https://api.govinfo.gov/packages"
+    ],
+    "authentication": "api.data.gov API key",
+    "developer_constraints": "36,000 requests per hour (1,200 req/min, 40 req/sec)",
+    "license_and_reuse": "Public domain (17 U.S.C. \u00a7 105). Free commercial and educational reuse.",
+    "terms_and_license_urls": [
+      "https://www.govinfo.gov/about"
+    ],
+    "recommended_integration": "Direct REST API ingestion for full text statutory XML packages and PDF archives",
+    "monitoring_support": "Collection publish date index; sitemaps; automated notifications",
+    "coverage_limitations": "Scanned legacy volumes prior to 1994 rely on OCR with minor character errors",
+    "accessibility_and_offline": "Digital repository; physical depository items accessible at 1,100+ FDLP partner libraries",
+    "verification_status": "Verified live",
+    "last_verified_at": "2026-10-17T03:59:04Z",
+    "evidence_urls": [
+      "https://api.govinfo.gov/docs"
+    ],
+    "confidence": "High",
+    "notes": "Gold standard for digitally signed, tamper-evident federal legal texts."
+  },
+  {
+    "resource_id": "FED-GEO-CENSUS-API",
+    "resource_name": "U.S. Census Geocoder API",
+    "provider_name": "U.S. Census Bureau",
+    "provider_type": "Government",
+    "primary_category": "Voting and election administration",
+    "secondary_categories": [
+      "Precincts and boundaries",
+      "Address resolution",
+      "TIGER GIS"
+    ],
+    "government_level": "Federal",
+    "jurisdiction_ids": [
+      "US"
+    ],
+    "geographic_coverage": "United States nationwide and all territories",
+    "product_url": "https://geocoding.geo.census.gov/",
+    "search_or_portal_url": "https://geocoding.geo.census.gov/geocoder/geographies/onelineaddress",
+    "executive_summary": "Authoritative federal geocoding service translating residential street addresses into latitude/longitude coordinates, Census blocks, tracts, and Congressional District boundaries.",
+    "content_types": [
+      "Geographic Coordinates",
+      "Census Blocks",
+      "Census Tracts",
+      "Congressional Districts"
+    ],
+    "entity_types": [
+      "Addresses",
+      "Geographic Entities",
+      "Districts"
+    ],
+    "historical_coverage": "Decennial Census 2010, 2020, and Current Benchmark releases",
+    "update_frequency": "Bi-annually tied to TIGER database benchmark releases",
+    "content_formats": [
+      "JSON",
+      "XML",
+      "CSV"
+    ],
+    "languages": [
+      "English"
+    ],
+    "content_access": "Free",
+    "pricing_summary": "Completely free public utility",
+    "developer_access": [
+      "API",
+      "Bulk export"
+    ],
+    "developer_docs_url": "https://geocoding.geo.census.gov/geocoder/",
+    "api_or_feed_urls": [
+      "https://geocoding.geo.census.gov/geocoder/geographies/onelineaddress",
+      "https://geocoding.geo.census.gov/geocoder/geographies/addressbatch"
+    ],
+    "authentication": "None required (Open public API)",
+    "developer_constraints": "Unthrottled under ordinary usage; batch file limit 10,000 records per POST",
+    "license_and_reuse": "Public domain. Unrestricted redistribution and commercial utilization.",
+    "terms_and_license_urls": [
+      "https://www.census.gov/about/policies.html"
+    ],
+    "recommended_integration": "Primary address-to-district resolution component in registration and voter guide pipelines",
+    "monitoring_support": "Benchmark release versioning (`Public_AR_Current`)",
+    "coverage_limitations": "Does not map local municipal voting precincts or ward-level boundaries directly",
+    "accessibility_and_offline": "Web service; raw TIGER/Line shapefiles available for offline GIS server deployment",
+    "verification_status": "Verified live",
+    "last_verified_at": "2026-10-17T03:59:20Z",
+    "evidence_urls": [
+      "https://geocoding.geo.census.gov/"
+    ],
+    "confidence": "High",
+    "notes": "Foundational spatial resolution infrastructure for civic tech platforms."
+  },
+  {
+    "resource_id": "NAT-ELE-VIP-SPEC",
+    "resource_name": "Voting Information Project (VIP) Specification",
+    "provider_name": "Democracy Works",
+    "provider_type": "Nonprofit",
+    "primary_category": "Voting and election administration",
+    "secondary_categories": [
+      "Polling locations",
+      "Ballot drop boxes",
+      "Contest feeds"
+    ],
+    "government_level": "Multilevel",
+    "jurisdiction_ids": [
+      "US"
+    ],
+    "geographic_coverage": "United States nationwide (participating states and counties)",
+    "product_url": "https://votinginfoproject.org/",
+    "search_or_portal_url": "https://github.com/votinginfoproject/vip-specification",
+    "executive_summary": "Standardized data format and XML schema used by state election officials and commercial platforms to publish official polling places, drop boxes, and candidate contest data.",
+    "content_types": [
+      "Polling Locations",
+      "Drop Boxes",
+      "Early Vote Sites",
+      "Ballot Contests",
+      "Candidates"
+    ],
+    "entity_types": [
+      "Elections",
+      "Precincts",
+      "Polling Places",
+      "Contests",
+      "Candidates"
+    ],
+    "historical_coverage": "2008 to present (Versions 3.0 through 6.0)",
+    "update_frequency": "Continuous updates during active election cycles",
+    "content_formats": [
+      "XML",
+      "JSON",
+      "Shapefile"
+    ],
+    "languages": [
+      "English",
+      "Spanish",
+      "Multilingual support in v6.0"
+    ],
+    "content_access": "Free",
+    "pricing_summary": "Open-source specification; free implementation",
+    "developer_access": [
+      "Feed",
+      "Bulk download"
+    ],
+    "developer_docs_url": "https://github.com/votinginfoproject/vip-specification",
+    "api_or_feed_urls": [
+      "https://github.com/votinginfoproject/vip-specification/tree/master/vip_spec.xsd"
+    ],
+    "authentication": "None required for schema; state feed authentication varies",
+    "developer_constraints": "Feeds generated by state election management vendors during election windows",
+    "license_and_reuse": "Creative Commons Attribution 4.0 International (CC BY 4.0)",
+    "terms_and_license_urls": [
+      "https://votinginfoproject.org/"
+    ],
+    "recommended_integration": "Parse official state VIP XML feeds directly or ingest via Google Civic Information API",
+    "monitoring_support": "GitHub commit log; state election calendar coordination",
+    "coverage_limitations": "Only available in states that actively publish VIP feeds; inactive between major election cycles",
+    "accessibility_and_offline": "Digital feed specification; feeds translate into physical voting site directories",
+    "verification_status": "Verified live",
+    "last_verified_at": "2026-10-17T03:59:36Z",
+    "evidence_urls": [
+      "https://github.com/votinginfoproject/vip-specification"
+    ],
+    "confidence": "High",
+    "notes": "Industry standard schema powering major national voter information tools."
+  },
+  {
+    "resource_id": "NAT-ELE-GOOGLE-CIVIC",
+    "resource_name": "Google Civic Information API",
+    "provider_name": "Google LLC",
+    "provider_type": "Commercial",
+    "primary_category": "Voting and election administration",
+    "secondary_categories": [
+      "Elected officials",
+      "Polling locations",
+      "OCD-ID mapping"
+    ],
+    "government_level": "Multilevel",
+    "jurisdiction_ids": [
+      "US"
+    ],
+    "geographic_coverage": "United States nationwide",
+    "product_url": "https://developers.google.com/civic-information",
+    "search_or_portal_url": "https://developers.google.com/civic-information/docs/v2",
+    "executive_summary": "Hosted REST API providing elected representative lookup by street address and address-specific ballot contest and polling place queries during supported elections.",
+    "content_types": [
+      "Elected Officials",
+      "Polling Places",
+      "Drop Boxes",
+      "Ballot Contests",
+      "OCD-IDs"
+    ],
+    "entity_types": [
+      "People (Officials)",
+      "Offices",
+      "Divisions",
+      "Polling Places",
+      "Contests"
+    ],
+    "historical_coverage": "Current officeholders; active election cycles only",
+    "update_frequency": "Continuous for representatives; election-driven for voterinfo",
+    "content_formats": [
+      "JSON"
+    ],
+    "languages": [
+      "English"
+    ],
+    "content_access": "Freemium",
+    "pricing_summary": "Free tier up to 25,000 queries per day; enterprise billing available",
+    "developer_access": [
+      "API"
+    ],
+    "developer_docs_url": "https://developers.google.com/civic-information/docs/v2",
+    "api_or_feed_urls": [
+      "https://www.googleapis.com/civicinfo/v2/representatives",
+      "https://www.googleapis.com/civicinfo/v2/voterinfo"
+    ],
+    "authentication": "Google Cloud API key",
+    "developer_constraints": "25,000 requests per day default quota; address-specific rate limits",
+    "license_and_reuse": "Commercial permissive under Google Cloud Platform Terms of Service",
+    "terms_and_license_urls": [
+      "https://developers.google.com/terms"
+    ],
+    "recommended_integration": "Core endpoint for user address to elected representative mapping; dynamic ballot lookup",
+    "monitoring_support": "Google Cloud Monitoring and quota metrics",
+    "coverage_limitations": "voterinfo endpoint returns 404/empty when no active election is registered for an address",
+    "accessibility_and_offline": "Cloud web API exclusively",
+    "verification_status": "Verified live",
+    "last_verified_at": "2026-10-17T03:58:41Z",
+    "evidence_urls": [
+      "https://developers.google.com/civic-information"
+    ],
+    "confidence": "High",
+    "notes": "Essential utility for rapid prototype and production representative resolution."
+  },
+  {
+    "resource_id": "NAT-LEG-OPENSTATES-V3",
+    "resource_name": "Open States REST API v3",
+    "provider_name": "Plural Policy",
+    "provider_type": "Commercial",
+    "primary_category": "Legislation and government action",
+    "secondary_categories": [
+      "50-state bills",
+      "Legislative votes",
+      "Legislators by coordinate"
+    ],
+    "government_level": "State",
+    "jurisdiction_ids": [
+      "US-ALL"
+    ],
+    "geographic_coverage": "All 50 U.S. states, District of Columbia, and Puerto Rico",
+    "product_url": "https://openstates.org/",
+    "search_or_portal_url": "https://v3.openstates.org/",
+    "executive_summary": "Open civic technology data platform aggregating bills, votes, committee memberships, and legislator geographic boundaries across all state legislatures.",
+    "content_types": [
+      "State Bills",
+      "Roll Call Votes",
+      "Legislators",
+      "Committees",
+      "Events"
+    ],
+    "entity_types": [
+      "Bills",
+      "People (Legislators)",
+      "Committees",
+      "Jurisdictions",
+      "Votes"
+    ],
+    "historical_coverage": "2010 to present across most states; selected states back to 2000",
+    "update_frequency": "Multiple scrapers run daily during active legislative sessions",
+    "content_formats": [
+      "JSON",
+      "CSV bulk"
+    ],
+    "languages": [
+      "English",
+      "Spanish (Puerto Rico)"
+    ],
+    "content_access": "Freemium",
+    "pricing_summary": "Free community tier with API key; commercial subscriptions for Plural Pro",
+    "developer_access": [
+      "API",
+      "Bulk download"
+    ],
+    "developer_docs_url": "https://docs.openstates.org/api-v3/",
+    "api_or_feed_urls": [
+      "https://v3.openstates.org/bills",
+      "https://v3.openstates.org/people.geo"
+    ],
+    "authentication": "API key passed via X-API-KEY header or apikey query parameter",
+    "developer_constraints": "Rate limits enforced per rolling minute/day on free tier",
+    "license_and_reuse": "Open data license for community tier; commercial redistribution requires agreement",
+    "terms_and_license_urls": [
+      "https://pluralpolicy.com/terms/"
+    ],
+    "recommended_integration": "Query /people.geo for state legislative district lookups; batch bill status sync",
+    "monitoring_support": "Open States GitHub scraper repositories; status alerts",
+    "coverage_limitations": "Scraper breakages can cause 24-48 hour lags during state website updates",
+    "accessibility_and_offline": "Web API; bulk data exports available for local indexing",
+    "verification_status": "Verified live",
+    "last_verified_at": "2026-10-17T03:59:00Z",
+    "evidence_urls": [
+      "https://docs.openstates.org/api-v3/",
+      "https://v3.openstates.org/docs/"
+    ],
+    "confidence": "High",
+    "notes": "Premier open-source community platform for multi-state legislative ingestion."
+  },
+  {
+    "resource_id": "NAT-LEG-LEGISCAN-API",
+    "resource_name": "LegiScan API",
+    "provider_name": "LegiScan LLC",
+    "provider_type": "Commercial",
+    "primary_category": "Legislation and government action",
+    "secondary_categories": [
+      "State legislation",
+      "Roll call votes",
+      "Bill text search"
+    ],
+    "government_level": "Multilevel",
+    "jurisdiction_ids": [
+      "US",
+      "US-ALL"
+    ],
+    "geographic_coverage": "United States Congress and all 50 State Legislatures",
+    "product_url": "https://legiscan.com/",
+    "search_or_portal_url": "https://legiscan.com/legiscan-api",
+    "executive_summary": "Commercial-grade legislative data engine providing normalized JSON data covering state and federal bills, full text documents, amendments, sponsors, and roll call votes.",
+    "content_types": [
+      "Bills",
+      "Bill Texts",
+      "Amendments",
+      "Roll Calls",
+      "Sponsors"
+    ],
+    "entity_types": [
+      "Bills",
+      "Legislators",
+      "Votes",
+      "Sessions",
+      "Amendments"
+    ],
+    "historical_coverage": "2009 to present across all 50 states and Congress",
+    "update_frequency": "Real-time to hourly polling; Push API delivers within 15 minutes",
+    "content_formats": [
+      "JSON",
+      "MIME/PDF/HTML text"
+    ],
+    "languages": [
+      "English"
+    ],
+    "content_access": "Freemium",
+    "pricing_summary": "Free tier: 10,000-30,000 queries/mo; Paid Pull & Push tiers scale by state count",
+    "developer_access": [
+      "API",
+      "Feed",
+      "Webhook"
+    ],
+    "developer_docs_url": "https://legiscan.com/legiscan-api",
+    "api_or_feed_urls": [
+      "https://api.legiscan.com/?key=...&op=getMasterList"
+    ],
+    "authentication": "API key passed as URL parameter",
+    "developer_constraints": "Free tier capped monthly; enterprise Push streaming avoids polling limits",
+    "license_and_reuse": "Standard license requires attribution; Whitebox license permits unbranded commercial redistribution",
+    "terms_and_license_urls": [
+      "https://legiscan.com/legiscan-api"
+    ],
+    "recommended_integration": "Enterprise push webhooks for mission-critical legislative alerting",
+    "monitoring_support": "Change hashes for bill updates; Push API automated webhooks",
+    "coverage_limitations": "Does not cover municipal or county-level ordinances",
+    "accessibility_and_offline": "Cloud RPC API; national weekly bulk archives available",
+    "verification_status": "Verified live",
+    "last_verified_at": "2026-10-17T03:58:51Z",
+    "evidence_urls": [
+      "https://legiscan.com/legiscan-api"
+    ],
+    "confidence": "High",
+    "notes": "Highly reliable commercial backbone for multi-state legislative intelligence."
+  },
+  {
+    "resource_id": "NAT-CRT-COURTLISTENER",
+    "resource_name": "CourtListener REST API v4",
+    "provider_name": "Free Law Project",
+    "provider_type": "Nonprofit",
+    "primary_category": "Courts, judges, and legal proceedings",
+    "secondary_categories": [
+      "PACER RECAP dockets",
+      "Legal opinions",
+      "Judicial disclosures",
+      "Oral audio"
+    ],
+    "government_level": "Multilevel",
+    "jurisdiction_ids": [
+      "US",
+      "US-ALL"
+    ],
+    "geographic_coverage": "United States Federal Courts and all 50 State Appellate Courts",
+    "product_url": "https://www.courtlistener.com/",
+    "search_or_portal_url": "https://www.courtlistener.com/api/rest/v4/",
+    "executive_summary": "Nonprofit legal database providing programmatic access to federal and state court opinions, RECAP PACER dockets, judicial biographical data, and oral argument audio recordings.",
+    "content_types": [
+      "Court Opinions",
+      "Dockets",
+      "Filings",
+      "Judges",
+      "Financial Disclosures",
+      "Oral Arguments"
+    ],
+    "entity_types": [
+      "Cases",
+      "Dockets",
+      "Judges",
+      "Courts",
+      "Audio Files"
+    ],
+    "historical_coverage": "1754 to present; comprehensive federal coverage and major state appellate backfill",
+    "update_frequency": "Continuous / Real-time ingestion via RECAP extensions and court scrapers",
+    "content_formats": [
+      "JSON",
+      "PDF",
+      "MP3",
+      "PostgreSQL dump"
+    ],
+    "languages": [
+      "English"
+    ],
+    "content_access": "Freemium",
+    "pricing_summary": "Free tier: 125 req/day; Paid memberships start at $10/mo; institutional tiers available",
+    "developer_access": [
+      "API",
+      "Bulk download",
+      "Database replication",
+      "Webhooks"
+    ],
+    "developer_docs_url": "https://free.law/wiki/api-v4/",
+    "api_or_feed_urls": [
+      "https://www.courtlistener.com/api/rest/v4/opinions/",
+      "https://www.courtlistener.com/api/rest/v4/dockets/"
+    ],
+    "authentication": "Authorization header (`Authorization: Token <key>`)",
+    "developer_constraints": "Free tier: 5 req/min, 50 req/hr, 125 req/day on rolling window basis",
+    "license_and_reuse": "Public domain primary court documents; API access governed by Free Law Project terms",
+    "terms_and_license_urls": [
+      "https://free.law/about/"
+    ],
+    "recommended_integration": "Direct REST API for case search; PostgreSQL logical replication for enterprise backends",
+    "monitoring_support": "Case alerts API; search alerts; real-time webhooks",
+    "coverage_limitations": "State trial court coverage is limited to crowdsourced or specific partner scrapers",
+    "accessibility_and_offline": "Web API; bulk CSV files; on-site archival court references",
+    "verification_status": "Verified live",
+    "last_verified_at": "2026-10-17T03:58:33Z",
+    "evidence_urls": [
+      "https://free.law/",
+      "https://www.courtlistener.com/api/rest/v4/"
+    ],
+    "confidence": "High",
+    "notes": "Indispensable non-profit resource for liberating paywalled PACER court records."
+  },
+  {
+    "resource_id": "NAT-ELE-BALLOTPEDIA-API",
+    "resource_name": "Ballotpedia Data Client API",
+    "provider_name": "Ballotpedia (Lucy Burns Institute)",
+    "provider_type": "Commercial",
+    "primary_category": "Ballots, candidates, and officeholders",
+    "secondary_categories": [
+      "Candidate profiles",
+      "Ballot measures",
+      "School boards",
+      "Judicial retention"
+    ],
+    "government_level": "Multilevel",
+    "jurisdiction_ids": [
+      "US",
+      "US-ALL"
+    ],
+    "geographic_coverage": "United States nationwide across federal, state, and top 100 metropolitan areas",
+    "product_url": "https://ballotpedia.org/",
+    "search_or_portal_url": "https://developer.ballotpedia.org/",
+    "executive_summary": "Comprehensive commercial API delivering structured data on candidates, ballot measures, elected officials, election dates, and voting districts based on geographic coordinates.",
+    "content_types": [
+      "Candidates",
+      "Elections",
+      "Ballot Measures",
+      "Officeholders",
+      "Districts"
+    ],
+    "entity_types": [
+      "People (Candidates)",
+      "Offices",
+      "Ballot Measures",
+      "Districts",
+      "Elections"
+    ],
+    "historical_coverage": "2012 to present comprehensive; historical coverage for major federal/state races",
+    "update_frequency": "Continuous updates by professional editorial staff during election filing cycles",
+    "content_formats": [
+      "JSON",
+      "CSV bulk"
+    ],
+    "languages": [
+      "English"
+    ],
+    "content_access": "Subscription",
+    "pricing_summary": "Commercial annual subscription packages; sales quote required (`data@ballotpedia.org`)",
+    "developer_access": [
+      "API",
+      "Bulk export"
+    ],
+    "developer_docs_url": "https://developer.ballotpedia.org/",
+    "api_or_feed_urls": [
+      "https://api4.ballotpedia.org/elections_by_point",
+      "https://api4.ballotpedia.org/officeholders"
+    ],
+    "authentication": "API token and origin domain whitelisting (CORS protection)",
+    "developer_constraints": "Geographic API: 5 RPS, 100 burst, 200,000 queries per 24 hours; Bulk API: 50 requests/day",
+    "license_and_reuse": "Proprietary copyright. Redistribution of raw dataset strictly prohibited; external app embedding allowed with anti-scraping safeguards.",
+    "terms_and_license_urls": [
+      "https://developer.ballotpedia.org/dictionaries-and-terms/terms-of-use"
+    ],
+    "recommended_integration": "Query /elections_by_point to populate sample ballots and local candidate dossiers",
+    "monitoring_support": "API usage endpoint (/usage); account executive status briefings",
+    "coverage_limitations": "Local coverage outside top 100 cities is selective; candidate survey response varies",
+    "accessibility_and_offline": "Web API; digital encyclopedia",
+    "verification_status": "Verified live",
+    "last_verified_at": "2026-10-17T03:58:46Z",
+    "evidence_urls": [
+      "https://developer.ballotpedia.org/"
+    ],
+    "confidence": "High",
+    "notes": "Premier commercial data source for nonpartisan candidate and ballot measure intelligence."
+  },
+  {
+    "resource_id": "NAT-LOC-CHRONICLING",
+    "resource_name": "Chronicling America Historic Newspapers API",
+    "provider_name": "Library of Congress",
+    "provider_type": "Government",
+    "primary_category": "Journalism, community, print, and archives",
+    "secondary_categories": [
+      "Historical newspapers",
+      "Public notices",
+      "Civil archives"
+    ],
+    "government_level": "Multilevel",
+    "jurisdiction_ids": [
+      "US",
+      "US-ALL"
+    ],
+    "geographic_coverage": "United States nationwide (all 50 states, DC, Puerto Rico)",
+    "product_url": "https://www.loc.gov/collections/chronicling-america/",
+    "search_or_portal_url": "https://www.loc.gov/apis/json-and-yaml/",
+    "executive_summary": "Historic American newspapers from 1770 to 1963, searchable via the unified Library of Congress JSON API for historical election notices, candidate profiles, and legal advertisements.",
+    "content_types": [
+      "Newspaper Pages",
+      "Articles",
+      "Advertisements",
+      "Legal Notices",
+      "OCR Text"
+    ],
+    "entity_types": [
+      "Newspapers",
+      "Issues",
+      "Pages",
+      "Holdings"
+    ],
+    "historical_coverage": "1770 to 1963 (strongest coverage 1836\u20131922)",
+    "update_frequency": "Bi-monthly batch additions by state partner libraries",
+    "content_formats": [
+      "JSON",
+      "TIFF",
+      "PDF",
+      "METS/ALTO XML"
+    ],
+    "languages": [
+      "English",
+      "Spanish",
+      "German",
+      "French",
+      "Multilingual"
+    ],
+    "content_access": "Free",
+    "pricing_summary": "Completely free public service",
+    "developer_access": [
+      "API",
+      "Bulk download"
+    ],
+    "developer_docs_url": "https://www.loc.gov/apis/json-and-yaml/",
+    "api_or_feed_urls": [
+      "https://www.loc.gov/collections/chronicling-america/?fo=json"
+    ],
+    "authentication": "None required",
+    "developer_constraints": "Standard LoC API rate limits (approx. 20 requests per second)",
+    "license_and_reuse": "Public domain for pre-1928 content; open access for digitized newspapers",
+    "terms_and_license_urls": [
+      "https://www.loc.gov/legal/"
+    ],
+    "recommended_integration": "Query LoC JSON API using newspaper directory parameters and keyword filters for historical context",
+    "monitoring_support": "LoC collections RSS feeds and API changelog",
+    "coverage_limitations": "Standalone API deprecated; all access migrated into core LoC JSON API architecture",
+    "accessibility_and_offline": "Digital portal; master 35mm microfilm negative reels preserved at state historical societies",
+    "verification_status": "Verified live",
+    "last_verified_at": "2026-10-17T03:59:07Z",
+    "evidence_urls": [
+      "https://www.loc.gov/apis/json-and-yaml/"
+    ],
+    "confidence": "High",
+    "notes": "Verified migration: legacy chroniclingamerica.loc.gov API retired in favor of loc.gov JSON."
+  },
+  {
+    "resource_id": "NAT-CAM-OPENSECRETS-BULK",
+    "resource_name": "OpenSecrets Bulk Data Program",
+    "provider_name": "Center for Responsive Politics",
+    "provider_type": "Nonprofit",
+    "primary_category": "Ballots, candidates, and officeholders",
+    "secondary_categories": [
+      "Campaign finance",
+      "Lobbying disclosures",
+      "527 committees",
+      "Personal finances"
+    ],
+    "government_level": "Multilevel",
+    "jurisdiction_ids": [
+      "US",
+      "US-ALL"
+    ],
+    "geographic_coverage": "United States federal and state campaign finance",
+    "product_url": "https://www.opensecrets.org/",
+    "search_or_portal_url": "https://www.opensecrets.org/bulk-data",
+    "executive_summary": "Comprehensive bulk data files harmonizing federal and state campaign contributions, federal lobbying registrations, 527 groups, and personal financial disclosures.",
+    "content_types": [
+      "Campaign Contributions",
+      "PAC Data",
+      "Lobbying Filings",
+      "Personal Finances"
+    ],
+    "entity_types": [
+      "Donors",
+      "Candidates",
+      "Committees",
+      "Lobbyists",
+      "Clients"
+    ],
+    "historical_coverage": "1989 to present (Federal); 2000 to present (State)",
+    "update_frequency": "Periodic cycle updates; historical backfill archives",
+    "content_formats": [
+      "CSV (compressed zip)"
+    ],
+    "languages": [
+      "English"
+    ],
+    "content_access": "Registration required",
+    "pricing_summary": "Free for non-commercial research; paid commercial licensing agreements required",
+    "developer_access": [
+      "Bulk download"
+    ],
+    "developer_docs_url": "https://www.opensecrets.org/bulk-data",
+    "api_or_feed_urls": [
+      "https://www.opensecrets.org/bulk-data"
+    ],
+    "authentication": "User registration and authenticated web download token",
+    "developer_constraints": "CRITICAL DISCOVERY: REST API is DISCONTINUED; bulk file downloads only",
+    "license_and_reuse": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 (CC BY-NC-SA 4.0)",
+    "terms_and_license_urls": [
+      "https://www.opensecrets.org/about/terms.php"
+    ],
+    "recommended_integration": "Download annual compressed CSV datasets, load into PostgreSQL data warehouse, apply standardization scripts",
+    "monitoring_support": "Email notices for new cycle data releases",
+    "coverage_limitations": "No real-time API; data reflects cleaned, standardized post-election reconciliations",
+    "accessibility_and_offline": "Digital bulk files; web research portal",
+    "verification_status": "Verified live (Bulk only)",
+    "last_verified_at": "2026-10-17T03:59:44Z",
+    "evidence_urls": [
+      "https://www.opensecrets.org/bulk-data"
+    ],
+    "confidence": "High",
+    "notes": "Vital correction: API is retired; bulk data program is active and robust."
+  }
+]

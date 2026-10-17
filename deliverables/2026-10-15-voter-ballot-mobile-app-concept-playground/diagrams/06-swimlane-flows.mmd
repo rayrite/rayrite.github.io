@@ -1,0 +1,28 @@
+sequenceDiagram
+    autonumber
+    actor Voter as Registered Voter
+    participant Client as VoterLens Mobile Client
+    participant Cache as Local Encrypted SQLite / IndexedDB
+    participant API as Civic Intelligence Gateway (QVF + FEC + Trail)
+
+    Voter->>Client: Launches VoterLens App
+    Client->>Cache: Check for cached precinct & ballot
+    alt Cache Hit (Offline Ready)
+        Cache-->>Client: Return cached 2026 Michigan Senate Slate
+        Client-->>Voter: Display Civic Reel & Verified Ballot
+    else Cache Miss / First Launch
+        Client->>Voter: Prompt for Michigan Precinct / ZIP
+        Voter->>Client: Enters ZIP (e.g. 48386 - White Lake)
+        Client->>API: Query QVF certified candidates & precinct rules
+        API-->>Client: Certified Nominees: El-Sayed (D), Rogers (R), Marsh (G), Christensen (L), Long (USTP)
+        Client->>Cache: Persist slate & logistics data locally
+        Client-->>Voter: Render Live Civic Feed
+    end
+
+    Voter->>Client: Taps Debate Audio Soundbite ('EV Mandates')
+    Client->>Cache: Retrieve cached audio stream & verbatim text
+    Client-->>Voter: Renders waveform visualizer & synchronized captions
+
+    Voter->>Client: Selects Candidate & Taps 'Export Booth Pass'
+    Client->>Cache: Encrypt ballot selections with voter private salt
+    Client-->>Voter: Renders high-contrast offline pass with precinct hours & accepted ID checklist

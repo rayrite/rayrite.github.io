@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zorin OS 18.1 Toolchain & Autonomous Agent Guide | PowerSpec G914</title>
+  <style>
+    /* =====================================================================
+       GLOBAL STYLES & RESET
+       ===================================================================== */
+    :root {
+      --bg-primary: #0b0f19;
+      --bg-secondary: #111827;
+      --bg-card: #1f2937;
+      --bg-code: #0f172a;
+      --text-primary: #f9fafb;
+      --text-secondary: #9ca3af;
+      --text-muted: #6b7280;
+      --accent: #38bdf8;
+      --accent-hover: #0284c7;
+      --accent-glow: rgba(56, 189, 248, 0.2);
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --border: #374151;
+      --border-accent: #2563eb;
+      --radius: 8px;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      --font-mono: "JetBrains Mono", "Fira Code", Consolas, Monaco, "Courier New", monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      padding: 2rem 1rem;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    /* =====================================================================
+       HEADER & BADGES
+       ===================================================================== */
+    header {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      border: 1px solid var(--border);
+      border-left: 6px solid var(--accent);
+      border-radius: var(--radius);
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      color: #ffffff;
+      margin-bottom: 0.5rem;
+      line-height: 1.2;
+    }
+
+    .subtitle {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .meta-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 1rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.35rem 0.75rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      border-radius: 9999px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text-primary);
+    }
+
+    .badge-accent {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .badge-success {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: var(--success);
+      color: var(--success);
+    }
+
+    .badge-warning {
+      background: rgba(245, 158, 11, 0.15);
+      border-color: var(--warning);
+      color: var(--warning);
+    }
+
+    /* =====================================================================
+       SECTIONS & CARDS
+       ===================================================================== */
+    section {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.8rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      color: var(--accent);
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    h3 {
+      font-size: 1.2rem;
+      color: #f3f4f6;
+      margin: 1.5rem 0 0.8rem 0;
+    }
+
+    p {
+      margin-bottom: 1rem;
+      color: #d1d5db;
+    }
+
+    /* =====================================================================
+       TABLES
+       ===================================================================== */
+    .table-container {
+      overflow-x: auto;
+      margin: 1.2rem 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+      text-align: left;
+    }
+
+    th {
+      background-color: var(--bg-card);
+      color: var(--accent);
+      padding: 0.8rem 1rem;
+      font-weight: 600;
+      border: 1px solid var(--border);
+    }
+
+    td {
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border);
+      color: #e5e7eb;
+    }
+
+    tr:nth-child(even) td {
+      background-color: rgba(31, 41, 55, 0.5);
+    }
+
+    /* =====================================================================
+       CODE BLOCKS
+       ===================================================================== */
+    pre {
+      background-color: var(--bg-code);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem 1.2rem;
+      overflow-x: auto;
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      color: #38bdf8;
+      margin: 0.8rem 0 1.2rem 0;
+      position: relative;
+    }
+
+    code {
+      font-family: var(--font-mono);
+      font-size: 0.88em;
+      background-color: rgba(55, 65, 81, 0.6);
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      color: #38bdf8;
+    }
+
+    pre code {
+      background: none;
+      padding: 0;
+      color: inherit;
+    }
+
+    /* =====================================================================
+       CALLOUTS & PROMPTS
+       ===================================================================== */
+    .callout {
+      border-left: 4px solid var(--accent);
+      background: rgba(30, 41, 59, 0.7);
+      padding: 1rem 1.2rem;
+      margin: 1.2rem 0;
+      border-radius: 0 var(--radius) var(--radius) 0;
+    }
+
+    .callout-warning {
+      border-left-color: var(--warning);
+      background: rgba(120, 53, 15, 0.2);
+    }
+
+    .callout-danger {
+      border-left-color: var(--danger);
+      background: rgba(153, 27, 27, 0.2);
+    }
+
+    .callout-success {
+      border-left-color: var(--success);
+      background: rgba(6, 78, 59, 0.2);
+    }
+
+    .prompt-box {
+      background: #020617;
+      border: 2px solid var(--border-accent);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      position: relative;
+    }
+
+    .prompt-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .prompt-title {
+      font-weight: 700;
+      color: #60a5fa;
+      font-size: 1.05rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .prompt-content {
+      font-family: var(--font-mono);
+      font-size: 0.86rem;
+      color: #e2e8f0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      line-height: 1.5;
+    }
+
+    /* =====================================================================
+       ACTION BUTTONS & TOOLBAR
+       ===================================================================== */
+    .action-bar {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .btn {
+      background-color: var(--accent);
+      color: #0b0f19;
+      font-weight: 600;
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.95rem;
+      transition: background-color 0.2s;
+    }
+
+    .btn:hover {
+      background-color: var(--accent-hover);
+      color: #ffffff;
+    }
+
+    /* =====================================================================
+       CHECKLISTS
+       ===================================================================== */
+    .checklist {
+      list-style: none;
+      margin: 1rem 0;
+    }
+
+    .checklist-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+      color: #e5e7eb;
+    }
+
+    .checkbox {
+      width: 18px;
+      height: 18px;
+      border: 2px solid var(--accent);
+      border-radius: 4px;
+      margin-top: 0.2rem;
+      flex-shrink: 0;
+    }
+
+    /* =====================================================================
+       PRINT STYLES
+       ===================================================================== */
+    @media print {
+      body {
+        background-color: #ffffff !important;
+        color: #111827 !important;
+        padding: 0 !important;
+        font-size: 10pt;
+      }
+
+      .container {
+        max-width: 100% !important;
+      }
+
+      header {
+        background: none !important;
+        border: none !important;
+        border-bottom: 2pt solid #111827 !important;
+        border-left: none !important;
+        box-shadow: none !important;
+        padding: 0 0 10pt 0 !important;
+        margin-bottom: 15pt !important;
+      }
+
+      h1 {
+        color: #111827 !important;
+        font-size: 18pt !important;
+      }
+
+      .subtitle {
+        color: #4b5563 !important;
+        font-size: 10pt !important;
+      }
+
+      section {
+        background: #ffffff !important;
+        border: 1pt solid #d1d5db !important;
+        box-shadow: none !important;
+        padding: 10pt !important;
+        margin-bottom: 15pt !important;
+        page-break-inside: avoid;
+      }
+
+      h2 {
+        color: #1f2937 !important;
+        border-bottom: 1pt solid #9ca3af !important;
+        font-size: 13pt !important;
+      }
+
+      h3 {
+        color: #111827 !important;
+        font-size: 11pt !important;
+      }
+
+      p, td, .checklist-item {
+        color: #1f2937 !important;
+      }
+
+      th {
+        background-color: #f3f4f6 !important;
+        color: #111827 !important;
+        border: 1pt solid #9ca3af !important;
+      }
+
+      td {
+        border: 1pt solid #d1d5db !important;
+      }
+
+      tr:nth-child(even) td {
+        background-color: #f9fafb !important;
+      }
+
+      pre, code {
+        background-color: #f3f4f6 !important;
+        color: #111827 !important;
+        border: 1pt solid #d1d5db !important;
+        font-size: 8.5pt !important;
+      }
+
+      .prompt-box {
+        background: #f8fafc !important;
+        border: 1.5pt solid #2563eb !important;
+        color: #0f172a !important;
+        page-break-inside: avoid;
+      }
+
+      .prompt-title {
+        color: #1d4ed8 !important;
+      }
+
+      .prompt-content {
+        color: #0f172a !important;
+      }
+
+      .badge {
+        background: #f3f4f6 !important;
+        border: 1pt solid #9ca3af !important;
+        color: #111827 !important;
+      }
+
+      .badge-accent, .badge-success, .badge-warning {
+        background: #f3f4f6 !important;
+        border-color: #9ca3af !important;
+        color: #111827 !important;
+      }
+
+      .action-bar, .no-print {
+        display: none !important;
+      }
+
+      @page {
+        margin: 12mm;
+        size: A4 portrait;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- TOP ACTION BAR (HIDDEN IN PRINT) -->
+  <div class="action-bar no-print">
+    <button class="btn" onclick="window.print()">
+      <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+      Print / Save as PDF Guide
+    </button>
+  </div>
+
+  <!-- DOCUMENT HEADER -->
+  <header>
+    <h1>Zorin OS 18.1 Developer Toolchain & Dual-Boot Guide</h1>
+    <div class="subtitle">Complete installation roadmap, hardware tuning, and autonomous co-working agent instructions for Google's Gemma 4 Developer Agent Competition.</div>
+    <div class="meta-badges">
+      <span class="badge badge-accent">Rig: PowerSpec G914</span>
+      <span class="badge">CPU: AMD Ryzen 9 9950X3D (16C/32T)</span>
+      <span class="badge">GPU: MSI RTX 5090 (32GB GDDR7)</span>
+      <span class="badge">RAM: 64GB DDR5-6000</span>
+      <span class="badge badge-success">Target OS: Zorin OS 18.1 (Ubuntu 24.04 LTS)</span>
+      <span class="badge badge-warning">Target Model: Gemma 4 31B QAT W4A16</span>
+    </div>
+  </header>
+
+  <!-- SECTION 1: HARDWARE & DUAL-BOOT ARCHITECTURE -->
+  <section id="architecture">
+    <h2>1. Dual-Boot Storage & Hardware Allocation Matrix</h2>
+    <p>Zorin OS 18.1 executes bare-metal on the PowerSpec G914, sharing the 2TB NVMe SSD with Windows 11 Pro through a unified UEFI partition layout. This eliminates virtualization layers and allows full direct hardware access:</p>
+    
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Hardware Resource</th>
+            <th>PowerSpec G914 Specification</th>
+            <th>Windows 11 Pro Role</th>
+            <th>Zorin OS 18.1 Bare-Metal Allocation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Processor (CPU)</strong></td>
+            <td>AMD Ryzen 9 9950X3D (16C / 32T, 3D V-Cache)</td>
+            <td>Host desktop & gaming</td>
+            <td><strong>All 32 Threads</strong> via <code>amd-pstate-epp</code> governor</td>
+          </tr>
+          <tr>
+            <td><strong>System Memory</strong></td>
+            <td>64GB DDR5-6000 (Dual Channel)</td>
+            <td>Host memory</td>
+            <td><strong>Full 64GB DDR5 RAM</strong> directly accessible</td>
+          </tr>
+          <tr>
+            <td><strong>Graphics (GPU)</strong></td>
+            <td>MSI Ventus 3X OC RTX 5090 (32GB GDDR7)</td>
+            <td>DirectX 12 Ultimate display</td>
+            <td><strong>Full 32GB VRAM</strong> for vLLM & Unsloth QLoRA</td>
+          </tr>
+          <tr>
+            <td><strong>Primary Storage</strong></td>
+            <td>2TB NVMe PCIe 4.0/5.0 SSD</td>
+            <td>C:\ NTFS Partition (~1.2 TB)</td>
+            <td><strong>Ext4 Partition (~750 GB)</strong> on <code>/dev/nvme0n1p5</code></td>
+          </tr>
+          <tr>
+            <td><strong>Motherboard</strong></td>
+            <td>MSI MAG X870E Tomahawk WiFi</td>
+            <td>Chipset & peripherals</td>
+            <td>Re-Size BAR enabled for high-bandwidth DMA</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- SECTION 2: STEP-BY-STEP DUAL BOOT INSTALLATION -->
+  <section id="dual-boot-steps">
+    <h2>2. Dual-Boot Setup Checklist: Step-by-Step</h2>
+
+    <h3>Step 2.1: Windows 11 Pre-Flight Preparations</h3>
+    <ul class="checklist">
+      <li class="checklist-item">
+        <div class="checkbox"></div>
+        <div><strong>Backup BitLocker Recovery Key:</strong> In Admin PowerShell, run <code>manage-bde -protectors -get C:</code>. Record the 48-digit key. Run <code>Suspend-BitLocker -MountPoint "C:" -RebootCount 2</code>.</div>
+      </li>
+      <li class="checklist-item">
+        <div class="checkbox"></div>
+        <div><strong>Disable Fast Startup:</strong> In Admin PowerShell, execute <code>powercfg /h off</code> to prevent NTFS filesystem locking.</div>
+      </li>
+      <li class="checklist-item">
+        <div class="checkbox"></div>
+        <div><strong>Shrink Volume in Disk Management:</strong> Open <code>diskmgmt.msc</code>, right-click C:, select <em>Shrink Volume</em>, enter <code>768000</code> MB (750GB), and click <em>Shrink</em>. Leave as Unallocated.</div>
+      </li>
+      <li class="checklist-item">
+        <div class="checkbox"></div>
+        <div><strong>Create Bootable USB:</strong> Download Zorin OS 18.1 Core ISO. Flash using Rufus with Partition Scheme: <strong>GPT</strong> and Target System: <strong>UEFI (non CSM)</strong>.</div>
+      </li>
+    </ul>
+
+    <h3>Step 2.2: MSI Click BIOS X Settings</h3>
+    <div class="callout">
+      Reboot PC and tap <strong>DEL</strong> to enter MSI Click BIOS X. Press <strong>F7</strong> for Advanced Mode:
+    </div>
+    <ul class="checklist">
+      <li class="checklist-item"><div class="checkbox"></div><div><strong>EXPO Memory Profile:</strong> Go to <em>OC</em> -> <em>DRAM Setting</em> -> Set <strong>EXPO</strong> to <code>[Profile 1]</code> (6000 MHz).</div></li>
+      <li class="checklist-item"><div class="checkbox"></div><div><strong>CPU Virtualization:</strong> Go to <em>OC</em> -> <em>CPU Features</em> -> Set <strong>SVM Mode</strong> to <code>[Enabled]</code>.</div></li>
+      <li class="checklist-item"><div class="checkbox"></div><div><strong>Re-Size BAR & IOMMU:</strong> In <em>Settings</em> -> <em>PCIe Sub-system</em>, set <strong>Above 4G Decoding</strong>, <strong>Re-Size BAR</strong>, and <strong>AMD IOMMU</strong> to <code>[Enabled]</code>.</div></li>
+      <li class="checklist-item"><div class="checkbox"></div><div><strong>Boot Mode:</strong> In <em>Settings</em> -> <em>Boot</em>, ensure <strong>Boot Mode Select</strong> is <code>[UEFI]</code>. Press <strong>F10</strong> to save and restart.</div></li>
+    </ul>
+
+    <h3>Step 2.3: Zorin OS 18.1 Installation Procedure</h3>
+    <ul class="checklist">
+      <li class="checklist-item"><div class="checkbox"></div><div>Tap <strong>F11</strong> during boot to open MSI Boot Menu. Select your UEFI Flash Drive.</div></li>
+      <li class="checklist-item"><div class="checkbox"></div><div>In GRUB, select <strong>"Try or Install Zorin OS (modern NVIDIA graphics)"</strong> to load the RTX 5090 driver.</div></li>
+      <li class="checklist-item"><div class="checkbox"></div><div>Check <em>"Install third-party software for graphics and Wi-Fi"</em> and <em>"Download updates"</em>.</div></li>
+      <li class="checklist-item"><div class="checkbox"></div><div>Choose <strong>"Install Zorin OS alongside Windows Boot Manager"</strong>. Complete setup and restart.</div></li>
+      <li class="checklist-item"><div class="checkbox"></div><div>If prompted on restart, select <strong>Enroll MOK</strong> -> <em>Continue</em> -> <em>Yes</em> -> enter your MOK password to bless NVIDIA drivers.</div></li>
+    </ul>
+  </section>
+
+  <!-- SECTION 3: NATIVE TOOLCHAIN SETUP -->
+  <section id="native-toolchain">
+    <h2>3. Native Zorin OS 18.1 Developer Toolchain</h2>
+    <p>Execute the following commands in the Zorin OS Terminal (<code>Ctrl + Alt + T</code>) to establish the complete bare-metal AI development stack:</p>
+
+    <h3>3.1 System Packages & Docker CE with NVIDIA Container Toolkit</h3>
+    <pre><code># 1. Update packages and install build essentials
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y build-essential cmake ninja-build git git-lfs curl wget jq unzip zip ripgrep ca-certificates software-properties-common
+git lfs install
+
+# 2. Install native Docker CE
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu noble stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt update && sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin
+sudo usermod -aG docker $USER
+
+# 3. Install NVIDIA Container Toolkit (enables RTX 5090 in Docker sandboxes)
+curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
+curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
+sudo apt update && sudo apt install -y nvidia-container-toolkit
+sudo nvidia-ctk runtime configure --runtime=docker
+sudo systemctl restart docker</code></pre>
+
+    <h3>3.2 Native Visual Studio Code (.deb Repository)</h3>
+    <div class="callout callout-warning">
+      <strong>Do NOT install VS Code from the Software Store via Flatpak/Snap.</strong> Flatpaks isolate VS Code from system paths, breaking Claude Code CLI integration. Install the native deb package:
+    </div>
+    <pre><code>curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | sudo tee /usr/share/keyrings/packages.microsoft.gpg > /dev/null
+echo "deb [arch=amd64,arm64,armhf signed-by=/usr/share/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" | sudo tee /etc/apt/sources.list.d/vscode.list > /dev/null
+sudo apt update && sudo apt install -y code</code></pre>
+
+    <h3>3.3 Node.js 22 LTS, Claude Code CLI & VS Code Extension</h3>
+    <pre><code># Install Node.js 22 LTS via nvm
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+nvm install 22 && nvm use 22 && nvm alias default 22
+
+# Install Anthropic Claude Code CLI
+npm install -g @anthropic-ai/claude-code
+
+# Install Official Claude Code Extension in VS Code
+code --install-extension anthropic.claude-code
+code --install-extension ms-python.python
+code --install-extension redhat.vscode-yaml
+code --install-extension ms-azuretools.vscode-docker</code></pre>
+
+    <h3>3.4 Python 3.11 Workspace, vLLM, Google ADK & swegemma</h3>
+    <pre><code># Install uv package manager
+curl -LsSf https://astral.sh/uv/install.sh | sh
+source ~/.cargo/env
+
+# Create workspace and virtual environment
+mkdir -p ~/bcf_workspace && cd ~/bcf_workspace
+uv python install 3.11
+uv venv .venv --python 3.11
+source .venv/bin/activate
+echo "source ~/bcf_workspace/.venv/bin/activate" >> ~/.bashrc
+
+# PyTorch Blackwell CUDA 12.6, vLLM, and ADK
+uv pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu126
+uv pip install vllm compressed-tensors google-adk adk-submission swegemma adk-eval-core kaggle
+uv pip install tree-sitter ast-grep-cli networkx transformers accelerate peft trl "unsloth[cu124-ampere-torch240]"</code></pre>
+  </section>
+
+  <!-- SECTION 4: AUTONOMOUS AGENT SYSTEM PROMPTS (THE SPECIAL SECTION) -->
+  <section id="autonomous-prompts">
+    <h2>4. Special Section: Autonomous Co-Working Agent Execution Prompt</h2>
+    <p>You can copy and hand the self-contained prompt below directly to an autonomous agent (such as <strong>Claude Code CLI</strong> running in your Zorin OS terminal or an agentic assistant). It instructs the agent to autonomously execute all software installs, dependency validations, and end-to-end sanity tests with zero manual hand-holding:</p>
+
+    <div class="prompt-box">
+      <div class="prompt-header">
+        <span class="prompt-title">
+          <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+          SYSTEM PROMPT: AUTONOMOUS ZORIN OS TOOLCHAIN PROVISIONER
+        </span>
+        <span class="badge badge-accent">Production Grade</span>
+      </div>
+      <div class="prompt-content">You are an Autonomous Systems Engineering Agent executing on a fresh installation of Zorin OS 18.1 (x86_64, Ubuntu 24.04 LTS Base) on a PowerSpec G914 workstation (AMD Ryzen 9 9950X3D, MSI Ventus 3X OC NVIDIA GeForce RTX 5090 32GB GDDR7, 64GB DDR5-6000 RAM).
+
+YOUR OBJECTIVE:
+Autonomously install, configure, and verify the complete software engineering and AI agent toolchain required for "Google - The Gemma 4 Developer Agent Competition", Visual Studio Code, and Anthropic Claude Code CLI.
+
+EXECUTION PRINCIPLES & SAFETY RULES:
+1. NON-INTERACTIVE MODE: All apt, npm, and script installations MUST run non-interactively. Use `DEBIAN_FRONTEND=noninteractive` and `-y` flags for all package operations. Never hang on a confirmation prompt.
+2. RE-ENTRANT & IDEMPOTENT: Check if a tool or package is already installed before attempting installation. Do not fail if a dependency or directory already exists.
+3. LOGGING & PROGRESS: Prefix every major step with `[*] STEP N: &lt;Description&gt;`. Log execution results clearly.
+4. GATE VERIFICATION: After each phase, execute the associated verification command. If any check fails, inspect stderr, apply immediate corrective action, and re-verify before proceeding to the next step.
+5. NO UNAUTHORIZED SYSTEM MODIFICATIONS: Limit all user files to `~/bcf_workspace` and standard config paths (`~/.bashrc`, `~/.kaggle`, `~/.nvm`).
+
+PHASE 1: SYSTEM ESSENTIALS & GPU VERIFICATION
+- Update package repositories: `sudo apt update && sudo apt upgrade -y`
+- Install build tools: `sudo apt install -y build-essential cmake ninja-build git git-lfs curl wget jq unzip zip ripgrep ca-certificates software-properties-common`
+- Verify NVIDIA Driver: Run `nvidia-smi`. Confirm RTX 5090 is detected with 32768 MiB VRAM and driver &gt;= 570.00. If missing, install `nvidia-driver-570` and warn that a reboot is required.
+
+PHASE 2: NATIVE DOCKER CE & NVIDIA CONTAINER TOOLKIT
+- Check if Docker is installed. If not, add Docker official APT repository and install `docker-ce docker-ce-cli containerd.io docker-buildx-plugin`.
+- Add `$USER` to the `docker` group: `sudo usermod -aG docker $USER`.
+- Add NVIDIA Container Toolkit repository and install `nvidia-container-toolkit`.
+- Configure runtime: `sudo nvidia-ctk runtime configure --runtime=docker` and `sudo systemctl restart docker`.
+- Verify: Run `docker --version`. Run a test container to verify daemon connectivity.
+
+PHASE 3: NATIVE VISUAL STUDIO CODE (.deb)
+- Ensure NO Flatpak/Snap VS Code is installed (check `snap list | grep code` and `flatpak list | grep com.visualstudio.code`). If present, warn user.
+- Add official Microsoft repository signing key and repo to `/etc/apt/sources.list.d/vscode.list`.
+- Install native package: `sudo apt update && sudo apt install -y code`.
+- Verify: Execute `code --version`.
+
+PHASE 4: NODE.JS 22 LTS & CLAUDE CODE ECOSYSTEM
+- Check for Node.js (`node -v`). If absent or &lt; 18.0.0:
+  * Install `nvm` via `https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh`.
+  * Source nvm into current subshell.
+  * Install and alias Node 22: `nvm install 22 && nvm use 22 && nvm alias default 22`.
+- Install Claude Code CLI: `npm install -g @anthropic-ai/claude-code`.
+- Verify: Execute `claude --version`.
+- Install VS Code Extensions:
+  * `code --install-extension anthropic.claude-code`
+  * `code --install-extension ms-python.python`
+  * `code --install-extension redhat.vscode-yaml`
+  * `code --install-extension ms-azuretools.vscode-docker`
+
+PHASE 5: HIGH-SPEED PYTHON TOOLCHAIN & COMPETITION HARNESS
+- Install Astral's `uv`: `curl -LsSf https://astral.sh/uv/install.sh | sh`.
+- Create workspace: `mkdir -p ~/bcf_workspace && cd ~/bcf_workspace`.
+- Provision Python 3.11 environment: `uv python install 3.11 && uv venv .venv --python 3.11`.
+- Activate venv and persist activation in `~/.bashrc`.
+- Install PyTorch with Blackwell CUDA 12.6 support: `uv pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu126`.
+- Install inference and competition packages:
+  `uv pip install vllm compressed-tensors google-adk adk-submission swegemma adk-eval-core kaggle tree-sitter ast-grep-cli networkx transformers accelerate peft trl "unsloth[cu124-ampere-torch240]"`
+
+PHASE 6: FINAL END-TO-END VERIFICATION & SANITY SUITE
+Execute a unified Python diagnostic script to verify all subsystems:
+```python
+import sys, subprocess, torch
+print("--- [POWERSPEC G914 TOOLCHAIN DIAGNOSTIC REPORT] ---")
+print(f"Python Runtime: {sys.version.split()[0]}")
+assert torch.cuda.is_available(), "CUDA is NOT available!"
+gpu = torch.cuda.get_device_name(0)
+vram = torch.cuda.get_device_properties(0).total_memory / (1024**3)
+print(f"GPU Hardware: {gpu} ({vram:.1f} GB VRAM)")
+assert "5090" in gpu or vram > 30.0, "RTX 5090 not recognized!"
+
+for pkg in ["vllm", "google.adk", "swegemma", "adk_submission", "transformers", "kaggle"]:
+    __import__(pkg)
+    print(f"Package [OK]: {pkg}")
+print("ALL DIAGNOSTICS PASSED: System ready for BCF Agent competition runs.")
+```
+
+OUTPUT REQUIREMENTS UPON COMPLETION:
+When finished, output a concise Markdown table summarizing:
+1. Tool Name
+2. Installed Version
+3. Verification Status (PASS/FAIL)
+4. Direct path to workspace (`~/bcf_workspace`) and next recommended user action.</div>
+    </div>
+  </section>
+
+  <!-- SECTION 5: INSTALLATION VERIFICATION MATRIX -->
+  <section id="verification-matrix">
+    <h2>5. Post-Installation Verification Matrix</h2>
+    <p>Run these verification commands to confirm every tier of the stack is operating at peak specification:</p>
+
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Subsystem</th>
+            <th>Verification Command</th>
+            <th>Expected Output Criteria</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>NVIDIA Blackwell GPU</strong></td>
+            <td><code>nvidia-smi</code></td>
+            <td>RTX 5090, Driver &gt;= 570.xx, 32768 MiB VRAM.</td>
+          </tr>
+          <tr>
+            <td><strong>Native Docker Engine</strong></td>
+            <td><code>docker run --rm hello-world</code></td>
+            <td>Outputs <code>Hello from Docker!</code> without sudo.</td>
+          </tr>
+          <tr>
+            <td><strong>Docker GPU Passthrough</strong></td>
+            <td><code>docker run --rm --gpus all nvidia/cuda:12.6.0-base-ubuntu24.04 nvidia-smi</code></td>
+            <td>Prints RTX 5090 GPU inside isolated container.</td>
+          </tr>
+          <tr>
+            <td><strong>Visual Studio Code</strong></td>
+            <td><code>code --version</code></td>
+            <td>Outputs latest 1.9x.x 64-bit release.</td>
+          </tr>
+          <tr>
+            <td><strong>Claude Code CLI</strong></td>
+            <td><code>claude --version</code></td>
+            <td>Outputs <code>@anthropic-ai/claude-code</code> version.</td>
+          </tr>
+          <tr>
+            <td><strong>Claude VS Code Extension</strong></td>
+            <td><code>code --list-extensions | grep claude</code></td>
+            <td>Outputs <code>anthropic.claude-code</code>.</td>
+          </tr>
+          <tr>
+            <td><strong>PyTorch RTX 5090 CUDA</strong></td>
+            <td><code>python3 -c "import torch; print(torch.cuda.is_available())"</code></td>
+            <td>Outputs <code>True</code>.</td>
+          </tr>
+          <tr>
+            <td><strong>Competition Harness</strong></td>
+            <td><code>python3 -c "import swegemma, adk_submission; print('OK')"</code></td>
+            <td>Outputs <code>OK</code> without import errors.</td>
+          </tr>
+          <tr>
+            <td><strong>Kaggle Dataset Access</strong></td>
+            <td><code>kaggle competitions files -c gemma-4-developer-agent</code></td>
+            <td>Lists <code>tasks.jsonl</code>, wheelhouse, and harness files.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer style="text-align: center; padding: 2rem 0; color: var(--text-muted); font-size: 0.85rem; border-top: 1px solid var(--border);">
+    PowerSpec G914 / Zorin OS 18.1 AI Agent Engineering Dossier • Google - The Gemma 4 Developer Agent Competition • Prepared October 13, 2026
+  </footer>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,1789 @@
+{
+  "project": "Civic Radar \u2014 Government Screener",
+  "subtitle": "High-Fidelity Mockups & Interactive Screen Architecture",
+  "version": "1.0.0",
+  "date": "2026-10-16",
+  "design_language": "Capitol Weather Station",
+  "total_screens": 56,
+  "total_modules": 14,
+  "total_journeys": 11,
+  "modules": [
+    {
+      "code": "SHL",
+      "name": "Shell & Global",
+      "count": 5
+    },
+    {
+      "code": "ONB",
+      "name": "Onboarding & Account",
+      "count": 5
+    },
+    {
+      "code": "PUL",
+      "name": "Pulse",
+      "count": 3
+    },
+    {
+      "code": "FSC",
+      "name": "Fiscal",
+      "count": 3
+    },
+    {
+      "code": "SHD",
+      "name": "Shutdown & Appropriations",
+      "count": 5
+    },
+    {
+      "code": "MCH",
+      "name": "The Machine",
+      "count": 3
+    },
+    {
+      "code": "LEG",
+      "name": "Legislation",
+      "count": 6
+    },
+    {
+      "code": "CRT",
+      "name": "Courts",
+      "count": 5
+    },
+    {
+      "code": "EXE",
+      "name": "Executive Actions",
+      "count": 3
+    },
+    {
+      "code": "MAP",
+      "name": "Maps & Overlays",
+      "count": 5
+    },
+    {
+      "code": "SNT",
+      "name": "Sentiment",
+      "count": 2
+    },
+    {
+      "code": "ELX",
+      "name": "Elections",
+      "count": 4
+    },
+    {
+      "code": "PPL",
+      "name": "People",
+      "count": 3
+    },
+    {
+      "code": "SCR",
+      "name": "Screener & Alerts",
+      "count": 4
+    }
+  ],
+  "types": [
+    {
+      "code": "DSH",
+      "name": "Dashboard",
+      "description": "High-density multi-widget monitoring decks"
+    },
+    {
+      "code": "VIZ",
+      "name": "Live Visualization",
+      "description": "Dynamic animated gauges, counters, pipelines, and assemblies"
+    },
+    {
+      "code": "MAP",
+      "name": "Map",
+      "description": "Vector geographic canvas with multi-layer architecture"
+    },
+    {
+      "code": "LST",
+      "name": "List/Table",
+      "description": "Sortable tabular datasets and Kanban lane boards"
+    },
+    {
+      "code": "DTL",
+      "name": "Detail",
+      "description": "Deep dossiers and profiles for single entities"
+    },
+    {
+      "code": "CMP",
+      "name": "Comparison",
+      "description": "Side-by-side pairwise diff and swipe split views"
+    },
+    {
+      "code": "BLD",
+      "name": "Builder/Filter",
+      "description": "Parametric query composers and scenario simulators"
+    },
+    {
+      "code": "SRC",
+      "name": "Search",
+      "description": "Omni-search overlays and geocoders"
+    },
+    {
+      "code": "SHT",
+      "name": "Sheet/Modal",
+      "description": "Slide-out drawers, inspectors, and modal dialogs"
+    },
+    {
+      "code": "NTF",
+      "name": "Notification",
+      "description": "Alert center trays and OS lock-screen notifications"
+    },
+    {
+      "code": "ONB",
+      "name": "Onboarding",
+      "description": "Boot sequence, calibration, and setup steps"
+    },
+    {
+      "code": "SET",
+      "name": "Settings",
+      "description": "Preferences, telemetry, and system controls"
+    },
+    {
+      "code": "TML",
+      "name": "Timeline",
+      "description": "Long-range chronological and historical archives"
+    },
+    {
+      "code": "STA",
+      "name": "System State",
+      "description": "Edge states, offline fallbacks, and degraded mode panels"
+    }
+  ],
+  "journeys": [
+    {
+      "id": "J1",
+      "title": "J1 \u2014 First Launch",
+      "subtitle": "New user sets up their station",
+      "steps": [
+        "ONB-ONB-01",
+        "ONB-ONB-02",
+        "ONB-ONB-03",
+        "ONB-ONB-04",
+        "PUL-DSH-01"
+      ],
+      "triggers": [
+        "Launch App / Power-on",
+        "Tap 'Calibrate Feeds'",
+        "Select 6+ Feeds -> Continue",
+        "Enter Home Address -> Confirm",
+        "Set Quiet Hours -> Enter Command Deck"
+      ]
+    },
+    {
+      "id": "J2",
+      "title": "J2 \u2014 Morning Briefing",
+      "subtitle": "60-second read on the phone",
+      "steps": [
+        "PUL-DSH-02",
+        "FSC-VIZ-01",
+        "FSC-DTL-01",
+        "SHD-VIZ-01",
+        "SHD-LST-01",
+        "SHL-SHT-01"
+      ],
+      "triggers": [
+        "Open Mobile App",
+        "Tap Debt Card",
+        "Tap 'Balance Sheet Detail'",
+        "Back -> Tap Shutdown Card",
+        "Tap '12 Subcommittees Board'",
+        "Tap 'SRC \u00b7 TREASURY' Chip"
+      ]
+    },
+    {
+      "id": "J3",
+      "title": "J3 \u2014 Follow a Bill to the President's Desk",
+      "subtitle": "Tracking H.R. 4821 through the legislative gauntlet",
+      "steps": [
+        "SHL-SRC-01",
+        "LEG-DTL-01",
+        "LEG-VIZ-01",
+        "LEG-SHT-01",
+        "SHL-NTF-02",
+        "LEG-VIZ-02",
+        "PPL-DTL-01",
+        "MCH-DTL-01"
+      ],
+      "triggers": [
+        "Press \u2318K -> Type '4821'",
+        "Select 'H.R. 4821'",
+        "Tap 'View in Pipeline'",
+        "Tap 'Track Bill'",
+        "Receive Push: 'Passed Senate'",
+        "Tap Notification -> Open Roll-Call",
+        "Tap Sponsor 'Rep. Thorne'",
+        "Tap 'Track in Machine'"
+      ]
+    },
+    {
+      "id": "J4",
+      "title": "J4 \u2014 Breaking News Shockwave",
+      "subtitle": "Geographic reaction spreading after a major story drops",
+      "steps": [
+        "SHL-NTF-02",
+        "MAP-MAP-02",
+        "MAP-MAP-01",
+        "MAP-SHT-01",
+        "MAP-CMP-01",
+        "MAP-DTL-01",
+        "SNT-DTL-01"
+      ],
+      "triggers": [
+        "Receive Breaking Alert Push",
+        "Tap Alert -> Shockwave Map",
+        "Tap 'Open in Map Studio'",
+        "Open Layer Stack -> Add Sentiment",
+        "Tap 'Swipe Compare (T-2h vs T+2h)'",
+        "Tap MI-13 District Polygon",
+        "Tap 'View Issue Polling Detail'"
+      ]
+    },
+    {
+      "id": "J5",
+      "title": "J5 \u2014 Shutdown Watch",
+      "subtitle": "Countdown to funding lapse and contingency tracking",
+      "steps": [
+        "SHD-VIZ-01",
+        "SHD-LST-01",
+        "SHD-VIZ-02",
+        "SHD-DTL-01",
+        "SHD-TML-01",
+        "SCR-BLD-02"
+      ],
+      "triggers": [
+        "Select Shutdown Clock from Rail",
+        "Tap '12 Subcommittee Matrix'",
+        "Toggle State: 'Simulate Funding Lapse'",
+        "Tap 'Agency Contingencies'",
+        "Tap 'Historical Lapse Timeline'",
+        "Tap 'Create Funding Alert Rule'"
+      ]
+    },
+    {
+      "id": "J6",
+      "title": "J6 \u2014 Court Watcher",
+      "subtitle": "Supreme Court term and federal docket tracking",
+      "steps": [
+        "CRT-DSH-01",
+        "CRT-LST-01",
+        "CRT-DTL-01",
+        "CRT-VIZ-01",
+        "CRT-LST-02"
+      ],
+      "triggers": [
+        "Select Courts from Module Rail",
+        "Tap 'SCOTUS Docket Kanban'",
+        "Tap Case 'No. 25-1147 Halvorsen'",
+        "Tap 'Opinion Day Live Terminal'",
+        "Search PACER Federal Dockets"
+      ]
+    },
+    {
+      "id": "J7",
+      "title": "J7 \u2014 Election Night",
+      "subtitle": "Real-time results, big board, and path to majority",
+      "steps": [
+        "ELX-DSH-01",
+        "ELX-MAP-01",
+        "MAP-DTL-01",
+        "ELX-DTL-01",
+        "ELX-BLD-01",
+        "PUL-DSH-03"
+      ],
+      "triggers": [
+        "Select Race Center from Rail",
+        "Tap 'Launch Wall Big Board'",
+        "Touch Drill: National -> MI -> Wayne County",
+        "Tap 'MI Senate Race Detail'",
+        "Tap 'Simulate Path to Majority'",
+        "Switch Display to Wall Mode 1080p"
+      ]
+    },
+    {
+      "id": "J8",
+      "title": "J8 \u2014 Power Screener",
+      "subtitle": "Finviz-style parametric screening and rule building",
+      "steps": [
+        "SCR-BLD-01",
+        "SCR-LST-01",
+        "PPL-CMP-01",
+        "SCR-BLD-02",
+        "SCR-LST-02"
+      ],
+      "triggers": [
+        "Select Screener from Module Rail",
+        "Apply Preset: 'Bipartisan Bills Moving Fast'",
+        "Select 2 Officials -> Tap 'Compare'",
+        "Tap 'Set Alert for these criteria'",
+        "Save Screen to Watchlist"
+      ]
+    },
+    {
+      "id": "J9",
+      "title": "J9 \u2014 Watch the Machine",
+      "subtitle": "Three branches assembly line and executive actions",
+      "steps": [
+        "MCH-VIZ-01",
+        "MCH-VIZ-02",
+        "EXE-LST-01",
+        "EXE-DTL-01",
+        "EXE-VIZ-01",
+        "MCH-DTL-01"
+      ],
+      "triggers": [
+        "Select The Machine from Rail",
+        "Click Executive Desk Station",
+        "Tap 'View Executive Actions Feed'",
+        "Select 'E.O. 14389 Permitting'",
+        "Tap 'View Rulemaking Pipeline'",
+        "Tap 'Trace Token Journey'"
+      ]
+    },
+    {
+      "id": "J10",
+      "title": "J10 \u2014 Know Your Government",
+      "subtitle": "Connecting citizens to reps, votes, policy, and public sentiment",
+      "steps": [
+        "PPL-SRC-01",
+        "PPL-DTL-01",
+        "LEG-VIZ-02",
+        "LEG-DSH-01",
+        "SNT-DSH-01"
+      ],
+      "triggers": [
+        "Select People from Module Rail",
+        "Select Rep Profile 'Elena Vance'",
+        "Tap 'Latest Floor Vote (H.R. 4821)'",
+        "Tap 'Explore Policy: Broadband & Tech'",
+        "Tap 'View National Sentiment Weather'"
+      ]
+    },
+    {
+      "id": "UTL",
+      "title": "Utilities & States",
+      "subtitle": "System drawers, diagnostics, settings, archives, and tables",
+      "steps": [
+        "SHL-NTF-01",
+        "SHL-STA-01",
+        "ONB-SET-01",
+        "FSC-TML-01",
+        "LEG-LST-01"
+      ],
+      "triggers": [
+        "Click Alert Bell Icon",
+        "Trigger Feed Outage Diagnostic",
+        "Click Gear Icon (Settings)",
+        "Open Historical Debt Timeline",
+        "Open Monitored Bills Table"
+      ]
+    }
+  ],
+  "screens": [
+    {
+      "id": "SHL-SRC-01",
+      "name": "Command Palette",
+      "module": "SHL",
+      "module_name": "Shell & Global",
+      "type": "SRC",
+      "type_name": "Search",
+      "functions": [
+        "Search",
+        "Explore"
+      ],
+      "journey": "J3-1",
+      "journey_name": "J3 \u2014 Follow a Bill to the President's Desk",
+      "platform": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "description": "\u2318K global query overlay; typed query '4821'; grouped results (Bills, Officials, Cases, Places, Screens); keyboard navigation hints.",
+      "must_show": "\u2318K overlay; typed query '4821'; grouped results (Bills, Officials, Cases, Places, Screens); keyboard hints.",
+      "sample_data": "H.R. 4821 query active, 5 grouped hits, ESC to close, \u21b5 to jump.",
+      "provenance": "INTERNAL_INDEX \u00b7 Civic Search Engine v2.4",
+      "liveness": "STATIC_MODAL",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "SHL-SHT-01",
+      "name": "Provenance Inspector",
+      "module": "SHL",
+      "module_name": "Shell & Global",
+      "type": "SHT",
+      "type_name": "Sheet/Modal",
+      "functions": [
+        "Drill down",
+        "Explore"
+      ],
+      "journey": "J2-6",
+      "journey_name": "J2 \u2014 Morning Briefing",
+      "platform": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "description": "Drawer revealing complete source lineage, endpoint URL, retrieved-at timestamp, update cadence, method (official vs EST), interpolation formula, and raw JSON payload link.",
+      "must_show": "Source name, endpoint/document, retrieved-at, update cadence, method (official vs EST), interpolation formula, link to raw record.",
+      "sample_data": "Source: U.S. Treasury Bureau of the Fiscal Service API; Endpoint: /v2/accounting/od/debt_to_penny; Interpolation: Linear spline between 00:01 ET and 17:00 ET settlement prints.",
+      "provenance": "SRC \u00b7 U.S. TREASURY (Fiscal Data)",
+      "liveness": "LIVE \u00b7 06:00:14 ET",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "SHL-STA-01",
+      "name": "System States & Diagnostics",
+      "module": "SHL",
+      "module_name": "Shell & Global",
+      "type": "STA",
+      "type_name": "System State",
+      "functions": [
+        "Monitor",
+        "Configure"
+      ],
+      "journey": "UTL-2",
+      "journey_name": "Utilities & States",
+      "platform": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "description": "Comprehensive matrix of degraded and edge states: skeleton loading, stale panel (60% opacity with STALE 14m), feed outage hatched overlay, offline cache, empty search, and rate-limited queue.",
+      "must_show": "Skeleton loading, stale panel, feed outage, offline, empty search, rate-limited \u2014 one panel each.",
+      "sample_data": "Six diagnostic tiles showing simulated failure and degraded modes across legislative, fiscal, and court feeds.",
+      "provenance": "SRC \u00b7 SYSTEM MONITOR",
+      "liveness": "DIAGNOSTIC",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "SHL-NTF-01",
+      "name": "Alert Center Drawer",
+      "module": "SHL",
+      "module_name": "Shell & Global",
+      "type": "NTF",
+      "type_name": "Notification",
+      "functions": [
+        "Alert",
+        "Monitor"
+      ],
+      "journey": "UTL-1",
+      "journey_name": "Utilities & States",
+      "platform": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "description": "Right-side collapsible slide-out tray aggregating active alerts grouped by module, severity colors (critical magenta, attention amber, live green), mute/snooze actions, and 'View on Map' deep links.",
+      "must_show": "Grouped alerts by module, severity color, mute/snooze, 'view on map' actions.",
+      "sample_data": "14 unread alerts: appropriations CR deadline T-24h, H.R. 4821 enrolled, SCOTUS opinion release in 35m.",
+      "provenance": "SRC \u00b7 ALERT DISPATCHER",
+      "liveness": "LIVE \u00b7 06:00:14 ET",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "SHL-NTF-02",
+      "name": "Push Notifications (Lock Screen)",
+      "module": "SHL",
+      "module_name": "Shell & Global",
+      "type": "NTF",
+      "type_name": "Notification",
+      "functions": [
+        "Alert"
+      ],
+      "journey": "J3-5",
+      "journey_name": "J3 \u2014 Follow a Bill to the President's Desk",
+      "platform": "Mobile",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "description": "Mobile OS lock-screen push notifications suite: breaking news shockwave, bill passed Senate, funding deadline T-24h, Supreme Court opinion released, key race called.",
+      "must_show": "Lock-screen set: Breaking story, Bill passed Senate, Funding deadline T-24h, Opinion released, Race called.",
+      "sample_data": "5 lock-screen notification cards with timestamp, severity accent, action buttons, and direct app deep links.",
+      "provenance": "SRC \u00b7 APNS / FCM GATEWAY",
+      "liveness": "TICKER DISPATCH",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "ONB-ONB-01",
+      "name": "Station Boot & Welcome",
+      "module": "ONB",
+      "module_name": "Onboarding & Account",
+      "type": "ONB",
+      "type_name": "Onboarding",
+      "functions": [
+        "Configure",
+        "Explore"
+      ],
+      "journey": "J1-1",
+      "journey_name": "J1 \u2014 First Launch",
+      "platform": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "description": "First-launch experience featuring the instrument power-on animation storyboard, democracy weather station value proposition, telemetry check, and calibration button.",
+      "must_show": "Instrument power-on animation storyboard, value prop, Continue.",
+      "sample_data": "Station ID: STN-US-0104 \u00b7 Telemetry: 14 feeds online \u00b7 Calibration: nominal \u00b7 'Continue to Feeds'.",
+      "provenance": "INTERNAL \u00b7 SYSTEM BOOTLOADER",
+      "liveness": "BOOT SEQUENCE",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "ONB-ONB-02",
+      "name": "Pick Your Feeds",
+      "module": "ONB",
+      "module_name": "Onboarding & Account",
+      "type": "ONB",
+      "type_name": "Onboarding",
+      "functions": [
+        "Configure"
+      ],
+      "journey": "J1-2",
+      "journey_name": "J1 \u2014 First Launch",
+      "platform": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "description": "Multi-select toggle matrix of government modules and policy domains (Fiscal, Floor, SCOTUS, Elections, Defense, Energy, Tech, Agriculture) with real-time payload estimates.",
+      "must_show": "Toggle tiles per module and policy area.",
+      "sample_data": "12 tiles toggled active (Congress, White House, Supreme Court, Treasury, Broadband, Clean Energy).",
+      "provenance": "SRC \u00b7 USER PREFERENCES",
+      "liveness": "SETUP",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "ONB-ONB-03",
+      "name": "Home District Setup",
+      "module": "ONB",
+      "module_name": "Onboarding & Account",
+      "type": "ONB",
+      "type_name": "Onboarding",
+      "functions": [
+        "Search",
+        "Configure"
+      ],
+      "journey": "J1-3",
+      "journey_name": "J1 \u2014 First Launch",
+      "platform": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "description": "Address and ZIP geocoder snapping to congressional district boundaries on an interactive vector map, previewing your Representative and two Senators.",
+      "must_show": "Address field, map snapping to congressional district, your House member + Senators preview.",
+      "sample_data": "Address: 48201 Detroit MI -> Snapped to MI-13 (Rep. Brenda Chen [D]) + Sen. Elena Vance [D-MI], Sen. Gary Peters [D-MI].",
+      "provenance": "SRC \u00b7 CENSUS GEOCODER API",
+      "liveness": "STATIC LOOKUP",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "ONB-ONB-04",
+      "name": "Alert Preferences",
+      "module": "ONB",
+      "module_name": "Onboarding & Account",
+      "type": "ONB",
+      "type_name": "Onboarding",
+      "functions": [
+        "Configure",
+        "Alert"
+      ],
+      "journey": "J1-4",
+      "journey_name": "J1 \u2014 First Launch",
+      "platform": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "description": "Threshold configurer for breaking news, roll-call outcomes, appropriations lapse proximity, quiet hours schedule, and channel toggles (Push, Desktop, In-app).",
+      "must_show": "Severity thresholds, quiet hours, channels.",
+      "sample_data": "Threshold: Attention & Critical only; Quiet hours: 23:00 - 06:30 ET; Emergency override: ON.",
+      "provenance": "SRC \u00b7 ALERT ENGINE",
+      "liveness": "PREFERENCE STATE",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "ONB-SET-01",
+      "name": "Settings & Data Transparency",
+      "module": "ONB",
+      "module_name": "Onboarding & Account",
+      "type": "SET",
+      "type_name": "Settings",
+      "functions": [
+        "Configure"
+      ],
+      "journey": "UTL-3",
+      "journey_name": "Utilities & States",
+      "platform": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "description": "System control sheet: Theme toggle (Night Ops default vs Day Ops), Reduced Motion switch, data refresh rates, cache purge, and exhaustive data source transparency audit.",
+      "must_show": "Theme (Night/Day Ops), units, Reduced Motion, data-source transparency list, notification controls.",
+      "sample_data": "Night Ops active, Reduced Motion OFF, 18 federal APIs verified with latency and SSL fingerprint checks.",
+      "provenance": "SRC \u00b7 PREFERENCES & TELEMETRY",
+      "liveness": "SYSTEM CONTROLS",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "PUL-DSH-01",
+      "name": "Pulse \u2014 Command Deck",
+      "module": "PUL",
+      "module_name": "Pulse",
+      "type": "DSH",
+      "type_name": "Dashboard",
+      "functions": [
+        "Monitor",
+        "Drill down",
+        "Explore"
+      ],
+      "journey": "J1-5",
+      "journey_name": "J1 \u2014 First Launch",
+      "platform": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "description": "Flagship desktop overview: persistent global ticker strip, live Debt Odometer, split-flap Shutdown Clock, mini Machine overview, active pipeline summary, House/Senate floor feeds, SCOTUS argument status, sentiment barometer, news seismograph, and live alert feed.",
+      "must_show": "Ticker strip, Debt Odometer, Shutdown Clock, mini Machine, pipeline summary, today's House/Senate floor, SCOTUS today, sentiment barometer, news seismograph, alert feed.",
+      "sample_data": "Debt: $36,812,491,208,440 (+$98,410/s EST) \u00b7 Shutdown: T-23d 05h 14m 22s \u00b7 Floor: House debating H.R. 4821, Senate in executive session \u00b7 SCOTUS: No. 25-1147 argued.",
+      "provenance": "SRC \u00b7 MULTI-AGENCY AGGREGATOR",
+      "liveness": "LIVE \u00b7 06:00:14 ET",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "PUL-DSH-02",
+      "name": "Pulse \u2014 Mobile Companion",
+      "module": "PUL",
+      "module_name": "Pulse",
+      "type": "DSH",
+      "type_name": "Dashboard",
+      "functions": [
+        "Monitor",
+        "Drill down"
+      ],
+      "journey": "J2-1",
+      "journey_name": "J2 \u2014 Morning Briefing",
+      "platform": "Mobile",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "description": "Mobile companion dashboard: stacked swipeable instrument cards presenting the same high-density readings as desktop (Debt, Shutdown, Floor status, Supreme Court, Seismograph) with 44px touch targets.",
+      "must_show": "Stacked instrument cards, swipeable; same readings as desktop.",
+      "sample_data": "Vertical card stack: [1] National Debt Odometer ($36.8T EST) [2] Shutdown Clock (T-23d) [3] Floor Activity [4] Shockwave Seismograph.",
+      "provenance": "SRC \u00b7 MOBILE SYNC STREAM",
+      "liveness": "LIVE \u00b7 06:00:14 ET",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "PUL-DSH-03",
+      "name": "Pulse \u2014 Wall Mode",
+      "module": "PUL",
+      "module_name": "Pulse",
+      "type": "DSH",
+      "type_name": "Dashboard",
+      "functions": [
+        "Monitor"
+      ],
+      "journey": "J7-6",
+      "journey_name": "J7 \u2014 Election Night",
+      "platform": "Wall Mode",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "description": "1080p broadcast/command-center wall mode: ultra-large typography, high-contrast dark surfaces, rotating hero instruments (National Debt mechanical counter, Shutdown split-flap, Election Big Board, The Machine), visible from 20 feet.",
+      "must_show": "1920\u00d71080 big-type rotation of hero instruments.",
+      "sample_data": "Hero display cycling every 30s: 96px mechanical debt odometer with real-time rate ticker, election balance-of-power arc, and live floor roll-call.",
+      "provenance": "SRC \u00b7 WALL CONTROLLER V4",
+      "liveness": "LIVE \u00b7 06:00:14 ET",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "FSC-VIZ-01",
+      "name": "National Debt Odometer",
+      "module": "FSC",
+      "module_name": "Fiscal",
+      "type": "VIZ",
+      "type_name": "Live Visualization",
+      "functions": [
+        "Monitor",
+        "Drill down"
+      ],
+      "journey": "J2-2",
+      "journey_name": "J2 \u2014 Morning Briefing",
+      "platform": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "description": "Hero rolling mechanical counter ticking continuously with per-second rate, debt per citizen ($108,412), debt per household ($284,105), daily interest cost readout ($2.94B/day), EST badge, and Treasury provenance link.",
+      "must_show": "Hero rolling counter (EST), $/sec, per-citizen, per-household, interest cost today, official last reading.",
+      "sample_data": "Current Debt: $36,812,491,208,440.18 \u00b7 Rate: +$98,412/sec \u00b7 Citizen: $108,412 \u00b7 Interest: $2.94B today \u00b7 Official print: $36.804T (yesterday 17:00 ET).",
+      "provenance": "SRC \u00b7 TREASURY (Fiscal Data / Debt to Penny)",
+      "liveness": "EST \u00b7 06:00:14 ET (Interpolated)",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "FSC-DTL-01",
+      "name": "Fiscal Breakdown Detail",
+      "module": "FSC",
+      "module_name": "Fiscal",
+      "type": "DTL",
+      "type_name": "Detail",
+      "functions": [
+        "Drill down",
+        "Explore"
+      ],
+      "journey": "J2-3",
+      "journey_name": "J2 \u2014 Morning Briefing",
+      "platform": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "description": "In-depth balance sheet: debt held by public ($29.4T) vs intragovernmental holdings ($7.4T), deficit YTD ($1.62T), receipts ($4.92T) vs outlays ($6.54T), net interest share of budget (14.2%), and statutory debt-limit headroom status.",
+      "must_show": "Debt held by public vs intragovernmental, deficit YTD, receipts vs outlays, interest share, debt-limit status.",
+      "sample_data": "Public Debt: $29.41T (79.9%) \u00b7 Intragovernmental: $7.40T (20.1%) \u00b7 Outlays: $6.54T \u00b7 Receipts: $4.92T \u00b7 Net Interest: $928B (14.2% of outlays).",
+      "provenance": "SRC \u00b7 CBO & TREASURY MONTHLY STATEMENT",
+      "liveness": "UPD \u00b7 2026-10-15 17:00 ET",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "FSC-TML-01",
+      "name": "Debt History & Limits Timeline",
+      "module": "FSC",
+      "module_name": "Fiscal",
+      "type": "TML",
+      "type_name": "Timeline",
+      "functions": [
+        "Explore",
+        "Track"
+      ],
+      "journey": "UTL-4",
+      "journey_name": "Utilities & States",
+      "platform": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "description": "Multi-decade chronological timeline showing national debt trajectories, debt-to-GDP ratios, historical debt-limit crises/suspensions, recession shading, and major legislative cost events.",
+      "must_show": "Long timeline with debt-limit events and recessions annotated.",
+      "sample_data": "1990-2026 debt curve: 1995 standoff, 2011 Budget Control Act, 2020 CARES Act, 2023 Fiscal Responsibility Act, 2025 extension.",
+      "provenance": "SRC \u00b7 ST. LOUIS FED (FRED) & HISTORICAL TREASURY",
+      "liveness": "HISTORICAL ARCHIVE",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "SHD-VIZ-01",
+      "name": "Shutdown Clock \u2014 Funded State",
+      "module": "SHD",
+      "module_name": "Shutdown & Appropriations",
+      "type": "VIZ",
+      "type_name": "Live Visualization",
+      "functions": [
+        "Monitor",
+        "Alert"
+      ],
+      "journey": "J2-4",
+      "journey_name": "J2 \u2014 Morning Briefing",
+      "platform": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "description": "Split-flap mechanical style countdown clock displaying exact T-minus to midnight appropriations deadline, active funding vehicle (CR through Nov 15), scheduled floor votes, and expiration risk level.",
+      "must_show": "Split-flap T-minus, funding vehicle (CR / full-year), deadline date/time ET, scheduled votes.",
+      "sample_data": "FLAPS: [023] DAYS \u00b7 [05] HOURS \u00b7 [14] MINS \u00b7 [22] SECS \u00b7 Vehicle: Continuing Resolution P.L. 119-14 \u00b7 Expiration: Nov 15 23:59 ET.",
+      "provenance": "SRC \u00b7 HOUSE APPROPRIATIONS COMMITTEE CALENDAR",
+      "liveness": "LIVE COUNTDOWN \u00b7 06:00:14 ET",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "SHD-VIZ-02",
+      "name": "Shutdown Clock \u2014 Lapse in Progress",
+      "module": "SHD",
+      "module_name": "Shutdown & Appropriations",
+      "type": "VIZ",
+      "type_name": "Live Visualization",
+      "functions": [
+        "Monitor",
+        "Alert",
+        "Drill down"
+      ],
+      "journey": "J5-3",
+      "journey_name": "J5 \u2014 Shutdown Watch",
+      "platform": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "description": "Alternate split-flap clock state in critical magenta counting up elapsed time since funding lapse, number of affected cabinet agencies, estimated furloughed vs excepted federal workforce, and comparison vs historical records.",
+      "must_show": "Elapsed counter in critical, agencies affected, furloughed/excepted estimates (EST), day-count vs historical record.",
+      "sample_data": "FLAPS (CRITICAL MAGENTA): +[004] DAYS \u00b7 [11] HOURS \u00b7 [48] MINS \u00b7 9 of 12 bills lapsed \u00b7 840,000 furloughed (EST) \u00b7 Record: 35 days (2018-19).",
+      "provenance": "SRC \u00b7 OMB CONTINGENCY PLANS / OPM",
+      "liveness": "LIVE CRITICAL \u00b7 06:00:14 ET",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "SHD-LST-01",
+      "name": "Appropriations Board (12 Subcommittees)",
+      "module": "SHD",
+      "module_name": "Shutdown & Appropriations",
+      "type": "LST",
+      "type_name": "List/Table",
+      "functions": [
+        "Track",
+        "Drill down"
+      ],
+      "journey": "J2-5",
+      "journey_name": "J2 \u2014 Morning Briefing",
+      "platform": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "description": "12 regular appropriations subcommittee bills tracking progress through 6 stages: House Subcomm, House Full, House Floor, Senate Floor, Conference, Enacted, with CR coverage indicator tags.",
+      "must_show": "12 subcommittee bills \u00d7 stages grid (House/Senate committee, floor, conference, enacted), CR coverage.",
+      "sample_data": "12 regular bills: Ag, Commerce/Justice/Science, Defense, Energy/Water, Financial Services, Homeland Security, Interior, Labor/HHS/Ed, Legislative Branch, MilCon/VA, State/Foreign Ops, Transportation/HUD.",
+      "provenance": "SRC \u00b7 CONGRESS.GOV APPROPRIATIONS TABLE",
+      "liveness": "UPD \u00b7 06:00:14 ET",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "SHD-DTL-01",
+      "name": "Agency Impact & Contingency Detail",
+      "module": "SHD",
+      "module_name": "Shutdown & Appropriations",
+      "type": "DTL",
+      "type_name": "Detail",
+      "functions": [
+        "Drill down",
+        "Explore"
+      ],
+      "journey": "J5-4",
+      "journey_name": "J5 \u2014 Shutdown Watch",
+      "platform": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "description": "Per-agency contingency breakdown: staffing gauges (excepted vs furloughed personnel), paused public services, passport processing latency, national park access status, and contractor impact.",
+      "must_show": "Per-agency contingency status, services paused, staffing gauge.",
+      "sample_data": "Agency: Department of the Interior \u00b7 Total Staff: 68,000 \u00b7 Excepted: 14,200 (20.8%) \u00b7 Furloughed: 53,800 \u00b7 Parks: Open gate without visitor centers.",
+      "provenance": "SRC \u00b7 OMB AGENCY CONTINGENCY PLANS",
+      "liveness": "UPD \u00b7 2026-10-15 18:30 ET",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "SHD-TML-01",
+      "name": "Shutdown History & Resolution Timeline",
+      "module": "SHD",
+      "module_name": "Shutdown & Appropriations",
+      "type": "TML",
+      "type_name": "Timeline",
+      "functions": [
+        "Explore",
+        "Compare"
+      ],
+      "journey": "J5-5",
+      "journey_name": "J5 \u2014 Shutdown Watch",
+      "platform": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "description": "Historical timeline of all U.S. government funding gaps and shutdowns since 1976: duration in calendar days, economic cost estimates, and legislative resolution vehicle.",
+      "must_show": "Every past lapse as a bar on a timeline, duration, resolution vehicle.",
+      "sample_data": "21 historical lapses: 2018-19 (35d, CR P.L. 116-5), 2018 Jan (3d), 2013 (16d, Continuing Appropriations Act), 1995-96 (21d).",
+      "provenance": "SRC \u00b7 CONGRESSIONAL RESEARCH SERVICE (CRS REPORT RL32614)",
+      "liveness": "HISTORICAL ARCHIVE",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "MCH-VIZ-01",
+      "name": "The Machine (Three Branches Assembly Line)",
+      "module": "MCH",
+      "module_name": "The Machine",
+      "type": "VIZ",
+      "type_name": "Live Visualization",
+      "functions": [
+        "Monitor",
+        "Explore",
+        "Drill down"
+      ],
+      "journey": "J9-1",
+      "journey_name": "J9 \u2014 Watch the Machine",
+      "platform": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "description": "2.5D isometric factory floor integrating the three branches: Legislative Works (House & Senate twin presses, conference junction, enrolled chute), Executive Desk (10-day signing clock, Law/Veto outputs, EO emitter, rulemaking belt), Judicial Review Chamber (cert filter, argument stage, opinion chute), checks-and-balances feedback cables, jam warning lights, token counters, Reduced Motion toggle, and 3-frame storyboard strip.",
+      "must_show": "See \u00a76.1: Twin presses, executive signing desk, judicial review chamber, checks-and-balances cables, jam lights, token counts, storyboard strip.",
+      "sample_data": "Active tokens: 184 bills on belts, 4 EOs emitted today, 12 rules in comment, 8 cases argued \u00b7 Jam: S. 1420 stalled in committee 94 days (amber glow).",
+      "provenance": "SRC \u00b7 MULTI-BRANCH SIMULATOR & TELEMETRY",
+      "liveness": "LIVE ENGINE \u00b7 06:00:14 ET",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "MCH-VIZ-02",
+      "name": "Branch Zoom \u2014 Executive Desk & Rulemaking",
+      "module": "MCH",
+      "module_name": "The Machine",
+      "type": "VIZ",
+      "type_name": "Live Visualization",
+      "functions": [
+        "Drill down",
+        "Monitor"
+      ],
+      "journey": "J9-2",
+      "journey_name": "J9 \u2014 Watch the Machine",
+      "platform": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "description": "Enlarged branch inspection view of the Executive Station: detailed 10-day countdown clock per enrolled bill, EO emitter tray, agency rulemaking conveyor (NPRM -> comments -> final rule), backlog counters, and jam alerts.",
+      "must_show": "One station enlarged with belt contents listed, gauges, jam list.",
+      "sample_data": "Executive Desk: H.R. 4821 arrived T+2d 14h ago (7d 10h remaining on signing clock) \u00b7 EO Emitter: 1 draft queued \u00b7 Rulemaking: 14 active dockets.",
+      "provenance": "SRC \u00b7 WHITE HOUSE EXECUTIVE CLERK & FEDERAL REGISTER",
+      "liveness": "LIVE BRANCH TELEMETRY",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "MCH-DTL-01",
+      "name": "Item Tracer (Full Path & Audit Trail)",
+      "module": "MCH",
+      "module_name": "The Machine",
+      "type": "DTL",
+      "type_name": "Detail",
+      "functions": [
+        "Track",
+        "Drill down"
+      ],
+      "journey": "J3-8",
+      "journey_name": "J3 \u2014 Follow a Bill to the President's Desk",
+      "platform": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "description": "Full end-to-end trace of a single token through The Machine: lit trajectory path showing timestamps, committee referrals, floor roll-call results, enrollment, and current position on the President's desk with 10-day clock.",
+      "must_show": "One item's full path through the machine as a lit route with timestamps.",
+      "sample_data": "Item: H.R. 4821 \u00b7 Path: Intro (Jan 12) -> Energy & Commerce (Feb 4) -> House Floor Pass (May 18) -> Senate Commerce (Jun 2) -> Senate Pass (Oct 14) -> Enrolled (Oct 15) -> President's Desk.",
+      "provenance": "SRC \u00b7 CONGRESS.GOV & WHITE HOUSE CLERK",
+      "liveness": "LIVE AUDIT TRACK",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "LEG-VIZ-01",
+      "name": "Bill Pipeline (Subway Map & Sankey)",
+      "module": "LEG",
+      "module_name": "Legislation",
+      "type": "VIZ",
+      "type_name": "Live Visualization",
+      "functions": [
+        "Track",
+        "Filter",
+        "Explore"
+      ],
+      "journey": "J3-3",
+      "journey_name": "J3 \u2014 Follow a Bill to the President's Desk",
+      "platform": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "description": "Subway-line visualization of legislative flow from Introduction to Public Law: tokens sized by cosponsors, tinted by policy domain, with days-in-stage motion trails. Top filter bar and secondary toggle to Sankey attrition diagram.",
+      "must_show": "Subway-map stages, cosponsor token sizing, policy tint, fading trail, Sankey attrition toggle.",
+      "sample_data": "Active Pipeline: 9,412 Introduced -> 1,840 Committee Reported -> 412 Passed One Chamber -> 89 Enacted into Public Law \u00b7 H.R. 4821 glowing in Enrolled station.",
+      "provenance": "SRC \u00b7 CONGRESS.GOV & GOVINFO API",
+      "liveness": "LIVE \u00b7 06:00:14 ET",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "LEG-LST-01",
+      "name": "Bill Tracker Table",
+      "module": "LEG",
+      "module_name": "Legislation",
+      "type": "LST",
+      "type_name": "List/Table",
+      "functions": [
+        "Track",
+        "Search",
+        "Compare"
+      ],
+      "journey": "UTL-5",
+      "journey_name": "Utilities & States",
+      "platform": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "description": "High-density Finviz-style table of monitored bills: stage badges, days-in-stage sparklines with min/max bounds, cosponsor counts, bipartisan index ratings, last action timestamps, and quick-track stars.",
+      "must_show": "Sortable table with stage, days-in-stage sparkline, cosponsors, bipartisan index.",
+      "sample_data": "25 tracked bills: H.R. 4821 (Enrolled, 48 cosponsors, BPI 0.88), S. 2104 (Senate Floor, 34 cosponsors, BPI 0.72), H.R. 1902 (Reported, 19 cosponsors).",
+      "provenance": "SRC \u00b7 CONGRESS.GOV DATA FEED",
+      "liveness": "UPD \u00b7 06:00:14 ET",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "LEG-DTL-01",
+      "name": "Bill Detail Dossier",
+      "module": "LEG",
+      "module_name": "Legislation",
+      "type": "DTL",
+      "type_name": "Detail",
+      "functions": [
+        "Drill down",
+        "Track"
+      ],
+      "journey": "J3-2",
+      "journey_name": "J3 \u2014 Follow a Bill to the President's Desk",
+      "platform": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "description": "Comprehensive legislative dossier: official title, primary sponsor card, cosponsor chamber seat map, step-by-step actions timeline, version diffs, CBO 10-year score, related companion bills, and public sentiment mini-barometer.",
+      "must_show": "Title, sponsor, cosponsor seat map, stage progress, actions timeline, text versions, CBO score, related bills, sentiment mini-barometer.",
+      "sample_data": "H.R. 4821 \u2014 Rural Broadband Resilience Act \u00b7 Sponsor: Rep. Marcus Thorne [R-MI-02] \u00b7 CBO Score: +$3.2B / 10yr \u00b7 Sentiment: 68% favorable (n=2,400).",
+      "provenance": "SRC \u00b7 CONGRESS.GOV & CBO.GOV",
+      "liveness": "LIVE DOSSIER \u00b7 06:00:14 ET",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "LEG-VIZ-02",
+      "name": "Live Roll-Call Vote Board",
+      "module": "LEG",
+      "module_name": "Legislation",
+      "type": "VIZ",
+      "type_name": "Live Visualization",
+      "functions": [
+        "Monitor",
+        "Drill down"
+      ],
+      "journey": "J3-6",
+      "journey_name": "J3 \u2014 Follow a Bill to the President's Desk",
+      "platform": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "description": "Real-time chamber seat arc filling seat-by-seat as votes are recorded, Yea/Nay/Present/Not Voting tallies, party discipline breakdown bar, voting time remaining clock, geographic choropleth map of cast votes, and 3-frame storyboard strip.",
+      "must_show": "Chamber seat arc filling in real time, yea/nay/present/not voting tallies, party breakdown, time remaining, district map of votes.",
+      "sample_data": "Roll Call #418 (H.R. 4821) \u00b7 Result: PASSED 274 - 156 \u00b7 Dem: 132 Yea, 78 Nay \u00b7 Rep: 142 Yea, 78 Nay \u00b7 Time remaining: 00:00 (Vote Finalized).",
+      "provenance": "SRC \u00b7 HOUSE CLERK ELECTRONIC VOTING SYSTEM",
+      "liveness": "LIVE VOTE TALLY",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "LEG-SHT-01",
+      "name": "Track Bill Bottom Sheet",
+      "module": "LEG",
+      "module_name": "Legislation",
+      "type": "SHT",
+      "type_name": "Sheet/Modal",
+      "functions": [
+        "Alert",
+        "Configure"
+      ],
+      "journey": "J3-4",
+      "journey_name": "J3 \u2014 Follow a Bill to the President's Desk",
+      "platform": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "description": "Configuration drawer for setting granular bill tracking triggers: notify on committee markup, floor scheduling, roll-call start, presidential signature/veto, and delivery channels.",
+      "must_show": "Bottom sheet: which stages to alert on, channel.",
+      "sample_data": "Tracking H.R. 4821: Alert on Senate Passage [X], President Signature [X], CBO Estimate revisions [X] \u00b7 Destination: Push & Desktop.",
+      "provenance": "SRC \u00b7 NOTIFICATION ENGINE",
+      "liveness": "CONFIG SHEET",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "LEG-DSH-01",
+      "name": "Legislation by Topic & Sentiment",
+      "module": "LEG",
+      "module_name": "Legislation",
+      "type": "DSH",
+      "type_name": "Dashboard",
+      "functions": [
+        "Explore",
+        "Compare"
+      ],
+      "journey": "J10-4",
+      "journey_name": "J10 \u2014 Know Your Government",
+      "platform": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "description": "Domain explorer displaying cards for 8 policy areas (Broadband/Tech, Clean Energy, Healthcare, Agriculture, National Defense, Transportation, Finance, Education) each with activity sparklines and public sentiment gauges.",
+      "must_show": "Policy-area tiles each with activity sparkline + sentiment.",
+      "sample_data": "8 domain cards: Technology & Telecom (84 bills, 68% pos sentiment), Clean Energy (112 bills, 59% pos sentiment), Health (142 bills, 51% sentiment).",
+      "provenance": "SRC \u00b7 CONGRESS POLICY CLASSIFIER & AGGREGATED POLLS",
+      "liveness": "UPD \u00b7 06:00:14 ET",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "CRT-DSH-01",
+      "name": "Courts Dashboard & Circuit Map",
+      "module": "CRT",
+      "module_name": "Courts",
+      "type": "DSH",
+      "type_name": "Dashboard",
+      "functions": [
+        "Monitor",
+        "Drill down"
+      ],
+      "journey": "J6-1",
+      "journey_name": "J6 \u2014 Court Watcher",
+      "platform": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "description": "Federal judiciary overview: SCOTUS October Term 2026 status gauge, shadow docket / emergency applications lane, interactive 13-circuit geographic map with case activity heat levels, and today's oral argument calendar.",
+      "must_show": "SCOTUS term status, emergency-application lane, circuit map with activity, today's arguments/opinions.",
+      "sample_data": "SCOTUS Term: 58 granted, 14 argued, 2 opinions released \u00b7 Emergency docket: 4 pending stay requests \u00b7 6th Circuit active in Cincinnati.",
+      "provenance": "SRC \u00b7 SUPREME COURT OF THE U.S. & PACER",
+      "liveness": "LIVE \u00b7 06:00:14 ET",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "CRT-LST-01",
+      "name": "SCOTUS Docket Kanban Board",
+      "module": "CRT",
+      "module_name": "Courts",
+      "type": "LST",
+      "type_name": "List/Table",
+      "functions": [
+        "Track",
+        "Drill down"
+      ],
+      "journey": "J6-2",
+      "journey_name": "J6 \u2014 Court Watcher",
+      "platform": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "description": "Six-column Kanban board organizing all current-term cases: Petitions Filed -> Distributed for Conference -> Cert Granted -> Argued -> Awaiting Opinion -> Decided, with emergency shadow applications lane.",
+      "must_show": "Kanban: Petitions \u2192 Distributed for conference \u2192 Granted \u2192 Argued \u2192 Awaiting opinion \u2192 Decided.",
+      "sample_data": "6 Kanban columns: No. 25-1147 Halvorsen v. DOL in 'Awaiting Opinion' lane (argued Oct 14); No. 25-892 Apex Energy in 'Granted' lane.",
+      "provenance": "SRC \u00b7 SUPREME COURT DOCKET SYSTEM",
+      "liveness": "LIVE KANBAN \u00b7 06:00:14 ET",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "CRT-DTL-01",
+      "name": "Case Detail Dossier & Audio Waveform",
+      "module": "CRT",
+      "module_name": "Courts",
+      "type": "DTL",
+      "type_name": "Detail",
+      "functions": [
+        "Drill down",
+        "Explore"
+      ],
+      "journey": "J6-3",
+      "journey_name": "J6 \u2014 Court Watcher",
+      "platform": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "description": "Deep case dossier: formal caption, docket number, question presented, lower-court circuit journey, filings timeline, amicus curiae tally, oral argument audio waveform player, and 9-seat justice split.",
+      "must_show": "Caption, docket number, question presented, lower-court path, filings timeline, amicus count, argument audio waveform, 9-seat vote split when decided.",
+      "sample_data": "No. 25-1147, Halvorsen v. Department of Labor \u00b7 Lower court: 6th Circuit \u00b7 Amicus briefs: 24 \u00b7 Oral argument: 58 min waveform playable.",
+      "provenance": "SRC \u00b7 SUPREME COURT & OYEZ / COURT RECORD",
+      "liveness": "RECORD VERIFIED \u00b7 06:00:14 ET",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "CRT-VIZ-01",
+      "name": "Opinion Day Live Feed",
+      "module": "CRT",
+      "module_name": "Courts",
+      "type": "VIZ",
+      "type_name": "Live Visualization",
+      "functions": [
+        "Monitor",
+        "Alert"
+      ],
+      "journey": "J6-4",
+      "journey_name": "J6 \u2014 Court Watcher",
+      "platform": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "description": "Live broadcast board for Supreme Court opinion release mornings: release countdown slots, live terminal feed posting slip opinions in real time, author attribution, and seat vote breakdown (e.g. 6-3, 9-0).",
+      "must_show": "Release slots, live feed of opinions as they post, author, vote split.",
+      "sample_data": "Slot 1 (10:00 ET): No. 25-812 Released \u00b7 Author: Barrett, J. \u00b7 Vote: 7-2 \u00b7 Holding: Affirmed lower court judgment \u00b7 Full PDF available.",
+      "provenance": "SRC \u00b7 SUPREME COURT PUBLIC INFORMATION OFFICE",
+      "liveness": "LIVE STREAM \u00b7 10:00 ET",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "CRT-LST-02",
+      "name": "Federal Docket Search (PACER Explorer)",
+      "module": "CRT",
+      "module_name": "Courts",
+      "type": "LST",
+      "type_name": "List/Table",
+      "functions": [
+        "Search",
+        "Filter"
+      ],
+      "journey": "J6-5",
+      "journey_name": "J6 \u2014 Court Watcher",
+      "platform": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "description": "Unified query tool across federal district and circuit courts: nature-of-suit filtering, party lookup, judge tags, document availability indicators, and RECAP free-archive integration badges.",
+      "must_show": "Results across district/circuit courts, filters (court, nature of suit, party type, date), document availability indicators.",
+      "sample_data": "Query: 'Broadband Infrastructure' \u00b7 42 dockets found across E.D. Mich., 6th Cir., D.D.C. \u00b7 18 free RECAP PDFs accessible.",
+      "provenance": "SRC \u00b7 COURTLISTENER / RECAP & PACER",
+      "liveness": "LIVE QUERY",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "EXE-LST-01",
+      "name": "Executive Actions Feed",
+      "module": "EXE",
+      "module_name": "Executive Actions",
+      "type": "LST",
+      "type_name": "List/Table",
+      "functions": [
+        "Track",
+        "Search"
+      ],
+      "journey": "J9-3",
+      "journey_name": "J9 \u2014 Watch the Machine",
+      "platform": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "description": "Chronological stream of Executive Orders, Presidential Proclamations, and Memoranda: Federal Register citations, issuing dates, affected cabinet departments, and judicial challenge status.",
+      "must_show": "EOs, proclamations, memoranda with Federal Register citation and status.",
+      "sample_data": "E.O. 14389 (Critical Grid Permitting, 91 FR 19842) \u00b7 Proclamation 10842 (National Energy Week) \u00b7 Memo on Federal AI Procurement.",
+      "provenance": "SRC \u00b7 FEDERAL REGISTER & WHITE HOUSE PRESS OFFICE",
+      "liveness": "UPD \u00b7 06:00:14 ET",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "EXE-DTL-01",
+      "name": "Executive Order Detail & Legal Tracker",
+      "module": "EXE",
+      "module_name": "Executive Actions",
+      "type": "DTL",
+      "type_name": "Detail",
+      "functions": [
+        "Drill down",
+        "Track"
+      ],
+      "journey": "J9-4",
+      "journey_name": "J9 \u2014 Watch the Machine",
+      "platform": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "description": "Executive Order dissection: plain-language summary, directed federal agencies, regulatory deadlines countdown, compliance milestones, and legal challenge tracker cross-referencing federal court cases.",
+      "must_show": "Text summary, agencies directed, deadlines, litigation tracker linking to cases.",
+      "sample_data": "E.O. 14389 \u00b7 Directs DOE, DOI, CEQ \u00b7 90-day progress report deadline \u00b7 Litigation: No. 26-cv-0142 (D.D.C.) preliminary injunction denied.",
+      "provenance": "SRC \u00b7 FEDERAL REGISTER & COURT REPOSITORIES",
+      "liveness": "VERIFIED ARCHIVE",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "EXE-VIZ-01",
+      "name": "Federal Rulemaking Pipeline",
+      "module": "EXE",
+      "module_name": "Executive Actions",
+      "type": "VIZ",
+      "type_name": "Live Visualization",
+      "functions": [
+        "Track",
+        "Monitor"
+      ],
+      "journey": "J9-5",
+      "journey_name": "J9 \u2014 Watch the Machine",
+      "platform": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "description": "Interactive Administrative Procedure Act pipeline: Proposed Rule (NPRM) -> Public Comment Period (countdown clock) -> Final Rule -> Effective Date, with live public comment submission volume charts.",
+      "must_show": "Proposed \u2192 comment period (countdown) \u2192 final \u2192 effective; comment volume chart.",
+      "sample_data": "EPA Ozone Standard (NPRM 2026-0812) \u00b7 Comment closes in 18d 04h \u00b7 Total comments: 142,410 \u00b7 Velocity: 840 comments/day.",
+      "provenance": "SRC \u00b7 REGULATIONS.GOV API",
+      "liveness": "LIVE FEED \u00b7 06:00:14 ET",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "MAP-MAP-01",
+      "name": "Map Studio (Layer Architecture)",
+      "module": "MAP",
+      "module_name": "Maps & Overlays",
+      "type": "MAP",
+      "type_name": "Map",
+      "functions": [
+        "Explore",
+        "Drill down",
+        "Compare"
+      ],
+      "journey": "J4-3",
+      "journey_name": "J4 \u2014 Breaking News Shockwave",
+      "platform": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "description": "Full-deck GIS platform with keyword query bar, multi-layer stack controls (events, sentiment isobars, live election results, campaign contributions, representation), time scrubber with 1x/10x/60x playback, and vector zoom.",
+      "must_show": "See \u00a76.3: Query bar, layer stack, per-layer opacity/blend, time scrubber with playback speed, vector drilldown.",
+      "sample_data": "Query: 'tariffs' -> Active layers: [1] Breaking News Shockwave [2] Public Sentiment Isobars [3] Congressional District Control.",
+      "provenance": "SRC \u00b7 MULTI-SOURCE GIS & CENSUS TIGER",
+      "liveness": "LIVE GIS CANVAS \u00b7 06:00:14 ET",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "MAP-SHT-01",
+      "name": "Map Studio Layer Stack Drawer",
+      "module": "MAP",
+      "module_name": "Maps & Overlays",
+      "type": "SHT",
+      "type_name": "Sheet/Modal",
+      "functions": [
+        "Configure",
+        "Explore"
+      ],
+      "journey": "J4-4",
+      "journey_name": "J4 \u2014 Breaking News Shockwave",
+      "platform": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "description": "Flyout catalog and layer manager: re-order layer hierarchy, toggle visibility, adjust opacity sliders, change blend modes (multiply, screen), view legends, and audit data source chips.",
+      "must_show": "Layer list with controls, add-layer catalog.",
+      "sample_data": "8 layers in stack: Event Shockwave (100% opacity), Sentiment Isobars (65% opacity), 2024 Base Margin (40% opacity), FEC Cash Flow (OFF).",
+      "provenance": "SRC \u00b7 MAP STUDIO ENGINE",
+      "liveness": "LAYER MANAGER",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "MAP-MAP-02",
+      "name": "News Shockwave Heat Map",
+      "module": "MAP",
+      "module_name": "Maps & Overlays",
+      "type": "MAP",
+      "type_name": "Map",
+      "functions": [
+        "Monitor",
+        "Explore"
+      ],
+      "journey": "J4-2",
+      "journey_name": "J4 \u2014 Breaking News Shockwave",
+      "platform": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "description": "Geographic story propagation tracker: pinned breaking story card, concentric heat rings radiating from epicenter, small multiples showing dispersion at T+0, T+15m, T+60m, T+6h, and seismograph strip along bottom.",
+      "must_show": "See \u00a76.3: Story card pinned top-left, heat rings radiating geographically, small multiples at T+0 / T+15m / T+60m / T+6h, seismograph.",
+      "sample_data": "Story: 'Bipartisan Broadband Agreement Enacted' \u00b7 Epicenter: Washington D.C. + Lansing MI \u00b7 Reach: 4.8M mentions across Midwest in 45m.",
+      "provenance": "SRC \u00b7 MEDIA CLOUD & REAL-TIME WIRE SERVICES",
+      "liveness": "LIVE SHOCKWAVE \u00b7 T+45m",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "MAP-CMP-01",
+      "name": "Swipe Compare (Dual-Layer Diff)",
+      "module": "MAP",
+      "module_name": "Maps & Overlays",
+      "type": "CMP",
+      "type_name": "Comparison",
+      "functions": [
+        "Compare",
+        "Explore"
+      ],
+      "journey": "J4-5",
+      "journey_name": "J4 \u2014 Breaking News Shockwave",
+      "platform": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "description": "Interactive split-screen map with draggable divider bar: compare two distinct layers or two points in time (e.g. sentiment before vs after breaking story, 2022 vs 2024 vote share, shift vectors).",
+      "must_show": "Draggable divider, two layers/time points, delta legend.",
+      "sample_data": "Left: Pre-Story Sentiment (T-2h) \u00b7 Right: Post-Story Sentiment (T+2h) \u00b7 Delta: +14% favorability swing in Upper Midwest rural districts.",
+      "provenance": "SRC \u00b7 TIME-SERIES SPATIAL INDEX",
+      "liveness": "COMPARISON MODE",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "MAP-DTL-01",
+      "name": "Geography Drilldown Dossier",
+      "module": "MAP",
+      "module_name": "Maps & Overlays",
+      "type": "DTL",
+      "type_name": "Detail",
+      "functions": [
+        "Drill down",
+        "Explore"
+      ],
+      "journey": "J4-6",
+      "journey_name": "J4 \u2014 Breaking News Shockwave",
+      "platform": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "description": "Hierarchical spatial profile with breadcrumb navigation (US \u203a MI \u203a MI-13 \u203a Wayne County): political representation, historical election margins, demographic makeup, federal grant allocations, and active local alerts.",
+      "must_show": "Breadcrumb (US \u203a MI \u203a MI-13 \u203a Wayne County), representation, past results, demographics, current overlays.",
+      "sample_data": "Wayne County MI \u00b7 Pop: 1.78M \u00b7 2024 Margin: D+28.4% \u00b7 Representation: Rep. Brenda Chen [D-MI-13] \u00b7 Broadband grants: $42.8M received.",
+      "provenance": "SRC \u00b7 CENSUS BUREAU & STATE ELECTION COMMISSIONS",
+      "liveness": "RECORD VERIFIED \u00b7 06:00:14 ET",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "SNT-DSH-01",
+      "name": "Sentiment Weather Station",
+      "module": "SNT",
+      "module_name": "Sentiment",
+      "type": "DSH",
+      "type_name": "Dashboard",
+      "functions": [
+        "Monitor",
+        "Explore"
+      ],
+      "journey": "J10-5",
+      "journey_name": "J10 \u2014 Know Your Government",
+      "platform": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "description": "National public opinion meteorology: issue atmospheric pressure systems, analog dial barometers, wind-vector momentum indicators, and transparent methodology source mix gauges.",
+      "must_show": "National 'pressure systems' by issue, barometers, wind-vector shifts, source mix.",
+      "sample_data": "Economy: 1012 hPa (High Pressure / Optimistic) \u00b7 Infrastructure: Rising 4 hPa \u00b7 Healthcare: Low Pressure 994 hPa (Volatile shift).",
+      "provenance": "SRC \u00b7 AGGREGATED POLLSTERS & PREDICTION MARKETS",
+      "liveness": "UPD \u00b7 06:00:14 ET",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "SNT-DTL-01",
+      "name": "Issue Sentiment Multi-Methodology",
+      "module": "SNT",
+      "module_name": "Sentiment",
+      "type": "DTL",
+      "type_name": "Detail",
+      "functions": [
+        "Drill down",
+        "Compare"
+      ],
+      "journey": "J4-7",
+      "journey_name": "J4 \u2014 Breaking News Shockwave",
+      "platform": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "description": "Transparent side-by-side evidence comparison: scientific probability sample polls (sample size n, margin of error \u00b13.1%, methodology), prediction market trading odds, and social sentiment velocity.",
+      "must_show": "Polls (with n, MoE, method), prediction markets, social volume \u2014 shown side by side, never blended without disclosure.",
+      "sample_data": "Issue: Rural Broadband Investment \u00b7 Polls: 64% Favor (n=1,850, MoE \u00b12.8%) \u00b7 Prediction: 88% enactment probability \u00b7 Social: 412k posts (71% positive).",
+      "provenance": "SRC \u00b7 INDEPENDENT POLLING INDEX & KALSHI / POLYMARKET",
+      "liveness": "MULTI-SOURCE \u00b7 06:00:14 ET",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "ELX-DSH-01",
+      "name": "Race Center & Balance of Power",
+      "module": "ELX",
+      "module_name": "Elections",
+      "type": "DSH",
+      "type_name": "Dashboard",
+      "functions": [
+        "Monitor",
+        "Explore"
+      ],
+      "journey": "J7-1",
+      "journey_name": "J7 \u2014 Election Night",
+      "platform": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "description": "Election command deck: House, Senate, and Gubernatorial balance-of-power segmented bars with 218/51 majority markers, key battleground races table, rating change alerts, and campaign fundraising meters.",
+      "must_show": "House/Senate/Governor balance bars, key races list, ratings changes, fundraising.",
+      "sample_data": "Senate: 49 Dem / 49 Rep / 2 Tossup \u00b7 House: 214 Dem / 216 Rep / 5 Tossup \u00b7 12 Key Races highlighted \u00b7 Rating: MI-Sen shifted Tossup -> Lean D.",
+      "provenance": "SRC \u00b7 COOK POLITICAL REPORT & AP CAMPAIGN REPOSITORY",
+      "liveness": "UPD \u00b7 06:00:14 ET",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "ELX-MAP-01",
+      "name": "Election Night Big Board (Wall & Touch)",
+      "module": "ELX",
+      "module_name": "Elections",
+      "type": "MAP",
+      "type_name": "Map",
+      "functions": [
+        "Monitor",
+        "Drill down"
+      ],
+      "journey": "J7-2",
+      "journey_name": "J7 \u2014 Election Night",
+      "platform": "Wall Mode",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "description": "Wall-mode big board map with touch-drill from national to state to county: balance-of-power bars, '% expected vote in' gauge, race-call status chips (CALLED, TOO EARLY, TOO CLOSE, LEADING), county delta vs prior cycle, and 'where remaining votes are' drawer.",
+      "must_show": "See \u00a76.4: Touch-drill national->county, balance-of-power bars, % expected vote in, race-call status chips, county comparison, remaining votes panel.",
+      "sample_data": "National Big Board: MI Called (D+2.4%), PA Leading R (+12,410 votes, 84% in), WI Too Close to Call \u00b7 Outstanding votes: Wayne Co mail ballots.",
+      "provenance": "SRC \u00b7 ASSOCIATED PRESS ELECTION WIRE & EDISON RESEARCH",
+      "liveness": "LIVE ELECTION NIGHT \u00b7 22:42:15 ET",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "ELX-DTL-01",
+      "name": "Key Race Detail & Vote Tabulation",
+      "module": "ELX",
+      "module_name": "Elections",
+      "type": "DTL",
+      "type_name": "Detail",
+      "functions": [
+        "Drill down",
+        "Explore"
+      ],
+      "journey": "J7-4",
+      "journey_name": "J7 \u2014 Election Night",
+      "platform": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "description": "Individual contest dissection: candidate head-to-head cards, raw vote counts and percentages, % expected vote reported gauge, county-by-county returns choropleth, race-call status, and vote-type breakdown (Election Day, Mail/Absentee, Early In-Person).",
+      "must_show": "Candidates (fictional), vote counts, % expected in, county map, call status, vote-type breakdown.",
+      "sample_data": "MI Senate 2026: Elena Vance [D] 2,412,890 (50.8%) vs Tyler Brooks [R] 2,334,102 (49.2%) \u00b7 94% Expected Vote In \u00b7 Call: LEADING D.",
+      "provenance": "SRC \u00b7 MICHIGAN SECRETARY OF STATE ELECTION DIVISION",
+      "liveness": "LIVE TABULATION \u00b7 22:42:15 ET",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "ELX-BLD-01",
+      "name": "Path to Majority Simulator",
+      "module": "ELX",
+      "module_name": "Elections",
+      "type": "BLD",
+      "type_name": "Builder/Filter",
+      "functions": [
+        "Explore",
+        "Configure"
+      ],
+      "journey": "J7-5",
+      "journey_name": "J7 \u2014 Election Night",
+      "platform": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "description": "Interactive chamber math scenario planner: toggle uncalled tossup seats to Dem or Rep, recalculate seats needed for majority in real time, lock confirmed calls, and save customized scenario outcomes.",
+      "must_show": "Toggle uncalled races, live seat math, scenarios saved.",
+      "sample_data": "Senate Simulator: Baseline 49 D / 49 R \u00b7 User scenario: Vance wins MI (+1 D), Brooks wins OH (+1 R) -> 50-50 tiebreaker to VP.",
+      "provenance": "SRC \u00b7 CIVIC RADAR SCENARIO ENGINE",
+      "liveness": "INTERACTIVE SIMULATOR",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "PPL-SRC-01",
+      "name": "Find My Officials (Address Lookup)",
+      "module": "PPL",
+      "module_name": "People",
+      "type": "SRC",
+      "type_name": "Search",
+      "functions": [
+        "Search",
+        "Explore"
+      ],
+      "journey": "J10-1",
+      "journey_name": "J10 \u2014 Know Your Government",
+      "platform": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "description": "Address search input geocoding to federal, state, and local representative cards: House representative, two Senators, Governor, and state legislative delegates with interactive district boundaries.",
+      "must_show": "Address input, map, federal + state officials list.",
+      "sample_data": "Address: '48226 Detroit MI' -> Rep. Brenda Chen [D-MI-13], Sen. Elena Vance [D-MI], Sen. Gary Peters [D-MI], Gov. Gretchen Whitmer [D].",
+      "provenance": "SRC \u00b7 GOOGLE CIVIC API & CENSUS GEOCODER",
+      "liveness": "RECORD VERIFIED",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "PPL-DTL-01",
+      "name": "Official Profile & Voting Record",
+      "module": "PPL",
+      "module_name": "People",
+      "type": "DTL",
+      "type_name": "Detail",
+      "functions": [
+        "Drill down",
+        "Explore"
+      ],
+      "journey": "J3-7",
+      "journey_name": "J3 \u2014 Follow a Bill to the President's Desk",
+      "platform": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "description": "Comprehensive elected official dossier: party affiliation glyph, district vector map, committee chairmanships/assignments, sponsored legislation portfolio, 100-vote history heatmap, party-unity dial gauge, and campaign fundraising sparkline.",
+      "must_show": "Party, district map, committee seats, sponsored bills, vote history heatmap, party-unity gauge, fundraising sparkline.",
+      "sample_data": "Sen. Elena Vance [D-MI] \u00b7 Party Unity: 92% \u00b7 Committees: Commerce, Science & Transportation \u00b7 Sponsored: 14 bills (3 enacted) \u00b7 Raised: $14.2M.",
+      "provenance": "SRC \u00b7 CONGRESS.GOV & FEC DISCLOSURES",
+      "liveness": "PROFILE ACTIVE \u00b7 06:00:14 ET",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "PPL-CMP-01",
+      "name": "Compare Officials (Vote Agreement Matrix)",
+      "module": "PPL",
+      "module_name": "People",
+      "type": "CMP",
+      "type_name": "Comparison",
+      "functions": [
+        "Compare",
+        "Drill down"
+      ],
+      "journey": "J8-3",
+      "journey_name": "J8 \u2014 Power Screener",
+      "platform": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "description": "Multi-official head-to-head comparison: 2 to 4 legislators side by side, pairwise vote agreement percentage matrix, key divergent roll-calls, committee overlaps, and campaign donor industry breakdown.",
+      "must_show": "2\u20134 side-by-side with vote agreement matrix.",
+      "sample_data": "Sen. Elena Vance [D-MI] vs Sen. Robert Sterling [R-OH]: 64% Overall Agreement, 88% Agreement on Infrastructure, Diverged on Tax Reconciliation.",
+      "provenance": "SRC \u00b7 CONGRESSIONAL VOTE MATRIX ANALYZER",
+      "liveness": "CALCULATED INDEX",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "SCR-BLD-01",
+      "name": "Finviz-Style Screener Builder",
+      "module": "SCR",
+      "module_name": "Screener & Alerts",
+      "type": "BLD",
+      "type_name": "Builder/Filter",
+      "functions": [
+        "Configure",
+        "Search",
+        "Explore"
+      ],
+      "journey": "J8-1",
+      "journey_name": "J8 \u2014 Power Screener",
+      "platform": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "description": "Multi-entity Finviz-style parametric query builder: entity selector (Bills, Officials, Cases, Districts, Races, Rules), filter chips, numeric range sliders (cosponsors >25, bipartisan index >0.70, days stalled >60), column picker, and 4 quick presets.",
+      "must_show": "Entity selector, filter chips, numeric sliders, column picker, presets ('Bipartisan bills moving fast', 'Stalled appropriations', 'Close House races', 'Votes against party').",
+      "sample_data": "Entity: Bills \u00b7 Preset: 'Bipartisan bills moving fast' \u00b7 Filters: Cosponsors >= 30, BPI >= 0.75, Stage: Reported or Floor.",
+      "provenance": "SRC \u00b7 QUERY COMPOSER ENGINE",
+      "liveness": "PARAMETRIC ENGINE",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "SCR-LST-01",
+      "name": "Screener Results Table",
+      "module": "SCR",
+      "module_name": "Screener & Alerts",
+      "type": "LST",
+      "type_name": "List/Table",
+      "functions": [
+        "Track",
+        "Compare",
+        "Share/Export"
+      ],
+      "journey": "J8-2",
+      "journey_name": "J8 \u2014 Power Screener",
+      "platform": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "description": "Dense tabular output of active query: sortable columns, inline progress sparklines, multi-row selection, CSV/JSON export trigger, and 'Open on Map' action.",
+      "must_show": "Dense table with sparklines, sort, export, 'open on map'.",
+      "sample_data": "18 bills matched query: H.R. 4821 (#1 rank, 48 cosponsors, BPI 0.88), S. 2104 (#2 rank), H.R. 3110 (#3 rank) \u00b7 Export button ready.",
+      "provenance": "SRC \u00b7 SCREENER RESULTS CACHE",
+      "liveness": "LIVE TABLE \u00b7 06:00:14 ET",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "SCR-LST-02",
+      "name": "Saved Screens & Watchlists",
+      "module": "SCR",
+      "module_name": "Screener & Alerts",
+      "type": "LST",
+      "type_name": "List/Table",
+      "functions": [
+        "Track",
+        "Configure"
+      ],
+      "journey": "J8-5",
+      "journey_name": "J8 \u2014 Power Screener",
+      "platform": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "description": "User dashboard of saved queries and entity watchlists: change counters since last session, trigger frequency, active alert toggles, and shared screen links.",
+      "must_show": "Watchlists with change counts since last visit.",
+      "sample_data": "4 Saved Screens: 'Bipartisan Fast-Track' (+3 new items), 'Approps Watch' (+1 item), 'Key 2026 Senate Races' (no changes), 'SCOTUS IP Cases'.",
+      "provenance": "SRC \u00b7 USER REPOSITORY",
+      "liveness": "SAVED WATCHLISTS",
+      "badge": "SAMPLE DATA"
+    },
+    {
+      "id": "SCR-BLD-02",
+      "name": "Alert Rule Builder (IF/THEN)",
+      "module": "SCR",
+      "module_name": "Screener & Alerts",
+      "type": "BLD",
+      "type_name": "Builder/Filter",
+      "functions": [
+        "Configure",
+        "Alert"
+      ],
+      "journey": "J5-6",
+      "journey_name": "J5 \u2014 Shutdown Watch",
+      "platform": "Desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "description": "Rule composer for automated alerting: IF [Entity = Appropriations] AND [Days to Lapse <= 1] AND [CR Status = None] THEN [Dispatch Critical Push Notification], with historical 30-day simulated trigger backtest.",
+      "must_show": "IF/THEN rule composer, preview of last 30 days of triggers.",
+      "sample_data": "Rule: 'Notify me when appropriations funding passes' \u00b7 IF [Bill Type = Appropriations] AND [Action = Signed by President] THEN [Push Alert] \u00b7 Backtest: 2 triggers in 30d.",
+      "provenance": "SRC \u00b7 RULE EVALUATION ENGINE",
+      "liveness": "RULE COMPOSER",
+      "badge": "SAMPLE DATA"
+    }
+  ]
+}

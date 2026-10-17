@@ -1,0 +1,17419 @@
+window.__NEWS_GRAPH_DATA__ = {
+  "version": "1.0.0",
+  "generated_at": "2026-10-14T05:05:00Z",
+  "dataset": "inputs/dukrnews/ground-news-scraper-2026-10-13_0400.xlsx",
+  "counts": {
+    "stories": 276,
+    "entities": 52,
+    "edges": 638
+  },
+  "nodes": [
+    {
+      "id": "rss_8627_1791839545765_1",
+      "label": "Emergency help was delayed by confusion after failed execution of Christa Pike, 911 calls reveal",
+      "group": "story",
+      "size": 15,
+      "summary": "Authorities have released the transcript of the 911 call made from Riverbend Maximum Security Institution the night of Christa Pike’s attempted execution.",
+      "sources_count": 5,
+      "bias": {
+        "left": 7,
+        "center": 13,
+        "right": 1,
+        "unknown": 0
+      },
+      "bias_score": -0.286,
+      "geo": {
+        "place": "Nashville, US",
+        "lat": 36.171196,
+        "lon": -86.744118
+      },
+      "headlines": [
+        {
+          "text": "911 call transcript from botched Christa Pike execution released",
+          "bias": "center",
+          "url": "https://www.wsmv.com/2026/10/12/911-call-transcript-botched-christa-pike-execution-released/"
+        },
+        {
+          "text": "Emergency help was delayed by confusion after failed execution of Christa Pike, 911 calls reveal",
+          "bias": "leanLeft",
+          "url": "https://www.sudbury.com/world-news/emergency-help-was-delayed-by-confusion-after-failed-execution-of-christa-pike-911-calls-reveal-12884737"
+        },
+        {
+          "text": "Emergency help was delayed by confusion after failed execution of Christa Pike, 911 calls reveal",
+          "bias": "leanLeft",
+          "url": "https://www.newmarkettoday.ca/world-news/emergency-help-was-delayed-by-confusion-after-failed-execution-of-christa-pike-911-calls-reveal-12884737"
+        },
+        {
+          "text": "911 calls reveal confusion delayed emergency help after Christa Pike's failed execution, reports say",
+          "bias": "center",
+          "url": "https://www.wjcl.com/article/christa-pike-failed-execution-911-calls/74112253"
+        },
+        {
+          "text": "Emergency help was delayed by confusion after failed execution of Christa Pike, 911 calls reveal",
+          "bias": "center",
+          "url": "https://www.krem.com/article/news/nation-world/christa-pike-emergency-help-delayed-failed-execution-911-calls/507-73ec736e-feb3-497b-9bc3-3dc9cabcc2d4"
+        },
+        {
+          "text": "Emergency help was delayed by confusion after failed execution of Christa Pike, 911 calls reveal",
+          "bias": "leanRight",
+          "url": "https://www.jonesborosun.com/news/national/emergency-help-was-delayed-by-confusion-after-failed-execution-of-christa-pike-911-calls-reveal/article_1b19760a-98b8-5dc7-90f3-56f167d72efa.html"
+        },
+        {
+          "text": "Emergency help was delayed by confusion after failed execution of Christa Pike, 911 calls reveal",
+          "bias": "center",
+          "url": "https://www.troyrecord.com/2026/10/12/tennessee-execution-911-calls/"
+        },
+        {
+          "text": "Emergency help was delayed by confusion after failed execution of Christa Pike, 911 calls reveal",
+          "bias": "center",
+          "url": "https://www.local3news.com/local-news/tennessee/emergency-help-was-delayed-by-confusion-after-failed-execution-of-christa-pike-911-calls-reveal/article_541d0d58-4618-5c34-858d-5fc8b52236e3.html"
+        }
+      ]
+    },
+    {
+      "id": "d39cb16c-0af5-4d13-87f1-95a059bfaa34",
+      "label": "Michael Jordan Jersey Sets $14 Million Record for Basketball Memorabilia, Auction House Says",
+      "group": "story",
+      "size": 30,
+      "summary": "A Michael Jordan jersey from his 'Last Dance' season sells for $14m (£10.6m), a record for a piece of basketball memorabilia.",
+      "sources_count": 37,
+      "bias": {
+        "left": 18,
+        "center": 19,
+        "right": 13,
+        "unknown": 30
+      },
+      "bias_score": -0.1,
+      "geo": {
+        "place": "London, UK",
+        "lat": 51.531342,
+        "lon": -0.124523
+      },
+      "headlines": [
+        {
+          "text": "Michael Jordan jersey from 'Last Dance' season sells for record £10.6m",
+          "bias": "center",
+          "url": "https://www.bbc.co.uk/sport/basketball/articles/cje36qz977yqo"
+        },
+        {
+          "text": "Michael Jordan T-Shirt Sets Record 14 Million in Basketball Souvenir Auction - Information Focus",
+          "bias": "unknown",
+          "url": "https://focoinformativo.site/camiseta-de-michael-jordan-fija-record-de-14-millones-en-subasta-de-recuerdos-de-basquet/"
+        },
+        {
+          "text": "Michael Jordan Jersey Sold for $14 Million",
+          "bias": "right",
+          "url": "https://www.protothema.gr/sports/article/1893829/fanela-tou-maikl-tzordan-poulithike-enadi-14-ekatommurion-dolarion/"
+        },
+        {
+          "text": "Next Jordan Jersey Sold for $14 Million",
+          "bias": "unknown",
+          "url": "https://www.suedtirolnews.it/sport/naechstes-jordan-trikot-fuer-14-millionen-dollar-verkauft"
+        },
+        {
+          "text": "Next Jordan Jersey Sold for $14 Million",
+          "bias": "unknown",
+          "url": "https://www.vienna.at/naechstes-jordan-trikot-fuer-14-millionen-dollar-verkauft/10539092"
+        },
+        {
+          "text": "Michael Jordan's Jersey Sold for the Highest Price Ever Paid for Basketball Memorabilia",
+          "bias": "leanLeft",
+          "url": "https://www.danas.rs/sport/majkl-dzordan-dres-prodaja-aukcijska-kuca/"
+        },
+        {
+          "text": "NBA legend Michael Jordan just set another new record – The Horn News",
+          "bias": "right",
+          "url": "https://thehornnews.com/nba-legend-michael-jordan-just-set-another-new-record/"
+        },
+        {
+          "text": "Michael Jordan / His Jersey From the '98 Finals Sold for 14 Million",
+          "bias": "unknown",
+          "url": "https://tvxs.gr/news/athlitika/maikl-tzorntan-fanela-toy-apo-toys-telikoys-toy-98-poylithike-gia-14-ektatommyria/"
+        }
+      ]
+    },
+    {
+      "id": "rss_40321_1791831931754_4",
+      "label": "Epic reportedly delays its Disney video game so it can be made using more AI",
+      "group": "story",
+      "size": 10,
+      "summary": "An unannounced shooter game utilizing Star Wars and Marvel characters is in development by Epic Games, and AI is supposedly being heavily pushed across its development. This news comes in a report by Bloomberg's Jason Schreier.\nBloomberg reports that the unnamed game is supposedly experiencing a delay. No known release date has been confirmed for the project so far. Developers are also allegedly encouraged to focus on an \"AI first\" game producti…",
+      "sources_count": 1,
+      "bias": {
+        "left": 2,
+        "center": 4,
+        "right": 0,
+        "unknown": 11
+      },
+      "bias_score": -0.333,
+      "geo": {
+        "place": "Cambridge, US",
+        "lat": 42.369403,
+        "lon": -71.104594
+      },
+      "headlines": [
+        {
+          "text": "Epic Games Reportedly Urges \"AI first\" Game Production",
+          "bias": "unknown",
+          "url": "https://www.keengamer.com/articles/news/epic-games-reportedly-urges-ai-first-game-production/"
+        },
+        {
+          "text": "Epic Games reportedly pivoting to \"AI first\" game development model",
+          "bias": "center",
+          "url": "https://arstechnica.com/gaming/2026/10/report-epic-games-goes-all-in-on-ai-for-disney-collaboration/"
+        },
+        {
+          "text": "Epic reportedly delays its Disney video game so it can be made using more AI",
+          "bias": "leanLeft",
+          "url": "https://www.engadget.com/2284680/epic-reportedly-delays-its-disney-video-game-so-it-can-be-made-using-more-ai/"
+        },
+        {
+          "text": "Marvel and Disney Shooter Postponed: Epic Games Revolutionizes Development by Focusing Everything on AI",
+          "bias": "unknown",
+          "url": "https://www.everyeye.it/notizie/rinviato-sparatutto-ip-marvel-disney-epic-games-punta-sviluppo-basato-ia-905651.html"
+        },
+        {
+          "text": "Epic Games delays Disney game and tells developers to go \"AI first\"",
+          "bias": "unknown",
+          "url": "https://www.gamesindustry.biz/epic-games-delays-disney-game-and-tells-developers-to-go-ai-first"
+        },
+        {
+          "text": "Epic Games reportedly orders staff to implement ‘AI-first’ development",
+          "bias": "unknown",
+          "url": "https://www.videogameschronicle.com/news/epic-games-reportedly-orders-staff-to-implement-ai-first-development/"
+        },
+        {
+          "text": "Epic Games Postpones a Star Wars and Marvel Shooter to Turn It Into a Completely AI-Generative Project",
+          "bias": "unknown",
+          "url": "https://www.hobbyconsolas.com/videojuegos/epic-games-aplaza-un-shooter-star-wars-marvel-para-convertirlo-un-proyecto-creado-por-completo-con-ia-generativa_7047888_0.html"
+        },
+        {
+          "text": "Epic Would Have Pushed Back a Shooting Game Mixing the Universes of Star Wars and Marvel and Would Now Boost Its Development to AI",
+          "bias": "center",
+          "url": "https://fr.ign.com/fortnite/93055/epic-aurait-repousse-un-jeu-de-tir-melant-les-univers-de-star-wars-et-marvel-et-boosterait-desormais"
+        }
+      ]
+    },
+    {
+      "id": "51329099-c2b6-4091-9098-37f2bcaa3a31",
+      "label": "Trump defends Russia diesel deal after bipartisan pushback: 'I made the right choice'",
+      "group": "story",
+      "size": 19,
+      "summary": "Ukrainian President Volodymyr Zelenskyy speaks with ABC News while appearing on ‘This Week,’ Oct. 11, 2026. (ABC News) President Donald Trump doubled down Monday on his decision to allow Russian diesel imports amid growing backlash, calling it",
+      "sources_count": 8,
+      "bias": {
+        "left": 5,
+        "center": 7,
+        "right": 6,
+        "unknown": 31
+      },
+      "bias_score": 0.056,
+      "geo": {
+        "place": "New York, US",
+        "lat": 40.729632,
+        "lon": -74.01051
+      },
+      "headlines": [
+        {
+          "text": "Trump stands by Russia diesel plan despite backlash: 'I made the right choice'",
+          "bias": "unknown",
+          "url": "https://www.wsjm.com/2026/10/12/trump-stands-by-russia-diesel-plan-despite-backlash-i-made-the-right-choice/"
+        },
+        {
+          "text": "Trump stands by Russia diesel plan despite backlash: ‘I made the right choice’",
+          "bias": "center",
+          "url": "https://www.deltaplexnews.com/politics/trump-stands-by-russia-diesel-plan-despite-backlash-i-made-the-right-choice/"
+        },
+        {
+          "text": "Trump stands by Russia diesel plan despite backlash: 'I made the right choice'",
+          "bias": "center",
+          "url": "https://www.everettpost.com/politics/trump-stands-by-russia-diesel-plan-despite-backlash-i-made-the-right-choice/"
+        },
+        {
+          "text": "Trump faces ‘bipartisan pushback’ on diesel deal with Russia as he tries to lower prices",
+          "bias": "leanLeft",
+          "url": "https://www.nbcnews.com/meet-the-press/video/trump-faces-bipartisan-pushback-on-diesel-deal-with-russia-as-he-tries-to-lower-prices-271459397698"
+        },
+        {
+          "text": "Hypocritical Europeans buy Putin’s diesel too, says Trump",
+          "bias": "center",
+          "url": "https://www.thetimes.com/world/russia-ukraine-war/article/trump-zelensky-russia-diesel-deal-midterms-dz8r3v2rw"
+        },
+        {
+          "text": "Trump: He Sticks to the Russian Diesel Plan Despite the Reactions - \"I Made the Right Choice\"",
+          "bias": "unknown",
+          "url": "https://www.lifo.gr/now/world/tramp-emmenei-sto-shedio-gia-rosiko-ntizel-para-tis-antidraseis-ekana-ti-sosti-epilogi"
+        },
+        {
+          "text": "Donald Trump: EU Paid Russia $250 Billion for Energy",
+          "bias": "unknown",
+          "url": "https://www.rp.pl/polityka/art45323771-donald-trump-ue-zaplacila-rosji-250-mld-dol-za-energie"
+        },
+        {
+          "text": "Trump Stands by Russia Diesel Plan Despite Backlash",
+          "bias": "center",
+          "url": "https://politicalwire.com/2026/10/12/trump-stands-by-russia-diesel-plan-despite-backlash/"
+        }
+      ]
+    },
+    {
+      "id": "ee928508-5bcd-46b4-b4c1-ab1fe3989d03",
+      "label": "Study Links ADHD to Higher Dementia Risk in Older Adults",
+      "group": "story",
+      "size": 30,
+      "summary": "NEWYou can now listen to Fox News articles! A common neurodevelopmental disorder could be linked to dementia risk, a new study suggests. Research led by the University of Pittsburgh School of Medicine, involving more than 187,000 adults aged 50 and older, found that ADHD (attention deficit hyperactivity disorder) was associated with a substantially increased risk [...]",
+      "sources_count": 53,
+      "bias": {
+        "left": 1,
+        "center": 6,
+        "right": 3,
+        "unknown": 0
+      },
+      "bias_score": 0.2,
+      "geo": {
+        "place": "New York, US",
+        "lat": 40.711781,
+        "lon": -74.012249
+      },
+      "headlines": [
+        {
+          "text": "Dementia risk more than quadruples among adults with common disorder - NEW YORK TIMES POST",
+          "bias": "leanRight",
+          "url": "https://nytimespost.com/dementia-risk-more-than-quadruples-among-adults-with-common-disorder/"
+        },
+        {
+          "text": "Dementia risk more than quadruples among adults with common disorder",
+          "bias": "right",
+          "url": "https://www.wfmd.com/2026/10/12/dementia-risk-more-than-quadruples-among-adults-with-common-disorder/"
+        },
+        {
+          "text": "Where the ADHD Dementia Risk Actually Comes From",
+          "bias": "center",
+          "url": "https://www.psychologytoday.com/ca/blog/talking-scientifically-about-mental-health/202610/where-the-adhd-dementia-risk-actually-comes"
+        },
+        {
+          "text": "187K People Linked This Condition To A 4x Higher Dementia Risk",
+          "bias": "leanLeft",
+          "url": "https://www.mindbodygreen.com/articles/this-condition-was-just-linked-to-4x-higher-dementia-risk"
+        },
+        {
+          "text": "Millions of adults have this common condition. It’s linked to cognitive decline",
+          "bias": "center",
+          "url": "https://www.newsweek.com/people-adhd-more-likely-get-dementia-study-12529606"
+        },
+        {
+          "text": "ADHD Was Linked to a 4-Fold Higher Risk of Cognitive Impairment. A Diagnosis Wasn’t the Only Signal",
+          "bias": "center",
+          "url": "https://www.inc.com/victoria-salves/adhd-linked-4-fold-higher-risk-cognitive-impairment-diagnosis-wasnt-only-signal/91416770"
+        },
+        {
+          "text": "Adults With ADHD May Have a Higher Risk of Later Cognitive Issues",
+          "bias": "center",
+          "url": "https://www.everydayhealth.com/neurological-conditions/adhd-linked-to-higher-risk-of-cognitive-impairment/"
+        },
+        {
+          "text": "Study: Adults with ADHD Have 4 Times Higher Risk of Cognitive Impairment Later in Life",
+          "bias": "leanRight",
+          "url": "https://www.tribunnews.com/kesehatan/7894176/studi-orang-dewasa-dengan-adhd-berisiko-4-kali-lebih-tinggi-alami-gangguan-kognitif-di-usia-lanjut"
+        }
+      ]
+    },
+    {
+      "id": "caf0f9dc-3c3f-49c6-9368-fec7ad16d1cd",
+      "label": "Microsoft president: AI faces fewer safety requirements than milk, washing machines",
+      "group": "story",
+      "size": 18,
+      "summary": "Microsoft President Brad Smith says milk faces more safety rules than AI, calling for global standards and mandatory incident reporting.",
+      "sources_count": 7,
+      "bias": {
+        "left": 7,
+        "center": 10,
+        "right": 17,
+        "unknown": 46
+      },
+      "bias_score": 0.294,
+      "geo": {
+        "place": "New York, US",
+        "lat": 40.711161,
+        "lon": -73.995015
+      },
+      "headlines": [
+        {
+          "text": "Microsoft president: Voluntary AI safety promises aren’t enough",
+          "bias": "left",
+          "url": "https://mashable.com/tech/microsoft-brad-smith-ai-regulation-milk"
+        },
+        {
+          "text": "\"Bricks of Milk Are Subject to More Controls\": Microsoft President Calls for the Development of Artificial Intelligence",
+          "bias": "leanRight",
+          "url": "https://www.lefigaro.fr/secteur/high-tech/les-briques-de-lait-font-l-objet-de-plus-de-controles-le-president-de-microsoft-appelle-a-encadrer-le-developpement-de-l-intelligence-artificielle-20261012"
+        },
+        {
+          "text": "Microsoft boss says ‘every carton of milk’ faces more safety rules than AI",
+          "bias": "right",
+          "url": "https://www.bizpacreview.com/2026/10/12/microsoft-boss-says-every-carton-of-milk-faces-more-safety-rules-than-ai-1662975/"
+        },
+        {
+          "text": "President of Microsoft Advocates More Regulation for AI: \"Each Milk Packaging\" Is Subject to More Safety Rules",
+          "bias": "center",
+          "url": "https://expresso.pt/ia-inteligencia-artificial/2026-10-12-presidente-da-microsoft-defende-mais-regulacao-para-a-ia-cada-embalagem-de-leite-esta-sujeita-a-mais-regras-de-seguranca-7399c1fa"
+        },
+        {
+          "text": "AI LESS REGULATED THAN MILK AND WASHING MACHINES, WARNS MICROSOFT PRESIDENT",
+          "bias": "unknown",
+          "url": "https://independentpress.cc/ai-less-regulated-than-milk-and-washing-machines-warns-microsoft-president/2026/10/12/"
+        },
+        {
+          "text": "The President of Microsoft Releases that the Regulation of AI Is Looser than that of a Carton of Milk",
+          "bias": "unknown",
+          "url": "https://www.que.es/2026/10/12/microsoft-regulacion-ia-carton-leche/"
+        },
+        {
+          "text": "Tech Giant Boss Says ‘Every Carton Of Milk’ Faces More Safety Rules Than AI",
+          "bias": "leanRight",
+          "url": "https://dailycaller.com/2026/10/12/brad-smith-microsoft-ai-safety-trump-bill-gates/"
+        },
+        {
+          "text": "Microsoft boss says ‘every carton of milk’ faces more safety rules than AI - The Daily Bo Snerdley",
+          "bias": "leanRight",
+          "url": "https://thedailybs.com/2026/10/12/microsoft-boss-says-every-carton-of-milk-faces-more-safety-rules-than-ai/"
+        }
+      ]
+    },
+    {
+      "id": "7f038e46-49b3-4d81-a33f-26ac636a88fa",
+      "label": "Former Atlanta Resident Soulja Boy Hints at 2028 Run for President",
+      "group": "story",
+      "size": 24,
+      "summary": "Rapper Soulja Boy is hinting at a possible 2028 presidential run.",
+      "sources_count": 15,
+      "bias": {
+        "left": 6,
+        "center": 13,
+        "right": 6,
+        "unknown": 18
+      },
+      "bias_score": 0.0,
+      "geo": {
+        "place": "Atlanta, US",
+        "lat": 33.740684,
+        "lon": -84.367742
+      },
+      "headlines": [
+        {
+          "text": "Former Atlanta resident Soulja Boy hints at 2028 run for president",
+          "bias": "center",
+          "url": "https://www.fox5atlanta.com/news/former-atlanta-resident-soulja-boy-hints-2028-run-president"
+        },
+        {
+          "text": "Soulja Boy Teases 2028 Presidential Run",
+          "bias": "unknown",
+          "url": "https://www.hotnewhiphop.com/1012800-soulja-boy-president-2028"
+        },
+        {
+          "text": "Soulja Boy Apparently Thinks the White House Is His Next Gig",
+          "bias": "center",
+          "url": "https://www.realitytea.com/2026/10/12/soulja-boy-white-house-next-gig/"
+        },
+        {
+          "text": "Big Draco For President?! Soulja Boy Teases 2028 White House Run",
+          "bias": "unknown",
+          "url": "https://cassiuslife.com/1414969/soulja-boy-teases-2028-president-run/"
+        },
+        {
+          "text": "Big Draco For President?! Soulja Boy Teases 2028 White House Run",
+          "bias": "unknown",
+          "url": "https://hotspotatl.com/6824689/soulja-boy-teases-2028-president-run/"
+        },
+        {
+          "text": "Big Draco For President?! Soulja Boy Teases 2028 White House Run",
+          "bias": "left",
+          "url": "https://hiphopwired.com/3067527/soulja-boy-teases-2028-president-run/"
+        },
+        {
+          "text": "Soulja Boy Announces US Presidential Candidate for 2028",
+          "bias": "unknown",
+          "url": "https://www.blick.ch/gesellschaft/soulja-boy-will-als-praesident-fuer-us-wahl-2028-kandidieren/qfpn8he"
+        },
+        {
+          "text": "\"A New Chapter\": Rapper Soulja Boy, Future Candidate for the US Presidency in 2028?",
+          "bias": "leanLeft",
+          "url": "https://www.tvanouvelles.ca/2026/10/12/un-nouveau-chapitre-le-rappeur-soulja-boy-futur-candidat-a-la-presidence-americaine-en-2028"
+        }
+      ]
+    },
+    {
+      "id": "3769b891-4743-4d31-b1c4-c541790333dd",
+      "label": "Meta releases Muse Wonder AI models to challenge Anthropic and OpenAI",
+      "group": "story",
+      "size": 16,
+      "summary": "Meta released on Monday the Muse Wonder and the Muse Wonder Full, describing them as their most advanced artificial intelligence models, at a time when the social media company seeks to compete more aggressively with OpenAI and Antropic. Meta's actions rose by about 4% in the middle of the afternoon in [...]",
+      "sources_count": 6,
+      "bias": {
+        "left": 9,
+        "center": 2,
+        "right": 5,
+        "unknown": 34
+      },
+      "bias_score": -0.25,
+      "geo": {
+        "place": "Alexandria, US",
+        "lat": 38.806872,
+        "lon": -77.046099
+      },
+      "headlines": [
+        {
+          "text": "Meta Launches IA Muse Wonder Models in Challenge to Anthropic and OpenAI – Money Times",
+          "bias": "unknown",
+          "url": "https://www.moneytimes.com.br/meta-lanca-modelos-de-ia-muse-wonder-em-desafio-a-anthropic-e-openai/"
+        },
+        {
+          "text": "Meta releases Muse Wonder, claims AI benchmark gains",
+          "bias": "right",
+          "url": "https://ijr.com/discover/tech-2026-10-12-meta-releases-muse-wonder-claims-ai-benchmark-gains-d73b5e62?utm_source=rss&utm_medium=syndication&utm_content=story%3Ad73b5e62-e5b9-401e-a964-93331de7f5f0"
+        },
+        {
+          "text": "Meta Presents New AI Model and States that It Is at the Level of OpenAI and Anthropic",
+          "bias": "unknown",
+          "url": "https://aristeguinoticias.com/1210/kiosko/meta-presenta-nuevo-modelo-de-ia-y-afirma-que-esta-al-nivel-de-openai-y-anthropic/"
+        },
+        {
+          "text": "Meta unveils new series of advanced AI models",
+          "bias": "leanLeft",
+          "url": "https://www.seattletimes.com/business/meta-unveils-new-series-of-advanced-ai-models/"
+        },
+        {
+          "text": "Meta says its new AI models on par with OpenAI, Anthropic",
+          "bias": "center",
+          "url": "https://www.france24.com/en/live-news/20261012-meta-says-its-new-ai-models-on-par-with-openai-anthropic"
+        },
+        {
+          "text": "Meta Launches Muse Wonder AI Model to Challenge ChatGPT and Claude",
+          "bias": "unknown",
+          "url": "https://ceoworld.biz/2026/10/12/meta-launches-muse-wonder-ai-model-to-challenge-chatgpt-and-claude/"
+        },
+        {
+          "text": "Meta Ships Muse Wonder, Its First Frontier Model — and Leaves the Research Blog Empty",
+          "bias": "unknown",
+          "url": "https://forkast.news/meta-ships-muse-wonder-its-first-frontier-model-and-leaves-the-research-blog-empty/"
+        },
+        {
+          "text": "Meta's New Muse Wonder Finally Puts Zuckerberg in the Frontier AI Race",
+          "bias": "unknown",
+          "url": "https://decrypt.co/380768/meta-muse-wonder-zuckerberg-frontier-ai-race"
+        }
+      ]
+    },
+    {
+      "id": "42ea5449-ecc6-4e19-8d50-17bcf9c10152",
+      "label": "Trump administration plans to move AI testing agency officials to White House, The Information reports",
+      "group": "story",
+      "size": 30,
+      "summary": "Oct 12 (Reuters) - The Trump administration is planning to move three senior officials of the Center for Advancing Innovation and Standards for Super Intelligence to the White House, The Information reported on Monday, citing a White House official. The White House and Commerce Department [...]",
+      "sources_count": 49,
+      "bias": {
+        "left": 0,
+        "center": 4,
+        "right": 2,
+        "unknown": 0
+      },
+      "bias_score": 0.333,
+      "geo": {
+        "place": "Mumbai, India",
+        "lat": 19.098807,
+        "lon": 72.886784
+      },
+      "headlines": [
+        {
+          "text": "Trump administration plans to move AI testing agency officials to White House, The Information reports - Regional Media News",
+          "bias": "leanRight",
+          "url": "https://www.regionalmedianews.com/news/national/trump-administration-plans-to-move-ai-testing-agency-officials-to-white-house-the-information-reports/"
+        },
+        {
+          "text": "Trump administration plans to move AI testing agency officials to White House, The Information reports",
+          "bias": "center",
+          "url": "https://www.investing.com/news/world-news/trump-administration-plans-to-move-ai-testing-agency-officials-to-white-house-the-information-reports-4945079"
+        },
+        {
+          "text": "Trump administration plans to move AI testing agency officials to White House: The Information",
+          "bias": "center",
+          "url": "https://m.economictimes.com/tech/artificial-intelligence/trump-administration-plans-to-move-ai-testing-agency-officials-to-white-house-the-information/articleshow/134901531.cms"
+        },
+        {
+          "text": "Trump administration plans to move AI testing agency officials to White House, The Information reports",
+          "bias": "leanRight",
+          "url": "https://wkzo.com/2026/10/12/trump-administration-plans-to-move-ai-testing-agency-officials-to-white-house-the-information-reports/"
+        },
+        {
+          "text": "Trump administration plans to move AI testing agency officials to White House, The Information reports",
+          "bias": "center",
+          "url": "https://kfgo.com/2026/10/12/trump-administration-plans-to-move-ai-testing-agency-officials-to-white-house-the-information-reports/"
+        },
+        {
+          "text": "Trump administration plans to move AI testing agency officials to White House, The Information reports",
+          "bias": "center",
+          "url": "https://www.marketscreener.com/news/trump-administration-plans-to-move-ai-testing-agency-officials-to-white-house-the-information-repor-ce785dddd88cf226"
+        }
+      ]
+    },
+    {
+      "id": "d744e3ee-10c2-4835-bf72-672df03bf884",
+      "label": "New York City Mayor Zohran Mamdani Orders Department-Wide Review of NYPD Use of Force Policies",
+      "group": "story",
+      "size": 13,
+      "summary": "NEW YORK (PIX11) - New York City Mayor Zohran Mamdani announced Monday that the NYPD will conduct a comprehensive review of its use-of-force policies and practices, the first such review in a decade. The review will take place over the coming months and include community input. “When the government uses force against a New Yorker, [...]",
+      "sources_count": 4,
+      "bias": {
+        "left": 8,
+        "center": 16,
+        "right": 3,
+        "unknown": 4
+      },
+      "bias_score": -0.185,
+      "geo": {
+        "place": "New York, US",
+        "lat": 40.749551,
+        "lon": -74.022485
+      },
+      "headlines": [
+        {
+          "text": "Mamdani orders first NYPD use-of-force review in a decade, announces reforms",
+          "bias": "center",
+          "url": "https://pix11.com/news/local-news/mamdani-orders-first-nypd-use-of-force-review-in-a-decade-announces-reforms/"
+        },
+        {
+          "text": "NYC Mayor Zohran Mamdani orders review of NYPD use of force policies, announces reforms",
+          "bias": "center",
+          "url": "https://www.newsday.com/news/new-york/crime/nypd-use-of-force-review-mamdani-lqw20jcx"
+        },
+        {
+          "text": "Mamdani orders NYPD use-of-force review, accountability reforms after officer in Win Rozario shooting retires before trial",
+          "bias": "leanLeft",
+          "url": "https://www.amny.com/news/mamdani-orders-nypd-use-of-force-review-accountability-reforms-after-officer-in-win-rozario-shooting-retires-before-trial/"
+        },
+        {
+          "text": "Mamdani orders NYPD to review use-of-force policies after teen's death",
+          "bias": "center",
+          "url": "https://ny1.com/nyc/all-boroughs/news/2026/10/12/mamdani-orders-nypd-to-review-use-of-force-policies-after-teen-s-death"
+        },
+        {
+          "text": "NYC to review NYPD use-of-force policies for first time in decade",
+          "bias": "center",
+          "url": "https://abc7ny.com/post/nyc-review-nypd-use-force-policies-first-time-decade/19931721/"
+        },
+        {
+          "text": "Mayor Mamdani orders review of NYPD use of force policies",
+          "bias": "leanLeft",
+          "url": "https://gothamist.com/news/mayor-mamdani-orders-review-of-nypd-use-of-force-policies"
+        },
+        {
+          "text": "Mayor Mamdani directs NYPD to review its use-of-force policies",
+          "bias": "leanLeft",
+          "url": "https://www.nbcnewyork.com/new-york-city/zohran-mamdani-directs-nypd-use-of-force-review/6558280/"
+        },
+        {
+          "text": "Mamdani unveils sweeping NYPD use-of-force review, but stops short of fulfilling key campaign promises",
+          "bias": "right",
+          "url": "https://www.khbrknews.com/mamdani-unveils-sweeping-nypd-use-of-force-review-but-stops-short-of-fulfilling-key-campaign-promises/"
+        }
+      ]
+    },
+    {
+      "id": "53ee787e-42fe-4741-9c27-47833299a06e",
+      "label": "Selma Blair arrested after trying to open plane doors, biting flight attendant",
+      "group": "story",
+      "size": 25,
+      "summary": "Delta Airlines condemned actress Selma Blair for unruly behavior after she allegedly bit a flight attendant, struck another, and tried to open a cabin door mid-flight, leaving crew hurt and police waiting at JFK. Blair was taken into custody Sunday after Delta flight 938 from Los Angeles to New York, where crew members reported a […]",
+      "sources_count": 18,
+      "bias": {
+        "left": 35,
+        "center": 64,
+        "right": 20,
+        "unknown": 75
+      },
+      "bias_score": -0.126,
+      "geo": {
+        "place": "Toronto, Canada",
+        "lat": 43.658787,
+        "lon": -79.381589
+      },
+      "headlines": [
+        {
+          "text": "Selma Blair Arrested After Biting Delta Flight Attendant",
+          "bias": "right",
+          "url": "https://capitalisminstitute.org/delta-condemns-selma-blair-after-alleged-mid-flight-biting-attack-on-crew/"
+        },
+        {
+          "text": "Selma Blair hospitalized after allegedly physically injuring flight attendants on plane",
+          "bias": "center",
+          "url": "https://www.ctvnews.ca/entertainment/article/selma-blair-hospitalized-after-allegedly-physically-injuring-flight-attendants-on-plane/"
+        },
+        {
+          "text": "Actress Selma Blair arrested in mid-air plane incident",
+          "bias": "right",
+          "url": "https://torontosun.com/entertainment/celebrity/actress-selma-blair-arrested-in-mid-air-plane-incident"
+        },
+        {
+          "text": "Actress Selma Blair arrested over alleged in-flight assault",
+          "bias": "leanLeft",
+          "url": "https://www.abc.net.au/news/2026-10-13/selma-blair-arrested-after-incident-on-flight/107258804"
+        },
+        {
+          "text": "Actress Selma Blair Arrested After Altercation on a Delta Airlines Flight",
+          "bias": "unknown",
+          "url": "https://lavocedinewyork.com/en/new-york/2026/10/12/actress-selma-blair-arrested-after-altercation-on-a-delta-airlines-flight/"
+        },
+        {
+          "text": "Actress Selma Blair Allegedly Tried to Open a Plane Door During a Flight and Bit a Flight Attendant",
+          "bias": "unknown",
+          "url": "https://www.echo24.cz/a/HAPjD/panorama-zpravy-herecka-selma-blairova-se-pokusila-otevrit-dvere-letadla-behem-letu-a-pokousala-letusku"
+        },
+        {
+          "text": "Actress Selma Blair arrested after incident during flight to New York",
+          "bias": "center",
+          "url": "https://www.cbs19.tv/article/news/nation-world/selma-blair-arrested-disturbance-delta-flight-jfk-airport-new-york/507-df6715e9-875e-4da5-a911-0359a698651f"
+        },
+        {
+          "text": "Actress Selma Blair arrested after incident during flight to New York",
+          "bias": "center",
+          "url": "https://www.9news.com/article/news/nation-world/selma-blair-arrested-disturbance-delta-flight-jfk-airport-new-york/507-df6715e9-875e-4da5-a911-0359a698651f"
+        }
+      ]
+    },
+    {
+      "id": "cfdc65d2-832d-41e4-bd7a-45ab0d94e83a",
+      "label": "Adult victims, suspected shooter ID'd in Erie mass shooting",
+      "group": "story",
+      "size": 10,
+      "summary": "Erie County Coroner Lyell Cook said he could not release the names of a 5-year-old boy and a 22-month-old girl who were killed in a mass shooting in Erie because they are under 18. The adults were identified.",
+      "sources_count": 2,
+      "bias": {
+        "left": 3,
+        "center": 3,
+        "right": 3,
+        "unknown": 0
+      },
+      "bias_score": 0.0,
+      "geo": {
+        "place": "Erie, US",
+        "lat": 42.129194,
+        "lon": -80.085151
+      },
+      "headlines": [
+        {
+          "text": "Coroner ID adults found dead in mass shooting at Erie residence",
+          "bias": "center",
+          "url": "https://www.goerie.com/story/news/crime/2026/10/12/erie-mass-shooting-adults-identified-names-of-children-not-released/92217851007/"
+        },
+        {
+          "text": "Authorities name the gunman and most of the 8 victims in last week's Erie mass shooting",
+          "bias": "leanLeft",
+          "url": "https://www.pbs.org/newshour/nation/authorities-name-the-gunman-and-most-of-the-8-victims-in-last-weeks-erie-mass-shooting"
+        },
+        {
+          "text": "Pregnant Woman Identified As 1 Of 8 Victims In Pennsylvania Shooting As Attacker's Identity Is Revealed (UPDATE)",
+          "bias": "center",
+          "url": "https://theshaderoom.com/pregnant-woman-erie-pennsylvania-attacker-matthew-stone-sr/"
+        },
+        {
+          "text": "Authorities name the attacker and most of the 8 victims in last week's Erie mass shooting",
+          "bias": "leanLeft",
+          "url": "https://www.goshennews.com/news/national_news/authorities-name-the-attacker-and-most-of-the-8-victims-in-last-weeks-erie-mass/article_71b8d173-9eb1-5d75-83bd-9847b1937018.html"
+        },
+        {
+          "text": "Authorities name the attacker and most of the 8 victims in last week's Erie mass shooting",
+          "bias": "leanRight",
+          "url": "https://mynorthwest.com/national/authorities-name-the-attacker-and-most-of-the-8-victims-in-last-weeks-erie-mass-shooting/4285680"
+        },
+        {
+          "text": "Coroner identifies nine victims and shooter in Erie mass shooting",
+          "bias": "center",
+          "url": "https://www.cleveland19.com/2026/10/12/coroner-identifies-nine-victims-shooter-erie-mass-shooting/"
+        },
+        {
+          "text": "Male, 45, fatally shoots 7 of his relatives, 1 family friend in home, police say; 1 victim was 8 months pregnant",
+          "bias": "right",
+          "url": "https://www.theblaze.com/news/male-45-fatally-shoots-7-of-his-relatives-1-family-friend-in-home-police-say-1-victim-was-8-months-pregnant"
+        },
+        {
+          "text": "Victims of Pennsylvania mass shooting included pregnant daughter of gunman",
+          "bias": "leanLeft",
+          "url": "https://www.nbcdfw.com/news/national-international/erie-pennsylvania-mass-shooting-victims/4090040/"
+        }
+      ]
+    },
+    {
+      "id": "6f9159d5-274c-4c72-a25c-227eaf12394d",
+      "label": "Sixth person who had measles has died in Pennsylvania, local coroner says",
+      "group": "story",
+      "size": 16,
+      "summary": "The county coroner said the death of a 39-year-old woman meets Pennsylvania’s definition of a measles-associated death.",
+      "sources_count": 6,
+      "bias": {
+        "left": 1,
+        "center": 3,
+        "right": 1,
+        "unknown": 0
+      },
+      "bias_score": 0.0,
+      "geo": {
+        "place": "Philadelphia, US",
+        "lat": 39.942305,
+        "lon": -75.166776
+      },
+      "headlines": [
+        {
+          "text": "Measles-associated death reported in Franklin County amid ongoing Pa. outbreak",
+          "bias": "leanLeft",
+          "url": "https://www.inquirer.com/health/measles-outbreak-death-franklin-county-pennsylvania-20261012.html"
+        },
+        {
+          "text": "Pa.'s sixth measles death announced by Franklin County Coroner as outbreak intensifies",
+          "bias": "center",
+          "url": "https://www.post-gazette.com/news/health/2026/10/12/measles-death-franklin-county/stories/202610120033"
+        },
+        {
+          "text": "Pennsylvania reports sixth measles-related death",
+          "bias": "center",
+          "url": "https://san.com/cc/pennsylvania-reports-sixth-measles-related-death/"
+        },
+        {
+          "text": "Pennsylvania reports its 6th measles death, in a Franklin County resident",
+          "bias": "center",
+          "url": "https://www.cidrap.umn.edu/measles/pennsylvania-reports-its-6th-measles-death-franklin-county-resident"
+        },
+        {
+          "text": "39-year-old Franklin County woman marks 6th 'measles-associated' death: coroner",
+          "bias": "leanRight",
+          "url": "https://local21news.com/news/local/franklin-county-coroner-announces-measles-associated-death-of-39-year-old-woman-pa-pennsylvania-measles-deaths-outbreak-6th"
+        }
+      ]
+    },
+    {
+      "id": "5e41b7f8-414b-4dab-8964-ba0774cd5d73",
+      "label": "Greenland lawmakers signal support for Trump security deal",
+      "group": "story",
+      "size": 24,
+      "summary": "COPENHAGEN – A majority of Greenlandic lawmakers signalled support for the Arctic island’s ‌recent security agreement with US President Donald Trump in a debate on Monday, although some opposition party members questioned the deal’s economic value. The United States, Denmark and Greenland ​last month signed the agreement, aimed at ending tensions after Trump’s repeated ​threats […]",
+      "sources_count": 15,
+      "bias": {
+        "left": 2,
+        "center": 1,
+        "right": 4,
+        "unknown": 10
+      },
+      "bias_score": 0.286,
+      "geo": {
+        "place": "Sri Lanka",
+        "lat": 8.132712,
+        "lon": 80.819661
+      },
+      "headlines": [
+        {
+          "text": "Greenland lawmakers signal support for Trump security deal",
+          "bias": "unknown",
+          "url": "https://egyptian-gazette.com/world/greenland-lawmakers-signal-support-for-trump-security-deal/"
+        },
+        {
+          "text": "Greenland lawmakers signal support for Trump security deal",
+          "bias": "leanLeft",
+          "url": "https://adaderana.lk/news/cmv5hbmi000023j6qiplcu0jk"
+        },
+        {
+          "text": "Greenland lawmakers signal support for Trump security deal",
+          "bias": "leanRight",
+          "url": "https://www.thestar.com.my/news/world/2026/10/13/greenland-lawmakers-signal-support-for-trump-security-deal"
+        },
+        {
+          "text": "Greenland Foreign Minister Says Trust with US Must Be Rebuilt",
+          "bias": "unknown",
+          "url": "https://alkhaleejtoday.co/international/5865795/Greenland-foreign-minister-says-trust-with-US-must-be-rebuilt.html"
+        },
+        {
+          "text": "Greenland foreign minister says trust with US must be rebuilt",
+          "bias": "leanRight",
+          "url": "https://www.malaymail.com/news/world/2026/10/12/greenland-foreign-minister-says-trust-with-us-must-be-rebuilt/238847"
+        },
+        {
+          "text": "The Relationship with the United States Needs to Be Rebuilt, According to Greenland's Chief of Diplomacy",
+          "bias": "unknown",
+          "url": "https://marine-oceans.com/actualites/la-relation-avec-les-etats-unis-doit-etre-reconstruite-selon-le-chef-de-la-diplomatie-du-groenland/"
+        },
+        {
+          "text": "Greenlandic Top Minister on Relations with the US: 'Something Has Seriously Gone Wrong'",
+          "bias": "leanLeft",
+          "url": "https://www.dr.dk/nyheder/indland/groenland/groenlandsk-topminister-om-forholdet-til-usa-noget-er-gaaet-alvorligt-i-stykker"
+        },
+        {
+          "text": "It's Not Just About the Struggle for Rare Earth Elements; the US Is Also Trying to Contain China's Arctic Expansion and Nuclear Missile Strategy Through the New Greenland Defense Agreement.",
+          "bias": "unknown",
+          "url": "https://toyokeizai.net/articles/-/960422"
+        }
+      ]
+    },
+    {
+      "id": "4f17ec1c-25c9-4b0b-9923-f8593757d525",
+      "label": "Omar says she won’t ‘be silenced’ by search of her home and blasts Trump’s ‘intimidation’ campaign",
+      "group": "story",
+      "size": 16,
+      "summary": "WASHINGTON — Democratic leaders in the U.S. House condemned a “deeply disturbing” raid early Monday at the District of Columbia home of Rep. Ilhan Omar, a Minnesota Democrat who has long been a target of verbal attacks by President Donald Trump and Republicans. House Minority Leader Hakeem Jeffries, D-N.Y., Democratic Whip Katherine Clark, D-Mass., and […]",
+      "sources_count": 6,
+      "bias": {
+        "left": 43,
+        "center": 22,
+        "right": 34,
+        "unknown": 32
+      },
+      "bias_score": -0.091,
+      "geo": {
+        "place": "Helsinki, Finland",
+        "lat": 60.19131,
+        "lon": 24.93026
+      },
+      "headlines": [
+        {
+          "text": "US House Dem leaders condemn Homeland Security raid on home of Rep. Ilhan Omar • Oklahoma Voice",
+          "bias": "left",
+          "url": "https://oklahomavoice.com/2026/10/12/repub/us-house-dem-leaders-condemn-homeland-security-raid-on-home-of-rep-ilhan-omar/"
+        },
+        {
+          "text": "Opposition Politician's Home Raided in the United States – \"I Will Not Be Silenced\"",
+          "bias": "center",
+          "url": "https://www.is.fi/ulkomaat/art-2000012338299.html"
+        },
+        {
+          "text": "US House Dem leaders condemn Homeland Security raid on home of Rep. Ilhan Omar",
+          "bias": "leanLeft",
+          "url": "https://michiganadvance.com/2026/10/12/repub/us-house-dem-leaders-condemn-homeland-security-raid-on-home-of-rep-ilhan-omar/"
+        },
+        {
+          "text": "In the United States, a Raid on the Home of a Somali-American Democratic Representative Sparked Outrage",
+          "bias": "center",
+          "url": "https://yle.fi/a/74-20251149"
+        },
+        {
+          "text": "US House Dem leaders condemn Homeland Security raid on home of Rep. Ilhan Omar",
+          "bias": "leanLeft",
+          "url": "https://iowacapitaldispatch.com/2026/10/12/repub/us-house-dem-leaders-condemn-homeland-security-raid-on-home-of-rep-ilhan-omar/"
+        },
+        {
+          "text": "Federal Agents Search Rep. Ilhan Omar’s Home: What We Know",
+          "bias": "leanRight",
+          "url": "https://www.theepochtimes.com/us/federal-agents-search-rep-ilhan-omars-home-what-we-know-6102697"
+        },
+        {
+          "text": "US House Dem leaders condemn Homeland Security raid on home of Rep. Ilhan Omar",
+          "bias": "left",
+          "url": "https://kentuckylantern.com/2026/10/12/repub/us-house-dem-leaders-condemn-homeland-security-raid-on-home-of-rep-ilhan-omar/"
+        },
+        {
+          "text": "Rep. Omar's Home Raided Weeks Before Midterms, Black Caucus Responds",
+          "bias": "unknown",
+          "url": "https://aurn.com/rep-omar-home-raided-black-caucus-responds/"
+        }
+      ]
+    },
+    {
+      "id": "1462acad-004a-4f93-9d0a-1eddbf975a72",
+      "label": "Security incident at US-run air base almost certainly directed by Iran, UK prime minister says",
+      "group": "story",
+      "size": 10,
+      "summary": "A SUSPECTED terror plot near RAF Fairford was ‘highly likely to have been coordinated in Iran’, Andy Burnham has said.",
+      "sources_count": 1,
+      "bias": {
+        "left": 15,
+        "center": 26,
+        "right": 15,
+        "unknown": 42
+      },
+      "bias_score": 0.0,
+      "geo": {
+        "place": "Stroud, UK",
+        "lat": 51.746189,
+        "lon": -2.216859
+      },
+      "headlines": [
+        {
+          "text": "RAF Fairford incident ‘highly likely to have been coordinated in Iran’, PM says",
+          "bias": "center",
+          "url": "https://www.stroudnewsandjournal.co.uk/news/26629920.raf-fairford-incident-highly-likely-coordinated-iran/"
+        },
+        {
+          "text": "RAF Fairford incident ‘highly likely to have been coordinated in Iran’, PM says",
+          "bias": "center",
+          "url": "https://www.swindonadvertiser.co.uk/news/26629920.raf-fairford-incident-highly-likely-coordinated-iran/"
+        },
+        {
+          "text": "RAF Fairford incident ‘highly likely to have been coordinated in Iran’, PM says",
+          "bias": "center",
+          "url": "https://www.wiltsglosstandard.co.uk/news/26629920.raf-fairford-incident-highly-likely-coordinated-iran/"
+        },
+        {
+          "text": "UK summons Iranian ambassador to show ‘Britain will not tolerate threats’",
+          "bias": "center",
+          "url": "https://www.standard.co.uk/news/politics/andy-burnham-iranian-ed-miliband-raf-mps-b1300495.html"
+        },
+        {
+          "text": "'The Attack on the Airbase Was Plotted on Instructions From Iran': British PM Claims; What Is the Full Story?",
+          "bias": "unknown",
+          "url": "https://www.amarujala.com/world/suspected-plot-at-us-run-air-base-almost-certainly-directed-by-iran-uk-prime-minister-says-2026-10-13"
+        },
+        {
+          "text": "Burnham: Iran's Revolutionary Guard Almost Certainly Behind Air Base Incident",
+          "bias": "unknown",
+          "url": "https://pmo.ee/8563297"
+        },
+        {
+          "text": "Britain: 'Almost Certain' Iran Orchestrated Drone Attack Plot at RAF Fairford Base",
+          "bias": "unknown",
+          "url": "https://www.rethemnosnews.gr/kosmos/727405_bretania-shedon-bebaio-oti-iran-enorhistrose-shedio-epithesis-me-drone-sti-basi-tis"
+        },
+        {
+          "text": "UK PM says Iran's IRGC likely behind base incident",
+          "bias": "leanLeft",
+          "url": "https://www.newcastleherald.com.au/story/9367210/uk-pm-says-irans-irgc-likely-behind-base-incident/"
+        }
+      ]
+    },
+    {
+      "id": "cd49be81-6782-4e41-b5c5-74141b753ca1",
+      "label": "NASA Cancels Mars Sample Return as Perseverance Sample Raises Life Questions",
+      "group": "story",
+      "size": 24,
+      "summary": "US officials canceled NASA’s ambitious Mars Sample Return program, leaving potential evidence of ancient life sitting on Mars. Could China beat them to it?",
+      "sources_count": 15,
+      "bias": {
+        "left": 1,
+        "center": 0,
+        "right": 0,
+        "unknown": 0
+      },
+      "bias_score": -1.0,
+      "geo": {
+        "place": "Atlanta, US",
+        "lat": 33.751511,
+        "lon": -84.380589
+      },
+      "headlines": [
+        {
+          "text": "An abandoned rock sample could prove life once existed on Mars. But will it ever reach Earth?",
+          "bias": "leanLeft",
+          "url": "https://www.cnn.com/2026/10/12/science/nasa-mars-sample-return-sapphire-canyon-china"
+        }
+      ]
+    },
+    {
+      "id": "ece3c37e-9f46-43d4-885e-b534b470dc2c",
+      "label": "Elon Musk becomes biggest known midterm donor with $276 million in Republican donations",
+      "group": "story",
+      "size": 10,
+      "summary": "Elon Musk, the world’s only trillionaire, has quietly become the biggest known donor in this year’s midterm elections, doling out more than $276 million since July to try to save Republican majorities in Congress. The numbers, first reported by the New York Times ahead of this week’s federal filing deadline, were confirmed by Andrew Romeo, […]",
+      "sources_count": 1,
+      "bias": {
+        "left": 6,
+        "center": 6,
+        "right": 9,
+        "unknown": 18
+      },
+      "bias_score": 0.143,
+      "geo": {
+        "place": "Vicente López, Argentina",
+        "lat": -34.528005,
+        "lon": -58.474023
+      },
+      "headlines": [
+        {
+          "text": "Elon Musk Emerges as Midterms’ Biggest Known Donor in Bid to Keep Republicans in Power",
+          "bias": "unknown",
+          "url": "https://imprintent.org/elon-musk-emerges-as-midterms-biggest-known-donor-in-bid-to-keep-republicans-in-power/"
+        },
+        {
+          "text": "Elon Musk becomes top midterm donor with more than $276 million to Republican groups",
+          "bias": "right",
+          "url": "https://flvoicenews.com/elon-musk-becomes-top-midterm-donor-with-more-than-276-million-to-republican-groups/"
+        },
+        {
+          "text": "Musk Contributes More than $276 Million to Save Republican Majorities in Congress",
+          "bias": "leanRight",
+          "url": "https://www.lanacion.com.ar/estados-unidos/musk-aporta-mas-de-us276-millones-para-salvar-las-mayorias-republicanas-en-el-congreso-nid12102026/"
+        },
+        {
+          "text": "USA: Musk Has Spent $366 Million to Help Republicans in Congress",
+          "bias": "unknown",
+          "url": "https://www.sofokleousin.gr/epikairotita/diethni/ipa-o-mask-exei-ksodepsei-366-ekat-dolaria-gia-na-voithisei-tous-"
+        },
+        {
+          "text": "Lawyers, Ratfucking, and Money",
+          "bias": "left",
+          "url": "https://www.lawyersgunsmoneyblog.com/2026/10/lawyers-ratfucking-and-money"
+        },
+        {
+          "text": "Elon Musk Donated $276 Million to the Republicans for the Midterm Elections.",
+          "bias": "unknown",
+          "url": "https://www.ekonomim.com/dunya/elon-musk-ara-secim-icin-cumhuriyetcilere-276-milyon-dolarlik-bagis-yapti-haberi-924222"
+        },
+        {
+          "text": "Elon Musk / He Has Spent $366 Million to Help Republicans",
+          "bias": "unknown",
+          "url": "https://www.avgi.gr/diethni/529171_ehei-xodepsei-366-ekatommyria-dolaria-gia-na-boithisei-toys-repoymplikanoys"
+        },
+        {
+          "text": "Elon Musk Invests $366 Million in Midterm Elections to Support Republi",
+          "bias": "unknown",
+          "url": "https://knews.media/2026/10/12/elon-musk-invests-366-million-in-midterm-elections-to-support-republicans/"
+        }
+      ]
+    },
+    {
+      "id": "f913a0d9-a742-4db2-a68e-df4e7b6af633",
+      "label": "Many GOP states have imposed new voting rules this year, some mirroring Trump’s midterm proposals",
+      "group": "story",
+      "size": 15,
+      "summary": "President Donald Trump has pushed Congress to pass a proof-of-citizenship law, signed an executive order seeking a national voter ID requirement and tried to limit mail voting through U.S. Postal Service changes.",
+      "sources_count": 5,
+      "bias": {
+        "left": 4,
+        "center": 9,
+        "right": 1,
+        "unknown": 1
+      },
+      "bias_score": -0.214,
+      "geo": {
+        "place": "Columbia, US",
+        "lat": 34.000375,
+        "lon": -81.036015
+      },
+      "headlines": [
+        {
+          "text": "Many GOP states have imposed new voting rules this year, some mirroring Trump's midterm proposals",
+          "bias": "center",
+          "url": "https://www.abccolumbia.com/2026/10/12/many-gop-states-have-imposed-new-voting-rules-this-year-some-mirroring-trumps-midterm-proposals/"
+        },
+        {
+          "text": "States implement stricter voter ID rules as critics warn of disenfranchisement",
+          "bias": "leanLeft",
+          "url": "https://www.wishtv.com/news/politics/states-implement-stricter-voter-id-rules-as-critics-warn-of-disenfranchisement/"
+        },
+        {
+          "text": "Democrats see new chances to flip red states — but a $400M GOP spending advantage could derail their plans",
+          "bias": "center",
+          "url": "https://thenyledger.com/politics/democrats-see-new-chances-to-flip-red-states-but-a-400m-gop-spending-advantage-could-derail-their-plans/"
+        },
+        {
+          "text": "Many GOP states have imposed new voting rules this year, some mirroring Trump's midterm proposals",
+          "bias": "leanLeft",
+          "url": "https://www.sooleader.com/michigan-news-ap/many-gop-states-have-imposed-new-voting-rules-this-year-some-mirroring-trumps-midterm-proposals-12884122"
+        },
+        {
+          "text": "Many GOP states have imposed new voting rules this year, some mirroring Trump’s midterm proposals",
+          "bias": "center",
+          "url": "https://mississippitoday.org/2026/10/12/gop-states-voting-rules-trump-midterm/?utm_medium=rss"
+        },
+        {
+          "text": "Many GOP States Have Imposed New Voting Rules This Year, Some Mirroring Trump’s Proposals",
+          "bias": "leanLeft",
+          "url": "https://www.mississippifreepress.org/many-gop-states-have-imposed-new-voting-rules-this-year-some-mirroring-trumps-midterm-proposals/"
+        },
+        {
+          "text": "New Ohio voting rolls part of larger national movement",
+          "bias": "unknown",
+          "url": "https://thelandcle.org/stories/new-ohio-voting-rolls-part-of-larger-national-movement/"
+        },
+        {
+          "text": "Red states impose sweeping new voting rules ahead of midterms",
+          "bias": "leanLeft",
+          "url": "https://www.nbcbayarea.com/news/national-international/gop-states-new-voting-rules-trump-midterm-proposals/4156765/"
+        }
+      ]
+    },
+    {
+      "id": "50f5b92f-f2d6-4478-9d3e-1377f6529636",
+      "label": "Judge temporarily halts tree cutting at DC's East Potomac golf course",
+      "group": "story",
+      "size": 10,
+      "summary": "After news reports emerged Monday morning that the National Park Service had cut down as many as 500 trees at East Potomac Golf Links, we at Washingtonian had lots of questions. Who approved the work? How were so many trees cut down so quickly? And, given the course was open—what did the golfers think of […]\nThe post Hundreds of Trees Cut, a Judge Furious: The Battle Over East Potomac Park Escalates first appeared on Washingtonian.",
+      "sources_count": 1,
+      "bias": {
+        "left": 5,
+        "center": 8,
+        "right": 0,
+        "unknown": 1
+      },
+      "bias_score": -0.385,
+      "geo": {
+        "place": "Washington, US",
+        "lat": 38.907142,
+        "lon": -77.024852
+      },
+      "headlines": [
+        {
+          "text": "Hundreds of Trees Cut, a Judge Furious: The Battle Over East Potomac Park Escalates",
+          "bias": "leanLeft",
+          "url": "https://washingtonian.com/2026/10/12/hundreds-of-trees-cut-a-judge-furious-the-battle-over-east-potomac-park-escalates/"
+        },
+        {
+          "text": "Judge blasts Trump officials for chopping down 529 trees in DC, halts work on makeover project",
+          "bias": "left",
+          "url": "https://dailyboulder.com/judge-blasts-trump-officials-for-chopping-down-529-trees-in-dc-halts-work-on-makeover-project/"
+        },
+        {
+          "text": "Federal judge orders Trump administration to halt work for a day on historic DC golf course",
+          "bias": "center",
+          "url": "https://www.kcra.com/article/federal-judge-trump-halt-work-dc-golf-course/74110879"
+        },
+        {
+          "text": "Federal judge orders Trump administration to halt work for a day on historic DC golf course",
+          "bias": "center",
+          "url": "https://www.reviewjournal.com/news/politics-and-government/federal-judge-orders-trump-administration-to-halt-work-for-a-day-on-historic-dc-golf-course-3899145/"
+        },
+        {
+          "text": "Federal judge orders Trump administration to halt work for a day on historic DC golf course",
+          "bias": "leanLeft",
+          "url": "https://www.stratfordtoday.ca/world-news/federal-judge-orders-trump-administration-to-halt-work-for-a-day-on-historic-dc-golf-course-12884421"
+        },
+        {
+          "text": "Federal judge orders Trump administration to halt work for a day on historic DC golf course",
+          "bias": "center",
+          "url": "https://meadowlakenow.com/2026/10/12/federal-judge-orders-trump-administration-to-halt-work-for-a-day-on-historic-dc-golf-course/"
+        },
+        {
+          "text": "Federal judge orders Trump administration to halt work for a day on historic DC golf course",
+          "bias": "center",
+          "url": "https://battlefordsnow.com/2026/10/12/federal-judge-orders-trump-administration-to-halt-work-for-a-day-on-historic-dc-golf-course/"
+        },
+        {
+          "text": "Expert discusses tree removal at East Potomac Golf Course - RAW CHILI",
+          "bias": "unknown",
+          "url": "https://www.rawchili.com/5122320/"
+        }
+      ]
+    },
+    {
+      "id": "73802320-42a9-4636-b34d-de772dd2839c",
+      "label": "Starbucks says it is not buying Chipotle after takeover speculation",
+      "group": "story",
+      "size": 19,
+      "summary": "The group ensures that its leadership is \"fully focused\" on the 'Back to Starbucks' strategy and that it maintains a \"strong momentum and confidence\" in its long-term growth prospects. Read",
+      "sources_count": 8,
+      "bias": {
+        "left": 1,
+        "center": 3,
+        "right": 0,
+        "unknown": 8
+      },
+      "bias_score": -0.25,
+      "geo": {
+        "place": "Madrid, Spain",
+        "lat": 40.420385,
+        "lon": -3.69994
+      },
+      "headlines": [
+        {
+          "text": "Starbucks Discards the Purchase of Chipotle Mexican Grill",
+          "bias": "unknown",
+          "url": "https://www.expansion.com/empresas/distribucion/2026/10/12/6acd0eaa468aeb276b8b4571.html"
+        },
+        {
+          "text": "Investors weigh up economic picture as UK GDP set to influence rate expectations, whilst Starbucks dismisses reports of Chipotle tie-up",
+          "bias": "unknown",
+          "url": "https://www.headlinemoney.co.uk/posts/investors-weigh-up-economic-picture-as-uk-gdp-set-to-influence-rate-expectations-whilst-starbucks-dismisses-reports-of-chipotle-tie-up"
+        },
+        {
+          "text": "Starbucks Denies Plans to Acquire Chipotle, Ending Takeover Speculation",
+          "bias": "center",
+          "url": "https://www.stylerave.com/starbucks-buy-chipotle/"
+        },
+        {
+          "text": "Starbucks Wipes Out Rumors and Discards Interest in Buying Chipotle",
+          "bias": "unknown",
+          "url": "https://www.merca20.com/starbucks-acaba-con-los-rumores-y-descarta-interes-en-comprar-chipotle/"
+        },
+        {
+          "text": "Starbucks Doesn't Want to Buy Burrito Chain Chipotle",
+          "bias": "unknown",
+          "url": "https://www.moneycab.com/international/starbucks-will-burrito-kette-chipotle-nicht-kaufen/"
+        },
+        {
+          "text": "Starbucks Belies Acquisition Entries of Chipotle Mexican Grill",
+          "bias": "unknown",
+          "url": "https://www.teleborsa.it/News/2026/10/12/starbucks-smentisce-voci-acquisizione-di-chipotle-mexican-grill-159.html"
+        },
+        {
+          "text": "Starbucks: No Purchase of Burrito Chain Chipotle",
+          "bias": "unknown",
+          "url": "https://www.infranken.de/ueberregional/newsticker-national/netzwelt/starbucks-kein-kauf-von-burrito-kette-chipotle-art-6402858"
+        },
+        {
+          "text": "Starbucks Denies Rumors, Tax on Crypto Investors, Most Sought-After Housing. Current Economic News on October 12",
+          "bias": "unknown",
+          "url": "https://www.delfi.lv/bizness/37264250/biznesa_vide/120138140/starbucks-noraida-baumas-nodoklis-kriptoinvestoriem-pieprasitakie-majokli-aktualais-ekonomika-12-oktobri"
+        }
+      ]
+    },
+    {
+      "id": "03d59173-ab1c-460a-90c0-decd1617d986",
+      "label": "A Spanish-language radio show overflows with voters’ frustration in Pennsylvania battleground",
+      "group": "story",
+      "size": 26,
+      "summary": "In a key congressional district, frustration over gas and grocery prices is testing Republican efforts to retain Latino voters ahead of the midterms.",
+      "sources_count": 20,
+      "bias": {
+        "left": 3,
+        "center": 9,
+        "right": 1,
+        "unknown": 1
+      },
+      "bias_score": -0.154,
+      "geo": {
+        "place": "New York, US",
+        "lat": 40.70521,
+        "lon": -74.016518
+      },
+      "headlines": [
+        {
+          "text": "‘This is not what we expected’: Latino voters were key to Trump’s win in a swing Pennsylvania district. Now some say the economy is 'worse'",
+          "bias": "center",
+          "url": "https://fortune.com/2026/10/12/latino-trump-voters-pennsylvania-midterms-economy/"
+        },
+        {
+          "text": "A Spanish-language radio show overflows with voters’ frustration in Pennsylvania battleground",
+          "bias": "center",
+          "url": "https://www.wspa.com/news/politics/ap-politics/ap-a-spanish-language-radio-show-overflows-with-voters-frustration-in-pennsylvania-battleground/"
+        },
+        {
+          "text": "A Spanish-language radio show overflows with voters' frustration in Pennsylvania battleground",
+          "bias": "center",
+          "url": "https://www.khq.com/news/syndicated/a-spanish-language-radio-show-overflows-with-voters-frustration-in-pennsylvania-battleground/article_d3abd9d7-0474-54ba-b524-f41f26da8caf.html"
+        },
+        {
+          "text": "Lehigh Valley Spanish-Language Radio Show Overflows With Voters' Frustration in Pennsylvania Battleground - Bucks County Beacon",
+          "bias": "left",
+          "url": "https://buckscountybeacon.com/2026/10/lehigh-valley-spanish-language-radio-show-overflows-with-voters-frustration-in-pennsylvania-battleground/"
+        },
+        {
+          "text": "A Spanish-language radio show overflows with voters' frustration in Pennsylvania battleground",
+          "bias": "leanLeft",
+          "url": "https://www.goskagit.com/news/politics/a-spanish-language-radio-show-overflows-with-voters-frustration-in-pennsylvania-battleground/article_2c84b5d8-d3ba-52d7-8a43-14b6aa3c95aa.html"
+        },
+        {
+          "text": "A Spanish-language radio show overflows with voters' frustration in Pennsylvania battleground",
+          "bias": "unknown",
+          "url": "https://madison365.com/a-spanish-language-radio-show-overflows-with-voters-frustration-in-pennsylvania-battleground/"
+        },
+        {
+          "text": "A Spanish-language radio show overflows with voters' frustration in Pennsylvania battleground",
+          "bias": "center",
+          "url": "https://www.coasttv.com/news/national/a-spanish-language-radio-show-overflows-with-voters-frustration-in-pennsylvania-battleground/article_48172918-71ba-52df-8e55-2bcd641d528a.html"
+        },
+        {
+          "text": "A Spanish-language radio show overflows with voters' frustration in Pennsylvania battleground",
+          "bias": "center",
+          "url": "https://www.swoknews.com/ap/national/a-spanish-language-radio-show-overflows-with-voters-frustration-in-pennsylvania-battleground/article_ae234dfb-d99c-5b0f-8291-d128e1a128c5.html"
+        }
+      ]
+    },
+    {
+      "id": "45039069-3538-4738-923f-1d88e686f09c",
+      "label": "Most Americans oppose betting on elections, government events, Reuters/Ipsos poll finds",
+      "group": "story",
+      "size": 12,
+      "summary": "A new poll finds that most Americans oppose election betting on prediction market platforms as policymakers’ express concerns of potential insider trading within the rapidly growing prediction sites industry.",
+      "sources_count": 3,
+      "bias": {
+        "left": 0,
+        "center": 1,
+        "right": 0,
+        "unknown": 0
+      },
+      "bias_score": 0.0,
+      "geo": {
+        "place": "Oakland, US",
+        "lat": 37.805706,
+        "lon": -122.254655
+      },
+      "headlines": [
+        {
+          "text": "Most Americans reject betting on elections, government events, poll finds",
+          "bias": "center",
+          "url": "https://www.ktvu.com/news/americans-oppose-betting-elections-poll"
+        }
+      ]
+    },
+    {
+      "id": "8c01cfc6-4a0d-4134-bd87-b4e29e31b5af",
+      "label": "Immigration Officials Conduct Pre-Dawn Search at Ilhan Omar's Home",
+      "group": "story",
+      "size": 10,
+      "summary": "A person familiar with the investigation said it is related to alleged immigration fraud; a spokesperson for Omar did not immediately respond to a request for comment.",
+      "sources_count": 1,
+      "bias": {
+        "left": 33,
+        "center": 51,
+        "right": 35,
+        "unknown": 62
+      },
+      "bias_score": 0.017,
+      "geo": {
+        "place": "Brainerd, US",
+        "lat": 46.354311,
+        "lon": -94.209139
+      },
+      "headlines": [
+        {
+          "text": "Federal immigration authorities raid Democratic Rep. Ilhan Omar's DC home",
+          "bias": "center",
+          "url": "https://www.stcloudlive.com/news/national/federal-immigration-authorities-raid-democratic-rep-ilhan-omars-dc-home"
+        },
+        {
+          "text": "Federal immigration authorities raid Democratic Rep. Ilhan Omar's DC home",
+          "bias": "leanRight",
+          "url": "https://www.brainerddispatch.com/news/national/federal-immigration-authorities-raid-democratic-rep-ilhan-omars-dc-home"
+        },
+        {
+          "text": "Rep. Ilhan Omar calls federal raid of her home 'an outrageous abuse of power'",
+          "bias": "center",
+          "url": "https://kstp.com/kstp-news/top-news/federal-agents-search-ilhan-omar-home/"
+        },
+        {
+          "text": "Federal agents search Rep. Ilhan Omar's home as part of a criminal investigation, AP sources say",
+          "bias": "center",
+          "url": "https://www.minnpost.com/politics-policy/2026/10/federal-agents-search-rep-ilhan-omars-home-as-part-of-a-criminal-investigation-ap-sources-say/"
+        },
+        {
+          "text": "Rep. Ilhan Omar’s home searched by federal agents, report says",
+          "bias": "leanLeft",
+          "url": "https://www.startribune.com/rep-ilhan-omars-home-searched-by-federal-agents-report-says/601900234"
+        },
+        {
+          "text": "DHS searched Ilhan Omar’s home as part of immigration fraud investigation",
+          "bias": "center",
+          "url": "https://reason.com/2026/10/12/dhs-searched-ilhan-omars-home-as-part-of-immigration-fraud-investigation/"
+        },
+        {
+          "text": "DHS Raids Ilhan Omar’s Home Amid Criminal Investigation",
+          "bias": "unknown",
+          "url": "https://drrichswier.com/2026/10/12/dhs-raids-ilhan-omars-home-amid-criminal-investigation/"
+        },
+        {
+          "text": "Federal immigration agents raid home of Congresswoman Ilhan Omar",
+          "bias": "leanLeft",
+          "url": "https://www.channel4.com/news/federal-immigration-agents-raid-home-of-congresswoman-ilhan-omar"
+        }
+      ]
+    },
+    {
+      "id": "rss_10866_1791799423700_1",
+      "label": "SNAP enrollment sinks to 19.8 million in June as states face higher costs and new rules",
+      "group": "story",
+      "size": 13,
+      "summary": "More than 167,000 Michiganders fell off of the Supplemental Nutrition Assistance Program (SNAP) since last summer, in large part, experts say, because of new work rules and more red tape.",
+      "sources_count": 4,
+      "bias": {
+        "left": 2,
+        "center": 1,
+        "right": 0,
+        "unknown": 0
+      },
+      "bias_score": -0.667,
+      "geo": {
+        "place": "Ann Arbor, US",
+        "lat": 42.287663,
+        "lon": -83.74326
+      },
+      "headlines": [
+        {
+          "text": "More than 167,000 Michiganders fell off SNAP since last summer",
+          "bias": "leanLeft",
+          "url": "https://www.michiganpublic.org/politics-government/2026-10-12/snap-michigan"
+        },
+        {
+          "text": "167K Michiganders fell off SNAP since last summer",
+          "bias": "leanLeft",
+          "url": "https://www.bridgedetroit.com/167k-michiganders-fell-off-snap-since-last-summer/"
+        },
+        {
+          "text": "SNAP enrollment sinks to 19.8 million in June as states face higher costs and new rules",
+          "bias": "center",
+          "url": "https://www.wisn.com/article/snap-participation-falls-after-new-work-rules/74091376"
+        }
+      ]
+    },
+    {
+      "id": "rss_4753_1791483603937_2",
+      "label": "$15.8 million being sent to users of cash advance app, FTC says",
+      "group": "story",
+      "size": 19,
+      "summary": "Approved claimants should start receiving payments this month from Cash App’s $15 million security settlement.",
+      "sources_count": 9,
+      "bias": {
+        "left": 0,
+        "center": 1,
+        "right": 0,
+        "unknown": 0
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Cash App $15M settlement payments are coming: Here's who qualifies and how much to expect",
+          "bias": "center",
+          "url": "https://www.fox26houston.com/news/cash-app-15m-settlement-payments-coming-heres-who-qualifies-how-much-expect"
+        }
+      ]
+    },
+    {
+      "id": "61fc7af2-4a51-4694-9658-f96a2d099210",
+      "label": "El-Sayed Addresses Past Obama Criticism, Says Democrats Now ‘Stand on the Shoulders of Giants’",
+      "group": "story",
+      "size": 15,
+      "summary": "When Democratic Michigan US Senate candidate Abdul El-Sayed sat down with Meet The Press’s Kristen Welker her first question was about Barack Obama, and El-Sayed turned the tables.",
+      "sources_count": 5,
+      "bias": {
+        "left": 1,
+        "center": 0,
+        "right": 1,
+        "unknown": 0
+      },
+      "bias_score": 0.0,
+      "geo": {
+        "place": "United States",
+        "lat": 40.03204,
+        "lon": -94.657738
+      },
+      "headlines": [
+        {
+          "text": "Abdul El-Sayed Turns The Tables On Kristen Welker When She Tries To Divide Democrats",
+          "bias": "left",
+          "url": "https://www.politicususa.com/p/abdul-el-sayed-turns-the-tables-on"
+        },
+        {
+          "text": "El-Sayed Compares Obama To His Father After Complaining About ‘His Failures’",
+          "bias": "right",
+          "url": "https://www.dailywire.com/news/el-sayed-compares-obama-to-his-father-after-complaining-about-his-failures"
+        }
+      ]
+    },
+    {
+      "id": "b3ae2bfd-97f9-49c3-b4f1-0ae53bf13795",
+      "label": "Zelenskyy says Ukraine is ready to agree to energy ceasefire, but warns Russia must do same",
+      "group": "story",
+      "size": 19,
+      "summary": "President of Ukraine Volodymyr Zelenskyy accepted the report of the negotiating group following the visit to the United States and said that Kiev supported the energy truce, but Moscow is not fulfilling the terms of the ceasefire. Zelenskyy underlined that Ukraine is ready to take real steps to de-escalate the war in order to bring the end of the war closer, according to the Zelenskyy Office. “Ukraine supported the energy ceasefire. The position…",
+      "sources_count": 8,
+      "bias": {
+        "left": 0,
+        "center": 3,
+        "right": 0,
+        "unknown": 3
+      },
+      "bias_score": 0.0,
+      "geo": {
+        "place": "Abuja, Nigeria",
+        "lat": 9.103418,
+        "lon": 7.404031
+      },
+      "headlines": [
+        {
+          "text": "Zelenskyy: Russians Missed Another Opportunity to Bring Peace Closer",
+          "bias": "unknown",
+          "url": "https://reform.news/zelenskij-rossijane-upustili-ocherednuju-vozmozhnost-priblizit-mir/"
+        },
+        {
+          "text": "Ukraine Threatens Retaliation If Russia Rejects Energy Ceasefire",
+          "bias": "unknown",
+          "url": "https://leadership.ng/ukraine-threatens-retaliation-if-russia-rejects-energy-ceasefire/"
+        },
+        {
+          "text": "What Kind of Ceasefire? Russia Continues Attacks, Zelensky Threatens Retaliation",
+          "bias": "center",
+          "url": "https://www.24ur.com/novice/tujina/kaksno-premirje-rusija-nadaljuje-napade-zelenski-grozi-s-povracilom.html"
+        },
+        {
+          "text": "Selenskyj Calls on the US to Enforce the Limited Ceasefire",
+          "bias": "center",
+          "url": "https://www.tagesschau.de/video/video-1664710.html"
+        },
+        {
+          "text": "Zelenskyy says Russia has already violated Trump's 'energy ceasefire'",
+          "bias": "center",
+          "url": "https://www.euronews.com/2026/10/12/zelenskyy-says-russia-ignored-trumps-ceasefire-and-kept-attacking-ukraine"
+        },
+        {
+          "text": "Zelenskyy ready to discuss elections if full ceasefire agreement is reached",
+          "bias": "unknown",
+          "url": "https://en.apa.az/europe/zelenskyy-ready-to-discuss-elections-if-full-ceasefire-agreement-is-reached-529498"
+        }
+      ]
+    },
+    {
+      "id": "f260ca4c-0879-4117-a37d-2ee1a28bb8d8",
+      "label": "Wildfire north of Los Angeles prompts evacuation order for parts of Santa Clarita",
+      "group": "story",
+      "size": 13,
+      "summary": "Officials downgraded all evacuation orders and warnings to advisories for the Bike Fire burning in northwest Los Angeles County Sunday. The fire started shortly before 2 p.m. near Ravenhill Road in Santa Clarita. The fire was initially 20 acres in size, but has since grown to roughly 172 acres, according to officials with the Angeles [...]",
+      "sources_count": 4,
+      "bias": {
+        "left": 0,
+        "center": 3,
+        "right": 1,
+        "unknown": 2
+      },
+      "bias_score": 0.25,
+      "geo": {
+        "place": "Los Angeles, US",
+        "lat": 34.066613,
+        "lon": -118.257396
+      },
+      "headlines": [
+        {
+          "text": "Evacuation orders downgraded for Bike Fire in Santa Clarita; residents can return home",
+          "bias": "center",
+          "url": "https://ktla.com/news/local-news/erratic-fast-moving-fire-prompts-evacuation-orders-in-santa-clarita/"
+        },
+        {
+          "text": "Crews making progress on containing Bike Fire; Santa Clarita residents praise firefighters",
+          "bias": "center",
+          "url": "https://www.foxla.com/news/crews-making-progress-containing-bike-fire"
+        },
+        {
+          "text": "Wildfire north of Los Angeles prompts evacuation order for parts of Santa Clarita",
+          "bias": "center",
+          "url": "https://www.yumasun.com/news/national_news/wildfire-north-of-los-angeles-prompts-evacuation-order-for-parts-of-santa-clarita/article_99128372-7e23-5368-9f2f-ba7a9ff2afab.html"
+        },
+        {
+          "text": "Wildfire north of Los Angeles prompts evacuation order for parts of Santa Clarita",
+          "bias": "leanRight",
+          "url": "https://www.mdjonline.com/news/national/wildfire-north-of-los-angeles-prompts-evacuation-order-for-parts-of-santa-clarita/article_d1182975-9b05-52dc-8f7d-28ea5312ee4f.html"
+        },
+        {
+          "text": "Bike Fire Burns 172 Acres, Forces Evacuations",
+          "bias": "unknown",
+          "url": "https://www.stl.news/bike-fire-burns-172-acres-forces-evacuations/"
+        },
+        {
+          "text": "Officers Order Evacuation Alert After Weed Fire in Santa Clarita",
+          "bias": "unknown",
+          "url": "https://www.telemundo52.com/noticias/local/santa-clarita-incendio/2905547/"
+        }
+      ]
+    },
+    {
+      "id": "175c4c35-6b81-45cb-8063-7b12994ea837",
+      "label": "Nobel prize in economics awarded to Robert E. Hall and Michael Woodford",
+      "group": "story",
+      "size": 21,
+      "summary": "American economists Robert E. Hall and Michael Woodford won the 2026 Nobel Memorial Prize in Economic Sciences",
+      "sources_count": 11,
+      "bias": {
+        "left": 22,
+        "center": 20,
+        "right": 27,
+        "unknown": 257
+      },
+      "bias_score": 0.072,
+      "geo": {
+        "place": "Lima, Peru",
+        "lat": -12.063581,
+        "lon": -77.039658
+      },
+      "headlines": [
+        {
+          "text": "Hall & Woodford Win 2026 Nobel Economics Prize",
+          "bias": "unknown",
+          "url": "https://see.news/hall-woodford-win-2026-nobel-economics-prize"
+        },
+        {
+          "text": "Hall and Woodford Win Nobel in Economics 2026",
+          "bias": "unknown",
+          "url": "https://psn.si/nobel-de-economia-2026/2026/10/12/"
+        },
+        {
+          "text": "The Nobel D'économie Rewards the Father of the Flat Tax",
+          "bias": "unknown",
+          "url": "https://contrepoints.org/le-nobel-deconomie-recompense-le-pere-de-la-flat-tax/"
+        },
+        {
+          "text": "Two American Economists Won the Nobel Prize in Economics 2026",
+          "bias": "unknown",
+          "url": "https://www.cba24n.com.ar/internacionales/dos-economistas-estadounidenses-ganaron-el-premio-nobel-de-economia-2026_a6acd2b7bffade6865ee7f9a8"
+        },
+        {
+          "text": "Nobel De Economía 2026 Recognizes Contributions on Consumption, Expectations and Economic Stability",
+          "bias": "unknown",
+          "url": "https://marketdata.com.py/noticias/nobel-de-economia-2026-reconoce-aportes-sobre-consumo-expectativas-y-estabilidad-economica-156275/"
+        },
+        {
+          "text": "The Nobel Prize in Economics 2026 Awards Hall and Woodford for the Models Used by Central Banks Today",
+          "bias": "unknown",
+          "url": "https://www.merca2.es/2026/10/12/nobel-economia-2026-hall-woodford-2472122/"
+        },
+        {
+          "text": "A Nobel Prize for Thinking Ahead: Hall and Woodford's Great Expectations",
+          "bias": "unknown",
+          "url": "https://truthonthemarket.com/2026/10/12/a-nobel-prize-for-thinking-ahead-hall-and-woodfords-great-expectations/"
+        },
+        {
+          "text": "Nobel in Economics 2026: Robert Hall and Michael Woodford Win for Their Crisis Studies",
+          "bias": "unknown",
+          "url": "https://diariocorreo.pe/economia/nobel-de-economia-2026-robert-hall-y-michael-woodford-ganan-por-sus-estudios-sobre-las-crisis-noticia/"
+        }
+      ]
+    },
+    {
+      "id": "f483917c-4190-4200-9835-63d76a027cf6",
+      "label": "Trump, Rubio weigh firing US envoy to Greece after mounting reports of improper conduct: Report",
+      "group": "story",
+      "size": 15,
+      "summary": "US President Donald Trump and Secretary of State Marco Rubio are considering removing Ambassador to Greece Kimberly Guilfoyle, the former fiancée of Trump's son, who faces allegations that she accepted inappropriate gifts and offered access to administration officials in exchange for money. Her lawyers deny any wrongdoing.",
+      "sources_count": 5,
+      "bias": {
+        "left": 0,
+        "center": 3,
+        "right": 2,
+        "unknown": 12
+      },
+      "bias_score": 0.4,
+      "geo": {
+        "place": "New York, US",
+        "lat": 40.743856,
+        "lon": -73.972043
+      },
+      "headlines": [
+        {
+          "text": "Trump's Ex-Daughter-in-Law in Trouble: She Wanted 2.4 Million and Offered Access to the Powerful? She Is in Danger of Being Fired!",
+          "bias": "unknown",
+          "url": "https://www.blesk.cz/clanek/zpravy-svet/850298/trumpova-exsnacha-v-maleru-chtela-2-4-milionu-a-nabizela-pristup-k-mocnym-hrozi-ji-vyhazov.html"
+        },
+        {
+          "text": "President Trump, Rubio Reportedly Weigh Firing US Ambassador to Greece Over Misconduct Allegations",
+          "bias": "leanRight",
+          "url": "https://themedialine.org/headlines/president-trump-rubio-reportedly-weigh-firing-us-ambassador-to-greece-over-misconduct-allegations/"
+        },
+        {
+          "text": "Trump and Rubio Are Thinking of Dismissing US Ambassador to Greece",
+          "bias": "unknown",
+          "url": "https://ecopolitic.ro/trump-si-rubio-se-gandesc-sa-o-destituie-pe-ambasadoarea-sua-in-grecia/"
+        },
+        {
+          "text": "Kimberly Guilfoyle: The Margins Are Narrowing for the American Ambassador in Athens - American Media Consider Her Removal a Matter of Time - Silence From the Maximos Mansion and the Ministry of Foreign Affairs on the Issue",
+          "bias": "unknown",
+          "url": "https://europost.gr/kimperli-gkilfoil-steneyoyn-ta-perithoria-gia-tin-amerikanida-presveira-stin-athina-zitima-chronoy-theoroyn-tin-apomakrynsi-tis-ta-amerikanika-mme-sigi-ichthyos-apo-to-megaro-maximoy-kai-to-ypoyrge/"
+        },
+        {
+          "text": "Guilfoyle on the Verge of Leaving: Bribery Scandal Rocks the US Embassy in Athens",
+          "bias": "unknown",
+          "url": "https://periodista.gr/%cf%83%cf%84%ce%b7%ce%bd-%cf%80%cf%8c%cf%81%cf%84%ce%b1-%cf%84%ce%b7%cf%82-%ce%b5%ce%be%cf%8c%ce%b4%ce%bf%cf%85-%ce%b7-%ce%b3%ce%ba%ce%af%ce%bb%cf%86%ce%bf%cf%8a%ce%bb-%cf%83%ce%ba%ce%ac%ce%bd%ce%b4/"
+        },
+        {
+          "text": "American Ambassador to Greece Soon Dismissed After a New Controversy?",
+          "bias": "unknown",
+          "url": "https://www.20min.ch/fr/story/grece-l-ambassadrice-americaine-viree-apres-une-nouvelle-polemique-103648528"
+        },
+        {
+          "text": "American Media: Kimberly Guilfoyle and Her Removal Scenarios in Focus",
+          "bias": "unknown",
+          "url": "https://www.tvopen.gr/watch/280416/amerikanikammestoepikentrohkimperligkilfoilkaitasenariaapomakrynshsths"
+        },
+        {
+          "text": "Kimberly Guilfoyle's Grifting Scandal Keeps Getting Worse",
+          "bias": "leanRight",
+          "url": "https://www.realclearpolitics.com/2026/10/12/kimberly_guilfoyles_grifting_scandal_keeps_getting_worse_713942.html"
+        }
+      ]
+    },
+    {
+      "id": "342f7d49-5810-464c-8c5b-8412bf355bd2",
+      "label": "Bill Gates warns cyberattacks most imminent AI threat",
+      "group": "story",
+      "size": 15,
+      "summary": "Microsoft co-founder Bill Gates has warned that artificial intelligence (AI) could lead to a rise in cyberattacks in 2027. He called for stronger measures to prevent criminals from misusing the technology.",
+      "sources_count": 5,
+      "bias": {
+        "left": 2,
+        "center": 5,
+        "right": 2,
+        "unknown": 9
+      },
+      "bias_score": 0.0,
+      "geo": {
+        "place": "Lagos, Nigeria",
+        "lat": 6.645567,
+        "lon": 3.641534
+      },
+      "headlines": [
+        {
+          "text": "Bill Gates warns AI could lead to more cyberattacks in 2027",
+          "bias": "unknown",
+          "url": "https://pmnewsnigeria.com/2026/10/12/bill-gates-warns-ai-could-lead-to-more-cyberattacks-in-2027/"
+        },
+        {
+          "text": "MichaelSavage.com – Bill Gates issues warning on ‘bad people’ exploiting a lack of AI safeguards to commit cyberattacks",
+          "bias": "farRight",
+          "url": "https://michaelsavage.com/bill-gates-issues-warning-on-bad-people-exploiting-a-lack-of-ai-safeguards-to-commit-cyberattacks/"
+        },
+        {
+          "text": "For Bill Gates, Cyberattacks Are the Main Current Risk of AI",
+          "bias": "center",
+          "url": "https://www.tvn-2.com/mundo/bill-gates-ciberataques-son-principal-riesgo-inteligencia-artificial_1_2265590.html"
+        },
+        {
+          "text": "Bill Gates Warns AI Could Trigger Cyberattacks",
+          "bias": "unknown",
+          "url": "https://tekno.sindonews.com/read/1759591/207/bill-gates-memperingatkan-ai-dapat-memicu-serangan-siber-1791792604"
+        },
+        {
+          "text": "‘Most dangerous tech ever invented’: Bill Gates challenges Trump’s AI stance",
+          "bias": "unknown",
+          "url": "https://rt-english.com/news/647064-most-dangerous-tech-ever-invented/"
+        },
+        {
+          "text": "Bill Gates Warns Against Increasing AI-Based Cyberattacks",
+          "bias": "unknown",
+          "url": "https://www.derstandard.de/story/3000000343658/bill-gates-warnt-vor-zunahme-von-ki-gestuetzten-cyberangriffen"
+        },
+        {
+          "text": "‘More Dangerous Than Drugs’: Bill Gates Warns Of Risks Posed By Artificial Intelligence",
+          "bias": "unknown",
+          "url": "https://joemiller.us/2026/10/more-dangerous-than-drugs-bill-gates-warns-of-risks-posed-by-artificial-intelligence/"
+        },
+        {
+          "text": "Bill Gates Warns of AI-Driven Cyberattacks Over the Next Year",
+          "bias": "unknown",
+          "url": "https://www.ceoinsightsindia.com/news/bill-gates-warns-of-aidriven-cyberattacks-over-the-next-year-nwid-25024.html"
+        }
+      ]
+    },
+    {
+      "id": "f1b9dbd2-a2d5-43a2-9da9-113230339711",
+      "label": "White House New Press Secretary to Assume Her Post on Monday",
+      "group": "story",
+      "size": 13,
+      "summary": "Katie Zacharia thinks COVID vaccines cause miscarriages and that trans people are behind \"at least a dozen\" school shootings.",
+      "sources_count": 4,
+      "bias": {
+        "left": 3,
+        "center": 1,
+        "right": 3,
+        "unknown": 1
+      },
+      "bias_score": 0.0,
+      "geo": {
+        "place": "San Francisco, US",
+        "lat": 37.776483,
+        "lon": -122.418597
+      },
+      "headlines": [
+        {
+          "text": "Trump’s new press secretary spread anti-LGBTQ+ conspiracy theories about “revolting, rabid” leftists",
+          "bias": "left",
+          "url": "https://www.lgbtqnation.com/2026/10/trumps-new-press-secretary-spread-anti-lgbtq-theories-about-revolting-rabid-leftists/"
+        },
+        {
+          "text": "Bizarre conspiracy theories Trump's new press secretary Katie Zacharia has backed as she steps into role",
+          "bias": "center",
+          "url": "https://www.unilad.com/news/us-news/katie-zacharia-conspiracy-theory-trump-press-secretary-627347-20261012"
+        },
+        {
+          "text": "Trump Bets on Katie Zacharia to Command White House Communication",
+          "bias": "unknown",
+          "url": "https://jovempan.com.br/colunistas/eliseu-caetano/trump-aposta-em-katie-zacharia-para-comandar-comunicacao-da-casa-branca/"
+        },
+        {
+          "text": "Donald Trump and Katie Zacharia: Trump Overwhelms His New Ones with Praise – Then Their Mob Posts Fly Up",
+          "bias": "leanLeft",
+          "url": "https://www.news.de/politik/860080609/donald-trump-schwaermt-in-peinlich-beitrag-ueber-katie-zacharia-trumps-neue-pressesprecherin-sorgt-mit-poebel-posts-fuer-entsetzen/1/"
+        },
+        {
+          "text": "Here's Trump's New on-Screen Face: 'He'll Do a Great Job' - Sözcü Newspaper",
+          "bias": "leanLeft",
+          "url": "https://www.sozcu.com.tr/iste-trump-in-yeni-ekran-yuzu-harika-bir-is-cikaracak-p368276"
+        },
+        {
+          "text": "White House new press secretary to assume her post on Monday",
+          "bias": "leanRight",
+          "url": "https://www.israelnationalnews.com/news/434451"
+        },
+        {
+          "text": "Trump praises new White House Press Secretary Katie Zacharia as her term officially begins * WorldNetDaily * by Joe Kovacs",
+          "bias": "right",
+          "url": "https://opslens.com/trump-praises-new-white-house-press-secretary-katie-zacharia-as-her-term-officially-begins-worldnetdaily-by-joe-kovacs/"
+        },
+        {
+          "text": "Trump: Zacharia Will Start Term as Press Secretary on Monday",
+          "bias": "right",
+          "url": "https://www.newsmax.com/politics/donald-trump-katie-zacharia-press-secretary/2026/10/11/id/1272450/"
+        }
+      ]
+    },
+    {
+      "id": "f725e991-e811-4271-ad4f-7735d3cae1d0",
+      "label": "Feud spills onto South Carolina debate stage as Darline Graham, Annie Andrews snipe in Senate race",
+      "group": "story",
+      "size": 10,
+      "summary": "",
+      "sources_count": 2,
+      "bias": {
+        "left": 1,
+        "center": 5,
+        "right": 1,
+        "unknown": 0
+      },
+      "bias_score": 0.0,
+      "geo": {
+        "place": "Greenville, US",
+        "lat": 34.8471,
+        "lon": -82.392364
+      },
+      "headlines": [
+        {
+          "text": "Andrews, Graham take jabs at each other in first U.S. Senate debate",
+          "bias": "center",
+          "url": "https://www.greenvilleonline.com/story/news/politics/2026/10/12/andrews-graham-take-jabs-at-each-other-in-first-u-s-senate-debate/92175103007/"
+        },
+        {
+          "text": "South Carolina US Senate candidates debate as Horry County GOP hosts watch party",
+          "bias": "leanRight",
+          "url": "https://abcnews4.com/news/nation-world/south-carolina-us-senate-candidates-debate-as-horry-county-gop-hosts-watch-party-myrtle-beach-annie-andrews-darline-graham-libertarian-kasie-whitener-10112026"
+        },
+        {
+          "text": "Darline Graham, Annie Andrews, Kasie Whitener face off in Senate Debate",
+          "bias": "center",
+          "url": "https://www.foxcarolina.com/2026/10/11/live-tonight-darline-graham-annie-andrews-kasie-whitener-face-off-us-senate-debate/"
+        },
+        {
+          "text": "How Darline Graham turned a safe red seat into an alarm-bell emergency",
+          "bias": "left",
+          "url": "https://www.queerty.com/5-million-bailouts-mar-a-lago-rescues-how-darline-graham-turned-a-safe-red-seat-into-an-alarm-bell-emergency-20261012/"
+        },
+        {
+          "text": "Will Darline Graham Debate Annie Andrews Again Before the South Carolina Senate Election?",
+          "bias": "center",
+          "url": "https://attackofthefanboy.com/news/sen-darline-graham-refuses-to-commit-to-a-second-debate-ahead-of-the-midterms-and-denies-dropping-nordone-from-her-name-for-political-benefit/"
+        },
+        {
+          "text": "Andrews, Graham trade blows in U.S. Senate debate",
+          "bias": "center",
+          "url": "https://charlestoncitypaper.com/2026/10/12/andrews-graham-trade-blows-in-u-s-senate-debate/"
+        },
+        {
+          "text": "Online feud spills onto South Carolina stage as Darline Graham, Annie Andrews snipe in Senate debate",
+          "bias": "center",
+          "url": "https://www.ottumwacourier.com/news/national_news/online-feud-spills-onto-south-carolina-stage-as-darline-graham-annie-andrews-snipe-in-senate/article_6f9c2311-1b86-55f4-afc3-525b58991137.html"
+        }
+      ]
+    },
+    {
+      "id": "05d9a8c8-07e6-4c5d-81a5-7ee803213a25",
+      "label": "Amazon in Talks to Buy AI Startup Decart for Around $7 Billion, WSJ Reports",
+      "group": "story",
+      "size": 13,
+      "summary": "Amazon is preparing a $7 billion contract: Nvidia's dominance in the AI market is being questioned Amazon is in talks to acquire Decart, a startup specialized in IA chip software. ... <p>The post USA: Amazon is preparing a $7 billion contract: Nvidia's dominance in the AI market is being questioned first appeared on The Informer.</p>",
+      "sources_count": 4,
+      "bias": {
+        "left": 0,
+        "center": 4,
+        "right": 3,
+        "unknown": 11
+      },
+      "bias_score": 0.429,
+      "geo": {
+        "place": "Berlin, Germany",
+        "lat": 52.515123,
+        "lon": 13.418382
+      },
+      "headlines": [
+        {
+          "text": "USA: Amazon Prepares a $7 Billion Contract: Nvidia's Dominance in the AI Market Is Questioned - The Informer",
+          "bias": "unknown",
+          "url": "https://qactus.fr/2026/10/12/usa-amazon-prepare-un-contrat-de-7-milliards-de-dollars-la-domination-de-nvidia-sur-le-marche-de-lia-est-remise-en-question/"
+        },
+        {
+          "text": "Amazon in Advanced Talks to Acquire AI Startup Decart for Around $7 Billion",
+          "bias": "unknown",
+          "url": "https://oodaloop.com/briefs/technology/amazon-in-advanced-talks-to-acquire-ai-startup-decart-for-around-7-billion/"
+        },
+        {
+          "text": "Amazon in Talks to Acquire AI Startup Decart: What the Deal Could Mean for AWS",
+          "bias": "unknown",
+          "url": "https://www.wealthiertoday.com/news/amazon-decart-acquisition-talks-aws-ai-chips/"
+        },
+        {
+          "text": "Amazon Negotiates with Decart After Attempts to Purchase Nvidia and Anthropic",
+          "bias": "unknown",
+          "url": "https://www.expreso.ec/ciencia-y-tecnologia/amazon-negocia-decart-intentos-compra-nvidia-anthropic-298995.html"
+        },
+        {
+          "text": "Top Tech News Today, October 12, 2026: Amazon, Anthropic, AMD, Google, IonQ, Microsoft, Tencent & More - Tech Startups",
+          "bias": "leanRight",
+          "url": "https://techstartups.com/2026/10/12/top-tech-news-today-october-12-2026-amazon-anthropic-amd-google-ionq-microsoft-tencent-more/"
+        },
+        {
+          "text": "Amazon is Reportedly In Talks to Buy AI Company Decart",
+          "bias": "center",
+          "url": "https://cordcuttersnews.com/amazon-is-reportedly-in-talks-to-buy-ai-company-decart/"
+        },
+        {
+          "text": "Amazon Would Negotiate the Acquisition of Decart for $7 Billion",
+          "bias": "unknown",
+          "url": "https://kulturegeek.fr/news-361426/amazon-rachat-decart-7-milliards-dollars"
+        },
+        {
+          "text": "The US Is Preparing a $7 Billion Purchase. Ana Maria Păcuraru, About Amazon's Plan to Buy an Israeli AI Company",
+          "bias": "right",
+          "url": "https://www.realitatea.net/stiri/extern/sua-pregateste-o-achizitie-de-7-miliarde-de-dolari-ana-maria-pacuraru-despre-planul-amazon-de-a-cumpara-o-companie-israeliana-de-ai-i0m8pa"
+        }
+      ]
+    },
+    {
+      "id": "7c6d2b55-a978-45c1-b322-b8a61e1a4730",
+      "label": "Mullin says livestreaming Hasan execution is part of ‘restoring American values’",
+      "group": "story",
+      "size": 10,
+      "summary": "US plans to live-stream an execution must be condemned. Sweden must not turn a blind eye to barbarity just because it concerns an ally.",
+      "sources_count": 1,
+      "bias": {
+        "left": 2,
+        "center": 0,
+        "right": 2,
+        "unknown": 6
+      },
+      "bias_score": 0.0,
+      "geo": {
+        "place": "Accra, Ghana",
+        "lat": 5.602377,
+        "lon": -0.18527
+      },
+      "headlines": [
+        {
+          "text": "Sweden Must Speak Out when the US Wants to Broadcast Executions",
+          "bias": "unknown",
+          "url": "https://www.ttela.se/asikt-och-debatt/ledare/sverige-maste-saga-ifran-nar-usa-vill-sanda-avrattningar.c8ffcbd4-4517-51db-a62d-36b1b548a602"
+        },
+        {
+          "text": "US Executions Must Not Become Entertainment",
+          "bias": "unknown",
+          "url": "https://www.bohuslaningen.se/asikt-och-debatt/ledare/usa-s-avrattningar-far-inte-bli-underhallning.13883162-57ac-53c2-baad-79ae1b8e5934"
+        },
+        {
+          "text": "Markwayne Mullin makes stunning defense of livestreaming public execution",
+          "bias": "leanLeft",
+          "url": "https://www.lehighvalleylive.com/nation-world/2026/10/markwayne-mullin-makes-stunning-defense-of-livestreaming-public-execution.html"
+        },
+        {
+          "text": "EU warns online platforms over livestreaming US execution planned by Pentagon",
+          "bias": "unknown",
+          "url": "https://www.modernghana.com/news/1535446/eu-warns-online-platforms-over-livestreaming-us.html"
+        },
+        {
+          "text": "Push to censor US execution livestream in Australia",
+          "bias": "unknown",
+          "url": "https://canberradaily.com.au/push-to-censor-us-execution-livestream-in-australia/"
+        },
+        {
+          "text": "US Minister: Live Broadcast of Execution No Risk",
+          "bias": "unknown",
+          "url": "https://www.tt.com/artikel/30944347/us-minister-liveuebertragung-von-hinrichtung-kein-risiko"
+        },
+        {
+          "text": "Speaking of Public Executions",
+          "bias": "farLeft",
+          "url": "https://freepress.org/article/speaking-public-executions"
+        },
+        {
+          "text": "Mullin Defends Possible Livestream Of Execution – 710am KURV",
+          "bias": "unknown",
+          "url": "https://www.kurv.com/mullin-defends-possible-livestream-of-execution/"
+        }
+      ]
+    },
+    {
+      "id": "bc7593ae-d54e-422e-9c84-e21ec7b3e935",
+      "label": "Trump ‘thinking of’ renaming Atlantic or Pacific",
+      "group": "story",
+      "size": 16,
+      "summary": "Every president’s party hits the same wall during midterm season: keeping the base motivated. The thrill of a White House victory fades quickly once governing...",
+      "sources_count": 6,
+      "bias": {
+        "left": 25,
+        "center": 58,
+        "right": 33,
+        "unknown": 127
+      },
+      "bias_score": 0.069,
+      "geo": {
+        "place": "United States",
+        "lat": 35.228285,
+        "lon": -97.833034
+      },
+      "headlines": [
+        {
+          "text": "Trump Floats Renaming Atlantic or Pacific Ocean at Tennessee Rally as Midterms Approach",
+          "bias": "farRight",
+          "url": "https://patriotjournal.org/trump-oceans-joke/"
+        },
+        {
+          "text": "Donald Trump Proposes to Rename the Atlantic Ocean or Pacific \"Trump Ocean\"",
+          "bias": "unknown",
+          "url": "https://www.vanityfair.fr/article/donald-trump-renommer-ocean-atlantique-pacifique-ocean-trump"
+        },
+        {
+          "text": "Here We Go Again, Donald Trump Wants to Rename the Pacific Ocean or Atlantic to His Name.",
+          "bias": "unknown",
+          "url": "https://www.generation-nt.com/actualites/donald-trump-ocean-ameriques-denomination-renommage-2082625"
+        },
+        {
+          "text": "THE PROPHECY NEWS PODCAST: As Donald Trump Debates Renaming The Atlantic And Pacific Oceans After Himself, Mohammed Bin Salman Goes Into Hiding",
+          "bias": "unknown",
+          "url": "https://www.nowtheendbegins.com/the-prophecy-news-podcast-as-donald-trump-debates-renaming-the-atlantic-and-pacific-oceans-after-himself-mohammed-bin-salman-goes-into-hiding/"
+        },
+        {
+          "text": "The Atlantic Ocean Is Being Renamed \"Trump Ocean\"? After the Gulf and the Lake of \"America\", It Turns to the Oceans",
+          "bias": "unknown",
+          "url": "https://www.gazzetta.gr/plus/2576762/o-atlantikos-okeanos-metonomazetai-se-okeanos-tramp-meta-ton-kolpo-kai-tin-limni-tis"
+        },
+        {
+          "text": "In an Event with Republicans, Trump Suggests Rebaptizing Atlantic or Pacific Ocean as Trump Ocean",
+          "bias": "unknown",
+          "url": "https://www.bemparana.com.br/noticias/mundo/em-evento-com-republicanos-trump-sugere-rebatizar-oceano-atlantico-ou-pacifico-como-oceano-trump/"
+        },
+        {
+          "text": "Trump Suggests Rebaptizing the Atlantic or Pacific Ocean as 'Trump Ocean'",
+          "bias": "unknown",
+          "url": "https://tribunaonline.com.br/internacional/trump-sugere-rebatizar-oceano-atlantico-ou-pacifico-como-oceano-trump-332601"
+        },
+        {
+          "text": "So Instead of the Atlantic Ocean, Let's Say the Trump Ocean?!",
+          "bias": "unknown",
+          "url": "https://fararu.com/fa/news/1009186/%D8%B2%DB%8C%D9%86-%D9%BE%D8%B3-%D8%A8%D9%87-%D8%AC%D8%A7%DB%8C-%D8%A7%D9%82%DB%8C%D8%A7%D9%86%D9%88%D8%B3-%D8%A7%D8%B7%D9%84%D8%B3-%D8%A8%DA%AF%D9%88%DB%8C%DB%8C%D9%85-%D8%A7%D9%82%DB%8C%D8%A7%D9%86%D9%88%D8%B3-%D8%AA%D8%B1%D8%A7%D9%85%D9%BE"
+        }
+      ]
+    },
+    {
+      "id": "fea5afda-80e2-4b3d-9f18-f2005ff7a96e",
+      "label": "New York Joins Federal School Scholarship Program Despite Union Opposition",
+      "group": "story",
+      "size": 13,
+      "summary": "Gov. Kathy Hochul announced Friday that she will opt New York into the new federal scholarship tax credit program, making her the second Democratic governor to do so since the administration published formal regulations for the program. Hochul’s decision bucks intense opposition from teachers’ unions, but has won her support from the Jewish community, which...",
+      "sources_count": 4,
+      "bias": {
+        "left": 2,
+        "center": 1,
+        "right": 2,
+        "unknown": 2
+      },
+      "bias_score": 0.0,
+      "geo": {
+        "place": "New York, US",
+        "lat": 40.70474,
+        "lon": -73.97764
+      },
+      "headlines": [
+        {
+          "text": "Hochul will opt New York into education tax credit that will help fund Jewish education",
+          "bias": "leanRight",
+          "url": "https://jewishinsider.com/2026/10/hochul-will-opt-new-york-into-federal-scholarship-tax-credit-program-that-will-help-fund-jewish-education/"
+        },
+        {
+          "text": "Hochul breaks with teachers unions to embrace GOP-backed education tax credit",
+          "bias": "leanLeft",
+          "url": "https://www.chalkbeat.org/2026/10/09/ny-gov-hochul-opts-into-federal-scholarship-tax-credit/"
+        },
+        {
+          "text": "Senator Bill Weber Welcomes Governor Hochul's Decision to Opt In to Federal Freedom Tax Credit Following Months of Advocacy",
+          "bias": "unknown",
+          "url": "https://monseyscoop.com/senator-bill-weber-welcomes-governor-hochuls-decision-to-opt-in-to-federal-freedom-tax-credit-following-months-of-advocacy/"
+        },
+        {
+          "text": "Hochul backs joining federal school choice program over objections from public school teachers, legislative leaders",
+          "bias": "unknown",
+          "url": "https://www.nny360.com/news/statenews/hochul-backs-joining-federal-school-choice-program-over-objections-from-public-school-teachers-legislative-leaders/article_9bdf464a-d06d-5155-a686-de08f86f7136.html"
+        },
+        {
+          "text": "Hochul says NY will join federal school-choice tax-credit program, which could direct more than $1.5 billion, including for yeshiva tuition",
+          "bias": "leanRight",
+          "url": "https://www.clevelandjewishnews.com/jns/hochul-says-ny-will-join-federal-school-choice-tax-credit-program-which-could-direct-more/article_f8c83e56-42b0-53f6-b8cf-76a47e6cda77.html"
+        },
+        {
+          "text": "Gov. Hochul opts NY into Trump’s federal school voucher program",
+          "bias": "leanLeft",
+          "url": "https://www.lodinews.com/news/national/article_98b0733d-cb59-5562-afd4-fc02d03c4003.html"
+        },
+        {
+          "text": "NY Bishops Praise Governor Hochul’s Move to Join Federal School Choice Program",
+          "bias": "center",
+          "url": "https://thetablet.org/ny-bishops-praise-hochul-move-to-join-school-choice-program/"
+        }
+      ]
+    },
+    {
+      "id": "4cff4832-9a81-4166-a6e8-df0363c2132f",
+      "label": "DOJ Charges 16 Noncitizens With Alleged Election Crimes Across Five States",
+      "group": "story",
+      "size": 16,
+      "summary": "WASHINGTON, CMC – A Bahamian is among 16 foreigners who have been arrested and charged by the United States Justice Department for allegedly casting a ballot in the 2024 federal general election. The Justice Department Monday said that the 16 were held in connection “with illegal voting, fraudulent voter registration, and related election crimes across the country”. “The cases include voting by aliens in federal elections, false claims of US cit…",
+      "sources_count": 6,
+      "bias": {
+        "left": 0,
+        "center": 1,
+        "right": 0,
+        "unknown": 0
+      },
+      "bias_score": 0.0,
+      "geo": {
+        "place": "Jamaica",
+        "lat": 18.038087,
+        "lon": -77.231604
+      },
+      "headlines": [
+        {
+          "text": "Bahamian among several people arrested and charged in US for illegal voting",
+          "bias": "center",
+          "url": "http://jamaica-gleaner.com/index%2Ephp/article/world-news/20261005/bahamian-among-several-people-arrested-and-charged-us-illegal-voting"
+        }
+      ]
+    },
+    {
+      "id": "9a68c2fa-e469-4c33-a15e-b2c9354fe016",
+      "label": "Judge orders Trump administration to cancel taxpayer-funded TV ads",
+      "group": "story",
+      "size": 18,
+      "summary": "A federal judge has ordered the Trump administration to stop running government-funded TV ads that promote the president, finding they are likely unlawful. In her ruling, U.S. District Judge Jennifer Rochon of New York blocked the Trump administration from spending public money to distribute the ads. She also said it must cancel “any slot, placement, reservation, or arrangement for the airing or dissemination of the challenged advertisements.” T…",
+      "sources_count": 7,
+      "bias": {
+        "left": 18,
+        "center": 23,
+        "right": 3,
+        "unknown": 16
+      },
+      "bias_score": -0.341,
+      "geo": {
+        "place": "New York, US",
+        "lat": 40.69746,
+        "lon": -74.032777
+      },
+      "headlines": [
+        {
+          "text": "Federal Judge Orders Trump Admin to Stop Running Taxpayer Funded Ads Promoting the President",
+          "bias": "left",
+          "url": "https://www.democracynow.org/2026/10/12/headlines/federal_judge_orders_trump_admin_to_running_taxpayer_funded_ads_promoting_the_president"
+        },
+        {
+          "text": "Judge cancels taxpayer-funded Trump ads made by Columbia-based company",
+          "bias": "center",
+          "url": "https://www.thebanner.com/politics-power/judge-cancels-trump-lmd-ads-P6F4JAUTGNHPPA3NBSQMKVM5ZE/"
+        },
+        {
+          "text": "Judge Bars Federal Airing of Trump's Taxpayer-Funded Ads for Two Weeks",
+          "bias": "right",
+          "url": "https://english.pravda.ru/news/world/169894-judge-bans-trump-taxpayer-funding-ads/"
+        },
+        {
+          "text": "Judge orders Trump administration to cancel taxpayer-funded TV ads",
+          "bias": "unknown",
+          "url": "https://losangelesweeklytimes.com/judge-orders-trump-administration-to-cancel-taxpayer-funded-tv-ads/"
+        },
+        {
+          "text": "USA - Judge Stops Tax-Financed Trump Commercials",
+          "bias": "center",
+          "url": "https://www.deutschlandfunk.de/richterin-stoppt-steuerfinanzierte-trump-werbespots-100.html"
+        },
+        {
+          "text": "Judge Halts Taxpayer-Funded Trump Ads Ahead of Midterms",
+          "bias": "leanLeft",
+          "url": "https://www.communityvoiceks.com/2026/10/12/judge-halts-taxpayer-funded-trump-ads/"
+        },
+        {
+          "text": "Trump ordered to stop taxpayer-funded ads promoting himself",
+          "bias": "center",
+          "url": "https://extra.ie/2026/10/12/news/donald-trump-taxpayer-funded-adverts"
+        },
+        {
+          "text": "The Court Found that the Government Spending Public Money on Ads that Improve Trump's Image Is Excessive.",
+          "bias": "unknown",
+          "url": "https://www.donald.pl/artykuly/gsNrqCeT/sad-uznal-ze-wydawanie-publicznych-pieniedzy-przez-rzad-na-reklamy-ocieplajace-wizerunek-trumpa-to-jednak-przesada"
+        }
+      ]
+    },
+    {
+      "id": "b45a26d5-6803-4fd7-a18c-1f6d58cc19ee",
+      "label": "Fugitive businessman taken into US custody in Venezuela bribery case",
+      "group": "story",
+      "size": 12,
+      "summary": "His first appearance before a federal court in South Florida is scheduled for Tuesday, October 13. Neither the Venezuelan nor the US government explained how the delivery took place.",
+      "sources_count": 3,
+      "bias": {
+        "left": 3,
+        "center": 4,
+        "right": 0,
+        "unknown": 9
+      },
+      "bias_score": -0.429,
+      "geo": {
+        "place": "Marinette, US",
+        "lat": 45.099489,
+        "lon": -87.632123
+      },
+      "headlines": [
+        {
+          "text": "Álvaro Pulido, Alex Saab's Partner, Was Arrested by U.S. Agents, According to Todd Blanche",
+          "bias": "unknown",
+          "url": "https://elestimulo.com/venezuela/2026-10-11/alvaro-pulido-alex-saab/"
+        },
+        {
+          "text": "Fugitive businessman taken into US custody in Venezuela bribery case",
+          "bias": "leanLeft",
+          "url": "https://www.thesunchronicle.com/news/nation_world/fugitive-businessman-taken-into-us-custody-in-venezuela-bribery-case/article_2f26e275-45a9-56c3-8833-ddcf858501d3.html"
+        },
+        {
+          "text": "Fugitive businessman taken into US custody in Venezuela bribery case",
+          "bias": "center",
+          "url": "https://www.hngnews.com/nation_world/fugitive-businessman-taken-into-us-custody-in-venezuela-bribery-case/article_dcefc49d-5328-5290-8c8c-5d013efa082f.html"
+        },
+        {
+          "text": "Álvaro Pulido, Partner of Álex Saab, Arrested in the United States for Alleged Corruption in Venezuela",
+          "bias": "unknown",
+          "url": "https://www.agenciapi.co/noticia/mundo/capturan-en-estados-unidos-alvaro-pulido-socio-de-alex-saab-por-presunta-corrupcion-en-venezuela"
+        },
+        {
+          "text": "Álvaro Pulido, Partner of Álex Saab, Was Reportedly Extradited From Venezuela to the United States",
+          "bias": "unknown",
+          "url": "https://www.asuntoslegales.com.co/actualidad/alvaro-pulido-socio-de-alex-saab-habria-sido-extraditado-de-venezuela-a-estados-unidos-4501257"
+        },
+        {
+          "text": "Álvaro Pulido, Alex Saab's Partner, Was Delivered to the United States #11Oct",
+          "bias": "unknown",
+          "url": "https://www.elimpulso.com/2026/10/11/alvaro-pulido-socio-de-alex-saab-fue-entregado-a-estados-unidos-11oct/"
+        },
+        {
+          "text": "Álvaro Pulido, Alex Saab's Partner Delivered by Venezuela to the U.S.",
+          "bias": "unknown",
+          "url": "https://www.el-carabobeno.com/alvaro-pulido-el-socio-de-alex-saab-entregado-por-venezuela-a-ee-uu/"
+        },
+        {
+          "text": "Venezuela Deported Colombian Alvaro Pulido to the U.S. to Answer for Money Laundering with Alex Saab",
+          "bias": "unknown",
+          "url": "https://larazon.co/venezuela-deporto-al-colombiano-alvaro-pulido-a-ee-uu-para-que-responda-por-lavado-de-activos-junto-a-alex-saab/"
+        }
+      ]
+    },
+    {
+      "id": "9537e44b-fe99-4b58-8199-c387c8cdf799",
+      "label": "Hamilton says Vance’s attacks on his religion are ‘really sad,’ ‘pathetic’",
+      "group": "story",
+      "size": 10,
+      "summary": "VP Vance called pastor Adam Hamilton's faith a 'skin suit.' The Kansas Senate candidate fired back, calling the attacks 'sad' and 'pathetic.'",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 1
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Vance Called a Pastor’s Faith a ‘Skin Suit.’ The Pastor Fired Back. - The Hip Hop Democrat",
+          "bias": "unknown",
+          "url": "https://thehiphopdemocrat.com/2026/10/11/vance-called-a-pastors-faith-a-skin-suit-the-pastor-fired-back/"
+        }
+      ]
+    },
+    {
+      "id": "85669731-4ea2-4b61-908e-b482bcf9212d",
+      "label": "US Threatens to Block Arms for Ukraine over Refinery Attacks, FT Reports",
+      "group": "story",
+      "size": 16,
+      "summary": "DONALD Trump is ready to wreck Ukraine’s war machine unless Kyiv stops targeting Russian energy sites. He has threatened to suspend a deal letting allies buy US... #news, #worldnews, #ukrainewar, #vladimirputin, #ukraine, #energybills, #donaldtrump, #thesunnewspaper, #fossilfuels, #volodymyrzelensky, #flyingeze",
+      "sources_count": 6,
+      "bias": {
+        "left": 9,
+        "center": 4,
+        "right": 1,
+        "unknown": 28
+      },
+      "bias_score": -0.571,
+      "geo": {
+        "place": "Kyiv, Ukraine",
+        "lat": 50.444031,
+        "lon": 30.525673
+      },
+      "headlines": [
+        {
+          "text": "Trump threatens to cut off vital US weapons to Ukraine in row with...",
+          "bias": "unknown",
+          "url": "https://www.flyingeze.com/trump-threatens-cut-us-weapons-ukraine-zelensky-row"
+        },
+        {
+          "text": "Donald Trump Just Did the Unthinkable: He Threated to Cut Military Aid and Intel to Ukraine as Putin Continues His Invasion",
+          "bias": "center",
+          "url": "https://nationalsecurityjournal.org/donald-trump-just-did-the-unthinkable-he-threated-to-cut-military-aid-and-intel-to-ukraine-as-putin-continues-his-invasion/"
+        },
+        {
+          "text": "FT: US threatens to freeze PURL and intelligence sharing unless Kyiv stops strikes on Russian energy infrastructure",
+          "bias": "unknown",
+          "url": "https://geopolitiki.com/politics-diplomacy/ft-us-threatens-freeze-purl-intelligence-sharing-ukraine-russian-energy-strikes/"
+        },
+        {
+          "text": "US threatens to cut intel sharing, arms shipments to Ukraine to protect Russian oil refineries, sources confirm",
+          "bias": "unknown",
+          "url": "https://www.philstockworld.com/2026/10/12/us-threatens-to-cut-intel-sharing-arms-shipments-to-ukraine-to-protect-russian-oil-refineries-sources-confirm/"
+        },
+        {
+          "text": "Russia’s sabotage of Europe should bring Ukraine more weapons through US purchase scheme, with clear statement of where its red lines lie, NATO’s top European commander says",
+          "bias": "leanLeft",
+          "url": "https://euromaidanpress.com/2026/10/12/russias-sabotage-of-europe-should-bring-ukraine-more-weapons-through-us-weapons-purchase-scheme-with-clear-statement-of-where-its-red-lines-lie-natos-top-european-commander-says/"
+        },
+        {
+          "text": "US Europe Commander Urges Arming Kyiv to Counter Russia’s Hybrid War",
+          "bias": "leanLeft",
+          "url": "https://www.kyivpost.com/post/86834"
+        },
+        {
+          "text": "NATO: US arms deliveries to Ukraine via PURL continue",
+          "bias": "leanLeft",
+          "url": "https://en.interfax.com.ua/news/general/1218709.html"
+        },
+        {
+          "text": "Trump Threatened to Limit Support to Ukraine Due to Strikes on Russia",
+          "bias": "unknown",
+          "url": "https://gazeta.ua/articles/politics/_tramp-prigroziv-ukrayini-obmezhennyam-pidtrimki-cherez-udari-po-rosiyi/1260123"
+        }
+      ]
+    },
+    {
+      "id": "5dfbe4d0-dece-46d2-9813-6588106a08ac",
+      "label": "Iran says US response to its proposal to reopen Hormuz was 'insufficient'",
+      "group": "story",
+      "size": 12,
+      "summary": "TEHRAN, OCT 12: Iran is still reviewing a US response to its proposal regarding the reopening of the Strait of Hormuz and will reply to Washington via intermediaries when the review is over, foreign ministry spokesperson Esmaeil Baghaei said on Monday. Baghaei also told a press conference that Iran continues to exchange messages via intermediaries, […]",
+      "sources_count": 3,
+      "bias": {
+        "left": 4,
+        "center": 7,
+        "right": 3,
+        "unknown": 25
+      },
+      "bias_score": -0.071,
+      "geo": {
+        "place": "Lahore, Pakistan",
+        "lat": 31.48269,
+        "lon": 74.371539
+      },
+      "headlines": [
+        {
+          "text": "Iran says it will reply to US response on Strait of Hormuz proposal once review over",
+          "bias": "unknown",
+          "url": "https://islamabadpost.com.pk/iran-says-it-will-reply-to-us-response-on-strait-of-hormuz-proposal-once-review-over/"
+        },
+        {
+          "text": "The Price of Brent Crude Is Turned Around and Quoted Already Above 105 Dollars",
+          "bias": "unknown",
+          "url": "https://elperiodicodelaenergia.com/el-precio-del-crudo-brent-se-da-la-vuelta-y-cotiza-ya-por-encima-de-los-105-dolares/"
+        },
+        {
+          "text": "Iran says reviewing US proposals for talks as indirect messages continue",
+          "bias": "leanRight",
+          "url": "https://www.nation.com.pk/12-Oct-2026/iran-says-reviewing-us-proposals-talks-indirect-messages-continue"
+        },
+        {
+          "text": "Iran Warns Strategic Offensives If U.S. Resumes Attacks · Global Voices",
+          "bias": "left",
+          "url": "https://www.jornada.com.mx/2026/10/12/mundo/020n4mun?partner=rss"
+        },
+        {
+          "text": "Iran Hormuz Proposal: Why Tehran Calls US Reply ‘Insufficient’",
+          "bias": "unknown",
+          "url": "https://tfiglobalnews.com/2026/10/12/iran-hormuz-proposal-why-tehran-calls-us-reply-insufficient/"
+        },
+        {
+          "text": "Iran says latest U.S. response was 'insufficient'",
+          "bias": "center",
+          "url": "https://billingsgazette.com/article_2c856aae-9f36-512b-8a44-95b227e41449.html"
+        },
+        {
+          "text": "Iran: Washington Has Agreed to some of Our Conditions for Opening the Strait of Hormuz - the Gate of the Sunshine.",
+          "bias": "unknown",
+          "url": "https://www.shorouknews.com/news/view.aspx?cdate=12102026&id=12614700-4278-4d40-b82e-58454509d161"
+        },
+        {
+          "text": "Tehran Rejects Washington's Response on the Strait of Hormuz",
+          "bias": "unknown",
+          "url": "https://www.lantidiplomatico.it/dettnews-teheran_boccia_la_risposta_di_washington_sullo_stretto_di_hormuz/82_69404/"
+        }
+      ]
+    },
+    {
+      "id": "e8f6217a-25c1-447e-bfd5-9caa43c7c149",
+      "label": "Zelenskyy accuses Russia of striking power plant after Trump's claim of energy ceasefire",
+      "group": "story",
+      "size": 19,
+      "summary": "",
+      "sources_count": 8,
+      "bias": {
+        "left": 9,
+        "center": 17,
+        "right": 8,
+        "unknown": 39
+      },
+      "bias_score": -0.029,
+      "geo": {
+        "place": "Riyadh, Saudi Arabia",
+        "lat": 24.724525,
+        "lon": 46.690341
+      },
+      "headlines": [
+        {
+          "text": "Zelensky Accuses Russia of Continuing Energy Ceasefire Violations",
+          "bias": "unknown",
+          "url": "https://www.mondialnews.com/2026/10/12/zelensky-accuses-russia-of-continuing-energy-ceasefire-violations/"
+        },
+        {
+          "text": "Despite Trump's Big Announcement, Putin Has Already Broken the Deal",
+          "bias": "unknown",
+          "url": "https://liner.hu/zelenszkij-trump-energetikai-tuzszunet-orosz-tamadasok/"
+        },
+        {
+          "text": "New Barrage of Russian Attacks",
+          "bias": "unknown",
+          "url": "https://www.alphatv.gr/kosmos/neo-baraz-rosikon-epitheseon/"
+        },
+        {
+          "text": "Zelensky on the Energy Truce: We Did Not Attack Russian Facilities, but They Continue to Do So",
+          "bias": "unknown",
+          "url": "https://seleo.gr/eidiseis/diethni/zelenski-gia-tin-energeiaki-ekecheiri/"
+        },
+        {
+          "text": "“The Signal From Russia Is Clear: They Do Not Know Anything About the Energy Truce” — Volodymyr Zelensky on Russian Strikes",
+          "bias": "unknown",
+          "url": "https://armyinform.com.ua/2026/10/12/sygnal-vid-rosiyi-chitkyj-vony-nichogo-ne-znayut-pro-energetychne-peremyrya-volodymyr-zelenskyj-pro-udary-rosiyan/"
+        },
+        {
+          "text": "Ukraine accuses Russia of violating Trump's energy ceasefire as EU ...",
+          "bias": "leanRight",
+          "url": "https://english.alarabiya.net/News/world/2026/10/12/ukraine-accuses-russia-of-violating-trump-s-energy-ceasefire-as-eu-imposes-new-sanctions"
+        },
+        {
+          "text": "Zelensky: Increasingly Clear that Russia Will Not Comply with Energy Ceasefire",
+          "bias": "unknown",
+          "url": "https://www.aftenbladet.no/utenriks/i/0B3AnJ/zelenskyj-stadig-tydeligere-at-russland-ikke-kommer-til-aa-overholde-energivaapenhvile"
+        },
+        {
+          "text": "Putin Challenges Trump: Russia Violates Truce While U.S. Raises Sanctions and Europe Rebels",
+          "bias": "unknown",
+          "url": "https://totalnewsagency.com/2026/10/12/putin-desafia-a-trump-rusia-viola-la-tregua-mientras-estados-unidos-levanta-sanciones-y-europa-se-rebela/"
+        }
+      ]
+    },
+    {
+      "id": "c67b8ecd-6bd1-4d3c-aa0b-d7d6133b3fd0",
+      "label": "Six senators call for Trump administration to ‘immediately reverse course’ on Russian diesel plan",
+      "group": "story",
+      "size": 13,
+      "summary": "The Trump administration’s order to allow import of Russian diesel violates a 2022 law banning Russian energy imports while the country’s war with Ukraine is ongoing, according to a bipartisan group of U.S. senators. Following an Oct. 9 call between President Donald Trump and Russian President Vladimir Putin, the U.S. Treasury Department’s Office of Foreign Assets […]",
+      "sources_count": 4,
+      "bias": {
+        "left": 10,
+        "center": 7,
+        "right": 1,
+        "unknown": 21
+      },
+      "bias_score": -0.5,
+      "geo": {
+        "place": "Annapolis, US",
+        "lat": 38.976518,
+        "lon": -76.495989
+      },
+      "headlines": [
+        {
+          "text": "US senators from both parties blast Trump order to import Russian diesel as illegal",
+          "bias": "leanLeft",
+          "url": "https://rhodeislandcurrent.com/2026/10/12/repub/us-senators-from-both-parties-blast-trump-order-to-import-russian-diesel-as-illegal/"
+        },
+        {
+          "text": "US senators from both parties blast Trump order to import Russian diesel as illegal",
+          "bias": "left",
+          "url": "https://sourcenm.com/2026/10/12/repub/us-senators-from-both-parties-blast-trump-order-to-import-russian-diesel-as-illegal/"
+        },
+        {
+          "text": "US senators from both parties blast Trump order to import Russian diesel as illegal",
+          "bias": "unknown",
+          "url": "https://www.dailyfly.com/2026/10/12/us-senators-from-both-parties-blast-trump-order-to-import-russian-diesel-as-illegal/"
+        },
+        {
+          "text": "Utah’s Curtis joins US senators from both parties blasting Trump order to import Russian diesel as illegal",
+          "bias": "left",
+          "url": "https://utahnewsdispatch.com/2026/10/12/repub/utahs-curtis-joins-us-senators-from-both-parties-blasting-trump-order-to-import-russian-diesel-as-illegal/"
+        },
+        {
+          "text": "US senators from both parties blast Trump order to import Russian diesel as illegal",
+          "bias": "leanLeft",
+          "url": "https://marylandmatters.org/2026/10/12/repub/us-senators-from-both-parties-blast-trump-order-to-import-russian-diesel-as-illegal/"
+        },
+        {
+          "text": "US senators from both parties blast Trump order to import Russian diesel as illegal",
+          "bias": "leanLeft",
+          "url": "https://wisconsinexaminer.com/2026/10/12/repub/us-senators-from-both-parties-blast-trump-order-to-import-russian-diesel-as-illegal/"
+        },
+        {
+          "text": "Trump on Russian Diesel: \"I Made the Right Choice for the American People\"",
+          "bias": "unknown",
+          "url": "https://meaculpa.gr/tramp-gia-rosiko-ntizel-ekana-ti-sosti-epilogi-gia-ton-amerikaniko-lao/"
+        },
+        {
+          "text": "Collins Joins Bipartisan Six Telling Trump to Kill Russian Diesel Deal",
+          "bias": "right",
+          "url": "https://www.themainewire.com/2026/10/collins-joins-bipartisan-six-telling-trump-to-kill-russian-diesel-deal/"
+        }
+      ]
+    },
+    {
+      "id": "9ee76260-4b36-4768-ac26-ded0bff077d4",
+      "label": "Marshall pays bakery bill after complaint goes viral",
+      "group": "story",
+      "size": 10,
+      "summary": "The owner of Hutchinson, Kansas, bakery went viral for a post about the Marshall campaign not paying a $678 bill for cookies and baked goods back in 2020. The Republican senator, who's now in a tough reelection fight, then paid its balance — with interest.",
+      "sources_count": 2,
+      "bias": {
+        "left": 1,
+        "center": 1,
+        "right": 0,
+        "unknown": 0
+      },
+      "bias_score": -0.5,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Roger Marshall campaign settles unpaid Kansas bakery bill after 6 years: 'Better late than never'",
+          "bias": "leanLeft",
+          "url": "https://www.kcur.org/politics-elections-and-government/2026-10-12/roger-marshall-campaign-kansas-bakery-bill"
+        },
+        {
+          "text": "Kansas GOP Sen. Roger Marshall pays off 6-year-old campaign cookie bill",
+          "bias": "center",
+          "url": "https://www.wkow.com/kansas-gop-sen-roger-marshall-pays-off-6-year-old-campaign-cookie-bill/article_250dbf6a-7953-5cd9-af55-a623846de96e.html"
+        }
+      ]
+    },
+    {
+      "id": "ef64e308-61cf-4d13-a5ce-2efe687b804e",
+      "label": "New Study Links Late Night Eating with Serious Liver Issues",
+      "group": "story",
+      "size": 10,
+      "summary": "Researchers from Oregon Health & Science University and Massachusetts General Hospital have found that people who reported eating late at night had a 20 to 30% higher risk of liver disease than those who did not.\nThe post Late-Night Snacking Linked to Higher Risk of Liver Disease appeared first on Sci.News: Breaking Science News.",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 4,
+        "right": 0,
+        "unknown": 2
+      },
+      "bias_score": 0.0,
+      "geo": {
+        "place": "Basildon, UK",
+        "lat": 51.576077,
+        "lon": 0.488935
+      },
+      "headlines": [
+        {
+          "text": "Late-Night Snacking Linked to Higher Risk of Liver Disease",
+          "bias": "center",
+          "url": "https://www.sci.news/medicine/late-night-snacking-liver-disease-15122.html"
+        },
+        {
+          "text": "Late-Night Snacking Linked to Higher Rates of Fatty Liver Disease and Cirrhosis",
+          "bias": "unknown",
+          "url": "https://www.iatronet.gr/article/143435/ta-snak-arga-to-vrady-syndeontai-me-ypshlotera-pososta-lipodoys-nosoy-toy-hpatos-kai-kirroshs-meleth"
+        },
+        {
+          "text": "The Study Made a Significant Finding About Those Who Eat Late at Night",
+          "bias": "unknown",
+          "url": "https://terveydenasialla.com/tutkimus-teki-merkittavan-havainnon-niista-jotka-syovat-yomyohaan/"
+        },
+        {
+          "text": "Late-night meals and snacks linked to liver disease in new study",
+          "bias": "center",
+          "url": "https://www.echo-news.co.uk/news/26621770.late-night-meals-snacks-linked-liver-disease-study/"
+        },
+        {
+          "text": "Late-night snacking may affect liver health",
+          "bias": "center",
+          "url": "https://www.news-medical.net/news/20261009/Late-night-snacking-may-affect-liver-health.aspx"
+        },
+        {
+          "text": "Late-night eating linked to higher rates of fatty liver disease and cirrhosis",
+          "bias": "center",
+          "url": "https://medicalxpress.com/news/2026-10-late-night-linked-higher-fatty.html"
+        }
+      ]
+    },
+    {
+      "id": "8b3e1f91-9eb1-42cf-89f0-edc770116add",
+      "label": "Sen. Thom Tillis says he believes Trump’s fuel deal with Russia could be breaking the law",
+      "group": "story",
+      "size": 10,
+      "summary": "Washington: Republican Senator Thom Tillis said that President Donald Trump \"may be\" breaking the law with his Russian diesel deal, while Senate",
+      "sources_count": 2,
+      "bias": {
+        "left": 2,
+        "center": 0,
+        "right": 2,
+        "unknown": 4
+      },
+      "bias_score": 0.0,
+      "geo": {
+        "place": "Bhubaneswar, India",
+        "lat": 20.298787,
+        "lon": 85.823806
+      },
+      "headlines": [
+        {
+          "text": "Trump 'May Be' Breaking Law On Russian Diesel: US Senator",
+          "bias": "unknown",
+          "url": "https://ommcomnews.com/world-news/trump-may-be-breaking-law-on-russian-diesel-us-senator/"
+        },
+        {
+          "text": "Big Baigulsan Trumpin Diesel Txl Halelceer Huul Buse Basshog Bxgd Nairamdah",
+          "bias": "unknown",
+          "url": "https://ikon.mn/n/3qxv"
+        },
+        {
+          "text": "Also on the Republican Wing, Trump's Diesel Deal Is Called",
+          "bias": "leanLeft",
+          "url": "https://politiken.dk/internationalt/art11018599/Ogs%C3%A5-p%C3%A5-den-republikanske-fl%C3%B8j-kaldes-Trumps-dieselaftale-med-Putin-en-%C2%BBalvorlig-fejl%C2%AB"
+        },
+        {
+          "text": "Republicans In Disarray Over Trump’s Illegal Deal With Putin",
+          "bias": "unknown",
+          "url": "https://www.thedailypoliticususa.com/p/republicans-in-disarray-over-trumps"
+        },
+        {
+          "text": "Prominent Republican senator says Trump's Russian diesel deal may be illegal",
+          "bias": "leanLeft",
+          "url": "https://www.sanluisobispo.com/news/nation-world/world/article317579857.html"
+        },
+        {
+          "text": "Prominent Republican senator says Trump’s Russian diesel deal may be illegal",
+          "bias": "unknown",
+          "url": "https://whtc.com/2026/10/11/prominent-republican-senator-says-trumps-russian-diesel-deal-may-be-illegal/"
+        },
+        {
+          "text": "Prominent Republican senator says Trump’s Russian diesel deal may be illegal",
+          "bias": "leanRight",
+          "url": "https://wsau.com/2026/10/11/prominent-republican-senator-says-trumps-russian-diesel-deal-may-be-illegal/"
+        },
+        {
+          "text": "Prominent Republican senator says Trump’s Russian diesel deal may be illegal",
+          "bias": "leanRight",
+          "url": "https://kelo.com/2026/10/11/prominent-republican-senator-says-trumps-russian-diesel-deal-may-be-illegal/"
+        }
+      ]
+    },
+    {
+      "id": "420f9564-1a32-4b34-a504-ae511f839674",
+      "label": "Trump says Russia and Ukraine reached 'energy ceasefire'",
+      "group": "story",
+      "size": 16,
+      "summary": "U.S. President Donald Trump announced this Sunday an agreement between Russia and Ukraine to stop attacks on energy infrastructure, in a new attempt to reduce hostilities. Through his social network Truth Social, the president reported that the ceasefire would have “immediate effect” and issued a warning [...] The entry “Don’t break it”: Trump’s warning after announcing an energy truce between Russia and Ukraine was first published in Diario San…",
+      "sources_count": 6,
+      "bias": {
+        "left": 12,
+        "center": 27,
+        "right": 11,
+        "unknown": 125
+      },
+      "bias_score": -0.02,
+      "geo": {
+        "place": "Rome, Italy",
+        "lat": 41.881743,
+        "lon": 12.490328
+      },
+      "headlines": [
+        {
+          "text": "“Don’t Break It”: Trump’s Warning After Announcing an Energy Truce Between Russia and Ukraine - Diario San Rafael",
+          "bias": "unknown",
+          "url": "https://diariosanrafael.com.ar/no-lo-rompan-la-advertencia-de-trump-tras-anunciar-una-tregua-energetica-entre-rusia-y-ucrania/"
+        },
+        {
+          "text": "Trump Claims Russia Ukraine Agree to Energy Ceasefire - THE DESTINATION",
+          "bias": "unknown",
+          "url": "https://dailythedestination.com/trump-claims-russia-ukraine-agree-to-energy-ceasefire/"
+        },
+        {
+          "text": "Oil Prices Fall as Trump Announces Russia-Ukraine Energy Ceasefire - Khaleej Mag",
+          "bias": "unknown",
+          "url": "https://khaleejmag.com/business/oil-prices-fall-as-trump-announces-russia-ukraine-energy-ceasefire/"
+        },
+        {
+          "text": "Trump Announces Energy Truce Between Russia and Ukraine, but Attacks Continue » Oronoticias",
+          "bias": "unknown",
+          "url": "https://oronoticiaspuebla.com/trump-anuncia-tregua-energetica-entre-rusia-y-ucrania-pero-los-ataques-continuan/"
+        },
+        {
+          "text": "Trump announces Russia-Ukraine energy ceasefire, but agreement remains uncertain",
+          "bias": "center",
+          "url": "https://www.41nbc.com/trump-russia-ukraine-energy-ceasefire-diesel-sanctions/"
+        },
+        {
+          "text": "Trump Announces Immediate Energy Ceasefire Between Russia and Ukraine But Attacks Continue · Global Voices",
+          "bias": "unknown",
+          "url": "https://gmnoticias.mx/trump-anuncia-un-alto-el-fuego-energetico-inmediato-entre-rusia-y-ucrania-pero-los-ataques-continuan/"
+        },
+        {
+          "text": "Trump's Phantom Truce Is Useless: the Oil Brake and the Bags Go up. Incognite About Storage and Refining",
+          "bias": "unknown",
+          "url": "https://www.ilriformista.it/la-tregua-fantasma-di-trump-e-inutile-il-petrolio-frena-e-le-borse-salgono-incognite-su-stoccaggi-e-raffinazione-533897/"
+        },
+        {
+          "text": "Trump Announces Russia-Ukraine Energy Ceasefire, Oil Prices Rise",
+          "bias": "unknown",
+          "url": "https://www.cnbcindonesia.com/market/20261012180121-17-775488/trump-umumkan-gencatan-energi-rusia-ukraina-harga-minyak-malah-naik"
+        }
+      ]
+    },
+    {
+      "id": "rss_12108_1791671722404_4",
+      "label": "Some in Florida and Alabama without power as Isaias moves north to Appalachians and Mid-Atlantic",
+      "group": "story",
+      "size": 10,
+      "summary": "",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 6,
+        "right": 0,
+        "unknown": 0
+      },
+      "bias_score": 0.0,
+      "geo": {
+        "place": "Houston, US",
+        "lat": 29.763476,
+        "lon": -95.373538
+      },
+      "headlines": [
+        {
+          "text": "Client Challenge",
+          "bias": "center",
+          "url": "https://www.chron.com/news/article/some-in-florida-and-alabama-without-power-as-22472178.php"
+        },
+        {
+          "text": "Some in Florida and Alabama without power as Isaias moves north to Appalachians and Mid-Atlantic",
+          "bias": "center",
+          "url": "https://www.thepress.net/news/national/some-in-florida-and-alabama-without-power-as-isaias-moves-north-to-appalachians-and-mid/article_a03305f4-936a-56d9-8b73-b88fc21dedb0.html"
+        },
+        {
+          "text": "Nearly 396,000 without power in Florida and Alabama as Isaias moves north to Appalachians and Mid-Atlantic",
+          "bias": "center",
+          "url": "https://www.azfamily.com/2026/10/11/nearly-396000-without-power-florida-alabama-isaias-moves-north-appalachians-mid-atlantic/"
+        },
+        {
+          "text": "Nearly 396,000 without power in Florida and Alabama as Isaias moves north to Appalachians and Mid-Atlantic",
+          "bias": "center",
+          "url": "https://www.wndu.com/2026/10/11/nearly-396000-without-power-florida-alabama-isaias-moves-north-appalachians-mid-atlantic/"
+        },
+        {
+          "text": "Some in Florida and Alabama without power as Isaias brings rain to Appalachians and mid-Atlantic",
+          "bias": "center",
+          "url": "https://www.daytondailynews.com/nation-world/some-in-florida-and-alabama-without-power-as-isaias-moves-north-to-appalachians-and-mid/article_9d335dc4-d8a0-52db-b013-84320073dc65.html"
+        },
+        {
+          "text": "Isaias Leaves More Than 390,000 Alabama and Florida Customers Without Power as Officials Warn About Generator Carbon Monoxide",
+          "bias": "center",
+          "url": "https://www.medicaldaily.com/isaias-power-outages-generator-carbon-monoxide-alabama-florida-479823"
+        }
+      ]
+    },
+    {
+      "id": "44c56d71-b977-4357-94ae-12b747cc6d75",
+      "label": "Guilfoyle told Greek businessman ‘I’m going to make you a lot of f—ing money’: Report",
+      "group": "story",
+      "size": 10,
+      "summary": "ΕΑΝ ΠΡΟΤΙΜΑΤΕ ΕΛΛΗΝΙΚΑ ΠΑΤΗΣΤΕ ΤΗ ΣΗΜΑΙΑ ΣΤΟ ΚΑΤΩ ΜΕΡΟΣ ΤΗΣ ΟΘΟΝΗΣ New reports from The New York Times and The Wall Street Journal reveal Kimberly Guilfoyle’s boasts about luxury trips funded by wealthy Greek businessmen and growing diplomatic embarrassment in Athens. The revelations intensify scrutiny of Trump’s ambassador to Greece, who is already under investigation […]",
+      "sources_count": 2,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 1
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Guilfoyle Scandal Fallout Continues in Greece and in the U.S.",
+          "bias": "unknown",
+          "url": "http://www.helleniscope.com/2026/10/10/guilfoyle-scandal-deepens-in-greece-and-in-the-u-s/"
+        }
+      ]
+    },
+    {
+      "id": "22cfe393-d42b-4593-a25e-e0c607c51ed3",
+      "label": "Supreme Court Ruling Could Send Freed Tennessee Man Back to Prison",
+      "group": "story",
+      "size": 10,
+      "summary": "WASHINGTON — Two years after his release from prison, Patrick Dewayne Smith spends Sundays with his family in a modest brick church with a white steeple in rural Tennessee. He works two jobs. He goes to ball games to cheer…",
+      "sources_count": 1,
+      "bias": {
+        "left": 2,
+        "center": 2,
+        "right": 0,
+        "unknown": 0
+      },
+      "bias_score": -0.5,
+      "geo": {
+        "place": "Cherokee County, US",
+        "lat": 34.22841,
+        "lon": -84.494711
+      },
+      "headlines": [
+        {
+          "text": "A freed man faces life back in prison after a Supreme Court ruling on the First Step Act",
+          "bias": "center",
+          "url": "https://www.virginislandsdailynews.com/ap/washington/a-freed-man-faces-life-back-in-prison-after-a-supreme-court-ruling-on-the/article_c0c85c24-9f45-5d6d-9c55-d0337d0e454f.html"
+        },
+        {
+          "text": "A freed man faces life back in prison after a Supreme Court ruling on the First Step Act",
+          "bias": "leanLeft",
+          "url": "https://www.crossville-chronicle.com/news/tennessee_news/a-freed-man-faces-life-back-in-prison-after-a-supreme-court-ruling-on-the/article_604c7fb8-60ec-5abf-8de9-9d462373a9f3.html"
+        },
+        {
+          "text": "A freed man faces life back in prison after a Supreme Court ruling on the First Step Act",
+          "bias": "center",
+          "url": "https://www.standard-journal.com/ap/washington/a-freed-man-faces-life-back-in-prison-after-a-supreme-court-ruling-on-the/article_ada2f188-ad7d-5b3b-8b70-1223c6b27bd1.html"
+        },
+        {
+          "text": "A freed man faces life back in prison after a Supreme Court ruling on the First Step Act",
+          "bias": "leanLeft",
+          "url": "https://www.elpasoinc.com/news/ap_wire/a-freed-man-faces-life-back-in-prison-after-a-supreme-court-ruling-on-the/article_99250a09-bbd5-5dcc-81ed-0e98d306d15a.html"
+        }
+      ]
+    },
+    {
+      "id": "3b65aedc-699d-436d-be91-007c3630207f",
+      "label": "Tariffs Fuel Factory Layoffs as Republicans Face Midterm Pressure",
+      "group": "story",
+      "size": 10,
+      "summary": "NEW YORK — Nelson Vandermeer voted Republican for decades but balked at supporting President Donald T...",
+      "sources_count": 1,
+      "bias": {
+        "left": 4,
+        "center": 0,
+        "right": 0,
+        "unknown": 1
+      },
+      "bias_score": -1.0,
+      "geo": {
+        "place": "United States",
+        "lat": 37.84288,
+        "lon": -95.714006
+      },
+      "headlines": [
+        {
+          "text": "Republicans face midterm backlash from factory workers squeezed out of jobs by Trump’s tariffs",
+          "bias": "leanLeft",
+          "url": "https://www.timesleader.com/news/1762249/republicans-face-midterm-backlash-from-factory-workers-squeezed-out-of-jobs-by-trumps-tariffs"
+        },
+        {
+          "text": "Republicans face midterm backlash from factory workers squeezed out of jobs by Trump's tariffs",
+          "bias": "leanLeft",
+          "url": "https://www.mcalesternews.com/region/republicans-face-midterm-backlash-from-factory-workers-squeezed-out-of-jobs-by-trumps-tariffs/article_2032c84a-8ea5-5b14-aaea-03bb078f20c9.html"
+        },
+        {
+          "text": "Republicans face midterm backlash from factory workers squeezed out of jobs by Trump's tariffs",
+          "bias": "leanLeft",
+          "url": "https://www.dailyindependent.com/national/republicans-face-midterm-backlash-from-factory-workers-squeezed-out-of-jobs-by-trumps-tariffs/article_165274c3-0530-5369-8c5b-beae5abc1801.html"
+        },
+        {
+          "text": "Trump's trade wars sting US manufacturers ahead of midterms",
+          "bias": "leanLeft",
+          "url": "https://www.newindianexpress.com/world/2026/Oct/11/trumps-trade-wars-sting-us-manufacturers-ahead-of-midterms"
+        },
+        {
+          "text": "Trump's trade wars sting US manufacturers ahead of midterms",
+          "bias": "unknown",
+          "url": "https://www.coastaltvnews.com/business/trumps-trade-wars-sting-us-manufacturers-ahead-of-midterms/article_e59937b2-ca74-5a98-aa44-0aff6b42d169.html"
+        }
+      ]
+    },
+    {
+      "id": "7b45314f-a4bc-4a13-acfa-36fce1e9f013",
+      "label": "Trump Expands Tariffs on 60 Economies as Polls Show Rising Disapproval",
+      "group": "story",
+      "size": 10,
+      "summary": "President Donald Trump shows no signs of budging from a trade policy that many Americans don't like as the midterm elections loom",
+      "sources_count": 2,
+      "bias": {
+        "left": 0,
+        "center": 1,
+        "right": 0,
+        "unknown": 0
+      },
+      "bias_score": 0.0,
+      "geo": {
+        "place": "Boston, US",
+        "lat": 42.353752,
+        "lon": -71.054334
+      },
+      "headlines": [
+        {
+          "text": "Trump sticks with tariffs even as US voters turn against them before the midterms",
+          "bias": "center",
+          "url": "https://www.boston25news.com/news/business/trump-sticks-with/BYPLZRY66M6WZNIVH6M6VN3TVY/"
+        }
+      ]
+    },
+    {
+      "id": "2ecac120-cd6c-4f6b-9961-ccb2b5559cee",
+      "label": "Montana Supreme Court Race Pits Eddy Against Wilson Amid Nonpartisan Vote",
+      "group": "story",
+      "size": 10,
+      "summary": "Montana’s voters are set to decide a ballot proposal that would enshrine nonpartisan judicial elections in the state constitution. The state’s Supreme Court race is officially nonpartisan, but one candidate this year is backed by the state Republican Party and…",
+      "sources_count": 2,
+      "bias": {
+        "left": 1,
+        "center": 3,
+        "right": 2,
+        "unknown": 1
+      },
+      "bias_score": 0.167,
+      "geo": {
+        "place": "Georgia, US",
+        "lat": 32.315616,
+        "lon": -83.094167
+      },
+      "headlines": [
+        {
+          "text": "Nonpartisan state Supreme Court elections are being put to the test in Montana",
+          "bias": "leanRight",
+          "url": "https://www.wjfw.com/nonpartisan-state-supreme-court-elections-are-being-put-to-the-test-in-montana/article_4bc09f4f-f1da-517d-aaca-90970a62eaba.html"
+        },
+        {
+          "text": "Nonpartisan state Supreme Court elections are being put to the test in Montana",
+          "bias": "unknown",
+          "url": "https://www.rockdalecitizen.com/news/state/nonpartisan-state-supreme-court-elections-are-being-put-to-the-test-in-montana/article_5bcd124c-8d00-50cb-a213-912dae68b06f.html"
+        },
+        {
+          "text": "Nonpartisan state Supreme Court elections are being put to the test in Montana",
+          "bias": "center",
+          "url": "https://www.wftv.com/news/politics/nonpartisan-state/FLJVZPK6C4ZINGLIZU57KUL7NI/"
+        },
+        {
+          "text": "Nonpartisan state Supreme Court elections are being put to the test in Montana",
+          "bias": "center",
+          "url": "https://www.gwinnettdailypost.com/news/state/nonpartisan-state-supreme-court-elections-are-being-put-to-the-test-in-montana/article_3230634b-392d-5bd1-b3c5-f701f4699ea7.html"
+        },
+        {
+          "text": "Nonpartisan state Supreme Court elections are being put to the test in Montana",
+          "bias": "leanRight",
+          "url": "https://www.heraldpalladium.com/news/state/nonpartisan-state-supreme-court-elections-are-being-put-to-the-test-in-montana/article_530ee40d-819b-592d-b0f3-470ef5dae72d.html"
+        },
+        {
+          "text": "Nonpartisan state Supreme Court elections are being put to the test in Montana",
+          "bias": "leanLeft",
+          "url": "https://www.wataugademocrat.com/ap/national/nonpartisan-state-supreme-court-elections-are-being-put-to-the-test-in-montana/article_2063f447-91a8-53c2-8c5e-d31a079c0d3a.html"
+        },
+        {
+          "text": "Nonpartisan state Supreme Court elections are being put to the test in Montana",
+          "bias": "center",
+          "url": "https://www.krqe.com/news/national/ap-nonpartisan-state-supreme-court-elections-are-being-put-to-the-test-in-montana/"
+        }
+      ]
+    },
+    {
+      "id": "9c7d4d33-c57d-4aa4-aa9b-f0ae0b516cfa",
+      "label": "U.S. measles cases surpass 4,000, with over 25 percent coming from Pennsylvania",
+      "group": "story",
+      "size": 10,
+      "summary": "Measles cases for the calendar year surpassed 4,000 for the first time in decades, with as many as five deaths in Pennsylvania, as the federal government steps in with financial help for states but also fans vaccination fears and skepticism.\nA weekly report from the Centers for Disease Control and Prevention showed 4,080 cases this year as of Oct.\nContinue reading Measles Cases Reach 4,080 for the Year — the Highest in Decades at Royal Examiner.",
+      "sources_count": 2,
+      "bias": {
+        "left": 10,
+        "center": 5,
+        "right": 1,
+        "unknown": 5
+      },
+      "bias_score": -0.562,
+      "geo": {
+        "place": "St. Louis, US",
+        "lat": 38.633346,
+        "lon": -90.217236
+      },
+      "headlines": [
+        {
+          "text": "Measles Cases Reach 4,080 for the Year — the Highest in Decades",
+          "bias": "leanRight",
+          "url": "https://royalexaminer.com/measles-cases-reach-4080-for-the-year-the-highest-in-decades/"
+        },
+        {
+          "text": "Measles cases reach 4,080 for the year — the highest in decades",
+          "bias": "leanLeft",
+          "url": "https://azmirror.com/2026/10/12/repub/measles-cases-reach-4080-for-the-year-the-highest-in-decades/"
+        },
+        {
+          "text": "Measles cases reach 4,080 for the year — the highest in decades",
+          "bias": "leanLeft",
+          "url": "https://virginiamercury.com/2026/10/12/repub/measles-cases-reach-4080-for-the-year-the-highest-in-decades/"
+        },
+        {
+          "text": "Measles cases reach 4,080 for the year — the highest in decades",
+          "bias": "leanLeft",
+          "url": "https://missouriindependent.com/2026/10/12/repub/measles-cases-reach-4080-for-the-year-the-highest-in-decades/"
+        },
+        {
+          "text": "Measles cases reach 4,080 for the year — the highest in decades",
+          "bias": "leanLeft",
+          "url": "https://oregoncapitalchronicle.com/2026/10/12/repub/measles-cases-reach-4080-for-the-year-the-highest-in-decades/"
+        },
+        {
+          "text": "Measles cases reach 4,080 for the year — the highest in decades",
+          "bias": "left",
+          "url": "https://alabamareflector.com/2026/10/12/repub/measles-cases-reach-4080-for-the-year-the-highest-in-decades/"
+        },
+        {
+          "text": "U.S. Measles Cases Surpass Four-Thousand This Year",
+          "bias": "unknown",
+          "url": "https://www.lightnercommunications.com/2026/10/12/u-s-measles-cases-surpass-four-thousand-this-year/"
+        },
+        {
+          "text": "Measles cases reach 4,080 for the year — the highest in decades",
+          "bias": "leanLeft",
+          "url": "https://nebraskaexaminer.com/2026/10/12/repub/measles-cases-reach-4080-for-the-year-the-highest-in-decades/"
+        }
+      ]
+    },
+    {
+      "id": "20985241-48c6-473b-a93b-d54ee6afdd23",
+      "label": "Trump says he will ‘ultimately make decision’ on Fort Hood shooter execution livestream",
+      "group": "story",
+      "size": 10,
+      "summary": "While he supports Hasan’s execution, Westerman said, “a public execution is not in the best interest of the United States or our justice system, which, for 250 years, has been marked by dignity and great respect around the world.”",
+      "sources_count": 1,
+      "bias": {
+        "left": 3,
+        "center": 1,
+        "right": 0,
+        "unknown": 4
+      },
+      "bias_score": -0.75,
+      "geo": {
+        "place": "Germany",
+        "lat": 51.255456,
+        "lon": 10.458559
+      },
+      "headlines": [
+        {
+          "text": "Westerman calls on President Trump to cancel planned “public spectacle” of livestreamed execution",
+          "bias": "leanLeft",
+          "url": "https://arktimes.com/arkansas-blog/2026/10/12/westerman-calls-on-president-trump-to-cancel-planned-public-spectacle-of-livestreamed-execution"
+        },
+        {
+          "text": "Cardinal Müller Criticizes Threat in USA",
+          "bias": "unknown",
+          "url": "https://www.die-tagespost.de/kirche/aktuell/kardinal-mueller-kritisiert-verrohung-in-usa-art-279533"
+        },
+        {
+          "text": "U.S. May Have 1st Public Execution in Almost a Century; Trump Government Assesses Transmitting Live Firing of Convicted Ex-Military",
+          "bias": "unknown",
+          "url": "https://ndmais.com.br/seguranca/eua-execucao-publica-governo-trump-ao-vivo-fuzilamento-ex-militar-condenado/"
+        },
+        {
+          "text": "Execution Live on the Internet: How Do the Tech Companies Decide?",
+          "bias": "unknown",
+          "url": "https://onlinemarketing.de/digitalpolitik/hinrichtung-livestream-usa-meta-youtube-tiktok"
+        },
+        {
+          "text": "The fight against terrorism and antisemitism: Oct. 11, 2026",
+          "bias": "unknown",
+          "url": "https://www.sdjewishworld.com/2026/10/11/the-fight-against-terrorism-and-antisemitism-oct-11-2026/"
+        },
+        {
+          "text": "Donald Trump Says He Will Make Final Decision About Whether or Not to Livestream Nidal Hasan’s Execution",
+          "bias": "leanLeft",
+          "url": "https://people.com/donald-trump-says-he-will-make-final-decision-about-nidal-hasan-execution-livestream-12168214"
+        },
+        {
+          "text": "Trump to make 'final decision' on Fort Hood execution broadcast as outrage grows",
+          "bias": "leanLeft",
+          "url": "https://www.themirror.com/news/us-news/trump-decision-broadcast-hasan-execution-2063671"
+        },
+        {
+          "text": "Catholics are standing on a scaffold over death: Will we accept the offered coin?",
+          "bias": "center",
+          "url": "https://cruxnow.com/news-analysis/2026/10/catholics-are-standing-on-a-scaffold-over-death-will-we-accept-the-offered-coin/"
+        }
+      ]
+    },
+    {
+      "id": "ec8331a9-9bc8-4a28-8b4f-9f857b0476a2",
+      "label": "Trump continues red state campaign swing with Montana, Arizona rallies next week",
+      "group": "story",
+      "size": 10,
+      "summary": "President Donald Trump is coming to Kalispell Wednesday. He is slated to appear at Majestic Valley Arena, according to the venue’s website. Doors for the Oct. 14 event open at 2:45 p.m., and the program begins at 4:45 p.m., with Trump scheduled to speak at 6:15 p.m., according to an advisory from the Republican National […]",
+      "sources_count": 1,
+      "bias": {
+        "left": 1,
+        "center": 6,
+        "right": 0,
+        "unknown": 2
+      },
+      "bias_score": -0.143,
+      "geo": {
+        "place": "Missoula, US",
+        "lat": 46.884271,
+        "lon": -113.986429
+      },
+      "headlines": [
+        {
+          "text": "President Donald Trump to Appear in Kalispell Wednesday",
+          "bias": "center",
+          "url": "https://flatheadbeacon.com/2026/10/12/president-donald-trump-to-appear-in-kalispell-wednesday/"
+        },
+        {
+          "text": "Trump Returning to Montana for Kalispell Campaign Rally",
+          "bias": "unknown",
+          "url": "https://politics406.com/trump-returning-to-montana-for-kalispell-campaign-rally/"
+        },
+        {
+          "text": "Trump to hold Montana and Arizona rallies ahead of elections",
+          "bias": "unknown",
+          "url": "https://ua.news/en/world/prezident-tramp-provede-mitingi-v-montani-ta-arizoni-pered-viborami-the-hill"
+        },
+        {
+          "text": "President Trump's Montana rally confirmed for next Wednesday in Kalispell",
+          "bias": "center",
+          "url": "https://missoulian.com/news/state-regional/article_41d196f4-0500-5172-9602-9d7d36a5964e.html"
+        },
+        {
+          "text": "President Trump's Montana rally confirmed for Wednesday in Kalispell",
+          "bias": "center",
+          "url": "https://helenair.com/news/state-regional/government-politics/article_60a13ed3-4b96-4793-9ffd-e4f32a4dba9d.html"
+        },
+        {
+          "text": "President Trump to rally for Aaron Flint in Kalispell",
+          "bias": "leanLeft",
+          "url": "https://www.timeswv.com/cnhi_network/president-trump-to-rally-for-aaron-flint-in-kalispell/article_68dfabc9-6cb0-5066-8784-d93eddd4d752.html"
+        },
+        {
+          "text": "President Trump to rally for Aaron Flint in Kalispell",
+          "bias": "center",
+          "url": "https://www.montanarightnow.com/elections/president-trump-to-rally-for-aaron-flint-in-kalispell/article_1071ebfd-8c64-4e3d-9732-7e3188889a0f.html"
+        },
+        {
+          "text": "Trump returning to Montana for campaign event in Kalispell",
+          "bias": "center",
+          "url": "https://www.kxlf.com/news/trump-returning-to-montana-for-campaign-event-in-kalispell"
+        }
+      ]
+    },
+    {
+      "id": "rss_12964_1791682180429_4",
+      "label": "Trump urges Sen. John Fetterman to switch parties and become a Republican",
+      "group": "story",
+      "size": 13,
+      "summary": "President Donald Trump told reporters over the weekend that he'd 'love to see' Democratic Sen. John Fetterman switch parties and become a Republican.",
+      "sources_count": 4,
+      "bias": {
+        "left": 1,
+        "center": 1,
+        "right": 0,
+        "unknown": 0
+      },
+      "bias_score": -0.5,
+      "geo": {
+        "place": "Philadelphia, US",
+        "lat": 39.943903,
+        "lon": -75.178362
+      },
+      "headlines": [
+        {
+          "text": "President Trump says he'd 'love to see' Sen. Fetterman become a Republican",
+          "bias": "leanLeft",
+          "url": "https://www.phillyvoice.com/president-trump-john-fetterman-republican-party/"
+        },
+        {
+          "text": "Trump urges Pa.’s Democratic Sen. John Fetterman to switch parties",
+          "bias": "center",
+          "url": "https://www.pennlive.com/elections/2026/10/trump-urges-pas-democratic-sen-john-fetterman-to-switch-parties.html"
+        }
+      ]
+    },
+    {
+      "id": "02dc898f-d478-4e65-a8b6-49c40453d2dc",
+      "label": "Pope Leo says will undergo surgery for small growth on lung",
+      "group": "story",
+      "size": 10,
+      "summary": "Pope Leo XIV will be hospitalized for surgery After 17 months of pontificate at a frantic rate, the holy father announced on Sunday that he will be undergoing surgery by a pulmonary nodule, detected “at a very early stage”. A lung nodule is a small mass or lesion in lung tissue, which is usually detected by an image examination [...] Radio France International El Mundo CR",
+      "sources_count": 1,
+      "bias": {
+        "left": 10,
+        "center": 34,
+        "right": 14,
+        "unknown": 223
+      },
+      "bias_score": 0.069,
+      "geo": {
+        "place": "Paris, France",
+        "lat": 48.847565,
+        "lon": 2.348356
+      },
+      "headlines": [
+        {
+          "text": "Pope Leo XIV Will Be Hospitalized for Surgery",
+          "bias": "unknown",
+          "url": "https://elmundo.cr/mundo/el-papa-leon-xiv-sera-hospitalizado-para-ser-operado/"
+        },
+        {
+          "text": "Pope Leo XIV Will Be Hospitalized. The Vatican Has Confirmed the Surgery.",
+          "bias": "unknown",
+          "url": "https://warszawawpigulce.pl/papiez-leon-xiv-trafi-do-szpitala-watykan-potwierdzil-operacje/"
+        },
+        {
+          "text": "Pope Leo XIV Hospitalized for a Pulmonary Nodule: \"The Pre-Conclave Is Already Preparing\"",
+          "bias": "leanLeft",
+          "url": "https://www.marianne.net/monde/europe/le-pape-leon-xiv-hospitalise-pour-un-nodule-pulmonaire-le-pre-conclave-se-prepare-deja"
+        },
+        {
+          "text": "The Pope Will Be Operated on Tuesday at Gemelli Policlinic Hospital",
+          "bias": "unknown",
+          "url": "https://www.eldiarioweb.com/2026/10/el-papa-sera-operado-este-martes-en-el-hospital-policlinico-gemelli/"
+        },
+        {
+          "text": "Pope to Undergo Surgery to Remove Small Growth on Lung – Axadle",
+          "bias": "unknown",
+          "url": "https://axadletimes.com/ax-world/pope-undergo-surgery-remove-small-growth-lung.html5"
+        },
+        {
+          "text": "Pope Leo XIV Will Enter the Hospital by Pulmonary Nodule: What Is His State of Health?",
+          "bias": "unknown",
+          "url": "https://desdelafe.mx/noticias/la-voz-del-papa/papa-leon-cual-es-estado-de-salud/"
+        },
+        {
+          "text": "Pope Leo XIV, Nodule to the Lung: Tomorrow the Hospitalization to Gemini",
+          "bias": "unknown",
+          "url": "https://www.ilsud24.it/2026/10/12/papa-leone-xiv-nodulo-al-polmone-domani-il-ricovero-al-gemelli/"
+        },
+        {
+          "text": "Pope Leo XIV Will Be Operated During These Days: This Is the Reason",
+          "bias": "unknown",
+          "url": "https://www.radioimagina.cl/2026/10/papa-leon-xiv-sera-operado-durante-estos-dias-esta-es-la-razon/"
+        }
+      ]
+    },
+    {
+      "id": "c0303144-e24c-4dd8-8fa1-796762d3d010",
+      "label": "House Republican Moves to Block Import of Russian Diesel Fuel",
+      "group": "story",
+      "size": 12,
+      "summary": "Trump's deal with Putin may alleviate some pain at the pump - but at what price?",
+      "sources_count": 3,
+      "bias": {
+        "left": 1,
+        "center": 2,
+        "right": 1,
+        "unknown": 5
+      },
+      "bias_score": 0.0,
+      "geo": {
+        "place": "Orlando, US",
+        "lat": 28.540263,
+        "lon": -81.379111
+      },
+      "headlines": [
+        {
+          "text": "Congress Calls Foul on Trump-Putin Diesel Deal",
+          "bias": "right",
+          "url": "https://www.libertynation.com/congress-calls-foul-on-trump-putin-diesel-deal/"
+        },
+        {
+          "text": "\"Trum Is Ready to Lift Sanctions Before the End of the conflict.\" We're Talking About Moscow and Washington's Big Economic Game.",
+          "bias": "unknown",
+          "url": "https://www.e1.ru/text/politics/2026/10/12/76694140/"
+        },
+        {
+          "text": "Six senators call for Trump administration to ‘immediately reverse course’ on Russian diesel plan",
+          "bias": "leanLeft",
+          "url": "https://www.orlandosentinel.com/2026/10/11/six-senators-call-for-trump-administration-to-immediately-reverse-course-on-russian-diesel-plan/"
+        },
+        {
+          "text": "Trump-Putin Diesel Deal Immoral, Ineffective, Illegal",
+          "bias": "center",
+          "url": "https://dakotafreepress.com/2026/10/11/trump-putin-diesel-deal-immoral-ineffective-illegal/"
+        },
+        {
+          "text": "King, Collins, object to diesel deal with Russia",
+          "bias": "center",
+          "url": "https://wgme.com/news/nation-world/king-collins-object-to-diesel-deal-with-russia"
+        },
+        {
+          "text": "The US Congress Will Soon Consider a Bill to Ban the Purchase of Russian Diesel.",
+          "bias": "unknown",
+          "url": "https://zbruc.eu/node/125519"
+        },
+        {
+          "text": "Milen Keremedchiev: The Deal Between Trump and Putin Could Be Blocked in Congress",
+          "bias": "unknown",
+          "url": "https://www.varna24.bg/novini/Bylgaria/Milen-Keremedchiev-Sdelkata-mezhdu-Trump-i-Putin-mozhe-da-bude-blokirana-v-Kongresa-3037836"
+        },
+        {
+          "text": "US Republicans plan bipartisan Bill to block Trump’s Russian oil purchases",
+          "bias": "unknown",
+          "url": "https://www.nationalheraldindia.com/international/us-republicans-plan-bipartisan-bill-to-block-donald-trumps-russian-oil-purchases"
+        }
+      ]
+    },
+    {
+      "id": "c267aa16-ee73-4966-9fb8-633f3edd6f51",
+      "label": "US military says it disabled cargo vessel trying to run Iran blockade",
+      "group": "story",
+      "size": 12,
+      "summary": "The US military has disabled the Panamanian-flagged commercial cargo ship Ocean Molica in the Gulf of Oman.\nThe post US fighter hit a cargo ship trying to break the blockade of Iran (video) appeared first on Ukrainian Shipping Magazine - Shipping News of Ukraine and the World.",
+      "sources_count": 3,
+      "bias": {
+        "left": 0,
+        "center": 3,
+        "right": 0,
+        "unknown": 8
+      },
+      "bias_score": 0.0,
+      "geo": {
+        "place": "Vero Beach, US",
+        "lat": 27.64373,
+        "lon": -80.392587
+      },
+      "headlines": [
+        {
+          "text": "US Fighter Hits Cargo Ship Trying to Break Iran Blockade",
+          "bias": "unknown",
+          "url": "https://usm.media/vinishhuvach-ssha-uraziv-vantazhne-sudno-yake-namagalosya-prorvati-blokadu-iranu-video/"
+        },
+        {
+          "text": "U.S. Hits Chinese-Owned Freighter, Claiming it Ran Blockade on Iran",
+          "bias": "center",
+          "url": "https://maritime-executive.com/article/u-s-claims-to-have-hit-chinese-owned-freighter-that-ran-blockade-on-iran"
+        },
+        {
+          "text": "US Fighter Jet Disables Cargo Vessel Attempting to Violate Naval Blockade",
+          "bias": "unknown",
+          "url": "https://www.domigood.com/2026/10/us-fighter-jet-disables-cargo-vessel.html"
+        },
+        {
+          "text": "US Fighter Jet Disables Cargo Ship Leaving Iranian Port in Gulf of Oman",
+          "bias": "unknown",
+          "url": "https://lowerbuckstimes.com/2026/10/11/us-fighter-jet-disables-cargo-ship-leaving-iranian-port-in-gulf-of-oman/"
+        },
+        {
+          "text": "The U.S. Hit a Cargo Ship that Ignored Its Warnings: \"The Propulsion System Has Been Completely Deactivated.",
+          "bias": "unknown",
+          "url": "https://focuspress.ro/sua-a-lovit-o-nava-cargo-care-i-a-ignorat-avertismentele-a-fost-dezactivat-complet-sistemul-de-propulsie-0e279d20d/"
+        },
+        {
+          "text": "Americans Rocket Cargo Ship in Gulf of Oman - Say It \"Ignored Warnings\"",
+          "bias": "unknown",
+          "url": "https://www.morski.hr/amerikanci-raketirali-teretni-brod-u-omanskom-zaljevu-kazu-da-je-ignorirao-upozorenja/"
+        },
+        {
+          "text": "The US Military Struck a Ship Attempting to Break the Naval Blockade Imposed on Iran.",
+          "bias": "unknown",
+          "url": "https://www.61saat.com/abd-ordusu-irana-uygulanan-deniz-ablukasini-delmeye-calisan-gemiyi-vurdu"
+        },
+        {
+          "text": "US Military Neutralizes Cargo Ship Attempting to Blockade Iran.",
+          "bias": "unknown",
+          "url": "https://www.arabnews.jp/en/middle-east/us-military-says-it-disabled-cargo-vessel-trying-to-run-iran-blockade-3000710"
+        }
+      ]
+    },
+    {
+      "id": "280c1079-581d-459d-9aa5-d926c48c4165",
+      "label": "DOJ launches antitrust inquiry against TV networks over White House pool coverage",
+      "group": "story",
+      "size": 10,
+      "summary": "WASHINGTON (AP) — The U.S. Department of Justice is investigating whether the decision of the White House television press pool to halt coverage of President Donald Trump last month violated antitrust law, an agency spokesperson said Saturday.\nEmily Covington, a spokesperson for the department, said group boycotts among business competitors might violate U.S. law. “The Antitrust Division is simply investigating to determine whether these news or…",
+      "sources_count": 1,
+      "bias": {
+        "left": 2,
+        "center": 6,
+        "right": 3,
+        "unknown": 10
+      },
+      "bias_score": 0.091,
+      "geo": {
+        "place": "Indonesia",
+        "lat": -2.080378,
+        "lon": 116.141911
+      },
+      "headlines": [
+        {
+          "text": "DOJ Says It’s Investigating Whether White House TV Pool’s Coverage Halt Violated Antitrust Law",
+          "bias": "unknown",
+          "url": "https://firstamendmentwatch.org/doj-says-its-investigating-whether-white-house-tv-pools-coverage-halt-violated-antitrust-law/"
+        },
+        {
+          "text": "DOJ Launches Antitrust Investigation Against ABC News, CBS News, NBC News, CNN, and Fox News",
+          "bias": "center",
+          "url": "https://www.adweek.com/tvnewser/doj-launches-antitrust-investigation-against-abc-news-cbs-news-nbc-news-cnn-and-fox-news/"
+        },
+        {
+          "text": "DOJ TV pool inquiry tests shared coverage",
+          "bias": "unknown",
+          "url": "https://www.contentgrip.com/doj-tv-pool-antitrust/"
+        },
+        {
+          "text": "Antitrust or Payback? The Justice Department Is Investigating the Networks That Stood With CNN",
+          "bias": "unknown",
+          "url": "https://myrtlebeachnews.com/investigating-the-networks/"
+        },
+        {
+          "text": "The US Department of Justice Is Investigating the Media",
+          "bias": "unknown",
+          "url": "https://www.dagensmedia.se/ljud-och-rorligt/tv/usa-s-justitiedepartement-utreder-medier/"
+        },
+        {
+          "text": "White House TV Pool Boycott Triggers DOJ Antitrust Investigation",
+          "bias": "unknown",
+          "url": "https://liberoreporter.it/2026/10/eng-news/white-house-tv-pool-boycott-triggers-doj-antitrust-investigation.html"
+        },
+        {
+          "text": "‘Brazen attempt to try to intimidate Journalists’: Trump DOJ launches Antitrust Probe into News Networks",
+          "bias": "unknown",
+          "url": "https://nexusnewsfeed.com/article/geopolitics/brazen-attempt-to-try-to-intimidate-journalists-trump-doj-launches-antitrust-probe-into-news-networks/"
+        },
+        {
+          "text": "U.S. Justice Is Investigating Alleged Agreements Between Major TV Stations in the Dispute over the TV Pool.",
+          "bias": "unknown",
+          "url": "https://www.turi2.de/aktuell/us-justiz-prueft-mutmassliche-absprachen-grosser-tv-sender-im-streit-um-den-fernseh-pool/"
+        }
+      ]
+    },
+    {
+      "id": "49a83ec2-8540-4b06-85e1-d65daad9d04c",
+      "label": "Pentagon raises official toll of troops who died during war with Iran to 21",
+      "group": "story",
+      "size": 19,
+      "summary": "WASHINGTON — The Pentagon has again quietly raised the number of U.S. service members killed and wounded during operations related to the Iran war amid widening criticism over the lack of transparency about the conflict’s human and operational costs.The military now is reporting that 21 U.S. service members have been killed, from 18, and 865 wounded, up by 98 since August.The changes were posted Friday evening to the Defense Casualty Analysis Sy…",
+      "sources_count": 8,
+      "bias": {
+        "left": 1,
+        "center": 1,
+        "right": 1,
+        "unknown": 2
+      },
+      "bias_score": 0.0,
+      "geo": {
+        "place": "Bristol, US",
+        "lat": 41.679156,
+        "lon": -72.949189
+      },
+      "headlines": [
+        {
+          "text": "Pentagon again increases number of US casualties in Iran war",
+          "bias": "center",
+          "url": "https://www.westhawaiitoday.com/2026/10/11/nation-world-news/pentagon-again-increases-number-of-us-casualties-in-iran-war/"
+        },
+        {
+          "text": "Pentagon quietly admits true death toll of Iran war as 21 Americans are killed and hundreds are injured",
+          "bias": "right",
+          "url": "https://legitgov.org/pentagon-quietly-admits-true-death-toll-of-iran-war-as-21-americans-are-killed-and-hundreds-are-injured/"
+        },
+        {
+          "text": "Pentagon raises Iran war death toll to 21",
+          "bias": "leanLeft",
+          "url": "https://taskandpurpose.com/news/pentagon-iran-war-death-toll-21/"
+        },
+        {
+          "text": "Pentagon Raises Iran War Casualty Figures to 21 Dead and 865 Wounded",
+          "bias": "unknown",
+          "url": "https://wanaen.com/pentagon-raises-iran-war-casualty-figures-to-21-dead-and-865-wounded/"
+        },
+        {
+          "text": "Pentagon adds 37 wounded to Iran tally amid reporting questions",
+          "bias": "unknown",
+          "url": "https://timesofmiddleeast.com/pentagon-adds-37-wounded-iran-tally/"
+        }
+      ]
+    },
+    {
+      "id": "decf0a3b-9bfe-4a82-9724-14e94cd7a847",
+      "label": "Attack on Saudi airport leaves 12 dead, dozens wounded: Report",
+      "group": "story",
+      "size": 10,
+      "summary": "The attack by Al-Houthi militia on King Khalid International Airport in the Saudi capital, Riyadh, resulted in a humanitarian tragedy that affected civilians of different nationalities.",
+      "sources_count": 2,
+      "bias": {
+        "left": 13,
+        "center": 15,
+        "right": 12,
+        "unknown": 67
+      },
+      "bias_score": -0.025,
+      "geo": {
+        "place": "Virginia Beach, US",
+        "lat": 36.854034,
+        "lon": -75.931939
+      },
+      "headlines": [
+        {
+          "text": "Bangali's Advocate and Syria's widow... Humanitarian Stories of the Victims of the Attack on Riyadh Airport.",
+          "bias": "unknown",
+          "url": "https://www.aljarida.com/article/147213"
+        },
+        {
+          "text": "No Tajik citizens among those injured in attacks on Riyadh airport — Foreign Ministry",
+          "bias": "unknown",
+          "url": "https://asiaplus.news/en/2026/10/12/no-tajik-citizens-among-those-injured-in-attacks-on-riyadh-airport-foreign-ministry/"
+        },
+        {
+          "text": "Osnato (FdI): Attack on Riad, Full Solidarity with Saudi Arabia. Hitting Civilians Is Unacceptable.",
+          "bias": "unknown",
+          "url": "https://www.lavocedelpatriota.it/osnato-fdi-attacco-a-riad-piena-solidarieta-allarabia-saudita-colpire-i-civili-e-inaccettabile/"
+        },
+        {
+          "text": "Read Saudi Arabia Ke Riyadh Airport Par bada Attack! 12 Ki Maut, 309 Ghayal | Janiye Poora Maamla - Gallinews India",
+          "bias": "unknown",
+          "url": "https://gallinews.com/saudi-arabia-ke-riyadh-airport-par-bada-attack-12-ki-maut-309-ghayal-janiye-poora-maamla/"
+        },
+        {
+          "text": "Chad Condemns Infrastructure Attacks in Saudi Arabia - Journal Du Tchad",
+          "bias": "unknown",
+          "url": "https://journaldutchad.com/le-tchad-condamne-les-attaques-des-infrastructures-en-arabie-saoudite/"
+        },
+        {
+          "text": "How Riyadh airport attack turned Indian family’s Umrah pilgrimage into tragedy",
+          "bias": "unknown",
+          "url": "https://coastaldigest.com/how-riyadh-airport-attack-turned-indian-familys-umrah-pilgrimage-into-tragedy/"
+        },
+        {
+          "text": "After Airport Attack Kills 12, Injures Hundreds, Trump and Netanyahu Explore Possible Action",
+          "bias": "right",
+          "url": "https://cbn.com/news/israel/after-airport-attack-kills-12-injures-hundreds-trump-and-netanyahu-explore-possible"
+        },
+        {
+          "text": "Death toll at Riyadh airport rises to 13, one Indian dies",
+          "bias": "unknown",
+          "url": "https://www.nagpurtoday.in/death-toll-at-riyadh-airport-rises-to-13-one-indian-dies/"
+        }
+      ]
+    },
+    {
+      "id": "d46f1e86-90ae-425c-b02c-91e4daeb1a15",
+      "label": "Trump says US may join Saudi strikes against Houthis: 'We'll make a decision very quickly'",
+      "group": "story",
+      "size": 10,
+      "summary": "The conflict with Iran is escalating. Since the US and Israel launched their attack on Iran in February of this year, Iran-backed groups such as Hezbollah in Lebanon and the Houthi rebels in Yemen have joined the fighting, further expanding the conflict...",
+      "sources_count": 2,
+      "bias": {
+        "left": 0,
+        "center": 1,
+        "right": 2,
+        "unknown": 6
+      },
+      "bias_score": 0.667,
+      "geo": {
+        "place": "Osaka, Japan",
+        "lat": 34.690788,
+        "lon": 135.50108
+      },
+      "headlines": [
+        {
+          "text": "President Trump Hints at Joining the Attack on the Houthi Rebels, Potentially Spreading the Conflict Across the Middle East.",
+          "bias": "unknown",
+          "url": "https://www.tokyo-sports.co.jp/articles/-/406383"
+        },
+        {
+          "text": "Trump will regret it if he attacks the Houthis",
+          "bias": "right",
+          "url": "https://www.spectator.com.au/2026/10/trump-will-regret-it-if-he-attacks-the-houthis/"
+        },
+        {
+          "text": "Riyadh Airport Hit by Houthis for Third Time in a Week. Trump Considers Strikes, Saudi Arabia Running Out of Defensive Missiles",
+          "bias": "unknown",
+          "url": "https://dennikn.sk/5616900/letisko-v-rijade-zasiahli-husiovci-tretikrat-za-tyzden-trump-zvazuje-udery-saudskej-arabii-ubudaju-obranne-strely/"
+        },
+        {
+          "text": "Trump Weighs U.S. Role As Deadly Riyadh Airport Strike Escalates Saudi-Houthi Conflict",
+          "bias": "unknown",
+          "url": "https://www.indiandefensenews.in/2026/10/trump-weighs-us-role-as-deadly-riyadh.html"
+        },
+        {
+          "text": "Trump Says U.S. May Join Saudi Campaign Against Houthis After Riyadh Airport Attack",
+          "bias": "unknown",
+          "url": "https://virtualjerusalem.com/article/trump-says-u-s-may-join-saudi-strikes-on-houthis-after-new-riyadh-airport-attack"
+        },
+        {
+          "text": "Huthi Attack on Saudi Airport - Donald Trump: \"We're Going to Look at this.\"",
+          "bias": "leanRight",
+          "url": "https://www.cicero.de/aussenpolitik/huthi-angriff-auf-saudischen-flughafen-donald-trump-wir-werden-uns-das-anschauen"
+        },
+        {
+          "text": "Bitcoin Price Under Pressure as Houthis Attack Saudi Arabia and Trump Signals US Involvement",
+          "bias": "unknown",
+          "url": "https://cryptopotato.com/bitcoin-price-under-pressure-as-houthis-attack-saudi-arabia-and-trump-signals-us-involvement/"
+        },
+        {
+          "text": "Saudi Arabia’s Deadly Day May Pull Trump Into Yemen War",
+          "bias": "unknown",
+          "url": "https://heisenbergreport.com/2026/10/10/saudi-arabias-deadly-day-may-pull-trump-into-yemen-war/"
+        }
+      ]
+    },
+    {
+      "id": "8948e17a-5a9f-48d7-8b4d-b0a5b4acf311",
+      "label": "Rubio pledges US cooperation in Okinawa murder case",
+      "group": "story",
+      "size": 15,
+      "summary": "A U.S. Marine stationed in Okinawa is suspected of murdering a local woman. U.S. Secretary of State Marco Rubio spoke with Foreign Minister Toshimitsu Motegi by phone on October 10, expressing his \"deepest condolences\" regarding the incident. Both Japan and the U.S. pledged to maintain full communication and cooperate fully with the investigation.",
+      "sources_count": 5,
+      "bias": {
+        "left": 0,
+        "center": 1,
+        "right": 2,
+        "unknown": 4
+      },
+      "bias_score": 0.667,
+      "geo": {
+        "place": "Alexandria, US",
+        "lat": 38.80461,
+        "lon": -77.048953
+      },
+      "headlines": [
+        {
+          "text": "Japanese and US Foreign Ministers Hold Phone Call; Foreign Minister Rubio Promises Cooperation in the Investigation of Murder Case in Okinawa.",
+          "bias": "unknown",
+          "url": "https://www.epochtimes.jp/2026/10/389847.html"
+        },
+        {
+          "text": "What I Learned Commanding US Marines on Okinawa – The American Spectator | USA News and Politics",
+          "bias": "right",
+          "url": "https://spectator.org/what-i-learned-commanding-us-marines-on-okinawa/"
+        },
+        {
+          "text": "Rubio offers Japan FM condolences over murder linked to US Marine",
+          "bias": "unknown",
+          "url": "https://thepeninsulaqatar.com/article/10/10/2026/rubio-offers-japan-fm-condolences-over-murder-linked-to-us-marine"
+        },
+        {
+          "text": "Rubio Promises Japan Full Cooperation in Okinawa Murder Investigation",
+          "bias": "leanRight",
+          "url": "https://www.politika.rs/scc/clanak/792605/rubio-obecao-japanu-punu-saradnju-u-istrazi-ubistva-na-okinavi"
+        },
+        {
+          "text": "Rubio pledges US cooperation in Okinawa murder case",
+          "bias": "unknown",
+          "url": "https://www.centraloregondaily.com/news/nation-world/rubio-pledges-us-cooperation-in-okinawa-murder-case/article_9b84b77a-4ab7-59e9-8c78-503e4d23248b.html"
+        },
+        {
+          "text": "Japan Informs U.S. of Concern over ICC Sanctions",
+          "bias": "unknown",
+          "url": "https://www.nippon.com/en/news/yjj2026101000528/"
+        },
+        {
+          "text": "BREAKING NEWS: Japan foreign minister holds phone talks with Rubio, ICC head Akane",
+          "bias": "center",
+          "url": "https://english.kyodonews.net/articles/-/87793"
+        }
+      ]
+    },
+    {
+      "id": "eca50292-018a-4438-9cec-70d426141102",
+      "label": "Evergreen High Uses Support Dogs to Help Students Heal After Shooting",
+      "group": "story",
+      "size": 12,
+      "summary": "Evergreen High School has introduced two Labradors, Norene and Polenta, to help students cope with stress after a school shooting. The dogs, part of a program by Canine Companions, provide a calming presence as students heal. Principal Skylar Artes decided…",
+      "sources_count": 3,
+      "bias": {
+        "left": 0,
+        "center": 1,
+        "right": 0,
+        "unknown": 0
+      },
+      "bias_score": 0.0,
+      "geo": {
+        "place": "Santa Fe, US",
+        "lat": 35.691835,
+        "lon": -105.945238
+      },
+      "headlines": [
+        {
+          "text": "Therapy dogs bring calm and joy to students following shooting at Colorado high school",
+          "bias": "center",
+          "url": "https://www.santafenewmexican.com/ap/national/therapy-dogs-bring-calm-and-joy-to-students-following-shooting-at-colorado-high-school/article_051e7ce6-8a76-5d3d-9d6f-e1c291e17228.html"
+        }
+      ]
+    },
+    {
+      "id": "3b10f05a-e923-4c66-a834-b36c9eafe11f",
+      "label": "Silicon Valley AI Leaders Back Trump’s Self-Regulation Push",
+      "group": "story",
+      "size": 12,
+      "summary": "At Tech Week in San Francisco, venture capitalists and AI founders have been ebullient about the White House's hands-off approach to AI regulation",
+      "sources_count": 3,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 1
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "In Silicon Valley, AI founders Cheer Trump AI Self-Regulation",
+          "bias": "unknown",
+          "url": "https://broadbandbreakfast.com/in-silicon-valley-ai-founders-cheer-trump-ai-self-regulation/"
+        }
+      ]
+    },
+    {
+      "id": "c0659785-38cf-4eca-8874-527298588cc2",
+      "label": "At least 4 dead as weakened Isaias brings threat of floods across the Southeast",
+      "group": "story",
+      "size": 10,
+      "summary": "TALLAHASSEE – Hurricane Isaias made tore through Florida’s western Gulf Coast on Friday evening, bringing storm surge, heavy winds and plenty of rain. Now the region is assessing the damage and starting the recovery process.",
+      "sources_count": 2,
+      "bias": {
+        "left": 12,
+        "center": 51,
+        "right": 12,
+        "unknown": 42
+      },
+      "bias_score": 0.0,
+      "geo": {
+        "place": "Tallahassee, US",
+        "lat": 30.443436,
+        "lon": -84.286009
+      },
+      "headlines": [
+        {
+          "text": "Panhandle Looks to Recovery Efforts After Isaias",
+          "bias": "unknown",
+          "url": "https://www.newsserviceflorida.com/townnews/meteorology/panhandle-looks-to-recovery-efforts-after-isaias/article_632c5f28-d92c-48e5-be4e-b4c5195f4880.html"
+        },
+        {
+          "text": "Post-Hurricane Isaias, 1 death in Florida, rain, flooding and tornado risk",
+          "bias": "center",
+          "url": "https://www.tallahassee.com/story/news/2026/10/10/florida-isaias-landfall-destin-hurricane-track-path-weather/92189203007/"
+        },
+        {
+          "text": "Hurricane Isaias path caused damage in Florida, see photos",
+          "bias": "center",
+          "url": "https://www.palmbeachpost.com/picture-gallery/weather/hurricane/2026/10/10/hurricane-isaias-path-damage-florida-see-photos/92193408007/"
+        },
+        {
+          "text": "Hurricane Isaias damage in Florida, Alabama, after landfall in Destin",
+          "bias": "center",
+          "url": "https://www.floridatoday.com/story/weather/hurricanes/2026/10/10/isaias-damage-photos-florida-pensacola-destin-tallahassee-alabama/92189706007/"
+        },
+        {
+          "text": "Hurricane Isaias makes landfall in Florida as Category 2 storm",
+          "bias": "center",
+          "url": "https://www.wctv.tv/video/2026/10/10/hurricane-isaias-makes-landfall-florida-category-2-storm/"
+        },
+        {
+          "text": "2 dead, 700,000 without power after Isaias slams Florida Panhandle",
+          "bias": "center",
+          "url": "https://www.tampabay.com/hurricane/2026/10/09/hurricane-isaias-florida-panhandle-landfall/"
+        },
+        {
+          "text": "Category 3 Hurricane Isaias Set to Strike Florida Panhandle Tonight (Live Videos)",
+          "bias": "center",
+          "url": "https://southfloridareporter.com/category-3-hurricane-isaias-set-to-strike-florida-panhandle-tonight-live-video/"
+        },
+        {
+          "text": "Hurricane Isaias: Send us your pictures and video of the storm's effect on your neighborhood",
+          "bias": "center",
+          "url": "https://www.wtxl.com/news/local-news/in-your-neighborhood/hurricane-isaias-send-us-your-pictures-and-video-of-the-storms-effect-on-your-neighborhood"
+        }
+      ]
+    },
+    {
+      "id": "807e0678-06ae-4961-b15f-ddbf5e52fbd1",
+      "label": "Talarico makes first appearance in 13-days at music festival after flu absence",
+      "group": "story",
+      "size": 10,
+      "summary": "On this Salcedo Storm Podcast: Chris & Sean talks about some breaking news in the Texas Senate Race.",
+      "sources_count": 1,
+      "bias": {
+        "left": 3,
+        "center": 5,
+        "right": 4,
+        "unknown": 1
+      },
+      "bias_score": 0.083,
+      "geo": {
+        "place": "Leander, US",
+        "lat": 30.580349,
+        "lon": -97.852359
+      },
+      "headlines": [
+        {
+          "text": "The Show Behind The Show, Tala-Freak-Show's Absence Explained Edition?",
+          "bias": "right",
+          "url": "https://texasscorecard.com/podcasts/the-show-behind-the-show-tala-freak-shows-absence-explained-edition/"
+        },
+        {
+          "text": "James Talarico returns to campaign trail at ACL festival after illness spurred GOP calls for “proof of life”",
+          "bias": "leanLeft",
+          "url": "https://www.houstonpublicmedia.org/articles/news/politics/election-2026/2026/10/12/564115/james-talarico-returns-to-campaign-trail-at-acl-festival-after-illness-spurred-gop-calls-for-proof-of-life/"
+        },
+        {
+          "text": "Client Challenge",
+          "bias": "center",
+          "url": "https://www.dallasnews.com/news/politics/article/talarico-returns-senate-campaign-trail-flu-22470670.php"
+        },
+        {
+          "text": "Talarico makes first public appearance since flu-induced absence",
+          "bias": "leanLeft",
+          "url": "https://www.texastribune.org/2026/10/09/james-talarico-returns-to-campaign-trail-flu-austin-city-limits-senate/"
+        },
+        {
+          "text": "So, Where Was Waldo?",
+          "bias": "farRight",
+          "url": "https://www.kunstler.com/p/so-where-was-waldo"
+        },
+        {
+          "text": "Talarico Breaks Silence As Brutal Flu Rumors Swirl - Civil Deadline",
+          "bias": "unknown",
+          "url": "https://civildeadline.com/talarico-breaks-silence-as-brutal-flu-rumors-swirl/"
+        },
+        {
+          "text": "Talarico Reappears on Campaign Trail After 9-Day Absence",
+          "bias": "right",
+          "url": "https://sanangelolive.com/news/politics/2026-10-12/talarico-reappears-campaign-trail-after-9-day-absence"
+        },
+        {
+          "text": "James Talarico Changes His Flu Story While Denying Mental Hospital Rumors",
+          "bias": "right",
+          "url": "https://thepatriotchronicles.com/news-for-you/watch-james-talarico-changes-his-flu-story-while-denying-mental-hospital-rumors/"
+        }
+      ]
+    },
+    {
+      "id": "a05aac06-3117-4e0b-b6de-493fb78da741",
+      "label": "Philadelphia police officer dies from injuries in shooting, another officer injured",
+      "group": "story",
+      "size": 19,
+      "summary": "Officer Shane Seiber died after a West Philadelphia ambush left him shot three times and his partner wounded a dozen times, and a city water worker now faces murder charges. Philadelphia police say officers answering a gun call early Saturday were fired on moments after they stepped onto a porch in the 100 block of North 52nd Street. Officer Shane Seiber, a 40-year-old, 10-year veteran, was shot three times and later died at the hospital. His pa…",
+      "sources_count": 9,
+      "bias": {
+        "left": 1,
+        "center": 1,
+        "right": 2,
+        "unknown": 5
+      },
+      "bias_score": 0.25,
+      "geo": {
+        "place": "New York, US",
+        "lat": 40.729405,
+        "lon": -73.987665
+      },
+      "headlines": [
+        {
+          "text": "Philadelphia Officer Shane Seiber Killed in Porch Ambush",
+          "bias": "leanRight",
+          "url": "https://conservativejournalreview.com/philadelphia-officer-shane-seiber-killed-in-porch-ambush-as-partner-is-shot-12-times-city-worker-charged-with-murder/"
+        },
+        {
+          "text": "Reporter Crosses The Line, Tries To Interview Fallen Police Officer’s Family",
+          "bias": "unknown",
+          "url": "https://delawarevalleynews.com/2026/10/11/reporter-crosses-the-line-tries-to-interview-fallen-police-officers-family/"
+        },
+        {
+          "text": "Philadelphia police officer killed, another injured after responding to reports of man with a gun",
+          "bias": "leanLeft",
+          "url": "https://keystonenewsroom.com/news/crime-safety/philadelphia-police-officer-killed-another-injured-after-responding-to-reports-of-man-with-a-gun/"
+        },
+        {
+          "text": "Philadelphia Police Officer Dies After West Philadelphia Shooting",
+          "bias": "unknown",
+          "url": "https://rnbphilly.com/5949815/philadelphia-police-officer-dies-after-west-philadelphia-shooting/"
+        },
+        {
+          "text": "Philly cop killed, another hospitalized in shooting ambush from city water department employee: report",
+          "bias": "unknown",
+          "url": "https://www.kvi.com/2026/10/10/philly-cop-killed-another-hospitalized-in-shooting-ambush-from-city-water-department-employee-report/"
+        },
+        {
+          "text": "Police Officer Shane Seiber, Philadelphia Police Department, Pennsylvania",
+          "bias": "unknown",
+          "url": "https://www.odmp.org/officer/27916-police-officer-shane-seiber"
+        },
+        {
+          "text": "One Philadelphia Police Officer Killed and Another Wounded in Ambush Attack",
+          "bias": "right",
+          "url": "https://wabcradio.com/2026/10/10/one-philadelphia-police-officer-killed-and-another-wounded-in-ambush-attack/"
+        },
+        {
+          "text": "Philadelphia Officer, Father Of 2, Dies After Being Shot On Duty",
+          "bias": "center",
+          "url": "https://patch.com/pennsylvania/philadelphia/philadelphia-police-officers-shot-multiple-times-suspect-custody"
+        }
+      ]
+    },
+    {
+      "id": "19bda03f-8afe-415a-aa93-968cf66d9bf5",
+      "label": "Federal judge: DOJ cannot request states’ voter lists for eligibility database",
+      "group": "story",
+      "size": 10,
+      "summary": "A federal judge appointed by Biden has placed another legal barrier in front of the Trump administration’s effort to clean voter rolls ahead of an",
+      "sources_count": 1,
+      "bias": {
+        "left": 3,
+        "center": 1,
+        "right": 1,
+        "unknown": 1
+      },
+      "bias_score": -0.4,
+      "geo": {
+        "place": "Los Angeles, US",
+        "lat": 34.041323,
+        "lon": -118.232279
+      },
+      "headlines": [
+        {
+          "text": "Judge Sparkle Throws Another Roadblock in Trump’s Push to Clean Dirty Voter Rolls",
+          "bias": "farRight",
+          "url": "https://www.lifezette.com/2026/10/judge-sparkle-throws-another-roadblock-in-trumps-push-to-clean-dirty-voter-rolls/"
+        },
+        {
+          "text": "Judge strikes down Justice Department policy to use voter rolls for citizenship checks",
+          "bias": "leanLeft",
+          "url": "https://thegrio.com/2026/10/10/doj-voter-roll-policy-judge-ruling/"
+        },
+        {
+          "text": "Federal judge shuts down Trump DOJ’s nationwide voter roll crusade, even in states that cooperated",
+          "bias": "left",
+          "url": "https://www.democracydocket.com/news-alerts/federal-judge-shuts-down-trump-dojs-nationwide-voter-roll-crusade/"
+        },
+        {
+          "text": "Federal judge shuts down Trump DOJ’s nationwide voter roll crusade, even in states that cooperated",
+          "bias": "unknown",
+          "url": "https://attentiontotheunseen.com/2026/10/09/federal-judge-shuts-down-trump-dojs-nationwide-voter-roll-crusade-even-in-states-that-cooperated/"
+        },
+        {
+          "text": "US judge blocks DOJ’s ‘dragnet’ probes of voter fraud nationwide",
+          "bias": "center",
+          "url": "https://www.thedailynewsonline.com/news/us-judge-blocks-doj-s-dragnet-probes-of-voter-fraud-nationwide/article_23d49073-3162-473b-9dc2-4ae5ec567e9a.html"
+        },
+        {
+          "text": "Federal court sides with Common Cause and voters, ruling DOJ data demands violate voter privacy, states’ election authority - CREW | Citizens for Responsibility and Ethics in Washington",
+          "bias": "leanLeft",
+          "url": "https://www.citizensforethics.org/news/press-releases/federal-court-sides-with-common-cause-and-voters-ruling-doj-data-demands-violate-voter-privacy-states-election-authority/"
+        }
+      ]
+    },
+    {
+      "id": "c3bd2141-6463-4d5b-bb1d-f50d415e08fa",
+      "label": "Trump Rallies for Blakeman in Syracuse With Mike Tyson",
+      "group": "story",
+      "size": 10,
+      "summary": "SYRACUSE, N.Y. (WSYR-TV) -- President Donald Trump urged people to vote for Republicans and repeatedly criticized the Democratic party, or \"dumbocrats,\" New York Gov. Kathy Hochul and more during his wide-ranging remarks at the Oncenter in Syracuse Friday night. The center was standing room only for the event, where the president supported Republican gubernatorial candidate [...]",
+      "sources_count": 2,
+      "bias": {
+        "left": 2,
+        "center": 5,
+        "right": 1,
+        "unknown": 2
+      },
+      "bias_score": -0.125,
+      "geo": {
+        "place": "Buffalo, US",
+        "lat": 42.887293,
+        "lon": -78.88738
+      },
+      "headlines": [
+        {
+          "text": "Trump praises Blakeman, rips Hochul, brings Mike Tyson up on stage during Syracuse speech",
+          "bias": "center",
+          "url": "https://www.wivb.com/news/trump-praises-blakeman-rips-hochul-brings-mike-tyson-up-on-stage-during-syracuse-speech/"
+        },
+        {
+          "text": "Donald Trump meets with Mike Tyson before Syracuse ...",
+          "bias": "center",
+          "url": "https://www.democratandchronicle.com/picture-gallery/news/politics/elections/2026/10/09/donald-trump-mike-tyson-white-house-marine-one-syracuse/92177875007/"
+        },
+        {
+          "text": "Mike Tyson Draws Criticism From Fans After Praising Trump",
+          "bias": "unknown",
+          "url": "https://urbanhollywood411.com/mike-tyson-draws-criticism-from-fans-after-praising-trump/"
+        },
+        {
+          "text": "'There's no way in the world I would ever be here if it wasn't for a president like Donald Trump': Mike Tyson backs Trump",
+          "bias": "center",
+          "url": "https://thecomeback.com/boxing/mike-tyson-makes-appearance-at-president-donald-trump-ny-rally.html"
+        },
+        {
+          "text": "Mike Tyson Goes From Feared Heavyweight to Trump’s Hype Man, and Fans Aren’t Letting Him Live Down His Fall to Political 'Prop'",
+          "bias": "leanLeft",
+          "url": "https://atlantablackstar.com/2026/10/11/mike-tysons-rush-to-support-trump-backfired-into-being-called-a-prop/"
+        },
+        {
+          "text": "Sean Kirst: In Syracuse, in a season for ghosts, Donald Trump collides with legacy of president who served when Trump was born",
+          "bias": "leanLeft",
+          "url": "https://centralcurrent.org/sean-kirst-in-syracuse-in-a-season-for-ghosts-donald-trump-collides-with-legacy-of-president-who-served-when-trump-was-born/"
+        },
+        {
+          "text": "Donald Trump and Mike Tyson Wax Lyrical on Stage",
+          "bias": "unknown",
+          "url": "https://www.kimura.se/video-donald-trump-och-mike-tyson-blev-lyriska-pa-scen/"
+        },
+        {
+          "text": "Trump rally spotlights GOP attacks on Hochul ahead of midterms",
+          "bias": "center",
+          "url": "https://www.poughkeepsiejournal.com/story/news/politics/elections/2026/10/10/trump-blakeman-target-energy-costs-taxes-at-syracuse-rally/92189689007/"
+        }
+      ]
+    },
+    {
+      "id": "12a66988-7cb9-4d77-9d95-4afda54286f3",
+      "label": "Trump’s Medicaid cuts strip refugees and other legal immigrants of their health coverage",
+      "group": "story",
+      "size": 10,
+      "summary": "New restrictions have stripped Medicaid coverage from certain legal immigrants, including refugees and victims of human trafficking, as part of broader federal changes to the health insurance program that are expected to force millions off their coverage. The change effective Oct. 1 cut from Medicaid what is estimated to be hundreds of thousands of people who legally immigrated to the United States, many of whom work and pay taxes, in the latest…",
+      "sources_count": 2,
+      "bias": {
+        "left": 0,
+        "center": 1,
+        "right": 0,
+        "unknown": 2
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Trump’s Medicaid cuts strip refugees and other legal immigrants of their health coverage",
+          "bias": "unknown",
+          "url": "https://usa-today-news.com/news/trumps-medicaid-cuts-strip-refugees-and-other-legal-immigrants-of-their-health-coverage/"
+        },
+        {
+          "text": "Trump’s Medicaid cuts strip refugees and other legal immigrants of their health coverage",
+          "bias": "center",
+          "url": "https://www.vaildaily.com/news/nation-world/trumps-medicaid-cuts-strip-refugees-and-other-legal-immigrants-of-their-health-coverage/"
+        },
+        {
+          "text": "Thousands of New Mexico Immigrants Lose Medicaid Coverage as New Federal Eligibility Rules Take Effect",
+          "bias": "unknown",
+          "url": "https://brant.one/2026/10/08/thousands-of-new-mexico-immigrants-lose-medicaid-coverage-as-new-federal-eligibility-rules-take-effect/"
+        }
+      ]
+    },
+    {
+      "id": "8af1e245-3317-468e-b64f-46825d8c301f",
+      "label": "A small-town Alaska fisherman has Republicans on the defensive as they try to keep US House majority",
+      "group": "story",
+      "size": 10,
+      "summary": "JUNEAU — In the thick of Alaska's primary election season this summer, independent Bill Hill took a break from his U.S. House campaign to return home to Bristol Bay.",
+      "sources_count": 2,
+      "bias": {
+        "left": 0,
+        "center": 1,
+        "right": 0,
+        "unknown": 0
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "A small-town Alaska fisherman has Republicans on the defensive as they try to keep US House majority",
+          "bias": "center",
+          "url": "https://www.newsminer.com/news/alaska_news/a-small-town-alaska-fisherman-has-republicans-on-the-defensive-as-they-try-to-keep/article_129613db-0b5f-4cd2-9512-2a9d255cb646.html"
+        }
+      ]
+    },
+    {
+      "id": "36573225-699e-4908-9033-62fec5e9a912",
+      "label": "Christa Pike released from hospital, back in prison following botched execution in Tennessee, lawyers say",
+      "group": "story",
+      "size": 10,
+      "summary": "Tennessee death row inmate Christa Pike is back behind bars following a stunning recovery from...",
+      "sources_count": 2,
+      "bias": {
+        "left": 3,
+        "center": 9,
+        "right": 1,
+        "unknown": 12
+      },
+      "bias_score": -0.154,
+      "geo": {
+        "place": "Manchester, UK",
+        "lat": 53.476929,
+        "lon": -2.231957
+      },
+      "headlines": [
+        {
+          "text": "Christa Pike out of hospital and back behind bars",
+          "bias": "unknown",
+          "url": "https://www.supertalk929.com/2026/10/12/christa-pike-out-of-hospital-and-back-behind-bars/"
+        },
+        {
+          "text": "Christa Pike: Released and Returned to Prison after... Cheating Death Twice",
+          "bias": "unknown",
+          "url": "https://e-thessalia.gr/christa-pike-pire-exitirio-kai-epestrepse-sti-fylaki-afoy-xegelase-dyo-fores-ton-thanato/"
+        },
+        {
+          "text": "Possible outcomes for what could happen next as Christa Pike released from hospital after botched execution",
+          "bias": "center",
+          "url": "https://www.ladbible.com/news/us-news/christa-pike-what-happens-next-discharged-hospital-269815-20261011"
+        },
+        {
+          "text": "Christa Pike 'Breaks Silence' After Being Released From Hospital Following Botched Execution",
+          "bias": "unknown",
+          "url": "https://filantropikum.com/christa-pike-megtorte-a-csendet-miutan-a-sikertelen-kivegzes-utan-kiengedtek-a-korhazbol/"
+        },
+        {
+          "text": "Tennessee death row inmate discharged from hospital after surviving botched execution",
+          "bias": "unknown",
+          "url": "https://dailytelegraph.co.nz/world/tennessee-death-row-inmate-discharged-from-hospital-after-surviving-botched-execution/"
+        },
+        {
+          "text": "US lethal injection survivor Christa Pike returns to prison",
+          "bias": "leanLeft",
+          "url": "https://www.thesouthafrican.com/news/world-news/us-lethal-injection-survivor-christa-pike-returns-to-prison/"
+        },
+        {
+          "text": "Sentenced to Survive Execution in USA Returns to Jail · Global Voices",
+          "bias": "unknown",
+          "url": "https://www.atvlatino.net/condenada-que-sobrevivio-a-ejecucion-en-eeuu-regresa-a-la-carcel/"
+        },
+        {
+          "text": "Christa Pike is discharged from a hospital after surviving execution attempt, her attorneys say",
+          "bias": "center",
+          "url": "https://who13.com/news/national-news/christa-pike-is-discharged-from-a-hospital-after-surviving-execution-attempt-her-attorneys-say/"
+        }
+      ]
+    },
+    {
+      "id": "4de003db-9c3c-43fe-9ada-86bbe7538f4a",
+      "label": "Pope Leo declares death penalty ‘inadmissible’ as his native US plans to livestream execution",
+      "group": "story",
+      "size": 12,
+      "summary": "h/t Amil I",
+      "sources_count": 3,
+      "bias": {
+        "left": 2,
+        "center": 1,
+        "right": 1,
+        "unknown": 3
+      },
+      "bias_score": -0.25,
+      "geo": {
+        "place": "Washington, US",
+        "lat": 38.912167,
+        "lon": -77.035658
+      },
+      "headlines": [
+        {
+          "text": "POPE LEO slams the United States for planning a public execution of Nidal Hasan, the Muslim Army Major who murdered 13 of his fellow soldiers in cold blood",
+          "bias": "farRight",
+          "url": "https://barenakedislam.com/2026/10/12/pope-leo-slams-the-united-states-for-planning-a-public-execution-of-nidal-hasan-the-muslim-army-major-who-murdered-13-of-his-fellow-soldiers-in-cold-blood/"
+        },
+        {
+          "text": "Christianity teaches us not to turn executions into entertainment",
+          "bias": "leanLeft",
+          "url": "https://religionnews.com/2026/10/12/christianity-teaches-us-not-to-turn-executions-into-entertainment/"
+        },
+        {
+          "text": "Archbishop of the U.S. military says Catholic soldiers should not serve on firing squad",
+          "bias": "center",
+          "url": "https://www.abc12.com/news/archbishop-of-the-u-s-military-says-catholic-soldiers-should-not-serve-on-firing-squad/article_ffa56d61-7287-500b-b6a2-749874ee2338.html"
+        },
+        {
+          "text": "Shooting in Streaming. The Performance of the Gallows Takes Us to Distant Times",
+          "bias": "unknown",
+          "url": "https://www.articolo21.org/2026/10/fucilazione-in-streaming-lesibizione-del-patibolo-ci-porta-a-tempi-lontani/"
+        },
+        {
+          "text": "Pope Leo XIV: 'Death Penalty Is Inadmissible'",
+          "bias": "unknown",
+          "url": "https://dwtonline.com/paus-leo-xiv-doodstraf-is-ontoelaatbaar/"
+        },
+        {
+          "text": "Pope Leo declares death penalty 'inadmissible' as his native US plans to livestream execution",
+          "bias": "leanLeft",
+          "url": "https://www.niagara-gazette.com/news/pope-leo-declares-death-penalty-inadmissible-as-his-native-us-plans-to-livestream-execution/article_ed2110d3-291a-4987-8c3a-25e918e81b3d.html"
+        },
+        {
+          "text": "Leon XIV Calls the Death Penalty in the Face of Shootings Announced in the United States Inadmissible",
+          "bias": "unknown",
+          "url": "https://indicepolitico.com/leon-xiv-califica-de-inadmisible-la-pena-de-muerte-ante-fusilamiento-anunciado-en-eu/"
+        }
+      ]
+    },
+    {
+      "id": "326a7494-5f2a-4334-ae08-8dcf346f3786",
+      "label": "Legal path seems narrow to challenge livestream of Fort Hood shooter’s execution, experts say",
+      "group": "story",
+      "size": 10,
+      "summary": "Pete Hegseth's decision to publicly execute a convicted terrorist has sparked outrage. But can Christians condemn as immoral something God Himself prescribed?",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 1,
+        "right": 2,
+        "unknown": 7
+      },
+      "bias_score": 0.667,
+      "geo": {
+        "place": "Australia",
+        "lat": -25.810844,
+        "lon": 134.344588
+      },
+      "headlines": [
+        {
+          "text": "God Prescribed Public Executions. Was He Wrong?",
+          "bias": "farRight",
+          "url": "https://www.caldronpool.com/p/god-prescribed-public-executions"
+        },
+        {
+          "text": "“Things only North Korea or Iran Would Do”… U.S. Faces Backlash over ‘Live Broadcast of Firing Squad Execution’",
+          "bias": "unknown",
+          "url": "https://www.joongang.co.kr/article/25468720"
+        },
+        {
+          "text": "The Live Death of American Consciousness",
+          "bias": "unknown",
+          "url": "https://www.settimananews.it/informazione-internazionale/la-morte-in-diretta-della-coscienza-americana/"
+        },
+        {
+          "text": "Wake up with Euronews Morning: Will We Witness the First Public Execution in the US in Almost a Hundred Years?",
+          "bias": "unknown",
+          "url": "https://www.euronews.rs/srbija/aktuelno/246878/najava-za-euronews-jutro-11-oktobar/vest"
+        },
+        {
+          "text": "They Want to Broadcast Live Shooting of Fort Hood's Killer; They Unleash Rejection - North of Ciudad Juárez",
+          "bias": "unknown",
+          "url": "https://nortedigital.mx/quieren-transmitir-en-vivo-fusilamiento-del-asesino-de-fort-hood-desatan-rechazo/"
+        },
+        {
+          "text": "UN Calls U.S. Decision to Broadcast Nidal Hasan’s Execution Live “Abominable”",
+          "bias": "unknown",
+          "url": "https://lpemnoticias.cl/2026/10/10/onu-califica-de-abominable-la-decision-de-estados-unidos-de-transmitir-en-vivo-la-ejecucion-de-nidal-hasan/"
+        },
+        {
+          "text": "Liberal writer 'sickened' by public execution of Ft. Hood terrorist gets SHUT DOWN fast...",
+          "bias": "right",
+          "url": "https://revolver.news/2026/10/liberal-writer-sickened-by-public-execution-of-ft-hood-terrorist-gets-shut-down-fast/"
+        },
+        {
+          "text": "Pentagon Faces Backlash Over Plan to Livestream Fort Hood Shooter Execution",
+          "bias": "unknown",
+          "url": "https://thechenabtimes.com/2026/10/10/pentagon-faces-backlash-over-plan-to-livestream-execution-of-fort-hood-shooter/"
+        }
+      ]
+    },
+    {
+      "id": "49472db7-877e-4e5c-bc79-4c4e6f21a46b",
+      "label": "Trump Asks Supreme Court to Revive His 2016 Election Lawsuit Against Hillary Clinton",
+      "group": "story",
+      "size": 10,
+      "summary": "",
+      "sources_count": 2,
+      "bias": {
+        "left": 0,
+        "center": 1,
+        "right": 0,
+        "unknown": 2
+      },
+      "bias_score": 0.0,
+      "geo": {
+        "place": "Washington, US",
+        "lat": 38.909487,
+        "lon": -77.042617
+      },
+      "headlines": [
+        {
+          "text": "Trump asks justices to allow dismissed lawsuit against Hillary Clinton to proceed",
+          "bias": "center",
+          "url": "https://www.scotusblog.com/2026/10/trump-asks-justices-to-allow-dismissed-lawsuit-against-hillary-clinton-to-proceed/"
+        },
+        {
+          "text": "Trump Asks Supreme Court to Revive His Dismissed Lawsuit Against Hillary Clinton - Quick News Updates",
+          "bias": "unknown",
+          "url": "https://quicknewsupdates.com/trump-asks-supreme-court-to-revive-his-dismissed-lawsuit-against-hillary-clinton/"
+        },
+        {
+          "text": "Trumps Legal Battle With Clinton Over 2016 Election Reaches Supreme Court",
+          "bias": "unknown",
+          "url": "https://digitalchew.com/2016-trumps-legal-battle-with-clinton-over"
+        }
+      ]
+    },
+    {
+      "id": "db099eb9-c176-490a-ab57-dbec419b7b65",
+      "label": "Super Micro Contractor Pleads Guilty in Scheme to Divert AI Servers with Nvidia Chips to China",
+      "group": "story",
+      "size": 10,
+      "summary": "A contractor linked to Super Micro Computer has pleaded guilty in a scheme to illegally export computer servers containing advanced ​Nvidia AI chips to China, reports Reuters. Ting-Wei “Willy” Sun pleaded ‌guilty to four counts, including conspiracies to violate US export controls, smuggle goods from the US, defraud the country and obstruct justice. He entered the plea […]",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 3
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Contractor pleads guilty to diverting Nvidia chips from US to China",
+          "bias": "unknown",
+          "url": "https://chinaeconomicreview.com/contractor-pleads-guilty-to-diverting-nvidia-chips-from-us-to-china/"
+        },
+        {
+          "text": "Super Micro smuggling co-conspirator pleads guilty to sending AI chips to China — broker admits breaking export control rules as company co-founder denies charges",
+          "bias": "unknown",
+          "url": "https://www.tomshardware.com/tech-industry/artificial-intelligence/super-micro-smuggling-co-conspirator-pleads-guilty-to-sending-ai-chips-to-china-broker-admits-breaking-export-control-rules-as-company-co-founder-denies-charges"
+        },
+        {
+          "text": "Super Micro contractor pleads guilty to diverting Nvidia AI servers to China",
+          "bias": "unknown",
+          "url": "https://www.cryptopolitan.com/super-micro-contractor-pleads-guilty-to-diverting-nvidia-ai-servers-to-china/"
+        }
+      ]
+    },
+    {
+      "id": "f32e4524-bb3d-4b5e-87db-9bd2eb920314",
+      "label": "Trump says Norway has 'indelible stain' for not awarding him Nobel Peace Prize",
+      "group": "story",
+      "size": 10,
+      "summary": "Hey everyone, happy Saturday. The news didn’t slow down for the weekend. Trump spent Friday night raging at Norway over the Nobel Peace Prize, the backlash to Hegseth’s plan to livestream an execution is now reaching the Vatican and fueling an impeachment push, and ICE is tearing through California’s farm towns. There’s a lot to get through, so I’ll keep this short.With the midterms just over three weeks away, I want to let you in on what’s comi…",
+      "sources_count": 1,
+      "bias": {
+        "left": 1,
+        "center": 0,
+        "right": 0,
+        "unknown": 2
+      },
+      "bias_score": -1.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "NEWS: Trump Melts Down Over Nobel Prize, Hegseth Faces Impeachment Calls Over Public Execution, ICE Surge Empties California Towns",
+          "bias": "leanLeft",
+          "url": "https://aaronparnas.substack.com/p/news-trump-melts-down-over-nobel"
+        },
+        {
+          "text": "Trump says Norway has 'indelible stain' for not awarding him Nobel Peace Prize - Uitvconnect : Breaking News, India News, Sports News and Live Updates",
+          "bias": "unknown",
+          "url": "https://www.uitvconnect.com/world/trump-says-norway-has-indelible-stain-for-not-awarding-him-nobel-peace-prize/"
+        },
+        {
+          "text": "Donald Trump Demands Eight Nobel Peace Prizes. Norway Accused of Lèse-Majesté",
+          "bias": "unknown",
+          "url": "https://unidivers.fr/donald-trump-prix-nobel-paix/"
+        }
+      ]
+    },
+    {
+      "id": "b4d8a4f1-5c46-4b3f-b45d-1bd8a883623d",
+      "label": "Five shot dead at residence in Georgia's Douglas, police says",
+      "group": "story",
+      "size": 10,
+      "summary": "Investigators say additional information will be released later Saturday.",
+      "sources_count": 2,
+      "bias": {
+        "left": 0,
+        "center": 1,
+        "right": 1,
+        "unknown": 1
+      },
+      "bias_score": 0.5,
+      "geo": {
+        "place": "Atlanta, US",
+        "lat": 33.755992,
+        "lon": -84.388341
+      },
+      "headlines": [
+        {
+          "text": "Five people killed in shooting at south Georgia home",
+          "bias": "right",
+          "url": "https://www.wsbradio.com/news/local/five-people-killed-shooting-south-georgia-home/5K62HRHFWZHSLF73TCT5Z5A3EU/"
+        },
+        {
+          "text": "South Georgia mass shooting leaves five dead",
+          "bias": "unknown",
+          "url": "https://cnaw2news.com/2026/10/10/breaking-south-georgia-mass-shooting-leaves-five-dead/"
+        },
+        {
+          "text": "Mass shooting reported in Douglas; 5 dead",
+          "bias": "center",
+          "url": "https://www.walb.com/2026/10/10/mass-shooting-reported-douglas-5-dead/"
+        }
+      ]
+    },
+    {
+      "id": "4d598303-c4bc-4ba2-b840-d2f2546539d4",
+      "label": "9 people killed, including 2 children, in mass shooting in northern Pennsylvania",
+      "group": "story",
+      "size": 12,
+      "summary": "Faith leaders in Erie, Pennsylvania, are pledging support after a 45-year-old grandfather fatally shot eight people at his home Friday, including his wife, pregnant daughter, two sons and two grandchildren, before killing himself.",
+      "sources_count": 3,
+      "bias": {
+        "left": 3,
+        "center": 15,
+        "right": 7,
+        "unknown": 18
+      },
+      "bias_score": 0.16,
+      "geo": {
+        "place": "Washington, US",
+        "lat": 38.901722,
+        "lon": -77.042934
+      },
+      "headlines": [
+        {
+          "text": "Church offers hope as pregnant mother named among 9 killed in Erie house massacre",
+          "bias": "leanRight",
+          "url": "https://www.christianpost.com/news/church-offers-hope-as-pregnant-mother-named-among-9-killed.html"
+        },
+        {
+          "text": "Nine dead, many injured in Pennsylvania shooting - News Today",
+          "bias": "unknown",
+          "url": "https://newstodaynet.com/2026/10/12/nine-dead-many-injured-in-pennsylvania-shooting/"
+        },
+        {
+          "text": "US horror: Deadly shooting in Erie leaves nine dead, including two children - The Canadian Media",
+          "bias": "unknown",
+          "url": "https://thecanadianmedia.com/us-horror-deadly-shooting-in-erie-leaves-nine-dead-including-two-children/"
+        },
+        {
+          "text": "Pregnant mother who was days away from giving birth among 8 killed in mass shooting",
+          "bias": "center",
+          "url": "https://www.kjct8.com/2026/10/12/pregnant-mother-who-was-days-away-giving-birth-among-8-killed-mass-shooting/"
+        },
+        {
+          "text": "Erie Mass Shooting Leaves 9 Dead, Including Children And Pregnant Woman",
+          "bias": "unknown",
+          "url": "https://www.soapoperaspy.com/2026/erie-mass-shooting-leaves-9-dead-including-children-and-pregnant-woman/"
+        },
+        {
+          "text": "Murder-Suicide Horror Freezes Quiet Block | Fresh Off The Press",
+          "bias": "right",
+          "url": "https://freshoffthepress.org/murder-suicide-horror-freezes-quiet-block/"
+        },
+        {
+          "text": "Erie gathers to honor victims of Perry Street mass shooting",
+          "bias": "center",
+          "url": "https://www.wytv.com/news/local-news/erie-gathers-to-honor-victims-of-perry-street-mass-shooting/"
+        },
+        {
+          "text": "Erie Horror: Nine Dead, Children Among Victims",
+          "bias": "unknown",
+          "url": "https://conservativeamericatoday.com/erie-horror-nine-dead-children-among-victims/"
+        }
+      ]
+    },
+    {
+      "id": "rss_10841_1791387771749_12",
+      "label": "Congregants Celebrate the Reconstruction of One of America's Oldest Black Churches",
+      "group": "story",
+      "size": 10,
+      "summary": "The site is located on South Nassau Street in Colonial Williamsburg.",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 3,
+        "right": 1,
+        "unknown": 0
+      },
+      "bias_score": 0.25,
+      "geo": {
+        "place": "Norfolk, US",
+        "lat": 36.853682,
+        "lon": -76.29699
+      },
+      "headlines": [
+        {
+          "text": "Reconstructed African Baptist Meeting House and Burial Ground opens in Colonial Williamsburg",
+          "bias": "center",
+          "url": "https://www.13newsnow.com/article/news/history/reconstructed-african-baptist-meeting-house-burial-ground-opens-colonial-williamsburg/291-4bb9d97d-66d4-42ca-bf90-1838b8a6dfc7"
+        },
+        {
+          "text": "Congregants celebrate the reconstruction of one of America's oldest Black churches",
+          "bias": "center",
+          "url": "https://www.loudountimes.com/congregants-celebrate-the-reconstruction-of-one-of-americas-oldest-black-churches/article_03782f73-84b3-5e72-adfc-b473335af9b5.html"
+        },
+        {
+          "text": "Congregants celebrate the reconstruction of one of America's oldest Black churches",
+          "bias": "leanRight",
+          "url": "https://www.dailyunion.com/news/nation_world/congregants-celebrate-the-reconstruction-of-one-of-americas-oldest-black-churches/article_ad29939d-ac04-521b-bf2e-8c520eaeb3e2.html"
+        },
+        {
+          "text": "Replica of first black church in Colonial Williamsburg nears completion",
+          "bias": "center",
+          "url": "https://www.wavy.com/news/local-news/replica-of-first-black-church-in-colonial-williamsburg-nears-completion/"
+        }
+      ]
+    },
+    {
+      "id": "a7cc93ef-8d43-43bc-a994-67138e292e90",
+      "label": "Justice Department won’t enforce registration rules on silencers and certain guns after court ruling",
+      "group": "story",
+      "size": 10,
+      "summary": "The agency will still process Form 4s in consideration of residents who live in the 15 states that continue to require federal approval",
+      "sources_count": 1,
+      "bias": {
+        "left": 1,
+        "center": 1,
+        "right": 8,
+        "unknown": 3
+      },
+      "bias_score": 0.7,
+      "geo": {
+        "place": "Homer, US",
+        "lat": 59.649776,
+        "lon": -151.551968
+      },
+      "headlines": [
+        {
+          "text": "ATF 'Will Not Enforce' Federal Suppressor Approvals, Effectively Deregulating Silencers",
+          "bias": "center",
+          "url": "https://www.outdoorlife.com/guns/atf-deregulates-suppressors/"
+        },
+        {
+          "text": "Justice Department removes bureaucratic barriers to gun ownership after court ruling",
+          "bias": "right",
+          "url": "https://mustreadalaska.com/justice-department-removes-bureaucratic-barriers-to-gun-ownership-after-court-ruling/"
+        },
+        {
+          "text": "ATF Announces Nationwide NFA Nonenforcement Policy For Suppressors And Other Covered Firearms",
+          "bias": "right",
+          "url": "https://concealednation.org/2026/10/atf-nfa-nonenforcement-october-9-2026/"
+        },
+        {
+          "text": "About That NFA “Guidance” – Oregon Firearms Federation",
+          "bias": "unknown",
+          "url": "https://www.oregonfirearms.org/about-that-nfa-guidance"
+        },
+        {
+          "text": "ATF’s New Suppressor Rules Are In. Here’s What They Say",
+          "bias": "farRight",
+          "url": "https://conservativedailynews.com/2026/10/atfs-new-suppressor-rules-are-in-heres-what-they-say/"
+        },
+        {
+          "text": "Federal Government to Stop Enforcing Registration Rules on Suppressors, Short-Barreled Firearms",
+          "bias": "leanRight",
+          "url": "https://www.ntd.com/federal-government-to-stop-enforcing-registration-rules-on-suppressors-short-barreled-firearms_1178158.html?utm_source=facebook&utm_medium=Social&utm_content=NTDnews&utm_term=fbsocial"
+        },
+        {
+          "text": "Kansas-led lawsuit forces ATF to drop nationwide registration requirement for suppressors, short-barreled rifles, and shotguns",
+          "bias": "unknown",
+          "url": "https://www.newstalkkzrg.com/2026/10/10/kansas-led-lawsuit-forces-atf-to-drop-nationwide-registration-requirement-for-suppressors-short-barreled-rifles-and-shotguns/"
+        },
+        {
+          "text": "ATF Finally Provides Guidance On NFA Transfers, No Registration Required!",
+          "bias": "right",
+          "url": "https://www.thetruthaboutguns.com/atf-nfa-registration-suppressors-sbrs-guidance/"
+        }
+      ]
+    },
+    {
+      "id": "2f752fb8-1eb0-4cb7-a46d-9deef36b13b8",
+      "label": "Anthropic AI model submits false homicide tip to police website",
+      "group": "story",
+      "size": 10,
+      "summary": "Models routinely take shortcuts to pass evaluations. Who gets to decide what incidents are innocuous?",
+      "sources_count": 1,
+      "bias": {
+        "left": 3,
+        "center": 7,
+        "right": 1,
+        "unknown": 35
+      },
+      "bias_score": -0.182,
+      "geo": {
+        "place": "New York, US",
+        "lat": 40.709472,
+        "lon": -74.003266
+      },
+      "headlines": [
+        {
+          "text": "Claude sent a false homicide tip to police - and it’s part of a troubling AI pattern",
+          "bias": "center",
+          "url": "https://www.zdnet.com/innovation/claude-false-homicide-tip/"
+        },
+        {
+          "text": "Anthropic AI Agent Gave Police A Fake Tip-Off In An Unsolved Murder Case",
+          "bias": "leanLeft",
+          "url": "https://www.iflscience.com/anthropic-ai-agent-gave-police-a-fake-tip-off-in-an-unsolved-murder-case-84910"
+        },
+        {
+          "text": "Claude Told Police It 'Saw' a Potential Suspect From an Unsolved Homicide",
+          "bias": "center",
+          "url": "https://www.extremetech.com/internet/claude-told-police-it-saw-a-potential-suspect-from-an-unsolved-homicide"
+        },
+        {
+          "text": "Anthropically Criticized by U.S. Police After Claude AI Sent a False Information Session About an Unsolved Crime",
+          "bias": "unknown",
+          "url": "https://www.money.ro/stiri/anthropic-criticata-de-politia-americana-dupa-ce-claude-ai-a-trimis-o-sesizare-c-mv5emfmf"
+        },
+        {
+          "text": "Anthropic Model Invents a False Report of Murder and Sends It to the Police",
+          "bias": "unknown",
+          "url": "https://www.ictjournal.ch/news/2026-10-12/un-modele-danthropic-invente-un-faux-signalement-de-meurtre-et-lenvoie-a-la-police"
+        },
+        {
+          "text": "Anthropic’s Claude Filed a Fake Murder Tip: What Went Wrong",
+          "bias": "unknown",
+          "url": "https://www.eweek.com/news/anthropic-claude-fake-murder-tip-ai-test/"
+        },
+        {
+          "text": "Claude provided false tip in unsolved murder case, Anthropic says",
+          "bias": "unknown",
+          "url": "https://www.abajournal.com/news/article/claude-provided-false-tip-in-unsolved-murder-case-anthropic-says"
+        },
+        {
+          "text": "AI Model Submitted False Tip About Unsolved Murder",
+          "bias": "unknown",
+          "url": "https://computersweden.se/article/4233748/ai-modell-skickade-in-falskt-tips-om-olost-mord.html"
+        }
+      ]
+    },
+    {
+      "id": "621a8158-8aa3-488b-a87e-aad8a52c43ba",
+      "label": "Kremlin says Putin in phone call with Trump downplays immediate Ukraine talks resumption",
+      "group": "story",
+      "size": 10,
+      "summary": "The Ukrainian population has been living in uncertainty for over four years due to Russian terror. Peace talks have yielded little so far, and the fighting continues.",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 1
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Putin Postpones Rapid Resumption of Peace Talks Following Ukrainian Drone Attacks on Moscow",
+          "bias": "unknown",
+          "url": "https://www.dvhn.nl/buitenland/poetin-schuift-snelle-hervatting-vredesoverleg-op-lange-baan-na-oekraense-droneaanvallen-op-moskou/158541230.html"
+        }
+      ]
+    },
+    {
+      "id": "8e1084dc-fd65-4cf2-8828-f1f5674141fa",
+      "label": "Mexican court finds three men guilty of 2024 killing of Australian, US surfers",
+      "group": "story",
+      "size": 10,
+      "summary": "The victims, Australian brothers Jake and Callum Robinson, aged 30 and 33, and their American friend Carter Rhoad, 30, were shot dead while camping near Mexico’s Pacific coast. Investigators concluded that the killings occurred during an attempted robbery. *** On October 9, 2026, a court convicted three Mexican defendants of aggravated homicide and related offenses. […]\nThe post Why were three foreign surfers murdered in Mexico and what did the …",
+      "sources_count": 2,
+      "bias": {
+        "left": 0,
+        "center": 1,
+        "right": 1,
+        "unknown": 4
+      },
+      "bias_score": 0.5,
+      "geo": {
+        "place": "Kuala Lumpur, Malaysia",
+        "lat": 3.141991,
+        "lon": 101.693397
+      },
+      "headlines": [
+        {
+          "text": "Why were three foreign surfers murdered in Mexico and what did the court decide?​",
+          "bias": "unknown",
+          "url": "https://azeritimes.com/why-were-three-foreign-surfers-murdered-in-mexico-and-what-did-the-court-decide/"
+        },
+        {
+          "text": "“No Verdict Can Bring Them Back”: Parents of Surfers Killed in Ensenada After Judgment Hearing",
+          "bias": "unknown",
+          "url": "https://diariotijuana.info/2026/10/ningun-veredicto-puede-traerlos-de-vuelta-padres-de-los-surfistas-asesinados-en-ensenada-tras-audiencia-de-fallo"
+        },
+        {
+          "text": "Three men found guilty of murdering Australian surfers in",
+          "bias": "unknown",
+          "url": "https://latin-american.news/three-men-found-guilty-of-murdering-australian-surfers-in-mexico/"
+        },
+        {
+          "text": "Mexican court finds three men guilty of 2024 killing of Australian, US surfers",
+          "bias": "center",
+          "url": "https://www.nst.com.my/world/world/2026/10/1552080/mexican-court-finds-three-men-guilty-2024-killing-australian-us-surfers?source=widget"
+        },
+        {
+          "text": "Judge convicts 3 Mexicans in the killings of 3 surfers from San Diego",
+          "bias": "leanRight",
+          "url": "https://www.ocregister.com/2026/10/09/mexico-surfers-trial/"
+        },
+        {
+          "text": "Accused for the Murder of Foreign Surfers in Ensenada",
+          "bias": "unknown",
+          "url": "https://jornadabc.com.mx/02_secundarias/declaran-culpables-a-acusados-por-el-homicidio-de-surfistas-extranjeros-en-ensenada/"
+        }
+      ]
+    },
+    {
+      "id": "61253cbc-0e13-4d5f-a953-2c69cad55351",
+      "label": "Lockheed Martin unveils PAC-3 Edge interceptor designed to counter hypersonic threats",
+      "group": "story",
+      "size": 10,
+      "summary": "The new interceptor will be sit at the top of Patriot missile family and promises more range, altitude, and maneuverability against rapidly-developing threats. New interceptor promises more range, altitude, and maneuverability against advanced threats, including hypersonic weapons, but still has to prove itself in testing.",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 16,
+        "right": 1,
+        "unknown": 13
+      },
+      "bias_score": 0.059,
+      "geo": {
+        "place": "Arlington, US",
+        "lat": 38.884731,
+        "lon": -77.113185
+      },
+      "headlines": [
+        {
+          "text": "PAC-3 Edge Will Be The Most Capable Patriot Interceptor Ever",
+          "bias": "center",
+          "url": "https://www.twz.com/land/pac-3-edge-will-be-the-most-capable-patriot-interceptor-ever"
+        },
+        {
+          "text": "Lockheed’s New PAC-3 Edge interceptor aims for agility",
+          "bias": "center",
+          "url": "https://www.militarytimes.com/industry/techwatch/2026/10/12/lockheeds-new-pac-3-edge-interceptor-aims-for-agility/"
+        },
+        {
+          "text": "With a Projection of 2000 Units Manufactured per Year, Lockheed Martin Presents the PAC-3 Edge Interceptor at AUSA 2026",
+          "bias": "unknown",
+          "url": "https://www.zona-militar.com/2026/10/12/con-una-proyeccion-de-2000-unidades-fabricadas-por-ano-lockheed-martin-presenta-en-ausa-2026-al-interceptor-pac-3-edge/"
+        },
+        {
+          "text": "Lockheed Martin Unveils New PAC-3 Edge Missile",
+          "bias": "unknown",
+          "url": "https://defencereview.gr/amintiki-viomihania/i-lockheed-martin-paroysiazei-ton-neo-pyraylo-pac-3-edge/"
+        },
+        {
+          "text": "PAC-3 Edge Unveiled: Patriot Targets Hypersonic Missile Threat",
+          "bias": "unknown",
+          "url": "https://defencesecurityasia.com/pac-3-edge-patriot-peluru-berpandu-hipersonik/"
+        },
+        {
+          "text": "Lockheed unveils PAC-3 Edge for Army's $1.7 billion Future Interceptor effort",
+          "bias": "center",
+          "url": "https://insidedefense.com/daily-news/lockheed-unveils-pac-3-edge-armys-17-billion-future-interceptor-effort"
+        },
+        {
+          "text": "Lockheed Martin unveils new Patriot interceptor designed to defeat hypersonic missiles",
+          "bias": "unknown",
+          "url": "https://www.airdatanews.com/lockheed-martin-unveils-new-patriot-interceptor-designed-to-defeat-hypersonic-missiles/"
+        },
+        {
+          "text": "Lockheed Martin Introduces New Missile: PAC-3 Edge",
+          "bias": "unknown",
+          "url": "https://www.savunmasanayist.com/lockheed-martinden-yeni-fuze-pac-3-edge/"
+        }
+      ]
+    },
+    {
+      "id": "cde8e11c-fe66-4efe-b639-c240d6077f79",
+      "label": "Kalshi probes suspicious trades tied to Trump press secretary pick, WSJ reports",
+      "group": "story",
+      "size": 10,
+      "summary": "US prediction market Kalshi has launched an investigation into suspicious transactions surrounding President Donald Trump's nomination for the next White House press secretary. The US newspaper Wall Street...\nThe post Prediction market Kalshi investigates suspicious transactions surrounding Trump's press secretary nomination = WSJ first appeared on NADA NEWS.",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 1,
+        "right": 0,
+        "unknown": 4
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Prediction Market Kalshi Investigates Suspicious Transactions Surrounding the Nomination of Trump's Next Press Secretary",
+          "bias": "unknown",
+          "url": "https://www.nadanews.com/372144/"
+        },
+        {
+          "text": "Kalshi Reviews Three Sub-$100 Bets That Called Trump's Press Secretary Pick Early",
+          "bias": "center",
+          "url": "https://unchainedcrypto.com/kalshi-reviews-three-sub-100-bets-that-called-trumps-press-secretary-pick-early/"
+        },
+        {
+          "text": "Insider Trading in the White House? Suspect Bets on Trump's Spokesperson",
+          "bias": "unknown",
+          "url": "https://www.btc-echo.de/news/trump-und-die-verdaechtigen-wetten-gab-es-vorwissen-ueber-seine-neue-sprecherin-239020/"
+        },
+        {
+          "text": "Kalshi Reviews Well-Timed Bets on Trump’s Pick of House Press Secretary",
+          "bias": "unknown",
+          "url": "https://financefeeds.com/kalshi-reviews-well-timed-bets-on-trumps-pick-of-house-press-secretary/"
+        },
+        {
+          "text": "Kalshi Investigates Suspicious Bets on Trump's New Spokesperson",
+          "bias": "unknown",
+          "url": "https://www.jamma.it/attualita/kalshi-indaga-sulle-scommesse-sospette-sulla-nuova-portavoce-di-trump-360461"
+        }
+      ]
+    },
+    {
+      "id": "rss_10793_1791493044955_1",
+      "label": "French NBA star Wembanyama expresses support for student protests",
+      "group": "story",
+      "size": 10,
+      "summary": "Life in the NBA didn't keep him out of trouble.\nThe post Victor Wembanyama supports high school protests in France appeared first on basketballsphere.com.",
+      "sources_count": 1,
+      "bias": {
+        "left": 1,
+        "center": 0,
+        "right": 0,
+        "unknown": 8
+      },
+      "bias_score": -1.0,
+      "geo": {
+        "place": "New York, US",
+        "lat": 40.713475,
+        "lon": -73.998172
+      },
+      "headlines": [
+        {
+          "text": "Victor Wembanyama Supported High School Protests in France",
+          "bias": "unknown",
+          "url": "https://basketballsphere.com/victor-wembanyama-podrzao-srednjoskolske-proteste-u-francuskoj/"
+        },
+        {
+          "text": "'These Are Systemic Inequalities' | Why Wembanyama Supports Student Protesters in France",
+          "bias": "leanLeft",
+          "url": "https://www.si.com/nba/spurs/onsi/these-are-systemic-inequalities-why-wembanyama-supports-student-protesters-in-france"
+        },
+        {
+          "text": "Wembanyama, Theodora, Squeezie... These Personalities Who Support the High School Movement",
+          "bias": "unknown",
+          "url": "https://www.notretemps.com/depeches/wembanyama-theodora-squeezie-ces-personnalites-qui-soutiennent-le-mouvement-lyceen-139633"
+        },
+        {
+          "text": "Victor Wembanyama Puts Himself on the Crisis of High School Students: Teddy Riner, Kylian Mbappé, Léon Marchand, Sportsmen-Politics a False Good Idea?",
+          "bias": "unknown",
+          "url": "https://www.closermag.fr/people/victor-wembanyama-se-positionne-sur-la-crise-des-lyceens-teddy-riner-kylian-mbappe-leon-marchand-les-sportifs-politiques-une-fausse-bonne-idee-3663018"
+        },
+        {
+          "text": "\"I Hear Them and I Support Them\" Victor Wembanyama Takes a Stand in Favour of the Mobilized High School Students",
+          "bias": "unknown",
+          "url": "https://www.gentside.com/news/politique/art121542-je-les-entends-et-je-les-soutiens-victor-wembanyama-prend-position-en-faveur-des-lyceens.html"
+        },
+        {
+          "text": "Wembanyama Gives Support to the High School Movement",
+          "bias": "unknown",
+          "url": "https://www.konbini.com/lifestyle/je-suis-content-que-les-jeunes-se-fassent-entendre-wembanyama-apporte-son-soutien-au-mouvement-lyceen/"
+        },
+        {
+          "text": "Victor Wembanyama Gives Support to the High School Movement",
+          "bias": "unknown",
+          "url": "https://www.gqmagazine.fr/article/victor-wembanyama-apporte-son-soutien-au-mouvement-lyceen"
+        },
+        {
+          "text": "Victor Wembanyama in the Back of the High School!",
+          "bias": "unknown",
+          "url": "https://www.sports.fr/nba/wembanyama-a-fond-derriere-les-lyceens-1052458.html"
+        }
+      ]
+    },
+    {
+      "id": "434051d2-3d0d-4a7e-bc93-cd1af22219f0",
+      "label": "DeSantis withdraws death warrant for first time, calling off execution",
+      "group": "story",
+      "size": 10,
+      "summary": "TALLAHASSEE --- Gov. Ron DeSantis has withdrawn the death warrant for William Lee Thompson, who was scheduled to be one of two inmates executed on Tuesday.",
+      "sources_count": 1,
+      "bias": {
+        "left": 1,
+        "center": 1,
+        "right": 0,
+        "unknown": 3
+      },
+      "bias_score": -0.5,
+      "geo": {
+        "place": "Florida, US",
+        "lat": 27.530692,
+        "lon": -80.65906
+      },
+      "headlines": [
+        {
+          "text": "DeSantis withdraws death warrant",
+          "bias": "center",
+          "url": "https://www.yoursun.com/charlotte/desantis-withdraws-death-warrant/article_f94a3f3e-1eb4-4379-99f7-0dde3e1ec39f.html"
+        },
+        {
+          "text": "Fla. governor withdraws death warrant for inmate convicted in 1976 murder",
+          "bias": "unknown",
+          "url": "https://www.corrections1.com/capital-punishment/fla-governor-withdraws-death-warrant-for-inmate-convicted-in-1976-murder"
+        },
+        {
+          "text": "DeSantis withdraws death warrant for Florida inmate with dementia and heart failure",
+          "bias": "unknown",
+          "url": "https://www.cltampa.com/news/desantis-withdraws-death-warrant-for-inmate-with-dementia-and-heart-failure/"
+        },
+        {
+          "text": "Execution of Inmate Suspended in Florida · Global Voices",
+          "bias": "unknown",
+          "url": "https://radionicaragua.com.ni/suspenden-ejecucion-de-un-recluso-en-florida/"
+        },
+        {
+          "text": "DeSantis Withdraws Death Warrant for Sick Inmate Who'd Been Refused Care",
+          "bias": "leanLeft",
+          "url": "https://flaglerlive.com/desantis-withdraws-death/"
+        }
+      ]
+    },
+    {
+      "id": "fde74464-6148-482f-84ce-8c4bcba07f2f",
+      "label": "Vance on Guilfoyle texts: If ‘something bad’ happened, ‘people have to suffer consequences’",
+      "group": "story",
+      "size": 10,
+      "summary": "",
+      "sources_count": 1,
+      "bias": {
+        "left": 1,
+        "center": 0,
+        "right": 0,
+        "unknown": 0
+      },
+      "bias_score": -1.0,
+      "geo": {
+        "place": "Louisville, US",
+        "lat": 38.240532,
+        "lon": -85.779363
+      },
+      "headlines": [
+        {
+          "text": "JD Vance responds to Kimberly Guilfoyle allegations",
+          "bias": "leanLeft",
+          "url": "https://www.courier-journal.com/story/news/politics/2026/10/09/jd-vance-responds-to-kimberly-guilfoyle-allegations/92175900007/"
+        }
+      ]
+    },
+    {
+      "id": "bf96426e-265b-41ad-8b3f-381e5d4f21e8",
+      "label": "Student Loan Forgiveness Could Triple Tax Bill for Many Borrowers: Report",
+      "group": "story",
+      "size": 12,
+      "summary": "Spread the loveImagine this: You’ve been diligently paying your student loans for decades, perhaps through an income-driven repayment (IDR) plan, holding onto the hope that one day, after years of financial struggle, your remaining debt would finally be forgiven. You’ve made your payments, you’ve followed the rules, and you’ve waited. Then, the news arrives – your loans are discharged! A moment of immense relief, right? Not so fast. For millions of federal student loan borrowers, that promised relief could soon morph into a stunning new financial burden, thanks to a looming tax bomb. An advocacy group called Protect Borrowers has […]",
+      "sources_count": 3,
+      "bias": {
+        "left": 1,
+        "center": 0,
+        "right": 0,
+        "unknown": 2
+      },
+      "bias_score": -1.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Jaw-Dropping: Millions Face Triple Tax Bills on Forgiven Student Loans",
+          "bias": "unknown",
+          "url": "https://www.thetechedvocate.org/jaw-dropping-millions-face-triple-tax-bills-on-forgiven-student-loans/"
+        },
+        {
+          "text": "US student-loan forgiveness could trigger a surprise tax bill of $6,000 to $12,000, report says",
+          "bias": "leanLeft",
+          "url": "https://www.thecooldown.com/green-business/student-loan-forgiveness-tax-bill-2026/"
+        },
+        {
+          "text": "The Cancellation of Student Loans Could Triple the Tax Bill of Many Borrowers, According to a Report",
+          "bias": "unknown",
+          "url": "https://secretnews.fr/lannulation-des-prets-etudiants-pourrait-tripler-la-facture-fiscale-de-nombreux-emprunteurs-selon-un-rapport/"
+        }
+      ]
+    },
+    {
+      "id": "5471b59b-a010-4ede-86ed-d6801ecaccc0",
+      "label": "US lifts sanctions on daughter of Myanmar military-linked businessman",
+      "group": "story",
+      "size": 10,
+      "summary": "Is Theint Win Htet's removal from the Treasury Department's blacklist a sign of a looming rapprochement between Washington and Naypyidaw?",
+      "sources_count": 2,
+      "bias": {
+        "left": 0,
+        "center": 1,
+        "right": 0,
+        "unknown": 0
+      },
+      "bias_score": 0.0,
+      "geo": {
+        "place": "Arlington, US",
+        "lat": 38.8854,
+        "lon": -77.100972
+      },
+      "headlines": [
+        {
+          "text": "US Drops Sanctions on Daughter of Prominent Myanmar Businessman Thein Win Zaw",
+          "bias": "center",
+          "url": "https://thediplomat.com/2026/10/us-drops-sanctions-on-daughter-of-prominent-myanmar-businessman-thein-win-zaw/"
+        }
+      ]
+    },
+    {
+      "id": "851d57a5-b3b0-4c97-a310-a8f4c2e3b2fb",
+      "label": "Cook Political Report moves 18 House seats toward Democrats",
+      "group": "story",
+      "size": 12,
+      "summary": "(The Center Square) – With just weeks before the midterm elections, 18 more races for the U.S. House have moved left, according to a Cook Political Report analysis.",
+      "sources_count": 3,
+      "bias": {
+        "left": 1,
+        "center": 2,
+        "right": 1,
+        "unknown": 1
+      },
+      "bias_score": 0.0,
+      "geo": {
+        "place": "Prestonsburg, US",
+        "lat": 37.664887,
+        "lon": -82.772321
+      },
+      "headlines": [
+        {
+          "text": "Cook Political Report: 18 more House races move left",
+          "bias": "unknown",
+          "url": "https://www.maqnews.com/news/national/cook-political-report-18-more-house-races-move-left/article_a563afd1-3ec5-5a06-80fc-2b9d716ab105.html"
+        },
+        {
+          "text": "Cook Political Report: 18 more House races move left",
+          "bias": "center",
+          "url": "https://www.guampdn.com/news/national/cook-political-report-18-more-house-races-move-left/article_786b9acd-cac9-558c-99ab-b525a4841735.html"
+        },
+        {
+          "text": "Cook Political Report: 18 more House races move left",
+          "bias": "leanRight",
+          "url": "https://www.chronicle-tribune.com/news/wire/cook-political-report-18-more-house-races-move-left/article_726f00fe-6af7-55f7-9b2e-be1d897b2c4d.html"
+        },
+        {
+          "text": "Cook Political Report: 18 more House races move left",
+          "bias": "center",
+          "url": "https://www.floydct.com/news/national/cook-political-report-18-more-house-races-move-left/article_cfc9b3f6-7a04-5e54-a4cb-9ff2f35dc854.html"
+        },
+        {
+          "text": "🚨 COOK POLITICAL REPORT: 18 HOUSE RACES SHIFT TOWARDS DEMOCRATS 🚨",
+          "bias": "leanLeft",
+          "url": "https://dccc.org/%F0%9F%9A%A8-cook-political-report-18-house-races-shift-towards-democrats-%F0%9F%9A%A8/"
+        }
+      ]
+    },
+    {
+      "id": "f5e7889d-b0db-48bc-ba77-a5a6b672a434",
+      "label": "Reuters/Ipsos Poll Finds 78% Blame Trump Policies for Rising Prices",
+      "group": "story",
+      "size": 10,
+      "summary": "\"All I can say is I know my family's finances very well and I know everything we spend money on has gone up in price...\"",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 3
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Voters Identify a Culprit in the Rising Cost of Living – Pagosa Daily Post News Events & Video for Pagosa Springs Colorado",
+          "bias": "unknown",
+          "url": "https://pagosadailypost.com/2026/10/09/voters-identify-a-culprit-in-the-rising-cost-of-living/"
+        },
+        {
+          "text": "Bipartisan majority of Americans blame Trump policies for rising costs, Reuters/Ipsos poll finds",
+          "bias": "unknown",
+          "url": "https://www.internazionale.it/ultime-notizie-reuters/2026/10/09/bipartisan-majority-of-americans-blame-trump-policies-for-rising-costs-reuters-ipsos-poll-finds"
+        },
+        {
+          "text": "Midterm voters see Trump's tariffs as culprit for rising costs",
+          "bias": "unknown",
+          "url": "https://missoulacurrent.com/midterm-voters-tariffs/"
+        }
+      ]
+    },
+    {
+      "id": "57d72558-f8b0-4c51-8770-030591552ec4",
+      "label": "Zelenskyy says letting Russia sell diesel to US is 'investment in war'",
+      "group": "story",
+      "size": 10,
+      "summary": "The US has authorized Russian diesel sales for roughly six months, and Zelensky says the arrangement helps fund Russia’s war. Moscow has made no commitment to the energy truce Trump announced, while the EU approved new sanctions.",
+      "sources_count": 1,
+      "bias": {
+        "left": 1,
+        "center": 4,
+        "right": 6,
+        "unknown": 30
+      },
+      "bias_score": 0.455,
+      "geo": {
+        "place": "Makati, Philippines",
+        "lat": 14.550869,
+        "lon": 121.027118
+      },
+      "headlines": [
+        {
+          "text": "Is the US Easing Sanctions on Russia?",
+          "bias": "unknown",
+          "url": "https://www.gamepur.com/news/zelensky-called-the-us-diesel-deal-with-russia-a-gift-to-putin-then-trump-said-its-time-for-ukraine-to-get-a-new-president"
+        },
+        {
+          "text": "Zelensky Trashed Trump's Russia Diesel Deal the Same Day His Team Begged Miami for Help",
+          "bias": "right",
+          "url": "https://politicalanimalnews.com/zelensky-trashed-trumps-russia-diesel-deal-the-same-day-his-team-begged-miami-for-help/"
+        },
+        {
+          "text": "U.S-Russia Diesel Agreement Will Have Little Impact On U.S. Prices, Experts Warn",
+          "bias": "center",
+          "url": "https://www.marineinsight.com/u-s-russia-diesel-agreement-will-have-little-impact-on-u-s-prices-experts-warn/"
+        },
+        {
+          "text": "FTSE 100 gains after Trump deal to import Russian diesel",
+          "bias": "unknown",
+          "url": "https://ukinvestormagazine.co.uk/ftse-100-gains-after-trump-deal-to-import-russian-diesel/"
+        },
+        {
+          "text": "Donald Trump's diesel deal puts delivery reliability under scrutiny",
+          "bias": "center",
+          "url": "https://www.financial-world.org/news/news/financial/31243/donald-trump-s-diesel-deal-puts-delivery-reliability-under-scrutiny/"
+        },
+        {
+          "text": "Trump Just Begged Putin for a Diesel Bailout: The Energy Crisis Is Here and It’s Going to Get Worse",
+          "bias": "farRight",
+          "url": "https://www.newstarget.com/2026-10-12-trump-just-begged-putin-for-diesel-bailout.html"
+        },
+        {
+          "text": "On Energy, Trump Yields to Putin",
+          "bias": "unknown",
+          "url": "https://wartaekonomi.co.id/read640205/urusan-energi-trump-luluh-di-hadapan-putin"
+        },
+        {
+          "text": "Trump Diesel Tax Relief and Russia Supply Deal Face Ukraine and Congressional Backlash",
+          "bias": "unknown",
+          "url": "https://lynnwoodtimes.com/2026/10/11/diesel/"
+        }
+      ]
+    },
+    {
+      "id": "1cc2da81-2b7b-47f0-b5ef-ad6296ac5e65",
+      "label": "Judge Blocks Deportation of Man Shot by ICE in New York City",
+      "group": "story",
+      "size": 18,
+      "summary": "A federal judge blocked the deportation of Oscar Bergal, shot by ICE in Marble Hill with his 5-year-old in the car.",
+      "sources_count": 7,
+      "bias": {
+        "left": 1,
+        "center": 0,
+        "right": 1,
+        "unknown": 1
+      },
+      "bias_score": 0.0,
+      "geo": {
+        "place": "New York, US",
+        "lat": 40.697021,
+        "lon": -73.99324
+      },
+      "headlines": [
+        {
+          "text": "Federal Judge Blocks Deportation After ICE Shoots Dominican Man in Marble Hill — Here's What Comes Next",
+          "bias": "leanLeft",
+          "url": "https://www.latintimes.com/federal-judge-blocks-deportation-after-ice-shoots-dominican-man-marble-hill-heres-what-comes-600049"
+        },
+        {
+          "text": "B4L34D0 Blocked D3P0RT4TION and TRANSLATION of Man by ICE Agents in New York",
+          "bias": "unknown",
+          "url": "https://libero.pe/estados-unidos/2026/10/12/alerta-maxima-inmigrantes-legales-indocumentados-en-estados-unidos-bloquean-deportacion-traslado-de-hombre-baleado-agentes-del-ice-en-nueva-york-usa-eeuu-lbeu-419640"
+        },
+        {
+          "text": "Judge Blocks Deportation of Illegal Immigrant Who Tried To Run Over ICE Agents - Alex Jones Live",
+          "bias": "farRight",
+          "url": "https://www.alexjoneslive.com/2026/10/11/judge-blocks-deportation-of-illegal-immigrant-who-tried-to-run-over-ice-agents/"
+        }
+      ]
+    },
+    {
+      "id": "4efe7b01-6768-4ec3-907d-bdc6bd5d8334",
+      "label": "Trump Administration Considers Using Ships to Deport Immigrants: NYT",
+      "group": "story",
+      "size": 10,
+      "summary": "(LPL) – President Donald Trump’s administration is studying using ships to deport immigrants to countries in Central and South America, a proposal that could involve trips of several days and costs of millions of dollars per operation, according to an investigation published by The New York Times on October 8. The initiative is still [...]",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 1,
+        "right": 0,
+        "unknown": 0
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Trump Evaluates Using Ships to Deport Immigrants to Central and South America",
+          "bias": "center",
+          "url": "https://laprensalatina.com/trump-evalua-utilizar-barcos-para-deportar-inmigrantes-a-centroamerica-y-sudamerica/"
+        }
+      ]
+    },
+    {
+      "id": "9fc8ab14-46d1-4516-9abb-b75e3ea549f9",
+      "label": "NYPD Releases Bodycam of Aftermath of ICE Shooting in Bronx",
+      "group": "story",
+      "size": 16,
+      "summary": "On Friday, New York Police Department released images of body cameras showing the intervention of its officers.",
+      "sources_count": 6,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 1,
+        "unknown": 2
+      },
+      "bias_score": 1.0,
+      "geo": {
+        "place": "Montreal, Canada",
+        "lat": 45.499626,
+        "lon": -73.568189
+      },
+      "headlines": [
+        {
+          "text": "Images of Body Cameras Revealed After a Man Was Shot and Wounded by ICE Agents in New York",
+          "bias": "unknown",
+          "url": "https://www.24heures.ca/2026/10/09/en-video--des-images-de-cameras-corporelles-devoilees-apres-quun-homme-a-ete-blesse-par-balle-par-des-agents-de-lice-a-new-york"
+        },
+        {
+          "text": "NYPD releases body-worn camera footage of response to Marble Hill ICE shooting",
+          "bias": "unknown",
+          "url": "http://riverdalepress.stage1.crc.ms/stories/nypd-releases-body-worn-camera-footage-of-response-to-marble-hill-ice-shooting,247551"
+        },
+        {
+          "text": "NYPD bodycam captures aftermath of ICE shooting in NYC",
+          "bias": "leanRight",
+          "url": "https://kval.com/news/nation-world/watch-nypd-bodycam-captures-aftermath-of-ice-shooting-in-nyc-new-york-marble-hill-911-dominican-man-oscar-belgal-superficial-neck-wound-homeland-security-investigation-sanctuary-policies"
+        }
+      ]
+    },
+    {
+      "id": "1bab08b5-450e-42f8-800d-d8b89848074a",
+      "label": "Paxton Says Cornyn Wants Him to Lose in Leaked Audio",
+      "group": "story",
+      "size": 12,
+      "summary": "(CNN) — Ken Paxton has publicly said he would “love to have” John Cornyn’s support after their bruising Republican primary runoff in the Texas Senate race. But privately, Paxton has grown frustrated with the outgoing senator’s distance from his campaign.",
+      "sources_count": 3,
+      "bias": {
+        "left": 1,
+        "center": 1,
+        "right": 0,
+        "unknown": 0
+      },
+      "bias_score": -0.5,
+      "geo": {
+        "place": "New York, US",
+        "lat": 40.695609,
+        "lon": -73.974803
+      },
+      "headlines": [
+        {
+          "text": "‘He wants me to lose’: Paxton complains about lack of support from Cornyn in leaked audio",
+          "bias": "center",
+          "url": "https://www.kimt.com/news/he-wants-me-to-lose-paxton-complains-about-lack-of-support-from-cornyn-in-leaked/article_63f70a13-3535-5db5-b733-63d017e099ce.html"
+        },
+        {
+          "text": "In leaked audio Ken Paxton privately suggests cutting federal benefit programs to reduce national deficit",
+          "bias": "left",
+          "url": "https://www.peoplesworld.org/article/in-leaked-audio-ken-paxton-privately-suggests-cutting-federal-benefit-programs-to-reduce-national-deficit/"
+        }
+      ]
+    },
+    {
+      "id": "ec582ab4-70fb-4a94-a22b-270e29cb74be",
+      "label": "Trump cancels trip to Alabama football game amid looming hurricane",
+      "group": "story",
+      "size": 10,
+      "summary": "President Donald Trump will not attend Saturday’s Alabama football game against Georgia due to Hurricane Isaias. Trump confirmed the cancellation Friday in a post on Truth Social, and the Tuscaloosa Police Department was told around 1:30 p.m. Friday the visit was off. He had previously said Wednesday that he would let the weather decide whether he would make the trip to Bryant-Denny Stadium. “Based on the fact that a huge Hurricane/Storm is comi…",
+      "sources_count": 1,
+      "bias": {
+        "left": 3,
+        "center": 7,
+        "right": 4,
+        "unknown": 7
+      },
+      "bias_score": 0.071,
+      "geo": {
+        "place": "Tuscaloosa, US",
+        "lat": 33.210335,
+        "lon": -87.569023
+      },
+      "headlines": [
+        {
+          "text": "Trump cancels visit to Alabama-Georgia due to Hurricane Isaias",
+          "bias": "unknown",
+          "url": "https://thecrimsonwhite.com/131120/news/trump-cancels-visit-to-alabama-georgia-due-to-hurricane-isaias/"
+        },
+        {
+          "text": "President Trump makes Alabama-Georgia attendance decision",
+          "bias": "center",
+          "url": "https://larrybrownsports.com/college-football/president-trump-makes-alabama-georgia-attendance-decision/773785"
+        },
+        {
+          "text": "President Donald Trump cancels plans to attend Georgia vs. Alabama due to Hurricane Isaias",
+          "bias": "unknown",
+          "url": "https://bvmsports.com/2026/10/09/president-donald-trump-cancels-plans-to-attend-georgia-vs-alabama-due-to-hurricane-isaias/"
+        },
+        {
+          "text": "President Donald Trump cancels plans to attend Georgia vs. Alabama due to Hurricane Isaias",
+          "bias": "center",
+          "url": "https://www.cbssports.com/college-football/news/president-donald-trump-cancels-georgia-alabama-hurricane-isaias/"
+        },
+        {
+          "text": "Trump cancels trip to Alabama football game amid looming hurricane",
+          "bias": "leanRight",
+          "url": "https://wmbdradio.com/2026/10/09/trump-cancels-trip-to-alabama-football-game-amid-looming-hurricane/"
+        },
+        {
+          "text": "Trump will not attend Georgia-Alabama game due to Hurricane Isaias",
+          "bias": "leanLeft",
+          "url": "https://www.espn.com/college-football/story/_/id/50142513/trump-not-attend-georgia-alabama-game-due-hurricane-isaias"
+        },
+        {
+          "text": "President Donald Trump cancels Alabama vs Georgia visit as hurricane threatens",
+          "bias": "center",
+          "url": "https://www.tuscaloosanews.com/story/sports/college/sec/2026/10/09/president-trump-cancels-alabama-georgia-game-visit-hurricane-isaias-tuscaloosa/92173869007/"
+        },
+        {
+          "text": "Will Donald Trump be at Alabama vs. Georgia? Why president chose not to attend 2026 SEC rivalry",
+          "bias": "center",
+          "url": "https://www.sportingnews.com/us/ncaa-football/news/why-donald-trump-alabama-georgia-not-attending/f8a972f466075a9c8cffe634"
+        }
+      ]
+    },
+    {
+      "id": "ccb8f1d6-2b42-4357-b519-2250084d6632",
+      "label": "Lightsaber Darth Vader used in duel in 'Empire Strikes Back' goes up for auction",
+      "group": "story",
+      "size": 10,
+      "summary": "Darth Vader's lightsaber, which was used during the filming of the fight with Luke Skywalker in the movie “Star Wars. Episode V: The Empire Strikes Back,” will be auctioned on November 12. The initial bid is $1 million, according to Associ...",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 6
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Darth Vader's Lightsaber, Previously Sold for $3.65 Million, Will Be Put up for Auction Again",
+          "bias": "unknown",
+          "url": "https://bzh.life/ua/novyny/1791636269-svitlovyi-mech-darta-veidera-yakyi-ranishe-prodaly-za-3-65-miliona-znovu-vystavliat-na-torhy/"
+        },
+        {
+          "text": "Darth Vader's Cult Light Sword Will Be Auctioned.",
+          "bias": "unknown",
+          "url": "https://itc.ua/news/na-auktsyon-vystavyat-kultovyj-svetovoj-mech-darta-vejdera/"
+        },
+        {
+          "text": "Darth Vader’s Lightsaber From ‘Empire Strikes Back’ Up for Auction",
+          "bias": "unknown",
+          "url": "https://theconguy.com/2026/10/09/darth-vaders-lightsaber-from-empire-strikes-back-up-for-auction/"
+        },
+        {
+          "text": "Darth Vader�s Lightsaber From The Empire Strikes Back Heads to Auction",
+          "bias": "unknown",
+          "url": "https://jediinsider.com/243-28180"
+        },
+        {
+          "text": "The Laser Sword Used by Dark Vador in \"The Empire Counterattack\" at Auction",
+          "bias": "unknown",
+          "url": "https://www.acadienouvelle.com/etc/insolite/2026/10/09/le-sabre-laser-utilise-par-dark-vador-dans-lempire-contre-attaque-aux-encheres/"
+        },
+        {
+          "text": "Lightsaber Darth Vader used in 'I am your father' duel in 'Empire Strikes Back' goes up for auction - The Business Journal Darth Vader Lightsaber From ‘Star Wars’ Auction Expected to Fetch $1 Million",
+          "bias": "unknown",
+          "url": "https://thebusinessjournal.com/darth-vader-lightsaber-star-wars-auction/"
+        }
+      ]
+    },
+    {
+      "id": "9374b87c-b312-4212-8c2d-2c66f9fdc22f",
+      "label": "U.S. Budget Deficit Reaches $2 Trillion, CBO Says",
+      "group": "story",
+      "size": 10,
+      "summary": "According to CBO, the FY 2026 budget deficit totaled $2 trillion. This insight examines what contributed to it.",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 2,
+        "unknown": 2
+      },
+      "bias_score": 1.0,
+      "geo": {
+        "place": "Washington, US",
+        "lat": 38.910638,
+        "lon": -77.045321
+      },
+      "headlines": [
+        {
+          "text": "CBO: FY 2026 Budget Deficit Totaled $2 Trillion",
+          "bias": "leanRight",
+          "url": "https://www.americanactionforum.org/insight/cbo-fy-2026-budget-deficit-totaled-2-trillion/"
+        },
+        {
+          "text": "A First Look at Fiscal Year 2026’s Final Numbers",
+          "bias": "right",
+          "url": "https://www.aei.org/economics/health-care/a-first-look-at-fiscal-year-2026s-final-numbers/"
+        },
+        {
+          "text": "U.S. Budget Deficit Jumps to Nearly $2 Trillion",
+          "bias": "unknown",
+          "url": "https://www.schwartzreport.net/2026/10/09/u-s-budget-deficit-jumps-to-nearly-2-trillion/"
+        },
+        {
+          "text": "TCS President's Statement on CBO Announcing $2 trillion deficit in FY2026 - Taxpayers for Common Sense",
+          "bias": "unknown",
+          "url": "https://www.taxpayer.net/budget-appropriations-tax/tcs-presidents-statement-on-cbo-announcing-2-trillion-deficit-in-fy2026/"
+        }
+      ]
+    },
+    {
+      "id": "8f5c80c2-1e67-4d5f-ba01-4e96deb3ec37",
+      "label": "Mullin says ICE didn’t know 5-year-old boy was in car when officer fired",
+      "group": "story",
+      "size": 10,
+      "summary": "IMMIGRATION ENFORCEMENT",
+      "sources_count": 2,
+      "bias": {
+        "left": 1,
+        "center": 6,
+        "right": 0,
+        "unknown": 0
+      },
+      "bias_score": -0.143,
+      "geo": {
+        "place": "Munster, US",
+        "lat": 41.563321,
+        "lon": -87.509284
+      },
+      "headlines": [
+        {
+          "text": "Officials defend ICE shooting",
+          "bias": "center",
+          "url": "https://pressofatlanticcity.com/article_4a020fc6-8945-594c-b13f-1c03ae708da6.html"
+        },
+        {
+          "text": "Officials defend ICE shooting",
+          "bias": "center",
+          "url": "https://qconline.com/article_f975e778-268a-5149-bacc-4057d96ce96a.html"
+        },
+        {
+          "text": "Officials defend ICE shooting",
+          "bias": "center",
+          "url": "https://nwitimes.com/article_35f88a8f-5eef-5458-a321-55c97fc575b3.html"
+        },
+        {
+          "text": "Officials defend ICE shooting",
+          "bias": "center",
+          "url": "https://omaha.com/eedition/sunrise/articles/article_bccc1b13-8595-5d3c-b63c-e959e2fc97a0.html"
+        },
+        {
+          "text": "Officials defend ICE shooting",
+          "bias": "leanLeft",
+          "url": "https://www.stltoday.com/article_fad09f88-227b-5f3d-9243-b94700a785b8.html"
+        },
+        {
+          "text": "‘Normalize Bad Tactics’: ICE Keeps Shooting at People in Cars",
+          "bias": "center",
+          "url": "https://www.themarshallproject.org/2026/10/09/new-york-ice-shooting-oscar-belgal"
+        },
+        {
+          "text": "ICE officers say they shot a man in NY because they believed they were in danger",
+          "bias": "center",
+          "url": "https://www.tmj4.com/politics/immigration/federal-agents-shot-and-wounded-a-person-in-new-york-tuesday-police-say"
+        }
+      ]
+    },
+    {
+      "id": "db2c6dc6-749f-4a12-8aa8-d08580b5bae7",
+      "label": "Trump Strikes Deal with Putin to Supply Russian Diesel to U.S. and Global Markets",
+      "group": "story",
+      "size": 10,
+      "summary": "In this Quick Take, Ian Bremmer explains why President Donald Trump is pressuring Ukraine over strikes on Russian refineries, and what his new deal to buy Russian diesel means for the war.Trump warned Ukrainian President Volodymyr Zelenskyy against hitting Russian refineries, first privately and then publicly. He said the strikes help push up diesel prices. Zelenskyy refused to back off. Trump then announced a deal with Russian President Vladimi…",
+      "sources_count": 2,
+      "bias": {
+        "left": 6,
+        "center": 7,
+        "right": 12,
+        "unknown": 59
+      },
+      "bias_score": 0.24,
+      "geo": {
+        "place": "New York, US",
+        "lat": 40.697376,
+        "lon": -74.026598
+      },
+      "headlines": [
+        {
+          "text": "Trump's Russian diesel deal and what it means for Ukraine",
+          "bias": "leanLeft",
+          "url": "https://www.gzeromedia.com/video/quick-take/trump-s-russian-diesel-deal-and-what-it-means-for-ukraine"
+        },
+        {
+          "text": "Jelena Panina: What Does the Oil Deal Between Putin and Trump Say - New Standard",
+          "bias": "unknown",
+          "url": "https://standard.rs/2026/10/12/sta-kazuje-naftni-dogovor-putina-i-trampa/"
+        },
+        {
+          "text": "Trump: Panic in Washington · Global Voices",
+          "bias": "unknown",
+          "url": "https://www.iris-france.org/trump-panique-a-washington/"
+        },
+        {
+          "text": "Trump Trade: Russia to provide 300,000 tons of diesel under U.S. deal",
+          "bias": "unknown",
+          "url": "https://www.interactivebrokers.com/campus/traders-insight/securities/macro/trump-trade-russia-to-provide-300000-tons-of-diesel-under-u-s-deal/"
+        },
+        {
+          "text": "Trump Makes a Deal with Putin That Betrays Ukraine, the U.S., and Our Allies",
+          "bias": "unknown",
+          "url": "https://dianeravitch.net/2026/10/12/trump-makes-a-deal-with-putin-that-betrays-ukraine-and-europe/"
+        },
+        {
+          "text": "Trump's Dangerous Diesel Deal",
+          "bias": "left",
+          "url": "https://www.dcreport.org/2026/10/12/trump-russian-diesel-deal-fuel-prices/"
+        },
+        {
+          "text": "President Trump and Putin Show that They Control Supply and Demand of Oil and Gas and the Endgame Is Near",
+          "bias": "farRight",
+          "url": "https://joehoft.com/president-trump-putin-show-that-they-control-supply/"
+        },
+        {
+          "text": "The 10% Drop in Global Refining Capacity Leads Trump to Negotiate with Putin to Add Russian Diesel to the Market",
+          "bias": "unknown",
+          "url": "https://econojournal.com.ar/internacionales/caida-de-capacidad-de-refinamiento-lleva-a-trump-a-negociar-con-putin-para-sumar-diesel-ruso/"
+        }
+      ]
+    },
+    {
+      "id": "eea13f1b-2041-4cb8-b78d-d955fd0e06d8",
+      "label": "Starbucks Exploring Possible Acquisition of Chipotle, Report Says",
+      "group": "story",
+      "size": 10,
+      "summary": "Hello Omni Talk Fans! If you have ever seen Blazing Saddles, then you will likely know burritos and coffee don’t go... Continue Reading",
+      "sources_count": 1,
+      "bias": {
+        "left": 1,
+        "center": 3,
+        "right": 0,
+        "unknown": 8
+      },
+      "bias_score": -0.25,
+      "geo": {
+        "place": "Newton, US",
+        "lat": 42.336445,
+        "lon": -71.218751
+      },
+      "headlines": [
+        {
+          "text": "🕔 Retail Daily Minute | Starbucks Reportedly Explored a Chipotle Takeover, Prime Big Deal Days Nears $10B & CVS Brings Its Pharmacy-Focused Format to Boston",
+          "bias": "unknown",
+          "url": "https://omnitalk.blog/2026/10/12/%F0%9F%95%94-retail-daily-minute-starbucks-reportedly-explored-a-chipotle-takeover-prime-big-deal-days-nears-10b-cvs-brings-its-pharmacy-focused-format-to-boston/"
+        },
+        {
+          "text": "Was a Starbucks buyout of Chipotle even possible?",
+          "bias": "center",
+          "url": "https://www.restaurantdive.com/news/starbucks-chipotle-rumored-takeover-analysis/832662/"
+        },
+        {
+          "text": "How Much Would It Cost for Starbucks to Buy Chipotle? Together They Would Add up to 45,000 Establishments",
+          "bias": "unknown",
+          "url": "https://www.liderempresarial.com/cuanto-le-costaria-a-starbucks-comprar-chipotle-juntos-sumarian-45-mil-establecimientos/"
+        },
+        {
+          "text": "Starbucks Would Evaluate Buying Chipotle: the Operation Could Exceed US$ 39 Billion",
+          "bias": "unknown",
+          "url": "https://www.peru-retail.com/starbucks-evaluaria-comprar-chipotle-la-operacion-podria-superar-los-us-39-000-millones/"
+        },
+        {
+          "text": "Chipotle Stock Jumps on Starbucks Takeover Report",
+          "bias": "center",
+          "url": "https://thecryptobasic.com/2026/10/09/chipotle-stock-extends-6-rally-on-report-starbucks-explored-takeover-analysts-split/"
+        },
+        {
+          "text": "Starbucks could buy Chipotle in a blockbuster deal that would reshape fast food",
+          "bias": "leanLeft",
+          "url": "https://www.fastcompany.com/91620910/starbucks-could-buy-chipotle-in-a-blockbuster-deal-that-would-reshape-fast-food"
+        },
+        {
+          "text": "Reports Point to Potential Chipotle, Starbucks Merger - Orange County Business Journal",
+          "bias": "unknown",
+          "url": "https://www.ocbj.com/food/restaurants/reports-point-to-potential-chipotle-starbucks-merger/"
+        },
+        {
+          "text": "Why a Starbucks takeover of Chipotle would — and wouldn’t — make sense for both companies",
+          "bias": "unknown",
+          "url": "https://retailwit.com/why-a-starbucks-takeover-of-chipotle-would-and-wouldnt-make-sense-for-both-companies/"
+        }
+      ]
+    },
+    {
+      "id": "5ad282d5-a9ff-4d48-aaa4-9fa90ad2835a",
+      "label": "Jon Rahm Says He Won't Be Part of the Next Version of LIV Golf",
+      "group": "story",
+      "size": 10,
+      "summary": "(Photo credit: Jerod Ringwald)The DP World Tour, formerly known as the European Tour, may hold the key for many players departing LIV Golf.Spanish youngster David Puig announced Thursday that he would not stay with LIV as it restructures for the future, switching his membership to the DP World Tour. And two-time major champion Bryson DeChambeau is reportedly weighing more starts in Europe, as well.",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 6,
+        "right": 1,
+        "unknown": 16
+      },
+      "bias_score": 0.143,
+      "geo": {
+        "place": "United Kingdom",
+        "lat": 52.926452,
+        "lon": -0.706221
+      },
+      "headlines": [
+        {
+          "text": "David Puig leaves LIV as Bryson DeChambeau reportedly eyes Europe starts",
+          "bias": "unknown",
+          "url": "http://www.tucsonpost.com/news/279362879/david-puig-leaves-liv-as-bryson-dechambeau-reportedly-eyes-europe-starts"
+        },
+        {
+          "text": "Jon Rahm Breaks with Saudi Golf League",
+          "bias": "unknown",
+          "url": "https://www.atalayar.com/articulo/deportes/jon-rahm-rompe-liga-saudi-golf/20261008220952229754.html"
+        },
+        {
+          "text": "Why is Jon Rahm set to quit LIV Golf and what is next for the Spaniard?",
+          "bias": "unknown",
+          "url": "https://www.skysports.com/golf/video/13596486/why-is-rahm-set-to-quit-liv-golf-and-what-is-next-for-the-spaniard"
+        },
+        {
+          "text": "Jon Rahm is officially leaving LIV Golf. Here’s what we know - Irish Golfer Magazine",
+          "bias": "unknown",
+          "url": "https://irishgolfer.ie/latest-golf-news/2026/10/08/jon-rahm-is-officially-leaving-liv-golf-heres-what-we-know/"
+        },
+        {
+          "text": "Fresh twist in LIV saga as Aussies make legal request",
+          "bias": "center",
+          "url": "https://www.golfaustralia.com.au/news/fresh-twist-in-liv-saga-as-aussies-make-legal-request-629503"
+        },
+        {
+          "text": "2x Major Champion Jon Rahm Poised for LIV Golf Exit Amid Major League Changes",
+          "bias": "unknown",
+          "url": "https://firstsportz.com/jon-rahm-poised-for-liv-golf-exit/"
+        },
+        {
+          "text": "Jon Rahm says he won’t be part of the next version of LIV Golf",
+          "bias": "unknown",
+          "url": "https://www.scoregolf.com/news-story/jon-rahm-says-he-wont-be-part-of-the-next-version-of-liv-golf/"
+        },
+        {
+          "text": "Jon Rahm set to sever ties with LIV Golf",
+          "bias": "unknown",
+          "url": "https://www.golf365.com/home/jon-rahm-liv-golf-journey"
+        }
+      ]
+    },
+    {
+      "id": "9887133f-1cda-450e-9df0-c5c23c40c6c8",
+      "label": "Trump picks Katie Zacharia as next White House press secretary",
+      "group": "story",
+      "size": 12,
+      "summary": "Former White House intern and legal advisor to Trump Media, Katie Zacharia, has been announced as the successor to the outgoing White House Press Secretary, Karoline Leavitt. She seems thrilled – or, to put it another way, lost in a rabbit hole of sycophancy. Thank you to President Trump for the distinguished privilege of serving […]",
+      "sources_count": 3,
+      "bias": {
+        "left": 4,
+        "center": 13,
+        "right": 6,
+        "unknown": 13
+      },
+      "bias_score": 0.087,
+      "geo": {
+        "place": "Washington, US",
+        "lat": 38.90703,
+        "lon": -77.031884
+      },
+      "headlines": [
+        {
+          "text": "There's a new Press Secretary in the White House ...but it's not that easy to tell - 18 favourite reactions to the koincidences",
+          "bias": "unknown",
+          "url": "https://www.thepoke.com/2026/10/12/new-press-secretary-in-the-white-house-reactions-to-the-koincidence/"
+        },
+        {
+          "text": "Reproductive Freedom for All Slams New White House Press Secretary as an Anti-Abortion Conspiracy Theorist - News & Photo Features",
+          "bias": "unknown",
+          "url": "https://news-photos-features.com/2026/10/11/reproductive-freedom-for-all-slams-new-white-house-press-secretary-as-an-anti-abortion-conspiracy-theorist/"
+        },
+        {
+          "text": "New White House press secretary is a Pizzagate conspiracy theorist",
+          "bias": "left",
+          "url": "https://popular.info/p/new-white-house-press-secretary-is"
+        },
+        {
+          "text": "Trump's new press secretary said abortion pills contain chemicals used in Nazi camps",
+          "bias": "center",
+          "url": "https://www.celebtattler.com/news/news/celebrities/47009/trump-s-new-press-secretary-said-abortion-pills-contain-chemicals-used-in-nazi-camps/"
+        },
+        {
+          "text": "Trump taps Truth Social adviser as White House press secretary",
+          "bias": "center",
+          "url": "https://wcfcourier.com/article_10f5ea5e-8ad4-5068-9594-31e1c7925700.html"
+        },
+        {
+          "text": "Katie Zacharia picked as White House press secretary",
+          "bias": "center",
+          "url": "https://starherald.com/article_687a90ca-39da-5f6e-92fb-db39bd7252b9.html"
+        },
+        {
+          "text": "Katie Zacharia appointed White House press secretary",
+          "bias": "unknown",
+          "url": "https://capitolcommunicator.com/katie-zacharia-appointed-white-house-press-secretary/"
+        },
+        {
+          "text": "Who is Katie Zacharia? What to know about the next White House press secretary",
+          "bias": "center",
+          "url": "https://www.actionnews5.com/2026/10/10/who-is-katie-zacharia-what-know-about-next-white-house-press-secretary/"
+        }
+      ]
+    },
+    {
+      "id": "42c439a2-89fe-4bb5-8ea5-68049e416577",
+      "label": "JD Vance expresses doubt about livestreaming Fort Hood shooter execution, says he wouldn't watch",
+      "group": "story",
+      "size": 10,
+      "summary": "WASHINGTON — Vice President JD Vance said Friday he doesn't know whether the Pentagon will carry out its plan to livestream the execution by firing squad of the former Army psychiatrist convicted in the deadly 2009 Fort Hood shooting, a…",
+      "sources_count": 1,
+      "bias": {
+        "left": 2,
+        "center": 7,
+        "right": 0,
+        "unknown": 2
+      },
+      "bias_score": -0.222,
+      "geo": {
+        "place": "Cincinnati, US",
+        "lat": 39.099261,
+        "lon": -84.508723
+      },
+      "headlines": [
+        {
+          "text": "Vance unsure about livestream execution",
+          "bias": "center",
+          "url": "https://herald-review.com/article_3f2a5f27-d763-5d70-9796-e6c4fa72e13a.html"
+        },
+        {
+          "text": "JD Vance Distances Himself From Hegseth’s Televised Execution Plans With Stunning Admission",
+          "bias": "unknown",
+          "url": "https://api.follow.it/track-rss-story-click/v3/NmWK7c5pDza7STqiRCC4U_z2oFCvJ_OI?utm_source=follow.it"
+        },
+        {
+          "text": "In Ohio visit, JD Vance says he won't watch livestreamed ...",
+          "bias": "center",
+          "url": "https://www.cincinnati.com/story/news/politics/2026/10/09/jd-vance-is-in-cincinnati-and-lima-friday--live/92168158007/"
+        },
+        {
+          "text": "Update: Vice President JD Vance: “I won’t watch Fort Hood shooter’s execution”",
+          "bias": "center",
+          "url": "https://sandrarose.com/2026/10/fort-hood-shooters-execution-by-firing-squad-will-be-livestreamed/"
+        },
+        {
+          "text": "Vance expresses doubts about Pentagon plan to livestream Fort Hood shooter's execution",
+          "bias": "center",
+          "url": "https://www.loganbanner.com/news/vance-expresses-doubts-about-pentagon-plan-to-livestream-fort-hood-shooters-execution/article_577fddad-d32d-5d20-96d3-282a6dabb1da.html"
+        },
+        {
+          "text": "JD Vance says he won't watch public execution of Fort Hood shooter",
+          "bias": "center",
+          "url": "https://www.dispatch.com/videos/news/politics/2026/10/09/jd-vance-says-he-wont-watch-public-execution-of-fort-hood-shooter/92174439007/"
+        },
+        {
+          "text": "Vance expresses doubts about plan to livestream Fort Hood shooter’s execution",
+          "bias": "center",
+          "url": "https://www.impartialreporter.com/news/national/26624697.vance-expresses-doubts-plan-livestream-fort-hood-shooters-execution/"
+        },
+        {
+          "text": "Vance expresses doubts about Pentagon plan to livestream Ford Hood shooter’s execution",
+          "bias": "center",
+          "url": "https://www.dailybulletin.com/2026/10/09/fort-hood-shooting-execution-vance/"
+        }
+      ]
+    },
+    {
+      "id": "ee23aefa-304b-4c74-8937-13666f9a4343",
+      "label": "CDC Data Shows Fewer Young Teens Identifying as Gay or Bisexual, Especially Girls",
+      "group": "story",
+      "size": 10,
+      "summary": "Our friends at the Daily Citizen report that new data from the Centers for Disease Control shows the number of teenagers who identify as lesbian, gay, or bisexual has dropped dramatically. Social psychologist Jean Twenge of San Diego State University analyzed the CDC’s 2025 Youth Risk Behavior Survey and found the decline is striking",
+      "sources_count": 1,
+      "bias": {
+        "left": 3,
+        "center": 0,
+        "right": 0,
+        "unknown": 2
+      },
+      "bias_score": -1.0,
+      "geo": {
+        "place": "Washington, US",
+        "lat": 38.903443,
+        "lon": -77.022672
+      },
+      "headlines": [
+        {
+          "text": "CDC Data Shows Younger Teens Much Less Likely to Identify as Lesbian, Gay, or Bisexual – Family Council",
+          "bias": "unknown",
+          "url": "https://familycouncil.org/2026/10/12/cdc-data-shows-younger-teens-much-less-likely-to-identify-as-lesbian-gay-or-bisexual/"
+        },
+        {
+          "text": "Fewer Younger Teens Identify as Lesbian, Gay, or Bisexual",
+          "bias": "left",
+          "url": "https://www.metroweekly.com/2026/10/fewer-younger-teens-identify-lesbian-gay-bisexual/"
+        },
+        {
+          "text": "LGBTQ+ Youth Identification Is Falling Among Younger Teens. But Why?",
+          "bias": "left",
+          "url": "https://instinctmagazine.com/lgbtq-youth-back-in-closet/"
+        },
+        {
+          "text": "Fewer and Fewer US Teenagers Identify as Lesbian, Gay, or Bisexual.",
+          "bias": "unknown",
+          "url": "https://www.queer.de/detail.php?article_id=59909"
+        },
+        {
+          "text": "Is LGBTQ+ Identification Really in “Free Fall” Among Teenagers? The Data, Explained",
+          "bias": "left",
+          "url": "https://www.them.us/answers-and-advice/health/lgbtq-identification-youth-free-fall"
+        }
+      ]
+    },
+    {
+      "id": "e75a3c3f-6282-4b56-9bcd-4dac171645ab",
+      "label": "FBI Arrests Suspect in ShinyHunters Hack of the Bureau's Jobs Portal",
+      "group": "story",
+      "size": 10,
+      "summary": "The FBI has arrested another suspected ShinyHunters associate in the jobs portal breach investigation, highlighting third-party security risks.",
+      "sources_count": 1,
+      "bias": {
+        "left": 1,
+        "center": 3,
+        "right": 2,
+        "unknown": 5
+      },
+      "bias_score": 0.167,
+      "geo": {
+        "place": "New York, US",
+        "lat": 40.721271,
+        "lon": -74.020143
+      },
+      "headlines": [
+        {
+          "text": "FBI Arrests Another Suspect in ShinyHunters Breach Investigation",
+          "bias": "unknown",
+          "url": "https://securereading.com/fbi-arrests-shinyhunters-suspect-jobs-portal-breach/"
+        },
+        {
+          "text": "FBI Arrests Another Suspected ShinyHunters Hacker Linked to FBIJobs.gov Breach",
+          "bias": "unknown",
+          "url": "https://cybersecuritynews.com/fbi-arrests-shinyhunters-hacker-linked-to-breach/"
+        },
+        {
+          "text": "Another Suspect Arrested in FBI Job Portal Hack",
+          "bias": "leanRight",
+          "url": "https://patribotics.blog/cybersecurity/%D8%A7%D8%B9%D8%AA%D9%82%D8%A7%D9%84-%D9%85%D8%B4%D8%AA%D8%A8%D9%87-%D8%A8%D9%87-%D8%A2%D8%AE%D8%B1-%D9%81%D9%8A-%D8%A7%D8%AE%D8%AA%D8%B1%D8%A7%D9%82-%D8%A8%D9%88%D8%A7%D8%A8%D8%A9-%D9%88%D8%B8%D8%A7/"
+        },
+        {
+          "text": "FBI Arrests Another ShinyHunters Suspect Reportedly Involved in Its Jobs Portal Hack",
+          "bias": "unknown",
+          "url": "https://thehackernews.com/2026/10/fbi-arrests-another-shinyhunters.html"
+        },
+        {
+          "text": "FBI Arrests Suspect from Hacker Group that Targeted GTA and the FBI Itself",
+          "bias": "leanLeft",
+          "url": "https://www.polygon.com/shinyhunters-hacker-arrested-gta-6-fbi-leak/"
+        },
+        {
+          "text": "FBI arrests another ShinyHunters suspect after massive breach of employee data",
+          "bias": "center",
+          "url": "https://www.nextgov.com/cybersecurity/2026/10/fbi-arrests-another-shinyhunters-suspect-after-massive-breach-employee-data/416532/"
+        },
+        {
+          "text": "FBI arrests another suspect tied to cybercrime group accused of hacking FBI",
+          "bias": "leanRight",
+          "url": "https://wpde.com/news/nation-world/fbi-arrests-another-suspect-tied-to-cybercrime-shinyhunters-group-accused-of-hacking-its-jobs-site-director-kash-patel-steal-data-personal-information-dark-web-third-party-vendor"
+        },
+        {
+          "text": "FBI arrests another suspect tied to cybercrime group accused of hacking FBI",
+          "bias": "center",
+          "url": "https://krcrtv.com/news/nation-world/fbi-arrests-another-suspect-tied-to-cybercrime-shinyhunters-group-accused-of-hacking-its-jobs-site-director-kash-patel-steal-data-personal-information-dark-web-third-party-vendor"
+        }
+      ]
+    },
+    {
+      "id": "5972ecd8-8567-4a73-a627-945948b2c3ea",
+      "label": "Delta Air Slashes Profit Forecast over Fuel-Cost Surge",
+      "group": "story",
+      "size": 10,
+      "summary": "Delta Air Lines expects to have to absorb additional fuel costs of around DKK 39 billion in 2026. The American airline is therefore lowering its expectations for this year's results despite significant revenue growth.",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 4,
+        "right": 0,
+        "unknown": 4
+      },
+      "bias_score": 0.0,
+      "geo": {
+        "place": "Charlotte, US",
+        "lat": 35.225812,
+        "lon": -80.857938
+      },
+      "headlines": [
+        {
+          "text": "High Fuel Prices Force Delta to Downgrade",
+          "bias": "unknown",
+          "url": "https://check-in.dk/hoeje-braendstofpriser-tvinger-delta-til-nedjustering/"
+        },
+        {
+          "text": "Jet fuel pain: Delta cuts profit forecast as Ryanair CEO warns of price pressures",
+          "bias": "unknown",
+          "url": "https://globalbusinessoutlook.com/aviation/jet-fuel-pain-delta-cuts-profit-forecast-as-ryanair-ceo-warns-of-price-pressures/"
+        },
+        {
+          "text": "Delta remains confident in travel demand despite high fuel costs",
+          "bias": "center",
+          "url": "https://www.bizjournals.com/twincities/news/2026/10/09/delta-slashes-forecast-q3.html?ana=brss_3254"
+        },
+        {
+          "text": "Delta cuts 2026 profit forecast as fuel costs surge",
+          "bias": "center",
+          "url": "https://www.aerotime.aero/articles/delta-cuts-2026-profit-forecast-fuel-costs"
+        },
+        {
+          "text": "Delta Lowers Profit Forecast Due to Higher Fuel Costs",
+          "bias": "unknown",
+          "url": "https://www.airliners.de/delta-gewinnprognose-hoeherer-treibstoffkosten/90725"
+        },
+        {
+          "text": "Delta cuts outlook amid fuel price pressures – CEO NA Magazine",
+          "bias": "unknown",
+          "url": "https://ceo-na.com/news/delta-cuts-outlook-amid-fuel-price-pressures/"
+        },
+        {
+          "text": "Delta Air Lines (NYSE:DAL) Announces FY 2026 Earnings Guidance",
+          "bias": "center",
+          "url": "https://www.marketbeat.com/instant-alerts/guidance-delta-air-lines-nyse-dal-announces-fy-2026-earnings-guidance-2026-10-09/"
+        },
+        {
+          "text": "Delta Air Lines Expects to Absorb $6 Billion Increase in Fuel Costs, Lowers 2026 Profit Outlook",
+          "bias": "center",
+          "url": "https://skift.com/2026/10/09/delta-air-lines-expects-to-absorb-six-billion-in-fuel-costs/"
+        }
+      ]
+    },
+    {
+      "id": "70e6c1aa-3cd6-40c3-b6fa-3b9f9ebabd81",
+      "label": "First suicide memorial by a US archdiocese signals a compassionate shift by the Catholic Church",
+      "group": "story",
+      "size": 12,
+      "summary": "EDITOR’S NOTE — This story includes discussion of suicide. If you or someone you know needs help, the national suicide and crisis lifeline in the U.S. is available by calling or texting 988. There is also an online chat at…",
+      "sources_count": 3,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 1,
+        "unknown": 0
+      },
+      "bias_score": 1.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "First suicide memorial by a US archdiocese signals a compassionate shift by the Catholic Church",
+          "bias": "leanRight",
+          "url": "https://www.grandhaventribune.com/lifestyles/faith/first-suicide-memorial-by-a-us-archdiocese-signals-a-compassionate-shift-by-the-catholic-church/article_2a1aff01-5aa2-5704-a133-d2bcfdfc98f3.html"
+        }
+      ]
+    },
+    {
+      "id": "b8e04639-1164-4e51-ab8b-d603c06479af",
+      "label": "Boy Killed After Video Display Board Falls at Brevard County Elementary School",
+      "group": "story",
+      "size": 10,
+      "summary": "A family in Florida is seeking answers following a tragic incident in which a 120-pound digital display board collapsed on a 5-year-old boy at school, resulting in his death. The boy has been identified by his family as Bellamy Dawkins-Morris, and he had autism.  Brevard Public Schools reported that Bellamy sustained severe injuries when a...",
+      "sources_count": 2,
+      "bias": {
+        "left": 1,
+        "center": 1,
+        "right": 0,
+        "unknown": 1
+      },
+      "bias_score": -0.5,
+      "geo": {
+        "place": "New York, US",
+        "lat": 40.731134,
+        "lon": -74.024335
+      },
+      "headlines": [
+        {
+          "text": "5-year-old dies after digital whiteboard falls on him at school, family demands answers",
+          "bias": "leanLeft",
+          "url": "https://face2faceafrica.com/article/5-year-old-dies-after-digital-whiteboard-falls-on-him-at-school-family-demands-answers"
+        },
+        {
+          "text": "5-year-old boy killed after video board falls at elementary school",
+          "bias": "center",
+          "url": "https://local12.com/news/nation-world/five-year-old-boy-dies-after-promethean-board-falls-central-florida-elementary-school-police-investigate-cause-district-mourns-loss-cincinnati-education-safety-tragedy-family-grief-classroom-equipment-incident-tragic-fatal"
+        },
+        {
+          "text": "6-Year-Old Riviera Elementary Student Dies After Video Display Board Falls on Palm Bay Campus",
+          "bias": "unknown",
+          "url": "https://thespacecoastrocket.com/6-year-old-riviera-elementary-student-dies-after-video-display-board-falls-on-palm-bay-campus/"
+        }
+      ]
+    },
+    {
+      "id": "a2a2129b-6e05-49ed-90f0-e54abf378f40",
+      "label": "OpenAI fires 3 safety researchers in dispute over AI risks",
+      "group": "story",
+      "size": 10,
+      "summary": "OpenAI's firing of three safety researchers has sparked a dispute over misconduct allegations, independent AI evaluations, and protections for safety research.",
+      "sources_count": 1,
+      "bias": {
+        "left": 1,
+        "center": 2,
+        "right": 0,
+        "unknown": 16
+      },
+      "bias_score": -0.333,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "OpenAI Fires 3 Safety Researchers, Then Defends Decision Amid Oversight Dispute",
+          "bias": "unknown",
+          "url": "https://www.techrepublic.com/article/news-openai-fires-three-ai-safety-researchers/"
+        },
+        {
+          "text": "OpenAI Accused of Firing Three Security Researchers - The Media Leader EN",
+          "bias": "unknown",
+          "url": "https://fr.themedialeader.com/openai-accusee-davoir-licencie-trois-chercheurs-securite/"
+        },
+        {
+          "text": "Three Former OpenAI Employees Alert About Chain of Thought Monitoring",
+          "bias": "unknown",
+          "url": "https://www.fredzone.org/trois-ex-employes-dopenai-alertent-sur-la-surveillance-des-chaines-de-pensee/"
+        },
+        {
+          "text": "OpenAI Responds to the Charges of the Three Employees Fired",
+          "bias": "unknown",
+          "url": "https://www.punto-informatico.it/openai-risponde-accuse-tre-dipendenti-licenziati/"
+        },
+        {
+          "text": "OpenAI Defends Firing of Three Safety Researchers Amid Growing Concerns Over Rogue AI Systems",
+          "bias": "unknown",
+          "url": "https://www.tekedia.com/openai-defends-firing-of-three-safety-researchers-amid-growing-concerns-over-rogue-ai-systems/"
+        },
+        {
+          "text": "OpenAI Fires 3 Safety Researchers in Dispute Over AI Risks",
+          "bias": "unknown",
+          "url": "https://www.securityweek.com/openai-fires-3-safety-researchers-in-dispute-over-ai-risks/"
+        },
+        {
+          "text": "OpenAI defends firing of three safety researchers",
+          "bias": "center",
+          "url": "https://betanews.com/article/openai-safety-researchers-fired/"
+        },
+        {
+          "text": "OpenAI Fired Three Researchers Who Wanted to Preserve the Monitoring of the Reasoning of Their Models",
+          "bias": "unknown",
+          "url": "https://wwwhatsnew.com/2026/10/09/openai-despidos-investigadores-cadena-pensamiento-monitoreo-gpt6-astra-2026/"
+        }
+      ]
+    },
+    {
+      "id": "96b60e65-45f3-4a42-8637-6d016c2870ca",
+      "label": "A US charity plans to use AI to monitor its Gaza classrooms for ‘hateful’ speech",
+      "group": "story",
+      "size": 13,
+      "summary": "A US-based charity educating thousands of Palestinian children in Gaza plans to use artificial intelligence to monitor classroom conversations for...",
+      "sources_count": 4,
+      "bias": {
+        "left": 2,
+        "center": 1,
+        "right": 1,
+        "unknown": 2
+      },
+      "bias_score": -0.25,
+      "geo": {
+        "place": "New York, US",
+        "lat": 40.687069,
+        "lon": -73.976682
+      },
+      "headlines": [
+        {
+          "text": "US Charity to Use AI to Detect ‘Hateful,’ ‘Antisemitic’ Speech in Gaza Classrooms",
+          "bias": "leanRight",
+          "url": "https://www.algemeiner.com/2026/10/12/781088/"
+        },
+        {
+          "text": "They’re Setting Up AI Surveillance To ‘De-Radicalize’ Classrooms In Gaza",
+          "bias": "farLeft",
+          "url": "https://orinocotribune.com/theyre-setting-up-ai-surveillance-to-de-radicalize-classrooms-in-gaza/"
+        },
+        {
+          "text": "A U.S. Plan to Monitor Teachers' Conversations in Gaza Schools with Artificial Intelligence.",
+          "bias": "left",
+          "url": "https://palinfo.com/news/2026/10/10/1120507/"
+        },
+        {
+          "text": "They’re Setting Up AI Surveillance To “De-Radicalize” Classrooms In Gaza",
+          "bias": "unknown",
+          "url": "https://caitlinjohnstone.com.au/2026/10/10/theyre-setting-up-ai-surveillance-to-de-radicalize-classrooms-in-gaza/"
+        },
+        {
+          "text": "They're Setting Up AI Surveillance To \"De-Radicalize\" Classrooms In Gaza",
+          "bias": "unknown",
+          "url": "https://www.caitlinjohnst.one/p/theyre-setting-up-ai-surveillance"
+        },
+        {
+          "text": "U.S. charity plans to use AI to monitor Gaza classrooms to police anti-Israel speech",
+          "bias": "center",
+          "url": "https://5pillarsuk.com/2026/10/09/u-s-charity-plans-to-use-ai-to-monitor-gaza-classrooms-to-police-anti-israel-speech/"
+        }
+      ]
+    },
+    {
+      "id": "rss_10866_1791395943752_1",
+      "label": "FDA: Pre-workout recalled over ingredient linked to heart and blood pressure problems",
+      "group": "story",
+      "size": 10,
+      "summary": "(CNN) – A popular pre-workout powder is being recalled because it contains an illegal ingredient that can raise blood pressure and lead to cardiovascular problems. During testing, Food and Drug Administration officials found that Rapture Pre-workout contained DMAA, a derivative of amphetamine. Three flavors of Rapture Pre-workout are included in the voluntary recall: Rainbow Twist, [...]",
+      "sources_count": 2,
+      "bias": {
+        "left": 1,
+        "center": 4,
+        "right": 0,
+        "unknown": 2
+      },
+      "bias_score": -0.2,
+      "geo": {
+        "place": "Harlingen, US",
+        "lat": 26.195625,
+        "lon": -97.696528
+      },
+      "headlines": [
+        {
+          "text": "FDA testing found DMAA in recalled Rapture pre-workout - Dining and Cooking",
+          "bias": "unknown",
+          "url": "https://www.diningandcooking.com/2854185/fda-testing-found-dmaa-in-recalled-rapture-pre-workout/"
+        },
+        {
+          "text": "Pre-workout powder recalled over illegal stimulant. Here’s what it is and how to get a refund",
+          "bias": "center",
+          "url": "https://www.wgem.com/2026/10/11/pre-workout-powder-recalled-over-illegal-stimulant-heres-what-it-is-how-get-refund/"
+        },
+        {
+          "text": "FDA Recalls RAPTURE Pre-Workout After Detecting DMAA: Scientific Analysis of the Controversial Stimulant – IronMag Bodybuilding & Fitness Blog",
+          "bias": "unknown",
+          "url": "https://www.ironmagazine.com/2026/fda-recalls-rapture-pre-workout-after-detecting-dmaa-scientific-analysis-of-the-controversial-stimulant/"
+        },
+        {
+          "text": "Pre-workout powder recalled nationwide for illegal substance: FDA",
+          "bias": "center",
+          "url": "https://www.valleycentral.com/news/state-news/pre-workout-powder-recalled-nationwide-for-illegal-substance-fda/"
+        },
+        {
+          "text": "FDA Announces Nationwide Recall of Supplements That May Raise Blood Pressure",
+          "bias": "leanLeft",
+          "url": "https://www.health.com/pre-workout-recall-october-2026-12164805"
+        },
+        {
+          "text": "Workout supplement recalled after FDA finds ‘hidden ingredient’ known to raise blood pressure, cause heart problems",
+          "bias": "center",
+          "url": "https://cardiovascularbusiness.com/topics/clinical/heart-health/rapture-workout-supplement-recalled-fda-heart-attack"
+        },
+        {
+          "text": "FDA: Pre-workout recalled over ingredient linked to heart and blood pressure problems",
+          "bias": "center",
+          "url": "https://www.ketv.com/article/fda-pre-workout-recall-raptor/74066496"
+        }
+      ]
+    },
+    {
+      "id": "9556fdc0-bed0-48e0-b80e-62c89c895bf6",
+      "label": "194-year-old tortoise reveals stable gene switches that may help resist aging: Study",
+      "group": "story",
+      "size": 10,
+      "summary": "Jonathan, the oldest turtle in the world, carries 287 genetic variants that slow down aging. His epigenome still resembles that of much younger congeners.",
+      "sources_count": 2,
+      "bias": {
+        "left": 3,
+        "center": 17,
+        "right": 1,
+        "unknown": 20
+      },
+      "bias_score": -0.095,
+      "geo": {
+        "place": "Middelharnis, Netherlands",
+        "lat": 51.751637,
+        "lon": 4.161195
+      },
+      "headlines": [
+        {
+          "text": "She Is More than Two Hundred Years Old: We Finally Know the Secret of Jonathan's Longevity, the Oldest Turtle in the World, and He Holds in 287 Genes.",
+          "bias": "unknown",
+          "url": "https://www.science-et-vie.com/mise-en-avant/elle-a-plus-de-deux-cent-ans-on-connait-enfin-le-secret-de-la-longevite-de-jonathan-la-tortue-la-plus-vieille-du-monde-et-il-tient-dans-287-genes-262666.html"
+        },
+        {
+          "text": "Jonathan's Secret of Longevity, the 194-Year-Old Giant Turtle, Finally Pierced?",
+          "bias": "unknown",
+          "url": "https://trustmyscience.com/le-secret-de-longevite-de-jonathan-la-tortue-geante-de-194-ans-enfin-perce/"
+        },
+        {
+          "text": "Jonathan the Tortoise: 287 Gene Variants and a Stable Epigenome Explain His",
+          "bias": "unknown",
+          "url": "https://bioengineer.org/jonathan-the-tortoise-287-gene-variants-and-a-stable-epigenome-explain-his-194-year-life/"
+        },
+        {
+          "text": "Jonathan the Tortoise: 287 Gene Variants and a Stable Epigenome Explain His",
+          "bias": "unknown",
+          "url": "https://scienmag.com/jonathan-the-tortoise-287-gene-variants-and-a-stable-epigenome-explain-his-194-year-life/"
+        },
+        {
+          "text": "Jonathan Is 194 Years Old and the World's Oldest Land Animal – Now Scientists Have Made a Rather Remarkable Discovery Inside Him",
+          "bias": "unknown",
+          "url": "https://illvet.se/naturen/jonathan-ar-194-ar-gammal-och-varldens-aldsta-landdjur-nu-har-forskare-gjort-en-ganska-anmarkningsvard-upptackt-i-hans-inre"
+        },
+        {
+          "text": "How Does Jonathan the Tortoise Stay so Young at 194? The Answer Lies in His Genes.",
+          "bias": "unknown",
+          "url": "https://scientias.nl/hoe-blijft-schildpad-jonathan-op-zijn-194e-zo-jong-het-antwoord-zit-in-zijn-genen/"
+        },
+        {
+          "text": "From Less than a Thousand to More than 180,000: Aldabra Giant Turtles Already Exceed the Human Population of the Seychelles",
+          "bias": "unknown",
+          "url": "https://socientifica.com.br/de-menos-de-mil-a-mais-de-180-mil-tartarugas-gigantes-de-aldabra-ja-superam-a-populacao-humana-das-seicheles/"
+        },
+        {
+          "text": "Vanderbilt Health researchers uncover longevity clues from 194-year-old tortoise",
+          "bias": "center",
+          "url": "https://elizabethton.com/2026/10/09/vanderbilt-health-researchers-uncover-longevity-clues-from-194-year-old-tortoise/"
+        }
+      ]
+    },
+    {
+      "id": "9249b3be-a9c1-4aa6-8d61-b7de2c1b8a94",
+      "label": "US imposes sanctions on ICC hours after former judge wins Nobel Peace Prize",
+      "group": "story",
+      "size": 10,
+      "summary": "He just can not do sensible things. And again this time he got caught by the devils of his delusion of omnipotence: yesterday Donald Trump imposed sanctions on the International Criminal Court. Why? The statement arrived a few hours after the award of the Nobel Peace Prize to Navi Pillay, former judge of the Criminal Court [...]",
+      "sources_count": 1,
+      "bias": {
+        "left": 3,
+        "center": 4,
+        "right": 1,
+        "unknown": 12
+      },
+      "bias_score": -0.25,
+      "geo": {
+        "place": "Washington, US",
+        "lat": 38.902558,
+        "lon": -77.048069
+      },
+      "headlines": [
+        {
+          "text": "Trump Against the International Criminal Court: the World Against",
+          "bias": "unknown",
+          "url": "https://www.corrierenazionale.net/2026/10/10/trump-contro-la-corte-penale-internazionale-il-mondo-contro/"
+        },
+        {
+          "text": "US imposes sanctions on ICC hours after Navi Pillay wins Nobel Peace Prize - Inside Politics",
+          "bias": "unknown",
+          "url": "https://insidepolitic.co.za/watch-us-imposes-sanctions-on-icc-hours-after-navi-pillay-wins-nobel-peace-prize/"
+        },
+        {
+          "text": "Global support for the International Criminal Court after Trump imposes sanctions",
+          "bias": "unknown",
+          "url": "https://smilefm.co.za/global-support-for-the-international-criminal-court-after-trump-imposes-sanctions/"
+        },
+        {
+          "text": "The U.S. Imposed Sanctions on the International Criminal Court Hours After a Former Judge Received the Nobel Peace Prize",
+          "bias": "unknown",
+          "url": "https://agenciaajn.com/noticia/ee-uu-impuso-sanciones-a-la-corte-penal-internacional-horas-despues-de-que-una-exjueza-recibiera-el-nobel-de-la-paz-314982"
+        },
+        {
+          "text": "Netanyahu Supports US Sanctions to the ICC and Criticises Nobel",
+          "bias": "unknown",
+          "url": "https://www.diariocarioca.com/2026/10/09/mundo/oriente-medio/condenado-binyamin-netanyahu-apoia-sancoes-dos-eua-ao-tpi/"
+        },
+        {
+          "text": "Nobel Peace Prize Goes to Former ICC Judge",
+          "bias": "center",
+          "url": "https://foreignpolicy.com/2026/10/09/nobel-peace-prize-navi-pillay-icc-israel-genocide-gaza-us-trump-sanctions/"
+        },
+        {
+          "text": "US hits International Criminal Court with sweeping sanctions as part of drive to dismantle tribunal",
+          "bias": "center",
+          "url": "https://www.carolinacoastonline.com/national/article_d298f794-5155-4171-95a6-685633c86c11.html"
+        },
+        {
+          "text": "UK and allies back International Criminal Court over US sanctions",
+          "bias": "leanRight",
+          "url": "https://www.itv.com/news/2026-10-09/uk-and-allies-back-international-criminal-court-over-us-sanctions"
+        }
+      ]
+    },
+    {
+      "id": "f5bd2d27-1212-4a86-a82b-51086cd733f6",
+      "label": "New York-Bound Avianca Flight Diverted to Miami After Turbulence; 8 Passengers Hospitalized",
+      "group": "story",
+      "size": 10,
+      "summary": "Several passengers were taken to hospitals after the landing, while the aeronautical authorities announced an investigation into what happened The article Nine wounded in mid-flight: the turbulence that made Avianca's journey between Rionegro and New York a nightmare was originally published in Las2orillas.co: Stories, Voices and News from Colombia. Copyrights Las2orillas.co",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 2,
+        "right": 0,
+        "unknown": 2
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Nine Wounded in Mid-Flight: the Turbulence that Turned a Nightmare Into a Journey From Avianca Between Rionegro and New York",
+          "bias": "unknown",
+          "url": "https://www.las2orillas.co/nueve-heridos-en-pleno-vuelo-la-turbulencia-que-volvio-una-pesadilla-un-viaje-de-avianca-entre-rionegro-y-nueva-york/"
+        },
+        {
+          "text": "Terror on a Flight Due to Severe Turbulence – Nine Injured, Emergency Landing",
+          "bias": "unknown",
+          "url": "https://www.irafina.gr/tromos-se-ptisi-apo-ischyres-anatarakseis-ennea-travmaties-ektakti-prosgeiosi/"
+        },
+        {
+          "text": "Multiple passengers and crew injured after Avianca flight experiences severe turbulence",
+          "bias": "center",
+          "url": "https://www.ksro.com/2026/10/09/multiple-passengers-and-crew-injured-after-avianca-flight-experiences-severe-turbulence/"
+        },
+        {
+          "text": "Multiple passengers and crew injured after Avianca flight experiences severe turbulence",
+          "bias": "center",
+          "url": "https://www.ktlo.com/2026/10/09/multiple-passengers-and-crew-injured-after-avianca-flight-experiences-severe-turbulence/"
+        }
+      ]
+    },
+    {
+      "id": "5066911a-2ea2-40b9-aca0-cda3638fe445",
+      "label": "Americans 75 and Older Are Wealthiest Age Group, Fed Survey Finds",
+      "group": "story",
+      "size": 10,
+      "summary": "Bolstered by steady gains in the stock market, families headed by someone aged 75 or older are now America’s wealthiest, while the youngest families saw their wealth decline in the past three years, a government report released Friday said. The…",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 1,
+        "right": 0,
+        "unknown": 1
+      },
+      "bias_score": 0.0,
+      "geo": {
+        "place": "Cherokee County, US",
+        "lat": 34.262996,
+        "lon": -84.492016
+      },
+      "headlines": [
+        {
+          "text": "Americans 75 and older are wealthiest age group, Fed survey finds",
+          "bias": "center",
+          "url": "https://www.times-news.com/news/americans-75-and-older-are-wealthiest-age-group-fed-survey-finds/article_df91b5a5-04ab-5d46-a925-40c31aaf3ced.html"
+        },
+        {
+          "text": "Americans 75 and older are wealthiest age group, Fed survey finds",
+          "bias": "unknown",
+          "url": "http://www.nashvilleledger.com/editorial/Article.aspx?id=208740"
+        }
+      ]
+    },
+    {
+      "id": "67cb4a3c-9990-4c18-92a1-3d3968b83668",
+      "label": "Trump sets up committee to investigate, potentially remove the Fed's Lisa Cook",
+      "group": "story",
+      "size": 12,
+      "summary": "Al Drago/BloombergPresident Donald Trump has launched a renewed effort to remove Federal Reserve Governor Lisa Cook, placing the first Black woman to…",
+      "sources_count": 3,
+      "bias": {
+        "left": 3,
+        "center": 4,
+        "right": 2,
+        "unknown": 6
+      },
+      "bias_score": -0.111,
+      "geo": {
+        "place": "Newton, US",
+        "lat": 42.338358,
+        "lon": -71.210693
+      },
+      "headlines": [
+        {
+          "text": "Trump Renews Effort to Remove Federal Reserve Governor Lisa Cook",
+          "bias": "unknown",
+          "url": "https://shinemycrown.com/trump-renews-effort-to-remove-federal-reserve-governor-lisa-cook/"
+        },
+        {
+          "text": "Dive Deposits: Trump’s Cook committee is betting like it’s 2025",
+          "bias": "center",
+          "url": "https://www.bankingdive.com/news/trump-lisa-cook-federal-reserve/832754/"
+        },
+        {
+          "text": "Lisa Cook Fights to Keep Her Seat at the Federal Reserve as Trump Renews Push to Oust Her",
+          "bias": "left",
+          "url": "https://lasentinel.net/lisa-cook-fights-to-keep-her-seat-at-the-federal-reserve-as-trump-renews-push-to-oust-her.html"
+        },
+        {
+          "text": "Trump appoints committee to revive quest to remove Lisa Cook from Fed board",
+          "bias": "leanLeft",
+          "url": "https://kansasreflector.com/2026/10/10/repub/trump-appoints-committee-to-revive-quest-to-remove-lisa-cook-from-fed-board/"
+        },
+        {
+          "text": "The Latest Roundup: Trump establishes committee to investigate Fed’s Lisa Cook in latest effort to fire her",
+          "bias": "center",
+          "url": "https://indepthnh.org/2026/10/09/the-latest-roundup-trump-establishes-committee-to-investigate-feds-lisa-cook-in-latest-effort-to-fire-her/"
+        },
+        {
+          "text": "Fed gov probe continues; bill to give agents ‘clear legal status’",
+          "bias": "unknown",
+          "url": "https://www.realestatenews.com/2026/10/09/fed-gov-probe-continues-bill-to-give-agents-clear-legal-status"
+        },
+        {
+          "text": "Trump Creates Committee to Investigate Fed Governor Lisa Cook’s Mortgage Statements",
+          "bias": "farRight",
+          "url": "https://slaynews.com/trump-creates-committee-investigate-fed-governor-lisa-cook-mortgage-statements/"
+        },
+        {
+          "text": "Trump announces inquiry into Fed governor Cook",
+          "bias": "leanLeft",
+          "url": "https://azdailysun.com/trump-announces-inquiry-into-fed-governor-cook/article_0a800e28-545c-47b1-8b4c-7310b65aee73.html"
+        }
+      ]
+    },
+    {
+      "id": "2261985c-fc90-4516-88b1-6dfb1ec4c056",
+      "label": "Anthropic Bans 'Cruel' Behavior Against Its Claude AI",
+      "group": "story",
+      "size": 10,
+      "summary": "Anthropogenic introduces from 12 November 2026 rules against repeated abusive interactions with Claude, without automatically sanctioning the swearing, criticism or testing of AI models.",
+      "sources_count": 2,
+      "bias": {
+        "left": 4,
+        "center": 6,
+        "right": 1,
+        "unknown": 33
+      },
+      "bias_score": -0.273,
+      "geo": {
+        "place": "Mill Valley, US",
+        "lat": 37.906813,
+        "lon": -122.544859
+      },
+      "headlines": [
+        {
+          "text": "Are You Arguing Too Often with Claude? Anthropically Introduce a Policy Against Abusive Behavior Against Artificial Intelligence",
+          "bias": "unknown",
+          "url": "https://www.mobilissimo.ro/stiri-diverse/te-certi-prea-des-cu-claude-anthropic-introduce-o-politica-impotriva-comportamentului-abuziv-fata-de-inteligenta-artificiala"
+        },
+        {
+          "text": "Anthropic wants people to stop being mean to Claude",
+          "bias": "left",
+          "url": "https://boingboing.net/2026/10/12/anthropic-wants-people-to-stop-being-mean-to-claude.html"
+        },
+        {
+          "text": "Anthropic bans \"abusive or cruel behavior\" towards its AI models - Stuff South Africa",
+          "bias": "unknown",
+          "url": "https://stuff.co.za/?p=229000"
+        },
+        {
+          "text": "Can IIA Suffer? Anthropic Now Forbids Gratuitous and Repeated Cruelty to Claude",
+          "bias": "unknown",
+          "url": "https://www.journaldugeek.com/2026/10/12/lia-peut-elle-souffrir-anthropic-interdit-desormais-la-cruaute-gratuite-et-repetee-envers-claude/"
+        },
+        {
+          "text": "Anthropic Bans \"Cruel\" Treatment of AI Model Claude",
+          "bias": "unknown",
+          "url": "https://www.tek.no/nyheter/nyhet/i/rMmrz8/anthropic-naa-faar-du-ikke-vaere-slem-mot-claude"
+        },
+        {
+          "text": "Anthropic Bans Cruel Behavior Toward Claude, Says Chatbot Is Still Not a Person",
+          "bias": "farRight",
+          "url": "https://www.naturalnews.com/2026-10-12-anthropic-bans-cruel-behavior-toward-claude-ai.html"
+        },
+        {
+          "text": "Anthropic Bans Sustained Cruelty to AI Models",
+          "bias": "unknown",
+          "url": "https://www.tech360.tv/anthropic-bans-sustained-cruelty-to-ai-models"
+        },
+        {
+          "text": "The Biggest Change Anthology Made to Claude's Rules",
+          "bias": "unknown",
+          "url": "https://www.businessinsider.jp/article/2610-anthropic-changes-rules-claude-usage-policy/"
+        }
+      ]
+    },
+    {
+      "id": "6a85a07e-c0ba-435d-b4ca-c7afcb1df9a8",
+      "label": "Ex-college basketball player Kerr Kriisa admits demanding $9,000 from victim in fraud scheme",
+      "group": "story",
+      "size": 10,
+      "summary": "Estonian national basketball team player and former guard for Lithuanian team Zalgiris Kerr Kriisa has pleaded guilty in federal court in the United States to wire fraud. The 25-year-old guard admitted to participating in a multi-year fraud scheme involving two victims and millions of dollars, the U.S. Attorney’s Office announced on […]",
+      "sources_count": 1,
+      "bias": {
+        "left": 1,
+        "center": 6,
+        "right": 1,
+        "unknown": 4
+      },
+      "bias_score": 0.0,
+      "geo": {
+        "place": "Phoenix, US",
+        "lat": 33.462942,
+        "lon": -112.094811
+      },
+      "headlines": [
+        {
+          "text": "SCANDAL SHAKES THE BASKETBALL WORLD: Former ŽAlgiris Player Admits to Multi-Million Dollar Fraud in the USA, Faces up to Two Years in Prison!",
+          "bias": "unknown",
+          "url": "https://www.bhbasket.ba/skandal-trese-kosarkaski-svijet-bivsi-igrac-zalgirisa-priznao-milionsku-prevaru-u-sad-u-prijeti-mu-do-dvije-godine-zatvora/"
+        },
+        {
+          "text": "Kriisa Pleaded Guilty, Faces Prison Sentence",
+          "bias": "unknown",
+          "url": "https://www.basketnews.lt/news-257178-kriisa-pripazino-kalte-gresia-laisves-atemimo-bausme.html"
+        },
+        {
+          "text": "Ex-WVU Guard Kerr Kriisa Pleads Guilty In $2.2M Wire Fraud Scheme",
+          "bias": "unknown",
+          "url": "https://globelivemedia.com/news/ex-wvu-guard-kerr-kriisa-pleads-guilty-in-2-2m-wire-fraud-scheme/"
+        },
+        {
+          "text": "Former U of A basketball player admits demanding $9,000 from victim in fraud scheme",
+          "bias": "center",
+          "url": "https://www.12news.com/article/syndication/associatedpress/ex-college-basketball-player-kerr-kriisa-admits-demanding-9000-from-victim-in-fraud-scheme/616-04886ef1-31d0-4249-9a5e-93d26bfdc558"
+        },
+        {
+          "text": "Former Arizona Wildcat Kerr Kriisa admits demanding $9,000 from victim in fraud scheme",
+          "bias": "center",
+          "url": "https://www.kgun9.com/sports/local-sports/former-arizona-wildcat-kerr-kriisa-admits-demanding-9-000-from-victim-in-fraud-scheme"
+        },
+        {
+          "text": "BREAKING: Kerr Kriisa pleads guilty to federal wire fraud charges",
+          "bias": "center",
+          "url": "https://kykernel.com/128893/news/breaking-kerr-kriisa-pleads-guilty-to-federal-wire-fraud-charges/"
+        },
+        {
+          "text": "Former WVU Basketball G Kerr Kriisa Pleads Guilty to Fraud",
+          "bias": "unknown",
+          "url": "https://wvsportsnow.com/former-wvu-basketball-g-kerr-kriisa-pleads-guilty-to-fraud/"
+        },
+        {
+          "text": "Kriisa pleads guilty in multi-million dollar fraud case",
+          "bias": "center",
+          "url": "https://wvmetronews.com/2026/10/08/kriisa-pleads-guilty-in-multi-million-dollar-fraud-case/"
+        }
+      ]
+    },
+    {
+      "id": "1f252cc3-ba3e-4d2d-bf9f-85d6d19cc459",
+      "label": "Annie Andrews Releases Transgender Issues Ad",
+      "group": "story",
+      "size": 10,
+      "summary": "President used anti-trans slur to describe SC Senate candidate \nThe post Annie Andrews denounces trans athletes after Trump targets her appeared first on Washington Blade: LGBTQ News, Politics, LGBTQ Rights, Gay News.",
+      "sources_count": 1,
+      "bias": {
+        "left": 3,
+        "center": 0,
+        "right": 1,
+        "unknown": 1
+      },
+      "bias_score": -0.5,
+      "geo": {
+        "place": "Los Angeles, US",
+        "lat": 34.027968,
+        "lon": -118.209977
+      },
+      "headlines": [
+        {
+          "text": "Annie Andrews denounces trans athletes after Trump targets her",
+          "bias": "leanLeft",
+          "url": "https://www.washingtonblade.com/2026/10/12/annie-andrews-denounces-trans-athletes-after-trump-targets-her/"
+        },
+        {
+          "text": "Annie Andrews Calls Out Washington ‘Swamp’ in New Campaign Ad",
+          "bias": "unknown",
+          "url": "https://holycitysinner.com/politics/annie-andrews-calls-out-washington-%E2%80%98swamp%E2%80%99-in-new-campaign-a/"
+        },
+        {
+          "text": "After Trump called Annie Andrews an anti-trans slur, the Democrat now calls trans women ‘biological men’",
+          "bias": "leanLeft",
+          "url": "https://www.advocate.com/politics/election/annie-andrews-south-carolina-democrat"
+        },
+        {
+          "text": "SC Dem Senate Candidate Annie Andrews Releases Ad Calling Trans Women “Biological Men”",
+          "bias": "left",
+          "url": "https://www.erininthemorning.com/p/sc-dem-senate-candidate-annie-andrews"
+        },
+        {
+          "text": "Annie Andrews Just Hit the Panic Button",
+          "bias": "right",
+          "url": "https://www.nrsc.org/press-releases/annie-andrews-just-hit-the-panic-button-2026-10-08/"
+        }
+      ]
+    },
+    {
+      "id": "f61cf6a6-d928-4d5b-8921-253121e49db5",
+      "label": "Mamdani’s Oct. 7 commemoration outrages supporters and critics of Israel",
+      "group": "story",
+      "size": 10,
+      "summary": "October 7 is a day that will surely live in infamy, both at home and in the Middle East. Marking the first anniversary of the attacks on Israel since taking office, New York City Mayor Zohran Mamdani used the occasion to trash Israeli policy rather than mourn the lives of Israelis and foreign nationals slaughtered […]",
+      "sources_count": 1,
+      "bias": {
+        "left": 1,
+        "center": 1,
+        "right": 0,
+        "unknown": 0
+      },
+      "bias_score": -0.5,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "The Mamdani Tightrope is Slippery",
+          "bias": "leanLeft",
+          "url": "https://washingtonmonthly.com/2026/10/12/the-mamdani-tightrope-is-slippery/"
+        },
+        {
+          "text": "The Problem With Mamdani’s October 7 Statement",
+          "bias": "center",
+          "url": "https://www.readtangle.com/the-problem-with-mamdanis-october-7-statement/"
+        }
+      ]
+    },
+    {
+      "id": "1ee7becb-f5fd-4af2-ab96-b2371b467141",
+      "label": "Trump's Fed ex-nominee Shelton to advise Bessent, Treasury says",
+      "group": "story",
+      "size": 10,
+      "summary": "by Quoth The Raven, QTR’s Fringe Finance: If you were looking for evidence that the United States was seriously considering revaluing its gold reserves, or potentially moving toward some form of gold-linked monetary system, the appointment of Judy Shelton to advise Treasury Secretary Scott Bessent is almost exactly what you would expect to see. News this […]",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 1,
+        "right": 1,
+        "unknown": 0
+      },
+      "bias_score": 0.5,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Judy Shelton, Scott Bessent And The Coming Gold Revaluation?",
+          "bias": "right",
+          "url": "https://www.sgtreport.com/2026/10/judy-shelton-scott-bessent-and-the-coming-gold-revaluation/"
+        },
+        {
+          "text": "Security Check",
+          "bias": "center",
+          "url": "https://lufkindailynews.com/news_reuters/business/trumps-fed-ex-nominee-shelton-to-advise-bessent-treasury-says/article_3bc35dd4-64b6-5492-b44d-f88742d25406.html"
+        }
+      ]
+    },
+    {
+      "id": "03210dbf-0ba3-42bb-aa22-d1d6d6de81f7",
+      "label": "Arizona Man Arrested, Charged After Allegedly Threatening to Bomb White House",
+      "group": "story",
+      "size": 10,
+      "summary": "TUCSON – A Tucson man, Jacob Aaron Hicks, was arrested this week for allegedly sending an email on Sep.23, 2026, threatening to commit mass bombings at the White House and around the Washington, D.C. area. Hicks was charged by criminal complaint with Making an Interstate Threat to Injure. He made his initial appearance in federal...",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 2,
+        "right": 1,
+        "unknown": 1
+      },
+      "bias_score": 0.333,
+      "geo": {
+        "place": "Glendale, US",
+        "lat": 33.526937,
+        "lon": -112.172935
+      },
+      "headlines": [
+        {
+          "text": "Tucson Man Arrested For Threatening To Bomb White House",
+          "bias": "right",
+          "url": "https://arizonadailyindependent.com/2026/10/08/tucson-man-arrested-for-threatening-to-bomb-white-house/"
+        },
+        {
+          "text": "Tucson Man Charged Over White House Bomb Threat Also Allegedly Threatened Anthrax Attack",
+          "bias": "unknown",
+          "url": "https://azfreenews.com/2026/10/tucson-man-charged-over-white-house-bomb-threat-also-allegedly-threatened-anthrax-attack/"
+        },
+        {
+          "text": "Federal Case Follows Alleged Bomb Threats Targeting Washington",
+          "bias": "center",
+          "url": "https://www.allaboutarizonanews.com/federal-case-follows-alleged-bomb-threats-targeting-washington/"
+        },
+        {
+          "text": "Discrimination: Man Insults and Threatens Young People with Litter",
+          "bias": "center",
+          "url": "https://www.stern.de/gesellschaft/regional/mecklenburg-vorpommern/diskriminierung--mann-beleidigt-und-bedroht-jugendlichen-mit-wurfbeil-38374240.html"
+        }
+      ]
+    },
+    {
+      "id": "4560283b-e59b-4273-9678-aee4baff54e1",
+      "label": "US Imposes Sanctions Targeting 17 Vessels of Iran 'Shadow Fleet'",
+      "group": "story",
+      "size": 10,
+      "summary": "New postsFeatured entry14:18US Sanctions 17 Vessels Linked To Iran's Shadow FleetThe US Treasury Department announced new sanctions on October 8 targeting 17 vessels and companies accused of helping Iran transport crude oil, petroleum products, and petrochemicals in violation of US sanctions.The action is part of Operation Economic Outcast, a campaign launched in August to restrict",
+      "sources_count": 2,
+      "bias": {
+        "left": 0,
+        "center": 1,
+        "right": 0,
+        "unknown": 1
+      },
+      "bias_score": 0.0,
+      "geo": {
+        "place": "Toronto, Canada",
+        "lat": 43.65328,
+        "lon": -79.38132
+      },
+      "headlines": [
+        {
+          "text": "US Sanctions 17 Vessels Linked To Iran's Shadow Fleet",
+          "bias": "unknown",
+          "url": "https://www.torontotelegraph.com/news/279361857/us-sanctions-17-vessels-linked-to-iran-shadow-fleet"
+        },
+        {
+          "text": "Treasury Sanctions 17 Tankers in Iran Shadow Fleet Crackdown",
+          "bias": "center",
+          "url": "https://ritzherald.com/treasury-sanctions-17-tankers-in-iran-shadow-fleet-crackdown/"
+        }
+      ]
+    },
+    {
+      "id": "16f8d13f-700a-4a7e-8479-4659bd3edf65",
+      "label": "Protesters Stage 'I Am Jane Doe' Rally in New York City Against Sexual Violence",
+      "group": "story",
+      "size": 10,
+      "summary": "In light of Jane Doe’s civil lawsuit against seven men in the Chi Phi fraternity and Cornell University, discussions of",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 2
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Resources For Victims of Sexual Violence On Campus",
+          "bias": "unknown",
+          "url": "https://nevadasagebrush.com/2026/10/09/resources-for-victims-of-sexual-violence-on-campus/"
+        },
+        {
+          "text": "Here's Everything To Know About The Nationwide \"I Am Jane Doe\" Protest",
+          "bias": "unknown",
+          "url": "https://www.hercampus.com/culture/oct-8-i-am-jane-doe-nationwide-protest-locations-how-to-join-info/"
+        }
+      ]
+    },
+    {
+      "id": "03ba35d0-c594-4d7b-97a9-a0f4ab56bfb5",
+      "label": "Huckabee aide suppressed US Embassy reports critical of Israeli government: Report",
+      "group": "story",
+      "size": 10,
+      "summary": "The New York Times reports that U.S. Ambassador to Israel Mike Huckabee’s senior adviser, David Milstein, suppressed an embassy report and obstructed efforts by our elected representatives in Congress to obtain information. That in itself is a scandal—but it’s the gravity of the information in question that makes this story rise to the level of […]",
+      "sources_count": 2,
+      "bias": {
+        "left": 1,
+        "center": 0,
+        "right": 2,
+        "unknown": 0
+      },
+      "bias_score": 0.333,
+      "geo": {
+        "place": "Lake Jackson, US",
+        "lat": 29.028485,
+        "lon": -95.446542
+      },
+      "headlines": [
+        {
+          "text": "Mike Huckabee Should Resign",
+          "bias": "right",
+          "url": "https://ronpaulinstitute.org/mike-huckabee-should-resign/"
+        },
+        {
+          "text": "Mark Levin’s stepson systematically quashed US embassy reports on Israeli war crimes",
+          "bias": "right",
+          "url": "https://www.tehrantimes.com/news/530896/Mark-Levin-s-stepson-systematically-quashed-US-embassy-reports"
+        },
+        {
+          "text": "Does America First Really Mean Israel First?",
+          "bias": "left",
+          "url": "https://www.thenation.com/article/politics/donald-trump-israel-first-mike-huckabee-david-milstein/"
+        }
+      ]
+    },
+    {
+      "id": "049de3ee-a843-41d6-b2cc-3ad1d70074cd",
+      "label": "Debate over energy costs highlights how differently Jackson and Collins approach governing",
+      "group": "story",
+      "size": 10,
+      "summary": "U.S. Senate candidate Troy Jackson (D-ME) continues his criticism of his GOP opponent, Sen. Susan Collins, for claiming she helped exempt road salt from President Trump's tariffs on Canada. The two candidates sparred over the issue at a debate earlier this week, with Jackson at one point chiding her with his \"We can't eat road salt\" retort. \"If I was in Sen. Collins' position, I wouldn't be crowing about the fact that I got road salt exempted of…",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 1,
+        "right": 0,
+        "unknown": 1
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Troy Jackson Steps Up Criticism of Susan Collins Over Trade Tariffs Impact on Mainers",
+          "bias": "center",
+          "url": "https://www.c-span.org/clip/campaign-2026/troy-jackson-steps-up-criticism-of-susan-collins-over-trade-tariffs-impact-on-mainers/5208168"
+        },
+        {
+          "text": "Democrats push for Troy Jackson to unseat Susan...",
+          "bias": "unknown",
+          "url": "https://pluang.com/en/news-feed/demokrat-desak-pemilih-maine-dukung-troy-jackson-gantikan-susan-collins-2026"
+        }
+      ]
+    },
+    {
+      "id": "e40b0634-d013-47a5-9e62-9a033049673c",
+      "label": "Trump says Minnesotans should ‘fight back’ against Somali immigrants",
+      "group": "story",
+      "size": 10,
+      "summary": "Fight Back! News Service is circulating the following statement by the Twin Cities district of the Freedom Road Socialist Organization ...",
+      "sources_count": 1,
+      "bias": {
+        "left": 3,
+        "center": 4,
+        "right": 0,
+        "unknown": 3
+      },
+      "bias_score": -0.429,
+      "geo": {
+        "place": "Minneapolis, US",
+        "lat": 44.978045,
+        "lon": -93.264693
+      },
+      "headlines": [
+        {
+          "text": "Resist Trump’s Racist Attacks on Ilhan Omar and the Somali Community",
+          "bias": "farLeft",
+          "url": "https://fightbacknews.org/articles/resist-trumps-racist-attacks-on-ilhan-omar-and-the-somali-community"
+        },
+        {
+          "text": "Faith leaders denounce President Trump's post about Somali immigrants encouraging Minnesotans to 'fight back'",
+          "bias": "center",
+          "url": "https://www.kare11.com/article/news/local/faith-leaders-denounce-president-trump-post-about-somali-immigrants/89-ba6e4eb6-a849-4e64-8bff-683578f44258"
+        },
+        {
+          "text": "Trump once again targets Minnesota Somali Americans with inflammatory post, suggests another federal invasion",
+          "bias": "center",
+          "url": "https://bringmethenews.com/minnesota-news/trump-once-again-targets-minnesota-somali-americans-with-inflammatory-post-suggests-another-federal-invasion"
+        },
+        {
+          "text": "‘Violence, murder and mayhem all over’: President Donald Trump urges Minnesotans to ‘fight back’ against Somali immigrants in the state",
+          "bias": "center",
+          "url": "https://www.wonderwall.com/politics/violence-murder-mayhem-all-over-president-donald-trump-urges-minnesotans-fight-back-against-somali-immigrants-state/"
+        },
+        {
+          "text": "How Does the MN GOP Feel About the President’s Call for Anti-Somali Pogroms?",
+          "bias": "unknown",
+          "url": "https://racketmn.com/how-does-the-mn-gop-feel-about-the-presidents-call-for-anti-somali-pogroms"
+        },
+        {
+          "text": "Does he lie about everything?",
+          "bias": "unknown",
+          "url": "https://freethoughtblogs.com/pharyngula/2026/10/09/does-he-lie-about-everything/"
+        },
+        {
+          "text": "'Taken over by Somali immigrants': Trump tells Minnesotans to 'fight back!'",
+          "bias": "unknown",
+          "url": "https://olivetreeviews.org/taken-over-by-somali-immigrants-trump-tells-minnesotans-to-fight-back/"
+        },
+        {
+          "text": "Somalia: Trump Urges Minnesotans to 'Fight Back' Against Somali Immigrants",
+          "bias": "center",
+          "url": "https://allafrica.com/stories/202610090379.html"
+        }
+      ]
+    },
+    {
+      "id": "f07caeab-cb18-490b-b6cf-b6bc5c88f9ee",
+      "label": "Georgia, Michigan Senate Debates Turn to Personal Attacks",
+      "group": "story",
+      "size": 10,
+      "summary": "The incumbent Democrat pressed his GOP challenger on tariffs and the Iran war, while Collins tied Ossoff to Biden-era inflation.",
+      "sources_count": 1,
+      "bias": {
+        "left": 3,
+        "center": 8,
+        "right": 2,
+        "unknown": 2
+      },
+      "bias_score": -0.077,
+      "geo": {
+        "place": "Suwanee, US",
+        "lat": 34.048668,
+        "lon": -84.071835
+      },
+      "headlines": [
+        {
+          "text": "In heated debate, Ossoff puts Collins’ record on trial",
+          "bias": "center",
+          "url": "https://gasiantimes.com/nation/2026/10/09/63518/"
+        },
+        {
+          "text": "Collins, Ossoff trade personal insults during Georgia’s first U.S. Senate debate",
+          "bias": "center",
+          "url": "https://roughdraftatlanta.com/2026/10/09/ossoff-collins-senate-debate/"
+        },
+        {
+          "text": "Trump and accusations of extremism were dominant themes in Georgia’s U.S. Senate debate",
+          "bias": "center",
+          "url": "https://capitol-beat.org/2026/10/trump-and-accusations-of-extremism-were-dominant-themes-in-georgias-u-s-senate-debate/"
+        },
+        {
+          "text": "Trump and accusations of extremism were dominant themes in Georgia’s U.S. Senate debate",
+          "bias": "center",
+          "url": "https://www.jacksonprogress-argus.com/news/elections/trump-and-accusations-of-extremism-were-dominant-themes-in-georgia-s-u-s-senate-debate/article_56243fbd-d355-5406-93ce-80cbc2d24c77.html"
+        },
+        {
+          "text": "Trump, accusations of extremism were dominant themes in Georgia’s U.S. Senate debate",
+          "bias": "unknown",
+          "url": "https://thecurrentga.org/2026/10/09/trump-accusations-of-extremism-were-dominant-themes-in-georgias-u-s-senate-debate/"
+        },
+        {
+          "text": "Collins, Ossoff trade personal insults during Georgia’s first U.S. Senate debate",
+          "bias": "leanLeft",
+          "url": "https://georgiarecorder.com/2026/10/08/collins-ossoff-trade-personal-insults-during-georgias-first-u-s-senate-debate/"
+        },
+        {
+          "text": "Somehow, Mike Collins Was Completely Unprepared for Questions About His Neo-Nazi Ties During Senate Debate",
+          "bias": "left",
+          "url": "https://talkingpointsmemo.com/fivepoints/somehow-mike-collins-was-completely-unprepared-for-questions-about-his-neo-nazi-ties-during-senate-debate"
+        },
+        {
+          "text": "Ossoff, Collins debate healthcare, tariffs, gas prices",
+          "bias": "leanLeft",
+          "url": "https://www.gonzagabulletin.com/news/national/ossoff-collins-debate-healthcare-tariffs-gas-prices/article_a27789df-37af-50ef-baab-1cda016b7b47.html"
+        }
+      ]
+    },
+    {
+      "id": "2baf47ea-f4b9-42f9-b4be-8f31fdb7a8ab",
+      "label": "SpaceX takes aim at US wireless carriers with spectrum acquisition",
+      "group": "story",
+      "size": 10,
+      "summary": "Washington,USA (TechGenez) – SpaceX wants to build its own cellular network, sending massive shocks through the telecom industry. The company signed a deal on Thursday to buy a nationwide collection of low-band radio spectrum for about $8 billion from the private-equity firm Grain Management. This purchase brings SpaceX much closer to offering direct satellite-to-cellular service [...]",
+      "sources_count": 2,
+      "bias": {
+        "left": 0,
+        "center": 6,
+        "right": 0,
+        "unknown": 54
+      },
+      "bias_score": 0.0,
+      "geo": {
+        "place": "London, UK",
+        "lat": 51.533599,
+        "lon": -0.127362
+      },
+      "headlines": [
+        {
+          "text": "SpaceX Eyes Its Own Cellular Network, Sending Shockwaves Through The Telecom Industry",
+          "bias": "unknown",
+          "url": "https://techgenez.com/spacex-eyes-its-own-cellular-network-sending-shockwaves-through-the-telecom-industry/"
+        },
+        {
+          "text": "Why SpaceX is buying radio spectrum to expand Starlink Mobile beyond satellites",
+          "bias": "unknown",
+          "url": "https://www.indiaweekly.biz/why-spacex-is-buying-radio-spectrum-to-expand-starlink-mobile-beyond-satellites/"
+        },
+        {
+          "text": "Banking Giant sets AST SpaceMobile (ASTS) stock price target",
+          "bias": "unknown",
+          "url": "https://finbold.com/banking-giant-sets-ast-spacemobile-asts-stock-price-target/"
+        },
+        {
+          "text": "Starlink Mobile, 15,000 New Satellites and Frequencies at 800 MHz: the Plan to Bring Satellite to Smartphones",
+          "bias": "unknown",
+          "url": "https://www.smartworld.it/news/starlink-mobile-15000-satelliti-banda-800-mhz-smartphone.html"
+        },
+        {
+          "text": "SpaceX to acquire additional low-band spectrum",
+          "bias": "unknown",
+          "url": "https://www.tahawultech.com/home-slide/spacex-to-acquire-additional-low-band-spectrum/"
+        },
+        {
+          "text": "15,000 More Satellites: Starlink Steps Up Its Telco Challenge – channelnews",
+          "bias": "center",
+          "url": "https://www.channelnews.com.au/15000-more-satellites-starlink-steps-up-its-telco-challenge/"
+        },
+        {
+          "text": "“From operator to agent: the great shift in mobile connectivity” – L. Lassauce (interview)",
+          "bias": "unknown",
+          "url": "https://www.europeanscientist.com/en/features/from-operator-to-agent-the-great-shift-in-mobile-connectivity-l-lassauce-interview/"
+        },
+        {
+          "text": "Starlink Mobile's 800 MHz Deal Answers Carrier Skeptics",
+          "bias": "unknown",
+          "url": "https://www.iphoneincanada.ca/2026/10/10/starlink-mobile-800mhz-spectrum-t-mobile-nextel/"
+        }
+      ]
+    },
+    {
+      "id": "ac646073-3677-4af9-9d6f-f9fb281df847",
+      "label": "El-Sayed and Rogers spar over Iran and Trump, and toss insults, in Michigan Senate debate",
+      "group": "story",
+      "size": 10,
+      "summary": "Michigan’s “progressive” Senate candidate defends capitalism and tariffs, denounces Iran and Venezuela, and backs a “safe and secure” border as he prepares to campaign with Obama.",
+      "sources_count": 1,
+      "bias": {
+        "left": 5,
+        "center": 2,
+        "right": 3,
+        "unknown": 2
+      },
+      "bias_score": -0.2,
+      "geo": {
+        "place": "United States",
+        "lat": 38.415148,
+        "lon": -95.965633
+      },
+      "headlines": [
+        {
+          "text": "Michigan’s senatorial candidates debate: El-Sayed lurches further to the right</em>",
+          "bias": "farLeft",
+          "url": "https://www.wsws.org/en/articles/2026/10/12/sdhr-o12.html"
+        },
+        {
+          "text": "El-Sayed and Rogers attack each other over economy, healthcare at first Senate debate",
+          "bias": "leanLeft",
+          "url": "https://www.michigandaily.com/news/government/el-sayed-and-rogers-attack-each-other-over-economy-healthcare-at-first-senate-debate/"
+        },
+        {
+          "text": "Michigan Senate Odds After Debate: Trade on Politics Prediction Markets",
+          "bias": "unknown",
+          "url": "https://www.sportsbettingdime.com/news/politics/michigan-senate-odds-after-debate-trade-politics-prediction-markets/"
+        },
+        {
+          "text": "Michigan Senate debate: El-Sayed, Rogers spar over Iran, Israel",
+          "bias": "leanLeft",
+          "url": "https://www.newarab.com/news/michigan-senate-debate-el-sayed-rogers-spar-over-iran-israel"
+        },
+        {
+          "text": "El-Sayed, Rogers clash in heated Michigan U.S. Senate debate",
+          "bias": "leanRight",
+          "url": "https://www.suncommercial.com/news/national/article_9ac3837a-d24b-50b6-afce-a64729ba2772.html"
+        },
+        {
+          "text": "El-Sayed, Rogers clash in heated Michigan U.S. Senate debate",
+          "bias": "center",
+          "url": "https://www.insidenova.com/news/national/el-sayed-rogers-clash-in-heated-michigan-u-s-senate-debate/article_2763f9e5-da64-560a-8c39-8f8231c7e807.html"
+        },
+        {
+          "text": "Michigan U.S. Senate debate focuses on affordability, A.I. control",
+          "bias": "leanRight",
+          "url": "https://wsbt.com/news/local/michigan-us-senate-debate-focuses-on-affordability-ai-artificial-intelligence-healthcare-budgets-housing-gas-groceries-costs-policies-medicare-taxes-tariffs-families-michigan"
+        },
+        {
+          "text": "Michigan Senate debate: Fact-checks of El-Sayed, Rogers",
+          "bias": "leanLeft",
+          "url": "https://politifact.com/article/2026/oct/08/michigan-senate-debate-fact-check-el-sayed-rogers/"
+        }
+      ]
+    },
+    {
+      "id": "e675faab-45c1-4cc9-b006-c31c539d7ed5",
+      "label": "Danny Trejo Denies Being Pro-ICE Amid Backlash to Daily Wire Film",
+      "group": "story",
+      "size": 10,
+      "summary": "Danny Trejo will appear alongside Harvey Keitel in 'Pawn Shop,' a movie produced by right-wing media company The Daily Wire.",
+      "sources_count": 1,
+      "bias": {
+        "left": 1,
+        "center": 1,
+        "right": 0,
+        "unknown": 2
+      },
+      "bias_score": -0.5,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Danny Trejo Not Apologizing for Taking Role in Daily Wire Movie Inspired By Minneapolis ICE Shooting, Says He's 'Pro Immigrant'",
+          "bias": "leanLeft",
+          "url": "https://mediatakeout.com/mexican-actor-danny-trejo-hired-for-right-wing-movie-under-fire-by-immigrant-groups/"
+        },
+        {
+          "text": "Danny Trejo Not Apologizing for Taking Role in Daily Wire Movie Inspired By Minneapolis ICE Shooting, Says He's 'Pro Immigrant'",
+          "bias": "unknown",
+          "url": "https://www.cheatsheet.com/news/danny-trejo-not-apologizing-role-daily-wire-movie-minneapolis-ice-shooting.html/"
+        },
+        {
+          "text": "Danny Trejo denies being pro-ICE amid backlash to Daily Wire film",
+          "bias": "center",
+          "url": "https://www.recorderonline.com/features/entertainment_news/danny-trejo-denies-being-pro-ice-amid-backlash-to-daily-wire-film/article_241d3900-2c4c-5d47-aab6-96863149c63b.html"
+        },
+        {
+          "text": "Danny Trejo Says He's “Not Pro-ICE” After Starring in Ben Shapiro’s “Anti-ICE” Movie",
+          "bias": "unknown",
+          "url": "https://www.worldofreel.com/blog/2026/10/10/danny-trejo-says-hes-not-pro-ice-but-he-knew-exactly-what-movie-he-was-making"
+        }
+      ]
+    },
+    {
+      "id": "de0f120f-4864-4cf3-b3f5-6b3075a19758",
+      "label": "Man Pleads Not Guilty to ‘Racist’ Murder of Scientist in Dundee",
+      "group": "story",
+      "size": 10,
+      "summary": "A man is to stand trial charged with the \"hate crime\" murder of a popular scientist.",
+      "sources_count": 1,
+      "bias": {
+        "left": 3,
+        "center": 0,
+        "right": 0,
+        "unknown": 0
+      },
+      "bias_score": -1.0,
+      "geo": {
+        "place": "Glasgow, UK",
+        "lat": 55.860713,
+        "lon": -4.228139
+      },
+      "headlines": [
+        {
+          "text": "Man to stand trial charged with murder of popular scientist",
+          "bias": "leanLeft",
+          "url": "https://www.heraldscotland.com/news/26627221.man-stand-trial-charged-murder-scientist-dundee/"
+        },
+        {
+          "text": "Man denies 'racist murder' of 'exceptional' scientist in Dundee",
+          "bias": "leanLeft",
+          "url": "https://www.dailyrecord.co.uk/news/scottish-news/man-denies-racist-murder-exceptional-37761789"
+        },
+        {
+          "text": "Man pleads not guilty to ‘racist’ murder of scientist in Dundee",
+          "bias": "leanLeft",
+          "url": "https://www.irishnews.com/news/uk/man-pleads-not-guilty-to-racist-murder-of-scientist-in-dundee-GBP2YCZSFJLYJGXW66KNUJP4ZU/"
+        }
+      ]
+    },
+    {
+      "id": "204836b8-c924-464e-9f0b-869fab75d44c",
+      "label": "Senior Iranian military official threatens strikes on vital AI centers",
+      "group": "story",
+      "size": 10,
+      "summary": "Iran digital infrastructure threat: Mohsen Rezaei says regional cables, data centers and AI facilities could be targeted if war with the US resumes.",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 1
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Iran official says $2 trillion in regional digital infrastructure could be targeted in renewed war",
+          "bias": "unknown",
+          "url": "https://irannewswire.org/iran-digital-infrastructure-threat-hormuz-us-talks/"
+        }
+      ]
+    },
+    {
+      "id": "d4b4c01c-fd2e-4264-a2c8-97aa3747d759",
+      "label": "Prime Minister Carney speaks with President of the United States Donald J. Trump",
+      "group": "story",
+      "size": 10,
+      "summary": "/CNW/ -- Today, the Prime Minister, Mark Carney, spoke with the President of the United States, Donald J. Trump. The Prime Minister thanked the President for...",
+      "sources_count": 2,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 1
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Readout - Prime Minister Carney speaks with President of the United States Donald J. Trump",
+          "bias": "unknown",
+          "url": "https://www.newswire.ca/news-releases/readout-prime-minister-carney-speaks-with-president-of-the-united-states-donald-j-trump-877833541.html"
+        }
+      ]
+    },
+    {
+      "id": "7583f6c8-7320-469b-baf6-05b04e7354df",
+      "label": "Zelensky Accuses Russia of Violating Proposed Energy Ceasefire",
+      "group": "story",
+      "size": 10,
+      "summary": "The President of Ukraine, Volodymyr Zelensky, accuses Russia of violating the cease-fire in the energy sector announced by the US counterpart Donald Trump. The accusation was made on Monday, October 12, when the Ukrainian leader appealed to the US to ensure its compliance, according to Reuters. Zelensky said that there was [...] The Ukrainian content: Zelensky accuses Russia of violating energy truces appears first in e-Global.",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 2
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Ukraine: Zelensky Accuses Russia of Violating Energy Truce",
+          "bias": "unknown",
+          "url": "https://e-global.pt/noticias/mundo/europa/ucrania-zelensky-acusa-russia-de-violar-treguas-energeticas/"
+        },
+        {
+          "text": "Zelenskyy: Ukraine Held Fire on Russian Energy Sites Overnight, but Russia Answered Trump’s Energy Truce With More Shahed Strikes",
+          "bias": "unknown",
+          "url": "https://uatv.ua/en/zelenskyy-ukraine-held-fire-on-russian-energy-sites-overnight-but-russia-answered-trump-s-energy-truce-with-more-shahed-strikes/"
+        }
+      ]
+    },
+    {
+      "id": "3bc3ac52-feee-4fa7-ab09-d976e8751c6f",
+      "label": "Carney says U.S.-Russia diesel supply deal hurts Ukraine peace cause: PMO",
+      "group": "story",
+      "size": 10,
+      "summary": "Open the article to view the coverage from Calgary Journal Online",
+      "sources_count": 2,
+      "bias": {
+        "left": 0,
+        "center": 1,
+        "right": 0,
+        "unknown": 2
+      },
+      "bias_score": 0.0,
+      "geo": {
+        "place": "Canada",
+        "lat": 54.801549,
+        "lon": -103.796141
+      },
+      "headlines": [
+        {
+          "text": "Carney says U.S.-Russia diesel supply deal hurts Ukraine peace cause: PMO",
+          "bias": "unknown",
+          "url": "https://calgaryjournal.ca/2026/10/11/carney-says-u-s-russia-diesel-supply-deal-hurts-ukraine-peace-cause-pmo/"
+        },
+        {
+          "text": "Carney says U.S.-Russia diesel supply deal hurts Ukraine peace cause: PMO",
+          "bias": "center",
+          "url": "https://www.narcity.com/carney-zelenskyy-discuss-u-s-russia-energy-deal"
+        },
+        {
+          "text": "Prime Minister Carney speaks with President of Ukraine Volodymyr Zelenskyy",
+          "bias": "unknown",
+          "url": "https://www.pm.gc.ca/en/news/readouts/2026/10/11/prime-minister-carney-speaks-president-ukraine-volodymyr-zelenskyy"
+        }
+      ]
+    },
+    {
+      "id": "rss_10996_1791800764731_3",
+      "label": "Trump Heads West in Latest Swing to Bolster GOP in Rocky Lead-up to Midterms",
+      "group": "story",
+      "size": 12,
+      "summary": "WASHINGTON — President Donald Trump this week will journey out West in an effort to galvanize support for Republican candidates three weeks before the midterm elections and convince voters to support his party amid low presidential approval ratings. As the deeply unpopular war in Iran enters month eight, resulting in spiking prices at the gas pump and […]",
+      "sources_count": 3,
+      "bias": {
+        "left": 3,
+        "center": 0,
+        "right": 0,
+        "unknown": 0
+      },
+      "bias_score": -1.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Trump heads West in latest swing to bolster GOP in rocky lead-up to midterms",
+          "bias": "leanLeft",
+          "url": "https://tennesseelookout.com/2026/10/12/repub/trump-heads-west-in-latest-swing-to-bolster-gop-in-rocky-lead-up-to-midterms/"
+        },
+        {
+          "text": "Trump heads West in latest swing to bolster GOP in rocky lead-up to midterms",
+          "bias": "leanLeft",
+          "url": "https://alaskabeacon.com/2026/10/12/repub/trump-heads-west-in-latest-swing-to-bolster-gop-in-rocky-lead-up-to-midterms/"
+        },
+        {
+          "text": "Trump heads West in latest swing to bolster GOP in rocky lead-up to midterms",
+          "bias": "left",
+          "url": "https://washingtonstatestandard.com/2026/10/12/repub/trump-heads-west-in-latest-swing-to-bolster-gop-in-rocky-lead-up-to-midterms/"
+        }
+      ]
+    },
+    {
+      "id": "ae912cca-4110-4569-af89-5ec59fc0aa1b",
+      "label": "Army, FCI Sign Five-Year Pact to Strengthen Military Logistics During Contingencies",
+      "group": "story",
+      "size": 10,
+      "summary": "The Indian Army on Monday launched “Bharat Rice”, a defence-specification rice supply for troops, and signed an agreement with the Food Corporation of India (FCI) that lets it use the corporation’s warehouses, manpower and material-handling equipment during military emergencies. Defence Minister Rajnath Singh and Consumer Affairs, Food and Public Distribution Minister Pralhad Joshi attended the […]",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 5
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Army launches 'Bharat Rice' for troops, signs pact with FCI to use its warehouses in wartime",
+          "bias": "unknown",
+          "url": "https://tfipost.com/2026/10/army-launches-bharat-rice-for-troops-signs-pact-with-fci-to-use-its-warehouses-in-wartime/"
+        },
+        {
+          "text": "Indian Army launches ‘Bharat Rice’ for troops in the presence of Rajnath Singh and Pralhad Joshi",
+          "bias": "unknown",
+          "url": "https://www.chinimandi.com/indian-army-launches-bharat-rice-for-troops-in-the-presence-of-rajnath-singh-and-pralhad-joshi/"
+        },
+        {
+          "text": "‘Bharat Rice’ launched for Army personnel, Rajnath Singh attends event",
+          "bias": "unknown",
+          "url": "https://www.awazthevoice.in/world-news/bharat-rice-launched-for-army-personnel-rajnath-singh-attends-event-69189.html"
+        },
+        {
+          "text": "Indian Army launches ‘Bharat Rice’ for troops, MoU inked with FCI to enable use of its warehousing, manpower and material-handling resources during operational contingencies",
+          "bias": "unknown",
+          "url": "https://indianewsdiary.com/indian-army-launches-bharat-rice-for-troops-mou-inked-with-fci-to-enable-use-of-its-warehousing-manpower-and-material-handling-resources-during-operational-contingencies/"
+        },
+        {
+          "text": "Rajnath Singh and Pralhad Joshi Attend Bharat Rice Launch",
+          "bias": "unknown",
+          "url": "https://www.prokerala.com/news/photos/rajnath-singh-and-pralhad-joshi-attend-bharat-rice-launch-3775665.html"
+        }
+      ]
+    },
+    {
+      "id": "8a1174ab-6dbf-46ff-b45e-f53f8530177f",
+      "label": "Trump Says Supporters Would Applaud Even His “Stupidest” Remarks at Tennessee Rally",
+      "group": "story",
+      "size": 10,
+      "summary": "The president ribbed his devotees while stumping in Tennessee on Saturday.View Entire Post ›",
+      "sources_count": 1,
+      "bias": {
+        "left": 1,
+        "center": 0,
+        "right": 0,
+        "unknown": 1
+      },
+      "bias_score": -1.0,
+      "geo": {
+        "place": "New York, US",
+        "lat": 40.701752,
+        "lon": -74.037567
+      },
+      "headlines": [
+        {
+          "text": "Trump Told A Crowd Of MAGA Faithfuls That He Could Say \"The Stupidest Things\" And They'd Still Support Him",
+          "bias": "leanLeft",
+          "url": "https://www.buzzfeed.com/kelbyvera/trump-maga-supporters-blind-devotion-stupidest-things"
+        },
+        {
+          "text": "Trump Tells Tennessee MAGA Rally Crowd: 'I Could Say The Stupidest Things, And You'd Clap!'",
+          "bias": "unknown",
+          "url": "https://upolitics.com/news/trump-tells-tennessee-maga-rally-crowd-i-could-say-the-stupidest-things-and-youd-clap/"
+        }
+      ]
+    },
+    {
+      "id": "4b75a980-14f9-4b63-bbbd-a4be3c54499e",
+      "label": "‘Saving Himself with US Blood’: Iran Tears Into Netanyahu, Calls Him ‘Wanted War Criminal’",
+      "group": "story",
+      "size": 10,
+      "summary": "The Foreign Minister of the Islamic Republic of Iran wrote: \"Even American senators want to get out of the precipice of catastrophic defeats.\"",
+      "sources_count": 2,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 1
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Araqchi: Netanyahu Is a Bankrupt Gambler",
+          "bias": "unknown",
+          "url": "https://inn.ir/news/article/168908/%D8%B9%D8%B1%D8%A7%D9%82%DA%86%DB%8C:-%D9%86%D8%AA%D8%A7%D9%86%DB%8C%D8%A7%D9%87%D9%88-%D9%82%D9%85%D8%A7%D8%B1%D8%A8%D8%A7%D8%B2%DB%8C-%D9%88%D8%B1%D8%B4%DA%A9%D8%B3%D8%AA%D9%87-%D8%A7%D8%B3%D8%AA"
+        }
+      ]
+    },
+    {
+      "id": "2a9ec8b4-3cbb-490f-b3ad-ce0303ec6a5b",
+      "label": "Johnson: Video of Hasan Execution Could Be ‘Recruiting Tool for Future Terrorists’",
+      "group": "story",
+      "size": 10,
+      "summary": "House Speaker Mike Johnson says he won't watch a livestream of the Pentagon's firing-squad execution of the Fort Hood shooter, becoming the latest high-ranking Republican to express apparent unease.",
+      "sources_count": 1,
+      "bias": {
+        "left": 1,
+        "center": 0,
+        "right": 0,
+        "unknown": 0
+      },
+      "bias_score": -1.0,
+      "geo": {
+        "place": "Kansas City, US",
+        "lat": 39.125945,
+        "lon": -94.609677
+      },
+      "headlines": [
+        {
+          "text": "Mike Johnson says he won't watch Fort Hood shooter's execution livestream",
+          "bias": "leanLeft",
+          "url": "https://www.kansascity.com/entertainment/article317591614.html"
+        }
+      ]
+    },
+    {
+      "id": "1cd224e8-fb83-4a29-950a-0358b05ef070",
+      "label": "Reform promises tariffs on countries that won’t take back migrants",
+      "group": "story",
+      "size": 10,
+      "summary": "Reform UK will unveil a package of punitive measures next week aimed at compelling overseas governments to accept the return of migrants it deems illegal. Party political correspondent Helen Corbett said the proposals will see tariffs imposed on nations that refuse to take back deportees, adding that the approach will be backed by a suite of other sanctions. Under the plan, the party intends to freeze all new visas for nationals of Pakistan, Afg…",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 1
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Reform party vows tariffs to force migrant returns",
+          "bias": "unknown",
+          "url": "https://thenational.wales/2026-10-11-reform-party-vows-tariffs-to-force-migrant-returns/"
+        }
+      ]
+    },
+    {
+      "id": "da8a026d-1a0b-441f-b449-d0183a912e96",
+      "label": "Data Center Backlash Set to Sway Midterm Elections Across Country",
+      "group": "story",
+      "size": 10,
+      "summary": "By Alex Brown In the course of a single election cycle, the backlash against data centers has grown from an issue at local planning commission and city council meetings to become a flashpoint in state and federal races across the country. Candidates who once touted data centers as an economic boon have backtracked, and voters in at [...]",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 1
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Data center backlash set to sway midterm elections — including in Kansas",
+          "bias": "unknown",
+          "url": "https://1350kman.com/2026/10/data-center-backlash-set-to-sway-midterm-elections-including-in-kansas/"
+        }
+      ]
+    },
+    {
+      "id": "286022a6-c579-4df8-b264-a142d6888595",
+      "label": "Leaked Audio Regarding Texas Senate Candidate Talarico’s Campaign Absence Sparks Political Debate",
+      "group": "story",
+      "size": 10,
+      "summary": "Senate candidate James Talarico never checked himself into a mental-health clinic in early October, but ring-wing media sure took that BS story and ran with it.",
+      "sources_count": 1,
+      "bias": {
+        "left": 2,
+        "center": 0,
+        "right": 1,
+        "unknown": 1
+      },
+      "bias_score": -0.333,
+      "geo": {
+        "place": "New York, US",
+        "lat": 40.704198,
+        "lon": -74.053816
+      },
+      "headlines": [
+        {
+          "text": "The White House Disinformation Machine Is Doing Its Best to Derail a Potentially Huge Midterm Swing",
+          "bias": "left",
+          "url": "https://www.esquire.com/news-politics/politics/a74109016/white-house-disinformation-right-wing-media/"
+        },
+        {
+          "text": "The James Talarico HIPAA Crime and Stephen Miller's Apparent Advance Knowledge",
+          "bias": "leanLeft",
+          "url": "https://emptywheel.net/2026/10/12/the-james-talarico-hipaa-crime-and-stephen-millers-apparent-advance-knowledge/"
+        },
+        {
+          "text": "BREAKING: Lindner Center of Hope Says Talarico Was Never a Patient",
+          "bias": "farRight",
+          "url": "https://www.currentrevolt.com/p/breaking-lindner-center-of-hope-says"
+        },
+        {
+          "text": "James Talarico’s Flu Story Collapses Under Audio From an Ohio Mental Health Facility",
+          "bias": "unknown",
+          "url": "https://jdrucker.com/james-talaricos-flu-story-collapses-under-audio-from-an-ohio-mental-health-facility/"
+        }
+      ]
+    },
+    {
+      "id": "rss_14187_1791755926595_1",
+      "label": "Walz said he considered leaving public office after Hortman assassination",
+      "group": "story",
+      "size": 12,
+      "summary": "Gov. Tim Walz considered leaving public office after the assassination of former Minnesota House Speaker Melissa Hortman and her husband, Mark, according to a New York Times investigation into rising threats of political violence against elected officials nationwide. Walz, who…",
+      "sources_count": 3,
+      "bias": {
+        "left": 0,
+        "center": 1,
+        "right": 0,
+        "unknown": 0
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Walz said he considered leaving public office after Hortman assassination",
+          "bias": "center",
+          "url": "https://hanfordsentinel.com/news/national/walz-said-he-considered-leaving-public-office-after-hortman-assassination/article_a6a008bf-7d54-5c58-9419-ba831846a9b1.html"
+        }
+      ]
+    },
+    {
+      "id": "aa91c0cf-6cf3-42f2-af58-f683209cef1c",
+      "label": "In Germany, 87% Of Suspects With An Arrest Warrant Are Foreigners",
+      "group": "story",
+      "size": 10,
+      "summary": "German authorities are currently looking for more than 148.000 people with arrest warrants. The AfD demands a change of course in view of the high proportion of foreigners. The police union complains that arrests are often left to chance. This contribution Foreigner crime 87 percent of the wanted by arrest warrants are foreigners was published on Young Freedom.",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 1
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "87 Percent of Those Sought by Warrant Are Foreigners",
+          "bias": "unknown",
+          "url": "https://jungefreiheit.de/politik/deutschland/2026/87-prozent-der-per-haftbefehl-gesuchten-sind-auslaender/"
+        }
+      ]
+    },
+    {
+      "id": "7bf9eb94-5330-40de-835b-174bd2f0ef3e",
+      "label": "Canada Backs International Criminal Court After U.S. Imposes Sanctions",
+      "group": "story",
+      "size": 10,
+      "summary": "",
+      "sources_count": 1,
+      "bias": {
+        "left": 1,
+        "center": 0,
+        "right": 0,
+        "unknown": 2
+      },
+      "bias_score": -1.0,
+      "geo": {
+        "place": "Vancouver, Canada",
+        "lat": 49.283138,
+        "lon": -123.120856
+      },
+      "headlines": [
+        {
+          "text": "Canada Supports the International Criminal Court After United States Sanctions",
+          "bias": "unknown",
+          "url": "https://www.noovo.info/nouvelles/justice/article/le-canada-soutient-la-cour-penale-internationale-apres-des-sanctions-des-etats-unis/"
+        },
+        {
+          "text": "Canada backs International Criminal Court after US imposes sanctions",
+          "bias": "leanLeft",
+          "url": "https://www.nationalobserver.com/2026/10/09/news/canada-backs-international-criminal-court-after-us-imposes-sanctions"
+        },
+        {
+          "text": "NDP Foreign Affairs Critic: Canada Must Stand Up for the ICC and International Law",
+          "bias": "unknown",
+          "url": "https://www.ndp.ca/news/ndp-foreign-affairs-critic-canada-must-stand-icc-and-international-law"
+        }
+      ]
+    },
+    {
+      "id": "21257e36-c790-48ba-8139-8db05406bda0",
+      "label": "New White House Press Secretary to Hold First Press Conference This Week",
+      "group": "story",
+      "size": 10,
+      "summary": "President Donald Trump announced that Katie Zacharia will begin her term as White House press secretary on Monday, Columbus Day, with an introductory news conference scheduled for Tuesday at 9:30 a.m. in the White House Press Briefing Room. In a social media post, Trump praised Zacharia, saying she has been with him “in spirit, from the very beginning,” and expressed confidence that she would “do a fantastic job.” Truth Social: I am pleased to a…",
+      "sources_count": 2,
+      "bias": {
+        "left": 0,
+        "center": 2,
+        "right": 2,
+        "unknown": 1
+      },
+      "bias_score": 0.5,
+      "geo": {
+        "place": "Little Rock, US",
+        "lat": 34.765138,
+        "lon": -92.287482
+      },
+      "headlines": [
+        {
+          "text": "Update On When The New White House Press Secretary Will Start",
+          "bias": "farRight",
+          "url": "https://protrumpnews.com/update-on-when-new-white-house-press-secretary-will-start/"
+        },
+        {
+          "text": "Update On When The New White House Press Secretary Will Start",
+          "bias": "unknown",
+          "url": "https://realnewsfeed.com/update-on-when-new-white-house-press-secretary-will-start/"
+        },
+        {
+          "text": "New White House press secretary to hold first press conference this week",
+          "bias": "leanRight",
+          "url": "https://katv.com/news/nation-world/new-white-house-press-secretary-to-hold-first-press-conference-this-week-columbus-day-donald-trump-karoline-leavitt-katie-zacharia-briefing-room-truth-social"
+        },
+        {
+          "text": "New White House press secretary to hold first press conference this week",
+          "bias": "center",
+          "url": "https://cbsaustin.com/news/nation-world/new-white-house-press-secretary-to-hold-first-press-conference-this-week-columbus-day-donald-trump-karoline-leavitt-katie-zacharia-briefing-room-truth-social"
+        },
+        {
+          "text": "New White House press secretary to hold first press conference this week",
+          "bias": "center",
+          "url": "https://turnto10.com/news/nation-world/new-white-house-press-secretary-to-hold-first-press-conference-this-week-columbus-day-donald-trump-karoline-leavitt-katie-zacharia-briefing-room-truth-social"
+        }
+      ]
+    },
+    {
+      "id": "fe9b5f78-5e0d-49b8-bd95-4b49961385f1",
+      "label": "Police Rescue Kidnapped Victim In Edo",
+      "group": "story",
+      "size": 10,
+      "summary": "Troops of the Nigerian Army’s 4 Brigade have neutralised three suspected kidnappers and rescued an abducted victim during an intelligence-led operation in Sasaro Forest, Akoko-Edo Local Government Area of Edo State. The operation, conducted on October 11, 2026, involved troops of the 195 Battalion (Rear), working in collaboration with personnel...",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 4
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Edo: Army Troops Kill Three Suspected Kidnappers, Rescue 44-Year-Old Abductee - THE AUTHORITY NEWS",
+          "bias": "unknown",
+          "url": "https://authorityngr.com/2026/10/12/edo-army-troops-kill-three-suspected-kidnappers-rescue-44-year-old-abductee/"
+        },
+        {
+          "text": "NEWS: Troops Rescued Kidnap Victim, Neutralise Three Suspected Kidnappers in Edo",
+          "bias": "unknown",
+          "url": "https://www.gbeduxclusive.com.ng/2026/10/news-troops-rescue-kidnap-victim.html"
+        },
+        {
+          "text": "Troops kill 3 suspected kidnappers, rescue abducted prince in Edo forest",
+          "bias": "unknown",
+          "url": "https://nationalaccordnewspaper.com/troops-kill-3-suspected-kidnappers-rescue-abducted-prince-in-edo-forest/"
+        },
+        {
+          "text": "Troops Rescue Kidnap Victim, Neutralise Three Suspected Kidnappers in Edo",
+          "bias": "unknown",
+          "url": "https://www.empressivenaija.com/2026/10/troops-rescue-kidnap-victim-neutralise.html"
+        }
+      ]
+    },
+    {
+      "id": "d27de845-cf26-4103-96b9-a54d3192bd90",
+      "label": "Pete Hegseth addresses the USS Lincoln in 'SNL' Cold Open",
+      "group": "story",
+      "size": 10,
+      "summary": "Cold Open -- The USS Lincoln returned to San Diego (which our President asked Iran to bomb) after 11 months, and in SNL's Cold Open, Colin Jost's Pete Hegseth is there to greet them with fireball nips and tell them...\n\t\t\t\t\tRead more...",
+      "sources_count": 1,
+      "bias": {
+        "left": 1,
+        "center": 1,
+        "right": 0,
+        "unknown": 1
+      },
+      "bias_score": -0.5,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "'SNL' Highlights: Shane Gillis Tanks Another Monologue and Most of the Show",
+          "bias": "leanLeft",
+          "url": "https://www.pajiba.com/tv_reviews/snl-highlights-shane-gillis-tanks-another-monologue.php"
+        },
+        {
+          "text": "Pete Hegseth Welcomes Soldiers Back From Operation Epic Fury in ‘SNL’ Cold Open That Mocks Christa Pike’s Botched Execution and RFK Jr.",
+          "bias": "unknown",
+          "url": "https://www.digestwire.com/2026/10/11/pete-hegseth-welcomes-soldiers-back-from-operation-epic-fury-in-snl-cold-open-that-mocks-christa-pikes-botched-execution-and-rfk-jr/"
+        },
+        {
+          "text": "SNL 52 Cold Open: Pete Hegseth, RFK Jr. Greet USS Abraham Lincoln",
+          "bias": "center",
+          "url": "https://bleedingcool.com/tv/snl-cold-open-pete-hegseth-rfk-jr-welcome-uss-abraham-lincoln-home/"
+        }
+      ]
+    },
+    {
+      "id": "30a5d21d-a3f3-4577-95b9-745c5b717162",
+      "label": "US Democrats call on FBI Director Kash Patel to cancel upcoming trip to Russia",
+      "group": "story",
+      "size": 10,
+      "summary": "Among FBI Director Kash Patel’s many extracurricular pleasures, he plays hockey in a DC-area beer league. His security team tags along. (João Fazenda for The New Yorker) Strange Trip: Both present and former FBI and DOJ officials are troubled over FBI Director Kash Patel’s reported plans this week to visit Russia as a likely guest of the FSB, Moscow’s murderous domestic repression and foreign assassinations service— especially now with President…",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 3
+      },
+      "bias_score": 0.0,
+      "geo": {
+        "place": "United States",
+        "lat": 35.371154,
+        "lon": -96.099151
+      },
+      "headlines": [
+        {
+          "text": "New in SpyWeek: Kash Heads to Kremlin Amid Trump ‘Deal’ with Putin, Attack on Zelenskyy, NATO Alarms Over Russian Aggression",
+          "bias": "unknown",
+          "url": "https://www.spytalk.co/p/new-in-spyweek-kash-heads-to-kremlin"
+        },
+        {
+          "text": "US Democratic Lawmakers Demand FBI Chief Not Visit Russia",
+          "bias": "unknown",
+          "url": "https://www.nampa.org/text/23036020"
+        },
+        {
+          "text": "Why Is Kash Patel Planning to Visit Russia?",
+          "bias": "unknown",
+          "url": "https://www.thefuturist.co/why-is-kash-patel-planning-to-visit-russia/"
+        }
+      ]
+    },
+    {
+      "id": "aed1b04c-24f2-464c-9582-017bdbbdc4be",
+      "label": "All clear after bomb threats at two Orthodox Jewish schools in Brooklyn, NYPD says",
+      "group": "story",
+      "size": 10,
+      "summary": "The first threatening call came into Yeshivah of Flatbush Joel Braverman High School at approximately 9:54 a.m. Friday. Six minutes later United Talmudical Academy (UTA) of Williamsburg received a similar call.",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 1,
+        "right": 0,
+        "unknown": 0
+      },
+      "bias_score": 0.0,
+      "geo": {
+        "place": "New York, US",
+        "lat": 43.146666,
+        "lon": -73.901482
+      },
+      "headlines": [
+        {
+          "text": "Bomb threats phoned into 2 Brooklyn Yeshivahs moments apart",
+          "bias": "center",
+          "url": "https://brooklyn.news12.com/2026/10/09/bomb-threats-phoned-into-2-brooklyn-yeshivahs-moments-apart/5BK4PXHnWszSDJkbVHXC6l"
+        }
+      ]
+    },
+    {
+      "id": "r_1x1aset",
+      "label": "Canadian woman who married ISIS fighter pleads guilty to terrorism charge",
+      "group": "story",
+      "size": 10,
+      "summary": "Kimberly Polman has pleaded guilty to participating in ISIS about a month before her trial was expected to start in B.C. Supreme Court.",
+      "sources_count": 2,
+      "bias": {
+        "left": 1,
+        "center": 0,
+        "right": 1,
+        "unknown": 0
+      },
+      "bias_score": 0.0,
+      "geo": {
+        "place": "Vancouver, Canada",
+        "lat": 49.292129,
+        "lon": -123.131325
+      },
+      "headlines": [
+        {
+          "text": "Squamish woman who wed ISIS fighter pleads guilty in B.C. to terrorism charge",
+          "bias": "leanRight",
+          "url": "https://vancouversun.com/news/squamish-woman-who-wed-isis-fighter-pleads-guilty-in-bc-to-terrorism-charge"
+        },
+        {
+          "text": "Former ISIS bride pleads guilty to terror-related charge in B.C. court",
+          "bias": "leanLeft",
+          "url": "https://lethbridgeherald.com/news/national-news/2026/10/09/former-isis-bride-pleads-guilty-to-terror-related-charge-in-b-c-court/"
+        }
+      ]
+    },
+    {
+      "id": "48961521-0124-4999-a084-a4cdeb549015",
+      "label": "James, Komatireddy Clash Over Cornell Case in NY1 AG Debate",
+      "group": "story",
+      "size": 10,
+      "summary": "Open the article to view the coverage from CPNYS",
+      "sources_count": 2,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 1
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Statement From NYS Conservative Party on Saritha Komatireddy’s Debate 10/10/26 – Conservative Party of New York State",
+          "bias": "unknown",
+          "url": "https://www.cpnys.org/statement-from-nys-conservative-party-on-saritha-komatireddys-debate-10-10-26/"
+        }
+      ]
+    },
+    {
+      "id": "6b39a4f5-8a38-4916-8538-27eefba6bdf5",
+      "label": "President Trump approves Florida emergency declaration following Hurricane Isaias, FEMA says",
+      "group": "story",
+      "size": 10,
+      "summary": "The emergency declaration from Florida for Hurricane Isaias was approved by the President.",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 1
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Hurricane Isaias Emergency Declaration for Florida Approved by President",
+          "bias": "unknown",
+          "url": "https://westorlandonews.com/hurricane-isaias-emergency-declaration-for-florida-approved-by-president/"
+        }
+      ]
+    },
+    {
+      "id": "4bf2c16a-2953-428f-b2fa-ba62f1a4e1f3",
+      "label": "Toronto police had no choice but to shoot suspect in raid that killed officer: SIU",
+      "group": "story",
+      "size": 13,
+      "summary": "TORONTO — Ontario’s police watchdog says Toronto police had no choice but to fire at a suspect who shot and killed an officer during a raid in June. The Special Investigations Unit released a report today that provides new details about the exchange of gunfire that killed Const. Marc Pinizzotto and left the 19-year-old suspect with multiple gunshot wounds. SIU Director Joseph Martino wrote that Pinizzotto and another officer fired their weapons …",
+      "sources_count": 4,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 1
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Toronto police had no choice but to shoot suspect in raid that killed officer: SIU – 105.9 The Region",
+          "bias": "unknown",
+          "url": "https://1059theregion.com/toronto-police-had-no-choice-but-to-shoot-suspect-in-raid-that-killed-officer-siu/"
+        }
+      ]
+    },
+    {
+      "id": "55375b5d-958a-4ef7-8fe5-c93e40a1156d",
+      "label": "Kid Rock introduces President Donald Trump at Clarksville Republican rally",
+      "group": "story",
+      "size": 10,
+      "summary": "Musician Kid Rock introduced President Donald Trump at the Clarksville Republican rally.",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 1,
+        "unknown": 2
+      },
+      "bias_score": 1.0,
+      "geo": {
+        "place": "New York, US",
+        "lat": 40.721281,
+        "lon": -73.954887
+      },
+      "headlines": [
+        {
+          "text": "Kid Rock introduces President Donald Trump at Clarksville Republican rally",
+          "bias": "unknown",
+          "url": "https://www.haystack.tv/v/kid-rock-introduces-president-donald-trump-clarksville-republican-rally"
+        },
+        {
+          "text": "Kid Rock brands media 'public enemy number 1' in fiery attack at Trump rally in Tennessee",
+          "bias": "leanRight",
+          "url": "https://news.meaww.com/kid-rock-brands-media-public-enemy-number-1-in-fiery-attack-at-trump-rally-in-tennessee"
+        },
+        {
+          "text": "Brent Taylor to Address Crowd at Trump Rally",
+          "bias": "unknown",
+          "url": "https://mighty990.com/brent-taylor-to-address-crowd-at-trump-rally/"
+        }
+      ]
+    },
+    {
+      "id": "f06bf96d-9764-4567-b9ba-f0bc78946286",
+      "label": "Ithaca to Buy Suncor N.L. Assets for $1.2B; Critics Cite UN-Listed Delek Link",
+      "group": "story",
+      "size": 10,
+      "summary": "Ithaca Energy’s impending takeover of Suncor’s stakes in three oil projects comes after PM's promise to ban trade with Israel’s illegal settlements, while Ithaca’s majority owner is named on a UN blacklist for its alleged activities supporting settlements in the occupied Palestinian territories",
+      "sources_count": 1,
+      "bias": {
+        "left": 1,
+        "center": 0,
+        "right": 0,
+        "unknown": 0
+      },
+      "bias_score": -1.0,
+      "geo": {
+        "place": "St. John's, Canada",
+        "lat": 47.554429,
+        "lon": -52.729763
+      },
+      "headlines": [
+        {
+          "text": "N.L.’s offshore oil could help bankroll a company linked to Israel’s illegal occupation of Palestine – The Independent",
+          "bias": "left",
+          "url": "https://theindependent.ca/news/lji/n-l-s-offshore-oil-could-help-bankroll-a-company-linked-to-israels-illegal-occupation-of-palestine/"
+        }
+      ]
+    },
+    {
+      "id": "489d2142-00b9-4795-b364-f87ad9164054",
+      "label": "Abdul El-Sayed’s Sister Undermines His Claim Family Not Involved with the Muslim Brotherhood",
+      "group": "story",
+      "size": 10,
+      "summary": "U.S. Senate nominee Abdul El-Sayed on Sunday denied his family’s involvement in the Muslim Brotherhood, despite his sister’s claims to the contrary. Meet the Press’ Kristen Welker confronted El-Sayed on attacks from Republican rival, former Congressman Mike Rogers, during last week’s debate linking the former Wayne County health official to the terrorist organization. “He made roughly 10 references seemingly trying to link you to terrorism. You’…",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 3,
+        "unknown": 0
+      },
+      "bias_score": 1.0,
+      "geo": {
+        "place": "Washington, US",
+        "lat": 38.913038,
+        "lon": -77.044653
+      },
+      "headlines": [
+        {
+          "text": "Abdul El-Sayed’s sister undermines his claim family not involved with the Muslim Brotherhood",
+          "bias": "leanRight",
+          "url": "https://www.themidwesterner.news/2026/10/abdul-el-sayeds-sister-undermines-his-claim-family-not-involved-with-the-muslim-brotherhood/"
+        },
+        {
+          "text": "In a family way, MB style",
+          "bias": "right",
+          "url": "https://www.powerlineblog.com/archives/2026/10/in-a-family-way-mb-style.php"
+        },
+        {
+          "text": "Abdul El-Sayed’s Family Has ‘Long Been’ in Egyptian Muslim Brotherhood, Senate Candidate’s Sister Said in Unearthed Social Media Posts",
+          "bias": "right",
+          "url": "https://freebeacon.com/democrats/abdul-el-sayeds-family-has-long-been-in-egyptian-muslim-brotherhood-senate-candidates-sister-said-in-unearthed-social-media-posts/"
+        }
+      ]
+    },
+    {
+      "id": "a5dcd769-20d4-4d20-aa19-03c94a22ead2",
+      "label": "Casini: I Leave Parliament After 44 Years, I Don't Reappear",
+      "group": "story",
+      "size": 10,
+      "summary": "Pier Ferdinando Casini leaves, after 44 years, his parliamentary activity. A prominent political figure that also favored the birth of numerous television parodies bringing the Italian satire to another cultural and media level.",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 2
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Pier Ferdinando Casini, From Political Reference to TV Jolly: the Most Successful Parodies on the Small Screen",
+          "bias": "unknown",
+          "url": "https://www.tvblog.it/post/pier-ferdinando-casini-da-riferimento-politico-a-jolly-televisivo-le-parodie-piu-riuscite-sul-piccolo-schermo"
+        },
+        {
+          "text": "Pier Ferdinando Casini Doesn't Go Back: \"Bologna, the Center of Everything. We Must Recover a Policy that Is Rooted Among the People\"",
+          "bias": "unknown",
+          "url": "https://www.ilrestodelcarlino.it/bologna/politica/casini-non-si-ricandida-bmhi5xhv"
+        }
+      ]
+    },
+    {
+      "id": "0734e287-ef5f-4e44-b868-29ed92c8b0a2",
+      "label": "Trump Administration Has Legal Authority for Russian Diesel Deal, Bessent Says",
+      "group": "story",
+      "size": 10,
+      "summary": "Diesel supplies. U.S. Treasury Secretary Scott Bessent defended an agreement reached between the U.S. and Russian presidents during a call on Friday to release 300,000 metric tons of diesel to the U.S. and global markets. Bessent said in an interview over the weekend it would benefit U.S. consumers by lowering diesel prices. According to President […]",
+      "sources_count": 2,
+      "bias": {
+        "left": 0,
+        "center": 1,
+        "right": 0,
+        "unknown": 0
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Daily Memo: US Strategy for Diesel Prices, Russian Data Centers Under Attack",
+          "bias": "center",
+          "url": "https://geopoliticalfutures.com/daily-memo-us-strategy-for-diesel-prices-russian-data-centers-under-attack/"
+        }
+      ]
+    },
+    {
+      "id": "36544948-dffc-4988-8949-f097f4a84a43",
+      "label": "UK 10-year borrowing costs rise to 19-year high after oil prices jump",
+      "group": "story",
+      "size": 10,
+      "summary": "The bond market is beginning to expose what governments have desperately tried to hide. Britain's 30-year yield has now reached 6.036%, the highest since",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 2,
+        "unknown": 2
+      },
+      "bias_score": 1.0,
+      "geo": {
+        "place": "Delaware, US",
+        "lat": 38.853022,
+        "lon": -75.526047
+      },
+      "headlines": [
+        {
+          "text": "Debt Crisis Reflected In Bond Market",
+          "bias": "right",
+          "url": "https://www.armstrongeconomics.com/world-news/sovereign-debt-crisis/debt-crisis-reflected-in-bond-market/"
+        },
+        {
+          "text": "Government Borrowing Costs Surge Again",
+          "bias": "right",
+          "url": "https://order-order.com/2026/10/07/government-borrowing-costs-surge-again/"
+        },
+        {
+          "text": "Aberdeen Investments: Five things that have changed for gilts since the last Budget",
+          "bias": "unknown",
+          "url": "https://wealthdfm.com/aberdeen-investments-five-things-that-have-changed-for-gilts-since-the-last-budget/"
+        },
+        {
+          "text": "UK borrowing costs rise as gilts hit 5.4%",
+          "bias": "unknown",
+          "url": "https://aberdeenbusinessnews.co.uk/uk-borrowing-costs-rise-as-gilts-hit-5-4/"
+        }
+      ]
+    },
+    {
+      "id": "a79e9e46-fef8-4a41-814f-00f2a03d2c88",
+      "label": "Bracing for the midterms, Trump says he will be blamed if Republicans lose",
+      "group": "story",
+      "size": 10,
+      "summary": "First Sitting Presidential Visit to Clarksville in 34 Years Clarksville, TN — President Donald Trump spent more than an hour and a half on stage at F&M Bank Arena in Clarksville on Saturday, October 10th, urging Tennessee voters to back Republican candidates in the November 3rd midterm election and promising a $5,000 payment to every […]\nThe post President Donald Trump Touts Korea Zinc, Fort Campbell and Memphis Task Force at F&M Bank Arena Rall…",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 1
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "President Donald Trump Touts Korea Zinc, Fort Campbell and Memphis Task Force at F&M Bank Arena Rally - Clarksville Online - Clarksville News, Sports, Events and Information",
+          "bias": "unknown",
+          "url": "https://www.clarksvilleonline.com/2026/10/11/president-donald-trump-touts-korea-zinc-fort-campbell-and-memphis-task-force-at-fm-bank-arena-rally/"
+        }
+      ]
+    },
+    {
+      "id": "b798ec83-0918-439b-bddc-2310d089c0cc",
+      "label": "Hamilton steel plant to lay off hundreds of workers as U.S. tariffs prompt ‘survival’ move",
+      "group": "story",
+      "size": 10,
+      "summary": "Stelco’s U.S.-based parent company Cleveland-Cliffs says a “significant” number of the roughly 350 Hamilton steelworkers set to be laid off on Oct. 9 could transfer to the company’s Nanticoke steelworks, as Stelco concentrates steel production in Haldimand County.",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 4,
+        "right": 2,
+        "unknown": 5
+      },
+      "bias_score": 0.333,
+      "geo": {
+        "place": "Simcoe, Canada",
+        "lat": 42.841139,
+        "lon": -80.303604
+      },
+      "headlines": [
+        {
+          "text": "Stelco’s owner says ‘significant’ number of laid-off Hamilton workers will land at Nanticoke mill; union is skeptical",
+          "bias": "leanRight",
+          "url": "https://www.simcoereformer.ca/news/local-news/stelcos-owner-says-significant-number-of-laid-off-hamilton-workers-will-land-at-nanticoke-mill-union-is-skeptical"
+        },
+        {
+          "text": "Stelco’s owner says ‘significant’ number of laid-off Hamilton workers will land at Nanticoke mill; union is skeptical",
+          "bias": "leanRight",
+          "url": "https://www.brantfordexpositor.ca/news/local-news/stelcos-owner-says-significant-number-of-laid-off-hamilton-workers-will-land-at-nanticoke-mill-union-is-skeptical/wcm/18cea958-0298-4bb3-8b46-24c5803a72d0"
+        },
+        {
+          "text": "Selective Announcements Won’t Cut It: Doug Ford Must Be Straight with Ontarians About Tariff Relief Amid ‘Break-the-Glass’ Moments",
+          "bias": "unknown",
+          "url": "https://ontarioliberal.ca/selective-announcements-wont-cut-it-doug-ford-must-be-straight-with-ontarians-about-tariff-relief-amid-break-the-glass-moments/"
+        },
+        {
+          "text": "Hamilton's Stelco plans to lay off up to 500 employees",
+          "bias": "unknown",
+          "url": "https://urbanicity.com/hamiltons-stelco-plans-to-lay-off-up-to-500-employees/"
+        },
+        {
+          "text": "NDP: Ford’s inaction leaves Hamilton steelworkers paying the price",
+          "bias": "unknown",
+          "url": "https://www.ontariondp.ca/news/ndp-ford-s-inaction-leaves-hamilton-steelworkers-paying-price"
+        },
+        {
+          "text": "Stelco Layoffs 2026: Hamilton Steelworkers",
+          "bias": "unknown",
+          "url": "https://www.theworkersrights.com/stelco-layoffs/"
+        },
+        {
+          "text": "Stelco shifts production to Nanticoke as Hamilton operations idled",
+          "bias": "center",
+          "url": "https://www.norfolktoday.ca/2026/09/29/stelco-shifts-production-to-nanticoke-as-hamilton-operations-idled/"
+        },
+        {
+          "text": "Stelco To Lay Off Up To 500 Workers Amid Production Shift, Citing U.S. Tariffs",
+          "bias": "center",
+          "url": "https://www.canadianmanufacturing.com/exporting-and-importing/stelco-to-lay-off-up-to-500-workers-amid-production-shift-citing-u-s-tariffs-321802/"
+        }
+      ]
+    },
+    {
+      "id": "e77c1bbf-c5ed-451f-97cb-276eeb03f03a",
+      "label": "President Trump blasts Nobel Peace Prize snub with blistering list of accomplishments: 'WOW!'",
+      "group": "story",
+      "size": 10,
+      "summary": "For starters, Media Bias, a web service that evaluates online media for bias, accuracy and credibility, has this to say about The Hayride, Louisiana’s leading conservative news blog: “Overall, we rate The Hayride as Far-Right biased and Questionable based on the promotion of conspiracy theories, pseudoscience, failed fact checks, a lack of transparency, and poor […]",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 2
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Far-right Louisiana blog laments the fact that Pedo Trump snubbed by Nobel committee for winning so much peace",
+          "bias": "unknown",
+          "url": "https://louisianavoice.com/2026/10/12/far-right-louisiana-blog-laments-the-fact-that-pedo-trump-snubbed-by-nobel-committee-for-winning-so-much-peace/"
+        },
+        {
+          "text": "Donald Trump Delivers His \"Arguments\" to Win the Nobel Peace Prize: \"I Ended 8 Wars, I'm Close to Ending or Solving Another 2\" - The Journal of Antofagasta",
+          "bias": "unknown",
+          "url": "https://www.diarioantofagasta.cl/politica/231890/donald-trump-entrega-sus-argumentos-para-obtener-el-premio-nobel-de-la-paz-puse-fin-a-8-guerras-estoy-cerca-de-terminar-o-resolver-otras-2/"
+        }
+      ]
+    },
+    {
+      "id": "aca2a596-18de-4191-8007-801269e1350c",
+      "label": "Belleville synagogue shooting was hate-motivated crime, police chief says",
+      "group": "story",
+      "size": 10,
+      "summary": "A police officer was badly injured while blocking an antisemite from attacking a Canadian synagogue on Yom Kippur. By Rachel Avraham About two dozen people had gathered at Sons of Jacob Synagogue in Belleville, Ontario, on Sunday evening to begin Yom Kippur. It should have been a quiet night of fasting and prayer in a […]",
+      "sources_count": 1,
+      "bias": {
+        "left": 3,
+        "center": 2,
+        "right": 1,
+        "unknown": 5
+      },
+      "bias_score": -0.333,
+      "geo": {
+        "place": "New York, US",
+        "lat": 40.720127,
+        "lon": -74.01144
+      },
+      "headlines": [
+        {
+          "text": "Gunshots fired at Canadian synagogue on Yom Kippur",
+          "bias": "unknown",
+          "url": "https://defendjerusalem.com/gunshots-fired-at-canadian-synagogue-on-yom-kippur/"
+        },
+        {
+          "text": "Beyond the Headlines – new facts about synagogue shooting",
+          "bias": "unknown",
+          "url": "https://www.inquinte.ca/2026/09/beyond-the-headlines-new-facts-about-synagogue-shooting/"
+        },
+        {
+          "text": "Belleville synagogue shooting leaves Queen’s community \"afraid to be Jewish\"",
+          "bias": "left",
+          "url": "https://www.queensjournal.ca/belleville-synagogue-shooting-leaves-queens-community-afraid-to-be-jewish/"
+        },
+        {
+          "text": "Police label shooting in Belleville, Ontario, a hate-motivated attack against the Jewish community",
+          "bias": "unknown",
+          "url": "https://www.sajr.co.za/police-label-shooting-in-belleville-ontario-a-hate-motivated-attack-against-the-jewish-community/"
+        },
+        {
+          "text": "Police label shooting in Belleville, Ontario, a hate-motivated attack against the Jewish community",
+          "bias": "leanLeft",
+          "url": "https://forward.com/fast-forward/852152/police-label-shooting-in-belleville-ontario-a-hate-motivated-attack-against-the-jewish-community/"
+        },
+        {
+          "text": "Police label shooting in Belleville, Ontario, a hate-motivated attack against the Jewish community",
+          "bias": "leanLeft",
+          "url": "https://www.jta.org/2026/09/24/global/police-label-shooting-in-belleville-ontario-a-hate-motivated-attack-against-the-jewish-community"
+        },
+        {
+          "text": "'They are both heroes’: Belleville police confirm officers stopped 'hate-motivated' attack on synagogue",
+          "bias": "center",
+          "url": "https://www.kingstonist.com/news/they-are-both-heroes-belleville-police-confirm-officers-stopped-hate-motivated-attack-on-synagogue/"
+        },
+        {
+          "text": "Evidence confirms Sons of Jacob Synagogue shooting was 'hate motivated'",
+          "bias": "leanRight",
+          "url": "https://www.intelligencer.ca/news/evidence-confirms-sons-of-jacob-synagogue-shooting-was-hate-motivated/"
+        }
+      ]
+    },
+    {
+      "id": "cb55d02c-364c-4892-9486-594cedba6ecf",
+      "label": "Michigan Republican faces pressure during heated debate on Trump's Canada tariffs",
+      "group": "story",
+      "size": 10,
+      "summary": "Michigan Republican Senate candidate, who previously backed U.S. President Donald Trump's tariffs on Canada, calls for end to trade war",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 1,
+        "unknown": 1
+      },
+      "bias_score": 1.0,
+      "geo": {
+        "place": "Windsor, Canada",
+        "lat": 42.307057,
+        "lon": -83.032309
+      },
+      "headlines": [
+        {
+          "text": "Political pundit questions sincerity of Michigan Republican Mike Rogers flip flop on Canada",
+          "bias": "leanRight",
+          "url": "https://windsorstar.com/news/windsor-essex-politics/michigan-republican-mike-rogers-calls-for-end-to-trumps-trade-war-with-canada/"
+        },
+        {
+          "text": "Debate week in Michigan continues tomorrow night with El-Sayed and Rogers",
+          "bias": "unknown",
+          "url": "https://watershedvoice.com/2026/10/07/debate-week-in-michigan-continues-tomorrow-night-with-el-sayed-and-rogers/"
+        }
+      ]
+    },
+    {
+      "id": "fc6261a7-2fd4-4039-8abd-c6dd938dad48",
+      "label": "Kamala Harris’s Husband Privately Says He Doesn’t Want Her to Run for President Again",
+      "group": "story",
+      "size": 10,
+      "summary": "If Kamala Harris runs for president again, she would begin with advantages no rival could match: near-universal name recognition, experience in the White House and the hard-earned lessons of already having carried the party’s banner. For many Democrats, that still may not be enough. With roughly a dozen Democrats maneuvering toward possible 2028 bids, Harris […]\nRelated posts:\nKamala Harris ran her office like a prosecutor. Not everyone liked th…",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 1
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Kamala Harris has a 2028 opening — and a 2024 problem",
+          "bias": "unknown",
+          "url": "https://newsindiatimes.com/kamala-harris-has-a-2028-opening-and-a-2024-problem/"
+        }
+      ]
+    },
+    {
+      "id": "a0d5d809-ae2a-4131-8196-d4dbeeb79a9c",
+      "label": "Trump's latest round of 50% tariffs on Canadian goods now in effect",
+      "group": "story",
+      "size": 10,
+      "summary": "The Trump administration has removed ordinary Portland cement from the Canadian products subject to an additional 50 per cent US import tariff. \nThe exemp...",
+      "sources_count": 1,
+      "bias": {
+        "left": 2,
+        "center": 4,
+        "right": 0,
+        "unknown": 10
+      },
+      "bias_score": -0.333,
+      "geo": {
+        "place": "Ottawa, Canada",
+        "lat": 45.418384,
+        "lon": -75.700773
+      },
+      "headlines": [
+        {
+          "text": "US removes 50% tariff on Canadian cement",
+          "bias": "unknown",
+          "url": "https://www.cemnet.com/News/story/182089/us-removes-50-tariff-on-canadian-cement.html"
+        },
+        {
+          "text": "Trade War Escalates: US Imposes 50% Tariff on Canadian Goods",
+          "bias": "unknown",
+          "url": "https://www.gercekgundem.com/ekonomi/ticaret-savasi-kizisiyor-abd-kanada-mallarina-yuzde-50-vergi-duvari-ordu-578731"
+        },
+        {
+          "text": "U.S.-Canada Tariffs Escalate & Oregon EPR Court Decision",
+          "bias": "unknown",
+          "url": "https://www.lightnowblog.com/2026/09/u-s-canada-tariffs-escalate-oregon-epr-court-decision/"
+        },
+        {
+          "text": "Latest U.S. tariffs hit a small number of Canadian goods while others are lifted",
+          "bias": "leanLeft",
+          "url": "https://www.ipolitics.ca/2026/09/15/latest-u-s-tariffs-hit-a-small-number-of-canadian-goods-while-others-are-lifted/"
+        },
+        {
+          "text": "New U.S. Customs Duties Come Into Force",
+          "bias": "unknown",
+          "url": "https://www.lechodelarivenord.ca/actualites/politique/674514/de-nouveaux-droits-de-douane-americains-entrent-en-vigueur"
+        },
+        {
+          "text": "CBP Issues CSMS Guidance on Section 338 Canada Duties",
+          "bias": "unknown",
+          "url": "https://www.lexblog.com/2026/09/15/cbp-issues-csms-guidance-on-section-338-canada-duties/"
+        },
+        {
+          "text": "New US Tariffs, Exemptions Take Effect on Canadian Goods",
+          "bias": "center",
+          "url": "https://www.industryweek.com/the-economy/news/55405113/new-us-tariffs-exemptions-take-effect-on-canadian-goods"
+        },
+        {
+          "text": "New U.S. tariffs widen trade pressure on Canadian products",
+          "bias": "leanLeft",
+          "url": "https://canadianinquirer.net/2026/09/15/new-u-s-tariffs-widen-trade-pressure-on-canadian-products/"
+        }
+      ]
+    },
+    {
+      "id": "656505b3-79f4-47c7-9054-65c2cc3b3db8",
+      "label": "Marshall Used Public Funds For Campaign: Report",
+      "group": "story",
+      "size": 10,
+      "summary": "U.S. Sen. Roger Marshall appears at the Sept. 12, 2026, debate at the Kansas State Fair in Hutchinson. (Photo by Sherman Smith/Kansas Reflector) As Sen. Roger Marshall fights for his political life in Kansas, a staffer for Democrat Adam Hamilton — Marshall’s opponent — has been needling the Republican senator’s staff with an unusual question: Are any of you getting...",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 1
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Taxpayer dollars and campaign cash repeatedly blur for Roger Marshall",
+          "bias": "unknown",
+          "url": "https://www.thepitchkc.com/taxpayer-dollars-and-campaign-cash-repeatedly-blur-for-roger-marshall/"
+        }
+      ]
+    },
+    {
+      "id": "b44cebfe-b3dd-4971-a605-14db38b2c096",
+      "label": "Carney government to extend gas tax holiday into the new year: Report",
+      "group": "story",
+      "size": 10,
+      "summary": "OTTAWA - The federal government is extending its suspension of the fuel excise tax through the end of January,...",
+      "sources_count": 1,
+      "bias": {
+        "left": 8,
+        "center": 5,
+        "right": 2,
+        "unknown": 6
+      },
+      "bias_score": -0.4,
+      "geo": {
+        "place": "Saint John, Canada",
+        "lat": 45.297861,
+        "lon": -66.020694
+      },
+      "headlines": [
+        {
+          "text": "Ottawa extends gas and diesel tax relief into 2027",
+          "bias": "unknown",
+          "url": "https://www.play1037.ca/2026/09/03/ottawa-extends-gas-and-diesel-tax-relief-into-2027/"
+        },
+        {
+          "text": "The Relief From the Federal Excise Tax on Gasoline, Diesel Fuel, and Aviation Fuels Is Extended",
+          "bias": "unknown",
+          "url": "https://wawa-news.com/index.php/2026/09/03/lallegement-de-la-taxe-daccise-federale-sur-lessence-le-combustible-diesel-et-les-carburants-daviation-est-prolonge/"
+        },
+        {
+          "text": "Taxpayers group applauds federal gas tax freeze extension",
+          "bias": "leanLeft",
+          "url": "https://reddeeradvocate.com/2026/09/02/taxpayers-group-applauds-federal-gas-tax-freeze-extension/"
+        },
+        {
+          "text": "Taxpayers group applauds federal gas tax freeze extension",
+          "bias": "unknown",
+          "url": "https://todayinbc.com/2026/09/02/taxpayers-group-applauds-federal-gas-tax-freeze-extension/"
+        },
+        {
+          "text": "Champagne announces gas tax-holiday extension",
+          "bias": "leanLeft",
+          "url": "https://www.hilltimes.com/2026/09/02/champagne-announces-gas-tax-holiday-extension/516755/"
+        },
+        {
+          "text": "Extending Gas Tax Holiday Won’t Fix Fossil Fuel Inflation",
+          "bias": "unknown",
+          "url": "https://centreforfuturework.ca/2026/09/02/extending-gas-tax-holiday-wont-fix-fossil-fuel-inflation/"
+        },
+        {
+          "text": "Taxpayers group applauds federal gas tax freeze extension",
+          "bias": "leanLeft",
+          "url": "https://sylvanlakenews.com/2026/09/02/taxpayers-group-applauds-federal-gas-tax-freeze-extension/"
+        },
+        {
+          "text": "Federal fuel excise tax suspension extended into 2027",
+          "bias": "unknown",
+          "url": "https://islandsocialtrends.ca/federal-fuel-excise-tax-extended-into-2027/"
+        }
+      ]
+    },
+    {
+      "id": "2db41937-a44a-4cce-81f8-981f688245ea",
+      "label": "Rand Paul Releases Fauci Diary Pages Showing Private Trump Criticism",
+      "group": "story",
+      "size": 10,
+      "summary": "The new diaries reveal Fauci’s support for impeaching Trump and how he contradicted himself on an Ebola vaccine trial.",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 2,
+        "unknown": 0
+      },
+      "bias_score": 1.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Rand Paul releases new Fauci diaries, exposing anti-Trump views, more duplicity",
+          "bias": "farRight",
+          "url": "https://www.lifesitenews.com/news/rand-paul-releases-new-fauci-diaries-exposing-anti-trump-views-more-duplicity/"
+        },
+        {
+          "text": "More from Fauci’s diary: Praised Ebola vaccine, wanted Trump impeached for border wall",
+          "bias": "right",
+          "url": "https://worldtribune.com/more-from-faucis-diary-praised-ebola-vaccine-wanted-trump-impeached-for-border-wall/"
+        }
+      ]
+    },
+    {
+      "id": "14b5defd-b38e-4e87-9faa-3fa9158c0bae",
+      "label": "Liberals Sweep Trio of Byelections in Chicoutimi, Toronto and Vancouver",
+      "group": "story",
+      "size": 10,
+      "summary": "Trump's ongoing hatred for Canada and his desire to send our economy into the tank was very much a key to the Liberals’ strength of victory.",
+      "sources_count": 1,
+      "bias": {
+        "left": 15,
+        "center": 3,
+        "right": 2,
+        "unknown": 6
+      },
+      "bias_score": -0.65,
+      "geo": {
+        "place": "Edmonton, Canada",
+        "lat": 53.551915,
+        "lon": -113.487917
+      },
+      "headlines": [
+        {
+          "text": "Lorne Gunter: Liberals ride anti-Trump wave to byelection wins, poll gains",
+          "bias": "leanRight",
+          "url": "https://edmontonjournal.com/opinion/columnists/lorne-gunter-liberals-ride-anti-trump-wave-to-byelection-wins-poll-gains"
+        },
+        {
+          "text": "The Next Round of Federal By-Elections in 2026",
+          "bias": "unknown",
+          "url": "https://parliamentum.org/2026/09/02/the-next-round-of-federal-by-elections-in-2026/"
+        },
+        {
+          "text": "What a Liberal Win in North Vancouver Means for Federal Politics",
+          "bias": "leanLeft",
+          "url": "https://thetyee.ca/Analysis/2026/09/01/What-Liberals-North-Vancouver-Capilano-Byelection-Win-Means/"
+        },
+        {
+          "text": "Liberals sweep, Conservatives weep",
+          "bias": "unknown",
+          "url": "https://www.thewrit.ca/p/liberals-sweep-conservatives-weep"
+        },
+        {
+          "text": "Reactions: Liberals clean sweep by-elections in Quebec, Ontario and B.C.",
+          "bias": "right",
+          "url": "http://www.rebelnews.com/reactions_liberals_clean_sweep_by_elections_in_quebec_ontario_and_bc"
+        },
+        {
+          "text": "Liberals sweep in byelections in B.C., Ontario, Quebec - Yellowknifer",
+          "bias": "unknown",
+          "url": "https://yellowknifer.com/2026/09/01/liberals-sweep-in-byelections-in-b-c-ontario-quebec/"
+        },
+        {
+          "text": "Liberals sweep in byelections in B.C., Ontario, Quebec - Creston Valley Advance",
+          "bias": "leanLeft",
+          "url": "https://crestonvalleyadvance.ca/2026/09/01/liberals-sweep-in-byelections-in-b-c-ontario-quebec/"
+        },
+        {
+          "text": "Liberals sweep in byelections in B.C., Ontario, Quebec - Fort St. James Caledonia Courier",
+          "bias": "leanLeft",
+          "url": "https://caledoniacourier.com/2026/09/01/liberals-sweep-in-byelections-in-b-c-ontario-quebec/"
+        }
+      ]
+    },
+    {
+      "id": "26b7598e-108d-41da-a47d-d8b27a5b4423",
+      "label": "Trump Threatens NYC Funding Over Little Italy Map Omission",
+      "group": "story",
+      "size": 10,
+      "summary": "On the occasion of the celebrations of the Columbus Day at the White House, the American president attacked the Mamdani administration for the exclusion of the historic neighborhood from a tourist map",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 1,
+        "unknown": 0
+      },
+      "bias_score": 1.0,
+      "geo": {
+        "place": "Italy",
+        "lat": 41.674794,
+        "lon": 12.574981
+      },
+      "headlines": [
+        {
+          "text": "Trump in Defense of Little Italy: If Cancelled, I Cut the Funds in New York",
+          "bias": "leanRight",
+          "url": "https://www.ilgiornale.it/news/cronaca-internazionale/trump-in-difesa-di-little-italy-se-cancellata-taglio-i-fondi-a-new-york/"
+        }
+      ]
+    },
+    {
+      "id": "40173ddc-c9c6-48b0-a1f1-989e7f962b8f",
+      "label": "D.C. Elections Board Asks National Guard to Stay Away From Ballot Drop Boxes",
+      "group": "story",
+      "size": 10,
+      "summary": "Federal law criminalizes deploying federal troops or armed federal law enforcement agents to places where elections are held.",
+      "sources_count": 1,
+      "bias": {
+        "left": 1,
+        "center": 1,
+        "right": 0,
+        "unknown": 0
+      },
+      "bias_score": -0.5,
+      "geo": {
+        "place": "San Diego, US",
+        "lat": 32.722167,
+        "lon": -117.168928
+      },
+      "headlines": [
+        {
+          "text": "Do images show National Guard illegally guarding DC ballot drop box? What posts get right, wrong",
+          "bias": "leanLeft",
+          "url": "https://www.snopes.com/fact-check/national-guard-ballot-box-dc/"
+        },
+        {
+          "text": "National Guard asked to limit placement of soldiers near voting locations",
+          "bias": "center",
+          "url": "https://www.wusa9.com/article/news/politics/elections/national-guard-near-ballot-drop-box-dc/65-ae4ab453-0e38-4bf0-bf62-ec7d786ab797"
+        }
+      ]
+    },
+    {
+      "id": "c9b82c6c-cfa4-49dd-bde6-ce90dbddeb18",
+      "label": "B.C. Conservative leader Doerkson dumps candidate Joachim Agou in racism row",
+      "group": "story",
+      "size": 10,
+      "summary": "A B.C. MLA and now former member of the Conservative Party has issued an apology after some questionable social media posts surfaced.",
+      "sources_count": 1,
+      "bias": {
+        "left": 4,
+        "center": 1,
+        "right": 1,
+        "unknown": 0
+      },
+      "bias_score": -0.5,
+      "geo": {
+        "place": "Vancouver, Canada",
+        "lat": 49.28345,
+        "lon": -123.121536
+      },
+      "headlines": [
+        {
+          "text": "B.C. Conservative candidate is 'truly sorry' after party removal",
+          "bias": "leanLeft",
+          "url": "https://dailyhive.com/vancouver/bc-conservative-agou-removal"
+        },
+        {
+          "text": "Victoria candidate kicked from BC Conservatives after resurfaced social media posts",
+          "bias": "leanLeft",
+          "url": "https://nelsonstar.com/2026/10/08/victoria-candidate-kicked-from-bc-conservatives-after-resurfaced-social-media-posts/"
+        },
+        {
+          "text": "Fired BC Conservative candidate for Victoria-Beacon Hill issues apology",
+          "bias": "leanLeft",
+          "url": "https://victoriabuzz.com/2026/10/fired-bc-conservative-candidate-for-victoria-beacon-hill-issues-apology/"
+        },
+        {
+          "text": "Security Check",
+          "bias": "leanRight",
+          "url": "https://www.winnipegsun.com/national-news/b-c-conservative-leader-doerkson-dumps-candidate-joachim-agou-in-racism-row/article_f52d3874-6521-5b66-8ecb-b4285e1e1e1d.html"
+        },
+        {
+          "text": "B.C. Conservatives dump candidate in racism row",
+          "bias": "leanLeft",
+          "url": "https://nationalnewswatch.com/2026/10/08/cp-newsalert-b-c-conservatives-dump-candidate-in-racism-row"
+        },
+        {
+          "text": "B.C. Conservative leader Doerkson dumps candidate Joachim Agou in racism row",
+          "bias": "center",
+          "url": "https://panow.com/2026/10/08/b-c-conservatives-back-in-battleground-surrey-on-election-trail/"
+        }
+      ]
+    },
+    {
+      "id": "eda14478-97f9-4bb9-8058-b823a91598eb",
+      "label": "Spencer Pratt says he was told Democratic candidate Talarico is in mental health facility",
+      "group": "story",
+      "size": 10,
+      "summary": "Republican Ken Paxton’s campaign made hay over the Democrat’s nine-day spell without a public appearance, casting doubt on his flu diagnosis.",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 3,
+        "right": 0,
+        "unknown": 0
+      },
+      "bias_score": 0.0,
+      "geo": {
+        "place": "Houston, US",
+        "lat": 29.76548,
+        "lon": -95.34898
+      },
+      "headlines": [
+        {
+          "text": "James Talarico returns to campaign trail at ACL festival after illness spurred GOP calls for 'proof of life'",
+          "bias": "center",
+          "url": "https://www.khou.com/article/news/politics/elections/james-talarico-returns-to-campaign-trail-at-acl-festival-after-illness-spurred-gop-calls-for-proof-of-life/287-f77564ff-a804-4f66-9f1b-ba0cfacb9e9e"
+        },
+        {
+          "text": "James Talarico returns to campaign trail at ACL festival after illness spurred GOP calls for “proof of life”",
+          "bias": "center",
+          "url": "https://www.gilmermirror.com/2026/10/10/james-talarico-returns-to-campaign-trail-at-acl-festival-after-illness-spurred-gop-calls-for-proof-of-life/"
+        },
+        {
+          "text": "Where is Talarico? Paxton requests doctor's note proving flu",
+          "bias": "center",
+          "url": "https://www.idahostatesman.com/news/nation-world/national/article317556740.html"
+        }
+      ]
+    },
+    {
+      "id": "f2428d09-f5f6-462e-a177-1e88ebb07e2d",
+      "label": "Johnson floats return to Louisiana if GOP loses majority in midterms",
+      "group": "story",
+      "size": 10,
+      "summary": "House Speaker Mike Johnson (R-LA) drew attention this week after suggesting he might leave politics and return to his hometown of Shreveport, Louisiana, to start a lawn care business if Republicans lose their narrow House majority in the November 2026 midterms. VIDEO More",
+      "sources_count": 2,
+      "bias": {
+        "left": 1,
+        "center": 0,
+        "right": 0,
+        "unknown": 1
+      },
+      "bias_score": -1.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Speaker Mike Johnson to leave office to start a lawn mowing business if GOP loses the midterms",
+          "bias": "unknown",
+          "url": "https://politicsvideochannel.com/speaker-mike-johnson-to-leave-office-to-start-a-lawn-mowing-business-if-gop-loses-the-midterms/"
+        },
+        {
+          "text": "House Speaker Johnson Weighs 'Next Chapter' if Republicans Lose Majority",
+          "bias": "leanLeft",
+          "url": "https://gvwire.com/2026/10/08/house-speaker-johnson-weighs-next-chapter-if-republicans-lose-majority/"
+        }
+      ]
+    },
+    {
+      "id": "2c8f11d8-3ed6-4804-87c8-80e739b0da1a",
+      "label": "Quebec City Man Charged with Making Death Threats Against Prime Minister Mark Carney",
+      "group": "story",
+      "size": 10,
+      "summary": "Ousmane Bah faces charges of uttering threats and promoting hatred toward an identifiable group.",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 1,
+        "right": 2,
+        "unknown": 1
+      },
+      "bias_score": 0.667,
+      "geo": {
+        "place": "Montreal, Canada",
+        "lat": 45.496333,
+        "lon": -73.570192
+      },
+      "headlines": [
+        {
+          "text": "Quebec man charged with threatening to kill PM Mark Carney has history of mental health issues",
+          "bias": "leanRight",
+          "url": "https://montrealgazette.com/news/local-crime/quebec-man-mark-carney-death-threats-mental-health/"
+        },
+        {
+          "text": "Quebec man charged for alleged anti-White hate and threatening Carney’s life online",
+          "bias": "right",
+          "url": "https://www.thecountersignal.com/p/quebec-man-charged-for-alleged-anti"
+        },
+        {
+          "text": "Quebec City man charged with making death threats against Prime Minister Mark Carney",
+          "bias": "unknown",
+          "url": "https://www.mtlblog.com/quebec-man-charged-with-threatening-carney"
+        },
+        {
+          "text": "A Quebec Man Accused of Threatening Carney, Trump and King Charles III with Death",
+          "bias": "center",
+          "url": "https://www.ledroit.com/actualites/justice-et-faits-divers/2026/09/25/un-homme-de-quebec-accuse-davoir-menace-de-mort-plusieurs-dirigeants-QDSDQBWCMNFSHKJ5AC3VICJBUY/"
+        }
+      ]
+    },
+    {
+      "id": "17a4d88b-0fbb-48de-a2b7-ed95c33a0d32",
+      "label": "Trump: Canada’s currency imbalance with US will be ‘no longer’",
+      "group": "story",
+      "size": 10,
+      "summary": "The Canadian dollar buys American goods at a steep discount, and President Donald Trump says he's done tolerating it.",
+      "sources_count": 2,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 1,
+        "unknown": 1
+      },
+      "bias_score": 1.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Trump Blasts Canada's 'Unacceptable' Currency Advantage",
+          "bias": "right",
+          "url": "https://americanfaith.com/trump-blasts-canadas-unacceptable-currency-advantage/"
+        },
+        {
+          "text": "Trump Calls Canadian Dollar ‘Imbalance’ Unacceptable; Parity Would Take 38%",
+          "bias": "unknown",
+          "url": "https://ts2.tech/en/trump-calls-canadian-dollar-imbalance-unacceptable-parity-would-take-38/"
+        }
+      ]
+    },
+    {
+      "id": "10eb4dfe-08f0-4293-ac90-189de4bb470f",
+      "label": "Afghan women facing arrest for wearing makeup and alleged dress code violations, UN says",
+      "group": "story",
+      "size": 10,
+      "summary": "At least 52 women and one girl were briefly arrested or detained by Taliban authorities in Kabul and Herat between July and September for alleged violations of the group's strict dress code, the United Nations said on Thursday.",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 2
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Taliban Briefly Detain 52 Women, One Girl Over Alleged Dress Code Violations, UN Says",
+          "bias": "unknown",
+          "url": "https://kabulnow.com/2026/10/taliban-briefly-detains-over-50-women-one-girl-over-dress-code-violations-un-says/"
+        },
+        {
+          "text": "UNAMA says Taliban authorities arrested 52 women in three months",
+          "bias": "unknown",
+          "url": "https://amu.tv/254025/"
+        }
+      ]
+    },
+    {
+      "id": "3353e003-56c4-49dd-9976-4d5f2a99e615",
+      "label": "Former Taiwan President Tsai tells US audience of 'sustained' Chinese pressure",
+      "group": "story",
+      "size": 10,
+      "summary": "San Francisco, Oct. 7 (CNA) Former Taiwan President Tsai Ing-wen (蔡英文) said Wednesday that deeper international cooperation with Taiwan will not only strengthen its security, but also boost stability in the Indo-Pacific and the resilience of other democracies.",
+      "sources_count": 2,
+      "bias": {
+        "left": 1,
+        "center": 0,
+        "right": 1,
+        "unknown": 0
+      },
+      "bias_score": 0.0,
+      "geo": {
+        "place": "Taipei, Taiwan",
+        "lat": 25.00306,
+        "lon": 121.580446
+      },
+      "headlines": [
+        {
+          "text": "Taiwan cooperation key to Indo-Pacific stability: Ex-President Tsai",
+          "bias": "leanLeft",
+          "url": "https://focustaiwan.tw/politics/202610080005"
+        },
+        {
+          "text": "Taiwan’s Defense-Tech Role Comes Into Focus During Tsai Ing-wen’s Stanford Visit",
+          "bias": "right",
+          "url": "https://www.visiontimes.com/2026/10/07/taiwans-defense-tech-role-comes-into-focus-during-tsai-ing-wens-stanford-visit.html"
+        }
+      ]
+    },
+    {
+      "id": "4a8164c8-0e86-4f16-bd32-8912b1481424",
+      "label": "Harper says 'no choice' but to walk away from U.S. trade talks",
+      "group": "story",
+      "size": 10,
+      "summary": "The new 50% tariffs on $20 billion of Canadian goods will hammer many small- and medium-sized businesses, including family firms, that up to this point have been largely sheltered from the trade war.",
+      "sources_count": 2,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 1
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Mark Carney Said No to Donald Trump. Now He Must Contend with the Economic Fallout",
+          "bias": "unknown",
+          "url": "https://www.cpapracticeadvisor.com/2026/09/14/mark-carney-said-no-to-donald-trump-now-he-must-contend-with-the-economic-fallout/190156/"
+        }
+      ]
+    },
+    {
+      "id": "6bd4e2bf-9d21-445e-a454-4c8966e0ab72",
+      "label": "Trump Says His Administration Is Thinking About Suspending Federal Gas Tax",
+      "group": "story",
+      "size": 10,
+      "summary": "The X22 Report's October 7 broadcasts analyze political and financial upheaval, detailing Trump’s strategies against globalist elites and forecasting significant economic changes and midterm election disruptions aimed at preserving sovereignty.",
+      "sources_count": 1,
+      "bias": {
+        "left": 1,
+        "center": 0,
+        "right": 0,
+        "unknown": 3
+      },
+      "bias_score": -1.0,
+      "geo": {
+        "place": "Washington, US",
+        "lat": 38.912377,
+        "lon": -77.037948
+      },
+      "headlines": [
+        {
+          "text": "X22 Report — Episode 4009: Trump Issues Another Gas Surprise, Deep State Pushing Multiple Events",
+          "bias": "unknown",
+          "url": "https://operationdisclosureofficial.com/2026/10/08/x22-report-episode-4009-trump-issues-another-gas-surprise-deep-state-pushing-multiple-events/"
+        },
+        {
+          "text": "Trump says he's considering gas tax suspension to ease costs",
+          "bias": "unknown",
+          "url": "https://www.accountingtoday.com/articles/trump-says-hes-considering-gas-tax-suspension-to-ease-costs"
+        },
+        {
+          "text": "President Trump weighs federal gas tax suspension ahead of midterm elections",
+          "bias": "unknown",
+          "url": "https://bizwatchnigeria.ng/president-trump-weighs-federal-gas-tax-suspension-ahead-of-midterm-elections/"
+        },
+        {
+          "text": "Trump Says He Is Thinking About Suspending Federal Gas Tax",
+          "bias": "leanLeft",
+          "url": "https://www.usnews.com/news/us/articles/2026-10-06/trump-says-his-administration-is-thinking-about-suspending-federal-gas-tax"
+        }
+      ]
+    },
+    {
+      "id": "eeed91c6-172d-4902-b08b-a4db9375f9ef",
+      "label": "EU Parliament to Open Office in Canada",
+      "group": "story",
+      "size": 10,
+      "summary": "Photo: A Peace Brigades International advocacy delegation visit to the European Parliament in Brussels with accompanied human rights defenders from Guatemala, Colombia, Mexico and Honduras. The European Parliament has announced it “will open an antenna office in Ottawa to further strengthen parliamentary relations between the European Union and Canada. The Bureau decision comes ahead of […]",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 4
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "PBI-Canada seeks to strengthen the accompaniment of human rights defenders with the European Parliament office in Ottawa | Peace Brigades International-Canada",
+          "bias": "unknown",
+          "url": "https://pbicanada.org/2026/09/15/pbi-canada-seeks-to-strengthen-the-accompaniment-of-human-rights-defenders-with-the-european-parliament-office-in-ottawa/"
+        },
+        {
+          "text": "EU Parliament to open office in Canada",
+          "bias": "unknown",
+          "url": "https://cde.news/eu-parliament-to-open-office-in-canada/"
+        },
+        {
+          "text": "EU and Canada Strengthen Relations; Metsola: We Are Opening an Office Across the Atlantic",
+          "bias": "unknown",
+          "url": "https://www.portalanalitika.me/clanak/clanak/eu-i-kanada-jacaju-odnose-metsola-otvaramo-kancelariju-preko-atlantika"
+        },
+        {
+          "text": "The EU Is Strengthening Its Presence in Canada. The New Office Will Also Focus on the Arctic.",
+          "bias": "unknown",
+          "url": "https://www.portalspozywczy.pl/technologie/wiadomosci/ue-wzmacnia-obecnosc-w-kanadzie-nowe-biuro-zajmie-sie-takze-arktyka,292972.html"
+        }
+      ]
+    },
+    {
+      "id": "48a00387-f64c-4174-9d5b-0787a4a52894",
+      "label": "Norway plans to spend $63.6 billion from wealth fund in 2027",
+      "group": "story",
+      "size": 10,
+      "summary": "In the proposed state budget for next year, the government increases the allocation to the Armed Forces by almost NOK 13 billion.",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 3
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Close to NOK 192 Billion for the Armed Forces",
+          "bias": "unknown",
+          "url": "https://www.folkebladet.no/norgeogverden/n/8Gqk5w/over-191-milliarder-kroner-til-forsvaret"
+        },
+        {
+          "text": "Will Spend a Record Number of Oil Kroner",
+          "bias": "unknown",
+          "url": "https://www.vaganavisa.no/nyheter/n/MAnq15/vil-bruke-rekordmange-oljekroner"
+        },
+        {
+          "text": "That's How Much He Wants to Spend of the Oil Money",
+          "bias": "unknown",
+          "url": "https://www.mn24.no/adresseavisen/n/KrMeV5/statsbudsjettet-2027"
+        }
+      ]
+    },
+    {
+      "id": "60e4df23-df12-4a2e-93ab-dc6f5e9e6b06",
+      "label": "US Judge Blocks Trump Policy of Fining Migrants up to $1.8 Million",
+      "group": "story",
+      "size": 10,
+      "summary": "A federal judge in Boston on Monday blocked the Trump administration’s effort to fine migrants up to $1.8 million for failing to leave the U.S. after receiving their final order to deport. U.S. District Judge George O’Toole ruled that the administration unlawfully imposed the fines and wrote that migrants in the “economically precarious position” of …",
+      "sources_count": 1,
+      "bias": {
+        "left": 2,
+        "center": 0,
+        "right": 0,
+        "unknown": 2
+      },
+      "bias_score": -1.0,
+      "geo": {
+        "place": "Pittsburgh, US",
+        "lat": 40.439807,
+        "lon": -79.991548
+      },
+      "headlines": [
+        {
+          "text": "Federal Judge Blocks Trump Admin Effort to Fine Migrants up to $1.8M Over Failure to Leave After Final Notice of Deportation",
+          "bias": "unknown",
+          "url": "https://news.law/federal-judge-blocks-trump-admin-effort-to-fine-migrants-up-to-1-8m-over-failure-to-leave-after-final-notice-of-deportation/"
+        },
+        {
+          "text": "US judge blocks Trump administration’s attempt to fine migrants who fail to willingly deport",
+          "bias": "leanLeft",
+          "url": "https://www.jurist.org/news/2026/10/us-judge-blocks-trump-administrations-attempt-to-fine-migrants-who-fail-to-willingly-deport/"
+        },
+        {
+          "text": "Judge blocks Trump policy of fining immigrants up to $1.8 million after deportation orders",
+          "bias": "left",
+          "url": "https://www.nationofchange.org/2026/10/06/judge-blocks-trump-policy-of-fining-immigrants-up-to-1-8-million-after-deportation-orders/"
+        },
+        {
+          "text": "Federal Court Blocks Trump Administration’s Unlawful Civil Penalty Scheme Targeting Immigrant Families",
+          "bias": "unknown",
+          "url": "https://www.publicjustice.net/federal-court-blocks-trump-administration-unlawful-immigration-fines/"
+        }
+      ]
+    },
+    {
+      "id": "1351eaeb-a069-4fe0-875c-c9eee522945f",
+      "label": "Carney points to federal review on SKS rifle after Tumbler Ridge revelations",
+      "group": "story",
+      "size": 10,
+      "summary": "Prime Minister Mark Carney indicated Thursday the federal government will look at the advice of an arm's-length panel studying firearms classification before making any decision on the status of the SKS rifle.",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 1
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Carney points to federal review on SKS rifle after Tumbler Ridge revelations",
+          "bias": "unknown",
+          "url": "https://www.castanetkamloops.net/news/Canada/633807/Carney_points_to_federal_review_on_SKS_rifle_after_Tumbler_Ridge_revelations"
+        }
+      ]
+    },
+    {
+      "id": "b3df4be6-31d4-4039-b17b-8cefa595d3ae",
+      "label": "UK PM weighs delay to roadmap for higher defence spending, Times reports",
+      "group": "story",
+      "size": 10,
+      "summary": "PRIME Minister Andy Burnham is facing growing questions over the Government’s defence spending plans amid reports that a major spending review could be pushed back until late next year. The review had been expected to provide crucial details of how Britain would increase defence spending, including when the country would reach 3 per cent of GDP.\nBut reports now suggest it could take place as late as autumn 2027, potentially delaying decisions ov…",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 3
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Burnham faces defence spending questions as review could be pushed back – NATIONAL NEWS",
+          "bias": "unknown",
+          "url": "https://rugbyobserver.co.uk/news/burnham-faces-defence-spending-questions-as-review-could-be-pushed-back-national-news-64821/"
+        },
+        {
+          "text": "Burnham faces defence spending questions as review could be pushed back – NATIONAL NEWS",
+          "bias": "unknown",
+          "url": "https://coventryobserver.co.uk/news/burnham-faces-defence-spending-questions-as-review-could-be-pushed-back-national-news-64821/"
+        },
+        {
+          "text": "Burnham faces defence spending questions as review could be pushed back – NATIONAL NEWS",
+          "bias": "unknown",
+          "url": "https://droitwichstandard.co.uk/news/burnham-faces-defence-spending-questions-as-review-could-be-pushed-back-national-news-64821/"
+        }
+      ]
+    },
+    {
+      "id": "d37f8413-b13f-4644-8e00-fd280f5c23d0",
+      "label": "Teachers, students file new wave of lawsuits against OpenAI over Tumbler Ridge shooting",
+      "group": "story",
+      "size": 10,
+      "summary": "OpenAI CSO says it's 'completely untrue' that the people making these decisions do not prioritize safety",
+      "sources_count": 1,
+      "bias": {
+        "left": 1,
+        "center": 1,
+        "right": 0,
+        "unknown": 3
+      },
+      "bias_score": -0.5,
+      "geo": {
+        "place": "Ucluelet, Canada",
+        "lat": 48.941441,
+        "lon": -125.550557
+      },
+      "headlines": [
+        {
+          "text": "30 more lawsuits filed against OpenAI, Altman in Tumbler Ridge mass shooting - Tofino/Ucluelet Westerly News",
+          "bias": "leanLeft",
+          "url": "https://westerlynews.ca/2026/09/08/30-more-lawsuits-filed-against-openai-altman-in-tumbler-ridge-mass-shooting/"
+        },
+        {
+          "text": "Thirty more lawsuits against OpenAI",
+          "bias": "unknown",
+          "url": "https://tumblerridgelines.com/2026/09/02/thirty-more-lawsuits-against-openai/"
+        },
+        {
+          "text": "OpenAI facing 30 lawsuits over Tumbler Ridge shooting",
+          "bias": "unknown",
+          "url": "https://mobilesyrup.com/2026/09/03/openai-30-lawsuits-tumbler-ridge-shooting/"
+        },
+        {
+          "text": "Survivors of the Tumbler Ridge Massacre File 30 New Lawsuits Against OpenAI",
+          "bias": "center",
+          "url": "https://efe.com/mundo/2026-09-03/supervivientes-matanza-canada-demandan-openai/"
+        },
+        {
+          "text": "OpenAI Executives Sued: Security Footage in Canadian Shooting?",
+          "bias": "unknown",
+          "url": "https://newssanmiguel.com.mx/opinion/nuevas-demandas-acusan-a-ejecutivos-de-openai-de-priorizar-imagenes-sobre-la-seguridad-en-el-caso-de-tiroteo-masivo-en-canada/"
+        }
+      ]
+    },
+    {
+      "id": "c29f078f-db00-49df-b524-e9c55db28cb4",
+      "label": "Man Who Planned Attack on Israeli Embassy in London Jailed for at Least 20 Years",
+      "group": "story",
+      "size": 10,
+      "summary": "Man jailed for planning terrorist attack\nPolly Jones\n7 Oct 2026\nMan jailed for planning terrorist attack\n7 Oct 2026\nA man has been jailed for planning a terrorist attack at the Embassy of Israel in Kensington.On 28 April 2025, Abdullah Sabah Albadri attempted to gain entry to the embassy armed with two knives.Officers from the Met’s Parliamentary and Diplomatic Protection Command stooped the 34-year-old from climbing over the gates of the proper…",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 1,
+        "unknown": 4
+      },
+      "bias_score": 1.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Man jailed for planning terrorist attack",
+          "bias": "unknown",
+          "url": "https://counterterrorbusiness.com/news/07102026/man-jailed-planning-terrorist-attack"
+        },
+        {
+          "text": "Man jailed for life over knife attack attempt at Israeli embassy in London",
+          "bias": "unknown",
+          "url": "https://eurojewcong.org/news/communities-news/united-kingdom/man-jailed-for-life-over-knife-attack-attempt-at-israeli-embassy-in-london/"
+        },
+        {
+          "text": "A man who planned a terrorist attack at the Embassy of Israel in Kensington has been jailed for a minimum of 20 years.",
+          "bias": "unknown",
+          "url": "https://radiojackie.com/a-man-who-planned-a-terrorist-attack-at-the-embassy-of-israel-in-kensington-has-been-jailed-for-a-minimum-of-20-years/"
+        },
+        {
+          "text": "Life sentence for boat migrant who planned Israeli Embassy attack – Court News UK",
+          "bias": "unknown",
+          "url": "https://courtnewsuk.co.uk/life-for-small-boat-migrant-who-planned-israeli-embassy-attack/"
+        },
+        {
+          "text": "Failed asylum seeker jailed for life after trying to break into London’s Israeli Embassy to launch knife attack",
+          "bias": "leanRight",
+          "url": "https://www.thejc.com/news/uk/failed-asylum-seeker-jailed-for-life-after-trying-to-break-into-londons-israeli-embassy-to-launch-knife-attack-dbwqxn13"
+        }
+      ]
+    },
+    {
+      "id": "033803e6-1adc-4637-8a4a-0d598e7aed4b",
+      "label": "Texas carries out nation’s first execution since Christa Pike’s failed lethal injection",
+      "group": "story",
+      "size": 10,
+      "summary": "A Texas man who fatally shot a convenience store clerk was put to death Wednesday night, becoming the 30th person executed in the U.S. this year. Mike Graczyk with The",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 4,
+        "right": 0,
+        "unknown": 0
+      },
+      "bias_score": 0.0,
+      "geo": {
+        "place": "Seattle, US",
+        "lat": 47.60083,
+        "lon": -122.348275
+      },
+      "headlines": [
+        {
+          "text": "Security Check",
+          "bias": "center",
+          "url": "https://www.swiowanewssource.com/video_1e49c92d-29b7-5aac-8b7f-fffc844a0f4b.html"
+        },
+        {
+          "text": "Texas carries out first execution since Christa Pike’s botched lethal injection",
+          "bias": "center",
+          "url": "https://www.wsoctv.com/news/trending/texas-carries-out-first-execution-since-christa-pikes-botched-lethal-injection/DLT2QSUZ3NB7VAVZWLJBFQAEZU/"
+        },
+        {
+          "text": "Texas carries out first execution since Christa Pike’s botched lethal injection",
+          "bias": "center",
+          "url": "https://www.kiro7.com/news/trending/texas-carries-out-first-execution-since-christa-pikes-botched-lethal-injection/DLT2QSUZ3NB7VAVZWLJBFQAEZU/"
+        },
+        {
+          "text": "Texas carries out nation’s first execution since Christa Pike’s failed lethal injection",
+          "bias": "center",
+          "url": "https://www.mypanhandle.com/news/ap-texas-set-to-execute-man-for-fatally-shooting-a-convenience-store-clerk-during-robbery-in-2000/"
+        }
+      ]
+    },
+    {
+      "id": "3c35c76a-bca3-4f4e-9871-06d41c87459c",
+      "label": "Oil and gas emissions dropped in 2025 despite increased production: report",
+      "group": "story",
+      "size": 10,
+      "summary": "JAY GOLDBERG: Oil and gas isn’t the enemy – and the latest emissions data proves it",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 1,
+        "unknown": 2
+      },
+      "bias_score": 1.0,
+      "geo": {
+        "place": "Calgary, Canada",
+        "lat": 51.054933,
+        "lon": -114.048815
+      },
+      "headlines": [
+        {
+          "text": "JAY GOLDBERG: Oil and gas isn’t the enemy – and the latest emissions data proves it",
+          "bias": "right",
+          "url": "https://calgarysun.com/opinion/columnists/jay-goldberg-oil-and-gas-isnt-the-enemy-and-the-latest-emissions-data-proves-it"
+        },
+        {
+          "text": "Canadian Climate Institute - Estimates show Canada's emissions went up in 2025, emphasizing need for electrification",
+          "bias": "unknown",
+          "url": "https://municipalinfonet.com/article/municipal/category/environment/18/1222502/estimates-show-canada-s-emissions-went-up-in-2025-emphasizing-need-for-electrification.html"
+        },
+        {
+          "text": "Canada’s Emissions Rise as Natural Gas Use Offsets Oil and Gas Sector Gains - Kindersley Social - Local Update, Sports, Events and more",
+          "bias": "unknown",
+          "url": "https://kindersleysocial.ca/2026/10/08/canadas-emissions-rise-as-natural-gas-use-offsets-oil-and-gas-sector-gains/"
+        }
+      ]
+    },
+    {
+      "id": "74d07cd9-1b3b-4219-b634-1a9ceecaab12",
+      "label": "ICE reviewed tens of millions of voter records looking for noncitizen voters, records show",
+      "group": "story",
+      "size": 10,
+      "summary": "The Department of Homeland Security obtained tens of millions of unspecified records as part of a sweeping nationwide effort to find voter fraud, according to internal DHS reports, and weighed",
+      "sources_count": 1,
+      "bias": {
+        "left": 2,
+        "center": 5,
+        "right": 1,
+        "unknown": 3
+      },
+      "bias_score": -0.125,
+      "geo": {
+        "place": "Minneapolis, US",
+        "lat": 44.978194,
+        "lon": -93.255363
+      },
+      "headlines": [
+        {
+          "text": "Documents show DHS probed nonprofits, obtained millions of records in hunt for noncitizen voters",
+          "bias": "center",
+          "url": "https://www.bhpioneer.com/local_news/documents-show-dhs-probed-nonprofits-obtained-millions-of-records-in-hunt-for-noncitizen-voters/article_7b9621e6-f34d-43cb-b3e4-be95ad8db135.html"
+        },
+        {
+          "text": "ICE Reviewed Tens of Millions of Voter Registrations in Search of Voters",
+          "bias": "leanLeft",
+          "url": "https://laprensademn.com/ice-reviso-decenas-de-millones-de-registros-de-electores-en-busca-de-votantes/"
+        },
+        {
+          "text": "US conducts ‘SIR’-like voter verification: How millions of records are being reviewed to identify noncitizen voters",
+          "bias": "right",
+          "url": "https://www.opindia.com/2026/10/us-conducts-sir-like-voter-verification-how-millions-of-records-are-being-reviewed-to-identify-noncitizen-voters/"
+        },
+        {
+          "text": "ICE Reviewed Tens of Millions of Voter Records in Search for Noncitizen Voters » ¡Que Onda Magazine!",
+          "bias": "unknown",
+          "url": "http://queondamagazine.com/ice-reviewed-voter-records-noncitizen-voters/"
+        },
+        {
+          "text": "Documents show DHS probed nonprofits, obtained millions of records in hunt for noncitizen voters - Hillsboro Sentry Enterprise",
+          "bias": "unknown",
+          "url": "http://hillsborose.com/premium/stories/documents-show-dhs-probed-nonprofits-obtained-millions-of-records-in-hunt-for-noncitizen-voters,170592"
+        },
+        {
+          "text": "Documents show DHS probed nonprofits, obtained millions of records in hunt for noncitizen voters - The Mexico Ledger",
+          "bias": "center",
+          "url": "http://www.mexicoledger.com/premium/stories/documents-show-dhs-probed-nonprofits-obtained-millions-of-records-in-hunt-for-noncitizen-voters,182136"
+        },
+        {
+          "text": "Documents show DHS probed nonprofits, obtained millions of records in hunt for noncitizen voters",
+          "bias": "unknown",
+          "url": "http://thewayneherald.staging.communityq.com/premium/stories/documents-show-dhs-probed-nonprofits-obtained-millions-of-records-in-hunt-for-noncitizen-voters,181232"
+        },
+        {
+          "text": "ICE reviewed tens of millions of voter records looking for noncitizen voters, records show",
+          "bias": "center",
+          "url": "https://www.news8000.com/news/politics/national-politics/ice-reviewed-tens-of-millions-of-voter-records-looking-for-noncitizen-voters-records-show/article_b735887d-ed3a-59c9-9c78-dce6f67c0daf.html"
+        }
+      ]
+    },
+    {
+      "id": "d42d1aae-aaac-4c06-8a0d-82926c48cdd6",
+      "label": "Brazil police serve warrants over alleged threat to US diplomatic sites",
+      "group": "story",
+      "size": 10,
+      "summary": "The Director General of the Federal Police (PF), Andrei Rodrigues, said on Sunday (4) that there is no risk or evidence of plans of attack against embassies located in the federal capital. On last Friday (2), the corporation investigated alleged threats to the U.S. Embassy in Brazil. Two warrants of search and seizure in São Paulo were fulfilled... Read more » The post PF says that there is no risk or indication of plans of attack on embassies a…",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 2
+      },
+      "bias_score": 0.0,
+      "geo": {
+        "place": "Brasília, Brazil",
+        "lat": -15.854349,
+        "lon": -47.969138
+      },
+      "headlines": [
+        {
+          "text": "PF Says There Is No Risk or Indication of Plans to Attack Embassies",
+          "bias": "unknown",
+          "url": "https://guaiba.com.br/pf-diz-que-nao-ha-risco-ou-indicio-de-planos-de-ataque-a-embaixadas/"
+        },
+        {
+          "text": "PF Investigates Alleged Plan to Attack U.S. Embassy: What Is Known and How the Brazilian Government Assesses",
+          "bias": "unknown",
+          "url": "https://www.correiobraziliense.com.br/mundo/2026/10/7513455-pf-investiga-suposto-plano-de-atacar-embaixada-dos-eua-o-que-se-sabe-e-como-o-governo-brasileiro-avalia.html"
+        }
+      ]
+    },
+    {
+      "id": "3d5c97e1-093c-48cb-a994-baecdb1ba6ee",
+      "label": "US judge finds law criminalizing noncitizen voting unconstitutional",
+      "group": "story",
+      "size": 10,
+      "summary": "ALEXANDRIA, VA — In United States v. Cox, U.S. District Judge David Leibowitz mistakenly ruled that the federal criminal law prohibiting aliens from voting was unconstitutional as applied to Chelsea Michelle Ann Cox. Federal prosecutors alleged that Cox, who is Jamaican, voted despite not being a U.S. citizen. “American elections belong to American citizens,” said… Read More »",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 1,
+        "right": 1,
+        "unknown": 1
+      },
+      "bias_score": 0.5,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Florida: Federal Judge Drops Charges Against Alien Voter",
+          "bias": "right",
+          "url": "https://publicinterestlegal.org/press/florida-federal-judge-drops-charges-against-alien-voter/"
+        },
+        {
+          "text": "US Judge – Banning Non-Citizen Vote Is Unconstitutional In Case Brought by Jamaican",
+          "bias": "unknown",
+          "url": "https://nycaribnews.com/us-judge-banning-non-citizen-vote-is-unconstitutional-in-case-brought-by-jamaican/"
+        },
+        {
+          "text": "US judge finds law criminalizing noncitizen voting unconstitutional",
+          "bias": "center",
+          "url": "https://whbl.com/2026/10/01/us-judge-finds-law-criminalizing-noncitizen-voting-unconstitutional/"
+        }
+      ]
+    },
+    {
+      "id": "271d2045-1c7a-4006-b71b-ff0361bc62b0",
+      "label": "DHS Watchdog Finds Errors in 40% of Sampled Afghan Asylum Files",
+      "group": "story",
+      "size": 10,
+      "summary": "(The Center Square) – The Biden administration’s Afghan refugee program was so flawed that it potentially allowed an untold number of terrorists and dangerous criminals into the country, according to a newly released Department of Homeland Security Office of Inspector…",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 4,
+        "right": 3,
+        "unknown": 0
+      },
+      "bias_score": 0.429,
+      "geo": {
+        "place": "Indiana, US",
+        "lat": 40.621123,
+        "lon": -79.152644
+      },
+      "headlines": [
+        {
+          "text": "Report: Biden-era Afghan refugee program had 40% error rate",
+          "bias": "center",
+          "url": "https://www.thepenn.org/news/national/report-biden-era-afghan-refugee-program-had-40-error-rate/article_ebc29a68-f72c-5bbc-bc07-14dcf183e750.html"
+        },
+        {
+          "text": "Report: Biden-era Afghan refugee program had 40% error rate",
+          "bias": "center",
+          "url": "https://www.purdueexponent.org/news/national/report-biden-era-afghan-refugee-program-had-40-error-rate/article_f00459e5-f214-5acc-9783-a5e00d8a339a.html"
+        },
+        {
+          "text": "Report: Biden-era Afghan refugee program had 40% error rate",
+          "bias": "leanRight",
+          "url": "https://www.thedigitalcourier.com/news/national/report-biden-era-afghan-refugee-program-had-40-error-rate/article_7851db31-b9a0-5a81-b372-0b896e9c6d44.html"
+        },
+        {
+          "text": "Report: Biden-era Afghan refugee program had 40% error rate",
+          "bias": "center",
+          "url": "https://www.sfweekly.com/news/national/report-biden-era-afghan-refugee-program-had-40-error-rate/article_5bab3a4c-5f78-5d8b-99a3-1708447950d8.html"
+        },
+        {
+          "text": "Report: Biden-era Afghan refugee program had 40% error rate",
+          "bias": "center",
+          "url": "https://starlocalmedia.com/news/national/report-biden-era-afghan-refugee-program-had-40-error-rate/article_76118138-3441-5eed-9ff1-7b0986081767.html"
+        },
+        {
+          "text": "DHS Audit: 40% Error Rate in Afghan Evacuee Vetting Files",
+          "bias": "right",
+          "url": "https://rightsidenews.com/us/homeland-security/the-hundred-percent-promise-how-dhss-own-audit-found-a-forty-percent-vetting-failure/"
+        },
+        {
+          "text": "DHS watchdog finds vetting errors in 40% of Afghan asylum applications under Biden admin",
+          "bias": "leanRight",
+          "url": "https://wach.com/news/nation-world/dhs-watchdog-finds-vetting-errors-in-40-of-afghan-asylum-applications-under-biden-admin-allies-capitol-hill-markwayne-mullin"
+        }
+      ]
+    },
+    {
+      "id": "28ccf530-cafe-4c58-a19f-281028aaeaa6",
+      "label": "B.C. NDP Leader Eby says not everybody shares his concerns about Trump",
+      "group": "story",
+      "size": 10,
+      "summary": "[wpcode id=\"85637\"]",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 1,
+        "unknown": 0
+      },
+      "bias_score": 1.0,
+      "geo": {
+        "place": "Toronto, Canada",
+        "lat": 43.669103,
+        "lon": -79.404924
+      },
+      "headlines": [
+        {
+          "text": "Eby vs. Doerkson: Perceived strengths and weaknesses highlight communication points for campaign - Angus Reid Institute Canada",
+          "bias": "leanRight",
+          "url": "https://angusreid.org/eby-vs-doerkson/"
+        }
+      ]
+    },
+    {
+      "id": "511e5236-4b94-43b4-88a4-f14451da3e23",
+      "label": "Poland to extend German, Lithuanian border controls until March 2027",
+      "group": "story",
+      "size": 10,
+      "summary": "The Ministry of Internal Affairs and Administration has decided to extend temporary border controls with Lithuania and Germany until 30 March 2027. The decree of Minister Marcin Kierwiński entered into force on 2 October. The government's decision is aimed at further sealing the borders and curbing illegal migration. The correctness of these actions is confirmed, among others, by the results of arrests from last weekend in Podlasie and during th…",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 4
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Checks at the Border with Lithuania Extended Until 2027. One Thousand Three Hundred Illegals Turned Back",
+          "bias": "unknown",
+          "url": "https://ddb24.pl/artykul/kontrole-na-granicy-z-n1864724"
+        },
+        {
+          "text": "Checks at the Polish Border Will Continue From October 2nd. The Services Will Check These Documents",
+          "bias": "unknown",
+          "url": "https://www.biznesinfo.pl/ciag-dalszy-kontroli-na-polskiej-granicy-od-2-pazdziernika-sluzby-sprawdza-te-dokumenty-jb-wksw-041026"
+        },
+        {
+          "text": "The Border Is Under Increased Surveillance. The Situation Is Not Safe.",
+          "bias": "unknown",
+          "url": "https://www.portalsamorzadowy.pl/wydarzenia-lokalne/granica-pod-wzmozonym-nadzorem-sytuacja-nie-jest-bezpieczna,678212.html"
+        },
+        {
+          "text": "Border Controls with Germany and Lithuania Will Remain in Place for Longer",
+          "bias": "unknown",
+          "url": "https://www.pulshr.pl/prawo-pracy/kontrole-na-granicy-z-niemcami-i-litwa-zostaja-na-dluzej,122210.html"
+        }
+      ]
+    },
+    {
+      "id": "rss_15251_1791305988564_1",
+      "label": "Army study found shock gloves purchased by ICE cause pain, compliance and fear",
+      "group": "story",
+      "size": 10,
+      "summary": "ICE was aware of the Army’s study about the pain and impact the electric gloves have on victims when they spent $16 million to obtain them for agents.",
+      "sources_count": 1,
+      "bias": {
+        "left": 1,
+        "center": 3,
+        "right": 0,
+        "unknown": 9
+      },
+      "bias_score": -0.25,
+      "geo": {
+        "place": "Norfolk, US",
+        "lat": 36.834258,
+        "lon": -76.285183
+      },
+      "headlines": [
+        {
+          "text": "Shocker: Army Finds Electric Gloves Used By ICE Are Incredibly Painful",
+          "bias": "unknown",
+          "url": "https://getuperica.com/1851268/army-finds-ice-electric-gloves-incrediblh-painful/"
+        },
+        {
+          "text": "Shocker: Army Finds Electric Gloves Used By ICE Are Incredibly Painful",
+          "bias": "unknown",
+          "url": "https://92q.com/5917342/army-finds-ice-electric-gloves-incrediblh-painful/"
+        },
+        {
+          "text": "Shocker: Army Finds Electric Gloves Used By ICE Are Incredibly Painful",
+          "bias": "unknown",
+          "url": "https://kysdc.com/5739654/army-finds-ice-electric-gloves-incrediblh-painful/"
+        },
+        {
+          "text": "Shocker: Army Finds Electric Gloves Used By ICE Are Incredibly Painful",
+          "bias": "unknown",
+          "url": "https://mycolumbusmagic.com/3924767/army-finds-ice-electric-gloves-incrediblh-painful/"
+        },
+        {
+          "text": "Shocker: Army Finds Electric Gloves Used By ICE Are Incredibly Painful",
+          "bias": "unknown",
+          "url": "https://woldcnews.com/3685381/army-finds-ice-electric-gloves-incrediblh-painful/"
+        },
+        {
+          "text": "Shocker: Army Finds Electric Gloves Used By ICE Are Incredibly Painful",
+          "bias": "unknown",
+          "url": "https://kissrichmond.com/4463971/army-finds-ice-electric-gloves-incrediblh-painful/"
+        },
+        {
+          "text": "Shocker: Army Finds Electric Gloves Used By ICE Are Incredibly Painful",
+          "bias": "unknown",
+          "url": "https://themorninghustle.com/1803228/army-finds-ice-electric-gloves-incrediblh-painful/"
+        },
+        {
+          "text": "Army Study Fund Shock Gloves Purchased by ICE Causes Pain",
+          "bias": "unknown",
+          "url": "https://www.portlandobserver.com/post/army-study-fund-shock-gloves-purchased-by-ice-causes-pain"
+        }
+      ]
+    },
+    {
+      "id": "f0cf0b71-c0ec-4515-a5c9-87888b55d9ed",
+      "label": "Trump Says He Discussed Release of Political Prisoners with Xi",
+      "group": "story",
+      "size": 12,
+      "summary": "Xi Jinping’s arrival in Washington on September 24 was watched closely across Asia, but not simply because it brought theContinue Reading",
+      "sources_count": 3,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 1,
+        "unknown": 6
+      },
+      "bias_score": 1.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Trump, Xi and the Indo-Pacific's Uncertain Equation",
+          "bias": "unknown",
+          "url": "https://www.newswire.lk/2026/10/03/trump-xi-and-the-indo-pacifics-uncertain-equation/"
+        },
+        {
+          "text": "Trump discussed release of certain political prisoners with Xi, but seen as silent on rights issues generally - Tibetan Review",
+          "bias": "unknown",
+          "url": "https://www.tibetanreview.net/trump-discussed-release-of-certain-political-prisoners-with-xi-but-seen-as-silent-on-rights-issues-generally/"
+        },
+        {
+          "text": "Trump and Xi Meet. Brazil Hesitates.",
+          "bias": "unknown",
+          "url": "https://diariodopoder.com.br/opiniao/trump-e-xi-se-encontram-o-brasil-hesita"
+        },
+        {
+          "text": "Xi Jinping | Trump Says He Proposed to Xi Jinping the Release of Lai Chi-Ying and Burmese American Political Scientist Min Xin and Hopes the Discussion Was “Productive”",
+          "bias": "unknown",
+          "url": "https://points-media.com/%E6%9C%80%E6%96%B0/%E7%BF%92%E7%89%B9%E6%9C%83%EF%BD%9C%E7%89%B9%E6%9C%97%E6%99%AE%E7%A8%B1%E6%9B%BE%E5%90%91%E7%BF%92%E8%BF%91%E5%B9%B3%E6%8F%90%E9%87%8B%E6%94%BE%E9%BB%8E%E6%99%BA%E8%8B%B1%E3%80%81%E7%B7%AC%E7%94%B8/"
+        },
+        {
+          "text": "No indication Trump addressed religious freedom with China’s Xi Jinping",
+          "bias": "unknown",
+          "url": "https://thebaptistrecord.org/no-indication-trump-addressed-religious-freedom-with-chinas-xi-jinping/"
+        },
+        {
+          "text": "Advocates to Trump: Confront Xi on China’s Religious Prisoners",
+          "bias": "unknown",
+          "url": "https://cnav.news/2026/09/28/accountability/executive/advocates-trump-confront-xi-religious-prisoners/"
+        },
+        {
+          "text": "Senators Press Trump to Confront Xi Over Detained Pastors, Religious Minorities",
+          "bias": "right",
+          "url": "https://www.christianitydaily.com/news/senators-press-trump-to-confront-xi-over-detained-pastors.html"
+        }
+      ]
+    },
+    {
+      "id": "79b569c5-6c4c-4975-9f6e-8f6dfd0860f2",
+      "label": "FBI Whistleblower Claims Trump Pushed Probe of LA Anti-ICE Protesters: Report",
+      "group": "story",
+      "size": 10,
+      "summary": "The FBI began preliminary investigations directed against protesters opposing the Immigration and Customs Control Service (ICE) in southern California, alleged a former FBI intelligence officer in a complaint where she also claimed that the measure violated the agency’s law and policies.",
+      "sources_count": 1,
+      "bias": {
+        "left": 1,
+        "center": 0,
+        "right": 0,
+        "unknown": 1
+      },
+      "bias_score": -1.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Trump \"Ordered\" to Investigate Anti-ICE Protesters After Watching Video of TikTok - Ecuador in Directo",
+          "bias": "unknown",
+          "url": "https://ecuadorendirecto.com/2026/10/06/trump-ordeno-investigar-a-manifestantes-anti-ice-tras-ver-video-de-tiktok/"
+        },
+        {
+          "text": "NBC News: FBI whistleblower says White House pushed unconstitutional probe of protesters",
+          "bias": "leanLeft",
+          "url": "https://whistleblower.org/in-the-news/nbc-fbi-whistleblower-unconstitutional-probe/"
+        }
+      ]
+    },
+    {
+      "id": "b02eb3ab-deec-4bb6-bf2f-89f445016ff8",
+      "label": "Ceuta mass migrant crossing handling 'responsibility of all EU,' Spanish king says",
+      "group": "story",
+      "size": 10,
+      "summary": "The monarch speaks directly in the Royal Palace before Macron that the immigrants entered “violating the Spanish border, which is also a European border”, raising the tone and leaving the government in evidence",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 1,
+        "unknown": 3
+      },
+      "bias_score": 1.0,
+      "geo": {
+        "place": "Madrid, Spain",
+        "lat": 40.42004,
+        "lon": -3.716504
+      },
+      "headlines": [
+        {
+          "text": "King Felipe VI Launches a Lethal Message About Ceuta that Leaves Sánchez Touched: \"It's Unacceptable\"",
+          "bias": "leanRight",
+          "url": "https://www.esdiario.com/nacional/260930/199032/rey-felipe-vi-ceuta-sanchez.html"
+        },
+        {
+          "text": "Migration Crisis in Ceuta: The King of Spain Raises His Tone, Finds the Situation \"Unacceptable\" and Challenges Europe (Reuters) - Article19.ma",
+          "bias": "unknown",
+          "url": "https://article19.ma/accueil/archives/199297"
+        },
+        {
+          "text": "Felipe VI Urges Emmanuel Macron to Be More Effective and Supportive in Protecting the European Union’s External Border: “We Cannot Face a Responsibility that Belongs to All of Us Alone”",
+          "bias": "unknown",
+          "url": "https://www.revistavanityfair.es/articulos/felipe-vi-emmanuel-macron-frontera-exterior-union-europea"
+        },
+        {
+          "text": "King Calls for More EU Cooperation by Ceuta in the Face of the Violation of a Border that Belongs to All",
+          "bias": "unknown",
+          "url": "https://elfarodeceuta.es/rey-colaboracion-ue-ceuta-violacion-frontera/"
+        }
+      ]
+    },
+    {
+      "id": "b3f5d87d-0a45-4d6d-834d-e9de8c32d7c4",
+      "label": "Serbia ties overseas voting to local time, a move likely to spark backlash ahead of a key election",
+      "group": "story",
+      "size": 10,
+      "summary": "New rule obliging voters abroad to follow polling hours based on Central European Time means some diaspora Serbians in countries like the US and Australia will have to cast ballots in the middle of the night.",
+      "sources_count": 1,
+      "bias": {
+        "left": 1,
+        "center": 0,
+        "right": 0,
+        "unknown": 2
+      },
+      "bias_score": -1.0,
+      "geo": {
+        "place": "Belgrade, Serbia",
+        "lat": 44.799652,
+        "lon": 20.444398
+      },
+      "headlines": [
+        {
+          "text": "Serbs Abroad May Have to Vote Overnight Under New Election Rule",
+          "bias": "leanLeft",
+          "url": "https://balkaninsight.com/2026/10/05/serbs-abroad-may-have-to-vote-overnight-under-new-election-rule/bi/"
+        },
+        {
+          "text": "Voted MSP Proposal on Polling Stations Abroad",
+          "bias": "unknown",
+          "url": "https://savremenapolitika.com/izglasan-predlog-msp-a-o-biralistima-u-inostranstvu/"
+        },
+        {
+          "text": "Polling Stations in the Diaspora Are Open as in Serbia, Voting Will Also Take Place at Night",
+          "bias": "unknown",
+          "url": "https://bif.rs/2026/10/biracka-mesta-u-dijaspori-otvorena-kao-u-srbiji-glasace-se-i-nocu/"
+        }
+      ]
+    },
+    {
+      "id": "0b885033-3672-4733-93c8-78a493ec6999",
+      "label": "Nicaragua Torture Victim Imprisoned for Second Time After Being Deported by U.S.",
+      "group": "story",
+      "size": 10,
+      "summary": "Jeffrey Jarquín fled Nicaragua after imprisonment and serious abuse. When the US sent him back, authorities were waiting at the airport.",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 1
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Deported to the Country He Fled From – Sent Straight Back to the Same prisonUproar - Den Plkilkurtalen Avis",
+          "bias": "unknown",
+          "url": "https://www.utrop.no/nyheter/390909/"
+        }
+      ]
+    },
+    {
+      "id": "62e91a45-f272-449b-8d84-fb246a9f5944",
+      "label": "BBC Faces Backlash Over Bare Nails Trend Article",
+      "group": "story",
+      "size": 10,
+      "summary": "The BBC’s bizarre article on ‘white supremacist’ manicures obscures a deeper truth about taste and class.",
+      "sources_count": 2,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 3,
+        "unknown": 1
+      },
+      "bias_score": 1.0,
+      "geo": {
+        "place": "London, UK",
+        "lat": 51.521454,
+        "lon": -0.099035
+      },
+      "headlines": [
+        {
+          "text": "No, it’s not ‘racist’ to have bare fingernails",
+          "bias": "right",
+          "url": "https://www.spiked-online.com/2026/10/01/no-its-not-racist-to-have-bare-fingernails/"
+        },
+        {
+          "text": "SIMON O'CONNOR: Apparently Fingernails Are Colonialist",
+          "bias": "unknown",
+          "url": "https://www.brashandmitchell.com/post/apparently-fingernails-are-colonialist"
+        },
+        {
+          "text": "BBC Deletes Bare Nails Racism Story After the Public Calls the Bluff",
+          "bias": "farRight",
+          "url": "https://truthbasedmedia.com/bbc-deletes-bare-nails-racism-story-after-the-public-calls-the-bluff/"
+        },
+        {
+          "text": "BBC Slammed Over Claim That Bare Fingernails Are \"Racist and Classist\"",
+          "bias": "right",
+          "url": "https://dailysceptic.org/2026/09/28/bbc-slammed-over-claim-that-bare-fingernails-are-racist-and-classist/"
+        }
+      ]
+    },
+    {
+      "id": "a9d679b9-38da-430e-a367-9ed946ba65a2",
+      "label": "Rare police raid of Taipei gay bar sparks angry protest",
+      "group": "story",
+      "size": 10,
+      "summary": "Police raided gay BDSM bar Commander D in Taipei’s Ximending district on Saturday, October 3. The bar was raided under the Social Order Maintenance Act, and the venue’s owner was placed under arrest on suspicion of public indecency, while 51 patrons were detained for questioning. Commander D had received 13 complaints this year alleging activities…",
+      "sources_count": 1,
+      "bias": {
+        "left": 2,
+        "center": 0,
+        "right": 0,
+        "unknown": 5
+      },
+      "bias_score": -1.0,
+      "geo": {
+        "place": "Dormansland, UK",
+        "lat": 51.163859,
+        "lon": 0.013575
+      },
+      "headlines": [
+        {
+          "text": "Police raid on Taipei gay bar sparks protests from LGBTQ+ community",
+          "bias": "unknown",
+          "url": "https://gcn.ie/police-raid-gay-bar-taipei-protests/"
+        },
+        {
+          "text": "51 Detained in Taipei Gay Bar Raid as LGBTQ+ Community Protests",
+          "bias": "unknown",
+          "url": "https://gayexpress.co.nz/2026/10/51-detained-in-taipei-gay-bar-raid-as-lgbtq-community-protests/"
+        },
+        {
+          "text": "Taiwan Gay Bar Raid: 51 Detained as LGBTQ+ Community Demands Answers",
+          "bias": "unknown",
+          "url": "https://www.mambaonline.com/2026/10/06/taiwan-gay-bar-raid-51-detained-as-lgbtq-community-demands-answers/"
+        },
+        {
+          "text": "Protests erupt in Taipei after police raid gay bar and detain 51 people",
+          "bias": "leanLeft",
+          "url": "https://www.attitude.co.uk/news/protests-erupt-in-taipei-after-police-raid-gay-bar-536314/"
+        },
+        {
+          "text": "Taipei Police Raid A Gay Bar Weeks Before Pride. The Community Hits Back",
+          "bias": "unknown",
+          "url": "https://www.dnamagazine.com.au/taipei-gay-bar-raid-commander-d/"
+        },
+        {
+          "text": "Taipei gay bar raid sparks protests, weeks before Taiwan Pride",
+          "bias": "leanLeft",
+          "url": "https://qnews.com.au/taipei-gay-bar-raid-taiwan-pride/"
+        },
+        {
+          "text": "Taiwan: 51 People Arrested in LGBTQIA Bar in Taipei - Association STOP Homophobia",
+          "bias": "unknown",
+          "url": "https://www.stophomophobie.com/taiwan-51-personnes-interpellees-dans-un-bar-lgbtqia-a-taipei/"
+        }
+      ]
+    },
+    {
+      "id": "02e5e902-8141-4933-8fe3-0ae81880e495",
+      "label": "UAE State Media Confirms Netanyahu Met UAE President Sheikh Mohamed in Abu Dhabi",
+      "group": "story",
+      "size": 10,
+      "summary": "On Sunday morning, without notice, a private plane carried Benjamin Netanyahu out of Israel and into Abu Dhabi. Channel 12 broke the story while he was still on the ground. A day later both governments confirmed the meeting with Sheikh Mohammed bin Zayed, calling it a conversation about bilateral relations.…",
+      "sources_count": 1,
+      "bias": {
+        "left": 2,
+        "center": 1,
+        "right": 0,
+        "unknown": 5
+      },
+      "bias_score": -0.667,
+      "geo": {
+        "place": "Jakarta, Indonesia",
+        "lat": -6.224085,
+        "lon": 106.858679
+      },
+      "headlines": [
+        {
+          "text": "The Usefulness of a Massacre",
+          "bias": "center",
+          "url": "https://original.antiwar.com/thomas_karat/2026/09/30/the-usefulness-of-a-massacre/"
+        },
+        {
+          "text": "Netanyahu Goes to U.A.E. in First Publicly Confirmed Visit",
+          "bias": "unknown",
+          "url": "https://www.thetrumpet.com/35718-netanyahu-goes-to-uae-in-first-publicly-confirmed-visit"
+        },
+        {
+          "text": "Netanyahu’s secret Abu Dhabi meetings reportedly included Saudi Arabia, Qatar, and Morocco",
+          "bias": "leanLeft",
+          "url": "https://today.lorientlejour.com/article/1549055/netanyahus-secret-abu-dhabi-meetings-reportedly-included-saudi-arabia-qatar-and-morocco.html"
+        },
+        {
+          "text": "UAE Confirms Netanyahu-Mohamed bin Zayed Meeting as Saudi Representatives Join Security Talks",
+          "bias": "unknown",
+          "url": "https://theblindside.pk/uae-confirms-netanyahu-mohamed-bin-zayed-meeting-as-saudi-representatives-join-security-talks/"
+        },
+        {
+          "text": "Netanyahu in Abu Dhabi, the Return of Secret Diplomacy Between Israel and the Emirates",
+          "bias": "unknown",
+          "url": "https://www.mosaico-cem.it/attualita-e-news/mondo/netanyahu-ad-abu-dhabi-il-ritorno-della-diplomazia-segreta-tra-israele-e-emirati/"
+        },
+        {
+          "text": "Israeli PM Netanyahu Met UAE President Mohammed bin Zayed in Abu Dhabi Last Sunday.",
+          "bias": "unknown",
+          "url": "https://www.globaldefensecorp.com/2026/09/29/israeli-pm-netanyahu-met-uae-president-mohammed-bin-zayed-in-abu-dhabi-last-sunday/"
+        },
+        {
+          "text": "UAE president met with Israeli PM on Sunday - Middle East and Africa",
+          "bias": "leanLeft",
+          "url": "https://www.thejakartapost.com/world/2026/09/29/uae-president-met-with-israeli-pm-on-sunday"
+        },
+        {
+          "text": "Netanyahu Visited Abu Dhabi and Met with the President of the United Arab Emirates – 9 News in 63 Seconds of Today",
+          "bias": "unknown",
+          "url": "https://www.radiojai.com/index.php/2026/09/28/205664/netanyahu-visito-abu-dhabi-y-se-reunio-con-el-presidente-de-emiratos-arabes-unidos-9-noticias-en-63-segundos-de-hoy/"
+        }
+      ]
+    },
+    {
+      "id": "92a2beb6-8805-421a-be5c-62871e706080",
+      "label": "Family of Mexican father shot dead by ICE in Chicago files claim over ‘unlawful’ shooting",
+      "group": "story",
+      "size": 10,
+      "summary": "Family of Mexican father shot dead by ICE in Chicago files claim over ‘unlawful’ shootingThe family of a man shot dead by an immigration enforcement agent in the Chicago area last year moved to sue the government on Thursday for a shooting they allege was unlawful and could have been prevented, according to attorneys for the family.\nSource: AP News",
+      "sources_count": 1,
+      "bias": {
+        "left": 1,
+        "center": 1,
+        "right": 0,
+        "unknown": 1
+      },
+      "bias_score": -0.5,
+      "geo": {
+        "place": "Lowell, US",
+        "lat": 42.631372,
+        "lon": -71.318389
+      },
+      "headlines": [
+        {
+          "text": "Family of Mexican father shot dead by ICE in Chicago files claim over ‘unlawful’ shooting | Illinois State Bar Association",
+          "bias": "unknown",
+          "url": "https://www.isba.org/dailylegalnews/2026/10/09/familyofmexicanfathershotdeadbyiceinchicagofilescl"
+        },
+        {
+          "text": "Family of Mexican father shot dead by ICE in Chicago files claim over ‘unlawful’ shooting",
+          "bias": "center",
+          "url": "https://www.lowellsun.com/2026/10/08/us-immigration-enforcement-chicago/"
+        },
+        {
+          "text": "A year without Silverio",
+          "bias": "left",
+          "url": "https://chicagoreader.com/food/a-year-without-silverio/"
+        }
+      ]
+    },
+    {
+      "id": "43e6fcc0-7351-4b31-b0bc-5be57ab27788",
+      "label": "UK Holds Emergency Talks with US Over Potential US Diesel Export Ban, Says Chancellor",
+      "group": "story",
+      "size": 10,
+      "summary": "The UK is in talks with US authorities over a potential stoppage of diesel exports and has started preparing for a ban, Chancellor John Healey has told BBC News. Diesel prices in the UK reached a new high on Monday due to supply pressures springing from the US-Israel conflict with Iran and Russia’s war with […]",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 1
+      },
+      "bias_score": 0.0,
+      "geo": {
+        "place": "Windhoek, Namibia",
+        "lat": -22.56009,
+        "lon": 17.063858
+      },
+      "headlines": [
+        {
+          "text": "UK tries to stop Trump’s diesel export ban",
+          "bias": "unknown",
+          "url": "https://www.namibian.com.na/uk-tries-to-stop-trumps-diesel-export-ban/"
+        }
+      ]
+    },
+    {
+      "id": "82a15da3-e236-41d9-bfe5-9ccbb391f661",
+      "label": "California Hits Robotaxi Operators With Fines for Blocking Emergency Responders",
+      "group": "story",
+      "size": 10,
+      "summary": "A new state law imposes fines and new emergency-response requirements on autonomous vehicle companies.",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 1
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "California cracks down on robotaxis that block 1st responders",
+          "bias": "unknown",
+          "url": "https://londonreconnections.com/california-cracks-down-on-robotaxis-that-block-1st-responders-gizmodo/"
+        }
+      ]
+    },
+    {
+      "id": "ca77b24b-882d-4d87-be10-26c3e5fa2299",
+      "label": "Rubio says US is hopeful 'Cuba will choose a different path'",
+      "group": "story",
+      "size": 10,
+      "summary": "The Secretary of State said Washington will never allow the island to become a \"base of operations\" against the security of the United States, amid the greatest bilateral tension in decades.",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 3,
+        "unknown": 2
+      },
+      "bias_score": 1.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Marco Rubio Insists that Cuba Is a \"Failed State,\" but Trump Hopes to Reach an Agreement without Using the Army",
+          "bias": "unknown",
+          "url": "https://tctelevision.com/lo-ultimo/marco-rubio-insiste-en-que-cuba-es-un-estado-fallido-pero-trump-confia-en-llegar-a-un-acuerdo-sin-usar-al-ejercito/"
+        },
+        {
+          "text": "Cuba Regretted that UN Aid Could Not Come Under Pressure From the U.S.",
+          "bias": "unknown",
+          "url": "https://www.capitalmexico.com.mx/mundo/cuba-lamento-que-la-ayuda-de-la-onu-no-pudo-llegar-por-presiones-de-ee-uu/"
+        },
+        {
+          "text": "Trump Prepares for an Invasion of Cuba - LewRockwell",
+          "bias": "farRight",
+          "url": "https://www.lewrockwell.com/2026/09/no_author/trump-prepares-for-an-invasion-of-cuba/"
+        },
+        {
+          "text": "Trump Prepares For An Invasion Of Cuba",
+          "bias": "farRight",
+          "url": "https://thewashingtonstandard.com/trump-prepares-for-an-invasion-of-cuba/"
+        },
+        {
+          "text": "Trump Prepares For An Invasion Of Cuba » Sons of Liberty Media",
+          "bias": "farRight",
+          "url": "https://sonsoflibertymedia.com/trump-prepares-for-an-invasion-of-cuba/"
+        }
+      ]
+    },
+    {
+      "id": "3bf5b6b4-15ce-447c-b4df-cc70dc6ea9a3",
+      "label": "Meta Uses Research Tax Credit to Cut Billions From Taxes on AI Data Center Spending: Report",
+      "group": "story",
+      "size": 10,
+      "summary": "Meta has been saving billions through a research tax credit by calling its AI data centers “pilot models,” while experts say the credit is meant for experimentation and innovation, not standard business expenses.",
+      "sources_count": 1,
+      "bias": {
+        "left": 2,
+        "center": 0,
+        "right": 0,
+        "unknown": 4
+      },
+      "bias_score": -1.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Meta Saved Nearly $4 Billion In Taxes Last Year By Calling Its AI Data Centers ‘Experimental’",
+          "bias": "leanLeft",
+          "url": "https://sfist.com/2026/10/01/meta-saved-nearly-4-billion-in-taxes-last-year-by-calling-its-ai-data-centers-experimental/"
+        },
+        {
+          "text": "Meta Claims Billions in AI Tax Breaks by Labeling Data Centers as ‘Experimental’: Report - Techstrong IT",
+          "bias": "unknown",
+          "url": "https://techstrong.it/ai/meta-claims-billions-in-ai-tax-breaks-by-labeling-data-centers-as-experimental-report/"
+        },
+        {
+          "text": "Morning Brew Daily — Meta uses data centers to avoid billions in federal taxes",
+          "bias": "unknown",
+          "url": "https://nebula.tv/videos/morningbrewdaily-meta-uses-data-centers-to-avoid-billions-in-federal-taxes/"
+        },
+        {
+          "text": "How Meta Uses A.I. Data Centres to Avoid Billions in Federal Taxes – Pixel Envy",
+          "bias": "unknown",
+          "url": "https://pxlnv.com/linklog/meta-data-centre-tax-break/"
+        },
+        {
+          "text": "Meta’s Outlandish Tax Breaks for AI Data Centers",
+          "bias": "leanLeft",
+          "url": "https://itep.org/metas-outlandish-tax-breaks-for-ai-data-centers/"
+        },
+        {
+          "text": "Meta's Prepping the AI Data Center for Tests, Reducing Taxes by Billions of Dollars.",
+          "bias": "unknown",
+          "url": "https://digitalphablet.com/%D9%85%D9%8A%D8%AA%D8%A7-%D8%AA%D8%AC%D9%87%D8%B2-%D9%85%D8%B1%D9%83%D8%B2-%D8%A8%D9%8A%D8%A7%D9%86%D8%A7%D8%AA-%D8%A7%D9%84%D8%B0%D9%83%D8%A7%D8%A1-%D8%A7%D9%84%D8%A7%D8%B5%D8%B7%D9%86%D8%A7%D8%B9/"
+        }
+      ]
+    },
+    {
+      "id": "e6d57924-a81c-4823-a49b-abbacc6d0247",
+      "label": "German security agencies face dilemma after victories for far right and far left",
+      "group": "story",
+      "size": 10,
+      "summary": "The results of the recent regional elections in Germany's federal lands triggered a profound political and institutional crisis within the country's national security system: Reuters Triumphal performance by the far-right Party Record Reuters: The victory of radicals in Germany put the intelligence services at risk for the first time.",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 2
+      },
+      "bias_score": 0.0,
+      "geo": {
+        "place": "Moscow, Russia",
+        "lat": 55.793034,
+        "lon": 37.522944
+      },
+      "headlines": [
+        {
+          "text": "Reuters: The Victory of Radicals in Germany Put Intelligence Agencies at Risk",
+          "bias": "unknown",
+          "url": "https://ghall.com.ua/2026/09/28/reuters-pobeda-radikalov-v-germanii-postavila-spetssluzhby-pod-udar/"
+        },
+        {
+          "text": "Helicopter Operations over the Territory and Vans at the Entrance: Bild Learned of Surveillance of the Russian Embassy",
+          "bias": "unknown",
+          "url": "https://rtvi.com/?p=616460"
+        }
+      ]
+    },
+    {
+      "id": "d382cf4e-32ae-45f4-9df5-066140b07788",
+      "label": "Saudi authorities shift schools in Riyadh to remote learning for week: AFP",
+      "group": "story",
+      "size": 10,
+      "summary": "The schools in Ryad will operate in distanciel for a period of one week, in the midst of the escalation of the attacks by the Yemeni Houthi against Saudi Arabia, according to messages sent Sunday, September 27 to the parents of the pupils. \"We have just learned from the Saudi authorities that the schools must remain closed all week\", said these messages consulted ... The article Saudi Arabia: the schools in Ryad are turning into distancile for a…",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 1
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Saudi Arabia: Ryad Schools Turn Into Distanciel for a Week in Front of Huthi Attacks",
+          "bias": "unknown",
+          "url": "https://atlasinfo.fr/arabie-saoudite-les-ecoles-de-ryad-basculent-en-distanciel-pour-une-semaine-face-aux-attaques-houthies.html"
+        }
+      ]
+    },
+    {
+      "id": "9c2d57e2-1f2a-4b8b-8387-745792ce9a63",
+      "label": "DHS Says ICE Won't Patrol Polling Places, but Lawsuits Continue",
+      "group": "story",
+      "size": 10,
+      "summary": "Police officers stand outside a polling place in Las Vegas on Election Day in 2024. Local law enforcement may be present at polling sites to help with security, but federal law sharply restricts the deployment of armed federal agents at places where voting is taking place.",
+      "sources_count": 1,
+      "bias": {
+        "left": 2,
+        "center": 0,
+        "right": 0,
+        "unknown": 0
+      },
+      "bias_score": -1.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Could ICE agents show up at your polling place? Here’s what the law says",
+          "bias": "leanLeft",
+          "url": "https://www.votebeat.org/wisconsin/2026/10/07/should-you-expect-ice-at-the-polls-november-midterm-election/"
+        },
+        {
+          "text": "Trump administration says it has no plans for ICE officers at polls. Activists are preparing anyway",
+          "bias": "leanLeft",
+          "url": "https://www.averyjournal.com/ap/washington/trump-administration-says-it-has-no-plans-for-ice-officers-at-polls-activists-are-preparing/article_061f01a4-6da6-5d4a-8228-5646f35676c1.html"
+        }
+      ]
+    },
+    {
+      "id": "670630e1-f0aa-4689-a93c-45e48c775db9",
+      "label": "UK Citizenship Review Looms After Ex-Haniyeh Bodyguard Arrest",
+      "group": "story",
+      "size": 10,
+      "summary": "A nameless district judge in Westminster hid the identity of a Hamas leader’s bodyguard for 100 years. Mohammed Naim, 39, held important positions with Hamas and served as the bodyguard to Ismail Haniyeh when Hamas seized power by force. In 2010, Egyptian police arrested him for smuggling gold into Gaza. Somehow he was free to […]\nThe post Former Bodyguard of Hamas Leader Given British Citizenship appeared first on www.independentsentinel.com.",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 1,
+        "unknown": 0
+      },
+      "bias_score": 1.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Former Bodyguard of Hamas Leader Given British Citizenship",
+          "bias": "right",
+          "url": "https://www.independentsentinel.com/former-bodyguard-of-hamas-leader-given-british-citizenship/"
+        }
+      ]
+    },
+    {
+      "id": "f197c6bb-ee4f-4016-a6bd-25d1ae4b606d",
+      "label": "Women’s basketball player from Senegal has deportation order rescinded after arrest by ICE",
+      "group": "story",
+      "size": 10,
+      "summary": "On August 7, Aminata Seck was supposed to be on a flight to New York with her Kentucky State University basketball teammates. Instead, federal immigration agents took her into custody at Louisville Muhammad Ali International Airport. More than seven weeks later, the 26-year-old student-athlete, originally from Dakar, Senegal, is fighting an immigration case while her attorneys raise concerns about her health. Seck, known as Amina on the Thorobre…",
+      "sources_count": 1,
+      "bias": {
+        "left": 1,
+        "center": 0,
+        "right": 0,
+        "unknown": 1
+      },
+      "bias_score": -1.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Kentucky State Basketball Player Detained By ICE During Team Trip",
+          "bias": "leanLeft",
+          "url": "https://www.essence.com/entertainment/sports/aminata-seck-kentucky-state-basketball-ice-detention/"
+        },
+        {
+          "text": "HBCU basketball player hospitalized in ICE custody, deportation case reopens",
+          "bias": "unknown",
+          "url": "https://hbcugameday.com/2026/10/01/hbcu-basketball-player-hospitalized-in-ice-custody-deportation-case-reopens/"
+        }
+      ]
+    },
+    {
+      "id": "92a1cea9-9564-410c-afe4-90794382d4ad",
+      "label": "Truckers, commuters protest in Portugal against soaring fuel prices",
+      "group": "story",
+      "size": 10,
+      "summary": "Drivers sounded their horns on Lisbon’s 25 de Abril Bridge this morning as a commuters’ association staged a slow-moving protest against fuel prices and the rising cost of living. The The post Drivers sound horns on 25 de Abril Bridge in fuel price protest appeared first on Portugal Resident.",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 3
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Drivers sound horns on 25 de Abril Bridge in fuel price protest",
+          "bias": "unknown",
+          "url": "https://www.portugalresident.com/driver-sound-horns-on-25-de-abril-bridge-in-fuel-price-protest/"
+        },
+        {
+          "text": "Protest on 25 April Bridge due to fuel prices",
+          "bias": "unknown",
+          "url": "https://www.theportugalnews.com/news/2026-09-25/protest-on-25-april-bridge-due-to-fuel-prices/1091539"
+        },
+        {
+          "text": "Protests Against Fuel Prices Take Buzino to the 25 April Bridge and Trucks to the Road",
+          "bias": "unknown",
+          "url": "https://omirante.pt/nacional/2026-09-25-protestos-contra-precos-dos-combustiveis-levam-buzinao-a-ponte-25-de-abril-e-camioes-a-estrada-ce62a9f0"
+        }
+      ]
+    },
+    {
+      "id": "53780f6d-2884-41d6-86fd-30ad833f3016",
+      "label": "Trump meme coin firm invites top buyers to ‘exclusive’ gala with the president",
+      "group": "story",
+      "size": 10,
+      "summary": "Find out the details of the new Trump dinner for $TRUMP investors as the memecoin faces yet another scritiny",
+      "sources_count": 1,
+      "bias": {
+        "left": 1,
+        "center": 2,
+        "right": 0,
+        "unknown": 5
+      },
+      "bias_score": -0.333,
+      "geo": {
+        "place": "New York, US",
+        "lat": 40.727739,
+        "lon": -73.976424
+      },
+      "headlines": [
+        {
+          "text": "Trump Crypto Dinner Returns: 185 Investors Invited as $TRUMP Faces New Scrutiny - Bitcoin Foundation",
+          "bias": "unknown",
+          "url": "https://bitcoinfoundation.org/news/altcoins/trump-crypto-dinner-returns-185-investors-invited-as-trump-faces-new-scrutiny/"
+        },
+        {
+          "text": "Trump’s latest crypto dinner leaving bad taste in supporters’ mouths",
+          "bias": "unknown",
+          "url": "https://coingeek.com/trump-latest-crypto-dinner-leaving-bad-taste-in-supporters-mouths/"
+        },
+        {
+          "text": "Trump's 'Exclusive Dinner' For His Memecoin Buyers Sparks Corruption Backlash",
+          "bias": "unknown",
+          "url": "https://coinedition.com/trumps-exclusive-dinner-for-his-memecoin-buyers-sparks-corruption-backlash/"
+        },
+        {
+          "text": "Trump to Host Third “Exclusive” Memecoin Event as Corruption Claims Persist",
+          "bias": "unknown",
+          "url": "https://www.cryptobreaking.com/trump-to-host-third-exclusive/"
+        },
+        {
+          "text": "Trump’s “Most EXCLUSIVE DINNER IN THE WORLD”",
+          "bias": "left",
+          "url": "https://www.vox.com/the-logoff-newsletter-trump/504911/trump-memecoin-crypto-dinner-corruption"
+        },
+        {
+          "text": "Donald Trump to Appear at DC Golf Club for 3rd Memecoin Holder Event",
+          "bias": "center",
+          "url": "https://cointelegraph.com/news/donald-trump-memecoin-dinner-corruption-claims"
+        },
+        {
+          "text": "Trump memecoin dinner returns for top token holders",
+          "bias": "unknown",
+          "url": "https://mycryptoparadise.com/trump-memecoin-dinner-returns-for-top-token-holders/"
+        },
+        {
+          "text": "TRUMP memecoin launches dinner contest for top 185 holders as token falls 97%",
+          "bias": "center",
+          "url": "https://crypto.news/trump-memecoin-launches-dinner-contest-for-top-holders/"
+        }
+      ]
+    },
+    {
+      "id": "rss_2134_1791627946306_1",
+      "label": "GOP Challenger Slams Omar Over Twin Cities Gang Violence",
+      "group": "story",
+      "size": 10,
+      "summary": "\"If you are truly trying to represent the Muslims in Minnesota, either show your 'leadership' in fixing this mess or resign,\" the reader says.",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 1,
+        "right": 0,
+        "unknown": 0
+      },
+      "bias_score": 0.0,
+      "geo": {
+        "place": "Saint Paul, US",
+        "lat": 44.957967,
+        "lon": -93.09477
+      },
+      "headlines": [
+        {
+          "text": "Letters: Omar is AWOL",
+          "bias": "center",
+          "url": "https://www.twincities.com/2026/10/11/letters-omar-is-awol/"
+        }
+      ]
+    },
+    {
+      "id": "143ebf91-50f6-401d-9848-af3c3dfbd760",
+      "label": "Newsom vetoes measure that would have penalized the use of smart glasses to secretly record people",
+      "group": "story",
+      "size": 10,
+      "summary": "Morning Briefing: California Governor Blocks Law Against 'Peeping Glasses' / Travel Plan Gets New, Simpler Design /",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 1
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Morning Briefing: California Governor Blocks Law Against 'Peeping Glasses' / Travel Plan Gets New, Simpler Design /",
+          "bias": "unknown",
+          "url": "https://www.computerworld.dk/art/297038/morgen-briefing-californiens-guvernoer-blokerer-lov-mod-lurer-briller-rejseplanen-faar-nyt-enklere-design"
+        }
+      ]
+    },
+    {
+      "id": "fa2da9cf-5885-4ac9-88be-62f239d4c7b7",
+      "label": "U.S. military lays groundwork for potential action around Cuba",
+      "group": "story",
+      "size": 10,
+      "summary": "The United States is working on the possibility of a military operation against Cuba, but there is no final decision on its conduct at the moment. Amid intensifying pressure on Havana, US military is checking the readiness of units that could potentially be needed in the next 90−120 days #США #Військова_операція #Куба #Американські_війська",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 1,
+        "unknown": 2
+      },
+      "bias_score": 1.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "US Prepares Military Options for Cuba: Reservists Can Be Withdrawn Within 90-120 Days",
+          "bias": "unknown",
+          "url": "https://wz.lviv.ua/news/559328-ssha-hotuiut-viiskovi-varianty-shchodo-kuby-rezervistiv-mozhut-zaluchyty-protiahom-90-120-dniv"
+        },
+        {
+          "text": "US Laying Groundwork For Military Action In Cuba?",
+          "bias": "unknown",
+          "url": "https://noahreport.com/us-laying-groundwork-for-military-action-in-cuba/"
+        },
+        {
+          "text": "US Laying Groundwork For Military Action In Cuba?",
+          "bias": "farRight",
+          "url": "https://headlines.americanlookout.com/us-laying-groundwork-for-military-action-in-cuba/"
+        }
+      ]
+    },
+    {
+      "id": "ee3d0d81-c2c3-4972-97e4-d6122b75b1e0",
+      "label": "Midterm early voting begins Tuesday, October 13 in Bulloch County",
+      "group": "story",
+      "size": 10,
+      "summary": "With the November 3rd midterm and local elections quickly approaching, here's all the information you need to know about voting in Bulloch County.",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 1,
+        "right": 0,
+        "unknown": 0
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Midterm early voting begins Tuesday, October 13 in Bulloch County",
+          "bias": "center",
+          "url": "https://www.griceconnect.com/local-news/midterm-early-voting-begins-tuesday-october-13-in-bulloch-county-12875363"
+        }
+      ]
+    },
+    {
+      "id": "014e749f-3168-4f95-b828-21195431d4a4",
+      "label": "Carney: Trump's 'energy ceasefire' could 'de-escalate' war in Ukraine",
+      "group": "story",
+      "size": 10,
+      "summary": "OTTAWA — Mark Carney thanked U.S. President Donald Trump for “his leadership toward securing an energy ceasefire\" between Ukraine and Russia, the Prime Minister's Office said on Sunday. But on the same day, Carney also expressed to Ukraine's leader tha...",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 1,
+        "right": 0,
+        "unknown": 0
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Carney: Trump’s ‘energy ceasefire’ could ‘de-escalate’ war in Ukraine",
+          "bias": "center",
+          "url": "https://lethbridgenewsnow.com/2026/10/11/carney-says-u-s-russia-diesel-supply-deal-hurts-ukraine-peace-cause-pmo/"
+        }
+      ]
+    },
+    {
+      "id": "01745cd1-790b-441e-ba84-bed620c7599f",
+      "label": "AI minister warns 'likely' UK's cyber defences will be breached",
+      "group": "story",
+      "size": 10,
+      "summary": "Britain’s cyber defences will probably be breached as increasingly powerful artificial intelligence systems create new opportunities for hackers and autonomous software, the Government’s AI minister has warned, as ministers prepare…\nThe post UK cyber defences face ‘likely, if not inevitable’ breach as AI superintelligence raises alarm appeared first on London Tech News",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 1,
+        "right": 0,
+        "unknown": 2
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "UK cyber defences face ‘likely, if not inevitable’ breach as AI superintelligence raises alarm - London Tech News",
+          "bias": "unknown",
+          "url": "https://londonlovestech.com/?p=114868"
+        },
+        {
+          "text": "AI minister calls on AI frontier labs to ramp up safety, as UK ups cyber defences",
+          "bias": "unknown",
+          "url": "https://tech.eu/2026/10/12/ai-minister-calls-on-ai-frontier-labs-to-ramp-up-safety-as-uk-ups-cyber-defences/"
+        },
+        {
+          "text": "UK Considers Mandatory AI Safety Reporting",
+          "bias": "center",
+          "url": "https://em360tech.com/tech-articles/uk-considers-mandatory-ai-safety-reporting"
+        }
+      ]
+    },
+    {
+      "id": "21c6cdd4-a490-44d4-9c6a-8b38a6014546",
+      "label": "What We Need to Know: Hurricane Isaias, a DOJ Probe of TV Networks, Russian Fuel, and Dick Gregory's Legacy",
+      "group": "story",
+      "size": 10,
+      "summary": "Hurricane Isaias bears as the Justice Department launches a probe into major television networks, and we remember comedian and activist Dick Gregory.",
+      "sources_count": 1,
+      "bias": {
+        "left": 1,
+        "center": 0,
+        "right": 0,
+        "unknown": 0
+      },
+      "bias_score": -1.0,
+      "geo": {
+        "place": "Silver Spring, US",
+        "lat": 38.987089,
+        "lon": -77.02345
+      },
+      "headlines": [
+        {
+          "text": "What We Need to Know: Hurricane Isaias, a DOJ Probe of TV Networks, Russian Fuel, and Dick Gregory's Legacy",
+          "bias": "leanLeft",
+          "url": "https://blackamericaweb.com/2026/10/12/what-we-need-to-know-hurricane-isaias-a-doj-probe-of-tv-networks-russian-fuel-and-dick-gregorys-legacy/"
+        }
+      ]
+    },
+    {
+      "id": "831edcd3-60a9-4bf9-b696-9894e51fbf07",
+      "label": "'Speechless': Dan Levy Slams Shane Gillis’ SNL Monologue About Women’s Gym Clothing",
+      "group": "story",
+      "size": 10,
+      "summary": "Dan Levy is sharing his thoughts on Shane Gillis' recent Saturday Night Live monologue.Gillis hosted the Oct. 10 episode of Saturday Night Live, where he performed a stand-up comedy routine…",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 3,
+        "right": 0,
+        "unknown": 2
+      },
+      "bias_score": 0.0,
+      "geo": {
+        "place": "London, UK",
+        "lat": 51.509392,
+        "lon": -0.123036
+      },
+      "headlines": [
+        {
+          "text": "Dan Levy slams Shane Gillis’ ‘Saturday Night Live’ monologue: ‘I’m speechless’ – 98.9 THE BULL",
+          "bias": "unknown",
+          "url": "https://www.989bull.com/dan-levy-slams-shane-gillis-saturday-night-live-monologue-im-speechless/"
+        },
+        {
+          "text": "Dan Levy Sparks Heated Debate Slamming Shane Gillis For His ‘SNL’ Monologue",
+          "bias": "unknown",
+          "url": "https://www.whiskeyriff.com/2026/10/12/dan-levy-sparks-heated-debate-slamming-shane-gillis-for-his-snl-monologue/"
+        },
+        {
+          "text": "Dan Levy calls out Shane Gillis’ comments on ‘SNL’: “I’m speechless that something like that can exist on live national television”",
+          "bias": "center",
+          "url": "https://www.nme.com/news/tv/dan-levy-calls-out-shane-gillis-snl-comments-im-speechless-3972990"
+        },
+        {
+          "text": "Before Shane Gillis, Dave Chappelle, Larry David And More Have Been Criticized For SNL Monologues",
+          "bias": "center",
+          "url": "https://www.cinemablend.com/television/shane-gillis-snl-monologue-backlash-larry-david"
+        },
+        {
+          "text": "“I’m Speechless”- Dan Levy Slams Shane Gillis Over His ‘SNL’ Gym Joke About Women",
+          "bias": "center",
+          "url": "https://www.netflixjunkie.com/hollywood-news-im-speechless-dan-levy-slams-shane-gillis-over-his-snl-gym-joke-about-women"
+        }
+      ]
+    },
+    {
+      "id": "e82cb5ca-3428-4952-8f8c-2964e6f54d0a",
+      "label": "Flanagan brings a piece of Park to politics",
+      "group": "story",
+      "size": 10,
+      "summary": "Peggy Flanagan, a class of ‘97 Park alum, prepares for the upcoming midterm elections to represent Minnesota on the U.S. Senate. She reflects on her time at Park, and looks ahead to future generations.",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 1
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Flanagan brings a piece of Park to politics",
+          "bias": "unknown",
+          "url": "https://slpecho.com/news/2026/10/12/flanagan-brings-a-piece-of-park-to-politics/"
+        }
+      ]
+    },
+    {
+      "id": "afff912f-721b-4703-aa9f-80a45934385e",
+      "label": "Stevenson Ranch Outback Steakhouse To Close After Nearly 30 Years In Business",
+      "group": "story",
+      "size": 10,
+      "summary": "In the latest restaurant closure to hit the west side of the Santa Clarita Valley, Outback Steakhouse in Stevenson Ranch is set to close its doors in just two weeks, ending nearly 30 years in business. For generations of local diners, the Outback in Stevenson Ranch has been a familiar stop for birthday celebrations, casual ...",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 1
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Stevenson Ranch Outback Steakhouse To Close After Nearly 30 Years In Business",
+          "bias": "unknown",
+          "url": "https://www.hometownstation.com/santa-clarita-news/community-news/stevenson-ranch-outback-steakhouse-to-close-after-nearly-30-years-in-business-613913"
+        }
+      ]
+    },
+    {
+      "id": "baf32f6d-df6e-40f9-92e9-08e784ca483f",
+      "label": "Hackers heat French supermarket fridges, sparking fires and food losses",
+      "group": "story",
+      "size": 10,
+      "summary": "Hundreds of French supermarkets have been hit by a cyberattack that caused their fridges and freezers to heat up, forcing retailers to dump stock.",
+      "sources_count": 1,
+      "bias": {
+        "left": 1,
+        "center": 2,
+        "right": 0,
+        "unknown": 13
+      },
+      "bias_score": -0.333,
+      "geo": {
+        "place": "London, UK",
+        "lat": 51.492242,
+        "lon": -0.12189
+      },
+      "headlines": [
+        {
+          "text": "Hackers turn supermarket fridges up to 122 degrees forcing stores to throw away food",
+          "bias": "center",
+          "url": "https://www.dexerto.com/food/hackers-turn-supermarket-fridges-up-to-122-degrees-forcing-stores-to-throw-away-food-3418321/"
+        },
+        {
+          "text": "Cyberattacks hit European grocers: French supermarket freezers hijacked, Dutch and Belgian stores disrupted",
+          "bias": "unknown",
+          "url": "https://www.helpnetsecurity.com/2026/10/12/france-cyberattack-supermarket-freezers/"
+        },
+        {
+          "text": "Hackers Hit the Refrigerators of French Supermarkets: Food to Throw in Hundreds of Stores",
+          "bias": "unknown",
+          "url": "https://europa.today.it/attualita/hacker-colpiscono-supermercati-francesi.html"
+        },
+        {
+          "text": "\"It Was No Longer a Freezer, It Was an Oven\": Several Bearnais Stores Affected by the Cyber Attack in Supermarkets",
+          "bias": "unknown",
+          "url": "https://www.larepubliquedespyrenees.fr/societe/securite/ce-n-etait-plus-un-congelateur-c-etait-un-four-plusieurs-magasins-bearnais-touches-par-la-cyberattaque-dans-les-supermarches-31037847.php"
+        },
+        {
+          "text": "Massive Cyber Attack on Supermarkets in France",
+          "bias": "unknown",
+          "url": "https://g4food.ro/atac-cibernetic-masiv-asupra-supermarketurilor-din-franta-sute-de-frigidere-si-congelatoare-deconectate-de-la-distanta/"
+        },
+        {
+          "text": "Cyber Attack Destroys Food Stocks at Intermarché and Coopérative U",
+          "bias": "unknown",
+          "url": "https://www.journaldunet.com/business/1556467-une-cyberattaque-detruit-des-stocks-alimentaires-chez-intermarche-et-cooperative-u/"
+        },
+        {
+          "text": "Intermarket and Super U Stores Affected by Cyberattack, Losses of Several Million Euros to Be Expected",
+          "bias": "unknown",
+          "url": "https://www.lyoncapitale.fr/actualite/des-magasins-intermarche-et-super-u-touches-par-une-cyberattaque-des-pertes-de-plusieurs-millions-deuros-a-prevoir"
+        },
+        {
+          "text": "Hackers Destroy Danfoss Refrigeration Systems: Turn up the Temperature in Hundreds of Supermarkets",
+          "bias": "unknown",
+          "url": "https://www.version2.dk/artikel/hackere-oedelaegger-danfoss-koelesystemer-skruer-temperaturen-op-i-hundredvis-af-supermarkeder"
+        }
+      ]
+    },
+    {
+      "id": "69016af0-66c4-4240-9635-a0ec3521ca10",
+      "label": "Microsoft Announces New AI Chip Azure Maia 300",
+      "group": "story",
+      "size": 10,
+      "summary": "Microsoft today announced that starting next year, it will widely adopt its own Azure Maia AI chip, consuming several gigawatts of power. AI functionality in its products and services will primarily be handled by Maia. Microsoft's second-generation chip, Maia 200, is already in use in the US, Europe, and Australia, currently handling AI functionality for Microsoft Copilot. GitHub Copilot and the Microsoft Foundry developer platform will also beg…",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 4
+      },
+      "bias_score": 0.0,
+      "geo": {
+        "place": "India",
+        "lat": 22.737868,
+        "lon": 80.213645
+      },
+      "headlines": [
+        {
+          "text": "Microsoft Will Use a Large Number of Its Own AI Chips Next Year Instead of Relying on Other Companies? - winandmac.com Shimai Media",
+          "bias": "unknown",
+          "url": "https://www.winandmac.com/2026/10/microsoft-azure-maia-hardware/"
+        },
+        {
+          "text": "Microsoft to deploy over a million Maia 300 AI chips to cut Nvidia reliance",
+          "bias": "unknown",
+          "url": "https://thetechportal.com/2026/10/12/microsoft-to-deploy-over-a-million-maia-300-ai-chips-to-cut-nvidia-reliance/"
+        },
+        {
+          "text": "Microsoft Azure Maia: Massive Expansion of Own AI Chips",
+          "bias": "unknown",
+          "url": "https://stadt-bremerhaven.de/microsoft-azure-maia-eigene-ki-chips-werden-massiv-ausgebaut/"
+        },
+        {
+          "text": "Microsoft is moving Copilot onto its own Maia chips, with multi-gigawatt deployments from 2027",
+          "bias": "unknown",
+          "url": "https://tech-ish.com/2026/10/12/microsoft-is-moving-copilot-onto-its-own-maia-chips-with-multi-gigawatt-deployments-from-2027/"
+        }
+      ]
+    },
+    {
+      "id": "5d620ef8-54c6-4011-b856-017ec3f64eeb",
+      "label": "‘Peaky Blinders’ Maker Refutes Being “Jealous” of Hollywood Studios Amid Talks of US Expansion",
+      "group": "story",
+      "size": 10,
+      "summary": "CANNES, France — Banijay Entertainment may be the world’s largest independent television production company, but its top executives say the recently merged entertainment powerhouse has ambitions that extend far beyond making television shows. “We are an entertainment company,” CEO Marco Bassetti said Oct. 12 during a keynote discussion at MIPCOM Cannes. “We aren’t anymore just … Continue reading \"Banijay Execs Tout Global Entertainment Ambitions…",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 2
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Banijay Execs Tout Global Entertainment Ambitions Following All3Media Merger",
+          "bias": "unknown",
+          "url": "https://www.mediaplaynews.com/banijay-execs-tout-global-entertainment-ambitions-following-all3media-merger/"
+        },
+        {
+          "text": "Banijay Plots U.S. Expansion As Marco Bassetti Says ‘Peaky Blinders’ Maker Is Not “Jealous” Of U.S. Studios",
+          "bias": "unknown",
+          "url": "https://franktrades.com/2026/10/12/banijay-plots-u-s-expansion-as-marco-bassetti-says-peaky-blinders-maker-is-not-jealous-of-u-s-studios/"
+        }
+      ]
+    },
+    {
+      "id": "rss_16567_1791783502648_4",
+      "label": "China’s carmakers rely on overseas markets as monthly domestic sales decline continues",
+      "group": "story",
+      "size": 10,
+      "summary": "China's passenger car exports saw a significant 64% surge in September 2025 compared to the same month the previous year, according to the China Association of Automobile Manufacturers. This growth trend is driven by the increasing focus of Chinese automakers on overseas markets to compensate for sluggish domestic sales.\nIn September, China exported approximately 919,000 passenger vehicles, with a notable demand for plug-in hybrids and electric …",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 1
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Chinese Car Exports Surge Amid Domestic Sales Decline",
+          "bias": "unknown",
+          "url": "https://www.chinamoneynetwork.com/2026/10/12/chinese-car-exports-surge-amid-domestic-sales-decline"
+        }
+      ]
+    },
+    {
+      "id": "2b27e6f2-fb20-41bf-a34d-1874f380ae33",
+      "label": "SSS flags Pasay employers over P3.19 million unpaid contributions",
+      "group": "story",
+      "size": 10,
+      "summary": "The Social Security System has ordered five employers in Pasay to settle P3.19 million in unpaid contributions for failing to remit their workers’ monthly social security payments.",
+      "sources_count": 2,
+      "bias": {
+        "left": 1,
+        "center": 0,
+        "right": 0,
+        "unknown": 0
+      },
+      "bias_score": -1.0,
+      "geo": {
+        "place": "Taguig, Philippines",
+        "lat": 14.518598,
+        "lon": 121.05082
+      },
+      "headlines": [
+        {
+          "text": "SSS flags Pasay employers over P3.19 million unpaid contributions",
+          "bias": "leanLeft",
+          "url": "https://www.philstar.com/nation/2026/10/13/2562787/sss-flags-pasay-employers-over-p319-million-unpaid-contributions"
+        }
+      ]
+    },
+    {
+      "id": "125073c3-72f1-4021-9ad9-0a0f783dff68",
+      "label": "Kenya: KRA Customs Collections Rise 5.8pc to Sh90bn in September",
+      "group": "story",
+      "size": 10,
+      "summary": "The Kenya Revenue Authority (KRA) collected Sh90.053 billion in customs revenue in September 2026, exceeding its monthly target as higher import values and increased cargo volumes supported collections. The Customs and Border Control Department raised Ksh 965 million above its target of Ksh 89.088 billion, achieving 101.1 per cent of the expected amount. The collection […]",
+      "sources_count": 2,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 1
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "KRA Collects Ksh90B in Customs Revenue",
+          "bias": "unknown",
+          "url": "https://businesstoday.co.ke/kra-collects-ksh90b-in-customs-revenue/"
+        }
+      ]
+    },
+    {
+      "id": "97328b78-e44e-4ab1-b674-498b7069f07f",
+      "label": "Trade minister leading 300-member mission to India this week",
+      "group": "story",
+      "size": 10,
+      "summary": "By Asia Samachar  | Canada | OTTAWA: Canadian International Trade Minister Maninder Sidhu will lead nearly 300 delegates on a major trade mission to India next week, marking Canada’s largest trade delegation to the country in more than three decades. The October 12–17 mission will visit Mumbai and Bengaluru, bringing Canadian businesses together with Indian",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 1
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Canada’s Maninder Sidhu to lead biggest trade mission to India in 30 years",
+          "bias": "unknown",
+          "url": "https://asiasamachar.com/2026/10/10/canadas-maninder-sidhu-to-lead-biggest-trade-mission-to-india-in-30-years/"
+        }
+      ]
+    },
+    {
+      "id": "rss_12420_1791827161752_1",
+      "label": "Follow the Money Tools for US Midterms",
+      "group": "story",
+      "size": 10,
+      "summary": "",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 1
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Follow the Money Tools for US Midterms",
+          "bias": "unknown",
+          "url": "https://www.metafilter.com/214803/Follow-the-Money-Tools-for-US-Midterms"
+        }
+      ]
+    },
+    {
+      "id": "1a3a2c76-f31d-4d9c-bf59-81c4ce9b2508",
+      "label": "Trump Touts Korea Zinc’s Smelter Project Ahead of Midterm Elections",
+      "group": "story",
+      "size": 10,
+      "summary": "Korea Zinc Chairman Yun B. Choi, center on the front row, inspects the site of a planned smelter in Tennessee during a visit in April. [Photo courtesy of Korea Zinc]\nU.S. President Donald Trump has singled out Korea Zinc as a major contributor to his administration’s efforts to revive American manufacturing, according to US media outlets.\nThe president spotlighted the company’s multibillion-dollar smelter project, called Project Crucible, during…",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 2
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Trump Hails Korea Zinc Project Ahead of Midterms",
+          "bias": "unknown",
+          "url": "https://www.newsarticleinsiders.com/news/articleView.html?idxno=4638"
+        },
+        {
+          "text": "Trump: “Korea Zinc to Invest $6 Billion Thanks to Tariffs”",
+          "bias": "unknown",
+          "url": "https://www.voakorea.com/a/8210100.html"
+        }
+      ]
+    },
+    {
+      "id": "02f9feb1-6e23-4b13-83ba-21c834b312b7",
+      "label": "Four Major European Parliament Groups Reject Irish Presidency’s EU Budget Proposal",
+      "group": "story",
+      "size": 10,
+      "summary": "Statement of the leaders of EPP, S&D, Renew Europe, Greens/EFA groups in the European Parliament on the revised version of the Negotiating Box for the 2028-2034 Multiannual Financial Framework presented by the Irish Presidency. We would like to convey our utmost dismay over the revised version of the Negotiating Box presented by the Irish Presidency ahead of the European Council...",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 2
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Statement of the leaders of EPP, S&D, Renew Europe, Greens/EFA groups in the European Parliament",
+          "bias": "unknown",
+          "url": "https://socialistsanddemocrats.eu/newsroom/statement-leaders-epp-sd-renew-europe-greensefa-groups-european-parliament"
+        },
+        {
+          "text": "Lead MEPs on EU’s long-term budget react to Irish presidency’s negotiating box - The European Sting - Critical News & Insights on European Politics, Economy, Foreign Affairs, Business & Technology - europeansting.com European Union News",
+          "bias": "unknown",
+          "url": "https://europeansting.com/2026/10/12/lead-meps-on-eus-long-term-budget-react-to-irish-presidencys-negotiating-box/"
+        }
+      ]
+    },
+    {
+      "id": "6cb7c1af-2df0-499f-ab38-21c09ff25c8f",
+      "label": "India’s HCLTech Signs a Pact with Anthropic, to Set up Business Unit",
+      "group": "story",
+      "size": 10,
+      "summary": "HCLTech to establish a dedicated Anthropic Business Unit and Center of Excellence (CoE) to accelerate deployments of Claude in enterprise environments HCLSoftware becomes an Anthropic ISV partner, embedding Claude and Claude Code into select enterprise products with frontier safety guardrails HCLTech (NSE: HCLTECH) (BSE: HCLTECH), a leading global technology company, today announced a Global Premier Partnership",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 3
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "HCLTech and Anthropic sign Global Premier Partnership to scale governed Agentic AI across global enterprises - CanadianSME Small Business Magazine",
+          "bias": "unknown",
+          "url": "https://canadiansme.ca/hcltech-and-anthropic-sign-global-premier-partnership-to-scale-governed-agentic-ai-across-global-enterprises/"
+        },
+        {
+          "text": "HCLTech and Anthropic sign Global Premier Partnership to scale governed Agentic AI across global enterprises",
+          "bias": "unknown",
+          "url": "https://aithority.com/machine-learning/hcltech-and-anthropic-sign-global-premier-partnership-to-scale-governed-agentic-ai-across-global-enterprises/"
+        },
+        {
+          "text": "HCLTech Partners with Anthropic to Set Up Dedicated AI Business Unit",
+          "bias": "unknown",
+          "url": "https://apacnewsnetwork.com/2026/10/hcltech-partners-with-anthropic-to-set-up-dedicated-ai-business-unit/"
+        }
+      ]
+    },
+    {
+      "id": "c16c7de2-b164-4f96-826c-42a96e7bcd21",
+      "label": "Volkswagen reports 14% drop in third quarter deliveries",
+      "group": "story",
+      "size": 10,
+      "summary": "In the third trimester Volkswagen records a collapse of deliveries of 14.3%, pairs to 1.89 million vehicles. It is the worst decrease for four years",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 7
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Volkswagen Collapses in the Third Quarter: -14.3%, the Worst Figure Since 4 Years",
+          "bias": "unknown",
+          "url": "https://www.sicurauto.it/news/novita-del-mercato/volkswagen-crolla-nel-terzo-trimestre-143-il-dato-peggiore-da-4-anni/"
+        },
+        {
+          "text": "China slump drives Volkswagen to sharpest quarterly fall in more than four years",
+          "bias": "unknown",
+          "url": "https://the-european.eu/story-67613/china-slump-drives-volkswagen-to-sharpest-quarterly-fall-in-more-than-four-years.html"
+        },
+        {
+          "text": "Volkswagen Group Reports 6.01 Million Vehicle Deliveries in Nine Months as European EV Orders Double",
+          "bias": "unknown",
+          "url": "https://news.europawire.eu/volkswagen-group-reports-6-01-million-vehicle-deliveries-in-nine-months-as-european-ev-orders-double/eu-press-release/2026/10/12/13/36/05/182592/"
+        },
+        {
+          "text": "Volkswagen Alarms Jump: Sales Drop by 14.3% in the Third Quarter, Including Electric Cars",
+          "bias": "unknown",
+          "url": "https://forococheselectricos.com/noticias/volkswagen-ventas-caen-china-tercer-trimestre-2026-20261012-42408.html"
+        },
+        {
+          "text": "Volkswagen Car Sales in Crash with -14% - VW and Audi Even -19%",
+          "bias": "unknown",
+          "url": "https://finanzmarktwelt.de/volkswagen-autoabsatz-im-absturz-405793/"
+        },
+        {
+          "text": "Volkswagen: Deliveries in Decline of 14.3% in Q3 Penalized by China, but the Electric Races in Europe",
+          "bias": "unknown",
+          "url": "https://www.wallstreetitalia.com/news/volkswagen-consegne-in-calo-del-143-nel-q3-penalizzate-dalla-cina-ma-lelettrico-corre-in-europa/"
+        },
+        {
+          "text": "Volkswagen Q3 deliveries plunge 14.3% as China sales slump",
+          "bias": "unknown",
+          "url": "https://www.cbtnews.com/volkswagen-q3-deliveries-plunge-14-3/"
+        }
+      ]
+    },
+    {
+      "id": "36b2cc72-543f-476c-aa28-ff3d40c2e9ad",
+      "label": "Tata Motors, Stellantis to Develop Vehicles in India for 50-Plus Global Markets",
+      "group": "story",
+      "size": 10,
+      "summary": "Tata Motors and Stellantis are expanding their collaboration in vehicle technology and global exports, highlighting the growing importance of strategic partnerships in the automotive industry. The broader cooperation is expected to support technology development, improve product capabilities and create opportunities to strengthen the companies’ presence in international markets. Collaboration between automotive manufacturers can also help […]",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 1,
+        "unknown": 3
+      },
+      "bias_score": 1.0,
+      "geo": {
+        "place": "India",
+        "lat": 20.787439,
+        "lon": 77.831277
+      },
+      "headlines": [
+        {
+          "text": "Tata Motors, Stellantis Broaden Partnership for Technology and Export Growth - India Seatrade News",
+          "bias": "unknown",
+          "url": "https://indiaseatradenews.com/tata-motors-stellantis-broaden-partnership-for-technology-and-export-growth/"
+        },
+        {
+          "text": "Stellantis to ride on Tata Motors technology for global markets - BusinessToday",
+          "bias": "unknown",
+          "url": "https://www.businesstoday.in/auto/story/stellantis-to-ride-on-tata-motors-technology-for-global-markets-561105-2026-10-12"
+        },
+        {
+          "text": "Tata Motors to share vehicle platforms with Stellantis",
+          "bias": "leanRight",
+          "url": "https://www.financialexpress.com/business/industry-tata-motors-to-share-vehicle-platforms-with-stellantis-4359383/"
+        },
+        {
+          "text": "Tata Motors & Stellantis Sign Deal To Develop New India-Made Vehicles",
+          "bias": "unknown",
+          "url": "https://gaadiwaadi.com/tata-motors-stellantis-sign-deal-to-develop-new-india-made-vehicles/"
+        }
+      ]
+    },
+    {
+      "id": "ad2e63fb-85ce-4254-b1fe-7d69e5f9a364",
+      "label": "A Strong Economy for Whom?",
+      "group": "story",
+      "size": 10,
+      "summary": "In his run-up to the midterm elections, the president is crisscrossing the country in an effort to energize his base. Unfortunately, he seeks to inflame his base with multiple exaggerations, obfuscations, half-truths, and down-right bald-faced lies. Thus, he told Oklahoma’s News 9 on October 1, “So we have the greatest economy in the history […]",
+      "sources_count": 2,
+      "bias": {
+        "left": 1,
+        "center": 0,
+        "right": 0,
+        "unknown": 0
+      },
+      "bias_score": -1.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "A Strong Economy for Whom?",
+          "bias": "left",
+          "url": "https://chicagocrusader.com/a-strong-economy-for-whom/"
+        }
+      ]
+    },
+    {
+      "id": "d75c4025-51b3-460d-b450-fb62b122fcd9",
+      "label": "\"RHOP\" Star Karen Huger Gives Update On Her Marriage To Husband Ray Following Prison Release",
+      "group": "story",
+      "size": 10,
+      "summary": "In the season premiere of RHOP, Karen and Robyn return. Plus, Tia and Gizelle’s friendship is tested when Tia’s husband is found on a dating app. Here are the highlights for “Read Between the Lies.” Karen is back. The episode begins with Gizelle, Karen, and Ashley catching up at a restaurant. In a confessional, Karen… Continue reading RHOP Premiere Highlights: Gizelle Disappoints Tia + Tia’s Husband Confesses",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 1,
+        "right": 0,
+        "unknown": 1
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "RHOP Premiere Highlights: Gizelle Disappoints Tia + Tia's Husband Confesses",
+          "bias": "unknown",
+          "url": "https://urbanbellemag.com/2026/10/12/rhop-premiere-highlights-gizelle-disappoints-tia-tias-husband-confesses/"
+        },
+        {
+          "text": "RHOP star Karen Huger teases her blowup With Gizelle Bryant and shades Stacey Rusch as \"AI,\" plus she addresses status with Ray, Wendy and Eddie Osefo’s separate legal teams, Tia Glover’s husband being on dating apps and Robyn Dixon’s return",
+          "bias": "center",
+          "url": "https://realityblurb.com/2026/10/12/rhop-star-karen-huger-teases-blowup-with-gizelle-bryant-and-shades-stacey-rusch-as-ai-plus-she-addresses-status-with-ray-wendy-and-eddies-separate-legal-teams-tias-husband-on-dating/"
+        }
+      ]
+    },
+    {
+      "id": "085145ff-dcd1-46ec-be59-a4907036c4f9",
+      "label": "Deloitte helped in falsifying documents to evade tax on Abramovich’s wealth, BBC finds",
+      "group": "story",
+      "size": 10,
+      "summary": "An investigation of the BBC and of Bureau of Investigative Journalism reveals that documents were allegedly falsified to hide part",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 2,
+        "right": 0,
+        "unknown": 7
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Chelsea: Roman Abramovich has a new big problem in England",
+          "bias": "unknown",
+          "url": "https://frenchfootballweekly.com/2026/10/12/chelsea-roman-abramovich-has-a-new-big-problem-in-england/"
+        },
+        {
+          "text": "Abramovich Faces Tax Evasion Allegations As BBC Investigation Raises Questions Over $10bn Fortune",
+          "bias": "unknown",
+          "url": "https://brandspurng.com/2026/10/12/abramovich-faces-tax-evasion-allegations-as-bbc-investigation-raises-questions-over-10bn-fortune/"
+        },
+        {
+          "text": "Former Patron of Chelsea, Abramovich Investigated for Alleged Financial Maneuvers",
+          "bias": "unknown",
+          "url": "https://www.violanews.com/altre-news/ex-patron-del-chelsea-abramovich-indagato-per-presunte-manovre-finanziarie/"
+        },
+        {
+          "text": "Abramovich in Trouble, Investigation of the Former Patron of Chelsea",
+          "bias": "unknown",
+          "url": "https://www.calcionews24.com/abramovich-guai-maxi-inchiesta-ex-patron-chelsea-10-miliardi-dollari-nascosti/"
+        },
+        {
+          "text": "Roman Abramovich Concealed Private Jets and Superyachts From the Tax Authorities with the Help of Deloitte",
+          "bias": "unknown",
+          "url": "https://www.quotenet.nl/zakelijk/a74107390/roman-abramovich-onttrok-privejets-en-superjachten-fiscus-hulp-van-deloitte/"
+        },
+        {
+          "text": "Deloitte approved falsified Abramovich accounts, BBC finds",
+          "bias": "center",
+          "url": "https://insidersport.com/2026/10/12/deloitte-abramovich-falsified-accounts/"
+        },
+        {
+          "text": "Shock Investigation on the Former Patron of Chelsea Abramovich: Hidden More than 10 Billion Dollars",
+          "bias": "unknown",
+          "url": "https://www.tuttomercatoweb.com/calcio-estero/inchiesta-shock-patron-chelsea-abramovich-nascosti-10-dollari-2282547"
+        },
+        {
+          "text": "Deloitte accused of helping former Chelsea owner to evade tax",
+          "bias": "center",
+          "url": "https://dailycannon.com/2026/10/deloitte-abramovich-tax-evasion/"
+        }
+      ]
+    },
+    {
+      "id": "510fd11d-23ac-47c3-b5af-ac294592f3c2",
+      "label": "Environment PS Festus Ng’eno Injured as KFS Helicopter Crashes in Kericho",
+      "group": "story",
+      "size": 10,
+      "summary": "FIVE TAKEN TO HOSPITAL AFTER GOVERNMENT HELICOPTER CRASHES AT KERICHO GOLF CLUB A helicopter carrying five people, reportedly including senior government officials, crashed while attempting to take off from Kericho Golf Club in Kericho County, Kenya, today, Monday. All five occupants were taken to hospital for medical assessment. Initial reports indicate that they survived the…",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 2
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "NO MISSING HEADS: 5 Hospitalised In Another Helicopter Crash In Kenya",
+          "bias": "unknown",
+          "url": "https://www.zimeye.net/2026/10/12/no-missing-heads-5-hospitalised-in-another-helicopter-crash/"
+        },
+        {
+          "text": "Helicopter Carrying Ruto PS Crashes in Kericho",
+          "bias": "unknown",
+          "url": "https://www.kenyans.co.ke/news/127794-helicopter-carrying-five-people-crashes-kericho-golf-club"
+        }
+      ]
+    },
+    {
+      "id": "38a8511d-4a80-475a-9ee0-d2dd536cc84c",
+      "label": "Billion-pound trade mission to India unlocks hundreds of UK jobs and new export deals",
+      "group": "story",
+      "size": 10,
+      "summary": "Cumbria is in the international spotlight this week, as part of a major effort to attract more overseas visitors.",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 4,
+        "right": 0,
+        "unknown": 1
+      },
+      "bias_score": 0.0,
+      "geo": {
+        "place": "Barrow-in-Furness, UK",
+        "lat": 54.111723,
+        "lon": -3.223878
+      },
+      "headlines": [
+        {
+          "text": "Cumbria targets Indian tourists in major North of England trade mission",
+          "bias": "center",
+          "url": "https://www.nwemail.co.uk/news/26628882.cumbria-promotes-lake-district-indian-travel-market/"
+        },
+        {
+          "text": "Cumbria targets Indian tourists in major North of England trade mission",
+          "bias": "center",
+          "url": "https://www.newsandstar.co.uk/news/26628882.cumbria-promotes-lake-district-indian-travel-market/"
+        },
+        {
+          "text": "Cumbria targets Indian tourists in major North of England trade mission",
+          "bias": "center",
+          "url": "https://www.thewestmorlandgazette.co.uk/news/26628882.cumbria-promotes-lake-district-indian-travel-market/"
+        },
+        {
+          "text": "Billion-pound trade mission to India unlocks hundreds of UK jobs and new export deals",
+          "bias": "center",
+          "url": "https://www.farminglife.com/country-and-farming/billion-pound-trade-mission-to-india-unlocks-hundreds-of-uk-jobs-and-new-export-deals-9282103"
+        },
+        {
+          "text": "India trade mission unlocks hundreds of UK jobs and new deals",
+          "bias": "unknown",
+          "url": "https://www.gov.uk/government/news/india-trade-mission-unlocks-hundreds-of-uk-jobs-and-new-deals"
+        }
+      ]
+    },
+    {
+      "id": "a9a27e07-d1ac-450a-85e7-60d5fdb44188",
+      "label": "Proactive MD expands executive leadership team to support continued growth",
+      "group": "story",
+      "size": 10,
+      "summary": "Proactive MD®, a national leader in value-based care, has expanded its executive leadership team to support the organization’s continued growth and strengthen leadership across key areas of the business. The…\nThe post Proactive MD expands executive leadership team to support continued growth appeared first on Who's On The Move.",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 1
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Proactive MD expands executive leadership team to support continued growth",
+          "bias": "unknown",
+          "url": "https://whosonthemove.com/proactive-md-expands-executive-leadership-team-to-support-continued-growth/"
+        }
+      ]
+    },
+    {
+      "id": "42ab880f-3903-45cf-9de8-775c0fc05717",
+      "label": "Big Money, Party Politics, and Congressional Leadership in the 2026 Election: From the Rockies to the Himalayas",
+      "group": "story",
+      "size": 10,
+      "summary": "In the 2026 midterms, congressional leaders of both parties are drawing very big money from megadonors, while small donors barely register.",
+      "sources_count": 1,
+      "bias": {
+        "left": 1,
+        "center": 0,
+        "right": 0,
+        "unknown": 0
+      },
+      "bias_score": -1.0,
+      "geo": {
+        "place": "New York, US",
+        "lat": 40.686397,
+        "lon": -74.00025
+      },
+      "headlines": [
+        {
+          "text": "Big Money, Party Politics, and Congressional Leadership in the 2026 Election: From the Rockies to the Himalayas",
+          "bias": "leanLeft",
+          "url": "https://www.nakedcapitalism.com/2026/10/big-money-party-politics-and-congressional-leadership-in-the-2026-election-from-the-rockies-to-the-himalayas.html"
+        }
+      ]
+    },
+    {
+      "id": "bccbae60-876b-4d18-8536-7504ec3f67cb",
+      "label": "Google Invests in Flo and Plans Women’s Health Wearables",
+      "group": "story",
+      "size": 10,
+      "summary": "Google announced a Flo Health partnership aimed at improving the personalized wellness insights and understanding women experience.",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 1
+      },
+      "bias_score": 0.0,
+      "geo": {
+        "place": "Bath, UK",
+        "lat": 51.374128,
+        "lon": -2.357172
+      },
+      "headlines": [
+        {
+          "text": "Google, Flo Health partner to elevate women's overall well-being with Fitbit Edge",
+          "bias": "unknown",
+          "url": "https://www.androidcentral.com/wearables/fitbit/google-flo-health-partner-to-elevate-womens-well-being"
+        }
+      ]
+    },
+    {
+      "id": "fae089e5-c456-4cac-91fb-1b05e4fdadc6",
+      "label": "HMV to Close Oxford Street Store 3 Years After Reopening",
+      "group": "story",
+      "size": 10,
+      "summary": "HMV has cited the doubling of its rent as the reason behind its decision to close its Oxford Street store, just three years after it returned to the location. The flagship branch will disappear from the nation’s soon to be traffic-free busiest high street in March next year. It raises the question as to what […]",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 1,
+        "right": 1,
+        "unknown": 4
+      },
+      "bias_score": 0.5,
+      "geo": {
+        "place": "London, UK",
+        "lat": 51.504153,
+        "lon": -0.123708
+      },
+      "headlines": [
+        {
+          "text": "Will HMV's Oxford Street demise spell the return of the street's largest candy store?",
+          "bias": "unknown",
+          "url": "https://westminstertimes.co.uk/2026/10/12/will-hmv-oxford-street-demise-spell-the-return-of-the-streets-largest-candy-store/"
+        },
+        {
+          "text": "HMV to close Oxford Street store three years after reopening historic site",
+          "bias": "center",
+          "url": "https://www.hertsad.co.uk/news/national/26627290.hmv-close-oxford-street-store-three-years-reopening-historic-site/"
+        },
+        {
+          "text": "HMV to close Oxford Street store three years after reopening flagship",
+          "bias": "leanRight",
+          "url": "https://www.thisismoney.co.uk/money/markets/article-16201937/HMV-close-unsustainable-Oxford-Street-store-three-years-reopening.html"
+        },
+        {
+          "text": "HMV to close its Oxford Street store citing soaring rental costs",
+          "bias": "unknown",
+          "url": "https://www.ianvisits.co.uk/articles/hmv-to-close-its-oxford-street-store-citing-soaring-rental-costs-93228/"
+        },
+        {
+          "text": "HMV to close flagship Oxford Street shop just three years after comeback – but record store fans still have reasons to smile",
+          "bias": "unknown",
+          "url": "https://www.whathifi.com/hi-fi/vinyl/hmv-to-close-flagship-oxford-street-shop-just-three-years-after-comeback-but-record-store-fans-still-have-reasons-to-smile"
+        },
+        {
+          "text": "hmv seeks new West End flagship as it plans to leave historic Oxford Street store",
+          "bias": "unknown",
+          "url": "https://retailtimes.co.uk/hmv-seeks-new-west-end-flagship-as-it-plans-to-leave-historic-oxford-street-store/"
+        }
+      ]
+    },
+    {
+      "id": "2b6f9b64-5718-4f57-ac45-9f90241d4677",
+      "label": "Randy Orton Pays Viral Wrestling Star’s $2,400 Wrestling School Tuition",
+      "group": "story",
+      "size": 10,
+      "summary": "Randy Orton appears to have helped an aspiring professional wrestler take another step toward pursuing a career in the business. Social media personality T’Zaih, better known as Zy (@btfo_zy) on Instagram, recently shared a screenshot suggesting that the WWE veteran contributed $2,400 toward his professional wrestling training fees. Zy has developed a following on social […]",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 3
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Randy Orton Appears To Pay For Social Media Star Pursuing Pro Wrestling Dream",
+          "bias": "unknown",
+          "url": "https://wrestlingheadlines.com/randy-orton-appears-to-pay-for-social-media-star-pursuing-pro-wrestling-dream/"
+        },
+        {
+          "text": "Randy Orton Pays Viral Wrestling Star’s $2,400 Wrestling School Tuition",
+          "bias": "unknown",
+          "url": "https://www.pwmania.com/randy-orton-pays-viral-wrestling-stars-2400-wrestling-school-tuition"
+        },
+        {
+          "text": "Randy Orton Makes Unexpected Gesture To Viral Wrestling Creator",
+          "bias": "unknown",
+          "url": "https://www.webisjericho.com/randy-orton-viral-zy-wrestling-school-tuition/"
+        }
+      ]
+    },
+    {
+      "id": "09c640da-0b43-4035-b1eb-44b0168d119b",
+      "label": "New York's notorious Rikers jail awaits elusive closure",
+      "group": "story",
+      "size": 10,
+      "summary": "New York's notorious Rikers Island jail, long criticized for unsanitary and violent conditions, will miss a deadline for the vast complex to close down, prompting disappointment from activists.",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 1,
+        "right": 0,
+        "unknown": 0
+      },
+      "bias_score": 0.0,
+      "geo": {
+        "place": "New York, US",
+        "lat": 40.710311,
+        "lon": -74.050029
+      },
+      "headlines": [
+        {
+          "text": "New York's Notorious Rikers Jail Awaits Elusive Closure",
+          "bias": "center",
+          "url": "https://www.barrons.com/news/new-york-s-notorious-rikers-jail-awaits-elusive-closure-f5175cef"
+        }
+      ]
+    },
+    {
+      "id": "6d206af0-53a9-40fb-adde-22faf4cada3a",
+      "label": "IonQ to Buy Cybersecurity Firm Elisity in up to $1.3 Billion Deal",
+      "group": "story",
+      "size": 10,
+      "summary": "A billion-dollar acquisition by a rival is rippling through quantum computing stocks, and D-Wave Quantum is feeling the brunt of it. Shares of the quantum specialist fell 4.6% on Monday to EUR 12.39, dragged down by sector-wide selling after IonQ agreed to buy Elisity in an all-stock transaction valued at up to $1.3 billion. The […]",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 1,
+        "right": 0,
+        "unknown": 3
+      },
+      "bias_score": 0.0,
+      "geo": {
+        "place": "Washington, US",
+        "lat": 38.900481,
+        "lon": -77.030546
+      },
+      "headlines": [
+        {
+          "text": "D-Wave Quantum Sinks 4.6% as IonQ's Billion-Dollar Deal Rattles the Sector",
+          "bias": "unknown",
+          "url": "https://www.newscase.com/d-wave-quantum-sinks-4-6-as-ionqs-billion-dollar-deal-rattles-the-sector/"
+        },
+        {
+          "text": "IonQ to buy zero-trust security firm Elisity in deal valued at up to $1.3 billion",
+          "bias": "center",
+          "url": "https://cyberscoop.com/ionq-acquires-elisity-1-3-billion-quantum-security/"
+        },
+        {
+          "text": "IonQ to Acquire Elisity for Up to $1.3 Billion to Integrate Zero Trust with Post-Quantum Cybersecurity",
+          "bias": "unknown",
+          "url": "https://quantumcomputingreport.com/ionq-to-acquire-elisity-for-up-to-1-3-billion-to-integrate-zero-trust-with-post-quantum-cybersecurity/"
+        },
+        {
+          "text": "IonQ to Acquire Elisity to Accelerate Zero Trust for the Quantum Era",
+          "bias": "unknown",
+          "url": "http://www.businesswire.com/news/home/20261011787748/en/IonQ-to-Acquire-Elisity-to-Accelerate-Zero-Trust-for-the-Quantum-Era/?feedref=JjAwJuNHiystnCoBq_hl-Rc4vIAVcHHkbDcwJimU8QtrtlakeQ9hNboBqTAWIjTge3KWq9s9jif-UkBjBsFRyYAbRTSLTc1mgvhPlnaBA55M-oupQnbXnhKsYk8RmHF_kAy2gZikaX3QWV6xOvgFlA=="
+        }
+      ]
+    },
+    {
+      "id": "2b5dd059-2357-41bd-8e7d-05efe64789fb",
+      "label": "H&M Probes Claims It Was Targeted by Shinyhunters Hacking Crooks",
+      "group": "story",
+      "size": 10,
+      "summary": "Drapers\nH&M investigates potential cyber-attack\nSwedish fashion giant H&M Group is investigating claims that it was targeted by a group of cybercriminals last week, according to reports.",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 1
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "H&M investigates potential cyber-attack",
+          "bias": "unknown",
+          "url": "https://www.drapersonline.com/news/hm-investigates-potential-cyber-attack"
+        }
+      ]
+    },
+    {
+      "id": "13a953dc-12c4-4be0-ad2a-e33200440a95",
+      "label": "A 'politically motivated cover-up': Why the state's maternal death report was pushed until after midterms",
+      "group": "story",
+      "size": 10,
+      "summary": "Advocates and lawmakers warn the Texas health agency's decision to delay releasing the annual report will further harm women — and make it harder to enact necessary laws in 2027.",
+      "sources_count": 1,
+      "bias": {
+        "left": 1,
+        "center": 0,
+        "right": 0,
+        "unknown": 0
+      },
+      "bias_score": -1.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "A 'politically motivated cover-up': Why the state's maternal death report was pushed until after midterms",
+          "bias": "left",
+          "url": "https://www.sacurrent.com/news/texas-news/a-politically-motivated-cover-up-why-the-states-maternal-death-report-was-pushed-until-after-midterms/"
+        }
+      ]
+    },
+    {
+      "id": "4e663e28-8112-4ccb-9eef-8c76ead9fa68",
+      "label": "More Indigenous Languages Come to iPhone and iPad Keyboards in New Apple Update",
+      "group": "story",
+      "size": 10,
+      "summary": "An iPhone keyboard can also become a cultural backup tool. Apple has been working with Indigenous communities for several years to properly integrate their...\nRead more...\nFacebook · X · iAddict\nThe article The iPhone helps preserve endangered indigenous languages through custom keyboards appeared first on Iphoneaddict.fr.",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 2
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "iPhone Helps Preserve Endangered Indigenous Languages with Custom Keyboards",
+          "bias": "unknown",
+          "url": "https://iphoneaddict.fr/post/news-437151-liphone-aide-preserver-langues-autochtones-menacees-grace-claviers-mesure"
+        },
+        {
+          "text": "From Wired: Apple news on Indigenous People's Day",
+          "bias": "unknown",
+          "url": "https://www.ped30.com/2026/10/12/apple-indigenous-peoples-day/"
+        }
+      ]
+    },
+    {
+      "id": "74ef4995-a101-4819-9cc4-c0285c5661c7",
+      "label": "China Probes P2P Giant CreditEase, Founder Faces Police Action",
+      "group": "story",
+      "size": 10,
+      "summary": "Chinese authorities have launched a criminal probe into CreditEase-linked businesses and taken compulsory measures against founder Tang Ning and other suspects. The investigation follows suspended investor repayments and warnings of possible insolvency. Police are collecting investor claims and tracing assets, while the total losses and potential recoveries remain undisclosed.",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 1,
+        "unknown": 3
+      },
+      "bias_score": 1.0,
+      "geo": {
+        "place": "Beijing, China",
+        "lat": 39.880883,
+        "lon": 116.387707
+      },
+      "headlines": [
+        {
+          "text": "CreditEase Investigation: Beijing Police Take Action Against Founder",
+          "bias": "unknown",
+          "url": "https://www.tronweekly.com/creditease-investigation-beijing-police-take/"
+        },
+        {
+          "text": "Chinese Authorities Investigate CreditEase, Founder Detained",
+          "bias": "unknown",
+          "url": "https://coinfomania.com/chinese-authorities-investigate-creditease-founder-detained/"
+        },
+        {
+          "text": "Beijing Police Probe CreditEase After Wealth Products Default",
+          "bias": "leanRight",
+          "url": "https://www.caixinglobal.com/2026-10-12/beijing-police-probe-creditease-after-wealth-products-default-102492588.html"
+        },
+        {
+          "text": "Yiren Digital’s Parent CreditEase Reports Insolvency, Beijing Police Open Criminal Investigation",
+          "bias": "unknown",
+          "url": "https://www.yuantalks.com/yiren-digitals-parent-creditease-announces-insolvency-beijing-police-launch-criminal-investigation/"
+        }
+      ]
+    },
+    {
+      "id": "rss_11742_1791760426598_7",
+      "label": "BBPA Warns Britain Could Lose One Pub a Day in 2026",
+      "group": "story",
+      "size": 10,
+      "summary": "Approximately one pub a day will have closed by the end of 2026, according to the latest figures from the British Beer and Pub Association (BBPA).  The trade body estimates that around 360 pubs will permanently shut their doors by the end of the year. This would result in around 5,000 job losses, with over […]\nThe post Pub closure rate is at one a day, says BBPA first appeared on Beer Today.",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 2,
+        "right": 0,
+        "unknown": 3
+      },
+      "bias_score": 0.0,
+      "geo": {
+        "place": "Leeds, UK",
+        "lat": 53.806879,
+        "lon": -1.538462
+      },
+      "headlines": [
+        {
+          "text": "Pub closure rate is at one a day, says BBPA",
+          "bias": "unknown",
+          "url": "https://beertoday.co.uk/2026/10/12/pub-closures-bbpa-1026/"
+        },
+        {
+          "text": "BBPA warns 360 pubs could close this year without Budget reforms",
+          "bias": "unknown",
+          "url": "https://www.morningadvertiser.co.uk/Article/2026/10/12/bbpa-290-uk-pubs-shut-in-2026-so-far-360-closures-forecast/"
+        },
+        {
+          "text": "Britain Set to Lose One Pub a Day and 5,000 Jobs in 2026 BBPA Reveal - CLH News: Caterer, Licensee and Hotelier News - News for Pubs, Bars, Hotels and Restaurants",
+          "bias": "unknown",
+          "url": "https://catererlicensee.com/britain-set-to-lose-one-pub-a-day-and-5000-jobs-in-2026-bbpa-reveal/"
+        },
+        {
+          "text": "A pub shuts its doors for good every day in 2026, figures show",
+          "bias": "center",
+          "url": "https://www.yorkshirepost.co.uk/news/politics/a-pub-shuts-its-doors-for-good-every-day-in-2026-figures-show-9280321"
+        },
+        {
+          "text": "One pub shutting each day in 2026 as cost pressures bite – industry data",
+          "bias": "center",
+          "url": "https://www.kentonline.co.uk/news/national/one-pub-shutting-each-day-in-2026-as-cost-pressures-bite-industry-data-172811/"
+        }
+      ]
+    },
+    {
+      "id": "13f5eaea-a2ea-4a98-9367-9f6649cb37e1",
+      "label": "Final Pair of Redwire ROSA Wings Launch to the ISS, Completing Historic Power Modernization Effort",
+      "group": "story",
+      "size": 10,
+      "summary": "Green Stock News for the New Green Economy.",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 1
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Final Pair of Redwire ROSA Wings Launch to the ISS, Completing Historic Power Modernization Effort",
+          "bias": "unknown",
+          "url": "https://greenstocknews.com/news/nyse/rdw/final-pair-of-redwire-rosa-wings-launch-to-the-iss-completing-historic-power-modernization-effort"
+        }
+      ]
+    },
+    {
+      "id": "0cf429a4-73f0-4306-822b-d550e2d8cd10",
+      "label": "NordVPN Brings Message Protection to iPhone Alongside New Free Scam-Blocking App",
+      "group": "story",
+      "size": 10,
+      "summary": "All-in-one digital security and privacy app NordVPN is bringing its message protection feature to iOS. The new feature screens incoming texts from unknown senders and flags scams before users act on them. Alongside scam call protection, which warns users about potentially fraudulent incoming calls, message protection is part of NordVPN’s call and message protection toolkit. […]",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 1
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "NordVPN brings message protection and HangUp to iPhone",
+          "bias": "unknown",
+          "url": "https://securityjournaluk.com/nordvpn-message-protection-iphone-hangup/"
+        }
+      ]
+    },
+    {
+      "id": "51977941-3f62-4799-9fdf-7fe84d4c1ccb",
+      "label": "AI-Based Drug Discovery: Ministry of Science Signs MoU with Peptris for Collab in AI-Based Drug Discovery and Development",
+      "group": "story",
+      "size": 10,
+      "summary": "The VIGOR programme will advance four drug candidates from TRL-4 to TRL-6 over three years, covering preclinical development and preparation for clinical trials",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 2
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "TDB approves ₹86 crore RDI support for Peptris’ AI-driven drug development",
+          "bias": "unknown",
+          "url": "https://www.expresspharma.in/tdb-approves-%E2%82%B986-crore-rdi-support-for-peptris-ai-driven-drug-development/"
+        },
+        {
+          "text": "Bengaluru-based Peptris Technologies Gets ₹86 Cr Financial Support Under the RDI Fund of TDB-DST",
+          "bias": "unknown",
+          "url": "https://www.indianweb2.com/2026/10/bengaluru-based-peptris-technologies.html"
+        }
+      ]
+    },
+    {
+      "id": "dd7a047e-6529-4920-b36e-50545f8a6dd5",
+      "label": "JK Tech Names Mahesh Ramakrishnan as New Chief Technology Officer",
+      "group": "story",
+      "size": 10,
+      "summary": "BENGALURU, India and NOIDA, India, Oct. 12, 2026 /PRNewswire/ -- JK Tech, a specialist AI and data solutions provider, has announced the appointment of Mahesh Ramakrishnan as Chief Technology Officer (CTO). The appointment reinforces JK Tech's commitment to building a future-ready technology organiz...",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 1
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "JK Tech Names Mahesh Ramakrishnan as New Chief Technology Officer",
+          "bias": "unknown",
+          "url": "https://adkhabar.com/jk-tech-names-mahesh-ramakrishnan-as-new-chief-technology-officer/"
+        }
+      ]
+    },
+    {
+      "id": "99b0c828-4175-4962-8294-ae0751ea8d29",
+      "label": "Diesel Prices to Fall P3.01 per Liter; Gasoline, Kerosene to Rise — DoE - BusinessWorld Online",
+      "group": "story",
+      "size": 10,
+      "summary": "Gasoline should stay up to five cents more expensive per litre this week, while diesel should record a slight drop.",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 0,
+        "right": 0,
+        "unknown": 2
+      },
+      "bias_score": 0.0,
+      "geo": null,
+      "headlines": [
+        {
+          "text": "Gasoline Can Go up 5 Cents per Litre While Diesel Gets Cheaper.",
+          "bias": "unknown",
+          "url": "https://postal.pt/economia/vai-abastecer-esta-semana-gasolina-pode-subir-5-centimos-por-litro-enquanto-gasoleo-fica-mais-barato/"
+        },
+        {
+          "text": "May rollback sa presyo sang diesel samtang masaka naman ang gasolina kag kerosene sa Martes",
+          "bias": "unknown",
+          "url": "https://digicastnegros.com/may-rollback-sa-presyo-sang-diesel-samtang-masaka-naman-ang-gasolina-kag-kerosene-sa-martes/"
+        }
+      ]
+    },
+    {
+      "id": "ce3f6c74-26bb-4d4b-9031-1b30f90571bb",
+      "label": "How Chinese Brands Are Putting Aesthetics Before Business",
+      "group": "story",
+      "size": 10,
+      "summary": "As China’s consumer market matures, a new generation of brands is trading speed and scale for cultural depth, craftsmanship and a more deliberate sense of place.",
+      "sources_count": 1,
+      "bias": {
+        "left": 0,
+        "center": 1,
+        "right": 0,
+        "unknown": 0
+      },
+      "bias_score": 0.0,
+      "geo": {
+        "place": "New York, US",
+        "lat": 40.680592,
+        "lon": -73.982605
+      },
+      "headlines": [
+        {
+          "text": "China Insight: Chinese Brands Are Putting Aesthetics Before Business",
+          "bias": "center",
+          "url": "https://wwd.com/business-news/business-features/chinese-brands-lamchiu-jewelry-fashion-1239342166/"
+        }
+      ]
+    },
+    {
+      "id": "p_trump",
+      "label": "Donald Trump",
+      "group": "person",
+      "size": 36,
+      "details": {
+        "type": "person",
+        "name": "Donald Trump",
+        "role": "US President",
+        "lat": null,
+        "lon": null,
+        "country": null,
+        "connected_stories": 81
+      }
+    },
+    {
+      "id": "p_zelenskyy",
+      "label": "Volodymyr Zelenskyy",
+      "group": "person",
+      "size": 26,
+      "details": {
+        "type": "person",
+        "name": "Volodymyr Zelenskyy",
+        "role": "President of Ukraine",
+        "lat": null,
+        "lon": null,
+        "country": null,
+        "connected_stories": 8
+      }
+    },
+    {
+      "id": "p_musk",
+      "label": "Elon Musk",
+      "group": "person",
+      "size": 15,
+      "details": {
+        "type": "person",
+        "name": "Elon Musk",
+        "role": "Tech Executive / Midterm Donor",
+        "lat": null,
+        "lon": null,
+        "country": null,
+        "connected_stories": 1
+      }
+    },
+    {
+      "id": "p_jordan",
+      "label": "Michael Jordan",
+      "group": "person",
+      "size": 15,
+      "details": {
+        "type": "person",
+        "name": "Michael Jordan",
+        "role": "NBA Legend",
+        "lat": null,
+        "lon": null,
+        "country": null,
+        "connected_stories": 1
+      }
+    },
+    {
+      "id": "p_blair",
+      "label": "Selma Blair",
+      "group": "person",
+      "size": 15,
+      "details": {
+        "type": "person",
+        "name": "Selma Blair",
+        "role": "Actress",
+        "lat": null,
+        "lon": null,
+        "country": null,
+        "connected_stories": 1
+      }
+    },
+    {
+      "id": "p_schreier",
+      "label": "Jason Schreier",
+      "group": "person",
+      "size": 15,
+      "details": {
+        "type": "person",
+        "name": "Jason Schreier",
+        "role": "Gaming Journalist",
+        "lat": null,
+        "lon": null,
+        "country": null,
+        "connected_stories": 1
+      }
+    },
+    {
+      "id": "p_pike",
+      "label": "Christa Pike",
+      "group": "person",
+      "size": 20,
+      "details": {
+        "type": "person",
+        "name": "Christa Pike",
+        "role": "Death Row Inmate",
+        "lat": null,
+        "lon": null,
+        "country": null,
+        "connected_stories": 4
+      }
+    },
+    {
+      "id": "p_rubio",
+      "label": "Marco Rubio",
+      "group": "person",
+      "size": 18,
+      "details": {
+        "type": "person",
+        "name": "Marco Rubio",
+        "role": "US Senator / State Nominee",
+        "lat": null,
+        "lon": null,
+        "country": null,
+        "connected_stories": 3
+      }
+    },
+    {
+      "id": "p_talarico",
+      "label": "James Talarico",
+      "group": "person",
+      "size": 18,
+      "details": {
+        "type": "person",
+        "name": "James Talarico",
+        "role": "Texas State Representative",
+        "lat": null,
+        "lon": null,
+        "country": null,
+        "connected_stories": 3
+      }
+    },
+    {
+      "id": "p_guilfoyle",
+      "label": "Kimberly Guilfoyle",
+      "group": "person",
+      "size": 18,
+      "details": {
+        "type": "person",
+        "name": "Kimberly Guilfoyle",
+        "role": "Political Figure / Envoy Nominee",
+        "lat": null,
+        "lon": null,
+        "country": null,
+        "connected_stories": 3
+      }
+    },
+    {
+      "id": "p_putin",
+      "label": "Vladimir Putin",
+      "group": "person",
+      "size": 29,
+      "details": {
+        "type": "person",
+        "name": "Vladimir Putin",
+        "role": "Russian President",
+        "lat": null,
+        "lon": null,
+        "country": null,
+        "connected_stories": 10
+      }
+    },
+    {
+      "id": "p_netanyahu",
+      "label": "Benjamin Netanyahu",
+      "group": "person",
+      "size": 20,
+      "details": {
+        "type": "person",
+        "name": "Benjamin Netanyahu",
+        "role": "Prime Minister of Israel",
+        "lat": null,
+        "lon": null,
+        "country": null,
+        "connected_stories": 4
+      }
+    },
+    {
+      "id": "p_biden",
+      "label": "Joe Biden",
+      "group": "person",
+      "size": 18,
+      "details": {
+        "type": "person",
+        "name": "Joe Biden",
+        "role": "Former US President",
+        "lat": null,
+        "lon": null,
+        "country": null,
+        "connected_stories": 3
+      }
+    },
+    {
+      "id": "p_harris",
+      "label": "Kamala Harris",
+      "group": "person",
+      "size": 15,
+      "details": {
+        "type": "person",
+        "name": "Kamala Harris",
+        "role": "Vice President",
+        "lat": null,
+        "lon": null,
+        "country": null,
+        "connected_stories": 1
+      }
+    },
+    {
+      "id": "p_altman",
+      "label": "Sam Altman",
+      "group": "person",
+      "size": 15,
+      "details": {
+        "type": "person",
+        "name": "Sam Altman",
+        "role": "OpenAI CEO",
+        "lat": null,
+        "lon": null,
+        "country": null,
+        "connected_stories": 1
+      }
+    },
+    {
+      "id": "t_energy",
+      "label": "Russian Diesel & Energy Trade",
+      "group": "topic",
+      "size": 36,
+      "details": {
+        "type": "topic",
+        "name": "Russian Diesel & Energy Trade",
+        "role": "Geopolitics",
+        "lat": null,
+        "lon": null,
+        "country": null,
+        "connected_stories": 19
+      }
+    },
+    {
+      "id": "t_ai_gaming",
+      "label": "AI Video Game Development",
+      "group": "topic",
+      "size": 15,
+      "details": {
+        "type": "topic",
+        "name": "AI Video Game Development",
+        "role": "Tech & Gaming",
+        "lat": null,
+        "lon": null,
+        "country": null,
+        "connected_stories": 1
+      }
+    },
+    {
+      "id": "t_midterms",
+      "label": "2026 Midterm Campaign Spending",
+      "group": "topic",
+      "size": 36,
+      "details": {
+        "type": "topic",
+        "name": "2026 Midterm Campaign Spending",
+        "role": "Politics",
+        "lat": null,
+        "lon": null,
+        "country": null,
+        "connected_stories": 41
+      }
+    },
+    {
+      "id": "t_adhd_dementia",
+      "label": "ADHD & Dementia Cognitive Link",
+      "group": "topic",
+      "size": 17,
+      "details": {
+        "type": "topic",
+        "name": "ADHD & Dementia Cognitive Link",
+        "role": "Health & Medicine",
+        "lat": null,
+        "lon": null,
+        "country": null,
+        "connected_stories": 2
+      }
+    },
+    {
+      "id": "t_capital_punishment",
+      "label": "Execution Protocols & Emergency Calls",
+      "group": "topic",
+      "size": 32,
+      "details": {
+        "type": "topic",
+        "name": "Execution Protocols & Emergency Calls",
+        "role": "Law & Justice",
+        "lat": null,
+        "lon": null,
+        "country": null,
+        "connected_stories": 12
+      }
+    },
+    {
+      "id": "t_aviation_security",
+      "label": "Aviation Security & Air Incidents",
+      "group": "topic",
+      "size": 15,
+      "details": {
+        "type": "topic",
+        "name": "Aviation Security & Air Incidents",
+        "role": "Aviation",
+        "lat": null,
+        "lon": null,
+        "country": null,
+        "connected_stories": 1
+      }
+    },
+    {
+      "id": "t_memorabilia",
+      "label": "Sports Auction Records",
+      "group": "topic",
+      "size": 15,
+      "details": {
+        "type": "topic",
+        "name": "Sports Auction Records",
+        "role": "Culture & Auctions",
+        "lat": null,
+        "lon": null,
+        "country": null,
+        "connected_stories": 1
+      }
+    },
+    {
+      "id": "t_ai_testing",
+      "label": "Federal AI Testing Regulation",
+      "group": "topic",
+      "size": 17,
+      "details": {
+        "type": "topic",
+        "name": "Federal AI Testing Regulation",
+        "role": "AI Policy",
+        "lat": null,
+        "lon": null,
+        "country": null,
+        "connected_stories": 2
+      }
+    },
+    {
+      "id": "t_middle_east",
+      "label": "Middle East Security & IRGC",
+      "group": "topic",
+      "size": 21,
+      "details": {
+        "type": "topic",
+        "name": "Middle East Security & IRGC",
+        "role": "Defense",
+        "lat": null,
+        "lon": null,
+        "country": null,
+        "connected_stories": 5
+      }
+    },
+    {
+      "id": "t_inflation",
+      "label": "Inflation & Cost of Living",
+      "group": "topic",
+      "size": 21,
+      "details": {
+        "type": "topic",
+        "name": "Inflation & Cost of Living",
+        "role": "Economy",
+        "lat": null,
+        "lon": null,
+        "country": null,
+        "connected_stories": 5
+      }
+    },
+    {
+      "id": "t_cybersecurity",
+      "label": "Cybersecurity & Critical Infrastructure",
+      "group": "topic",
+      "size": 20,
+      "details": {
+        "type": "topic",
+        "name": "Cybersecurity & Critical Infrastructure",
+        "role": "Tech",
+        "lat": null,
+        "lon": null,
+        "country": null,
+        "connected_stories": 4
+      }
+    },
+    {
+      "id": "l_washington",
+      "label": "Washington, DC",
+      "group": "place",
+      "size": 36,
+      "details": {
+        "type": "place",
+        "name": "Washington, DC",
+        "role": "",
+        "lat": 38.9072,
+        "lon": -77.0369,
+        "country": "US",
+        "connected_stories": 30
+      }
+    },
+    {
+      "id": "l_kyiv",
+      "label": "Kyiv, Ukraine",
+      "group": "place",
+      "size": 32,
+      "details": {
+        "type": "place",
+        "name": "Kyiv, Ukraine",
+        "role": "",
+        "lat": 50.4501,
+        "lon": 30.5234,
+        "country": "UA",
+        "connected_stories": 12
+      }
+    },
+    {
+      "id": "l_london",
+      "label": "London, UK",
+      "group": "place",
+      "size": 32,
+      "details": {
+        "type": "place",
+        "name": "London, UK",
+        "role": "",
+        "lat": 51.5074,
+        "lon": -0.1278,
+        "country": "GB",
+        "connected_stories": 12
+      }
+    },
+    {
+      "id": "l_newyork",
+      "label": "New York City",
+      "group": "place",
+      "size": 36,
+      "details": {
+        "type": "place",
+        "name": "New York City",
+        "role": "",
+        "lat": 40.7128,
+        "lon": -74.006,
+        "country": "US",
+        "connected_stories": 21
+      }
+    },
+    {
+      "id": "l_newdelhi",
+      "label": "New Delhi, India",
+      "group": "place",
+      "size": 26,
+      "details": {
+        "type": "place",
+        "name": "New Delhi, India",
+        "role": "",
+        "lat": 28.6139,
+        "lon": 77.209,
+        "country": "IN",
+        "connected_stories": 8
+      }
+    },
+    {
+      "id": "l_tehran",
+      "label": "Tehran, Iran",
+      "group": "place",
+      "size": 35,
+      "details": {
+        "type": "place",
+        "name": "Tehran, Iran",
+        "role": "",
+        "lat": 35.6892,
+        "lon": 51.389,
+        "country": "IR",
+        "connected_stories": 14
+      }
+    },
+    {
+      "id": "l_nashville",
+      "label": "Nashville, Tennessee",
+      "group": "place",
+      "size": 26,
+      "details": {
+        "type": "place",
+        "name": "Nashville, Tennessee",
+        "role": "",
+        "lat": 36.1627,
+        "lon": -86.7816,
+        "country": "US",
+        "connected_stories": 8
+      }
+    },
+    {
+      "id": "l_sanfrancisco",
+      "label": "San Francisco, CA",
+      "group": "place",
+      "size": 17,
+      "details": {
+        "type": "place",
+        "name": "San Francisco, CA",
+        "role": "",
+        "lat": 37.7749,
+        "lon": -122.4194,
+        "country": "US",
+        "connected_stories": 2
+      }
+    },
+    {
+      "id": "l_pittsburgh",
+      "label": "Pittsburgh, PA",
+      "group": "place",
+      "size": 15,
+      "details": {
+        "type": "place",
+        "name": "Pittsburgh, PA",
+        "role": "",
+        "lat": 40.4406,
+        "lon": -79.9959,
+        "country": "US",
+        "connected_stories": 1
+      }
+    },
+    {
+      "id": "l_losangeles",
+      "label": "Los Angeles, CA",
+      "group": "place",
+      "size": 18,
+      "details": {
+        "type": "place",
+        "name": "Los Angeles, CA",
+        "role": "",
+        "lat": 34.0522,
+        "lon": -118.2437,
+        "country": "US",
+        "connected_stories": 3
+      }
+    },
+    {
+      "id": "l_beijing",
+      "label": "Beijing, China",
+      "group": "place",
+      "size": 26,
+      "details": {
+        "type": "place",
+        "name": "Beijing, China",
+        "role": "",
+        "lat": 39.9042,
+        "lon": 116.4074,
+        "country": "CN",
+        "connected_stories": 8
+      }
+    },
+    {
+      "id": "l_moscow",
+      "label": "Moscow, Russia",
+      "group": "place",
+      "size": 36,
+      "details": {
+        "type": "place",
+        "name": "Moscow, Russia",
+        "role": "",
+        "lat": 55.7558,
+        "lon": 37.6173,
+        "country": "RU",
+        "connected_stories": 15
+      }
+    },
+    {
+      "id": "l_paris",
+      "label": "Paris, France",
+      "group": "place",
+      "size": 20,
+      "details": {
+        "type": "place",
+        "name": "Paris, France",
+        "role": "",
+        "lat": 48.8566,
+        "lon": 2.3522,
+        "country": "FR",
+        "connected_stories": 4
+      }
+    },
+    {
+      "id": "l_madrid",
+      "label": "Madrid, Spain",
+      "group": "place",
+      "size": 15,
+      "details": {
+        "type": "place",
+        "name": "Madrid, Spain",
+        "role": "",
+        "lat": 40.4168,
+        "lon": -3.7038,
+        "country": "ES",
+        "connected_stories": 1
+      }
+    },
+    {
+      "id": "o_epicgames",
+      "label": "Epic Games",
+      "group": "thing",
+      "size": 17,
+      "details": {
+        "type": "thing",
+        "name": "Epic Games",
+        "role": "Corporation",
+        "lat": null,
+        "lon": null,
+        "country": null,
+        "connected_stories": 2
+      }
+    },
+    {
+      "id": "o_disney",
+      "label": "The Walt Disney Company",
+      "group": "thing",
+      "size": 15,
+      "details": {
+        "type": "thing",
+        "name": "The Walt Disney Company",
+        "role": "Corporation",
+        "lat": null,
+        "lon": null,
+        "country": null,
+        "connected_stories": 1
+      }
+    },
+    {
+      "id": "o_whitehouse",
+      "label": "The White House",
+      "group": "thing",
+      "size": 35,
+      "details": {
+        "type": "thing",
+        "name": "The White House",
+        "role": "Government Institution",
+        "lat": null,
+        "lon": null,
+        "country": null,
+        "connected_stories": 14
+      }
+    },
+    {
+      "id": "o_delta",
+      "label": "Delta Air Lines",
+      "group": "thing",
+      "size": 17,
+      "details": {
+        "type": "thing",
+        "name": "Delta Air Lines",
+        "role": "Corporation",
+        "lat": null,
+        "lon": null,
+        "country": null,
+        "connected_stories": 2
+      }
+    },
+    {
+      "id": "o_bloomberg",
+      "label": "Bloomberg",
+      "group": "thing",
+      "size": 15,
+      "details": {
+        "type": "thing",
+        "name": "Bloomberg",
+        "role": "Media Organization",
+        "lat": null,
+        "lon": null,
+        "country": null,
+        "connected_stories": 1
+      }
+    },
+    {
+      "id": "o_irgc",
+      "label": "IRGC (Revolutionary Guard)",
+      "group": "thing",
+      "size": 15,
+      "details": {
+        "type": "thing",
+        "name": "IRGC (Revolutionary Guard)",
+        "role": "Military Force",
+        "lat": null,
+        "lon": null,
+        "country": null,
+        "connected_stories": 1
+      }
+    },
+    {
+      "id": "o_russiandiesel",
+      "label": "Russian Diesel Fuel",
+      "group": "thing",
+      "size": 32,
+      "details": {
+        "type": "thing",
+        "name": "Russian Diesel Fuel",
+        "role": "Commodity",
+        "lat": null,
+        "lon": null,
+        "country": null,
+        "connected_stories": 12
+      }
+    },
+    {
+      "id": "o_lastdancejersey",
+      "label": "'Last Dance' 1998 Jersey",
+      "group": "thing",
+      "size": 15,
+      "details": {
+        "type": "thing",
+        "name": "'Last Dance' 1998 Jersey",
+        "role": "Cultural Artifact",
+        "lat": null,
+        "lon": null,
+        "country": null,
+        "connected_stories": 1
+      }
+    },
+    {
+      "id": "o_upmc",
+      "label": "Univ. of Pittsburgh Med Center",
+      "group": "thing",
+      "size": 15,
+      "details": {
+        "type": "thing",
+        "name": "Univ. of Pittsburgh Med Center",
+        "role": "Academic Institution",
+        "lat": null,
+        "lon": null,
+        "country": null,
+        "connected_stories": 1
+      }
+    },
+    {
+      "id": "o_pentagon",
+      "label": "The Pentagon",
+      "group": "thing",
+      "size": 21,
+      "details": {
+        "type": "thing",
+        "name": "The Pentagon",
+        "role": "Government Institution",
+        "lat": null,
+        "lon": null,
+        "country": null,
+        "connected_stories": 5
+      }
+    },
+    {
+      "id": "o_nato",
+      "label": "NATO",
+      "group": "thing",
+      "size": 17,
+      "details": {
+        "type": "thing",
+        "name": "NATO",
+        "role": "International Alliance",
+        "lat": null,
+        "lon": null,
+        "country": null,
+        "connected_stories": 2
+      }
+    },
+    {
+      "id": "o_senate",
+      "label": "United States Senate",
+      "group": "thing",
+      "size": 35,
+      "details": {
+        "type": "thing",
+        "name": "United States Senate",
+        "role": "Legislative Body",
+        "lat": null,
+        "lon": null,
+        "country": null,
+        "connected_stories": 14
+      }
+    }
+  ],
+  "edges": [
+    {
+      "source": "rss_8627_1791839545765_1",
+      "target": "p_pike",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "rss_8627_1791839545765_1",
+      "target": "t_capital_punishment",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "rss_8627_1791839545765_1",
+      "target": "l_nashville",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "d39cb16c-0af5-4d13-87f1-95a059bfaa34",
+      "target": "p_jordan",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "d39cb16c-0af5-4d13-87f1-95a059bfaa34",
+      "target": "t_memorabilia",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "d39cb16c-0af5-4d13-87f1-95a059bfaa34",
+      "target": "o_lastdancejersey",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "rss_40321_1791831931754_4",
+      "target": "p_schreier",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "rss_40321_1791831931754_4",
+      "target": "t_ai_gaming",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "rss_40321_1791831931754_4",
+      "target": "o_epicgames",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "rss_40321_1791831931754_4",
+      "target": "o_disney",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "rss_40321_1791831931754_4",
+      "target": "o_bloomberg",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "51329099-c2b6-4091-9098-37f2bcaa3a31",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "51329099-c2b6-4091-9098-37f2bcaa3a31",
+      "target": "p_zelenskyy",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "51329099-c2b6-4091-9098-37f2bcaa3a31",
+      "target": "p_putin",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "51329099-c2b6-4091-9098-37f2bcaa3a31",
+      "target": "t_energy",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "51329099-c2b6-4091-9098-37f2bcaa3a31",
+      "target": "l_moscow",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "51329099-c2b6-4091-9098-37f2bcaa3a31",
+      "target": "o_russiandiesel",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "ee928508-5bcd-46b4-b4c1-ab1fe3989d03",
+      "target": "t_adhd_dementia",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "ee928508-5bcd-46b4-b4c1-ab1fe3989d03",
+      "target": "l_newyork",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "ee928508-5bcd-46b4-b4c1-ab1fe3989d03",
+      "target": "l_pittsburgh",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "ee928508-5bcd-46b4-b4c1-ab1fe3989d03",
+      "target": "o_upmc",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "7f038e46-49b3-4d81-a33f-26ac636a88fa",
+      "target": "l_washington",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "7f038e46-49b3-4d81-a33f-26ac636a88fa",
+      "target": "o_whitehouse",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "42ea5449-ecc6-4e19-8d50-17bcf9c10152",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "42ea5449-ecc6-4e19-8d50-17bcf9c10152",
+      "target": "t_ai_testing",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "42ea5449-ecc6-4e19-8d50-17bcf9c10152",
+      "target": "l_washington",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "42ea5449-ecc6-4e19-8d50-17bcf9c10152",
+      "target": "o_whitehouse",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "d744e3ee-10c2-4835-bf72-672df03bf884",
+      "target": "l_newyork",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "53ee787e-42fe-4741-9c27-47833299a06e",
+      "target": "p_blair",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "53ee787e-42fe-4741-9c27-47833299a06e",
+      "target": "t_aviation_security",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "53ee787e-42fe-4741-9c27-47833299a06e",
+      "target": "l_newyork",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "53ee787e-42fe-4741-9c27-47833299a06e",
+      "target": "l_losangeles",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "53ee787e-42fe-4741-9c27-47833299a06e",
+      "target": "o_delta",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "5e41b7f8-414b-4dab-8964-ba0774cd5d73",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "5e41b7f8-414b-4dab-8964-ba0774cd5d73",
+      "target": "l_beijing",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "4f17ec1c-25c9-4b0b-9923-f8593757d525",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "4f17ec1c-25c9-4b0b-9923-f8593757d525",
+      "target": "t_midterms",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "4f17ec1c-25c9-4b0b-9923-f8593757d525",
+      "target": "l_washington",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "1462acad-004a-4f93-9d0a-1eddbf975a72",
+      "target": "t_middle_east",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "1462acad-004a-4f93-9d0a-1eddbf975a72",
+      "target": "l_london",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "1462acad-004a-4f93-9d0a-1eddbf975a72",
+      "target": "l_tehran",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "1462acad-004a-4f93-9d0a-1eddbf975a72",
+      "target": "o_irgc",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "cd49be81-6782-4e41-b5c5-74141b753ca1",
+      "target": "l_beijing",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "ece3c37e-9f46-43d4-885e-b534b470dc2c",
+      "target": "p_musk",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "ece3c37e-9f46-43d4-885e-b534b470dc2c",
+      "target": "t_midterms",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "ece3c37e-9f46-43d4-885e-b534b470dc2c",
+      "target": "l_newyork",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "f913a0d9-a742-4db2-a68e-df4e7b6af633",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "f913a0d9-a742-4db2-a68e-df4e7b6af633",
+      "target": "t_midterms",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "50f5b92f-f2d6-4478-9d3e-1377f6529636",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "73802320-42a9-4636-b34d-de772dd2839c",
+      "target": "l_london",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "03d59173-ab1c-460a-90c0-decd1617d986",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "03d59173-ab1c-460a-90c0-decd1617d986",
+      "target": "t_midterms",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "03d59173-ab1c-460a-90c0-decd1617d986",
+      "target": "t_inflation",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "61fc7af2-4a51-4694-9658-f96a2d099210",
+      "target": "t_midterms",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "61fc7af2-4a51-4694-9658-f96a2d099210",
+      "target": "o_senate",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "b3ae2bfd-97f9-49c3-b4f1-0ae53bf13795",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "b3ae2bfd-97f9-49c3-b4f1-0ae53bf13795",
+      "target": "p_zelenskyy",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "b3ae2bfd-97f9-49c3-b4f1-0ae53bf13795",
+      "target": "t_energy",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "b3ae2bfd-97f9-49c3-b4f1-0ae53bf13795",
+      "target": "l_kyiv",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "b3ae2bfd-97f9-49c3-b4f1-0ae53bf13795",
+      "target": "l_moscow",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "f260ca4c-0879-4117-a37d-2ee1a28bb8d8",
+      "target": "l_losangeles",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "f483917c-4190-4200-9835-63d76a027cf6",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "f483917c-4190-4200-9835-63d76a027cf6",
+      "target": "p_rubio",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "f483917c-4190-4200-9835-63d76a027cf6",
+      "target": "p_guilfoyle",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "342f7d49-5810-464c-8c5b-8412bf355bd2",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "f1b9dbd2-a2d5-43a2-9da9-113230339711",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "f1b9dbd2-a2d5-43a2-9da9-113230339711",
+      "target": "l_washington",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "f1b9dbd2-a2d5-43a2-9da9-113230339711",
+      "target": "o_whitehouse",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "f725e991-e811-4271-ad4f-7735d3cae1d0",
+      "target": "o_senate",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "7c6d2b55-a978-45c1-b322-b8a61e1a4730",
+      "target": "t_capital_punishment",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "7c6d2b55-a978-45c1-b322-b8a61e1a4730",
+      "target": "o_pentagon",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "bc7593ae-d54e-422e-9c84-e21ec7b3e935",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "bc7593ae-d54e-422e-9c84-e21ec7b3e935",
+      "target": "t_midterms",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "bc7593ae-d54e-422e-9c84-e21ec7b3e935",
+      "target": "l_washington",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "bc7593ae-d54e-422e-9c84-e21ec7b3e935",
+      "target": "l_nashville",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "bc7593ae-d54e-422e-9c84-e21ec7b3e935",
+      "target": "o_whitehouse",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "fea5afda-80e2-4b3d-9f18-f2005ff7a96e",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "fea5afda-80e2-4b3d-9f18-f2005ff7a96e",
+      "target": "l_newyork",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "4cff4832-9a81-4166-a6e8-df0363c2132f",
+      "target": "l_washington",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "9a68c2fa-e469-4c33-a15e-b2c9354fe016",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "9a68c2fa-e469-4c33-a15e-b2c9354fe016",
+      "target": "l_newyork",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "9537e44b-fe99-4b58-8199-c387c8cdf799",
+      "target": "t_midterms",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "9537e44b-fe99-4b58-8199-c387c8cdf799",
+      "target": "o_senate",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "85669731-4ea2-4b61-908e-b482bcf9212d",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "85669731-4ea2-4b61-908e-b482bcf9212d",
+      "target": "p_putin",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "85669731-4ea2-4b61-908e-b482bcf9212d",
+      "target": "t_energy",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "85669731-4ea2-4b61-908e-b482bcf9212d",
+      "target": "l_kyiv",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "85669731-4ea2-4b61-908e-b482bcf9212d",
+      "target": "l_moscow",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "85669731-4ea2-4b61-908e-b482bcf9212d",
+      "target": "o_nato",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "5dfbe4d0-dece-46d2-9813-6588106a08ac",
+      "target": "t_middle_east",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "5dfbe4d0-dece-46d2-9813-6588106a08ac",
+      "target": "l_washington",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "5dfbe4d0-dece-46d2-9813-6588106a08ac",
+      "target": "l_tehran",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "e8f6217a-25c1-447e-bfd5-9caa43c7c149",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "e8f6217a-25c1-447e-bfd5-9caa43c7c149",
+      "target": "p_zelenskyy",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "e8f6217a-25c1-447e-bfd5-9caa43c7c149",
+      "target": "p_putin",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "e8f6217a-25c1-447e-bfd5-9caa43c7c149",
+      "target": "t_energy",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "e8f6217a-25c1-447e-bfd5-9caa43c7c149",
+      "target": "l_kyiv",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "e8f6217a-25c1-447e-bfd5-9caa43c7c149",
+      "target": "l_moscow",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "c67b8ecd-6bd1-4d3c-aa0b-d7d6133b3fd0",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "c67b8ecd-6bd1-4d3c-aa0b-d7d6133b3fd0",
+      "target": "p_putin",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "c67b8ecd-6bd1-4d3c-aa0b-d7d6133b3fd0",
+      "target": "t_energy",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "c67b8ecd-6bd1-4d3c-aa0b-d7d6133b3fd0",
+      "target": "l_kyiv",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "c67b8ecd-6bd1-4d3c-aa0b-d7d6133b3fd0",
+      "target": "o_russiandiesel",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "9ee76260-4b36-4768-ac26-ded0bff077d4",
+      "target": "t_midterms",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "8b3e1f91-9eb1-42cf-89f0-edc770116add",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "8b3e1f91-9eb1-42cf-89f0-edc770116add",
+      "target": "p_putin",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "8b3e1f91-9eb1-42cf-89f0-edc770116add",
+      "target": "t_energy",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "8b3e1f91-9eb1-42cf-89f0-edc770116add",
+      "target": "t_midterms",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "8b3e1f91-9eb1-42cf-89f0-edc770116add",
+      "target": "l_washington",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "8b3e1f91-9eb1-42cf-89f0-edc770116add",
+      "target": "l_moscow",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "8b3e1f91-9eb1-42cf-89f0-edc770116add",
+      "target": "o_russiandiesel",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "8b3e1f91-9eb1-42cf-89f0-edc770116add",
+      "target": "o_senate",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "420f9564-1a32-4b34-a504-ae511f839674",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "420f9564-1a32-4b34-a504-ae511f839674",
+      "target": "t_energy",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "420f9564-1a32-4b34-a504-ae511f839674",
+      "target": "l_kyiv",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "420f9564-1a32-4b34-a504-ae511f839674",
+      "target": "l_moscow",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "44c56d71-b977-4357-94ae-12b747cc6d75",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "44c56d71-b977-4357-94ae-12b747cc6d75",
+      "target": "p_guilfoyle",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "44c56d71-b977-4357-94ae-12b747cc6d75",
+      "target": "l_newyork",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "22cfe393-d42b-4593-a25e-e0c607c51ed3",
+      "target": "l_washington",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "22cfe393-d42b-4593-a25e-e0c607c51ed3",
+      "target": "l_nashville",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "3b65aedc-699d-436d-be91-007c3630207f",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "3b65aedc-699d-436d-be91-007c3630207f",
+      "target": "t_midterms",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "3b65aedc-699d-436d-be91-007c3630207f",
+      "target": "l_newyork",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "7b45314f-a4bc-4a13-acfa-36fce1e9f013",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "7b45314f-a4bc-4a13-acfa-36fce1e9f013",
+      "target": "t_midterms",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "2ecac120-cd6c-4f6b-9961-ccb2b5559cee",
+      "target": "t_midterms",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "20985241-48c6-473b-a93b-d54ee6afdd23",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "20985241-48c6-473b-a93b-d54ee6afdd23",
+      "target": "t_capital_punishment",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "ec8331a9-9bc8-4a28-8b4f-9f857b0476a2",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "ec8331a9-9bc8-4a28-8b4f-9f857b0476a2",
+      "target": "t_midterms",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "rss_12964_1791682180429_4",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "rss_12964_1791682180429_4",
+      "target": "t_midterms",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "02dc898f-d478-4e65-a8b6-49c40453d2dc",
+      "target": "l_paris",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "c0303144-e24c-4dd8-8fa1-796762d3d010",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "c0303144-e24c-4dd8-8fa1-796762d3d010",
+      "target": "p_putin",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "c0303144-e24c-4dd8-8fa1-796762d3d010",
+      "target": "t_energy",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "c0303144-e24c-4dd8-8fa1-796762d3d010",
+      "target": "t_midterms",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "c0303144-e24c-4dd8-8fa1-796762d3d010",
+      "target": "l_washington",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "c0303144-e24c-4dd8-8fa1-796762d3d010",
+      "target": "l_moscow",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "c0303144-e24c-4dd8-8fa1-796762d3d010",
+      "target": "o_russiandiesel",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "c267aa16-ee73-4966-9fb8-633f3edd6f51",
+      "target": "l_kyiv",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "c267aa16-ee73-4966-9fb8-633f3edd6f51",
+      "target": "l_tehran",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "280c1079-581d-459d-9aa5-d926c48c4165",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "280c1079-581d-459d-9aa5-d926c48c4165",
+      "target": "l_washington",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "280c1079-581d-459d-9aa5-d926c48c4165",
+      "target": "o_whitehouse",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "49a83ec2-8540-4b06-85e1-d65daad9d04c",
+      "target": "l_washington",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "49a83ec2-8540-4b06-85e1-d65daad9d04c",
+      "target": "l_tehran",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "49a83ec2-8540-4b06-85e1-d65daad9d04c",
+      "target": "o_pentagon",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "decf0a3b-9bfe-4a82-9724-14e94cd7a847",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "decf0a3b-9bfe-4a82-9724-14e94cd7a847",
+      "target": "p_netanyahu",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "decf0a3b-9bfe-4a82-9724-14e94cd7a847",
+      "target": "l_newdelhi",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "d46f1e86-90ae-425c-b02c-91e4daeb1a15",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "d46f1e86-90ae-425c-b02c-91e4daeb1a15",
+      "target": "t_middle_east",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "d46f1e86-90ae-425c-b02c-91e4daeb1a15",
+      "target": "l_tehran",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "8948e17a-5a9f-48d7-8b4d-b0a5b4acf311",
+      "target": "p_rubio",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "3b10f05a-e923-4c66-a834-b36c9eafe11f",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "3b10f05a-e923-4c66-a834-b36c9eafe11f",
+      "target": "t_ai_testing",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "3b10f05a-e923-4c66-a834-b36c9eafe11f",
+      "target": "l_washington",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "3b10f05a-e923-4c66-a834-b36c9eafe11f",
+      "target": "l_sanfrancisco",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "3b10f05a-e923-4c66-a834-b36c9eafe11f",
+      "target": "o_whitehouse",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "807e0678-06ae-4961-b15f-ddbf5e52fbd1",
+      "target": "p_talarico",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "807e0678-06ae-4961-b15f-ddbf5e52fbd1",
+      "target": "o_senate",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "19bda03f-8afe-415a-aa93-968cf66d9bf5",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "19bda03f-8afe-415a-aa93-968cf66d9bf5",
+      "target": "p_biden",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "19bda03f-8afe-415a-aa93-968cf66d9bf5",
+      "target": "l_washington",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "c3bd2141-6463-4d5b-bb1d-f50d415e08fa",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "c3bd2141-6463-4d5b-bb1d-f50d415e08fa",
+      "target": "t_midterms",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "c3bd2141-6463-4d5b-bb1d-f50d415e08fa",
+      "target": "l_newyork",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "12a66988-7cb9-4d77-9d95-4afda54286f3",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "8af1e245-3317-468e-b64f-46825d8c301f",
+      "target": "t_midterms",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "36573225-699e-4908-9033-62fec5e9a912",
+      "target": "p_pike",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "36573225-699e-4908-9033-62fec5e9a912",
+      "target": "t_capital_punishment",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "36573225-699e-4908-9033-62fec5e9a912",
+      "target": "l_nashville",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "4de003db-9c3c-43fe-9ada-86bbe7538f4a",
+      "target": "t_capital_punishment",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "326a7494-5f2a-4334-ae08-8dcf346f3786",
+      "target": "t_capital_punishment",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "326a7494-5f2a-4334-ae08-8dcf346f3786",
+      "target": "l_tehran",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "326a7494-5f2a-4334-ae08-8dcf346f3786",
+      "target": "o_pentagon",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "49472db7-877e-4e5c-bc79-4c4e6f21a46b",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "db099eb9-c176-490a-ab57-dbec419b7b65",
+      "target": "l_beijing",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "f32e4524-bb3d-4b5e-87db-9bd2eb920314",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "f32e4524-bb3d-4b5e-87db-9bd2eb920314",
+      "target": "t_capital_punishment",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "f32e4524-bb3d-4b5e-87db-9bd2eb920314",
+      "target": "l_newdelhi",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "621a8158-8aa3-488b-a87e-aad8a52c43ba",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "621a8158-8aa3-488b-a87e-aad8a52c43ba",
+      "target": "p_putin",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "621a8158-8aa3-488b-a87e-aad8a52c43ba",
+      "target": "l_kyiv",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "621a8158-8aa3-488b-a87e-aad8a52c43ba",
+      "target": "l_moscow",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "cde8e11c-fe66-4efe-b639-c240d6077f79",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "cde8e11c-fe66-4efe-b639-c240d6077f79",
+      "target": "l_washington",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "cde8e11c-fe66-4efe-b639-c240d6077f79",
+      "target": "o_whitehouse",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "rss_10793_1791493044955_1",
+      "target": "l_paris",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "434051d2-3d0d-4a7e-bc93-cd1af22219f0",
+      "target": "t_adhd_dementia",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "434051d2-3d0d-4a7e-bc93-cd1af22219f0",
+      "target": "t_capital_punishment",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "fde74464-6148-482f-84ce-8c4bcba07f2f",
+      "target": "p_guilfoyle",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "5471b59b-a010-4ede-86ed-d6801ecaccc0",
+      "target": "l_washington",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "851d57a5-b3b0-4c97-a310-a8f4c2e3b2fb",
+      "target": "t_midterms",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "f5e7889d-b0db-48bc-ba77-a5a6b672a434",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "f5e7889d-b0db-48bc-ba77-a5a6b672a434",
+      "target": "t_midterms",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "f5e7889d-b0db-48bc-ba77-a5a6b672a434",
+      "target": "t_inflation",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "57d72558-f8b0-4c51-8770-030591552ec4",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "57d72558-f8b0-4c51-8770-030591552ec4",
+      "target": "p_zelenskyy",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "57d72558-f8b0-4c51-8770-030591552ec4",
+      "target": "p_putin",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "57d72558-f8b0-4c51-8770-030591552ec4",
+      "target": "t_energy",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "57d72558-f8b0-4c51-8770-030591552ec4",
+      "target": "l_kyiv",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "57d72558-f8b0-4c51-8770-030591552ec4",
+      "target": "l_moscow",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "57d72558-f8b0-4c51-8770-030591552ec4",
+      "target": "o_russiandiesel",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "1cc2da81-2b7b-47f0-b5ef-ad6296ac5e65",
+      "target": "l_newyork",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "4efe7b01-6768-4ec3-907d-bdc6bd5d8334",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "4efe7b01-6768-4ec3-907d-bdc6bd5d8334",
+      "target": "l_newyork",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "9fc8ab14-46d1-4516-9abb-b75e3ea549f9",
+      "target": "l_newyork",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "1bab08b5-450e-42f8-800d-d8b89848074a",
+      "target": "t_midterms",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "1bab08b5-450e-42f8-800d-d8b89848074a",
+      "target": "o_senate",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "ec582ab4-70fb-4a94-a22b-270e29cb74be",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "db2c6dc6-749f-4a12-8aa8-d08580b5bae7",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "db2c6dc6-749f-4a12-8aa8-d08580b5bae7",
+      "target": "p_zelenskyy",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "db2c6dc6-749f-4a12-8aa8-d08580b5bae7",
+      "target": "p_putin",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "db2c6dc6-749f-4a12-8aa8-d08580b5bae7",
+      "target": "t_energy",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "db2c6dc6-749f-4a12-8aa8-d08580b5bae7",
+      "target": "l_washington",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "db2c6dc6-749f-4a12-8aa8-d08580b5bae7",
+      "target": "l_kyiv",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "db2c6dc6-749f-4a12-8aa8-d08580b5bae7",
+      "target": "l_moscow",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "db2c6dc6-749f-4a12-8aa8-d08580b5bae7",
+      "target": "o_russiandiesel",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "9887133f-1cda-450e-9df0-c5c23c40c6c8",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "9887133f-1cda-450e-9df0-c5c23c40c6c8",
+      "target": "l_washington",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "9887133f-1cda-450e-9df0-c5c23c40c6c8",
+      "target": "o_whitehouse",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "42c439a2-89fe-4bb5-8ea5-68049e416577",
+      "target": "t_capital_punishment",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "42c439a2-89fe-4bb5-8ea5-68049e416577",
+      "target": "l_washington",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "42c439a2-89fe-4bb5-8ea5-68049e416577",
+      "target": "o_pentagon",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "e75a3c3f-6282-4b56-9bcd-4dac171645ab",
+      "target": "t_cybersecurity",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "5972ecd8-8567-4a73-a627-945948b2c3ea",
+      "target": "o_delta",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "9249b3be-a9c1-4aa6-8d61-b7de2c1b8a94",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "9249b3be-a9c1-4aa6-8d61-b7de2c1b8a94",
+      "target": "p_netanyahu",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "9249b3be-a9c1-4aa6-8d61-b7de2c1b8a94",
+      "target": "l_london",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "f5bd2d27-1212-4a86-a82b-51086cd733f6",
+      "target": "l_newyork",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "67cb4a3c-9990-4c18-92a1-3d3968b83668",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "1f252cc3-ba3e-4d2d-bf9f-85d6d19cc459",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "1f252cc3-ba3e-4d2d-bf9f-85d6d19cc459",
+      "target": "t_midterms",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "1f252cc3-ba3e-4d2d-bf9f-85d6d19cc459",
+      "target": "l_washington",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "1f252cc3-ba3e-4d2d-bf9f-85d6d19cc459",
+      "target": "o_senate",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "f61cf6a6-d928-4d5b-8921-253121e49db5",
+      "target": "t_middle_east",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "f61cf6a6-d928-4d5b-8921-253121e49db5",
+      "target": "l_newyork",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "1ee7becb-f5fd-4af2-ab96-b2371b467141",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "03210dbf-0ba3-42bb-aa22-d1d6d6de81f7",
+      "target": "l_washington",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "03210dbf-0ba3-42bb-aa22-d1d6d6de81f7",
+      "target": "o_whitehouse",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "4560283b-e59b-4273-9678-aee4baff54e1",
+      "target": "l_tehran",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "16f8d13f-700a-4a7e-8479-4659bd3edf65",
+      "target": "l_newyork",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "03ba35d0-c594-4d7b-97a9-a0f4ab56bfb5",
+      "target": "l_newyork",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "049de3ee-a843-41d6-b2cc-3ad1d70074cd",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "049de3ee-a843-41d6-b2cc-3ad1d70074cd",
+      "target": "t_energy",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "049de3ee-a843-41d6-b2cc-3ad1d70074cd",
+      "target": "t_midterms",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "049de3ee-a843-41d6-b2cc-3ad1d70074cd",
+      "target": "o_senate",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "e40b0634-d013-47a5-9e62-9a033049673c",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "f07caeab-cb18-490b-b6cf-b6bc5c88f9ee",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "f07caeab-cb18-490b-b6cf-b6bc5c88f9ee",
+      "target": "p_biden",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "f07caeab-cb18-490b-b6cf-b6bc5c88f9ee",
+      "target": "t_midterms",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "f07caeab-cb18-490b-b6cf-b6bc5c88f9ee",
+      "target": "t_inflation",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "f07caeab-cb18-490b-b6cf-b6bc5c88f9ee",
+      "target": "l_tehran",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "f07caeab-cb18-490b-b6cf-b6bc5c88f9ee",
+      "target": "o_senate",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "2baf47ea-f4b9-42f9-b4be-8f31fdb7a8ab",
+      "target": "l_washington",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "ac646073-3677-4af9-9d6f-f9fb281df847",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "ac646073-3677-4af9-9d6f-f9fb281df847",
+      "target": "l_tehran",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "ac646073-3677-4af9-9d6f-f9fb281df847",
+      "target": "o_senate",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "204836b8-c924-464e-9f0b-869fab75d44c",
+      "target": "l_tehran",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "d4b4c01c-fd2e-4264-a2c8-97aa3747d759",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "7583f6c8-7320-469b-baf6-05b04e7354df",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "7583f6c8-7320-469b-baf6-05b04e7354df",
+      "target": "p_zelenskyy",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "7583f6c8-7320-469b-baf6-05b04e7354df",
+      "target": "t_energy",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "7583f6c8-7320-469b-baf6-05b04e7354df",
+      "target": "l_kyiv",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "7583f6c8-7320-469b-baf6-05b04e7354df",
+      "target": "l_moscow",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "3bc3ac52-feee-4fa7-ab09-d976e8751c6f",
+      "target": "p_zelenskyy",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "3bc3ac52-feee-4fa7-ab09-d976e8751c6f",
+      "target": "t_energy",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "3bc3ac52-feee-4fa7-ab09-d976e8751c6f",
+      "target": "l_kyiv",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "3bc3ac52-feee-4fa7-ab09-d976e8751c6f",
+      "target": "l_moscow",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "3bc3ac52-feee-4fa7-ab09-d976e8751c6f",
+      "target": "o_russiandiesel",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "rss_10996_1791800764731_3",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "rss_10996_1791800764731_3",
+      "target": "t_midterms",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "rss_10996_1791800764731_3",
+      "target": "l_washington",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "rss_10996_1791800764731_3",
+      "target": "l_tehran",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "ae912cca-4110-4569-af89-5ec59fc0aa1b",
+      "target": "l_newdelhi",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "8a1174ab-6dbf-46ff-b45e-f53f8530177f",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "8a1174ab-6dbf-46ff-b45e-f53f8530177f",
+      "target": "l_nashville",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "4b75a980-14f9-4b63-bbbd-a4be3c54499e",
+      "target": "p_netanyahu",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "4b75a980-14f9-4b63-bbbd-a4be3c54499e",
+      "target": "l_tehran",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "2a9ec8b4-3cbb-490f-b3ad-ce0303ec6a5b",
+      "target": "t_midterms",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "2a9ec8b4-3cbb-490f-b3ad-ce0303ec6a5b",
+      "target": "t_capital_punishment",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "2a9ec8b4-3cbb-490f-b3ad-ce0303ec6a5b",
+      "target": "o_pentagon",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "1cd224e8-fb83-4a29-950a-0358b05ef070",
+      "target": "l_london",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "da8a026d-1a0b-441f-b449-d0183a912e96",
+      "target": "t_midterms",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "286022a6-c579-4df8-b264-a142d6888595",
+      "target": "p_talarico",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "286022a6-c579-4df8-b264-a142d6888595",
+      "target": "t_midterms",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "286022a6-c579-4df8-b264-a142d6888595",
+      "target": "l_washington",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "286022a6-c579-4df8-b264-a142d6888595",
+      "target": "o_whitehouse",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "286022a6-c579-4df8-b264-a142d6888595",
+      "target": "o_senate",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "rss_14187_1791755926595_1",
+      "target": "l_newyork",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "21257e36-c790-48ba-8139-8db05406bda0",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "21257e36-c790-48ba-8139-8db05406bda0",
+      "target": "l_washington",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "21257e36-c790-48ba-8139-8db05406bda0",
+      "target": "o_whitehouse",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "d27de845-cf26-4103-96b9-a54d3192bd90",
+      "target": "p_pike",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "d27de845-cf26-4103-96b9-a54d3192bd90",
+      "target": "t_capital_punishment",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "d27de845-cf26-4103-96b9-a54d3192bd90",
+      "target": "l_tehran",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "d27de845-cf26-4103-96b9-a54d3192bd90",
+      "target": "o_epicgames",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "30a5d21d-a3f3-4577-95b9-745c5b717162",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "30a5d21d-a3f3-4577-95b9-745c5b717162",
+      "target": "p_zelenskyy",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "30a5d21d-a3f3-4577-95b9-745c5b717162",
+      "target": "p_putin",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "30a5d21d-a3f3-4577-95b9-745c5b717162",
+      "target": "t_midterms",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "30a5d21d-a3f3-4577-95b9-745c5b717162",
+      "target": "l_moscow",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "30a5d21d-a3f3-4577-95b9-745c5b717162",
+      "target": "o_nato",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "48961521-0124-4999-a084-a4cdeb549015",
+      "target": "l_newyork",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "6b39a4f5-8a38-4916-8538-27eefba6bdf5",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "55375b5d-958a-4ef7-8fe5-c93e40a1156d",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "55375b5d-958a-4ef7-8fe5-c93e40a1156d",
+      "target": "t_midterms",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "55375b5d-958a-4ef7-8fe5-c93e40a1156d",
+      "target": "l_nashville",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "f06bf96d-9764-4567-b9ba-f0bc78946286",
+      "target": "t_energy",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "489d2142-00b9-4795-b364-f87ad9164054",
+      "target": "t_midterms",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "489d2142-00b9-4795-b364-f87ad9164054",
+      "target": "o_senate",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "0734e287-ef5f-4e44-b868-29ed92c8b0a2",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "0734e287-ef5f-4e44-b868-29ed92c8b0a2",
+      "target": "t_energy",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "0734e287-ef5f-4e44-b868-29ed92c8b0a2",
+      "target": "o_russiandiesel",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "36544948-dffc-4988-8949-f097f4a84a43",
+      "target": "l_london",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "a79e9e46-fef8-4a41-814f-00f2a03d2c88",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "a79e9e46-fef8-4a41-814f-00f2a03d2c88",
+      "target": "t_midterms",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "a79e9e46-fef8-4a41-814f-00f2a03d2c88",
+      "target": "l_nashville",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "e77c1bbf-c5ed-451f-97cb-276eeb03f03a",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "cb55d02c-364c-4892-9486-594cedba6ecf",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "cb55d02c-364c-4892-9486-594cedba6ecf",
+      "target": "t_midterms",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "cb55d02c-364c-4892-9486-594cedba6ecf",
+      "target": "o_senate",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "fc6261a7-2fd4-4039-8abd-c6dd938dad48",
+      "target": "p_harris",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "fc6261a7-2fd4-4039-8abd-c6dd938dad48",
+      "target": "t_midterms",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "fc6261a7-2fd4-4039-8abd-c6dd938dad48",
+      "target": "l_washington",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "fc6261a7-2fd4-4039-8abd-c6dd938dad48",
+      "target": "o_whitehouse",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "a0d5d809-ae2a-4131-8196-d4dbeeb79a9c",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "656505b3-79f4-47c7-9054-65c2cc3b3db8",
+      "target": "t_midterms",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "b44cebfe-b3dd-4971-a605-14db38b2c096",
+      "target": "t_energy",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "b44cebfe-b3dd-4971-a605-14db38b2c096",
+      "target": "t_inflation",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "b44cebfe-b3dd-4971-a605-14db38b2c096",
+      "target": "o_russiandiesel",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "2db41937-a44a-4cce-81f8-981f688245ea",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "14b5defd-b38e-4e87-9faa-3fa9158c0bae",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "26b7598e-108d-41da-a47d-d8b27a5b4423",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "26b7598e-108d-41da-a47d-d8b27a5b4423",
+      "target": "l_washington",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "26b7598e-108d-41da-a47d-d8b27a5b4423",
+      "target": "l_newyork",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "26b7598e-108d-41da-a47d-d8b27a5b4423",
+      "target": "o_whitehouse",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "eda14478-97f9-4bb9-8058-b823a91598eb",
+      "target": "p_talarico",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "eda14478-97f9-4bb9-8058-b823a91598eb",
+      "target": "t_midterms",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "f2428d09-f5f6-462e-a177-1e88ebb07e2d",
+      "target": "t_midterms",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "2c8f11d8-3ed6-4804-87c8-80e739b0da1a",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "17a4d88b-0fbb-48de-a2b7-ed95c33a0d32",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "3353e003-56c4-49dd-9976-4d5f2a99e615",
+      "target": "l_sanfrancisco",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "4a8164c8-0e86-4f16-bd32-8912b1481424",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "6bd4e2bf-9d21-445e-a454-4c8966e0ab72",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "6bd4e2bf-9d21-445e-a454-4c8966e0ab72",
+      "target": "t_midterms",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "60e4df23-df12-4a2e-93ab-dc6f5e9e6b06",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "b3df4be6-31d4-4039-b17b-8cefa595d3ae",
+      "target": "l_london",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "d37f8413-b13f-4644-8e00-fd280f5c23d0",
+      "target": "p_altman",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "c29f078f-db00-49df-b524-e9c55db28cb4",
+      "target": "l_london",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "033803e6-1adc-4637-8a4a-0d598e7aed4b",
+      "target": "p_pike",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "033803e6-1adc-4637-8a4a-0d598e7aed4b",
+      "target": "t_capital_punishment",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "271d2045-1c7a-4006-b71b-ff0361bc62b0",
+      "target": "p_biden",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "28ccf530-cafe-4c58-a19f-281028aaeaa6",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "f0cf0b71-c0ec-4515-a5c9-87888b55d9ed",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "f0cf0b71-c0ec-4515-a5c9-87888b55d9ed",
+      "target": "l_washington",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "f0cf0b71-c0ec-4515-a5c9-87888b55d9ed",
+      "target": "l_beijing",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "79b569c5-6c4c-4975-9f6e-8f6dfd0860f2",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "79b569c5-6c4c-4975-9f6e-8f6dfd0860f2",
+      "target": "l_washington",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "79b569c5-6c4c-4975-9f6e-8f6dfd0860f2",
+      "target": "o_whitehouse",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "b02eb3ab-deec-4bb6-bf2f-89f445016ff8",
+      "target": "l_madrid",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "02e5e902-8141-4933-8fe3-0ae81880e495",
+      "target": "p_netanyahu",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "02e5e902-8141-4933-8fe3-0ae81880e495",
+      "target": "t_middle_east",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "43e6fcc0-7351-4b31-b0bc-5be57ab27788",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "43e6fcc0-7351-4b31-b0bc-5be57ab27788",
+      "target": "t_energy",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "43e6fcc0-7351-4b31-b0bc-5be57ab27788",
+      "target": "l_london",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "43e6fcc0-7351-4b31-b0bc-5be57ab27788",
+      "target": "l_tehran",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "43e6fcc0-7351-4b31-b0bc-5be57ab27788",
+      "target": "l_moscow",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "43e6fcc0-7351-4b31-b0bc-5be57ab27788",
+      "target": "o_russiandiesel",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "ca77b24b-882d-4d87-be10-26c3e5fa2299",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "ca77b24b-882d-4d87-be10-26c3e5fa2299",
+      "target": "p_rubio",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "ca77b24b-882d-4d87-be10-26c3e5fa2299",
+      "target": "l_washington",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "9c2d57e2-1f2a-4b8b-8387-745792ce9a63",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "670630e1-f0aa-4689-a93c-45e48c775db9",
+      "target": "l_london",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "f197c6bb-ee4f-4016-a6bd-25d1ae4b606d",
+      "target": "l_newyork",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "92a1cea9-9564-410c-afe4-90794382d4ad",
+      "target": "t_inflation",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "53780f6d-2884-41d6-86fd-30ad833f3016",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "ee3d0d81-c2c3-4972-97e4-d6122b75b1e0",
+      "target": "t_midterms",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "014e749f-3168-4f95-b828-21195431d4a4",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "014e749f-3168-4f95-b828-21195431d4a4",
+      "target": "t_energy",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "014e749f-3168-4f95-b828-21195431d4a4",
+      "target": "l_kyiv",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "014e749f-3168-4f95-b828-21195431d4a4",
+      "target": "l_moscow",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "01745cd1-790b-441e-ba84-bed620c7599f",
+      "target": "t_cybersecurity",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "01745cd1-790b-441e-ba84-bed620c7599f",
+      "target": "l_london",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "21c6cdd4-a490-44d4-9c6a-8b38a6014546",
+      "target": "o_russiandiesel",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "e82cb5ca-3428-4952-8f8c-2964e6f54d0a",
+      "target": "t_midterms",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "e82cb5ca-3428-4952-8f8c-2964e6f54d0a",
+      "target": "o_senate",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "baf32f6d-df6e-40f9-92e9-08e784ca483f",
+      "target": "t_cybersecurity",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "baf32f6d-df6e-40f9-92e9-08e784ca483f",
+      "target": "l_paris",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "5d620ef8-54c6-4011-b856-017ec3f64eeb",
+      "target": "l_losangeles",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "5d620ef8-54c6-4011-b856-017ec3f64eeb",
+      "target": "l_paris",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "rss_16567_1791783502648_4",
+      "target": "l_beijing",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "97328b78-e44e-4ab1-b674-498b7069f07f",
+      "target": "l_newdelhi",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "1a3a2c76-f31d-4d9c-bf59-81c4ce9b2508",
+      "target": "p_trump",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "1a3a2c76-f31d-4d9c-bf59-81c4ce9b2508",
+      "target": "t_midterms",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "1a3a2c76-f31d-4d9c-bf59-81c4ce9b2508",
+      "target": "l_nashville",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "6cb7c1af-2df0-499f-ab38-21c09ff25c8f",
+      "target": "l_newdelhi",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "c16c7de2-b164-4f96-826c-42a96e7bcd21",
+      "target": "l_beijing",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "36b2cc72-543f-476c-aa28-ff3d40c2e9ad",
+      "target": "l_newdelhi",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "ad2e63fb-85ce-4254-b1fe-7d69e5f9a364",
+      "target": "t_midterms",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "38a8511d-4a80-475a-9ee0-d2dd536cc84c",
+      "target": "l_london",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "38a8511d-4a80-475a-9ee0-d2dd536cc84c",
+      "target": "l_newdelhi",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "09c640da-0b43-4035-b1eb-44b0168d119b",
+      "target": "l_newyork",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "2b5dd059-2357-41bd-8e7d-05efe64789fb",
+      "target": "t_cybersecurity",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "74ef4995-a101-4819-9cc4-c0285c5661c7",
+      "target": "l_beijing",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "rss_11742_1791760426598_7",
+      "target": "l_london",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "dd7a047e-6529-4920-b36e-50545f8a6dd5",
+      "target": "l_newdelhi",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "99b0c828-4175-4962-8294-ae0751ea8d29",
+      "target": "t_energy",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "99b0c828-4175-4962-8294-ae0751ea8d29",
+      "target": "o_russiandiesel",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "ce3f6c74-26bb-4d4b-9031-1b30f90571bb",
+      "target": "l_beijing",
+      "type": "mention",
+      "weight": 1.0
+    },
+    {
+      "source": "51329099-c2b6-4091-9098-37f2bcaa3a31",
+      "target": "b3ae2bfd-97f9-49c3-b4f1-0ae53bf13795",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "l_moscow",
+        "p_zelenskyy",
+        "t_energy"
+      ]
+    },
+    {
+      "source": "51329099-c2b6-4091-9098-37f2bcaa3a31",
+      "target": "85669731-4ea2-4b61-908e-b482bcf9212d",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "l_moscow",
+        "p_putin",
+        "t_energy"
+      ]
+    },
+    {
+      "source": "7f038e46-49b3-4d81-a33f-26ac636a88fa",
+      "target": "42ea5449-ecc6-4e19-8d50-17bcf9c10152",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "o_whitehouse",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "7f038e46-49b3-4d81-a33f-26ac636a88fa",
+      "target": "f1b9dbd2-a2d5-43a2-9da9-113230339711",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "o_whitehouse",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "7f038e46-49b3-4d81-a33f-26ac636a88fa",
+      "target": "bc7593ae-d54e-422e-9c84-e21ec7b3e935",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "o_whitehouse",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "42ea5449-ecc6-4e19-8d50-17bcf9c10152",
+      "target": "4f17ec1c-25c9-4b0b-9923-f8593757d525",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "42ea5449-ecc6-4e19-8d50-17bcf9c10152",
+      "target": "f1b9dbd2-a2d5-43a2-9da9-113230339711",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "o_whitehouse",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "42ea5449-ecc6-4e19-8d50-17bcf9c10152",
+      "target": "bc7593ae-d54e-422e-9c84-e21ec7b3e935",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "o_whitehouse",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "4f17ec1c-25c9-4b0b-9923-f8593757d525",
+      "target": "f913a0d9-a742-4db2-a68e-df4e7b6af633",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "4f17ec1c-25c9-4b0b-9923-f8593757d525",
+      "target": "03d59173-ab1c-460a-90c0-decd1617d986",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "4f17ec1c-25c9-4b0b-9923-f8593757d525",
+      "target": "f1b9dbd2-a2d5-43a2-9da9-113230339711",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "4f17ec1c-25c9-4b0b-9923-f8593757d525",
+      "target": "bc7593ae-d54e-422e-9c84-e21ec7b3e935",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "t_midterms",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "4f17ec1c-25c9-4b0b-9923-f8593757d525",
+      "target": "8b3e1f91-9eb1-42cf-89f0-edc770116add",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "t_midterms",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "4f17ec1c-25c9-4b0b-9923-f8593757d525",
+      "target": "3b65aedc-699d-436d-be91-007c3630207f",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "1462acad-004a-4f93-9d0a-1eddbf975a72",
+      "target": "5dfbe4d0-dece-46d2-9813-6588106a08ac",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "t_middle_east",
+        "l_tehran"
+      ]
+    },
+    {
+      "source": "ece3c37e-9f46-43d4-885e-b534b470dc2c",
+      "target": "3b65aedc-699d-436d-be91-007c3630207f",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "l_newyork",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "f913a0d9-a742-4db2-a68e-df4e7b6af633",
+      "target": "03d59173-ab1c-460a-90c0-decd1617d986",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "f913a0d9-a742-4db2-a68e-df4e7b6af633",
+      "target": "bc7593ae-d54e-422e-9c84-e21ec7b3e935",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "f913a0d9-a742-4db2-a68e-df4e7b6af633",
+      "target": "8b3e1f91-9eb1-42cf-89f0-edc770116add",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "f913a0d9-a742-4db2-a68e-df4e7b6af633",
+      "target": "3b65aedc-699d-436d-be91-007c3630207f",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "f913a0d9-a742-4db2-a68e-df4e7b6af633",
+      "target": "7b45314f-a4bc-4a13-acfa-36fce1e9f013",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "03d59173-ab1c-460a-90c0-decd1617d986",
+      "target": "bc7593ae-d54e-422e-9c84-e21ec7b3e935",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "03d59173-ab1c-460a-90c0-decd1617d986",
+      "target": "8b3e1f91-9eb1-42cf-89f0-edc770116add",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "03d59173-ab1c-460a-90c0-decd1617d986",
+      "target": "3b65aedc-699d-436d-be91-007c3630207f",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "03d59173-ab1c-460a-90c0-decd1617d986",
+      "target": "7b45314f-a4bc-4a13-acfa-36fce1e9f013",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "03d59173-ab1c-460a-90c0-decd1617d986",
+      "target": "ec8331a9-9bc8-4a28-8b4f-9f857b0476a2",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "03d59173-ab1c-460a-90c0-decd1617d986",
+      "target": "rss_12964_1791682180429_4",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "61fc7af2-4a51-4694-9658-f96a2d099210",
+      "target": "9537e44b-fe99-4b58-8199-c387c8cdf799",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "o_senate",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "61fc7af2-4a51-4694-9658-f96a2d099210",
+      "target": "8b3e1f91-9eb1-42cf-89f0-edc770116add",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "o_senate",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "b3ae2bfd-97f9-49c3-b4f1-0ae53bf13795",
+      "target": "85669731-4ea2-4b61-908e-b482bcf9212d",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "l_moscow",
+        "l_kyiv",
+        "t_energy"
+      ]
+    },
+    {
+      "source": "b3ae2bfd-97f9-49c3-b4f1-0ae53bf13795",
+      "target": "e8f6217a-25c1-447e-bfd5-9caa43c7c149",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "l_kyiv",
+        "p_zelenskyy",
+        "p_trump",
+        "l_moscow",
+        "t_energy"
+      ]
+    },
+    {
+      "source": "b3ae2bfd-97f9-49c3-b4f1-0ae53bf13795",
+      "target": "c67b8ecd-6bd1-4d3c-aa0b-d7d6133b3fd0",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "l_kyiv",
+        "t_energy"
+      ]
+    },
+    {
+      "source": "b3ae2bfd-97f9-49c3-b4f1-0ae53bf13795",
+      "target": "8b3e1f91-9eb1-42cf-89f0-edc770116add",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "l_moscow",
+        "t_energy"
+      ]
+    },
+    {
+      "source": "b3ae2bfd-97f9-49c3-b4f1-0ae53bf13795",
+      "target": "420f9564-1a32-4b34-a504-ae511f839674",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "l_moscow",
+        "l_kyiv",
+        "t_energy"
+      ]
+    },
+    {
+      "source": "b3ae2bfd-97f9-49c3-b4f1-0ae53bf13795",
+      "target": "c0303144-e24c-4dd8-8fa1-796762d3d010",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "l_moscow",
+        "t_energy"
+      ]
+    },
+    {
+      "source": "f483917c-4190-4200-9835-63d76a027cf6",
+      "target": "44c56d71-b977-4357-94ae-12b747cc6d75",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "p_guilfoyle"
+      ]
+    },
+    {
+      "source": "f1b9dbd2-a2d5-43a2-9da9-113230339711",
+      "target": "bc7593ae-d54e-422e-9c84-e21ec7b3e935",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "o_whitehouse",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "f1b9dbd2-a2d5-43a2-9da9-113230339711",
+      "target": "8b3e1f91-9eb1-42cf-89f0-edc770116add",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "f1b9dbd2-a2d5-43a2-9da9-113230339711",
+      "target": "c0303144-e24c-4dd8-8fa1-796762d3d010",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "f1b9dbd2-a2d5-43a2-9da9-113230339711",
+      "target": "280c1079-581d-459d-9aa5-d926c48c4165",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "o_whitehouse",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "f1b9dbd2-a2d5-43a2-9da9-113230339711",
+      "target": "3b10f05a-e923-4c66-a834-b36c9eafe11f",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "o_whitehouse",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "bc7593ae-d54e-422e-9c84-e21ec7b3e935",
+      "target": "8b3e1f91-9eb1-42cf-89f0-edc770116add",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "t_midterms",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "bc7593ae-d54e-422e-9c84-e21ec7b3e935",
+      "target": "22cfe393-d42b-4593-a25e-e0c607c51ed3",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "l_nashville",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "bc7593ae-d54e-422e-9c84-e21ec7b3e935",
+      "target": "3b65aedc-699d-436d-be91-007c3630207f",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "bc7593ae-d54e-422e-9c84-e21ec7b3e935",
+      "target": "7b45314f-a4bc-4a13-acfa-36fce1e9f013",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "bc7593ae-d54e-422e-9c84-e21ec7b3e935",
+      "target": "ec8331a9-9bc8-4a28-8b4f-9f857b0476a2",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "bc7593ae-d54e-422e-9c84-e21ec7b3e935",
+      "target": "rss_12964_1791682180429_4",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "bc7593ae-d54e-422e-9c84-e21ec7b3e935",
+      "target": "c0303144-e24c-4dd8-8fa1-796762d3d010",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "t_midterms",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "bc7593ae-d54e-422e-9c84-e21ec7b3e935",
+      "target": "280c1079-581d-459d-9aa5-d926c48c4165",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "o_whitehouse",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "bc7593ae-d54e-422e-9c84-e21ec7b3e935",
+      "target": "3b10f05a-e923-4c66-a834-b36c9eafe11f",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "o_whitehouse",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "bc7593ae-d54e-422e-9c84-e21ec7b3e935",
+      "target": "19bda03f-8afe-415a-aa93-968cf66d9bf5",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "bc7593ae-d54e-422e-9c84-e21ec7b3e935",
+      "target": "c3bd2141-6463-4d5b-bb1d-f50d415e08fa",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "fea5afda-80e2-4b3d-9f18-f2005ff7a96e",
+      "target": "9a68c2fa-e469-4c33-a15e-b2c9354fe016",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "l_newyork"
+      ]
+    },
+    {
+      "source": "fea5afda-80e2-4b3d-9f18-f2005ff7a96e",
+      "target": "44c56d71-b977-4357-94ae-12b747cc6d75",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "l_newyork"
+      ]
+    },
+    {
+      "source": "fea5afda-80e2-4b3d-9f18-f2005ff7a96e",
+      "target": "3b65aedc-699d-436d-be91-007c3630207f",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "l_newyork"
+      ]
+    },
+    {
+      "source": "fea5afda-80e2-4b3d-9f18-f2005ff7a96e",
+      "target": "c3bd2141-6463-4d5b-bb1d-f50d415e08fa",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "l_newyork"
+      ]
+    },
+    {
+      "source": "9a68c2fa-e469-4c33-a15e-b2c9354fe016",
+      "target": "44c56d71-b977-4357-94ae-12b747cc6d75",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "l_newyork"
+      ]
+    },
+    {
+      "source": "9a68c2fa-e469-4c33-a15e-b2c9354fe016",
+      "target": "3b65aedc-699d-436d-be91-007c3630207f",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "l_newyork"
+      ]
+    },
+    {
+      "source": "9a68c2fa-e469-4c33-a15e-b2c9354fe016",
+      "target": "c3bd2141-6463-4d5b-bb1d-f50d415e08fa",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "l_newyork"
+      ]
+    },
+    {
+      "source": "9537e44b-fe99-4b58-8199-c387c8cdf799",
+      "target": "8b3e1f91-9eb1-42cf-89f0-edc770116add",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "o_senate",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "85669731-4ea2-4b61-908e-b482bcf9212d",
+      "target": "e8f6217a-25c1-447e-bfd5-9caa43c7c149",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_putin",
+        "l_kyiv",
+        "p_trump",
+        "l_moscow",
+        "t_energy"
+      ]
+    },
+    {
+      "source": "85669731-4ea2-4b61-908e-b482bcf9212d",
+      "target": "c67b8ecd-6bd1-4d3c-aa0b-d7d6133b3fd0",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "p_putin",
+        "l_kyiv",
+        "t_energy"
+      ]
+    },
+    {
+      "source": "85669731-4ea2-4b61-908e-b482bcf9212d",
+      "target": "8b3e1f91-9eb1-42cf-89f0-edc770116add",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "l_moscow",
+        "p_putin",
+        "t_energy"
+      ]
+    },
+    {
+      "source": "85669731-4ea2-4b61-908e-b482bcf9212d",
+      "target": "420f9564-1a32-4b34-a504-ae511f839674",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "l_moscow",
+        "l_kyiv",
+        "t_energy"
+      ]
+    },
+    {
+      "source": "85669731-4ea2-4b61-908e-b482bcf9212d",
+      "target": "c0303144-e24c-4dd8-8fa1-796762d3d010",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "l_moscow",
+        "p_putin",
+        "t_energy"
+      ]
+    },
+    {
+      "source": "5dfbe4d0-dece-46d2-9813-6588106a08ac",
+      "target": "49a83ec2-8540-4b06-85e1-d65daad9d04c",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "l_tehran",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "5dfbe4d0-dece-46d2-9813-6588106a08ac",
+      "target": "d46f1e86-90ae-425c-b02c-91e4daeb1a15",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "t_middle_east",
+        "l_tehran"
+      ]
+    },
+    {
+      "source": "e8f6217a-25c1-447e-bfd5-9caa43c7c149",
+      "target": "c67b8ecd-6bd1-4d3c-aa0b-d7d6133b3fd0",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "p_putin",
+        "l_kyiv",
+        "t_energy"
+      ]
+    },
+    {
+      "source": "e8f6217a-25c1-447e-bfd5-9caa43c7c149",
+      "target": "8b3e1f91-9eb1-42cf-89f0-edc770116add",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "l_moscow",
+        "p_putin",
+        "t_energy"
+      ]
+    },
+    {
+      "source": "e8f6217a-25c1-447e-bfd5-9caa43c7c149",
+      "target": "420f9564-1a32-4b34-a504-ae511f839674",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "l_moscow",
+        "l_kyiv",
+        "t_energy"
+      ]
+    },
+    {
+      "source": "e8f6217a-25c1-447e-bfd5-9caa43c7c149",
+      "target": "c0303144-e24c-4dd8-8fa1-796762d3d010",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "l_moscow",
+        "p_putin",
+        "t_energy"
+      ]
+    },
+    {
+      "source": "c67b8ecd-6bd1-4d3c-aa0b-d7d6133b3fd0",
+      "target": "8b3e1f91-9eb1-42cf-89f0-edc770116add",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "p_putin",
+        "o_russiandiesel",
+        "t_energy"
+      ]
+    },
+    {
+      "source": "c67b8ecd-6bd1-4d3c-aa0b-d7d6133b3fd0",
+      "target": "420f9564-1a32-4b34-a504-ae511f839674",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "l_kyiv",
+        "t_energy"
+      ]
+    },
+    {
+      "source": "c67b8ecd-6bd1-4d3c-aa0b-d7d6133b3fd0",
+      "target": "c0303144-e24c-4dd8-8fa1-796762d3d010",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "p_putin",
+        "o_russiandiesel",
+        "t_energy"
+      ]
+    },
+    {
+      "source": "8b3e1f91-9eb1-42cf-89f0-edc770116add",
+      "target": "420f9564-1a32-4b34-a504-ae511f839674",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "l_moscow",
+        "t_energy"
+      ]
+    },
+    {
+      "source": "8b3e1f91-9eb1-42cf-89f0-edc770116add",
+      "target": "3b65aedc-699d-436d-be91-007c3630207f",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "8b3e1f91-9eb1-42cf-89f0-edc770116add",
+      "target": "7b45314f-a4bc-4a13-acfa-36fce1e9f013",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "8b3e1f91-9eb1-42cf-89f0-edc770116add",
+      "target": "ec8331a9-9bc8-4a28-8b4f-9f857b0476a2",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "8b3e1f91-9eb1-42cf-89f0-edc770116add",
+      "target": "rss_12964_1791682180429_4",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "8b3e1f91-9eb1-42cf-89f0-edc770116add",
+      "target": "c0303144-e24c-4dd8-8fa1-796762d3d010",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_putin",
+        "l_washington",
+        "o_russiandiesel",
+        "p_trump",
+        "l_moscow",
+        "t_midterms",
+        "t_energy"
+      ]
+    },
+    {
+      "source": "8b3e1f91-9eb1-42cf-89f0-edc770116add",
+      "target": "280c1079-581d-459d-9aa5-d926c48c4165",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "8b3e1f91-9eb1-42cf-89f0-edc770116add",
+      "target": "3b10f05a-e923-4c66-a834-b36c9eafe11f",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "8b3e1f91-9eb1-42cf-89f0-edc770116add",
+      "target": "19bda03f-8afe-415a-aa93-968cf66d9bf5",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "8b3e1f91-9eb1-42cf-89f0-edc770116add",
+      "target": "c3bd2141-6463-4d5b-bb1d-f50d415e08fa",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "420f9564-1a32-4b34-a504-ae511f839674",
+      "target": "c0303144-e24c-4dd8-8fa1-796762d3d010",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "l_moscow",
+        "t_energy"
+      ]
+    },
+    {
+      "source": "420f9564-1a32-4b34-a504-ae511f839674",
+      "target": "621a8158-8aa3-488b-a87e-aad8a52c43ba",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "l_moscow",
+        "l_kyiv"
+      ]
+    },
+    {
+      "source": "44c56d71-b977-4357-94ae-12b747cc6d75",
+      "target": "3b65aedc-699d-436d-be91-007c3630207f",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "l_newyork"
+      ]
+    },
+    {
+      "source": "44c56d71-b977-4357-94ae-12b747cc6d75",
+      "target": "c3bd2141-6463-4d5b-bb1d-f50d415e08fa",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "l_newyork"
+      ]
+    },
+    {
+      "source": "3b65aedc-699d-436d-be91-007c3630207f",
+      "target": "7b45314f-a4bc-4a13-acfa-36fce1e9f013",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "3b65aedc-699d-436d-be91-007c3630207f",
+      "target": "ec8331a9-9bc8-4a28-8b4f-9f857b0476a2",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "3b65aedc-699d-436d-be91-007c3630207f",
+      "target": "rss_12964_1791682180429_4",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "3b65aedc-699d-436d-be91-007c3630207f",
+      "target": "c0303144-e24c-4dd8-8fa1-796762d3d010",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "3b65aedc-699d-436d-be91-007c3630207f",
+      "target": "c3bd2141-6463-4d5b-bb1d-f50d415e08fa",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "l_newyork",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "7b45314f-a4bc-4a13-acfa-36fce1e9f013",
+      "target": "ec8331a9-9bc8-4a28-8b4f-9f857b0476a2",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "7b45314f-a4bc-4a13-acfa-36fce1e9f013",
+      "target": "rss_12964_1791682180429_4",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "7b45314f-a4bc-4a13-acfa-36fce1e9f013",
+      "target": "c0303144-e24c-4dd8-8fa1-796762d3d010",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "7b45314f-a4bc-4a13-acfa-36fce1e9f013",
+      "target": "c3bd2141-6463-4d5b-bb1d-f50d415e08fa",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "20985241-48c6-473b-a93b-d54ee6afdd23",
+      "target": "f32e4524-bb3d-4b5e-87db-9bd2eb920314",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_capital_punishment"
+      ]
+    },
+    {
+      "source": "ec8331a9-9bc8-4a28-8b4f-9f857b0476a2",
+      "target": "rss_12964_1791682180429_4",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "ec8331a9-9bc8-4a28-8b4f-9f857b0476a2",
+      "target": "c0303144-e24c-4dd8-8fa1-796762d3d010",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "ec8331a9-9bc8-4a28-8b4f-9f857b0476a2",
+      "target": "c3bd2141-6463-4d5b-bb1d-f50d415e08fa",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "rss_12964_1791682180429_4",
+      "target": "c0303144-e24c-4dd8-8fa1-796762d3d010",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "rss_12964_1791682180429_4",
+      "target": "c3bd2141-6463-4d5b-bb1d-f50d415e08fa",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "rss_12964_1791682180429_4",
+      "target": "f5e7889d-b0db-48bc-ba77-a5a6b672a434",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "c0303144-e24c-4dd8-8fa1-796762d3d010",
+      "target": "280c1079-581d-459d-9aa5-d926c48c4165",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "c0303144-e24c-4dd8-8fa1-796762d3d010",
+      "target": "3b10f05a-e923-4c66-a834-b36c9eafe11f",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "c0303144-e24c-4dd8-8fa1-796762d3d010",
+      "target": "19bda03f-8afe-415a-aa93-968cf66d9bf5",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "c0303144-e24c-4dd8-8fa1-796762d3d010",
+      "target": "c3bd2141-6463-4d5b-bb1d-f50d415e08fa",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "c0303144-e24c-4dd8-8fa1-796762d3d010",
+      "target": "621a8158-8aa3-488b-a87e-aad8a52c43ba",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "l_moscow",
+        "p_putin"
+      ]
+    },
+    {
+      "source": "c0303144-e24c-4dd8-8fa1-796762d3d010",
+      "target": "cde8e11c-fe66-4efe-b639-c240d6077f79",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "c0303144-e24c-4dd8-8fa1-796762d3d010",
+      "target": "f5e7889d-b0db-48bc-ba77-a5a6b672a434",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "c0303144-e24c-4dd8-8fa1-796762d3d010",
+      "target": "57d72558-f8b0-4c51-8770-030591552ec4",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_putin",
+        "o_russiandiesel",
+        "p_trump",
+        "l_moscow",
+        "t_energy"
+      ]
+    },
+    {
+      "source": "280c1079-581d-459d-9aa5-d926c48c4165",
+      "target": "3b10f05a-e923-4c66-a834-b36c9eafe11f",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "o_whitehouse",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "280c1079-581d-459d-9aa5-d926c48c4165",
+      "target": "19bda03f-8afe-415a-aa93-968cf66d9bf5",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "280c1079-581d-459d-9aa5-d926c48c4165",
+      "target": "cde8e11c-fe66-4efe-b639-c240d6077f79",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "o_whitehouse",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "49a83ec2-8540-4b06-85e1-d65daad9d04c",
+      "target": "326a7494-5f2a-4334-ae08-8dcf346f3786",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "l_tehran",
+        "o_pentagon"
+      ]
+    },
+    {
+      "source": "decf0a3b-9bfe-4a82-9724-14e94cd7a847",
+      "target": "f32e4524-bb3d-4b5e-87db-9bd2eb920314",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "l_newdelhi"
+      ]
+    },
+    {
+      "source": "3b10f05a-e923-4c66-a834-b36c9eafe11f",
+      "target": "19bda03f-8afe-415a-aa93-968cf66d9bf5",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "3b10f05a-e923-4c66-a834-b36c9eafe11f",
+      "target": "cde8e11c-fe66-4efe-b639-c240d6077f79",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "o_whitehouse",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "3b10f05a-e923-4c66-a834-b36c9eafe11f",
+      "target": "db2c6dc6-749f-4a12-8aa8-d08580b5bae7",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "19bda03f-8afe-415a-aa93-968cf66d9bf5",
+      "target": "cde8e11c-fe66-4efe-b639-c240d6077f79",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "19bda03f-8afe-415a-aa93-968cf66d9bf5",
+      "target": "db2c6dc6-749f-4a12-8aa8-d08580b5bae7",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "19bda03f-8afe-415a-aa93-968cf66d9bf5",
+      "target": "9887133f-1cda-450e-9df0-c5c23c40c6c8",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "c3bd2141-6463-4d5b-bb1d-f50d415e08fa",
+      "target": "f5e7889d-b0db-48bc-ba77-a5a6b672a434",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "c3bd2141-6463-4d5b-bb1d-f50d415e08fa",
+      "target": "4efe7b01-6768-4ec3-907d-bdc6bd5d8334",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "l_newyork"
+      ]
+    },
+    {
+      "source": "326a7494-5f2a-4334-ae08-8dcf346f3786",
+      "target": "42c439a2-89fe-4bb5-8ea5-68049e416577",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "t_capital_punishment",
+        "o_pentagon"
+      ]
+    },
+    {
+      "source": "621a8158-8aa3-488b-a87e-aad8a52c43ba",
+      "target": "57d72558-f8b0-4c51-8770-030591552ec4",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "l_moscow",
+        "p_putin",
+        "l_kyiv"
+      ]
+    },
+    {
+      "source": "621a8158-8aa3-488b-a87e-aad8a52c43ba",
+      "target": "db2c6dc6-749f-4a12-8aa8-d08580b5bae7",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "l_moscow",
+        "p_putin",
+        "l_kyiv"
+      ]
+    },
+    {
+      "source": "cde8e11c-fe66-4efe-b639-c240d6077f79",
+      "target": "db2c6dc6-749f-4a12-8aa8-d08580b5bae7",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "cde8e11c-fe66-4efe-b639-c240d6077f79",
+      "target": "9887133f-1cda-450e-9df0-c5c23c40c6c8",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "o_whitehouse",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "cde8e11c-fe66-4efe-b639-c240d6077f79",
+      "target": "1f252cc3-ba3e-4d2d-bf9f-85d6d19cc459",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "f5e7889d-b0db-48bc-ba77-a5a6b672a434",
+      "target": "1f252cc3-ba3e-4d2d-bf9f-85d6d19cc459",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "f5e7889d-b0db-48bc-ba77-a5a6b672a434",
+      "target": "049de3ee-a843-41d6-b2cc-3ad1d70074cd",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "f5e7889d-b0db-48bc-ba77-a5a6b672a434",
+      "target": "f07caeab-cb18-490b-b6cf-b6bc5c88f9ee",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "t_inflation",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "57d72558-f8b0-4c51-8770-030591552ec4",
+      "target": "db2c6dc6-749f-4a12-8aa8-d08580b5bae7",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_putin",
+        "l_kyiv",
+        "p_zelenskyy",
+        "o_russiandiesel",
+        "p_trump",
+        "l_moscow",
+        "t_energy"
+      ]
+    },
+    {
+      "source": "57d72558-f8b0-4c51-8770-030591552ec4",
+      "target": "049de3ee-a843-41d6-b2cc-3ad1d70074cd",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_energy"
+      ]
+    },
+    {
+      "source": "1bab08b5-450e-42f8-800d-d8b89848074a",
+      "target": "1f252cc3-ba3e-4d2d-bf9f-85d6d19cc459",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "o_senate",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "1bab08b5-450e-42f8-800d-d8b89848074a",
+      "target": "049de3ee-a843-41d6-b2cc-3ad1d70074cd",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "o_senate",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "1bab08b5-450e-42f8-800d-d8b89848074a",
+      "target": "f07caeab-cb18-490b-b6cf-b6bc5c88f9ee",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "o_senate",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "db2c6dc6-749f-4a12-8aa8-d08580b5bae7",
+      "target": "9887133f-1cda-450e-9df0-c5c23c40c6c8",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "db2c6dc6-749f-4a12-8aa8-d08580b5bae7",
+      "target": "1f252cc3-ba3e-4d2d-bf9f-85d6d19cc459",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "db2c6dc6-749f-4a12-8aa8-d08580b5bae7",
+      "target": "049de3ee-a843-41d6-b2cc-3ad1d70074cd",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_energy"
+      ]
+    },
+    {
+      "source": "db2c6dc6-749f-4a12-8aa8-d08580b5bae7",
+      "target": "7583f6c8-7320-469b-baf6-05b04e7354df",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "l_kyiv",
+        "p_zelenskyy",
+        "p_trump",
+        "l_moscow",
+        "t_energy"
+      ]
+    },
+    {
+      "source": "db2c6dc6-749f-4a12-8aa8-d08580b5bae7",
+      "target": "3bc3ac52-feee-4fa7-ab09-d976e8751c6f",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "l_kyiv",
+        "p_zelenskyy",
+        "o_russiandiesel",
+        "l_moscow",
+        "t_energy"
+      ]
+    },
+    {
+      "source": "db2c6dc6-749f-4a12-8aa8-d08580b5bae7",
+      "target": "rss_10996_1791800764731_3",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "9887133f-1cda-450e-9df0-c5c23c40c6c8",
+      "target": "1f252cc3-ba3e-4d2d-bf9f-85d6d19cc459",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "9887133f-1cda-450e-9df0-c5c23c40c6c8",
+      "target": "03210dbf-0ba3-42bb-aa22-d1d6d6de81f7",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "o_whitehouse",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "9887133f-1cda-450e-9df0-c5c23c40c6c8",
+      "target": "rss_10996_1791800764731_3",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "42c439a2-89fe-4bb5-8ea5-68049e416577",
+      "target": "2a9ec8b4-3cbb-490f-b3ad-ce0303ec6a5b",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "t_capital_punishment",
+        "o_pentagon"
+      ]
+    },
+    {
+      "source": "1f252cc3-ba3e-4d2d-bf9f-85d6d19cc459",
+      "target": "049de3ee-a843-41d6-b2cc-3ad1d70074cd",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "o_senate",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "1f252cc3-ba3e-4d2d-bf9f-85d6d19cc459",
+      "target": "f07caeab-cb18-490b-b6cf-b6bc5c88f9ee",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "o_senate",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "1f252cc3-ba3e-4d2d-bf9f-85d6d19cc459",
+      "target": "ac646073-3677-4af9-9d6f-f9fb281df847",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "o_senate"
+      ]
+    },
+    {
+      "source": "1f252cc3-ba3e-4d2d-bf9f-85d6d19cc459",
+      "target": "rss_10996_1791800764731_3",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "t_midterms",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "1f252cc3-ba3e-4d2d-bf9f-85d6d19cc459",
+      "target": "286022a6-c579-4df8-b264-a142d6888595",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "o_senate",
+        "t_midterms",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "1f252cc3-ba3e-4d2d-bf9f-85d6d19cc459",
+      "target": "21257e36-c790-48ba-8139-8db05406bda0",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "1f252cc3-ba3e-4d2d-bf9f-85d6d19cc459",
+      "target": "30a5d21d-a3f3-4577-95b9-745c5b717162",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "1f252cc3-ba3e-4d2d-bf9f-85d6d19cc459",
+      "target": "55375b5d-958a-4ef7-8fe5-c93e40a1156d",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "03210dbf-0ba3-42bb-aa22-d1d6d6de81f7",
+      "target": "286022a6-c579-4df8-b264-a142d6888595",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "o_whitehouse",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "03210dbf-0ba3-42bb-aa22-d1d6d6de81f7",
+      "target": "21257e36-c790-48ba-8139-8db05406bda0",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "o_whitehouse",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "049de3ee-a843-41d6-b2cc-3ad1d70074cd",
+      "target": "f07caeab-cb18-490b-b6cf-b6bc5c88f9ee",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "o_senate",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "049de3ee-a843-41d6-b2cc-3ad1d70074cd",
+      "target": "ac646073-3677-4af9-9d6f-f9fb281df847",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "o_senate"
+      ]
+    },
+    {
+      "source": "049de3ee-a843-41d6-b2cc-3ad1d70074cd",
+      "target": "7583f6c8-7320-469b-baf6-05b04e7354df",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_energy"
+      ]
+    },
+    {
+      "source": "049de3ee-a843-41d6-b2cc-3ad1d70074cd",
+      "target": "rss_10996_1791800764731_3",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "049de3ee-a843-41d6-b2cc-3ad1d70074cd",
+      "target": "286022a6-c579-4df8-b264-a142d6888595",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "o_senate",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "049de3ee-a843-41d6-b2cc-3ad1d70074cd",
+      "target": "30a5d21d-a3f3-4577-95b9-745c5b717162",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "049de3ee-a843-41d6-b2cc-3ad1d70074cd",
+      "target": "55375b5d-958a-4ef7-8fe5-c93e40a1156d",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "049de3ee-a843-41d6-b2cc-3ad1d70074cd",
+      "target": "489d2142-00b9-4795-b364-f87ad9164054",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "o_senate",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "049de3ee-a843-41d6-b2cc-3ad1d70074cd",
+      "target": "0734e287-ef5f-4e44-b868-29ed92c8b0a2",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_energy"
+      ]
+    },
+    {
+      "source": "049de3ee-a843-41d6-b2cc-3ad1d70074cd",
+      "target": "a79e9e46-fef8-4a41-814f-00f2a03d2c88",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "f07caeab-cb18-490b-b6cf-b6bc5c88f9ee",
+      "target": "ac646073-3677-4af9-9d6f-f9fb281df847",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "o_senate",
+        "l_tehran"
+      ]
+    },
+    {
+      "source": "f07caeab-cb18-490b-b6cf-b6bc5c88f9ee",
+      "target": "rss_10996_1791800764731_3",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "t_midterms",
+        "l_tehran"
+      ]
+    },
+    {
+      "source": "f07caeab-cb18-490b-b6cf-b6bc5c88f9ee",
+      "target": "286022a6-c579-4df8-b264-a142d6888595",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "o_senate",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "f07caeab-cb18-490b-b6cf-b6bc5c88f9ee",
+      "target": "30a5d21d-a3f3-4577-95b9-745c5b717162",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "f07caeab-cb18-490b-b6cf-b6bc5c88f9ee",
+      "target": "55375b5d-958a-4ef7-8fe5-c93e40a1156d",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "f07caeab-cb18-490b-b6cf-b6bc5c88f9ee",
+      "target": "489d2142-00b9-4795-b364-f87ad9164054",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "o_senate",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "f07caeab-cb18-490b-b6cf-b6bc5c88f9ee",
+      "target": "a79e9e46-fef8-4a41-814f-00f2a03d2c88",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "f07caeab-cb18-490b-b6cf-b6bc5c88f9ee",
+      "target": "cb55d02c-364c-4892-9486-594cedba6ecf",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "o_senate",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "ac646073-3677-4af9-9d6f-f9fb281df847",
+      "target": "rss_10996_1791800764731_3",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "l_tehran"
+      ]
+    },
+    {
+      "source": "ac646073-3677-4af9-9d6f-f9fb281df847",
+      "target": "cb55d02c-364c-4892-9486-594cedba6ecf",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "o_senate"
+      ]
+    },
+    {
+      "source": "7583f6c8-7320-469b-baf6-05b04e7354df",
+      "target": "3bc3ac52-feee-4fa7-ab09-d976e8751c6f",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "l_moscow",
+        "p_zelenskyy",
+        "l_kyiv",
+        "t_energy"
+      ]
+    },
+    {
+      "source": "7583f6c8-7320-469b-baf6-05b04e7354df",
+      "target": "30a5d21d-a3f3-4577-95b9-745c5b717162",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "l_moscow",
+        "p_zelenskyy"
+      ]
+    },
+    {
+      "source": "7583f6c8-7320-469b-baf6-05b04e7354df",
+      "target": "0734e287-ef5f-4e44-b868-29ed92c8b0a2",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_energy"
+      ]
+    },
+    {
+      "source": "3bc3ac52-feee-4fa7-ab09-d976e8751c6f",
+      "target": "30a5d21d-a3f3-4577-95b9-745c5b717162",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "l_moscow",
+        "p_zelenskyy"
+      ]
+    },
+    {
+      "source": "3bc3ac52-feee-4fa7-ab09-d976e8751c6f",
+      "target": "0734e287-ef5f-4e44-b868-29ed92c8b0a2",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "o_russiandiesel",
+        "t_energy"
+      ]
+    },
+    {
+      "source": "3bc3ac52-feee-4fa7-ab09-d976e8751c6f",
+      "target": "b44cebfe-b3dd-4971-a605-14db38b2c096",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "o_russiandiesel",
+        "t_energy"
+      ]
+    },
+    {
+      "source": "rss_10996_1791800764731_3",
+      "target": "286022a6-c579-4df8-b264-a142d6888595",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "t_midterms",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "rss_10996_1791800764731_3",
+      "target": "21257e36-c790-48ba-8139-8db05406bda0",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "rss_10996_1791800764731_3",
+      "target": "30a5d21d-a3f3-4577-95b9-745c5b717162",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "rss_10996_1791800764731_3",
+      "target": "55375b5d-958a-4ef7-8fe5-c93e40a1156d",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "rss_10996_1791800764731_3",
+      "target": "a79e9e46-fef8-4a41-814f-00f2a03d2c88",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "rss_10996_1791800764731_3",
+      "target": "cb55d02c-364c-4892-9486-594cedba6ecf",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "rss_10996_1791800764731_3",
+      "target": "fc6261a7-2fd4-4039-8abd-c6dd938dad48",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "t_midterms",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "rss_10996_1791800764731_3",
+      "target": "26b7598e-108d-41da-a47d-d8b27a5b4423",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "8a1174ab-6dbf-46ff-b45e-f53f8530177f",
+      "target": "55375b5d-958a-4ef7-8fe5-c93e40a1156d",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "l_nashville"
+      ]
+    },
+    {
+      "source": "8a1174ab-6dbf-46ff-b45e-f53f8530177f",
+      "target": "a79e9e46-fef8-4a41-814f-00f2a03d2c88",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "l_nashville"
+      ]
+    },
+    {
+      "source": "286022a6-c579-4df8-b264-a142d6888595",
+      "target": "21257e36-c790-48ba-8139-8db05406bda0",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "o_whitehouse",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "286022a6-c579-4df8-b264-a142d6888595",
+      "target": "489d2142-00b9-4795-b364-f87ad9164054",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "o_senate",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "286022a6-c579-4df8-b264-a142d6888595",
+      "target": "cb55d02c-364c-4892-9486-594cedba6ecf",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "o_senate",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "286022a6-c579-4df8-b264-a142d6888595",
+      "target": "fc6261a7-2fd4-4039-8abd-c6dd938dad48",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "o_whitehouse",
+        "t_midterms",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "286022a6-c579-4df8-b264-a142d6888595",
+      "target": "26b7598e-108d-41da-a47d-d8b27a5b4423",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "o_whitehouse",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "286022a6-c579-4df8-b264-a142d6888595",
+      "target": "eda14478-97f9-4bb9-8058-b823a91598eb",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_talarico",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "21257e36-c790-48ba-8139-8db05406bda0",
+      "target": "fc6261a7-2fd4-4039-8abd-c6dd938dad48",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "o_whitehouse",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "21257e36-c790-48ba-8139-8db05406bda0",
+      "target": "26b7598e-108d-41da-a47d-d8b27a5b4423",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "o_whitehouse",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "30a5d21d-a3f3-4577-95b9-745c5b717162",
+      "target": "55375b5d-958a-4ef7-8fe5-c93e40a1156d",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "30a5d21d-a3f3-4577-95b9-745c5b717162",
+      "target": "a79e9e46-fef8-4a41-814f-00f2a03d2c88",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "30a5d21d-a3f3-4577-95b9-745c5b717162",
+      "target": "cb55d02c-364c-4892-9486-594cedba6ecf",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "30a5d21d-a3f3-4577-95b9-745c5b717162",
+      "target": "6bd4e2bf-9d21-445e-a454-4c8966e0ab72",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "55375b5d-958a-4ef7-8fe5-c93e40a1156d",
+      "target": "a79e9e46-fef8-4a41-814f-00f2a03d2c88",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "t_midterms",
+        "l_nashville"
+      ]
+    },
+    {
+      "source": "55375b5d-958a-4ef7-8fe5-c93e40a1156d",
+      "target": "cb55d02c-364c-4892-9486-594cedba6ecf",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "55375b5d-958a-4ef7-8fe5-c93e40a1156d",
+      "target": "6bd4e2bf-9d21-445e-a454-4c8966e0ab72",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "489d2142-00b9-4795-b364-f87ad9164054",
+      "target": "cb55d02c-364c-4892-9486-594cedba6ecf",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "o_senate",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "0734e287-ef5f-4e44-b868-29ed92c8b0a2",
+      "target": "b44cebfe-b3dd-4971-a605-14db38b2c096",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "o_russiandiesel",
+        "t_energy"
+      ]
+    },
+    {
+      "source": "a79e9e46-fef8-4a41-814f-00f2a03d2c88",
+      "target": "cb55d02c-364c-4892-9486-594cedba6ecf",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "a79e9e46-fef8-4a41-814f-00f2a03d2c88",
+      "target": "6bd4e2bf-9d21-445e-a454-4c8966e0ab72",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "cb55d02c-364c-4892-9486-594cedba6ecf",
+      "target": "6bd4e2bf-9d21-445e-a454-4c8966e0ab72",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "t_midterms"
+      ]
+    },
+    {
+      "source": "fc6261a7-2fd4-4039-8abd-c6dd938dad48",
+      "target": "26b7598e-108d-41da-a47d-d8b27a5b4423",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "o_whitehouse",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "fc6261a7-2fd4-4039-8abd-c6dd938dad48",
+      "target": "79b569c5-6c4c-4975-9f6e-8f6dfd0860f2",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "o_whitehouse",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "b44cebfe-b3dd-4971-a605-14db38b2c096",
+      "target": "43e6fcc0-7351-4b31-b0bc-5be57ab27788",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "o_russiandiesel",
+        "t_energy"
+      ]
+    },
+    {
+      "source": "26b7598e-108d-41da-a47d-d8b27a5b4423",
+      "target": "f0cf0b71-c0ec-4515-a5c9-87888b55d9ed",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "26b7598e-108d-41da-a47d-d8b27a5b4423",
+      "target": "79b569c5-6c4c-4975-9f6e-8f6dfd0860f2",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "o_whitehouse",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "26b7598e-108d-41da-a47d-d8b27a5b4423",
+      "target": "ca77b24b-882d-4d87-be10-26c3e5fa2299",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "f0cf0b71-c0ec-4515-a5c9-87888b55d9ed",
+      "target": "79b569c5-6c4c-4975-9f6e-8f6dfd0860f2",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "f0cf0b71-c0ec-4515-a5c9-87888b55d9ed",
+      "target": "ca77b24b-882d-4d87-be10-26c3e5fa2299",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "79b569c5-6c4c-4975-9f6e-8f6dfd0860f2",
+      "target": "ca77b24b-882d-4d87-be10-26c3e5fa2299",
+      "type": "semantic_similarity",
+      "weight": 0.8,
+      "common_entities": [
+        "p_trump",
+        "l_washington"
+      ]
+    },
+    {
+      "source": "43e6fcc0-7351-4b31-b0bc-5be57ab27788",
+      "target": "014e749f-3168-4f95-b828-21195431d4a4",
+      "type": "semantic_similarity",
+      "weight": 1.0,
+      "common_entities": [
+        "p_trump",
+        "l_moscow",
+        "t_energy"
+      ]
+    }
+  ]
+};

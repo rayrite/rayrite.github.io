@@ -1,0 +1,25 @@
+flowchart LR
+    subgraph Flow1["🚀 Onboarding to Ballot"]
+        direction TB
+        F1_A[App Launch] --> F1_B[Select Precinct / ZIP]
+        F1_B --> F1_C[View Certified Senate Slate]
+        F1_C --> F1_D[Record Voter Choices]
+    end
+
+    subgraph Flow2["⚖️ Decision Comparison"]
+        direction TB
+        F2_A[Open Decision Matrix] --> F2_B[Select Issue: EV Mandates]
+        F2_B --> F2_C[Listen to Debate Soundbite]
+        F2_C --> F2_D[Review Sourced Fact Check]
+        F2_D --> F2_E[Bookmark Preference]
+    end
+
+    subgraph Flow3["🗳️ Voting Action Plan"]
+        direction TB
+        F3_A[Complete Ballot Selection] --> F3_B[Verify Polling Place & Hours]
+        F3_B --> F3_C[Review Michigan Photo ID Rules]
+        F3_C --> F3_D[Export Encrypted Pass / Wallet]
+    end
+
+    Flow1 -.-> Flow2
+    Flow2 -.-> Flow3

@@ -1,0 +1,31 @@
+graph TD
+    subgraph Root["📱 Application Root Container"]
+        NAV[Universal Top & Bottom HUD]
+    end
+
+    subgraph Level1["Level 1: Core Layout Archetypes"]
+        S1[Civic Reel Feed]
+        S2[Decision Matrix]
+        S3[Ballot Navigator]
+        S4[Civic Radar & Districts]
+    end
+
+    subgraph Level2["Level 2: Modals & Detail Drawers"]
+        M1[Candidate Dossier Drawer]
+        M2[Debate Audio Player Modal]
+        M3[Voter Action & Rules Modal]
+        M4[Offline Booth Pass Modal]
+        M5[District Sentiment Detail Sheet]
+    end
+
+    NAV --> S1
+    NAV --> S2
+    NAV --> S3
+    NAV --> S4
+
+    S1 --- M1
+    S1 --- M2
+    S2 --- M1
+    S3 --- M3
+    S3 --- M4
+    S4 --- M5

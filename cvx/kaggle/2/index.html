@@ -260,7 +260,7 @@
 <main id="indexMain">
   <div>
     <div class="kicker">deliverables/2026-09-30-2 · companion decks to doc 03 — the real-data BCF case study</div>
-    <h1>httpx<span class="u">_</span>3672 <span class="u">· five decks</span></h1>
+    <h1>httpx<span class="u">_</span>3672 <span class="u">· five decks + two guides</span></h1>
     <p class="sub">The dataset's only httpx task (1 of 129), seen five ways: <b>the matchup</b>, <b>the raw data</b>, <b>the run itself</b>, <b>the decisions behind it</b>, and <b>the multi-source forensic data harvest</b>. Every deck is a standalone HTML file — now browsable seamlessly right in the viewport like a Single Page Application.</p>
   </div>
 
@@ -337,28 +337,63 @@
     </a>
 
     <a class="deck" href="03-bcf-simulation-httpx-3672.slides.v5.html" data-key="5" data-deck="v5">
-      <span class="ver">v5<small>side-by-side</small></span>
+      <span class="ver">v5<small>the replay</small></span>
       <span>
-        <h2>Side-by-side simulation: Naive agent vs BCF proposal</h2>
-        <p class="desc">A turn-by-turn simulation matchup on httpx_3672: Naive agent (Config 1, 43 calls, Trap 1 panic revert, repeat loop, fail) vs. BCF proposal (Config 3, 24 calls, breadcrumb journal, ratchet, exit 0 pass). Visually inspect where each improvement occurs across all sequence steps.</p>
+        <h2>Naive vs BCF vs Tier-2, replayed call by call</h2>
+        <p class="desc">Every tool call executed against the real httpx_3672 snapshot through an emulator of the nine harness tools, and every patch graded by an emulated Container B: naive (43 calls, 40 charged, reverts a winning patch at N13, resolved = False), BCF (30 calls, 28 charged, resolved = True) and the proposed Tier-2 (22 calls, 20 charged, 11/11 bullets, resolved = True). Each of the 8 steps shows real outputs, a per-call shadow verdict and bullet probe, plus statistics, tiers, hypotheses H1–H15, data wishlist D1–D19, 14 v4 errata and probes X1–X10.</p>
         <span class="chips">
-          <span class="chip bad"><span class="g">✗</span> [SIM] Naive 43 calls (fail)</span>
-          <span class="chip v"><span class="g">✓</span> [SIM] BCF 24 calls (pass)</span>
-          <span class="chip sim"><span class="g">⇄</span> 8 sequence steps compared</span>
-          <span class="chip est"><span class="g">★</span> 8 visual improvement levers</span>
+          <span class="chip v"><span class="g">▶</span> [REPLAY] real tool outputs &amp; verdicts</span>
+          <span class="chip sim"><span class="g">≈</span> [SIM] decisions scripted</span>
+          <span class="chip bad"><span class="g">✗</span> naive 43 / 40 · fail</span>
+          <span class="chip v"><span class="g">✓</span> BCF 30 / 28 · Tier-2 22 / 20 · pass</span>
+          <span class="chip r"><span class="g">R</span> [R] research-grounded</span>
         </span>
       </span>
       <span class="meta">
         <span class="key">press 5</span>
-        <span class="count"><b>15</b> slides</span>
+        <span class="count"><b>20</b> sections</span>
+      </span>
+    </a>
+
+    <a class="deck" href="03-bcf-simulation-httpx-3672.v5-beginner-guide.html" data-key="6" data-deck="guide">
+      <span class="ver">v5 guide<small>for beginners</small></span>
+      <span>
+        <h2>A beginner's guide to the v5 replay deck</h2>
+        <p class="desc">A gentle walkthrough of the replayed v5 deck, section by section: how to read a call card (shadow verdict, bullet probe, gain pill), every tool and BCF function explained one by one, all eight steps for naive (43 calls, 40 charged), BCF (30, 28) and Tier-2 (22, 20), and plain-language notes on the statistics, tiers, H1–H15, D1–D19 and the v4 errata.</p>
+        <span class="chips">
+          <span class="chip v"><span class="g">✓</span> follows the [REPLAY] outputs</span>
+          <span class="chip sim"><span class="g">≈</span> decisions still [SIM]</span>
+          <span class="chip est"><span class="g">★</span> deep links to step and call cards</span>
+        </span>
+      </span>
+      <span class="meta">
+        <span class="key">press 6</span>
+        <span class="count"><b>10</b> sections</span>
+      </span>
+    </a>
+
+    <a class="deck" href="03-bcf-spec-helpers-deep-dive.html" data-key="7" data-deck="helpers">
+      <span class="ver">deep dive<small>spec helpers</small></span>
+      <span>
+        <h2>classify_issue &amp; write_spec: how they would really work</h2>
+        <p class="desc">A concrete design for BCF's two proposed spec helpers (cards C1/C2, T1/T2), shaped by the real harness constraints: one stdlib script installed into .git/bcf and driven by run_command heredocs, a SequentialAgent planning step, and the plan pinned into the solver's instruction. Includes a working prototype run on the httpx_3672 snapshot (it predicts the 5 visible tests the rename turns red), a sweep of all 129 training tasks, and an estimate of how likely the deck's scenario is in real runs.</p>
+        <span class="chips">
+          <span class="chip v"><span class="g">▶</span> [PROTO] prototype run on the real snapshot</span>
+          <span class="chip v"><span class="g">✓</span> [MEASURED] 129-task corpus sweep</span>
+          <span class="chip est"><span class="g">±</span> [EST] likelihood of the scenario</span>
+        </span>
+      </span>
+      <span class="meta">
+        <span class="key">press 7</span>
+        <span class="count"><b>13</b> sections</span>
       </span>
     </a>
   </nav>
 </main>
 
 <footer>
-  <span><b>Companions</b> <a href="03-bcf-simulation-httpx-3672.md" class="spa-link">03-bcf-simulation-httpx-3672.md</a> (prose walkthrough) · <a href="00-README.md" class="spa-link">00-README.md</a> · <a href="../deep-research-handoff-multisource-harvest-bcf-brain.md" class="spa-link">deep-research-handoff-multisource-harvest-bcf-brain.md</a> · <b>v4 package</b> <a href="../2026-10-06/00-README.md" class="spa-link">00-README</a> · <a href="../2026-10-06/01-research-evidence.md" class="spa-link">01 research evidence</a> · <a href="../2026-10-06/02-hypotheses-and-test-plans.md" class="spa-link">02 hypotheses H1–H8</a> · <a href="../2026-10-06/03-data-wishlist.md" class="spa-link">03 data wishlist D1–D12</a></span>
-  <span>↑↓ select · <b>1–5</b> open deck · <b>Esc</b> back to index · updated 2026-10-13</span>
+  <span><b>Companions</b> <a href="03-bcf-simulation-httpx-3672.md" class="spa-link">03-bcf-simulation-httpx-3672.md</a> (prose walkthrough) · <a href="../../../2026-10-27_BCF_v5_Beginner_Walkthrough/01_BCF_v5_Simulation_Beginner_Walkthrough.md" class="spa-link">v5 beginner guide (markdown)</a> ·<a href="00-README.md" class="spa-link">00-README.md</a> · <a href="../deep-research-handoff-multisource-harvest-bcf-brain.md" class="spa-link">deep-research-handoff-multisource-harvest-bcf-brain.md</a> · <b>v4 package</b> <a href="../2026-10-06/00-README.md" class="spa-link">00-README</a> · <a href="../2026-10-06/01-research-evidence.md" class="spa-link">01 research evidence</a> · <a href="../2026-10-06/02-hypotheses-and-test-plans.md" class="spa-link">02 hypotheses H1–H8</a> · <a href="../2026-10-06/03-data-wishlist.md" class="spa-link">03 data wishlist D1–D12</a></span>
+  <span>↑↓ select · <b>1–7</b> open deck · <b>Esc</b> back to index · updated 2026-10-27</span>
 </footer>
 
 <!-- ================= SPA IN-VIEWPORT OVERLAY CONTAINER ================= -->
@@ -380,7 +415,9 @@
       <button class="spa-tab" data-deck="v2" onclick="openDeck('v2')">2 · v2 raw data</button>
       <button class="spa-tab" data-deck="v3" onclick="openDeck('v3')">3 · v3 the run</button>
       <button class="spa-tab" data-deck="v4" onclick="openDeck('v4')">4 · v4 decisions</button>
-      <button class="spa-tab" data-deck="v5" onclick="openDeck('v5')">5 · v5 side-by-side</button>
+      <button class="spa-tab" data-deck="v5" onclick="openDeck('v5')">5 · v5 the replay</button>
+      <button class="spa-tab" data-deck="guide" onclick="openDeck('guide')">6 · v5 guide</button>
+      <button class="spa-tab" data-deck="helpers" onclick="openDeck('helpers')">7 · spec helpers</button>
     </div>
 
     <div class="spa-actions">
@@ -418,7 +455,9 @@ var lines = [
   {cls:"out",txt:"03-bcf-simulation-httpx-3672.slides.v2.html   # v2 — the raw data"},
   {cls:"out",txt:"03-bcf-simulation-httpx-3672.slides.v3.html   # v3 — the run, step by step"},
   {cls:"out",txt:"03-bcf-simulation-httpx-3672.slides.v4.html   # v4 — the decisions + next tier"},
-  {cls:"hl", txt:"03-bcf-simulation-httpx-3672.slides.v5.html   # v5 — naive vs BCF side-by-side simulation"}
+  {cls:"out",txt:"03-bcf-simulation-httpx-3672.slides.v5.html   # v5 — naive vs BCF vs Tier-2, replayed"},
+  {cls:"out",txt:"03-bcf-simulation-httpx-3672.v5-beginner-guide.html   # v5 guide — beginner walkthrough"},
+  {cls:"hl", txt:"03-bcf-spec-helpers-deep-dive.html   # deep dive — classify_issue & write_spec"}
 ];
 
 if(reduced){
@@ -467,8 +506,18 @@ var deckMap = {
   },
   "v5": {
     file: "03-bcf-simulation-httpx-3672.slides.v5.html",
-    title: "v5 · Naive vs BCF Side-by-Side Simulation (the matchup)",
+    title: "v5 · Naive vs BCF vs Tier-2, replayed call by call (the replay)",
     badge: "v5"
+  },
+  "guide": {
+    file: "03-bcf-simulation-httpx-3672.v5-beginner-guide.html",
+    title: "v5 guide · A beginner's walkthrough of the replay deck",
+    badge: "guide"
+  },
+  "helpers": {
+    file: "03-bcf-spec-helpers-deep-dive.html",
+    title: "Deep dive · classify_issue & write_spec, and how likely the scenario is",
+    badge: "helpers"
   }
 };
 
@@ -621,8 +670,8 @@ document.addEventListener("keydown", function(e){
       e.preventDefault();
       closeSpa();
     }
-  } else if(e.key >= "1" && e.key <= "5"){
-    var targetKey = "v" + e.key;
+  } else if(e.key >= "1" && e.key <= "7"){
+    var targetKey = e.key === "6" ? "guide" : e.key === "7" ? "helpers" : "v" + e.key;
     if(deckMap[targetKey]){
       e.preventDefault();
       openDeck(targetKey);

@@ -1,0 +1,909 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Deep dive: how classify_issue and write_spec would really work</title>
+<style>
+:root{
+  --page:#0e1116; --surface:#151a21; --raised:#1b222c; --sunken:#11151c;
+  --hair:rgba(255,255,255,.08); --hair-2:rgba(255,255,255,.14);
+  --ink:#eef1f5; --ink-2:#aab4c0; --ink-3:#7a8694;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181;
+  --sans:system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"Cascadia Code","JetBrains Mono",ui-monospace,"Consolas",monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:20px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--page);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.65}
+a{color:#7fb2f0;text-underline-offset:2px}
+a:hover{color:#a9cbf5}
+.layout{display:grid;grid-template-columns:260px minmax(0,1fr);gap:40px;max-width:1240px;margin:0 auto;padding:40px clamp(18px,4vw,48px) 80px}
+nav.toc{position:sticky;top:24px;align-self:start;max-height:calc(100vh - 48px);overflow:auto;font-size:13.5px;
+  border:1px solid var(--hair);border-radius:10px;background:var(--surface);padding:14px 14px 10px}
+nav.toc .tt{font:600 11.5px/1.3 var(--mono);color:var(--ink-3);text-transform:uppercase;letter-spacing:.06em;margin:0 0 8px}
+nav.toc ol{margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:2px}
+nav.toc a{display:block;padding:4px 8px;border-radius:6px;color:var(--ink-2);text-decoration:none}
+nav.toc a:hover,nav.toc a[aria-current="true"]{background:var(--raised);color:var(--ink)}
+nav.toc .deck-link{display:block;margin-top:10px;padding:8px;border-top:1px solid var(--hair);font-size:12.5px}
+header.hero{border-bottom:1px solid var(--hair-2);padding-bottom:18px;margin-bottom:8px}
+.kicker{font:600 13px/1.4 var(--sans);color:var(--ink-3)}
+h1{font:700 clamp(26px,3.6vw,38px)/1.15 var(--mono);letter-spacing:-.02em;margin:6px 0 10px}
+.sub{color:var(--ink-2);margin:0;max-width:75ch}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+h2{font:700 22px/1.3 var(--sans);margin:44px 0 12px;padding-top:6px;border-top:1px solid var(--hair)}
+h3{font:650 17.5px/1.35 var(--sans);margin:28px 0 8px;color:var(--ink)}
+h2 .anchor,h3 .anchor{color:var(--ink-3);text-decoration:none;margin-right:8px;opacity:0;transition:opacity .15s}
+h2:hover .anchor,h3:hover .anchor{opacity:1}
+p,li{color:#d9dee5}
+article{min-width:0;max-width:880px}
+strong{color:var(--ink)}
+code{font:400 .88em/1.4 var(--mono);background:var(--sunken);border:1px solid var(--hair);border-radius:4px;padding:1px 5px;color:#e6c07b}
+pre{background:var(--sunken);border:1px solid var(--hair);border-radius:8px;padding:14px 16px;overflow-x:auto;font:400 13px/1.6 var(--mono)}
+pre code{background:none;border:0;padding:0;color:var(--ink-2)}
+blockquote{margin:12px 0;padding:10px 16px;border-left:3px solid var(--s1);background:var(--surface);border-radius:0 8px 8px 0}
+blockquote p{margin:4px 0;font-family:var(--mono);font-size:14px}
+.tw{overflow-x:auto;margin:12px 0 18px;border:1px solid var(--hair);border-radius:8px}
+table{border-collapse:collapse;width:100%;font-size:14.5px}
+th,td{text-align:left;vertical-align:top;padding:8px 12px;border-bottom:1px solid var(--hair)}
+th{background:var(--raised);font-weight:600;color:var(--ink);white-space:nowrap}
+tr:last-child td{border-bottom:0}
+tbody tr:hover td{background:rgba(255,255,255,.02)}
+.tag{display:inline-block;font:700 11.5px/1 var(--mono);padding:3px 6px;border-radius:4px;border:1px solid;vertical-align:1px}
+.tag.v{color:#4cc24c;border-color:rgba(12,163,12,.45);background:rgba(12,163,12,.12)}
+.tag.rp{color:#7fb2f0;border-color:rgba(57,135,229,.45);background:rgba(57,135,229,.12)}
+.tag.sim{color:#f0a37e;border-color:rgba(217,89,38,.45);background:rgba(217,89,38,.12)}
+.tag.est{color:#e9c46a;border-color:rgba(201,133,0,.45);background:rgba(201,133,0,.12)}
+.tag.r{color:#e58fb9;border-color:rgba(213,81,129,.45);background:rgba(213,81,129,.12)}
+footer{margin-top:56px;padding-top:14px;border-top:1px solid var(--hair);color:var(--ink-3);font-size:13px}
+@media (max-width:900px){.layout{grid-template-columns:1fr} nav.toc{position:static;max-height:none}}
+</style>
+</head>
+<body>
+<div class="layout">
+<nav class="toc" aria-label="Contents">
+  <p class="tt">Contents</p>
+  <ol><li><a href="#0-the-short-version">0. The short version</a></li><li><a href="#1-where-the-two-helpers-sit-in-a-bcf-run">1. Where the two helpers sit in a BCF run</a></li><li><a href="#2-what-the-real-harness-allows-and-what-that-forces">2. What the real harness allows, and what that forces</a></li><li><a href="#3-the-architecture">3. The architecture</a></li><li><a href="#4-classify-issue-in-depth">4. classify_issue in depth</a></li><li><a href="#5-write-spec-in-depth">5. write_spec in depth</a></li><li><a href="#6-cost-and-benefit">6. Cost and benefit</a></li><li><a href="#7-failure-modes-and-what-to-do-about-them">7. Failure modes and what to do about them</a></li><li><a href="#8-how-to-test-them-before-spending-gpu-time">8. How to test them before spending GPU time</a></li><li><a href="#9-corpus-evidence-in-one-place-measured">9. Corpus evidence in one place [MEASURED]</a></li><li><a href="#10-what-this-means-for-bcf">10. What this means for BCF</a></li><li><a href="#11-how-likely-is-the-scenario-the-deck-simulates">11. How likely is the scenario the deck simulates?</a></li><li><a href="#12-sources">12. Sources</a></li></ol>
+  <a class="deck-link" href="03-bcf-simulation-httpx-3672.slides.v5.html">↗ Open the v5 replay deck</a>
+  <a class="deck-link" href="index.html">← All decks (index)</a>
+</nav>
+<article>
+<header class="hero">
+  <div class="kicker">httpx_3672 · companion to the v5 replay deck · deep dive on BCF&#x27;s spec helpers</div>
+  <h1>Deep dive: how <code>classify_issue</code> and <code>write_spec</code> would really work</h1>
+  <p class="sub">Prepared 2026-10-27. Companion to the <a href="03-bcf-simulation-httpx-3672.slides.v5.html">v5 replay deck</a> (cards <a href="03-bcf-simulation-httpx-3672.slides.v5.html#call-C1">C1</a>, <a href="03-bcf-simulation-httpx-3672.slides.v5.html#call-C2">C2</a>, T1, T2) and to the <a href="03-bcf-simulation-httpx-3672.v5-beginner-guide.html">beginner guide</a>. It turns BCF's two proposed spec helpers into a concrete design, tests a working prototype on the real httpx_3672 snapshot and on all 129 training tasks, and ends with an honest estimate of how likely the deck's scenario is in real runs.</p>
+  <div class="chips"><span class="tag v">[V]</span><span class="tag rp">[REPLAY]</span><span class="tag sim">[SIM]</span><span class="tag est">[EST]</span><span class="tag r">[R]</span></div>
+</header>
+
+
+
+<h2 id="0-the-short-version"><a class="anchor" href="#0-the-short-version" aria-hidden="true">#</a>0. The short version</h2>
+<p><strong>What they are.</strong> Both helpers run at the start of a BCF run, before the agent reads any code:</p>
+<ul>
+<li><code>classify_issue</code> decides what kind of problem the issue describes, and checks the issue's names against the repository.</li>
+<li><code>write_spec</code> checks the agent's written plan and turns it into a checklist.</li>
+</ul>
+<p>Neither exists in the competition harness. In the deck they are emulated.</p>
+<p><strong>How I'd build them.</strong> One small, standard-library-only Python file, <code>bcf.py</code>:</p>
+<ul>
+<li>It is installed once per task into <code>&lt;repo&gt;/.git/bcf/</code>, where <code>git diff</code> never looks.</li>
+<li>After that it is driven by ordinary <code>run_command</code> calls, with the input passed through a heredoc.</li>
+<li>Only the one-time install goes through the ADK skill tool, with no arguments. Everything else avoids the known hazards of passing data through skill-tool arguments.</li>
+</ul>
+<p>A working prototype is at <a href="../../../scratch/bcf_skill_proto/bcf.py"><code>scratch/bcf_skill_proto/bcf.py</code></a>. Its installer, <a href="../../../scratch/bcf_skill_proto/install.py"><code>install.py</code></a>, is written but has not been tested inside the real harness.</p>
+<p><strong>What the prototype does on httpx_3672</strong> <span class="tag rp">[PROTO]</span>:</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Helper</th>
+<th>What it produced</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>classify_issue</code></td>
+<td>Routed the issue as a refactor and found both copies of <code>complete</code>. <strong>Predicted the exact 5 visible test lines that the rename turns red</strong> (lines 70, 116, 318, 557, 594). Detected the <code>unasync</code> generator and its 15 generated files.</td>
+</tr>
+<tr>
+<td><code>write_spec</code></td>
+<td>Validated the plan and derived the fix order. Pointed one edit at the async source file instead of the generated copy. Rejected a dependency cycle, a made-up symbol and a vague plan, each with a specific message. Accepted a fenced JSON block with a trailing comma.</td>
+</tr>
+</tbody>
+</table></div>
+<p>Every call returned under 1.6 kB of output. Classification took 0.6–3.2 s and spec validation 0.4–1.0 s, measured on Windows across six runs. Nothing it saved appeared in the patch.</p>
+<p><strong>What the 129 training tasks say</strong> <span class="tag v">[MEASURED]</span>:</p>
+<ul>
+<li>The issue style that drives the deck's classification (a bulleted list with an <code>old</code> -&gt; <code>new</code> arrow) appears in <strong>one task out of 129: httpx_3672 itself</strong>. A rule-based router built from this task would not generalize. Routing should be the model's job; the script should do what code is good at: checking names against the repository and predicting which tests will go red.</li>
+<li>The deck's decisive trap, a correct fix that turns the visible tests red, appears in its strict form in <strong>about 1 to 4 of the 129 tasks (≈1–3%)</strong>.</li>
+</ul>
+<p><strong>How likely is the deck's scenario?</strong> As a <em>mechanism</em>, real but rare. As a <em>trajectory</em>, essentially never as written. As an <em>outcome</em>, the naive agent fails this task maybe 40–65% of the time, not always. Section 11 gives the full answer.</p>
+
+<h2 id="1-where-the-two-helpers-sit-in-a-bcf-run"><a class="anchor" href="#1-where-the-two-helpers-sit-in-a-bcf-run" aria-hidden="true">#</a>1. Where the two helpers sit in a BCF run</h2>
+<pre><code class="language-text"> Phase 0  setup       run_skill_script(bcf-spec install)       copies bcf.py into .git/bcf/   (1 call, cost unverified)
+ Phase 1  spec        run_command: bcf.py classify &lt;&lt;EOF        route + anchors + expected red (1 charged call)
+                      run_command: bcf.py spec     &lt;&lt;EOF        validate, fix order, checklist (1 charged call)
+                      planner's final text → session.state[&quot;bcf_spec&quot;]  (pinned into the solver's instruction)
+ Phase 2  localize    read_file / grep, guided by the checklist
+ Phase 3  patch       edits in fix_order; journal lines appended with run_command
+ Phase 4  validate    gates G1–G6; submit only when all are true
+</code></pre>
+<p>In the deck, Phase 1 corresponds to cards C1 (<code>classify_issue</code>) and C2 (<code>write_spec</code>), and to T1 and T2 for Tier-2. The deck charges each one call.</p>
+
+<h2 id="2-what-the-real-harness-allows-and-what-that-forces"><a class="anchor" href="#2-what-the-real-harness-allows-and-what-that-forces" aria-hidden="true">#</a>2. What the real harness allows, and what that forces</h2>
+<p>Before designing anything, here is what the competition harness and its users have established. Each fact constrains the design.</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Fact</th>
+<th>Source</th>
+<th>What it forces</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Submissions are declarative YAML. Custom Python can only ship as <strong>skill scripts</strong>.</td>
+<td>HARNESS_README §2.1; Kaggle overview</td>
+<td>The helpers must be skill scripts. There is no orchestrator that can run them automatically.</td>
+</tr>
+<tr>
+<td><code>run_skill_script</code> takes its script arguments as an <strong>array</strong> (<code>args</code>). On the scorer's vLLM 0.19.1, a malformed array argument can hang the tool-call parser; about 10% of malformed arrays did in a fuzz test.</td>
+<td>Forum 746336</td>
+<td>Never pass the issue text or the spec through <code>args</code>.</td>
+</tr>
+<tr>
+<td>Passing <code>file_path</code> as a list instead of a string <strong>ends the task</strong> (3.4% of skills-based runs).</td>
+<td>Forum intel, 2026-10-02</td>
+<td>Call <code>run_skill_script</code> as rarely as possible, with no arguments.</td>
+</tr>
+<tr>
+<td>ADK runs skill scripts <strong>after changing into a temporary copy of the skill folder</strong>. Scripts that assume <code>/workspace</code> &quot;silently did nothing on Kaggle&quot;.</td>
+<td>Forum, robust-edit post</td>
+<td>The script must find the repository itself.</td>
+</tr>
+<tr>
+<td>Whether a skill-script call is <strong>charged</strong> against the 50 is unverified.</td>
+<td>Deck data item D18</td>
+<td>Prefer <code>run_command</code>, whose cost (1) is known.</td>
+</tr>
+<tr>
+<td><code>run_command</code> takes <strong>one string argument</strong>, and did not lose arguments on 31B. <code>edit_file</code> lost them in 43% of calls.</td>
+<td>Forum, robust-edit post</td>
+<td>Pass input through a single <code>run_command</code> heredoc.</td>
+</tr>
+<tr>
+<td>&quot;First, call X&quot; in the prompt was <strong>skipped in 11 of 16 tasks</strong>. A <code>SequentialAgent</code> with a dedicated setup step ran it <strong>47 of 48</strong> times.</td>
+<td>Forum, robust-edit post</td>
+<td>Put the helpers in their own first sub-agent.</td>
+</tr>
+<tr>
+<td><strong>An unknown tool call is fatal in ADK</strong>, and the harness's task prompt mentions all tools.</td>
+<td>Forum, robust-edit post</td>
+<td>Don't build &quot;Gate 0&quot; by removing file tools from the planner. One stray call to a missing tool kills the task.</td>
+</tr>
+<tr>
+<td>Command output is cut at <strong>5,000 characters</strong>.</td>
+<td>HARNESS_README §6.1</td>
+<td>Print a compact summary and save the full result to a file.</td>
+</tr>
+<tr>
+<td><code>write_file(&quot;/tmp/x&quot;)</code> lands in <code>/workspace/tmp/x</code> and ships in the patch.</td>
+<td>Replay probe X5</td>
+<td>Save state under <code>.git/bcf/</code> (or the real <code>/tmp</code> via <code>run_command</code>).</td>
+</tr>
+<tr>
+<td>Agent instructions can template session state (<code>{problem_description}</code>, or any <code>output_key</code>).</td>
+<td>HARNESS_README §2.3, §5.1</td>
+<td>The planner's result can be <strong>pinned into the solver's instruction</strong>, which context compaction never removes.</td>
+</tr>
+<tr>
+<td>The task graph indexes no <code>async def</code>, and the graph files may not be inside the sandbox.</td>
+<td>Replay (Trap 6); council notes C6</td>
+<td>Resolve names with Python's own <code>ast</code> module over the repository, not with the graph.</td>
+</tr>
+</tbody>
+</table></div>
+
+<h2 id="3-the-architecture"><a class="anchor" href="#3-the-architecture" aria-hidden="true">#</a>3. The architecture</h2>
+<h3 id="31-files-in-the-submission"><a class="anchor" href="#31-files-in-the-submission" aria-hidden="true">#</a>3.1 Files in the submission</h3>
+<pre><code class="language-text">submission/
+├── agent.yaml                      # SequentialAgent: bcf_plan → solver
+├── sub_agents/
+│   ├── bcf_plan.yaml               # LlmAgent, output_key: bcf_spec
+│   └── solver.yaml                 # LlmAgent, instruction includes {bcf_spec}
+├── prompts/
+│   ├── bcf_plan.md
+│   └── solver.md
+└── skills/
+    └── bcf-spec/
+        ├── SKILL.md                # when and how to use the helper
+        └── scripts/
+            ├── install.py          # copies bcf.py into &lt;repo&gt;/.git/bcf/ (no arguments)
+            └── bcf.py              # classify + spec (stdlib only)
+</code></pre>
+<h3 id="32-the-agent-wiring-illustrative"><a class="anchor" href="#32-the-agent-wiring-illustrative" aria-hidden="true">#</a>3.2 The agent wiring (illustrative)</h3>
+<p>Field names follow HARNESS_README §2.3. Exact skill-tool argument names must be copied from the installed <code>adk-submission</code> wheel.</p>
+<pre><code class="language-yaml"># agent.yaml
+agent_class: SequentialAgent
+name: bcf_root
+sub_agents:
+  - config_path: sub_agents/bcf_plan.yaml
+  - config_path: sub_agents/solver.yaml
+</code></pre>
+<pre><code class="language-yaml"># sub_agents/bcf_plan.yaml
+name: bcf_plan
+model: gemma-4-31b-it-qat-w4a16-ct
+instruction: !include ../prompts/bcf_plan.md   # contains {problem_description}
+tools: [run_command, read_file, edit_file, write_file, get_status, submit_patch,
+        search_similar_code, get_code_neighbors, get_code_subgraph]   # same list as solver: unknown tools are fatal
+skills: [skills/bcf-spec]
+output_key: bcf_spec        # the planner's final text is saved to session state
+</code></pre>
+<p>The solver's prompt then starts with a block that the model sees on every turn:</p>
+<pre><code class="language-markdown">## Your validated plan (from the planning step; do not re-derive it)
+{bcf_spec}
+</code></pre>
+<h3 id="33-how-gate-0-really-works-here"><a class="anchor" href="#33-how-gate-0-really-works-here" aria-hidden="true">#</a>3.3 How &quot;Gate 0&quot; really works here</h3>
+<p>The deck describes Gate 0 as file tools &quot;locked until the spec is valid&quot;. In this harness, a hard lock is neither possible nor safe (§2). The design keeps the <em>intent</em> with three softer but real mechanisms:</p>
+<ol>
+<li><strong>Structure.</strong> The planner sub-agent always runs first, and its instruction asks only for the three helper calls.</li>
+<li><strong>Feedback.</strong> <code>bcf.py spec</code> answers <code>&quot;G0&quot;: &quot;FAIL&quot;</code> with specific errors until the plan is valid.</li>
+<li><strong>Pinning.</strong> The planner's summary becomes part of the solver's instruction, so the plan survives context compaction. That is hypothesis H10's &quot;pinned state&quot; for free.</li>
+</ol>
+<h3 id="34-the-three-calls-exactly-as-the-model-would-make-them"><a class="anchor" href="#34-the-three-calls-exactly-as-the-model-would-make-them" aria-hidden="true">#</a>3.4 The three calls, exactly as the model would make them</h3>
+<pre><code class="language-text"># 1. setup (once; no arguments, so no array hazard)
+run_skill_script(skill = &quot;bcf-spec&quot;, file_path = &quot;scripts/install.py&quot;)
+
+# 2. classify_issue
+run_command(&quot;&quot;&quot;python3 .git/bcf/bcf.py classify &lt;&lt;'EOF'
+&lt;the issue text, copied from the instruction&gt;
+EOF&quot;&quot;&quot;)
+
+# 3. write_spec
+run_command(&quot;&quot;&quot;python3 .git/bcf/bcf.py spec &lt;&lt;'EOF'
+{&quot;task_class&quot;: &quot;compat_or_refactor&quot;, &quot;bugs&quot;: [ ... ]}
+EOF&quot;&quot;&quot;)
+</code></pre>
+<p>The quoted <code>&lt;&lt;'EOF'</code> matters: the shell then passes the text through untouched, so quotes, backticks and <code>$</code> signs in the issue or the JSON need no escaping. If the setup call is skipped, call 2 fails with &quot;No such file&quot;, and the planner can recover by running the setup.</p>
+
+<h2 id="4-classify-issue-in-depth"><a class="anchor" href="#4-classify-issue-in-depth" aria-hidden="true">#</a>4. <code>classify_issue</code> in depth</h2>
+<h3 id="41-what-goes-in-what-comes-out"><a class="anchor" href="#41-what-goes-in-what-comes-out" aria-hidden="true">#</a>4.1 What goes in, what comes out</h3>
+<p><strong>Input:</strong> the issue text on standard input.</p>
+<p><strong>Output:</strong> one JSON object, also saved to <code>.git/bcf/classify.json</code>.</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>route</code></td>
+<td>The plan template: <code>bugfix</code>, <code>feature</code> or <code>compat_or_refactor</code>, plus <code>+ multi</code> when several kinds of bullet are present.</td>
+</tr>
+<tr>
+<td><code>signals</code></td>
+<td>Which bullets read as feature, refactor or behavior; whether there is a traceback or an &quot;expected … got&quot; pair.</td>
+</tr>
+<tr>
+<td><code>renames</code></td>
+<td>Every <code>`old` -&gt; `new`</code> pair, with the new name fully qualified.</td>
+</tr>
+<tr>
+<td><code>anchors_resolved</code></td>
+<td>Issue names that exist in the repository, with their full dotted names (both trees).</td>
+</tr>
+<tr>
+<td><code>anchors_missing</code></td>
+<td>Issue names that don't exist, with the closest real names (including Python builtins).</td>
+</tr>
+<tr>
+<td><code>expected_red</code></td>
+<td><strong>The Trap-1 predictor.</strong> For each rename, every visible test line that uses the old name, with the prediction that those tests will fail and that this is expected.</td>
+</tr>
+<tr>
+<td><code>generators</code></td>
+<td>Code-generator scripts found in <code>scripts/</code>, <code>tools/</code> or <code>bin/</code>, with their source → output folder pairs and the exact files they generate.</td>
+</tr>
+<tr>
+<td><code>next</code></td>
+<td>One line telling the model what to do next.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="42-the-algorithm-step-by-step"><a class="anchor" href="#42-the-algorithm-step-by-step" aria-hidden="true">#</a>4.2 The algorithm, step by step</h3>
+<ol>
+<li><strong>Split into bullets</strong> (lines starting with <code>*</code> or <code>-</code>).</li>
+<li><strong>Read the signals.</strong>
+<ul>
+<li>A bullet starting &quot;Add/Support/Implement/Allow/Introduce&quot; is a <em>feature</em> signal.</li>
+<li>A bullet containing &quot;-&gt;&quot;, &quot;rename&quot; or &quot;deprecat…&quot; is a <em>refactor</em> signal.</li>
+<li>&quot;always/never/close/don't/should/must&quot; is a <em>behavior</em> signal.</li>
+<li>Separately, look for a Python traceback and an &quot;expected … got&quot; pair.</li>
+</ul>
+</li>
+<li><strong>Route.</strong> A traceback or an expected/got pair means <code>bugfix</code>. Otherwise a refactor signal means <code>compat_or_refactor</code>, a feature signal means <code>feature</code>, and anything else falls back to <code>bugfix</code>.</li>
+<li><strong>Collect anchors</strong>: back-ticked names and CamelCase names such as exception classes.</li>
+<li><strong>Parse renames</strong>: <code>`HTTPParser.complete` -&gt; `.reset`</code> becomes <code>HTTPParser.complete → HTTPParser.reset</code>.</li>
+<li><strong>Index the repository</strong> with Python's <code>ast</code> module. This records every <code>class</code>, <code>def</code> <strong>and <code>async def</code></strong> with its dotted name, file and line. It is the index the task graph should have been: it sees the async tree.</li>
+<li><strong>Resolve anchors</strong>: exact match first, then suffix match (<code>HTTPParser.complete</code> finds both <code>httpx.…</code> and <code>ahttpx.…</code>), then close matches for misspellings. Rename targets are skipped, because they are not supposed to exist yet.</li>
+<li><strong>Predict expected red.</strong> For each rename, word-search the test folders for the old name. Each hit is a test that the correct fix will turn red.</li>
+<li><strong>Detect generators.</strong> Look for <code>unasync</code> or &quot;do not edit / auto-generated&quot; markers, then read which files the script actually lists.</li>
+</ol>
+<h3 id="43-the-real-output-on-httpx-3672-proto"><a class="anchor" href="#43-the-real-output-on-httpx-3672-proto" aria-hidden="true">#</a>4.3 The real output on httpx_3672 <span class="tag rp">[PROTO]</span></h3>
+<p>Run on a copy of the base snapshot, this took 1–3 seconds and printed about 1,550 characters (abridged here):</p>
+<pre><code class="language-json">{&quot;status&quot;: &quot;ok&quot;,
+ &quot;route&quot;: &quot;compat_or_refactor + multi&quot;,
+ &quot;bullets&quot;: 5,
+ &quot;signals&quot;: {&quot;feature&quot;: [&quot;Add `HTTPParser.keep_alive`.&quot;],
+             &quot;refactor&quot;: [&quot;`HTTPParser.complete` -&gt; `.reset`&quot;],
+             &quot;behavior&quot;: [&quot;Server... always read ...&quot;, &quot;Close streams on server exit.&quot;,
+                          &quot;Don't raise `KeyboardException` on server exit.&quot;],
+             &quot;traceback&quot;: false, &quot;expected_got&quot;: false},
+ &quot;renames&quot;: [{&quot;old&quot;: &quot;HTTPParser.complete&quot;, &quot;new&quot;: &quot;HTTPParser.reset&quot;}],
+ &quot;anchors_resolved&quot;: {&quot;HTTPParser.complete&quot;: [&quot;ahttpx._parsers.HTTPParser.complete&quot;,
+                                              &quot;httpx._parsers.HTTPParser.complete&quot;]},
+ &quot;anchors_missing&quot;: {&quot;HTTPParser.keep_alive&quot;: [], &quot;KeyboardException&quot;: [&quot;KeyboardInterrupt&quot;]},
+ &quot;expected_red&quot;: [{&quot;rename&quot;: &quot;HTTPParser.complete -&gt; HTTPParser.reset&quot;, &quot;test_sites&quot;: 5,
+                   &quot;files&quot;: [&quot;tests/test_parsers.py&quot;], &quot;lines&quot;: [70, 116, 318, 557, 594],
+                   &quot;prediction&quot;: &quot;after the rename these tests fail with AttributeError: 'complete'; EXPECTED (hidden tests use 'reset')&quot;}],
+ &quot;generators&quot;: [{&quot;script&quot;: &quot;scripts/unasync&quot;, &quot;pairs&quot;: [[&quot;src/ahttpx/&quot;, &quot;src/httpx/&quot;]],
+                 &quot;generated_files&quot;: [&quot;src/httpx/__init__.py&quot;, &quot;... 15 files, not _network.py&quot;]}]}
+</code></pre>
+<p>What a beginner should notice:</p>
+<ul>
+<li><strong><code>expected_red</code> is the line that saves the run.</strong> In the deck, the BCF agent <em>wrote</em> &quot;local suite WILL go red; expected&quot; at C9, out of its own understanding. Here a script computes it before any code is read, down to the exact five line numbers in the hidden test patch. The model no longer has to be insightful at the critical moment; it only has to read its checklist.</li>
+<li><strong>Both trees are found from one name</strong>, because the index includes <code>async def</code>. That is exactly what the graph tools failed to do at C3–C5.</li>
+<li><strong>The generator and its file list are found before the first edit.</strong> That is Tier-2's provenance question (H6), answered in the same call.</li>
+<li><strong>Misnamed builtins get a suggestion</strong> (<code>KeyboardException</code> → <code>KeyboardInterrupt</code>). <code>keep_alive</code> gets none, correctly, because the method it describes doesn't exist yet.</li>
+</ul>
+<h3 id="44-what-it-cannot-do-and-the-corpus-result-that-matters-most"><a class="anchor" href="#44-what-it-cannot-do-and-the-corpus-result-that-matters-most" aria-hidden="true">#</a>4.4 What it cannot do, and the corpus result that matters most</h3>
+<p><code>classify_issue</code>'s routing rules come from this one issue. Run over all 129 training tasks, they behave like this <span class="tag v">[MEASURED]</span>:</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Route</th>
+<th>Tasks</th>
+<th>How it got there</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bugfix</code></td>
+<td>68</td>
+<td>An expected/got pair, or simply the default. <strong>No issue in the corpus contains a Python traceback.</strong></td>
+</tr>
+<tr>
+<td><code>feature</code> (from prose words like &quot;add&quot; or &quot;support&quot;)</td>
+<td>59</td>
+<td>Only a loose keyword fallback</td>
+</tr>
+<tr>
+<td><code>feature</code> (from a bullet)</td>
+<td>1</td>
+<td>The bullet rule</td>
+</tr>
+<tr>
+<td><code>compat_or_refactor</code></td>
+<td>1</td>
+<td>The arrow rule: <strong>httpx_3672 only</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p>The <code>`old` -&gt; `new`</code> arrow occurs in <strong>1 of 129</strong> issues. Most issues are prose:</p>
+<ul>
+<li>37 have any bulleted list and 18 have a code block.</li>
+<li>None has a traceback.</li>
+<li>Length ranges from 42 to 10,095 characters (median 418). So the rule-based router was fitted to the deck's task. Its routing is close to a guess on everything else.</li>
+</ul>
+<p><strong>Recommended split of responsibilities:</strong></p>
+<ul>
+<li><strong>The model routes.</strong> Reading prose is what a language model does well, and BCF's Tier-2 already proposes three drafts with a vote (H9).</li>
+<li><strong>The script measures.</strong> Resolving names against the repository, predicting expected-red tests and detecting generators are deterministic, cheap and testable, and that is where the prototype's real value showed. The script should accept the model's anchors and renames directly (for example <code>bcf.py classify --rename HTTPParser.complete=reset</code>), so long issues never have to be copied into a heredoc.</li>
+</ul>
+
+<h2 id="5-write-spec-in-depth"><a class="anchor" href="#5-write-spec-in-depth" aria-hidden="true">#</a>5. <code>write_spec</code> in depth</h2>
+<h3 id="51-the-spec-the-model-writes"><a class="anchor" href="#51-the-spec-the-model-writes" aria-hidden="true">#</a>5.1 The spec the model writes</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Required</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>task_class</code></td>
+<td>Yes</td>
+<td>One of <code>bugfix</code>, <code>feature</code>, <code>compat_or_refactor</code>, <code>multi</code>.</td>
+</tr>
+<tr>
+<td><code>bugs[]</code></td>
+<td>Yes, 1–6</td>
+<td>One entry per sub-problem the agent will address.</td>
+</tr>
+<tr>
+<td><code>bugs[].id</code></td>
+<td>Yes</td>
+<td>A short, unique id such as <code>B1</code>.</td>
+</tr>
+<tr>
+<td><code>bugs[].hypothesis</code></td>
+<td>Yes, ≥ 20 characters</td>
+<td>The <strong>code-level cause</strong>, not the symptom.</td>
+</tr>
+<tr>
+<td><code>bugs[].target_symbol</code></td>
+<td>Yes</td>
+<td>A dotted name that must resolve in the repository (exempt when the fix shape is <code>new_code</code>).</td>
+</tr>
+<tr>
+<td><code>bugs[].fix_shape</code></td>
+<td>Yes</td>
+<td>One of <code>delete</code>, <code>replace</code>, <code>guard_add</code>, <code>check_add</code>, <code>iterator_or_logic_rewrite</code>, <code>new_code</code>, <code>other</code>.</td>
+</tr>
+<tr>
+<td><code>bugs[].depends_on</code></td>
+<td>No</td>
+<td>Ids that must be fixed first.</td>
+</tr>
+<tr>
+<td><code>validation_plan</code></td>
+<td>No</td>
+<td>Repro location and tests to run.</td>
+</tr>
+<tr>
+<td><code>budget_plan</code></td>
+<td>No</td>
+<td>Defaults: localize in ≤ 10 calls, force-submit at 42 used, rescue after 3 failed G4 checks or 25% of the budget without progress.</td>
+</tr>
+</tbody>
+</table></div>
+<p>This is a simplified form of the BCF compendium's schema (§A6.3). The main differences:</p>
+<ul>
+<li><code>target_symbol</code> is a single string.</li>
+<li><strong><code>fix_order</code> is not written by the model.</strong> It is derived from <code>depends_on</code>, so the model can't write an order that contradicts its own dependencies.</li>
+</ul>
+<h3 id="52-what-the-validator-does"><a class="anchor" href="#52-what-the-validator-does" aria-hidden="true">#</a>5.2 What the validator does</h3>
+<ol>
+<li><strong>Parse leniently.</strong> It strips a surrounding Markdown code fence and trailing commas, two very common small-model JSON mistakes.</li>
+<li><strong>Check every field</strong> against the table above.</li>
+<li><strong>Check dependencies.</strong> Unknown ids are errors, and a cycle is an error that names the bugs involved.</li>
+<li><strong>Derive <code>fix_order</code></strong> by topological sort, stable in the order the bugs were written.</li>
+<li><strong>Resolve every <code>target_symbol</code></strong> against the <code>ast</code> index. If a name isn't found, it suggests close matches.</li>
+<li><strong>Redirect generated targets.</strong> If a target's file is one the generator writes, the obligation points to the same symbol in the <strong>source</strong> file, with its real line number, and a note: &quot;edit the source, then regenerate&quot;.</li>
+<li><strong>Build the closure map.</strong> For every rename, it lists every code line in <code>src/</code> that still uses the old name, grouped by file. The rule: every site must be renamed or explicitly classified as unrelated.</li>
+<li><strong>Carry over <code>expected_red</code></strong> from the classify step.</li>
+<li><strong>Save</strong> the full result to <code>.git/bcf/spec.json</code>, and seed <code>.git/bcf/journal.md</code> with the fix order and the expected-red lines.</li>
+<li><strong>Print a compact summary.</strong> Errors exit with code 1, so <code>run_command</code> reports <code>&quot;status&quot;: &quot;error&quot;</code> and the model sees a clear failure.</li>
+</ol>
+<h3 id="53-the-real-outputs-on-httpx-3672-proto"><a class="anchor" href="#53-the-real-outputs-on-httpx-3672-proto" aria-hidden="true">#</a>5.3 The real outputs on httpx_3672 <span class="tag rp">[PROTO]</span></h3>
+<p><strong>A valid spec</strong> (the deck's B1–B5, with B1 and B2 pointed at the async source) returned in under a second:</p>
+<pre><code class="language-json">{&quot;status&quot;: &quot;ok&quot;, &quot;G0&quot;: &quot;PASS&quot;,
+ &quot;fix_order&quot;: [&quot;B1&quot;, &quot;B2&quot;, &quot;B3&quot;, &quot;B4&quot;, &quot;B5&quot;],
+ &quot;obligations&quot;: [
+   {&quot;bug&quot;: &quot;B1&quot;, &quot;symbol&quot;: &quot;ahttpx._parsers.HTTPParser.complete&quot;, &quot;edit&quot;: &quot;src/ahttpx/_parsers.py:378&quot;},
+   {&quot;bug&quot;: &quot;B2&quot;, &quot;symbol&quot;: &quot;ahttpx._parsers.HTTPParser&quot;, &quot;edit&quot;: &quot;src/ahttpx/_parsers.py:72&quot;},
+   {&quot;bug&quot;: &quot;B3&quot;, &quot;symbol&quot;: &quot;httpx._server.HTTPConnection._complete&quot;, &quot;edit&quot;: &quot;src/ahttpx/_server.py:91&quot;,
+    &quot;generated_from&quot;: &quot;src/ahttpx/_server.py&quot;,
+    &quot;note&quot;: &quot;src/httpx/_server.py is generated: edit the source, then regenerate&quot;},
+   {&quot;bug&quot;: &quot;B4&quot;, &quot;symbol&quot;: &quot;httpx._network.NetworkServer.__init__&quot;, &quot;edit&quot;: &quot;src/httpx/_network.py:157&quot;},
+   {&quot;bug&quot;: &quot;B5&quot;, &quot;symbol&quot;: &quot;ahttpx._server.HTTPServer.wait&quot;, &quot;edit&quot;: &quot;src/ahttpx/_server.py:100&quot;}],
+ &quot;expected_red&quot;: [{&quot;rename&quot;: &quot;HTTPParser.complete -&gt; HTTPParser.reset&quot;, &quot;test_sites&quot;: 5, &quot;lines&quot;: [70, 116, 318, 557, 594]}],
+ &quot;closure&quot;: [{&quot;rename&quot;: &quot;HTTPParser.complete -&gt; HTTPParser.reset&quot;, &quot;code_sites&quot;: 18, &quot;files&quot;: 12}],
+ &quot;generated_targets&quot;: 1,
+ &quot;saved&quot;: [&quot;.git/bcf/spec.json&quot;, &quot;.git/bcf/journal.md&quot;]}
+</code></pre>
+<p>And the journal it seeded:</p>
+<pre><code class="language-markdown">## Journal (newest last)
+- t=spec | G0 PASS | fix_order B1 &gt; B2 &gt; B3 &gt; B4 &gt; B5
+- t=spec | expected red | HTTPParser.complete -&gt; HTTPParser.reset: 5 visible test sites -&gt; EXPECTED, do not revert
+## Ruled out
+## Current best patch
+- none
+</code></pre>
+<p>Three details are worth a beginner's attention:</p>
+<ul>
+<li><strong>B3 was redirected.</strong> The model named the sync symbol, and the validator pointed the edit at <code>src/ahttpx/_server.py:91</code>, because the sync file is generated. That one redirect is the difference between BCF's 10/11 and Tier-2's 11/11 in the deck.</li>
+<li><strong>B4 was not redirected.</strong> <code>_network.py</code> is the one file the generator doesn't write. <strong>My first version got this wrong</strong>: it assumed every file under <code>src/httpx/</code> was generated and sent B4 to <code>src/ahttpx/_network.py</code>, a different file. The fix was to read the generator's actual file list. This is exactly the kind of error a written, testable script exposes and a prompt instruction hides.</li>
+<li><strong>The closure count (18 code sites in 12 files) includes the decoy.</strong> <code>HTTPStream._complete</code> in <code>_streams.py</code> has the same name but is a different concept. The script deliberately doesn't guess; it lists every site and leaves the classification to the model (hypothesis H5).</li>
+</ul>
+<p><strong>Invalid specs</strong> were each rejected with an actionable message:</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Bad input</th>
+<th>Validator answer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>B1 depends on B2 and B2 on B1</td>
+<td><code>depends_on has a cycle among ['B1', 'B2']</code></td>
+</tr>
+<tr>
+<td><code>target_symbol: &quot;httpx.HttpParser.finish&quot;</code></td>
+<td><code>B1: target_symbol 'httpx.HttpParser.finish' not found</code></td>
+</tr>
+<tr>
+<td><code>task_class: &quot;refactor&quot;</code>, hypothesis &quot;fix it&quot;, <code>fix_shape: &quot;rename&quot;</code></td>
+<td>Three errors, each naming the allowed values</td>
+</tr>
+<tr>
+<td>The JSON wrapped in a code fence, with a trailing comma</td>
+<td><strong>Accepted</strong> (lenient parsing)</td>
+</tr>
+</tbody>
+</table></div>
+
+<h2 id="6-cost-and-benefit"><a class="anchor" href="#6-cost-and-benefit" aria-hidden="true">#</a>6. Cost and benefit</h2>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Charged calls</th>
+<th>Hazards</th>
+<th>Verdict</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Recommended:</strong> install once, then <code>bcf.py</code> via <code>run_command</code> heredocs</td>
+<td>2 (+1 setup, cost unverified)</td>
+<td>The setup call itself; copying a long issue into a heredoc</td>
+<td>Best balance</td>
+</tr>
+<tr>
+<td>Each helper as its own <code>run_skill_script</code> call with <code>args</code></td>
+<td>2 (cost unverified)</td>
+<td>Array-argument parser hang; list <code>file_path</code> crash; scripts start in a temporary folder</td>
+<td>Avoid</td>
+</tr>
+<tr>
+<td>Spec written with <code>write_file</code>, then validated</td>
+<td>3</td>
+<td><code>write_file</code> paths land in <code>/workspace</code> and ship in the patch</td>
+<td>Avoid</td>
+</tr>
+<tr>
+<td>No scripts: routing and spec rules only in the prompt</td>
+<td>0</td>
+<td>No validation, no name resolution, no expected-red prediction</td>
+<td>Cheapest, weakest</td>
+</tr>
+<tr>
+<td>Hybrid: the model routes in its head; the script only resolves and predicts</td>
+<td>1–2</td>
+<td>Same as recommended</td>
+<td><strong>Best after the corpus result</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p>What the two calls buy, measured on this task:</p>
+<ul>
+<li>The <strong>expected-red prediction</strong> removes the single decision the naive agent got wrong.</li>
+<li><strong>Name resolution across both trees</strong> replaces the three graph calls (C3–C5) that bought nothing.</li>
+<li><strong>Generator detection</strong> delivers Tier-2's 11th bullet.</li>
+<li>A <strong>validated, pinned plan</strong> survives compaction.</li>
+</ul>
+
+<h2 id="7-failure-modes-and-what-to-do-about-them"><a class="anchor" href="#7-failure-modes-and-what-to-do-about-them" aria-hidden="true">#</a>7. Failure modes and what to do about them</h2>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Failure</th>
+<th>How likely</th>
+<th>Mitigation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>The model skips the setup call</td>
+<td>Medium in a single-agent design; low with a separate first step (47/48)</td>
+<td><code>SequentialAgent</code> first step; <code>classify</code> fails loudly and the model can install</td>
+</tr>
+<tr>
+<td>The model copies the issue text badly</td>
+<td>Low for short issues; rises with long ones</td>
+<td>Hybrid mode: pass anchors and renames, not the whole issue</td>
+</tr>
+<tr>
+<td>Invalid JSON in the spec</td>
+<td>Medium for a 4-bit 31B model</td>
+<td>Lenient parser; specific errors; bounded retries (at most 2), then continue with the best valid spec</td>
+</tr>
+<tr>
+<td>Misroute (wrong template)</td>
+<td><strong>High</strong> with the rule router outside this task (§4.4)</td>
+<td>The model routes, with H9's 3-draft vote; the script reports evidence only</td>
+</tr>
+<tr>
+<td>A hallucinated target symbol</td>
+<td>Medium</td>
+<td>Resolution check with close-match suggestions</td>
+</tr>
+<tr>
+<td>Expected-red false positives (a common name like <code>run</code> matches many tests)</td>
+<td>Medium on large repos</td>
+<td>Report counts per file and cap the list; treat it as evidence, not a command</td>
+</tr>
+<tr>
+<td>Expected-red misses (tests break for reasons other than a rename)</td>
+<td>High in general</td>
+<td>It only covers the rename form of Trap 1; other forms need H1's failure-signature rules</td>
+</tr>
+<tr>
+<td>Slow indexing on big repos</td>
+<td>Low (about 1–2 s here; fastapi is larger)</td>
+<td>Cache the index in <code>.git/bcf/</code></td>
+</tr>
+<tr>
+<td>Output over 5,000 characters</td>
+<td>Low</td>
+<td>Compact summary; full result on disk</td>
+</tr>
+<tr>
+<td>The planner's final text isn't saved to state</td>
+<td>Unknown</td>
+<td>Verify <code>output_key</code> behavior under <code>SequentialAgent</code> in the first local run</td>
+</tr>
+</tbody>
+</table></div>
+
+<h2 id="8-how-to-test-them-before-spending-gpu-time"><a class="anchor" href="#8-how-to-test-them-before-spending-gpu-time" aria-hidden="true">#</a>8. How to test them before spending GPU time</h2>
+<ol>
+<li><strong>Unit tests</strong> (offline, no model): the prototype's runner <a href="../../../scratch/bcf_skill_proto/run_proto.py"><code>run_proto.py</code></a> already covers a valid spec and four bad ones. Extend it with a case per failure mode in §7.</li>
+<li><strong>Corpus sweep</strong> over the 129 training tasks (<a href="../../../scratch/bcf_skill_proto/corpus_stats.py"><code>corpus_stats.py</code></a>):
+<ul>
+<li>routing accuracy against hand labels;</li>
+<li>anchor-resolution precision;</li>
+<li>expected-red recall against tasks whose hidden test patch edits lines the gold patch breaks.</li>
+</ul>
+</li>
+<li><strong>Replay</strong> (the v5 harness): swap the emulated C1/C2 for the real script and rerun the shadow verdicts.</li>
+<li><strong>Live A/B</strong> on the 30-task split, with the plan pinned versus not pinned, and log the deck's data items:
+<ul>
+<li>D5: spec artifacts;</li>
+<li>D8: asymmetry events;</li>
+<li>D10: provenance probes;</li>
+<li><strong>D18: whether skill calls are charged</strong>.</li>
+</ul>
+</li>
+</ol>
+
+<h2 id="9-corpus-evidence-in-one-place-measured"><a class="anchor" href="#9-corpus-evidence-in-one-place-measured" aria-hidden="true">#</a>9. Corpus evidence in one place <span class="tag v">[MEASURED]</span></h2>
+<p>All numbers come from static analysis of the 129 training tasks (<a href="../../../scratch/bcf_skill_proto/out/corpus_stats.json"><code>out/corpus_stats.json</code></a>). No tests were executed.</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Measure</th>
+<th>Result</th>
+<th>What it means</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Repositories</td>
+<td>fastapi 67, rich 48, requests 13, httpx 1</td>
+<td>httpx_3672 is a one-off.</td>
+</tr>
+<tr>
+<td>Issue format</td>
+<td>37 with bullets, 18 with code blocks, <strong>0 with a traceback</strong>; 42–10,095 characters (median 418)</td>
+<td>Routing must read prose. Long issues make copying the text into a heredoc expensive.</td>
+</tr>
+<tr>
+<td>Issues with an <code>`old` -&gt; `new`</code> arrow</td>
+<td><strong>1</strong> (httpx_3672)</td>
+<td>The deck's cleanest classification signal is unique to its task.</td>
+</tr>
+<tr>
+<td>Hidden test patches that edit existing test lines</td>
+<td><strong>46 (35.7%)</strong></td>
+<td>The visible tests differ from the graded ones fairly often. Usually the hidden tests add or tighten assertions; that is not always a contradiction.</td>
+</tr>
+<tr>
+<td>Strict Trap-1 candidates: an edited test line uses a name the gold patch removes from a <code>def</code>/<code>class</code> signature</td>
+<td><strong>4 (3.1%)</strong>: fastapi_14609, rich_3930, httpx_3672, fastapi_15745</td>
+<td>The deck's exact trap is rare. Two of the four match only on very common names (<code>app</code>, <code>BaseModel</code>) and are probably false positives, so the true rate is likely 1–3%.</td>
+</tr>
+</tbody>
+</table></div>
+
+<h2 id="10-what-this-means-for-bcf"><a class="anchor" href="#10-what-this-means-for-bcf" aria-hidden="true">#</a>10. What this means for BCF</h2>
+<ul>
+<li><strong>Keep the two helpers, but reassign their jobs.</strong> The model reads and routes. The script resolves, predicts and validates.</li>
+<li><strong>The expected-red predictor is the most valuable single output</strong>, but it fires only when the issue names a rename, which is rare. Its general form is H1: a detector that labels a red test &quot;expected by spec&quot; from its failure signature.</li>
+<li><strong>Generator detection and two-tree name resolution are cheap and general.</strong> Any repository with generated or mirrored code benefits.</li>
+<li><strong>Pinning the plan into the solver's instruction</strong> is free. It is probably worth more than either helper, because it protects every later decision from compaction.</li>
+</ul>
+
+<h2 id="11-how-likely-is-the-scenario-the-deck-simulates"><a class="anchor" href="#11-how-likely-is-the-scenario-the-deck-simulates" aria-hidden="true">#</a>11. How likely is the scenario the deck simulates?</h2>
+<p>This is an expert estimate, not a measurement. Every number below is <span class="tag est">[EST]</span>, with the reasoning shown so you can disagree with a specific step.</p>
+<h3 id="111-separate-the-question-into-four"><a class="anchor" href="#111-separate-the-question-into-four" aria-hidden="true">#</a>11.1 Separate the question into four</h3>
+<p>The deck's scenario is really four claims:</p>
+<ol>
+<li>A task with this trap structure appears in scoring.</li>
+<li>A naive agent fails it the way the deck shows.</li>
+<li>A BCF agent succeeds the way the deck shows.</li>
+<li>The gap shows up on the leaderboard.</li>
+</ol>
+<h3 id="112-will-a-task-like-this-be-scored"><a class="anchor" href="#112-will-a-task-like-this-be-scored" aria-hidden="true">#</a>11.2 Will a task like this be scored?</h3>
+<ul>
+<li><strong>This exact task: no.</strong> httpx_3672 is a training task, and the scored tasks are different ones. A forum participant believes they come from private repositories; that is unconfirmed.</li>
+<li><strong>The async twin-tree parts</strong> (Traps 2, 5, 6): the host has said the private tasks touch no <code>async def</code>, so these are <strong>very unlikely</strong> to recur.</li>
+<li><strong>The core trap</strong> (a correct fix turns the visible tests red): about <strong>1–3% of tasks</strong>, judging from the training set. On the 58-task public split that is roughly <strong>0.5 to 2 tasks</strong>.</li>
+</ul>
+<h3 id="113-would-a-naive-agent-fail-it-the-decks-way"><a class="anchor" href="#113-would-a-naive-agent-fail-it-the-decks-way" aria-hidden="true">#</a>11.3 Would a naive agent fail it the deck's way?</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Estimate</th>
+<th>Reasoning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>It makes the rename at all</td>
+<td>60–85%</td>
+<td>It is the clearest instruction in the issue.</td>
+</tr>
+<tr>
+<td>It then runs the visible tests</td>
+<td>70–90%</td>
+<td>The harness prompt tells it to verify with tests.</td>
+</tr>
+<tr>
+<td>On red, it <strong>reverts</strong> or abandons the rename</td>
+<td>30–50%</td>
+<td>Small models under &quot;tests failed&quot; pressure often undo their last change. But updating tests after an API rename is also common coding-agent behavior, and aliasing is another way out.</td>
+</tr>
+<tr>
+<td>On red, it <strong>migrates the tests</strong> or <strong>aliases</strong> instead</td>
+<td>30–50%</td>
+<td>Either passes (probe X2; and test edits are dropped from the patch under wheelhouse v30).</td>
+</tr>
+<tr>
+<td>Generic hazards end the run anyway</td>
+<td>10–25%</td>
+<td>Failed <code>edit_file</code> calls (43% on 31B), context overflow that empties the patch (≈12% of sessions on v28), malformed tool calls</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Overall: the naive agent fails this task roughly 40–65% of the time.</strong> That is a coin flip, not a certainty. The source document says the same: a lucky naive roll passes.</p>
+<p><strong>The exact 43-call trajectory: essentially 0%.</strong> Any specific sequence of 43 decisions is vanishingly unlikely. The deck shows a <em>typical failure path</em>, not a forecast.</p>
+<p><strong>One historical twist:</strong> under wheelhouse v28, editing a test file made the hidden test patch fail to apply. In that period the naive agent's &quot;migrate the tests&quot; escape would <em>also</em> have failed, and so would BCF's own C25 step. That trap is fixed in v30, where test-file edits are dropped from the patch.</p>
+<h3 id="114-would-a-bcf-agent-succeed-the-decks-way"><a class="anchor" href="#114-would-a-bcf-agent-succeed-the-decks-way" aria-hidden="true">#</a>11.4 Would a BCF agent succeed the deck's way?</h3>
+<ul>
+<li><strong>BCF doesn't exist yet as a running system.</strong> Everything in the deck's BCF column is scripted. Real success depends on the 4-bit 31B model following a multi-phase protocol for about 30 calls. Forum evidence says 31B skips simple &quot;first do X&quot; instructions most of the time unless the structure forces them.</li>
+<li><strong>If it is built as in §3</strong> (forced first step, script-computed expected red, pinned plan), the decisive moment needs no insight, only reading. I'd put <strong>P(resolve this task | BCF built well) at 55–80%</strong>. The root fix is a one-line rename, and the plan names it.</li>
+<li><strong>The clean 30-call, zero-revert run: about 5–20%.</strong> Failed edits alone will add calls. The budget probably still holds: the scoring script's default is 100 calls unless the submission's <code>eval_config.yaml</code> sets fewer.</li>
+</ul>
+<h3 id="115-would-it-show-on-the-leaderboard"><a class="anchor" href="#115-would-it-show-on-the-leaderboard" aria-hidden="true">#</a>11.5 Would it show on the leaderboard?</h3>
+<ul>
+<li>The leaders resolve <strong>14 of 58 tasks (0.24)</strong>. The median team resolves about 5.</li>
+<li>If the trap appears on 0.5–2 public tasks, fixing it is worth <strong>at most about 0–2 tasks (0–3 points)</strong>.</li>
+<li>The deck's own statistics section says 30 tasks × 3 seeds can only detect differences of about <strong>17 points</strong>.</li>
+<li>A close analog exists: robust-edit removed a whole class of wasted calls but left the resolved count unchanged (6/16 in every run).</li>
+</ul>
+<p><strong>Overall: expect +0 to +2 public tasks from this specific mechanism.</strong> Most of that comes from cheap general pieces (plan pinning, two-tree name resolution, compact test output), not from the rename predictor.</p>
+<h3 id="116-summary"><a class="anchor" href="#116-summary" aria-hidden="true">#</a>11.6 Summary</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Claim</th>
+<th>Likelihood [EST]</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>The trap structure exists in real tasks</td>
+<td><strong>Real, rare</strong>: about 1–3% of tasks</td>
+</tr>
+<tr>
+<td>The async twin-tree traps recur in scoring</td>
+<td><strong>Very unlikely</strong>: the host says private tasks have no <code>async def</code></td>
+</tr>
+<tr>
+<td>The naive agent fails <em>this</em> task</td>
+<td><strong>About 40–65%</strong></td>
+</tr>
+<tr>
+<td>The naive agent follows the deck's exact 43 calls</td>
+<td><strong>≈ 0%</strong>; it is a typical path, not a forecast</td>
+</tr>
+<tr>
+<td>BCF, built as in §3, resolves this task</td>
+<td><strong>About 55–80%</strong></td>
+</tr>
+<tr>
+<td>BCF runs as cleanly as the deck (30 calls, 0 reverts)</td>
+<td><strong>About 5–20%</strong></td>
+</tr>
+<tr>
+<td>A visible leaderboard gain from this mechanism alone</td>
+<td><strong>Small</strong>: about 0–2 of 58 public tasks</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>What would change these estimates:</strong></p>
+<ul>
+<li>live Gemma runs of the naive and BCF configurations on the 4 strict Trap-1 tasks (H15);</li>
+<li>the D18 probe on skill-call charging;</li>
+<li>a check of the 46 &quot;visible tests differ&quot; tasks to see how many really turn red under the gold fix (run the visible suite on the gold patch, task by task).</li>
+</ul>
+
+<h2 id="12-sources"><a class="anchor" href="#12-sources" aria-hidden="true">#</a>12. Sources</h2>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>What</th>
+<th>Where</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Prototype helper</td>
+<td><a href="../../../scratch/bcf_skill_proto/bcf.py"><code>scratch/bcf_skill_proto/bcf.py</code></a></td>
+</tr>
+<tr>
+<td>Prototype test runner and outputs</td>
+<td><a href="../../../scratch/bcf_skill_proto/run_proto.py"><code>run_proto.py</code></a> · <a href="../../../scratch/bcf_skill_proto/out/"><code>out/</code></a></td>
+</tr>
+<tr>
+<td>Corpus statistics</td>
+<td><a href="../../../scratch/bcf_skill_proto/corpus_stats.py"><code>corpus_stats.py</code></a> · <a href="../../../scratch/bcf_skill_proto/out/corpus_stats.json"><code>out/corpus_stats.json</code></a></td>
+</tr>
+<tr>
+<td>Emulated helpers in the deck</td>
+<td><a href="../../../scratch/v5_replay/replay.py"><code>scratch/v5_replay/replay.py</code></a>, lines 206–235</td>
+</tr>
+<tr>
+<td>Harness contracts</td>
+<td><a href="../../../input/kagglecomp/kagglecomp_data_package/HARNESS_README.md"><code>HARNESS_README.md</code></a> §2, §5, §6</td>
+</tr>
+<tr>
+<td>Spec schema origin</td>
+<td><a href="../../../bcf/BCF-Reference-Compendium.md"><code>bcf/BCF-Reference-Compendium.md</code></a> §A6, §A7, §A8</td>
+</tr>
+<tr>
+<td>Skill-script behavior, setup-step reliability, edit failure rates</td>
+<td><a href="../../../input/kagglecomp/intel_20261012/02_Raw_Forum_Digest_posts_since_2026-10-06.md">Forum digest 2026-10-12</a> (robust-edit post; post 746336)</td>
+</tr>
+<tr>
+<td>Patch-zeroing defects, list <code>file_path</code> crash, host rulings</td>
+<td><a href="../../../2026-10-02_Leaderboard_Analysis/02_Forum_Resweep_Intel_and_Roadmap_Amendments.md"><code>2026-10-02_Leaderboard_Analysis/02_Forum_Resweep_Intel_and_Roadmap_Amendments.md</code></a></td>
+</tr>
+<tr>
+<td>The v5 replay deck</td>
+<td><a href="03-bcf-simulation-httpx-3672.slides.v5.html"><code>03-bcf-simulation-httpx-3672.slides.v5.html</code></a></td>
+</tr>
+</tbody>
+</table></div>
+
+<footer>Generated from <code>2026-10-27_BCF_v5_Beginner_Walkthrough/02_BCF_Spec_Helpers_classify_issue_write_spec_Deep_Dive.md</code> by <code>scratch/md2html_guide.py</code>. Edit the markdown, then regenerate.</footer>
+</article>
+</div>
+<script>
+(function(){
+  "use strict";
+  var links = Array.prototype.slice.call(document.querySelectorAll("nav.toc ol a"));
+  var heads = links.map(function(a){ return document.getElementById(a.getAttribute("href").slice(1)); });
+  if(!("IntersectionObserver" in window)) return;
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting){
+        var i = heads.indexOf(e.target);
+        links.forEach(function(a,k){ a.setAttribute("aria-current", k===i ? "true" : "false"); });
+      }
+    });
+  }, {rootMargin:"0px 0px -70% 0px"});
+  heads.forEach(function(h){ if(h) io.observe(h); });
+})();
+</script>
+</body>
+</html>

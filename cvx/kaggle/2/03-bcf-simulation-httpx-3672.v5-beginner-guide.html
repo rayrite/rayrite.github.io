@@ -1,0 +1,1560 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>A beginner&#x27;s guide to the v5 replay deck (httpx_3672)</title>
+<style>
+:root{
+  --page:#0e1116; --surface:#151a21; --raised:#1b222c; --sunken:#11151c;
+  --hair:rgba(255,255,255,.08); --hair-2:rgba(255,255,255,.14);
+  --ink:#eef1f5; --ink-2:#aab4c0; --ink-3:#7a8694;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181;
+  --sans:system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"Cascadia Code","JetBrains Mono",ui-monospace,"Consolas",monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:20px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--page);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.65}
+a{color:#7fb2f0;text-underline-offset:2px}
+a:hover{color:#a9cbf5}
+.layout{display:grid;grid-template-columns:260px minmax(0,1fr);gap:40px;max-width:1240px;margin:0 auto;padding:40px clamp(18px,4vw,48px) 80px}
+nav.toc{position:sticky;top:24px;align-self:start;max-height:calc(100vh - 48px);overflow:auto;font-size:13.5px;
+  border:1px solid var(--hair);border-radius:10px;background:var(--surface);padding:14px 14px 10px}
+nav.toc .tt{font:600 11.5px/1.3 var(--mono);color:var(--ink-3);text-transform:uppercase;letter-spacing:.06em;margin:0 0 8px}
+nav.toc ol{margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:2px}
+nav.toc a{display:block;padding:4px 8px;border-radius:6px;color:var(--ink-2);text-decoration:none}
+nav.toc a:hover,nav.toc a[aria-current="true"]{background:var(--raised);color:var(--ink)}
+nav.toc .deck-link{display:block;margin-top:10px;padding:8px;border-top:1px solid var(--hair);font-size:12.5px}
+header.hero{border-bottom:1px solid var(--hair-2);padding-bottom:18px;margin-bottom:8px}
+.kicker{font:600 13px/1.4 var(--sans);color:var(--ink-3)}
+h1{font:700 clamp(26px,3.6vw,38px)/1.15 var(--mono);letter-spacing:-.02em;margin:6px 0 10px}
+.sub{color:var(--ink-2);margin:0;max-width:75ch}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+h2{font:700 22px/1.3 var(--sans);margin:44px 0 12px;padding-top:6px;border-top:1px solid var(--hair)}
+h3{font:650 17.5px/1.35 var(--sans);margin:28px 0 8px;color:var(--ink)}
+h2 .anchor,h3 .anchor{color:var(--ink-3);text-decoration:none;margin-right:8px;opacity:0;transition:opacity .15s}
+h2:hover .anchor,h3:hover .anchor{opacity:1}
+p,li{color:#d9dee5}
+article{min-width:0;max-width:880px}
+strong{color:var(--ink)}
+code{font:400 .88em/1.4 var(--mono);background:var(--sunken);border:1px solid var(--hair);border-radius:4px;padding:1px 5px;color:#e6c07b}
+pre{background:var(--sunken);border:1px solid var(--hair);border-radius:8px;padding:14px 16px;overflow-x:auto;font:400 13px/1.6 var(--mono)}
+pre code{background:none;border:0;padding:0;color:var(--ink-2)}
+blockquote{margin:12px 0;padding:10px 16px;border-left:3px solid var(--s1);background:var(--surface);border-radius:0 8px 8px 0}
+blockquote p{margin:4px 0;font-family:var(--mono);font-size:14px}
+.tw{overflow-x:auto;margin:12px 0 18px;border:1px solid var(--hair);border-radius:8px}
+table{border-collapse:collapse;width:100%;font-size:14.5px}
+th,td{text-align:left;vertical-align:top;padding:8px 12px;border-bottom:1px solid var(--hair)}
+th{background:var(--raised);font-weight:600;color:var(--ink);white-space:nowrap}
+tr:last-child td{border-bottom:0}
+tbody tr:hover td{background:rgba(255,255,255,.02)}
+.tag{display:inline-block;font:700 11.5px/1 var(--mono);padding:3px 6px;border-radius:4px;border:1px solid;vertical-align:1px}
+.tag.v{color:#4cc24c;border-color:rgba(12,163,12,.45);background:rgba(12,163,12,.12)}
+.tag.rp{color:#7fb2f0;border-color:rgba(57,135,229,.45);background:rgba(57,135,229,.12)}
+.tag.sim{color:#f0a37e;border-color:rgba(217,89,38,.45);background:rgba(217,89,38,.12)}
+.tag.est{color:#e9c46a;border-color:rgba(201,133,0,.45);background:rgba(201,133,0,.12)}
+.tag.r{color:#e58fb9;border-color:rgba(213,81,129,.45);background:rgba(213,81,129,.12)}
+footer{margin-top:56px;padding-top:14px;border-top:1px solid var(--hair);color:var(--ink-3);font-size:13px}
+@media (max-width:900px){.layout{grid-template-columns:1fr} nav.toc{position:static;max-height:none}}
+</style>
+</head>
+<body>
+<div class="layout">
+<nav class="toc" aria-label="Contents">
+  <p class="tt">Contents</p>
+  <ol><li><a href="#0-read-this-first">0. Read this first</a></li><li><a href="#1-the-60-second-picture">1. The 60-second picture</a></li><li><a href="#2-the-task-and-its-six-traps-deck-3">2. The task and its six traps (deck §3)</a></li><li><a href="#3-at-a-glance-deck-4">3. At a glance (deck §4)</a></li><li><a href="#4-the-decision-engines-deck-5">4. The decision engines (deck §5)</a></li><li><a href="#5-the-toolbox-every-function-one-by-one">5. The toolbox: every function, one by one</a></li><li><a href="#6-the-eight-steps-deck-613">6. The eight steps (deck §6–13)</a></li><li><a href="#7-the-research-sections-deck-1420">7. The research sections (deck §14–20)</a></li><li><a href="#8-what-the-deck-still-leaves-open">8. What the deck still leaves open</a></li><li><a href="#9-sources-for-this-guide">9. Sources for this guide</a></li></ol>
+  <a class="deck-link" href="03-bcf-simulation-httpx-3672.slides.v5.html">↗ Open the v5 replay deck</a>
+  <a class="deck-link" href="index.html">← All decks (index)</a>
+</nav>
+<article>
+<header class="hero">
+  <div class="kicker">httpx_3672 · companion to the v5 replay deck · beginner guide</div>
+  <h1>A beginner's guide to the v5 replay deck (httpx_3672)</h1>
+  <p class="sub">Prepared 2026-10-27. A gentle companion to <a href="03-bcf-simulation-httpx-3672.slides.v5.html"><code>03-bcf-simulation-httpx-3672.slides.v5.html</code></a>, &quot;naive vs BCF, replayed call by call&quot;. It follows the deck's 20 sections in order and explains every function the deck uses.</p>
+  <div class="chips"><span class="tag v">[V]</span><span class="tag rp">[REPLAY]</span><span class="tag sim">[SIM]</span><span class="tag est">[EST]</span><span class="tag r">[R]</span></div>
+</header>
+
+
+
+<h2 id="0-read-this-first"><a class="anchor" href="#0-read-this-first" aria-hidden="true">#</a>0. Read this first</h2>
+<h3 id="01-what-the-deck-is"><a class="anchor" href="#01-what-the-deck-is" aria-hidden="true">#</a>0.1 What the deck is</h3>
+<p>The deck compares three AI agents fixing the same real bug:</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Agent</th>
+<th>Who it is</th>
+<th>Calls (total / charged)</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Naive</strong> (Config 1)</td>
+<td>A generic agent: &quot;here is the issue, fix it&quot;.</td>
+<td>43 / 40</td>
+<td><code>resolved = False</code></td>
+</tr>
+<tr>
+<td><strong>BCF</strong> (Config 3)</td>
+<td>The same model run under the Batonic Coding Framework's rules, notes and checklists.</td>
+<td>30 / 28</td>
+<td><code>resolved = True</code></td>
+</tr>
+<tr>
+<td><strong>Tier-2</strong> (proposed)</td>
+<td>BCF plus the improvements the replay suggested.</td>
+<td>22 / 20</td>
+<td><code>resolved = True</code></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>&quot;Replayed&quot; is the key word.</strong> Every tool call in the deck was actually executed against a real copy of the project, through an emulator of the competition's tools. Every output you see on a call card is the real output. What is <em>not</em> real is the choice of which call to make next. Those choices were scripted by a person to match each agent's design; no AI model chose them.</p>
+<p>So the deck answers: &quot;<em>if</em> an agent made these choices, <em>what would really happen</em>?&quot; It does not answer &quot;what would Gemma actually do?&quot; That needs live runs (§14 of the deck).</p>
+<h3 id="02-the-five-evidence-tags"><a class="anchor" href="#02-the-five-evidence-tags" aria-hidden="true">#</a>0.2 The five evidence tags</h3>
+<p>Every claim in the deck carries a tag. Learn these first.</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Tag</th>
+<th>Meaning</th>
+<th>How much to trust it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="tag v">[V]</span> verified</td>
+<td>Read straight from the competition data (task, code, graph, harness README).</td>
+<td>Fully. Anyone can re-check it.</td>
+</tr>
+<tr>
+<td><span class="tag rp">[REPLAY]</span></td>
+<td>Produced by actually running the call in the emulator.</td>
+<td>High. Two parts are emulated from documentation rather than real source: the graph-tool name matcher and the BCF skill scripts.</td>
+</tr>
+<tr>
+<td><span class="tag sim">[SIM]</span> simulated</td>
+<td>Which call comes next. Scripted, not sampled from a model.</td>
+<td>Design intent only.</td>
+</tr>
+<tr>
+<td><span class="tag est">[EST]</span> estimated</td>
+<td>Wall-clock minutes and model-token counts.</td>
+<td>Rough ranges.</td>
+</tr>
+<tr>
+<td><span class="tag r">[R]</span> research</td>
+<td>Claims from published papers, numbered S1, S2, … in the deck's source list.</td>
+<td>As good as the cited paper.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="03-how-to-read-a-call-card"><a class="anchor" href="#03-how-to-read-a-call-card" aria-hidden="true">#</a>0.3 How to read a call card</h3>
+<p>Each call in Steps 1–8 is a <strong>card</strong>. Its ID tells you whose call it is: <strong>N</strong> for naive (N1–N43), <strong>C</strong> for BCF (C0–C29), <strong>T</strong> for Tier-2 (T0–T21). A card shows:</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Part of the card</th>
+<th>What it tells you</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>The call itself</td>
+<td>The exact tool and arguments, e.g. <code>read_file(&quot;src/httpx/_parsers.py&quot;, 370, 425)</code>.</td>
+</tr>
+<tr>
+<td><strong>Real output</strong> (click to expand)</td>
+<td>What the tool really returned.</td>
+</tr>
+<tr>
+<td><strong>Budget meter</strong> (<code>7/50</code> or <code>free</code>)</td>
+<td>How many of the 50 charged calls have been used after this one.</td>
+</tr>
+<tr>
+<td><strong>Shadow verdict</strong> (<code>PASS if submitted</code> / <code>fail if submitted</code>)</td>
+<td>If the agent had submitted right now, would the grader have passed it? The replay computed this after <strong>every</strong> call by running the grader on the current code. The real harness doesn't offer this; it is a teaching instrument.</td>
+</tr>
+<tr>
+<td><strong>Issue-bullet probe</strong> (<code>k/11</code>)</td>
+<td>How many of 11 simple checks of the issue's five bullets the code currently satisfies (6 checks in the sync tree, 5 in the async tree). The real reference fix scores 10/11.</td>
+</tr>
+<tr>
+<td><strong>Gain pill</strong></td>
+<td>How much the call actually helped: <em>high gain</em>, <em>some gain</em>, <em>≈ zero gain</em> (repeats, empty answers, tests that couldn't fail) or <em>negative</em> (reverts).</td>
+</tr>
+<tr>
+<td><strong>How it was chosen</strong></td>
+<td>The rule that picked this call.</td>
+</tr>
+<tr>
+<td><strong>Meant to buy</strong> / <strong>Actually bought</strong></td>
+<td>What the call was supposed to achieve, and what it really achieved, judged from the real output.</td>
+</tr>
+</tbody>
+</table></div>
+<p>Below each step's two columns there are three more blocks: <strong>&quot;Where the improvement happens&quot;</strong> (the step's verdict), <strong>◆ teachable moments</strong>, and <strong>&quot;The next-tier lens&quot;</strong> (Tier-2's calls for that step).</p>
+<h3 id="04-about-the-earlier-walkthrough"><a class="anchor" href="#04-about-the-earlier-walkthrough" aria-hidden="true">#</a>0.4 About the earlier walkthrough</h3>
+<p>A different, earlier deck with the same name lives in <code>bcf/</code>. It claimed BCF needed 24 calls and that the graph tools found the twin trees. This replay deck corrects both claims. A copy of the walkthrough of that earlier deck is saved at <code>scratch/walkthrough_prev_bcf-deck_20261027.md</code>.</p>
+
+<h2 id="1-the-60-second-picture"><a class="anchor" href="#1-the-60-second-picture" aria-hidden="true">#</a>1. The 60-second picture</h2>
+<h3 id="11-the-game"><a class="anchor" href="#11-the-game" aria-hidden="true">#</a>1.1 The game</h3>
+<p>The Kaggle competition gives an AI model (Gemma 4, 31B) a real bug report from a real Python project. The model must fix the code by itself. It cannot type into an editor. It can only ask the <strong>harness</strong> (the competition software) to do things for it, one <strong>tool call</strong> at a time.</p>
+<p>Think of it as an exam taken through a letterbox:</p>
+<ul>
+<li>You slide a note under the door (&quot;show me lines 370–425 of <code>_parsers.py</code>&quot;), and a clerk slides back the result.</li>
+<li>You get <strong>50 charged notes</strong>. A couple of note types are free.</li>
+<li>When you are done, you send a &quot;submit&quot; note, and the clerk photocopies every change you made (the <strong>patch</strong>).</li>
+<li><strong>A different examiner, in a different room</strong>, applies that photocopy to a fresh copy of the project, adds <strong>secret test questions</strong>, and runs them. All pass: score 1. Anything else: score 0.</li>
+</ul>
+<h3 id="12-words-you-need"><a class="anchor" href="#12-words-you-need" aria-hidden="true">#</a>1.2 Words you need</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Plain meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Agent</strong></td>
+<td>The AI model plus its instructions.</td>
+</tr>
+<tr>
+<td><strong>Harness</strong></td>
+<td>The competition software that runs the agent and its tool calls, and enforces the budget.</td>
+</tr>
+<tr>
+<td><strong>Tool call</strong></td>
+<td>One request to the harness. Most cost 1 of the 50; <code>get_status</code> and <code>submit_patch</code> are free.</td>
+</tr>
+<tr>
+<td><strong>Turn</strong></td>
+<td>One response from the model, which may contain several tool calls. The deck counts calls, not turns.</td>
+</tr>
+<tr>
+<td><strong>Container A</strong></td>
+<td>The sandbox where the agent works: an isolated Linux box with the project at <code>/workspace</code>.</td>
+</tr>
+<tr>
+<td><strong>Container B</strong></td>
+<td>A fresh sandbox used only for grading. The agent never sees it.</td>
+</tr>
+<tr>
+<td><strong>Patch</strong></td>
+<td>The agent's changes as a <code>git diff</code>. The only thing carried from A to B.</td>
+</tr>
+<tr>
+<td><strong>test_patch</strong></td>
+<td>The hidden test changes the grader adds in Container B.</td>
+</tr>
+<tr>
+<td><strong>resolved</strong></td>
+<td><code>True</code> if the hidden tests all pass in Container B. This is the whole score.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="13-the-flow"><a class="anchor" href="#13-the-flow" aria-hidden="true">#</a>1.3 The flow</h3>
+<pre><code class="language-text"> Container A (agent works here)                    Container B (grader; agent never sees it)
+ ┌──────────────────────────────────┐              ┌────────────────────────────────────────────┐
+ │ /workspace = repo at base commit │              │ fresh repo at base commit                  │
+ │                                  │              │ 1. apply agent's patch                     │
+ │ agent ⇄ tools (50-call budget)   │   patch      │ 2. RESET any test files the agent touched  │
+ │ ... edits files ...              │ ───────────► │ 3. apply hidden test_patch                 │
+ │ submit_patch()  →  git diff      │              │ 4. run pytest tests/test_parsers.py        │
+ └──────────────────────────────────┘              │ 5. exit code 0 and all pass → resolved     │
+                                                   └────────────────────────────────────────────┘
+</code></pre>
+
+<h2 id="2-the-task-and-its-six-traps-deck-3"><a class="anchor" href="#2-the-task-and-its-six-traps-deck-3" aria-hidden="true">#</a>2. The task and its six traps (deck §3)</h2>
+<p><a href="03-bcf-simulation-httpx-3672.slides.v5.html#s2">Deck §3 →</a></p>
+<h3 id="21-the-issue"><a class="anchor" href="#21-the-issue" aria-hidden="true">#</a>2.1 The issue</h3>
+<p>This is the entire problem statement, 243 characters:</p>
+<blockquote>
+<p>Server connection handling.</p>
+<ul>
+<li>Add <code>HTTPParser.keep_alive</code>.</li>
+<li>Server... always read request to completion on keep alives.</li>
+<li><code>HTTPParser.complete</code> -&gt; <code>.reset</code></li>
+<li>Close streams on server exit.</li>
+<li>Don't raise <code>KeyboardException</code> on server exit.</li>
+</ul>
+</blockquote>
+<p>That is five requests, with no error message, no traceback, no example and no file names. Two names in it are slightly wrong:</p>
+<ul>
+<li>The real fix adds <code>is_keepalive()</code>, not <code>keep_alive</code>.</li>
+<li>Python's exception is <code>KeyboardInterrupt</code>; <code>KeyboardException</code> doesn't exist.</li>
+</ul>
+<p>The one clear, mechanical instruction is <strong>&quot;rename <code>HTTPParser.complete</code> to <code>reset</code>&quot;</strong>.</p>
+<h3 id="22-what-is-graded"><a class="anchor" href="#22-what-is-graded" aria-hidden="true">#</a>2.2 What is graded</h3>
+<p>The hidden <code>test_patch</code> changes one file, <code>tests/test_parsers.py</code>, replacing <code>p.complete()</code> with <code>p.reset()</code> five times. The grader then runs that file's 24 tests. The reference fix (the <strong>gold patch</strong>) touches 7 files, but the score only checks that <code>httpx.HTTPParser.reset()</code> exists and works. Probe <strong>X1</strong> proved that renaming one method in one file is enough to pass.</p>
+<h3 id="23-the-six-traps"><a class="anchor" href="#23-the-six-traps" aria-hidden="true">#</a>2.3 The six traps</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Trap</th>
+<th>What it is</th>
+<th>Why it hurts</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1. Visible tests contradict the graded tests</strong></td>
+<td>The agent's copy of <code>tests/test_parsers.py</code> still calls <code>p.complete()</code> (lines 70, 116, 318, 557, 594).</td>
+<td>The correct rename turns the agent's local tests red. It looks broken but isn't.</td>
+</tr>
+<tr>
+<td><strong>2. Two trees</strong></td>
+<td>The project has an async copy (<code>src/ahttpx/</code>) and a sync copy (<code>src/httpx/</code>) of the library.</td>
+<td>Fixes must land in both, and <code>grep</code> shows every hit twice.</td>
+</tr>
+<tr>
+<td><strong>3. A silent bug at the caller</strong></td>
+<td><code>_server.py:92</code> says <code>self._parser.complete</code> with <strong>no parentheses</strong>.</td>
+<td>The method is looked up and thrown away, never called. No test reaches it.</td>
+</tr>
+<tr>
+<td><strong>4. Ungraded bullets</strong></td>
+<td><code>Response(code=500…)</code> raises a <code>TypeError</code>; <code>_streams = list[NetworkStream]</code> stores a type, not a list; <code>wait()</code> lets Ctrl-C escape.</td>
+<td>Real bugs that the score never sees.</td>
+</tr>
+<tr>
+<td><strong>5. The sync tree is generated</strong> <em>(new in v5)</em></td>
+<td><code>scripts/unasync</code> writes 15 of the 16 <code>src/httpx/*.py</code> files from <code>src/ahttpx/</code> by deleting <code>async</code>/<code>await</code>. Nothing marks them as generated.</td>
+<td>Hand-edits to <code>src/httpx/</code> are erased the next time someone runs the generator.</td>
+</tr>
+<tr>
+<td><strong>6. The graph is blind</strong> <em>(new in v5)</em></td>
+<td>The organizers' code graph indexes no <code>async def</code> and has no real caller edges.</td>
+<td>Graph tools can't find the async tree's methods or who calls <code>complete</code>.</td>
+</tr>
+</tbody>
+</table></div>
+<p>Trap 3 has a twist the deck shows in code. In the async source the same line is <code>await self._parser.complete</code>, which <strong>crashes</strong> (<code>TypeError: object method can't be used in 'await' expression</code>, probe X7). The generator deleted <code>await</code>, which turned a crash into a silent no-op in the sync copy.</p>
+
+<h2 id="3-at-a-glance-deck-4"><a class="anchor" href="#3-at-a-glance-deck-4" aria-hidden="true">#</a>3. At a glance (deck §4)</h2>
+<p><a href="03-bcf-simulation-httpx-3672.slides.v5.html#s3">Deck §4 →</a></p>
+<h3 id="31-the-scorecard-row-by-row"><a class="anchor" href="#31-the-scorecard-row-by-row" aria-hidden="true">#</a>3.1 The scorecard, row by row</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Row</th>
+<th>Naive</th>
+<th>BCF</th>
+<th>Tier-2</th>
+<th>What the row means</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Container B verdict</td>
+<td>False</td>
+<td>True</td>
+<td>True</td>
+<td>The score.</td>
+</tr>
+<tr>
+<td>Graded tests</td>
+<td>5 failed, 19 passed</td>
+<td>24 passed</td>
+<td>24 passed</td>
+<td>The hidden test run.</td>
+</tr>
+<tr>
+<td>Calls (total / charged)</td>
+<td>43 / 40</td>
+<td>30 / 28</td>
+<td>22 / 20</td>
+<td>Charged = counted against the 50.</td>
+</tr>
+<tr>
+<td>Issue-bullet probe</td>
+<td>4/11</td>
+<td>10/11</td>
+<td>11/11</td>
+<td>How much of the issue the code satisfies (gold = 10/11).</td>
+</tr>
+<tr>
+<td>Calls holding a passing patch</td>
+<td>5</td>
+<td>21</td>
+<td>9</td>
+<td>How many calls ended with a winning patch on disk.</td>
+</tr>
+<tr>
+<td>First passing call</td>
+<td>8th</td>
+<td>10th</td>
+<td>14th</td>
+<td>When the code first became good enough to submit.</td>
+</tr>
+<tr>
+<td>Repeats</td>
+<td>7</td>
+<td>0</td>
+<td>0</td>
+<td>Calls that re-asked something already answered.</td>
+</tr>
+<tr>
+<td>Reverts of own edits</td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>Times the agent undid its own work.</td>
+</tr>
+<tr>
+<td>Files in patch</td>
+<td>4</td>
+<td>8</td>
+<td>7</td>
+<td>Size of the final change.</td>
+</tr>
+<tr>
+<td>Generator drift (files)</td>
+<td>2</td>
+<td>1</td>
+<td>0</td>
+<td>Files the <code>unasync</code> generator would overwrite if re-run (Trap 5).</td>
+</tr>
+<tr>
+<td>Observation tokens</td>
+<td>11,592</td>
+<td>7,926</td>
+<td>5,938</td>
+<td>Text the tools sent back (about characters ÷ 4).</td>
+</tr>
+<tr>
+<td>Wall clock [EST]</td>
+<td>12–33 min</td>
+<td>8–23 min</td>
+<td>6–17 min</td>
+<td>Estimate: 15–45 s per model turn plus measured tool time.</td>
+</tr>
+</tbody>
+</table></div>
+<p>The headline row is <strong>&quot;calls holding a passing patch&quot;</strong>. The naive agent held a winning patch for 5 calls (N8–N12) and then threw it away.</p>
+<h3 id="32-the-three-charts"><a class="anchor" href="#32-the-three-charts" aria-hidden="true">#</a>3.2 The three charts</h3>
+<ul>
+<li><strong>&quot;Every call, aligned by step&quot;</strong>: one tick per call, grouped into the 8 steps.
+<ul>
+<li>Solid ticks mean high gain, faded mean some, hollow mean ≈ zero, red mean negative.</li>
+<li>A dashed outline means the call was free.</li>
+<li>The strip under each tick is green when a submit at that moment would pass.</li>
+<li>Click a tick to jump to its card.</li>
+</ul>
+</li>
+<li><strong>&quot;Issue-bullet coverage and shadow verdict&quot;</strong>: each agent's bullet score over time. Naive plateaus at 4/11. BCF climbs to 10/11. Tier-2 reaches 11/11 because it edits the generator's source.</li>
+<li><strong>&quot;Context consumption&quot;</strong>: how full each agent's context window gets. ADK (the agent framework) summarises old messages once the context passes <strong>14,336 tokens</strong>, which can make an agent &quot;forget&quot;. All three agents cross that line somewhere between calls 11 and 22. Naive's single biggest output is N9's cut-off <code>pytest</code> log (about 1.4k tokens).</li>
+</ul>
+
+<h2 id="4-the-decision-engines-deck-5"><a class="anchor" href="#4-the-decision-engines-deck-5" aria-hidden="true">#</a>4. The decision engines (deck §5)</h2>
+<p><a href="03-bcf-simulation-httpx-3672.slides.v5.html#s4">Deck §5 →</a></p>
+<p>The deck uses some formal vocabulary. Here it is in plain words.</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Plain meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>POMDP</strong></td>
+<td>&quot;Acting when you can only see clues, not the truth.&quot; The agent can't see which code is wrong or what the hidden tests check; each tool output is a partial clue.</td>
+</tr>
+<tr>
+<td><strong>Belief state</strong></td>
+<td>What the agent currently thinks is true. BCF writes its beliefs down (spec and journal). Naive's exist only in its context window.</td>
+</tr>
+<tr>
+<td><strong>Policy</strong></td>
+<td>The rule that decides the next tool call.</td>
+</tr>
+<tr>
+<td><strong>Heuristic</strong></td>
+<td>A good-enough rule used because the perfect one can't be computed. In the deck this is a compliment.</td>
+</tr>
+</tbody>
+</table></div>
+<p>The three agents run three policies:</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th></th>
+<th>Naive</th>
+<th>BCF</th>
+<th>Tier-2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>How it picks the next call</td>
+<td>Reacts to the latest output: red test → read the test → undo.</td>
+<td>Asks five questions in order (below).</td>
+<td>Same five questions, with sharper versions of Q2 and Q5.</td>
+</tr>
+<tr>
+<td>Where its beliefs live</td>
+<td>Context window only.</td>
+<td>Spec plus journal on disk.</td>
+<td>Spec, journal and a belief log.</td>
+</tr>
+<tr>
+<td>When it stops</td>
+<td>Budget pressure plus a green local suite.</td>
+<td>When every gate check passes.</td>
+<td>Same as BCF.</td>
+</tr>
+<tr>
+<td>Cost on this task</td>
+<td>40 charged, 7 repeats, 2 reverts</td>
+<td>28 charged, 0 reverts</td>
+<td>20 charged, 0 reverts</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>BCF's five questions</strong>, asked before every call:</p>
+<ol>
+<li><strong>Which phase am I in?</strong> Spec, localize, patch or validate. Each phase allows certain tools.</li>
+<li><strong>What is my next unmet obligation?</strong> The next unconfirmed hypothesis, the next bug in the fix order, or the next check.</li>
+<li><strong>Can I afford it?</strong> At most 10 calls to localize; submit by call 42; rescue after 3 failed checks or 25% of the budget.</li>
+<li><strong>Have I tried this and failed?</strong> Look it up in the journal; never repeat a failed action.</li>
+<li><strong>Is there a cheaper tool for the same question?</strong> Graph, then grep, then read, smallest window first.</li>
+</ol>
+<p><strong>What Tier-2 changes:</strong></p>
+<ul>
+<li>Q5 ranks calls by <strong>p/C</strong>: the chance the call finds the answer, divided by its cost. Plain BCF looks at cost only.</li>
+<li>Q2's checklist gains two obligations: <strong>provenance</strong> (&quot;is this file generated?&quot;) and <strong>closure</strong> (&quot;is every old name gone?&quot;).</li>
+<li>Every red test first passes through an <strong>asymmetry detector</strong>: &quot;was this failure predicted by the spec?&quot;</li>
+<li>Commands are shaped so the important lines survive the 5,000-character output cap.</li>
+</ul>
+
+<h2 id="5-the-toolbox-every-function-one-by-one"><a class="anchor" href="#5-the-toolbox-every-function-one-by-one" aria-hidden="true">#</a>5. The toolbox: every function, one by one</h2>
+<p>This section explains each function the deck uses: what it does, what it costs, and how the deck uses it.</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Real?</th>
+<th>Provided by</th>
+<th>Charged?</th>
+<th>Used at</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>get_status()</code></td>
+<td>Yes</td>
+<td>Harness built-in</td>
+<td>No</td>
+<td>N1, N41, C0, T0</td>
+</tr>
+<tr>
+<td><code>run_command(cmd)</code></td>
+<td>Yes</td>
+<td>Harness built-in</td>
+<td>Yes</td>
+<td>N2, N9, C13, C24, T3 …</td>
+</tr>
+<tr>
+<td><code>read_file(path, start, end)</code></td>
+<td>Yes</td>
+<td>Harness built-in</td>
+<td>Yes</td>
+<td>N4, C6–C8, T4–T6 …</td>
+</tr>
+<tr>
+<td><code>edit_file(path, old, new)</code></td>
+<td>Yes</td>
+<td>Harness built-in</td>
+<td>Yes</td>
+<td>N8, N13, C9–C12 …</td>
+</tr>
+<tr>
+<td><code>write_file(path, content)</code></td>
+<td>Yes</td>
+<td>Harness built-in</td>
+<td>Yes</td>
+<td>Avoided in v5 (see 5.5)</td>
+</tr>
+<tr>
+<td><code>search_similar_code(query)</code></td>
+<td>Yes</td>
+<td>Harness graph tool</td>
+<td>Yes</td>
+<td>C3</td>
+</tr>
+<tr>
+<td><code>get_code_subgraph(nodes)</code></td>
+<td>Yes</td>
+<td>Harness graph tool</td>
+<td>Yes</td>
+<td>C4</td>
+</tr>
+<tr>
+<td><code>get_code_neighbors(node)</code></td>
+<td>Yes</td>
+<td>Harness graph tool</td>
+<td>Yes</td>
+<td>C5</td>
+</tr>
+<tr>
+<td><code>submit_patch()</code></td>
+<td>Yes</td>
+<td>Harness built-in</td>
+<td>No</td>
+<td>N43, C29, T21</td>
+</tr>
+<tr>
+<td><code>run_skill_script(...)</code></td>
+<td>Yes</td>
+<td>Google ADK skills</td>
+<td>Unverified (D18)</td>
+<td>Carries C1/C2, T1/T2</td>
+</tr>
+<tr>
+<td><code>classify_issue</code></td>
+<td><strong>Proposal</strong></td>
+<td>A BCF skill script</td>
+<td>Assumed yes</td>
+<td>C1, T1</td>
+</tr>
+<tr>
+<td><code>write_spec</code></td>
+<td><strong>Proposal</strong></td>
+<td>A BCF skill script</td>
+<td>Assumed yes</td>
+<td>C2, T2</td>
+</tr>
+<tr>
+<td>Journal, gates G0–G6</td>
+<td><strong>Proposal</strong></td>
+<td>Files and checks run via <code>run_command</code></td>
+<td>Yes, when run</td>
+<td>C9 note, C26–C28</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="51-get-status-read-the-meters"><a class="anchor" href="#51-get-status-read-the-meters" aria-hidden="true">#</a>5.1 <code>get_status()</code>: read the meters</h3>
+<p><strong>What it does.</strong> It returns the budget state as a small JSON message and doesn't touch any file. This is the real output from card C0:</p>
+<pre><code class="language-json">{&quot;status&quot;: &quot;ok&quot;, &quot;tool_calls_used&quot;: 0, &quot;patch_submitted&quot;: false, &quot;patch_size&quot;: 0,
+ &quot;tool_calls_remaining&quot;: 50, &quot;max_tool_calls&quot;: 50, &quot;max_time_minutes&quot;: 60.0,
+ &quot;max_turns&quot;: 500, &quot;command_timeout_seconds&quot;: 300}
+</code></pre>
+<p><strong>What code is inside.</strong> The harness's own source (<code>swegemma/tools/execution.py</code>) is not available. From its documented contract (HARNESS_README §6.1) it is almost certainly a few lines that read counters the harness already keeps. <span class="tag est">illustrative</span>:</p>
+<pre><code class="language-python">@budget_gated(count_tool_call=False)      # False = this tool is free
+def get_status() -&gt; str:
+    return json.dumps({
+        &quot;status&quot;: &quot;ok&quot;,
+        &quot;tool_calls_used&quot;: ctx.tool_calls_used,
+        &quot;patch_submitted&quot;: ctx.patch_submitted,
+        &quot;tool_calls_remaining&quot;: ctx.budget.tool_calls - ctx.tool_calls_used,
+        &quot;max_tool_calls&quot;: ctx.budget.tool_calls,
+        ...  # time and turn limits
+    })
+</code></pre>
+<p><code>@budget_gated</code> is the harness's toll booth, and every tool passes through it:</p>
+<ul>
+<li>When <code>count_tool_call=True</code>, it adds 1 to <code>tool_calls_used</code>.</li>
+<li>Once 10 or fewer charged calls remain, it adds a <code>budget_warning</code> field to every response. You can see the real warning on card N42: &quot;Only 10 tool call(s) remaining (40/50 used)&quot;.</li>
+</ul>
+<p>The replay emulator does exactly this in <a href="../../../scratch/v5_replay/replay.py"><code>replay.py</code></a>, lines 71–98.</p>
+<p><strong>Why it is &quot;free&quot; but not worthless.</strong> It costs no budget, but it costs a little time and context. The deck's Step 1 lesson is that its <em>information</em> gain was zero too, because the starting prompt already states the budget.</p>
+<p><strong>N1 versus C0.</strong> Both are the same free call. In this deck both cards say <strong>free</strong>, and the budget meter stays at 0 for both. N, C and T simply number each agent's calls (naive starts at 1, BCF and Tier-2 at 0). The difference is only <em>why</em> each agent made the call: naive out of habit, BCF as step one of its protocol.</p>
+<h3 id="52-run-commandcommand-run-a-shell-command"><a class="anchor" href="#52-run-commandcommand-run-a-shell-command" aria-hidden="true">#</a>5.2 <code>run_command(command)</code>: run a shell command</h3>
+<p><strong>What it does.</strong> It runs any Linux command in <code>/workspace</code>, such as <code>grep</code>, <code>pytest</code>, <code>sed</code>, <code>git diff</code> or <code>python</code>.</p>
+<p><strong>What it returns.</strong> The printed output, cut at <strong>5,000 characters</strong> each for stdout and stderr, plus the exit code. Exit code 0 gives <code>&quot;status&quot;: &quot;ok&quot;</code>; anything else gives <code>&quot;status&quot;: &quot;error&quot;</code>.</p>
+<p><strong>Limits.</strong> 300 seconds per command, and no internet.</p>
+<p><strong>Lessons in the deck:</strong></p>
+<ul>
+<li><strong>The output cap can hide the verdict (N9).</strong> <code>pytest</code> prints tracebacks first and its summary last. At N9 the line &quot;5 failed, 19 passed&quot; was cut off, so the agent judged a 24-test suite from two and a half tracebacks. Tier-2 uses <code>pytest -q --tb=line -rf … | tail -9</code> (T19) so the summary survives. This idea is hypothesis H3, &quot;evidence shaping&quot;.</li>
+<li><strong>One command can replace many edits (C13).</strong> BCF renamed <code>_complete</code> → <code>_reset</code> in four pool and server files with one <code>sed</code>, instead of eight <code>edit_file</code> calls. It deliberately limited the <code>sed</code> to those four files: a repo-wide rename would also have hit <code>HTTPStream._complete</code> in <code>_streams.py</code>, an unrelated attribute with the same name (the &quot;decoy&quot; that N2's grep turned up).</li>
+<li><strong>It is the right way to write to <code>/tmp</code>.</strong> See 5.5.</li>
+</ul>
+<h3 id="53-read-filefilepath-start-line-end-line-look-at-part-of-a-file"><a class="anchor" href="#53-read-filefilepath-start-line-end-line-look-at-part-of-a-file" aria-hidden="true">#</a>5.3 <code>read_file(filepath, start_line, end_line)</code>: look at part of a file</h3>
+<p><strong>What it does.</strong> It returns lines <code>start_line</code>..<code>end_line</code> of a file, counting from 1 with both ends included.</p>
+<p><strong>Limits.</strong> At most 150 lines and 10,000 characters per call. If either cap is hit, <code>is_truncated: true</code> says so.</p>
+<p><strong>In the deck:</strong></p>
+<ul>
+<li><strong>Naive repeats itself.</strong> N5 and N7 re-read exactly what N4 and N6 had just read. Their output is byte-identical, so they have <strong>zero information gain by construction</strong>: if you can predict a result with certainty, it can't change your mind.</li>
+<li><strong>BCF reads wide and targeted.</strong> C6 reads <code>_server.py</code> 28–105 and finds line 92 (no parentheses), line 46 (<code>Response(code=500…)</code>) and <code>wait()</code> at line 100. C7 reads <code>_network.py</code> 75–190.</li>
+<li><strong>C8 exists because edits need the exact text.</strong> <code>edit_file</code> needs the exact text it is replacing, so you must read a region before editing it. The earlier v4 trajectory edited <code>_parsers.py</code> without ever reading it, which is impossible.</li>
+</ul>
+<h3 id="54-edit-filefilepath-old-string-new-string-allow-multiplefalse-find-and-replace"><a class="anchor" href="#54-edit-filefilepath-old-string-new-string-allow-multiplefalse-find-and-replace" aria-hidden="true">#</a>5.4 <code>edit_file(filepath, old_string, new_string, allow_multiple=False)</code>: find and replace</h3>
+<p><strong>What it does.</strong> It finds <code>old_string</code> in the file and replaces it with <code>new_string</code>. That is <strong>one find-and-replace per call</strong>.</p>
+<p><strong>Matching.</strong> It tries an exact match first, then whitespace-tolerant matching.</p>
+<p><strong>Safety.</strong> If <code>old_string</code> appears more than once and <code>allow_multiple</code> is <code>False</code>, nothing changes. If the text isn't found, it fails loudly with <code>FileEditError</code>. That failure is a free safety net: a wrong guess costs one call and does no damage (see C11).</p>
+<p><strong>In the deck:</strong></p>
+<ul>
+<li><strong>N8</strong> renames the method, and the shadow verdict turns PASS.</li>
+<li><strong>N13</strong> renames it back, and the verdict turns fail for good.</li>
+<li><strong>C9–C12</strong> rename in both parsers. Each parser needs 2 calls, because the rename and the <code>return True</code> line are far apart.</li>
+<li><strong>C25</strong> uses <code>allow_multiple=True</code> to change all five <code>p.complete()</code> lines in the test file in one call.</li>
+<li>Because each call makes exactly one replacement, BCF honestly needs <strong>30</strong> calls here, not v4's 24 (errata, §17).</li>
+</ul>
+<h3 id="55-write-filefilepath-content-create-or-overwrite-a-file"><a class="anchor" href="#55-write-filefilepath-content-create-or-overwrite-a-file" aria-hidden="true">#</a>5.5 <code>write_file(filepath, content)</code>: create or overwrite a file</h3>
+<p><strong>What it does.</strong> It writes a whole file at <code>/workspace/&lt;filepath&gt;</code>.</p>
+<p><strong>The trap.</strong> A leading <code>/</code> is stripped, so <code>write_file(&quot;/tmp/repro_reset.py&quot;)</code> actually creates <code>/workspace/tmp/repro_reset.py</code>. <code>submit_patch</code> then ships that file inside the patch (probe <strong>X5</strong>). The earlier v4 trajectory made exactly this mistake.</p>
+<p><strong>In the deck.</strong> v5 avoids <code>write_file</code> entirely. C24 and T18 write the repro script with <code>run_command</code> and a heredoc:</p>
+<pre><code class="language-bash">cat &gt; /tmp/repro_reset.py &lt;&lt;'EOF'
+...script...
+EOF
+python /tmp/repro_reset.py
+</code></pre>
+<h3 id="56-the-three-graph-tools-c3-c4-c5"><a class="anchor" href="#56-the-three-graph-tools-c3-c4-c5" aria-hidden="true">#</a>5.6 The three graph tools (C3, C4, C5)</h3>
+<p>Before the competition, the organizers turned the httpx code into a <strong>graph</strong>:</p>
+<ul>
+<li>740 <strong>nodes</strong>, one per function or class, named like <code>httpx._parsers.HTTPParser.complete</code>.</li>
+<li>1,618 <strong>edges</strong>, all labeled <code>calls</code>.</li>
+<li>An <strong>embedding</strong> for each node: a list of 256 numbers summarising the code, used to measure similarity.</li>
+</ul>
+<p>Here is what each graph tool really returned in the replay:</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Card</th>
+<th>Call</th>
+<th>Hoped for</th>
+<th>Real output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C3</td>
+<td><code>search_similar_code(&quot;HTTPParser&quot;)</code></td>
+<td>Both trees' parsers.</td>
+<td>Itself, two <code>HTTPConnection</code> nodes and 7 test functions. All scores were 0.9968–1.0, and the async parser was absent.</td>
+</tr>
+<tr>
+<td>C4</td>
+<td><code>get_code_subgraph([4 classes from both trees])</code></td>
+<td>The mirror structure.</td>
+<td>4 nodes and <strong>0 edges</strong>. The only &quot;mirror&quot; information was the list of names the agent typed in.</td>
+</tr>
+<tr>
+<td>C5</td>
+<td><code>get_code_neighbors(&quot;httpx._parsers.HTTPParser.complete&quot;)</code></td>
+<td>Who calls <code>complete</code>.</td>
+<td>One neighbour, the parent class: a containment edge stored as a <code>calls</code> edge.</td>
+</tr>
+</tbody>
+</table></div>
+<p>Each tool in plain words:</p>
+<ul>
+<li><strong><code>search_similar_code(query, k=10)</code></strong> looks up the node named <code>query</code> and returns the <code>k</code> nodes whose number-lists point the same way. <strong>Lesson:</strong> when every score is about 0.997, the ranking means almost nothing. Always look at the spread of scores, not just their order.</li>
+<li><strong><code>get_code_subgraph(nodes)</code></strong> returns those nodes plus the edges <em>between them</em> (an &quot;induced subgraph&quot;).</li>
+<li><strong><code>get_code_neighbors(node)</code></strong> returns every node with an edge to or from <code>node</code>.</li>
+</ul>
+<p><strong>Why they failed here.</strong> The graph has two blind spots, which are Trap 6:</p>
+<ul>
+<li>It indexes no <code>async def</code>, so two-thirds of the async parser is invisible.</li>
+<li>It has no cross-file caller edges.</li>
+</ul>
+<p>That makes it a <strong>symbol index</strong> (&quot;does this name exist?&quot;), not a caller map (&quot;who calls this?&quot;).</p>
+<p><strong>Where the twin-tree knowledge really came from.</strong> The starting prompt includes a free workspace listing that shows <code>src/ahttpx/</code> next to <code>src/httpx/</code>.</p>
+<p><strong>Tier-2 skips the graph.</strong> One word-bounded <code>grep</code> (T3) finds the rename sites and detects the generator, in one call. This is hypothesis H4, &quot;search first&quot;.</p>
+<h3 id="57-submit-patch-hand-in-the-work"><a class="anchor" href="#57-submit-patch-hand-in-the-work" aria-hidden="true">#</a>5.7 <code>submit_patch()</code>: hand in the work</h3>
+<p><strong>What it does.</strong> It runs <code>git add -N .</code> (so new files are included) and then <code>git diff</code>, and stores the result as the patch. The session ends after the current model turn.</p>
+<p><strong>Cost.</strong> Free. It still works after the 50 charged calls are used up.</p>
+<p><strong>In the deck:</strong></p>
+<ul>
+<li><strong>N43</strong>: 4 files, 2,851 bytes. Container B: 5 failed, so <code>resolved = False</code>. The graded tests call <code>p.reset()</code>, which this patch never defines.</li>
+<li><strong>C29</strong>: 8 files (7 library files plus the migrated test file), 10,768 bytes. Container B: 24 passed, so <code>resolved = True</code>.</li>
+<li><strong>T21</strong>: 7 files with no test edits. Container B: 24 passed, so <code>resolved = True</code>.</li>
+</ul>
+<h3 id="58-run-skill-script-how-bcfs-helpers-would-run"><a class="anchor" href="#58-run-skill-script-how-bcfs-helpers-would-run" aria-hidden="true">#</a>5.8 <code>run_skill_script(...)</code>: how BCF's helpers would run</h3>
+<p>A competition submission may include a <code>skills/</code> folder. Each skill is a directory with:</p>
+<ul>
+<li><code>SKILL.md</code>: a short instruction sheet, and</li>
+<li>optional Python scripts in <code>scripts/</code>.</li>
+</ul>
+<p><strong><code>run_skill_script</code></strong> is the tool that runs one of those scripts. It comes from Google's Agent Development Kit (ADK), not from the 9 harness tools. The competition overview says skill scripts run inside the same container and share files with <code>run_command</code>.</p>
+<p>Two things are not yet known or are known hazards:</p>
+<ul>
+<li><strong>Budget cost is unverified.</strong> Nobody has confirmed whether a skill-script call costs one of the 50. The deck lists this as data item <strong>D18</strong> (a one-off probe). The replay assumes it is charged.</li>
+<li><strong>A crash bug exists.</strong> Forum reports show that passing the script's <code>file_path</code> as a list instead of a string ends the task (3.4% of skills-based runs).</li>
+</ul>
+<h3 id="59-classify-issue-c1-t1-what-kind-of-problem-is-this"><a class="anchor" href="#59-classify-issue-c1-t1-what-kind-of-problem-is-this" aria-hidden="true">#</a>5.9 <code>classify_issue</code> (C1, T1): what kind of problem is this?</h3>
+<p>This is a <strong>BCF proposal</strong>, not an existing script. It is plain Python, not an AI call. It reads <strong>only the issue text</strong> and picks a plan template. The emulator (<a href="../../../scratch/v5_replay/replay.py"><code>replay.py</code></a>, lines 206–218) is about 15 lines of keyword rules:</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Rule</th>
+<th>Signal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A bullet starts with &quot;Add&quot;, &quot;Support&quot; or &quot;Implement&quot;</td>
+<td>Feature</td>
+</tr>
+<tr>
+<td>A bullet contains &quot;-&gt;&quot; or &quot;rename&quot;</td>
+<td>Refactor</td>
+</tr>
+<tr>
+<td>A bullet says &quot;always&quot;, &quot;never&quot;, &quot;close&quot; or &quot;don't&quot;</td>
+<td>Behavior</td>
+</tr>
+<tr>
+<td>The text contains &quot;Traceback (most recent call last)&quot;</td>
+<td>Traceback</td>
+</tr>
+</tbody>
+</table></div>
+<p>Its real output on card C1:</p>
+<ul>
+<li>Route: <code>compat_or_refactor + feature sub-spec</code>.</li>
+<li>Signals: 1 feature, 1 refactor, 3 behavior; no traceback and no &quot;expected/got&quot;.</li>
+<li>Anchors: <code>HTTPParser</code>, <code>KeyboardException</code>, <code>complete</code>, <code>keep_alive</code>, <code>reset</code>.</li>
+</ul>
+<p><strong>Why issue text only?</strong> The issue is the only thing guaranteed to describe what is graded. The visible tests are stale (Trap 1), and the code is wrong by definition. The research term for code that satisfies the visible tests but not the specification is <strong>test overfitting</strong>.</p>
+<p><strong>Gate G0.</strong> BCF's rules say file tools stay locked until the spec is valid. In this competition a submission is configuration only (YAML) and can't intercept tool calls. So &quot;locked&quot; means either:</p>
+<ul>
+<li>the prompt says so, or</li>
+<li>the planning sub-agent is simply not given file tools.</li>
+</ul>
+<h3 id="510-write-spec-c2-t2-write-the-plan-down-before-looking"><a class="anchor" href="#510-write-spec-c2-t2-write-the-plan-down-before-looking" aria-hidden="true">#</a>5.10 <code>write_spec</code> (C2, T2): write the plan down before looking</h3>
+<p>This is also a <strong>BCF proposal</strong>, a skill script that checks the plan's shape. The plan lists five hypotheses:</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Hypothesis</th>
+<th>Target</th>
+<th>Depends on</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>B1</td>
+<td>Rename <code>complete</code> → <code>reset</code> (returning <code>True</code>/<code>False</code>), both trees</td>
+<td><code>httpx._parsers.HTTPParser.complete</code></td>
+<td>n/a</td>
+</tr>
+<tr>
+<td>B2</td>
+<td>Add <code>is_keepalive()</code></td>
+<td><code>httpx._parsers.HTTPParser</code></td>
+<td>B1</td>
+</tr>
+<tr>
+<td>B3</td>
+<td>The server never resets the parser (no parentheses) and never drains the request</td>
+<td><code>httpx._server.HTTPConnection._complete</code></td>
+<td>B1, B2</td>
+</tr>
+<tr>
+<td>B4</td>
+<td><code>_streams</code> holds a type, and streams are never closed</td>
+<td><code>httpx._network.NetworkServer.__init__</code></td>
+<td>n/a</td>
+</tr>
+<tr>
+<td>B5</td>
+<td><code>wait()</code> leaks Ctrl-C; <code>Response(code=500)</code> raises a <code>TypeError</code></td>
+<td><code>httpx._server.HTTPServer.wait</code></td>
+<td>n/a</td>
+</tr>
+</tbody>
+</table></div>
+<p>The plan also sets:</p>
+<ul>
+<li><code>fix_order = [B1, B2, B3, B4, B5]</code>, a validation plan, and a budget plan.</li>
+</ul>
+<p>The script checked three things: the schema is valid, the fix order respects the dependencies, and all five targets are real graph nodes. It returned <code>&quot;G0&quot;: &quot;PASS - file tools unblocked&quot;</code>.</p>
+<p>Two ideas from the deck's Step 3:</p>
+<ul>
+<li><strong>Pre-registration.</strong> Scientists write their predictions down <em>before</em> seeing the data, so the data can prove them wrong instead of being reinterpreted. The spec does the same for a debugging run. When the tests go red after the rename, &quot;was this predicted?&quot; has a written answer: yes.</li>
+<li><strong>DAG and topological order.</strong> A DAG is a dependency diagram you can't go in circles in. A topological order is any order that respects &quot;this before that&quot;. B3's code calls <code>is_keepalive()</code>, which B2 creates, which only makes sense after B1's rename. Writing B3 first would produce code that can't run, and it would look like a wrong hypothesis.</li>
+</ul>
+<h3 id="511-the-journal-the-ratchet-and-the-gates-bcf-proposals"><a class="anchor" href="#511-the-journal-the-ratchet-and-the-gates-bcf-proposals" aria-hidden="true">#</a>5.11 The journal, the ratchet and the gates (BCF proposals)</h3>
+<ul>
+<li><strong>Journal.</strong> A small text file in <code>/tmp</code> (outside the patch) with one line per important action. The key line, written at C9, is: <code>t=09 … local suite WILL go red; expected — hidden tests renamed</code>.</li>
+<li><strong>Ratchet.</strong> A ratchet only turns one way. BCF never undoes a justified edit because of a red test the spec predicted. Failures route forward (fix, check, rescue), never backward (revert).</li>
+<li><strong>Gates G0–G6.</strong> Yes/no checks computed by code, not judged by the model:</li>
+</ul>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Gate</th>
+<th>Check</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>G0</td>
+<td>The spec is valid.</td>
+</tr>
+<tr>
+<td>G1</td>
+<td>Only allowed files were changed.</td>
+</tr>
+<tr>
+<td>G2</td>
+<td>The patch applies cleanly.</td>
+</tr>
+<tr>
+<td>G3</td>
+<td>Every changed file still compiles.</td>
+</tr>
+<tr>
+<td>G4</td>
+<td>The target tests pass.</td>
+</tr>
+<tr>
+<td>G5</td>
+<td>Nearby tests still pass.</td>
+</tr>
+<tr>
+<td>G6</td>
+<td>The patch is not empty.</td>
+</tr>
+</tbody>
+</table></div>
+<p>BCF submits only when all seven are true. The submission can't run code of its own, so the gates cost a charged <code>run_command</code>: C26 runs G4, C27 runs G5, and C28 runs G1–G3 and G6 together.</p>
+
+<h2 id="6-the-eight-steps-deck-613"><a class="anchor" href="#6-the-eight-steps-deck-613" aria-hidden="true">#</a>6. The eight steps (deck §6–13)</h2>
+<p>Each step below covers what each agent does, the idea it teaches, and the card to look at. All outputs are real.</p>
+<h3 id="step-1-orient"><a class="anchor" href="#step-1-orient" aria-hidden="true">#</a>Step 1: Orient</h3>
+<p><a href="03-bcf-simulation-httpx-3672.slides.v5.html#step1">Deck →</a></p>
+<p><strong>What happens.</strong> N1, C0 and T0 are each a free <code>get_status()</code>.</p>
+<p><strong>Lesson.</strong> Before every call, ask: &quot;what could this result change about what I do next?&quot; Here the honest answer is &quot;nothing&quot;, because the prompt already stated the budget. That is acceptable only because the call is free.</p>
+<p><strong>Tier-2 adds.</strong> It also logs the serving environment (model, adapter and wheel versions), so the run can be interpreted later (D16).</p>
+<h3 id="step-2-frame"><a class="anchor" href="#step-2-frame" aria-hidden="true">#</a>Step 2: Frame</h3>
+<p><a href="03-bcf-simulation-httpx-3672.slides.v5.html#step2">Deck →</a></p>
+<p><strong>Naive (N2, N3).</strong> It runs <code>grep -rn 'complete' src/ tests/</code> and gets 53 lines (3.6 kB):</p>
+<ul>
+<li><strong>19</strong> are real rename sites.</li>
+<li><strong>12</strong> are a decoy: <code>HTTPStream._complete</code> in <code>_streams.py</code>, an unrelated callback slot.</li>
+<li><strong>22</strong> are prose and comments (&quot;complete URL&quot;).</li>
+</ul>
+<p>N3 shrinks the list to 13 file names. The twin tree is now visible, but naive has nowhere to store &quot;every fix must land twice&quot;.</p>
+<p><strong>BCF (C1).</strong> It runs <code>classify_issue</code>, which returns a route and an anchor vocabulary.</p>
+<p><strong>Lesson.</strong> Whatever frames the problem first tends to stay the frame. Naive framed it through the code's surface; BCF framed it through the issue's contract.</p>
+<p><strong>Tier-2 (T1).</strong> It would draw three classifications and vote (H9), because a misroute is the one judgment that can sink a run.</p>
+<h3 id="step-3-plan"><a class="anchor" href="#step-3-plan" aria-hidden="true">#</a>Step 3: Plan</h3>
+<p><a href="03-bcf-simulation-httpx-3672.slides.v5.html#step3">Deck →</a></p>
+<p><strong>Naive.</strong> The column is <strong>empty on purpose</strong>: there is no plan. Three later failures trace back to this empty cell:</p>
+<ul>
+<li>the revert at N13,</li>
+<li>the repeated query at N27,</li>
+<li>the final score of 4/11 bullets.</li>
+</ul>
+<p><strong>BCF (C2).</strong> It writes the spec (5.10).</p>
+<p><strong>Tier-2 (T2).</strong> It adds one question, &quot;is either tree generated?&quot; (H6, provenance). The answer (yes) changes the plan from &quot;edit both trees by hand&quot; to &quot;edit the async source, regenerate, then hand-edit <code>_network.py</code>&quot;. That one question is the difference between 10/11 and 11/11.</p>
+<h3 id="step-4-localize"><a class="anchor" href="#step-4-localize" aria-hidden="true">#</a>Step 4: Localize</h3>
+<p><a href="03-bcf-simulation-httpx-3672.slides.v5.html#step4">Deck →</a></p>
+<p><strong>Naive (N4–N7).</strong> It reads the parser in both trees, but two of the four reads (N5, N7) are exact repeats.</p>
+<p><strong>BCF (C3–C8).</strong> It makes three graph calls with about zero gain (5.6), then three good reads. Localization closes at 6 calls; the plan allowed 10.</p>
+<p><strong>Tier-2 (T3–T6).</strong> One shaped <code>grep</code> plus three reads. T3's <code>grep</code> also detects the generator script.</p>
+<p><strong>New ideas in this step:</strong></p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Idea</th>
+<th>Plain meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Entropy</strong></td>
+<td>How unsure you are, measured.</td>
+</tr>
+<tr>
+<td><strong>Expected information gain</strong></td>
+<td>How much a call is expected to shrink that uncertainty.</td>
+</tr>
+<tr>
+<td><strong>Value of information</strong></td>
+<td>Information is only worth what it changes about what you'll do.</td>
+</tr>
+<tr>
+<td><strong>p/C rule</strong></td>
+<td>Check first whatever has the best chance of finding the fault per unit of cost. BCF orders tools by cost only (1/C); Tier-2 uses p/C.</td>
+</tr>
+<tr>
+<td><strong>Realized vs expected gain</strong></td>
+<td>You can only tell whether your expectations are any good if you log both. That is why the data wishlist asks for a belief log (D4).</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="step-5-the-rename-the-turning-point"><a class="anchor" href="#step-5-the-rename-the-turning-point" aria-hidden="true">#</a>Step 5: The rename, the turning point</h3>
+<p><a href="03-bcf-simulation-httpx-3672.slides.v5.html#step5">Deck →</a></p>
+<p>This step decides the task. Read the naive cards in order:</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Card</th>
+<th>What naive does</th>
+<th>Shadow verdict</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="03-bcf-simulation-httpx-3672.slides.v5.html#call-N8">N8</a></td>
+<td>Renames <code>complete</code> → <code>reset</code> in the sync parser.</td>
+<td><strong>PASS</strong>: it now holds a winning patch.</td>
+</tr>
+<tr>
+<td>N9</td>
+<td>Runs <code>pytest</code>; the output cap hides &quot;5 failed, 19 passed&quot;. It sees <code>AttributeError … 'complete'</code>.</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>N10, N11</td>
+<td>Reads the failing tests; line 70 says <code>p.complete()</code>. The correct diagnosis is on screen.</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>N12</td>
+<td>Runs <code>git diff</code> and sees only its own intended change.</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td><a href="03-bcf-simulation-httpx-3672.slides.v5.html#call-N13">N13</a></td>
+<td><strong>Reverts the rename.</strong></td>
+<td><strong>fail</strong>, permanently</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Why naive reverts.</strong> It applies the <strong>regression heuristic</strong>: &quot;tests were green before my edit and red after, so my edit is wrong&quot;. That rule is almost always right. It is wrong exactly when the tests are stale, which is the defining property of this task. The deck cites a benchmark where a frontier model sided with deliberately wrong tests 54–76% of the time. Giving it an explicit &quot;flag a spec/test conflict&quot; option cut that to 9%.</p>
+<p><strong>BCF (C9–C14):</strong></p>
+<ul>
+<li>It renames both parsers (C9–C12) and journals that the red is expected.</li>
+<li>It renames every caller in one scoped <code>sed</code> (C13), which also fixes the no-parentheses line as a side effect.</li>
+<li>It re-greps to prove nothing still says <code>complete</code> in code (C14).</li>
+<li>It never runs the stale suite in this phase. Its shadow verdict stays green for the remaining 20 calls.</li>
+</ul>
+<p><strong>Tier-2 (T7–T9).</strong> It edits the <strong>async source</strong> first, then runs a <code>sed</code> on the async callers.</p>
+<h3 id="step-6-scope-the-ungraded-bullets"><a class="anchor" href="#step-6-scope-the-ungraded-bullets" aria-hidden="true">#</a>Step 6: Scope, the ungraded bullets</h3>
+<p><a href="03-bcf-simulation-httpx-3672.slides.v5.html#step6">Deck →</a></p>
+<p><strong>Naive (N14–N26), 13 calls:</strong></p>
+<ul>
+<li>It adds <code>is_keepalive()</code> (sync only).</li>
+<li>It reads the whole server file, which puts line 92 on screen, but nothing errors, so it doesn't react.</li>
+<li>It adds a drain without the reset it needs: half a fix that looks whole.</li>
+<li>It fixes <code>Response(500)</code> in sync only and the network code partly.</li>
+<li>It runs the full suite twice (N17, N26): 127 passed. That green <strong>could not have been red</strong>, because no test covers this code.</li>
+</ul>
+<p><strong>BCF (C15–C23), 9 calls.</strong> It works in topological order (B2 → B3 → B4 → B5), always in both trees where both exist, and runs no tests, because no test can see these bullets. The bullet probe ends this step at naive 4/11 against BCF 10/11.</p>
+<p><strong>Tier-2 (T10–T16).</strong></p>
+<ul>
+<li>It edits only <code>src/ahttpx/</code>, including the async <code>wait()</code>.</li>
+<li>At T13 it runs the repo's own generator to rebuild <code>src/httpx/</code>.</li>
+<li>It then hand-edits <code>_network.py</code>, the one file the generator doesn't write.</li>
+<li>Result: 11/11 and zero drift.</li>
+</ul>
+<p><strong>Lesson: the generator nobody noticed.</strong> Re-running <code>unasync</code> on each final tree shows what would be lost:</p>
+<ul>
+<li><strong>Naive</strong> loses most of its sync edits.</li>
+<li><strong>BCF</strong> loses its <code>wait()</code> fix.</li>
+<li><strong>The gold patch</strong> loses its <code>wait()</code> fix too (probe X8).</li>
+</ul>
+<p>Copied code that drifts apart is a known source of real bugs.</p>
+<h3 id="step-7-validate"><a class="anchor" href="#step-7-validate" aria-hidden="true">#</a>Step 7: Validate</h3>
+<p><a href="03-bcf-simulation-httpx-3672.slides.v5.html#step7">Deck →</a></p>
+<p><strong>Naive (N27–N39), 13 calls of churn:</strong></p>
+<ul>
+<li>N27 repeats N2 word for word, the start of a loop.</li>
+<li>N28, N29 and N33 re-read windows it had already read (N28's file had only grown by N14's insertion).</li>
+<li>N34 renames the async parser, and the tests stay green because every test imports only <code>httpx</code>.</li>
+<li>N38 reverts half of that, leaving the async tree internally inconsistent: the parser defines <code>reset</code>, but the pool still calls <code>complete()</code>.</li>
+</ul>
+<p><strong>BCF (C24–C28), five calls that could each fail:</strong></p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Card</th>
+<th>What it checks</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C24</td>
+<td>A <code>/tmp</code> repro of the new API.</td>
+</tr>
+<tr>
+<td>C25</td>
+<td>Migrates the 5 test lines in one call.</td>
+</tr>
+<tr>
+<td>C26</td>
+<td>G4: target tests, 24 passed.</td>
+</tr>
+<tr>
+<td>C27</td>
+<td>G5: nearby suites, 20 passed.</td>
+</tr>
+<tr>
+<td>C28</td>
+<td>G1–G3 and G6 together: <code>GATES_OK</code>.</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Tier-2 (T17–T20):</strong></p>
+<ul>
+<li>T17: a 10-line AST check for &quot;named but never called&quot; expressions (H7).</li>
+<li>T18: a repro plus spec-transformed tests in <code>/tmp</code>, with no test-file edits (H2).</li>
+<li>T19: shaped <code>pytest</code> output (H3).</li>
+<li>T20: a drift check confirming the generator would change nothing (H6).</li>
+</ul>
+<p><strong>Lesson.</strong> A test result carries information only if it could have come out differently. Before running anything, ask &quot;which tests could see this change?&quot;</p>
+<p>The deck adds a caution. Loops are better seen as a <strong>symptom</strong> than a cause. When one research project suppressed repetition directly, loops fell sharply but the resolve rate slipped slightly (40.2% to 38.4%).</p>
+<h3 id="step-8-submit"><a class="anchor" href="#step-8-submit" aria-hidden="true">#</a>Step 8: Submit</h3>
+<p><a href="03-bcf-simulation-httpx-3672.slides.v5.html#step8">Deck →</a></p>
+<p><strong>Naive (N40–N43).</strong> It takes stock with <code>git status</code> (N40), checks the budget (N41, free: 39 used, 11 left), and runs one more test (N42, which now carries the real <code>budget_warning</code>). It then submits (N43). The verdict is <strong>False</strong>: the graded tests call <code>p.reset()</code>, which the patch never defines. It is the mirror image of the error that made it revert at N13.</p>
+<p><strong>BCF (C29).</strong> It submits because all gates are true: &quot;a lookup, not a judgment&quot;. The verdict is <strong>True</strong>.</p>
+<p><strong>Tier-2 (T21).</strong> <strong>True</strong>, with 7 files and no test edits.</p>
+<p><strong>A data quirk.</strong> The dataset's <code>test_patch</code> has a malformed last hunk. <code>git apply</code> rejects it; only the harness's fourth fallback (GNU <code>patch</code>) applies it. That matters to anyone building a local grader.</p>
+<p><strong>Lesson.</strong> &quot;The agent's world ends at submit.&quot; Everything after that scores a fixed patch against evidence the agent never saw. That is why spec, journal and gates exist: to line up the agent's commitments with the issue.</p>
+
+<h2 id="7-the-research-sections-deck-1420"><a class="anchor" href="#7-the-research-sections-deck-1420" aria-hidden="true">#</a>7. The research sections (deck §14–20)</h2>
+<h3 id="71-statistics-one-run-proves-very-little-14"><a class="anchor" href="#71-statistics-one-run-proves-very-little-14" aria-hidden="true">#</a>7.1 Statistics: one run proves very little (§14)</h3>
+<p><a href="03-bcf-simulation-httpx-3672.slides.v5.html#stats">Deck →</a></p>
+<p>The planned experiment is 30 tasks × 3 random seeds per configuration. The deck explains why that is a blunt instrument:</p>
+<ul>
+<li>It can only reliably detect a difference of about <strong>17 percentage points</strong>, or about 22 after correcting for testing 8 hypotheses.</li>
+<li>Typical published improvements are 2–9 points.</li>
+<li>Seeds are not extra tasks. Because the same task tends to behave the same way across seeds, 90 runs carry about as much information as 37 independent ones.</li>
+<li>On the 58-task public leaderboard, scores of 0.20, 0.22 and 0.24 are just 12, 13 and 14 tasks, which is statistically indistinguishable.</li>
+</ul>
+<p><strong>What to do instead:</strong></p>
+<ul>
+<li>Use a <strong>paired t-test</strong> on the 30 per-task average differences.</li>
+<li>Make <strong>mechanism measurements</strong> the main endpoints. Examples: &quot;how often does the agent revert a spec-mandated edit?&quot; and &quot;how many calls to localize?&quot;. These give hundreds of data points per run, not 30.</li>
+<li>Write the plan down before running (pre-registration).</li>
+<li>Report a non-result as &quot;couldn't detect effects smaller than ~17 points&quot;, never as &quot;no effect&quot;.</li>
+</ul>
+<p><strong>One-line takeaway:</strong> one run gives one bit per task, so measure the mechanisms inside the run.</p>
+<h3 id="72-tiers-what-each-level-is-made-of-15"><a class="anchor" href="#72-tiers-what-each-level-is-made-of-15" aria-hidden="true">#</a>7.2 Tiers: what each level is made of (§15)</h3>
+<p><a href="03-bcf-simulation-httpx-3672.slides.v5.html#tiers">Deck →</a></p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>In one phrase</th>
+<th>What it trusts</th>
+<th>This run</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0 · naive</td>
+<td>Reactive</td>
+<td>The visible tests</td>
+<td>40 charged, fail, 4/11</td>
+</tr>
+<tr>
+<td>1 · BCF</td>
+<td>Discipline</td>
+<td>The spec over the visible tests</td>
+<td>28 charged, pass, 10/11</td>
+</tr>
+<tr>
+<td>2 · calibrated</td>
+<td>Measurement</td>
+<td>The spec plus its own proxy tests, with a conflict rule</td>
+<td>20 charged, pass, 11/11, 0 drift</td>
+</tr>
+<tr>
+<td>3 · trained</td>
+<td>Competence</td>
+<td>The same habits, learned into the model's weights (LoRA)</td>
+<td>Not replayable (needs a model)</td>
+</tr>
+</tbody>
+</table></div>
+<p>The order matters: <strong>discipline, then calibration, then competence</strong>. Train last, because training on a scaffold you are about to change wastes the run.</p>
+<p>The deck is also honest about the score: Tier-2 doesn't change it <strong>on this task</strong>, since BCF already passes. Its value would show on large repositories, generated code and tight budgets.</p>
+<h3 id="73-the-hypothesis-register-16"><a class="anchor" href="#73-the-hypothesis-register-16" aria-hidden="true">#</a>7.3 The hypothesis register (§16)</h3>
+<p><a href="03-bcf-simulation-httpx-3672.slides.v5.html#hyps">Deck →</a></p>
+<p>There are fifteen testable ideas. Each card in the deck gives a prediction, a design, endpoints, a power statement, a decision rule, threats and a cost. In plain words:</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Plain meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>H1</td>
+<td>Asymmetry detector + ratchet guard</td>
+<td>Automatically label a red test &quot;expected by spec&quot; when it names a renamed symbol, and refuse to revert spec-mandated edits.</td>
+</tr>
+<tr>
+<td>H2</td>
+<td>Spec-transformed proxy tests</td>
+<td>Copy the visible tests to <code>/tmp</code>, update them to the new API, and run those; never edit real test files.</td>
+</tr>
+<tr>
+<td>H3</td>
+<td>Evidence shaping</td>
+<td>Shape commands so the important lines survive the 5,000-character cap.</td>
+</tr>
+<tr>
+<td>H4</td>
+<td>VOI-lite localization</td>
+<td>Search before graph; order by p/C; stop when confident.</td>
+</tr>
+<tr>
+<td>H5</td>
+<td>Caller closure</td>
+<td>A classified <code>grep</code> that proves every old name is gone in code (ignoring comments and decoys).</td>
+</tr>
+<tr>
+<td>H6</td>
+<td>Provenance + drift check</td>
+<td>Ask &quot;is this file generated?&quot;; edit the source, regenerate, and verify zero drift.</td>
+</tr>
+<tr>
+<td>H7</td>
+<td>Post-edit micro-verification</td>
+<td>After each batch of edits, compile and run a tiny AST check for no-op lines.</td>
+</tr>
+<tr>
+<td>H8</td>
+<td>Mechanical-edit batching</td>
+<td>Do repetitive renames with one scripted command.</td>
+</tr>
+<tr>
+<td>H9</td>
+<td>Spec self-consistency</td>
+<td>Draft the spec 3 times and vote field by field.</td>
+</tr>
+<tr>
+<td>H10</td>
+<td>Masking-first compaction</td>
+<td>Keep the spec and journal pinned when old messages are summarised.</td>
+</tr>
+<tr>
+<td>H11</td>
+<td>Loop detector as a trigger</td>
+<td>Treat repetition as a signal to re-plan, not as something to block.</td>
+</tr>
+<tr>
+<td>H12</td>
+<td>Small-k final selection</td>
+<td>Build a few candidate patches and pick one with the proxy tests.</td>
+</tr>
+<tr>
+<td>H13</td>
+<td>Null-adapter gate, then LoRA</td>
+<td>Prove the fine-tuning pipeline actually changes the model before training on BCF trajectories.</td>
+</tr>
+<tr>
+<td>H14</td>
+<td>Measurement protocol</td>
+<td>Task-level, pre-registered, honest about the minimum detectable effect.</td>
+</tr>
+<tr>
+<td>H15</td>
+<td>Replay predicts live</td>
+<td>Check whether offline replay results like this deck match live runs.</td>
+</tr>
+</tbody>
+</table></div>
+<p>The suggested order of work: <strong>measure first</strong> (H14, H15), then the <strong>offline</strong> ones that need no GPU (H1, H2, H5, H6, H7, H9), then <strong>live batches</strong> (H3, H4, H8, H10, H11), then <strong>selection</strong> (H12), and <strong>weights last</strong> (H13).</p>
+<h3 id="74-the-data-wishlist-17"><a class="anchor" href="#74-the-data-wishlist-17" aria-hidden="true">#</a>7.4 The data wishlist (§17)</h3>
+<p><a href="03-bcf-simulation-httpx-3672.slides.v5.html#data">Deck →</a></p>
+<p>There are nineteen data feeds to record during runs. Seven are starred (★) because they <strong>cannot be reconstructed later</strong>.</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Feed</th>
+<th>Name</th>
+<th>Starred?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>D1</td>
+<td>Per-call telemetry</td>
+<td></td>
+</tr>
+<tr>
+<td>D2</td>
+<td>Per-call workspace diff snapshot</td>
+<td>★</td>
+</tr>
+<tr>
+<td>D3</td>
+<td>Shadow verdicts + bullet probes</td>
+<td></td>
+</tr>
+<tr>
+<td>D4</td>
+<td>Belief log</td>
+<td>★</td>
+</tr>
+<tr>
+<td>D5</td>
+<td>Spec artifacts</td>
+<td></td>
+</tr>
+<tr>
+<td>D6</td>
+<td>Edit ledger</td>
+<td>★</td>
+</tr>
+<tr>
+<td>D7</td>
+<td>Test-signal log</td>
+<td>★</td>
+</tr>
+<tr>
+<td>D8</td>
+<td>Asymmetry events</td>
+<td></td>
+</tr>
+<tr>
+<td>D9</td>
+<td>Caller-closure maps</td>
+<td></td>
+</tr>
+<tr>
+<td>D10</td>
+<td>Provenance probes</td>
+<td></td>
+</tr>
+<tr>
+<td>D11</td>
+<td>Lint / compile results</td>
+<td></td>
+</tr>
+<tr>
+<td>D12</td>
+<td>Compaction events</td>
+<td>★</td>
+</tr>
+<tr>
+<td>D13</td>
+<td>Loop / stuck events</td>
+<td></td>
+</tr>
+<tr>
+<td>D14</td>
+<td>Candidate pool</td>
+<td></td>
+</tr>
+<tr>
+<td>D15</td>
+<td>Trajectory export</td>
+<td>★</td>
+</tr>
+<tr>
+<td>D16</td>
+<td>Serving lineage</td>
+<td>★</td>
+</tr>
+<tr>
+<td>D17</td>
+<td>Run rollup</td>
+<td></td>
+</tr>
+<tr>
+<td>D18</td>
+<td>Budget-accounting probe (are skill scripts charged?)</td>
+<td></td>
+</tr>
+<tr>
+<td>D19</td>
+<td>Tool-fidelity sample (does the live graph resolver match the emulator?)</td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="75-the-v4-errata-18"><a class="anchor" href="#75-the-v4-errata-18" aria-hidden="true">#</a>7.5 The v4 errata (§18)</h3>
+<p><a href="03-bcf-simulation-httpx-3672.slides.v5.html#errata">Deck →</a></p>
+<p>Fourteen corrections to the earlier v4 deck, found by actually running it. <strong>None of them overturns the central claim:</strong> spec-first BCF beats the reactive agent, for the reason given. The ones a beginner should remember:</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>v4 said</th>
+<th>The replay found</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BCF needs 24 calls (22 charged).</td>
+<td>30 calls (28 charged): one replacement per <code>edit_file</code>.</td>
+</tr>
+<tr>
+<td>The graph finds both trees in one call.</td>
+<td>The async parser is absent, the subgraph has 0 edges, and there is 1 neighbour.</td>
+</tr>
+<tr>
+<td><code>write_file(&quot;/tmp/…&quot;)</code> stays out of the patch.</td>
+<td>It ships in the patch (X5).</td>
+</tr>
+<tr>
+<td>Gates are free &quot;orchestrator code&quot;.</td>
+<td>There is no orchestrator; gates cost a <code>run_command</code>.</td>
+</tr>
+<tr>
+<td>The no-parentheses line is a silent no-op in both trees.</td>
+<td>Silent in sync, a crash in async (X7).</td>
+</tr>
+<tr>
+<td>There are two hand-maintained mirror trees.</td>
+<td>The sync tree is generated by <code>unasync</code> (X9).</td>
+</tr>
+<tr>
+<td>&quot;+10.7 pp&quot; for guardrails.</td>
+<td>The cited paper's real number is +3.0 pp.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="76-glossary-and-sources-1920"><a class="anchor" href="#76-glossary-and-sources-1920" aria-hidden="true">#</a>7.6 Glossary and sources (§19–20)</h3>
+<p><a href="03-bcf-simulation-httpx-3672.slides.v5.html#glossary">Glossary →</a> · <a href="03-bcf-simulation-httpx-3672.slides.v5.html#sources">Sources →</a></p>
+<p>The deck's glossary gives a formal definition first, then &quot;plainly&quot;, then &quot;in this deck&quot;. The sources section lists the commands to rerun everything, plus the ten <strong>probes</strong>: small real experiments that each settle one question.</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Probe</th>
+<th>What was tried</th>
+<th>Result</th>
+<th>What it proves</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>X1</td>
+<td>Rename the sync parser only</td>
+<td>Resolved</td>
+<td>A lucky naive run would pass.</td>
+</tr>
+<tr>
+<td>X2</td>
+<td>Alias <code>reset = complete</code></td>
+<td>Resolved</td>
+<td>Aliasing passes too.</td>
+</tr>
+<tr>
+<td>X3</td>
+<td>Gold patch</td>
+<td>Resolved</td>
+<td>The emulator agrees with the reference fix.</td>
+</tr>
+<tr>
+<td>X4</td>
+<td>Empty patch</td>
+<td>Not resolved</td>
+<td>The emulator fails a do-nothing patch.</td>
+</tr>
+<tr>
+<td>X5</td>
+<td><code>write_file(&quot;/tmp/…&quot;)</code></td>
+<td>File appears in the patch</td>
+<td>v4's repro location was wrong.</td>
+</tr>
+<tr>
+<td>X6</td>
+<td><code>ruff</code> rule B018 on both servers</td>
+<td>Catches sync only</td>
+<td>Linters miss the async form.</td>
+</tr>
+<tr>
+<td>X7</td>
+<td><code>await obj.method</code> without calling</td>
+<td><code>TypeError</code></td>
+<td>The async line is a crash.</td>
+</tr>
+<tr>
+<td>X8</td>
+<td>Regenerate after the gold patch</td>
+<td><code>_server.py</code> drifts</td>
+<td>Gold's <code>wait()</code> fix would be erased.</td>
+</tr>
+<tr>
+<td>X9</td>
+<td>Regenerate the untouched base</td>
+<td>No drift</td>
+<td>The sync tree really is generated.</td>
+</tr>
+<tr>
+<td>X10</td>
+<td>10-line AST &quot;no effect&quot; check</td>
+<td>Catches both forms</td>
+<td>A tiny script beats the linters here.</td>
+</tr>
+</tbody>
+</table></div>
+
+<h2 id="8-what-the-deck-still-leaves-open"><a class="anchor" href="#8-what-the-deck-still-leaves-open" aria-hidden="true">#</a>8. What the deck still leaves open</h2>
+<ul>
+<li><strong>The decisions are scripted.</strong> The deck shows consequences, not what Gemma would choose. Probes X1 and X2 show a lucky naive run passes.</li>
+<li><strong>Two parts are emulated from documentation:</strong> the graph tools' name matcher, and the BCF skill scripts. D19 asks for a check against the live harness.</li>
+<li><strong>Whether skill scripts cost a call is unknown</strong> (D18). If they are free, BCF's and Tier-2's charged counts drop by 2.</li>
+<li><strong>Test-file edits may vanish.</strong> Under the newer wheelhouse v30 (forum intel, 2026-10-12), test-file edits are dropped from the patch, so BCF's patch would be 7 files, not 8. The score is unaffected.</li>
+<li><strong>Measurements came from Windows.</strong> Tool times were measured on Windows, not in the competition's 2-vCPU container. One Windows-only test (<code>test_multipart</code>) is skipped in full-suite runs.</li>
+</ul>
+<p><strong>The bottom line for a beginner:</strong> the replay keeps the deck's core lesson and changes the details.</p>
+<ul>
+<li><strong>The lesson:</strong> write the plan and your reasons down before acting; trust a clear instruction over a misleading local signal; never undo a justified fix in a panic.</li>
+<li><strong>The details:</strong> the graph tools didn't do the detective work (<code>grep</code> and short reads did), honest accounting costs more calls, and the next tier comes from measuring, not from more rules.</li>
+</ul>
+
+<h2 id="9-sources-for-this-guide"><a class="anchor" href="#9-sources-for-this-guide" aria-hidden="true">#</a>9. Sources for this guide</h2>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>What</th>
+<th>Where</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>The deck explained here</td>
+<td><a href="03-bcf-simulation-httpx-3672.slides.v5.html"><code>input/kagglecomp/docs/03-bcf-simulation-httpx-3672.slides.v5.html</code></a></td>
+</tr>
+<tr>
+<td>Deck builder and replay emulator</td>
+<td><a href="../../../scratch/v5_replay/"><code>scratch/v5_replay/</code></a> (<code>replay.py</code>, <code>t2_traj.py</code>, <code>build_v5.py</code>)</td>
+</tr>
+<tr>
+<td>Every replayed call and verdict</td>
+<td><a href="../../../scratch/v5_replay/out/"><code>scratch/v5_replay/out/</code></a> (<code>naive.json</code>, <code>bcf.json</code>, <code>t2.json</code>, <code>shadow*.json</code>, <code>experiments.json</code>)</td>
+</tr>
+<tr>
+<td>Official tool contracts, budgets, grading</td>
+<td><a href="../../../input/kagglecomp/kagglecomp_data_package/HARNESS_README.md"><code>HARNESS_README.md</code></a> §6–8</td>
+</tr>
+<tr>
+<td>Research report behind §14–17</td>
+<td><a href="../../../reports/BCF%20next%20tier%20accuracy%20grounding.md"><code>reports/BCF next tier accuracy grounding.md</code></a></td>
+</tr>
+<tr>
+<td>BCF tenets, journal, spec, gates</td>
+<td><a href="../../../bcf/BCF-Reference-Compendium.md"><code>bcf/BCF-Reference-Compendium.md</code></a></td>
+</tr>
+</tbody>
+</table></div>
+
+<footer>Generated from <code>2026-10-27_BCF_v5_Beginner_Walkthrough/01_BCF_v5_Simulation_Beginner_Walkthrough.md</code> by <code>scratch/md2html_guide.py</code>. Edit the markdown, then regenerate.</footer>
+</article>
+</div>
+<script>
+(function(){
+  "use strict";
+  var links = Array.prototype.slice.call(document.querySelectorAll("nav.toc ol a"));
+  var heads = links.map(function(a){ return document.getElementById(a.getAttribute("href").slice(1)); });
+  if(!("IntersectionObserver" in window)) return;
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting){
+        var i = heads.indexOf(e.target);
+        links.forEach(function(a,k){ a.setAttribute("aria-current", k===i ? "true" : "false"); });
+      }
+    });
+  }, {rootMargin:"0px 0px -70% 0px"});
+  heads.forEach(function(h){ if(h) io.observe(h); });
+})();
+</script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 # COMBINED MARKDOWN - combine
 
-_Generated 2026-10-31 03:14:07 | 7 files | folder: D:\stuff\docs\taylor_fv\github\rayrite.github.io\cvx\kaggle\items\combine_
+_Generated 2026-10-31 04:41:14 | 7 files | folder: D:\stuff\docs\taylor_fv\github\rayrite.github.io\cvx\kaggle\items\combine_
 
 ## Contents
 
@@ -40,7 +40,7 @@ Deep+wide workflow per the standing research rules: toolkit pre-warm (blessed br
 ## Key verdicts (one line each)
 
 1. **The Constitution is coherent and testable** — it decomposes into 4 axioms + 8 enforceable mechanisms, each with a falsifiable observable; the single aspirational claim (x′ asymptotically greater) is reframed as monotone artifact accumulation vs bounded-memory baselines (01 §2, §10).
-2. **The whitepaper draft is cap-compliant at 1,937/3,000 words** with headroom deliberately reserved for measured ablation numbers; stub-submit early for the tie-break, revise before Dec 2.
+2. **The whitepaper draft is cap-compliant at 1,937/3,000 words** with headroom deliberately reserved for measured ablation numbers; stub-submit early for the tie-break, revise before the paper track's own close — **2026-11-12, not the main Dec 2 date** (paper track is a separate competition).
 3. **E4B over E2B and over 12B** for the bonus track: agentic benchmarks double E2B→E4B, and 12B carries documented serving overrides (thread 748287) the E-series doesn't.
 4. **The bonus is a thin separate podium** — first priority is a validated, scoring E4B final (≥2 tasks ≈ 0.03), not a high score; the two-finals tax is the real cost (04 §1, §6).
 5. **Permanent improvement = artifacts and (gated) weights, never chat context** — the turn economy is the highest-confidence lever; LoRA only through the canary ladder given Cygnify's public E4B nulls (05 §2).
@@ -61,7 +61,8 @@ Deep+wide workflow per the standing research rules: toolkit pre-warm (blessed br
 - The paper draft's §5 case-study numbers are **constructed, labeled as such** — replace with measured A1–A5 rung output before any final submission (02 §B checklist item 1).
 - Re-verify citations [4][5][6][10] IDs against arXiv before submission (06 §E).
 - Re-check threads 753973 (tool-parser hang), 748287 (wheelhouse/12B fixes), and the promised daily small-model LB notebook before freeze (04 §5, §7).
-- Bonus-track gate dates: entry deadline 2026-11-25, finals 2026-12-02.
+- Bonus-track gate dates: entry deadline 2026-11-25, finals 2026-12-02 (bonus shares the MAIN competition's deadlines; scored on its private LB).
+- **Paper-track gate date: closes 2026-11-12 11:59 PM UTC — 18+ days earlier than the main final.** The paper is its own competition; do not plan it against Nov 25 / Dec 2.
 
 
 ---
@@ -365,7 +366,7 @@ All quantitative ladder claims are protocol-declared, not yet measured; case stu
 |---|---|
 | Word cap | 3,000 max (paper-track page, verified 2026-10-31). **Measured 2026-10-31: §A body = 1,937 words excluding citation entries (1,963 including)** — 1,037 words of deliberate headroom reserved for measured A1–A5 ladder numbers before submission; add results, do not pad prose |
 | Tie-break | Earliest entry wins ties → submit a stub Writeup **early** (title + abstract), then edit; the venue allows revision before the deadline |
-| Deadlines | Competition entry deadline 2026-11-25; final submission 2026-12-02 (shared with main competition) |
+| Deadlines | **Paper track closes 2026-11-12 11:59 PM UTC** — a separate competition, 18+ days BEFORE the main event's final-submission date (2026-12-02; main entry deadline 2026-11-25). Corrected 2026-10-31 from the live paper-track page; an earlier draft wrongly assumed shared deadlines |
 | Prizes | Paper track $15K / $10K / $10K; cross-eligible with main + bonus track |
 | Participation gate | Verify on the rules page: paper submission may require a main-competition entry — check before stub-submitting |
 | Rubric alignment | Relevance (harness-native agent) / Novelty (spec-ordering + risk gate) / Rigor (pre-registered refutations) / Reproducibility (frozen corpus + ladder) / Clarity — each § of the draft maps to one criterion; judges skew graph-ML (per 04-paper-track intel) → keep the DAG/entropy material |
@@ -626,9 +627,9 @@ Rationale for the ≥0.03 bar: any E-series final that resolves ≥2 private tas
 | Window | Milestones |
 |---|---|
 | Oct 31 – Nov 7 | Port scaffold to E4B; local eval green (R-1 audit done); first E4B submission (scaffold-only) — establishes "a score exists" |
-| Nov 8 – Nov 14 | C1+C2 canaries (one day); begin teacher-verified localization trajectory harvest on public tasks if pursuing C3 |
+| Nov 8 – Nov 14 | C1+C2 canaries (one day); begin teacher-verified localization trajectory harvest on public tasks if pursuing C3. **PAPER TRACK CLOSES Nov 12 11:59 PM UTC** (separate competition — not the main deadlines); whitepaper 02 must be submitted by then |
 | Nov 15 – Nov 21 | C3 candidate or explicit adapter-forfeit decision; freeze BCF-E config; E4B public-LB read |
-| Nov 22 – Nov 25 | Entry deadline (Nov 25) — confirm team entry + paper stub; both tracks' finals shortlist drafted |
+| Nov 22 – Nov 25 | Main-track entry deadline (Nov 25) — confirm team entry; finals shortlist drafted (paper track already closed Nov 12) |
 | Nov 26 – Dec 2 | Final submission window (Dec 2): select 2 finals per §6; no scaffold changes after Nov 28; last 48h reserved for resubmission of known-good artifacts only |
 
 ---
@@ -757,7 +758,7 @@ All web sources fetched live on **2026-10-31** via the research-toolkit browser 
 | B2 | New models thread 748287 (OP + 30 comments, full) | kaggle.com/competitions/gemma-4-developer-agent/discussion/748287 | Ryan Holbrook (staff) + GOSS, Jarno Rantala, Cam-Mark, tammamalasha, haji bolot et al. | fetched 2026-10-31 (full scroll-v2 capture) | P (OP) / I (comments) | four allowed models, no-mixing rule, host's three small-model advantages, ParallelAgent bug #7324 + host declining ADK v2 migration, train-against-unquantized guidance, scorer conditions identical, wheelhouse V31, Python 3.12.13/2026-07-01 pin vs 3.13 breakage, 12B override saga (contrast case), 12B ~67 tok/s vs 31B ~35 tok/s (I) |
 | B3 | HARNESS_README §3 + §8 | input/kagglecomp/kagglecomp_data_package/HARNESS_README.md | LOCAL (competition data package) | packaged pre-10-31; registry update confirmed via B2 participant quote | P | 4×L4/TP4/0.80/32768 serving, adapter sizing (31B-calibrated), two-container lifecycle, test-file reset / anti-tamper |
 | B4 | Kaggle-01-Overview | input/kagglecomp/docs/markdown/Kaggle-01-Overview.md | LOCAL | — | P | timeline (Nov 25 / Dec 2), 5 subs/day, 2 finals, prize structure, citation requirement |
-| B5 | Paper-track overview + rules pages | kaggle.com/competitions/gemma-4-developer-agent-paper (overview + rules) | Kaggle | fetched 2026-10-31 | P | 3,000-word cap ("Scope: 3,000 words maximum"), Writeup format, $15K/$10K/$10K, cross-eligibility, same deadlines |
+| B5 | Paper-track overview + rules pages | kaggle.com/competitions/gemma-4-developer-agent-paper (overview + rules) | Kaggle | fetched 2026-10-31 | P | 3,000-word cap ("Scope: 3,000 words maximum"), Writeup format, $15K/$10K/$10K, cross-eligibility, **closes 2026-11-12 11:59 PM UTC — a separate competition closing 18+ days BEFORE the main final (corrected 2026-10-31; "same deadlines" in an earlier draft was wrong)** |
 | B6 | Discussion listing (recent sort) | kaggle.com/competitions/gemma-4-developer-agent/discussion?sort=recently-created | Kaggle | fetched 2026-10-31 | P | thread index + recency check (all thread IDs used below) |
 
 ## C. Independent participant evidence (discussion threads)

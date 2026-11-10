@@ -1,6 +1,6 @@
 # COMBINED MARKDOWN - combine
 
-_Generated 2026-11-10 12:47:13 | 4 files | folder: D:\stuff\docs\taylor_fv\github\rayrite.github.io\cvx\kaggle2\items\combine_
+_Generated 2026-11-10 13:10:30 | 5 files | folder: D:\stuff\docs\taylor_fv\github\rayrite.github.io\cvx\kaggle2\items\combine_
 
 ## Contents
 
@@ -8,6 +8,7 @@ _Generated 2026-11-10 12:47:13 | 4 files | folder: D:\stuff\docs\taylor_fv\githu
 2. 01_Task1_Problem_Taxonomy_and_Root_Cause_Analysis.md
 3. 02_Task2_BCF_Brain_Design_and_Justification.md
 4. 03_Research_Sources_and_Grounding.md
+5. 04_Additional_Insights_and_BCF_Tuning_Levers.md
 
 ---
 
@@ -26,6 +27,7 @@ Deliverables for the two tasks on the Gemma 4 Developer Agent Competition datase
 | [01_Task1_Problem_Taxonomy_and_Root_Cause_Analysis.md](01_Task1_Problem_Taxonomy_and_Root_Cause_Analysis.md) | **Task 1, single file.** Categories and sub-categories for all 129 public tasks, root-cause analysis of every task that repairs a defect, cross-cutting insights, and defects in the dataset itself |
 | [02_Task2_BCF_Brain_Design_and_Justification.md](02_Task2_BCF_Brain_Design_and_Justification.md) | **Task 2.** The BCF brain, the two tracks, the helper, design evidence, risks, and the gated plan toward both leaderboards |
 | [03_Research_Sources_and_Grounding.md](03_Research_Sources_and_Grounding.md) | External research: what was read, how reliable it is, what it changed |
+| [04_Additional_Insights_and_BCF_Tuning_Levers.md](04_Additional_Insights_and_BCF_Tuning_Levers.md) | Follow-up: reachability tiers, further root-cause patterns, and the parts of the brain to adjust for a higher score |
 
 ## Code
 
@@ -40,7 +42,7 @@ Deliverables for the two tasks on the Gemma 4 Developer Agent Competition datase
 
 ## Status in one paragraph
 
-The bundles build and pass a static lint; the helper was run on all 129 public snapshots (category agreement 94%, a gold file in its first three targets for 77%). Nothing has been run with a Gemma model, compiled with the competition wheelhouse, or scored on Kaggle. One decision is open for the user: whether the scored bundle declares the skill (requested layout) or uses the `_noskills` variant (the project's standing rule since 2026-11-05). Report 02 §7.1 gives the facts and a recommendation; §9 lists everything not verified.
+The bundles build and pass a static lint; the helper was run on all 129 public snapshots (category agreement 94%, a gold file in its first three targets for 77%). Nothing has been run with a Gemma model, compiled with the competition wheelhouse, or scored on Kaggle. **Decision (user, 2026-11-10): the scored bundles are the `_noskills` variants.** The variants that declare the skill stay as lab builds. Report 02 §7.1 gives the facts behind the choice; §9 lists everything not verified.
 
 
 ---
@@ -707,7 +709,7 @@ These are in-sample figures (rules written against the same tasks).
 
 **What has not been done.** Nothing here has run with a Gemma model, with the competition wheelhouse, or on the Kaggle scorer. No resolve-rate number exists for these bundles. The claims in section 8 about leaderboard position are a plan with gates, not a result. Section 9 lists every open check.
 
-**One decision is yours.** The requested layout declares a skill. This project's standing rule since 2026-11-05 (action A1) is that scorer bundles declare no skills, because any declared skill exposes `run_skill_script`, whose array arguments can hang the scorer's vLLM 0.19.1 parser and zero a whole run [P]. I built both: the default bundles follow your layout and confine the skill tools to the short planning agent; the `_noskills` variants keep the same files and helper but drop the declaration. My recommendation is in section 7.1.
+**Decision taken (user, 2026-11-10): submit the `_noskills` variants to the scorer.** Background: the requested layout declares a skill. This project's standing rule since 2026-11-05 (action A1) is that scorer bundles declare no skills, because any declared skill exposes `run_skill_script`, whose array arguments can hang the scorer's vLLM 0.19.1 parser and zero a whole run [P]. I built both: the default bundles follow your layout and confine the skill tools to the short planning agent; the `_noskills` variants keep the same files and helper but drop the declaration. My recommendation is in section 7.1.
 
 ## 2. Architecture
 
@@ -909,7 +911,7 @@ What the default bundles do about it: the skill is declared on `bcf_plan` only, 
 
 The `_noskills` bundles remove the declaration. Everything else is identical, and the helper still installs through `run_command` wherever the submission folder is readable from the sandbox shell.
 
-**Recommendation:** submit the `_noskills` variant to the scorer unless the 5090 dry run shows (a) the compiled planner really needs the skill tool to reach the helper and (b) 300 or more local tasks with zero hangs on the unpatched parser, which is the project's existing gate G-SK. Keep the default variant as the lab build.
+**Decided 2026-11-10: the `_noskills` variants are the scored bundles.** The recommendation had been to submit the `_noskills` variant unless the 5090 dry run shows (a) the compiled planner really needs the skill tool to reach the helper and (b) 300 or more local tasks with zero hangs on the unpatched parser, which is the project's existing gate G-SK. Keep the default variant as the lab build.
 
 ### 7.2 Other risks
 
@@ -1099,4 +1101,239 @@ Via search summaries:
 - [SWE-smith](https://arxiv.org/html/2504.21798v1) — arXiv
 - [SWE-Bench Pro](https://static.scale.com/uploads/654197dc94d34f66c0f5184e/SWEAP_Eval_Scale%20(9).pdf) — Scale AI
 - [Why Local LLMs Fail at Agentic Coding in 2026](https://capitalandcompute.net/blog/why-local-llms-fail-agentic-coding/) — blog
+
+
+---
+
+<!-- ====================================================================== -->
+<!-- FILE: 04_Additional_Insights_and_BCF_Tuning_Levers.md -->
+<!-- ====================================================================== -->
+
+# 04 — Additional insights on the problem set, and what to adjust in the BCF brain
+
+*Prepared 2026-11-10 as a follow-up to reports 01 and 02. Part A adds findings from a second pass over the 129 public tasks (script: `analysis/extra.py`, output `analysis/extra.json`). Part B lists the parts of the BCF brain that can be adjusted, ranked by expected effect on the score. Counts are measured on the public tasks; expected effects in Part B are reasoned estimates, not measurements, because no bundle has run with a model yet.*
+
+## Summary
+
+- **About a third of the public set is the realistic target.** 45 of 129 tasks (35%) are small, described in words, need no unstated names, and have the gold file in the helper's first three targets. The public leader solved 29% of the leaderboard tasks, so a winning 31B entry has to convert most of this group; the E4B bonus needs about a third of it.
+- **The helper's weakest link is the function, not the file.** When the right file is in the first three targets, a changed function is among the listed symbols only 65% of the time.
+- **A correct fix often breaks visible tests.** In 46 tasks (36%) the hidden test patch rewrites lines of existing test files. The pre-submit test run can therefore push the model to undo a correct fix.
+- **Small tasks never need a guessed name.** Every task whose tests use a name that is in neither the repository nor the statement is medium or larger. For small tasks the right instruction is "invent no new public names".
+- **Many defects are asymmetries.** In at least 17 defect tasks the correct handling already exists in a sibling function or branch a few lines away; the fix is to copy it.
+- **Highest-value adjustments** (Part B): function-level targeting, expected-failure handling in the check, a tests-as-specification mode for title-only tasks, a sibling hint in the playbooks, and an early exit for large tasks.
+
+## Part A — Additional insights
+
+### A1. Reachability tiers
+
+Each task is placed in the first tier whose condition it meets, read from the bottom of the table upward (large first, then unstated names, then title-only).
+
+| Tier | Condition | Tasks | Share | One file, at most 15 lines | Gold file in helper's first 3 | By repository |
+|---|---|---:|---:|---:|---:|---|
+| A. Described, small or medium | Statement has a description; patch up to 60 lines and 3 files; no unstated names | 63 | 49% | 50 | 55 | fastapi 31, rich 21, requests 11 |
+| B. Title-only, small or medium | As A, but the statement is only a title or a link | 32 | 25% | 18 | 19 | rich 20, fastapi 11, requests 1 |
+| C. Unstated name, medium | Tests use a name introduced by the gold patch that is in neither the repository nor the statement | 7 | 5% | 0 | 4 | fastapi 5, rich 1, requests 1 |
+| D. Large | Patch over 60 lines or over 3 files | 27 | 21% | 0 | 21 | fastapi 20, rich 6, httpx 1 |
+
+What follows from it:
+
+| Observation | Meaning |
+|---|---|
+| Tier A, one file and at most 15 lines, gold file in the first 3: **45 tasks (35%)** | The core target. A changed function is also among the listed symbols for 23 of the 40 core tasks where the gold function can be identified |
+| Tier B: gold file in the first 3 for only 19 of 32 (59%) | Title-only tasks are lost at localisation first; 15 of the helper's 30 top-3 misses are title-only |
+| Tier D: 27 tasks (21%) | Time spent here is mostly wasted. On a 12-hour run, an early exit on these tasks is what pays for a longer cap elsewhere |
+| Helper top-3 by repository: requests 12 of 13, fastapi 54 of 67 (81%), rich 32 of 48 (67%) | Rich is the weakest repository for the helper, mainly because its statements are short |
+
+If the hidden tasks resemble the public ones, the 58-task public leaderboard would contain about 20 core-target tasks. The leader's 17 of 58 shows how little slack there is: on the main board the remaining gains must come from Tier B and from the Tier A tasks the helper currently mis-ranks.
+
+### A2. A correct fix often breaks visible tests
+
+| Measure | Tasks |
+|---|---:|
+| Hidden test patch removes or rewrites lines in an existing test file | 46 (36%) |
+| …and the rewritten lines include an assertion or comparison | 13 (10%) |
+| Test patch adds `pytest.raises` or `pytest.warns` checks | 15 |
+| Test patch uses inline snapshots | 13 |
+| Test functions added per task (median) | 1 |
+
+The harness replaces the test files after the agent finishes, so the tests the agent can run are the old ones. For roughly a third of tasks some old test is edited by the hidden patch, and for one in ten an old assertion itself changes. A model that runs the old test file after a correct fix can see a failure and revert. The current prompts warn about this in one sentence; A2 says that sentence carries a lot of weight and deserves tool support (B2).
+
+### A3. Names: what must be exact and what must not be invented
+
+- In 29 tasks the tests use at least one identifier that the gold patch introduces and that exists nowhere in the snapshot.
+- In 24 of those, at least one such word is also absent from the statement. This count is an upper bound: the word match also catches message words and test-local names. All 24 are medium, large or extra-large patches; **none is a one-file patch of 15 lines or fewer.**
+- Consequence: for small tasks, public names never have to be guessed, so any new public name the model invents is a risk with no upside. For medium and large feature work, names in the statement must be copied exactly, and tasks whose names are not in the statement are close to unwinnable.
+
+### A4. Shape of the gold edits
+
+| Measure (source files only, docs examples excluded) | Tasks |
+|---|---:|
+| Patch replaces lines (removes and adds) | 107 (83%) |
+| Patch only adds lines | 21 (16%) |
+| Patch only deletes lines | 1 |
+| One edit site (one hunk) | 55 (43%) |
+| Two edit sites | 23 (18%) |
+| Three or more edit sites | 48 (37%) |
+| Defect repairs that replace lines | 72 of 84 |
+
+Two points. First, most defect repairs change existing lines; the fix is rarely "add a new block and leave the old code". Second, 55% of tasks need two or more separate edits, and `edit_file` makes one replacement per call, so the number of edit calls is often 2 to 4 even for small tasks. The early-edit rule should count the first edit, and the budget should leave room for the rest.
+
+### A5. Root-cause pattern: asymmetry with a sibling
+
+Re-reading the root causes in report 01, a recurring origin is that one code path has the right handling and its sibling does not. The fix copies handling that is already in view.
+
+| Task | The sibling that already does it right |
+|---|---|
+| fastapi_14303 | Query and header extras were fixed with `getlist` in fastapi_14356; the form path still used `items()` |
+| fastapi_14356 | Declared parameters were read with `getlist`; extras with `items()` |
+| fastapi_14301 | `get_sub_dependant` passed `scope`; `get_parameterless_sub_dependant` did not |
+| fastapi_14430 | `Union` was handled; `X \| Y` was not |
+| fastapi_12942 | Other annotation helpers unwrap `Annotated`; `field_annotation_is_complex` did not |
+| fastapi_14360 | The value was read by alias and stored by name |
+| fastapi_14246 | Top-level fields carried their mode; nested model fields were rebuilt without it |
+| fastapi_15589 | The converted header name was marked as processed; the original alias was not |
+| fastapi_11194 | Other loops visit every body field; this one looked at the first only |
+| requests_7502, requests_7505 | `prepare_body` got the `hasattr` fallback in requests_7433; `_encode_files` and two more sites did not |
+| rich_3471 | `Text.append` strips control codes; `append_tokens` did not |
+| rich_3518 | Columns from `add_column` receive `highlight`; columns created by `add_row` did not |
+| rich_3905 | `Progress.start` honours `disable`; `stop` did not |
+| rich_3882 | Other prompt output is printed with markup on; the error path was not |
+| rich_4077 | `FileProxy` forwards `write` and `flush`; `isatty` was missing |
+| rich_3063 | Backslashes before tags were escaped; a trailing backslash was not |
+
+Seventeen tasks in this table, about one defect repair in five. The practical rule: before designing a fix, look at the function next door that handles the same data and copy what it does.
+
+### A6. Why the model is likely to fail, by tier
+
+These are predicted failure causes derived from the data above and from field reports in this project's notes; they are the hypotheses the local runs should confirm or reject.
+
+| Tier | Most likely failure | Evidence | Lever |
+|---|---|---|---|
+| A | Edits the right file but the wrong function, or fixes one of several sites | Function listed 65% of the time; 55% of tasks have 2 or more edit sites | B1, B4 |
+| A | Reverts a correct fix after an old test fails | A2 | B2 |
+| B | Wrong file, or no idea what behaviour is wanted | Top-3 only 59%; nothing in the statement | B3 |
+| C | Right behaviour, wrong name | A3 | None that is cheap |
+| D | Runs out of time with a partial patch | Size | B5 |
+| All (E4B) | Whole-file rewrite, malformed edit call, text-only turn that restarts the pipeline | Project notes; ADK restart behaviour (report 03, A1 and A2) | B8, B9 |
+
+## Part B — What can be adjusted in the BCF brain
+
+Each lever names the file and place to change, why it should help, and how to tell whether it did. "Offline" means it can be measured on the 129 snapshots with `analysis/eval_bcf.py` or `analysis/extra.py` in about 90 seconds, with no GPU. "Model" means it needs paired local runs on the 5090 (same tasks, same budget, with and without the change).
+
+### B-summary
+
+| # | Lever | Where | Tasks it can affect | Test | Effort |
+|---|---|---|---|---|---|
+| B1 | Function-level targeting | `bcf.py`: `locate`, symbol ranking | About a third of tasks where the file is right but the function is not listed | Offline | Medium |
+| B2 | Expected-failure handling in the check | `bcf.py`: `cmd_check`; solver prompts | 46 tasks whose old tests change | Model | Medium |
+| B3 | Tests-as-specification for title-only tasks | `bcf.py`: `build_spec`; planner prompt | 32 Tier B tasks | Offline, then model | Medium |
+| B4 | Sibling hint and sibling sweep | `bcf.py`: `PLAYBOOK`, `cmd_check` | About 17 asymmetry defects and multi-site fixes | Model | Small |
+| B5 | Early exit on large tasks | `bcf.py`: size estimate; solver prompts; `eval_config.yaml` | 27 Tier D tasks; frees time for the rest | Model + time projection | Small |
+| B6 | Planner step count and spec size | `prompts/bcf_plan.md`; `--track` output | All tasks (time) | Model | Small |
+| B7 | Target count for E4B | `bcf.py`: `build_spec` | 9 tasks where the gold file is third | Model | Trivial |
+| B8 | Restart cost | `prompts/bcf_plan.md` Step 0; `bcf.py show` | Every task that takes a nudge | Model | Small |
+| B9 | Edit protocol for E4B | `prompts/solver.md` (E4B) | E4B edit failures | Model | Small |
+| B10 | Sampling and thinking budgets | `sub_agents/*.yaml` | All tasks | Model | Trivial |
+| B11 | Merge confusable playbooks; tighten new-name rule | `bcf.py`: `PLAYBOOK`, `new_names` | 18 + 15 tasks in BUG-VALUE and BUG-COND; all small tasks | Offline for the rule; model for effect | Small |
+| B12 | Locator weights for Rich | `bcf.py`: `locate`, `stem_match` | 16 Rich misses | Offline | Medium |
+| B13 | Per-class budgets | `eval_config.yaml` is global; only prompt-level budgets can differ | All | Model | Small |
+
+### B1. Function-level targeting
+
+- **Now.** For each ranked file the helper lists up to three symbols, chosen by how many task words occur in their bodies. When the file is right, a changed function is listed in 60 of 92 cases.
+- **Adjust.** (a) Score methods by name match with title words ("append", "stop", "split_cells") more strongly than by body matches. (b) Penalise whole-class entries, which cost a slot and give a range too long to read. (c) For 31B list five symbols for the first target and two for the rest. (d) Print the line of the strongest match inside each symbol so the solver can read a 60-line window around it.
+- **Measure.** `analysis/extra.py` reports the function hit rate; target 80% or more given the right file.
+- **Why it should raise the score.** Reading the wrong 150 lines costs a call and often anchors the model on the wrong function.
+
+### B2. Expected-failure handling in the check
+
+- **Now.** `check --run` (31B) runs `tests/test_<module>.py` and prints one generic sentence if it fails. E4B does not run tests.
+- **Adjust.** (a) For each failing test, print whether its body mentions a symbol or string the agent changed; label those "expected: this test pins the old behaviour" and the others "regression". (b) Optionally compare with the baseline: run the same test file on `git stash` once and report only tests that newly fail. This costs one more test run, so make it 31B-only and time-boxed. (c) In the solver prompt, replace "keep your fix" with a concrete rule: revert only if a newly failing test does not mention anything you changed.
+- **Measure.** Model runs; count reverts of correct patches in traces on the 46 affected tasks.
+- **Risk.** Baseline comparison doubles check time. Start with (a) and (c).
+
+### B3. Tests as the specification for title-only tasks
+
+- **Now.** Title-only tasks get one NOTE line telling the 31B model to read the target function and its tests.
+- **Adjust.** When the statement is title-only, have `build_spec` search the existing test files for the title words and the target symbols, and print the two or three closest test function names with their file and line. Those tests show how the function is called and what output style is asserted; the hidden test is almost always a new neighbour of them (85 tasks only modify existing test files). Also use the matching test file name as locator evidence: a title word that matches `tests/test_<x>.py` points to module `x`.
+- **Measure.** Offline: top-3 on the 32 Tier B tasks (now 19). Then model runs.
+
+### B4. Sibling hint and sibling sweep
+
+- **Now.** Three playbooks mention sibling functions; the check does not look for them.
+- **Adjust.** (a) Add one line to every defect playbook: "look at the neighbouring function that handles the same data; if it already does this correctly, copy its handling". (b) In `cmd_check`, take the lines the agent removed, and report other places in the source where the same expression still occurs ("the old pattern remains at 2 more places"). This targets the chains in report 01 §6.1, where one call site was fixed and its twins were left.
+- **Measure.** Model runs on the 17 asymmetry tasks and the multi-site tasks.
+
+### B5. Early exit on large tasks
+
+- **Now.** The spec prints "SIZE: large" only for three sub-categories that the classifier rarely detects.
+- **Adjust.** Estimate size from signals that are available: number of bullets and code blocks in the statement, number of new names, sub-category, and whether the top targets span several folders. When the estimate is large, the spec tells the solver to implement the first listed item, submit by a fixed call number, and stop. Then lower `max_time_minutes` only if the time projection needs it.
+- **Measure.** `project_12h.py` on local rows; resolve rate on Tier D is expected to stay near zero either way, so the gain is time.
+- **Caution.** A wrong "large" label on a small task costs a solve. Tune the estimate offline against the size classes first (27 large tasks are known).
+
+### B6. Planner step count and spec size
+
+- **Now.** 31B planner: install, spec, up to two confirmation reads, then a rewritten spec with an EDIT PLAN. E4B planner: install, spec, relay.
+- **Adjust.** Variant P2: the 31B planner also relays the helper output and leaves confirmation to the solver. This saves one to two calls and the tokens of rewriting the spec, at the cost of the EDIT PLAN. Variant P3: fold install and spec into one command line so the planner needs one call.
+- **Measure.** Paired model runs: P1 (current) against P2 and P3 at equal time. This is the cleanest test of whether a reasoning planner earns its share of the budget.
+
+### B7. Target count for E4B
+
+- **Now.** E4B sees two targets (gold file present for 70% of tasks); 31B sees five (84%).
+- **Adjust.** Three targets raise coverage to 77% for about 60 more characters of spec.
+- **Measure.** Model runs; watch for the small model reading all three instead of editing.
+
+### B8. Restart cost
+
+- **Now.** After a nudge the pipeline restarts at the planner, which is told to repeat key lines from the conversation without a tool call.
+- **Adjust.** If traces show the planner ignores Step 0 and re-runs the helper, make re-running cheap and safe instead of forbidden: the planner's first command becomes `bcf.py show`, which prints the saved spec in under a second when it exists and a clear "no spec yet" line when it does not. One call per restart is a known cost; a confused planner is not.
+- **Measure.** Count restarts and planner calls per restart in local traces.
+
+### B9. Edit protocol for E4B
+
+- **Now.** `edit_file` with one to six lines of `old_string`; one retry on a malformed call.
+- **Adjust.** Options to compare: (a) require a `read_file` of the exact lines immediately before each edit; (b) cap `old_string` at three lines; (c) give E4B a helper command that performs a line-range replacement from a heredoc, so the model supplies only new text and two line numbers. Option (c) removes exact-match failures but needs a new `bcf.py` command and careful testing.
+- **Measure.** Malformed and failed edit counts per task in traces.
+
+### B10. Sampling and thinking budgets
+
+| Setting | Now | Alternatives worth one paired run each |
+|---|---|---|
+| Temperature | 0.2 on both agents | 0.0 for the planner; 0.6 and Google's recommended 1.0 for the solver |
+| Solver thinking budget | 4,096 (31B), 1,024 (E4B) | 2,048 for 31B; 512 and 2,048 for E4B |
+| Planner thinking budget | 2,048 (31B), 512 (E4B) | 0 for a relay-only planner |
+| Seed | 7 | Two more seeds, to learn the run-to-run spread before reading any other comparison |
+
+Measure the seed spread first. A difference between two variants that is smaller than the spread between two seeds is noise.
+
+### B11. Merge confusable playbooks; tighten the new-name rule
+
+- The classifier separates BUG-VALUE from BUG-COND poorly (8 of 18 correct for VALUE). Give both the same combined playbook ("find the branch or the value; change one clause or one name"), so a wrong label costs nothing.
+- For tasks the helper estimates as small, add the line "create no new public names" and print NEW NAMES only for names written in back-ticks in the title. A3 shows small tasks never need more.
+
+### B12. Locator weights for Rich
+
+- Rich misses are short titles such as "fix fonts" or "preserve newlines". Adjustments to try offline: match title words against method names across all classes; match against words in the module docstring's first line; treat `rich/console.py`, `rich/text.py`, `rich/cells.py`, `rich/segment.py` and `rich/markdown.py` as fallback targets when nothing matches, since they are the most edited Rich files in the public set.
+- The last item is a prior learned from the public tasks. It may not transfer to the hidden set; keep it behind a flag and judge it on held-out evidence only.
+
+### B13. Per-class budgets
+
+`eval_config.yaml` sets one budget for all tasks, so class-specific limits can only be expressed in the spec ("this class: first edit by call 4"). Defect classes with one-token fixes (TEXT, VALUE, COND, PROTO) can take a tighter edit deadline than ALGO, which needs a reproduction first.
+
+### Order of work
+
+| Step | Levers | Needs | Why this order |
+|---|---|---|---|
+| 1 | B1, B3, B11, B12 | Laptop only | Measurable today on the snapshots; they improve the spec before any model time is spent |
+| 2 | Compile and install probes (report 02, gates G1 to G3) | 5090 | Nothing else matters if the helper cannot be reached on the scorer |
+| 3 | B10 seed spread, then B6 | 5090 | Establishes the noise level and whether the planner earns its budget |
+| 4 | B2, B4, B8, B9 | 5090 | Behavioural fixes, read from traces |
+| 5 | B5, B7, B13 | 5090 + time projection | Budget shaping once behaviour is stable |
+
+## What this document does not show
+
+- No lever has been tested with a model. The expected effects are reasoning from task statistics.
+- The tier boundaries are choices (60 lines, 3 files); moving them changes the counts.
+- The unstated-name count is a word-level heuristic and overstates the true number.
+- The asymmetry table is hand-compiled from the root-cause notes in report 01 and may be incomplete.
 

@@ -62,8 +62,58 @@
   .article img { max-width: 100%; border-radius: var(--radius); }
   .article h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-bottom: 4px; border-bottom: 1px solid var(--bd); }
   .article h3 { font-size: 0.98rem; margin: 20px 0 6px; }
-  .iframe-doc { width: 100%; min-height: calc(100vh - 190px); border: 1px solid var(--bd); border-radius: var(--radius); background: #fff; }
-  .state-msg { color: var(--tx2); text-align: center; padding: 60px 20px; font-size: 0.9rem; }
+  .state-msg { color: var(--tx2); text-align: center; padding: 40px 16px; font-size: 0.88rem; }
+
+  /* ---- compact tablet-first spacing ---- */
+  :root { --pad: 6px; --gap: 6px; --cardpad: 8px; --hdr-h: 40px; }
+  .hdr { padding: 4px 6px; gap: 6px; }
+  .side, .toc { top: var(--hdr-h); max-height: calc(100vh - var(--hdr-h)); padding: 6px 4px; }
+  .side .searchpill { margin-bottom: 6px; padding: 4px 8px; }
+  .grp > summary { padding: 6px 7px; min-height: 30px; font-size: 0.76rem; }
+  details.dir > summary { padding: 3px 7px; }
+  a.file { padding: 4px 7px; min-height: 27px; font-size: 0.74rem; }
+  .main { padding: 6px 10px 40px; }
+  .crumb { margin-bottom: 6px; }
+  .article h1 { font-size: 1.3rem; }
+  .article h2 { margin: 18px 0 6px; }
+  .article h3 { margin: 14px 0 4px; }
+  .article pre { padding: 8px 10px; margin: 8px 0; font-size: 0.76rem; }
+  .article table { font-size: 0.76rem; margin: 8px 0; }
+  .article th, .article td { padding: 4px 7px; }
+  .byline { margin-bottom: 10px; }
+  .navbar { margin-top: 16px; padding-top: 8px; }
+  .hero { margin: 2px 0 12px; }
+  .hero h1 { font-size: 1.35rem; }
+  .cards { gap: 8px; margin-top: 10px; }
+  .gcard { padding: 10px; gap: 6px; }
+  .bottombar { padding: 4px 6px; }
+
+  /* ---- pane collapse: both panes start minimized (body classes).
+         Grid tracks are restated per state so auto-placement never
+         drops .main into a collapsed track. ---- */
+  @media (min-width: 901px) { body.side-closed .side { display: none; } }
+  body.toc-closed .toc { display: none; }
+  body.side-closed .shell { grid-template-columns: minmax(0,1fr) var(--toc-w, 190px); }
+  body.toc-closed .shell { grid-template-columns: var(--side-w, 250px) minmax(0,1fr); }
+  body.side-closed.toc-closed .shell { grid-template-columns: minmax(0,1fr); }
+  @media (max-width: 1080px) {
+    body.side-closed .shell,
+    body.side-closed.toc-closed .shell { grid-template-columns: minmax(0,1fr); }
+  }
+  @media (max-width: 900px) {
+    /* drawer mode: the tree is a fixed overlay, so the grid is always single-track */
+    .shell,
+    body.toc-closed .shell,
+    body.side-closed .shell,
+    body.side-closed.toc-closed .shell { grid-template-columns: minmax(0,1fr); }
+  }
+
+  /* ---- themed scrollbars ---- */
+  * { scrollbar-width: thin; scrollbar-color: var(--bd) transparent; }
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--bg3); border-radius: 8px; border: 2px solid var(--bg); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--bd); }
 
   /* overview */
   .hero { margin: 6px 0 18px; }
@@ -84,20 +134,20 @@
   @media (max-width: 900px) {
     .shell { grid-template-columns: minmax(0,1fr); }
     .side { display: none; }
-    body.side-open .side { display: block; position: fixed; left: 0; right: auto; top: 53px; bottom: 0; width: min(300px, 84vw); z-index: 70; max-height: none; border-right: 1px solid var(--bd); box-shadow: 0 0 40px rgba(0,0,0,.4); }
+    body.side-open .side { display: block; position: fixed; left: 0; right: auto; top: var(--hdr-h); bottom: 0; width: min(280px, 80vw); z-index: 70; max-height: none; border-right: 1px solid var(--bd); box-shadow: 0 0 40px rgba(0,0,0,.4); }
     .bottombar { display: flex; gap: 8px; position: fixed; left: 0; right: 0; bottom: 0; z-index: 60; padding: 8px 10px; background: color-mix(in srgb, var(--bg2) 92%, transparent); backdrop-filter: blur(8px); border-top: 1px solid var(--bd); }
     .bottombar .btn { flex: 1; }
     .main { padding-bottom: 90px; }
   }
-  @media (min-width: 901px) { #menuBtn { display: none; } }
 </style>
 </head>
-<body>
+<body class="side-closed toc-closed">
 <header class="hdr">
   <button class="icon-btn" id="menuBtn" title="Files" aria-label="Toggle file list">☰</button>
   <a class="mark" href="../../index.html" title="Back to portal">r</a>
   <a class="wordmark" href="../../index.html" style="color:inherit">kaggle3<small>BCF Gemma-4 deliverables · 2026-11-11</small></a>
   <button class="icon-btn" id="tocBtn" title="Contents" aria-label="Toggle table of contents" hidden>≡</button>
+  <button class="icon-btn" id="fontBtn" title="Font size" aria-label="Cycle font size">A±</button>
   <button class="icon-btn" id="themeBtn" title="Toggle theme" aria-label="Toggle theme">◐</button>
 </header>
 
@@ -332,7 +382,10 @@ function renderDir(node, forceOpen) {
   const files = [...node.files].sort((a, b) => ncmp(a.name, b.name));
   for (const f of files) {
     const isHtml = /\.html?$/i.test(f.name);
-    h += `<a class="file" href="#/${encodeURI(f.p)}" data-p="${esc(f.p)}" title="${esc(f.t || f.name)}"><span class="dot"></span><span class="nm">${esc(f.name.replace(/\.(md|html?)$/i, ""))}</span>${isHtml ? '<span class="ht">html</span>' : ""}</a>`;
+    /* HTML documents always open full-screen in their own tab */
+    const href = isHtml ? encodeURI(f.p) : "#/" + encodeURI(f.p);
+    const ext = isHtml ? ' target="_blank" rel="noopener"' : "";
+    h += `<a class="file" href="${href}"${ext} data-p="${esc(f.p)}" title="${esc(f.t || f.name)}"><span class="dot"></span><span class="nm">${esc(f.name.replace(/\.(md|html?)$/i, ""))}</span>${isHtml ? '<span class="ht">html</span>' : ""}</a>`;
   }
   return h;
 }
@@ -375,22 +428,26 @@ $("fq").addEventListener("input", () => {
 
 /* ---------------- routing & rendering ---------------- */
 let current = null;
+const MD = DOCS.filter(d => !/\.html?$/i.test(d.p));
 function route() {
   const h = decodeURI(location.hash.replace(/^#\/?/, ""));
-  if (h && BY_PATH.has(h)) loadDoc(h); else showOverview();
+  const d = h ? BY_PATH.get(h) : null;
+  if (!d) showOverview();
+  else if (/\.html?$/i.test(d.p)) showHtmlLaunch(d);
+  else loadDoc(d.p);
 }
 window.addEventListener("hashchange", route);
 
 function setNav() {
-  const idx = DOCS.findIndex(d => d.p === current);
+  const idx = MD.findIndex(d => d.p === current);
   const has = idx >= 0;
   $("navbar").hidden = !has; $("bottombar").hidden = !has; $("tocBtn").hidden = !has;
   if (!has) return;
-  $("pos").textContent = `${idx + 1} / ${DOCS.length}`;
+  $("pos").textContent = `${idx + 1} / ${MD.length}`;
   $("prevBtn").disabled = $("mPrev").disabled = idx <= 0;
-  $("nextBtn").disabled = $("mNext").disabled = idx >= DOCS.length - 1;
-  $("prevBtn").onclick = $("mPrev").onclick = () => { if (idx > 0) go(DOCS[idx - 1].p); };
-  $("nextBtn").onclick = $("mNext").onclick = () => { if (idx < DOCS.length - 1) go(DOCS[idx + 1].p); };
+  $("nextBtn").disabled = $("mNext").disabled = idx >= MD.length - 1;
+  $("prevBtn").onclick = $("mPrev").onclick = () => { if (idx > 0) go(MD[idx - 1].p); };
+  $("nextBtn").onclick = $("mNext").onclick = () => { if (idx < MD.length - 1) go(MD[idx + 1].p); };
 }
 function go(p) { location.hash = "#/" + encodeURI(p); }
 
@@ -399,21 +456,31 @@ function crumbFor(p) {
   return `<a href="#/">kaggle3</a> <span>/</span> <span>${esc(g ? g.f : "cvx")}</span> <span>/</span> <b>${esc(p.slice((g ? g.f + "/" : "").length))}</b> <a class="btn" style="margin-left:8px;padding:2px 8px;font-size:.68rem" href="${encodeURI(p)}" target="_blank" rel="noopener">open raw ⧉</a>`;
 }
 
+/* HTML documents never render inline: launch card → full-screen new tab */
+function showHtmlLaunch(d) {
+  current = null; markCurrent(); setNav();
+  $("toc").hidden = true;
+  $("crumb").innerHTML = crumbFor(d.p);
+  document.title = `${d.t || d.p} — kaggle3`;
+  $("article").innerHTML =
+    `<div class="state-msg">
+       <p><span class="badge">HTML document</span></p>
+       <h1 style="font-size:1.15rem;margin:10px 0 4px">${esc(d.t || d.p)}</h1>
+       <p class="mono" style="font-size:0.7rem;color:var(--tx2)">${esc(d.p)}</p>
+       <p style="margin:12px 0">HTML documents open full-screen in their own tab.</p>
+       <p style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+         <a class="btn primary" href="${encodeURI(d.p)}" target="_blank" rel="noopener">Open full-screen in new tab ⧉</a>
+         <a class="btn" href="#/">Back to overview</a></p>
+     </div>`;
+  window.scrollTo({ top: 0 });
+}
+
 async function loadDoc(p) {
   current = p; markCurrent(); setNav();
   const d = BY_PATH.get(p);
   $("crumb").innerHTML = crumbFor(p);
   document.title = `${d.t || p} — kaggle3`;
-  const isHtml = /\.html?$/i.test(p);
   window.scrollTo({ top: 0 });
-  if (isHtml) {
-    $("toc").hidden = true;
-    $("article").innerHTML =
-      `<h1>${esc(d.t || p)}</h1>
-       <div class="byline"><span class="badge">HTML document</span><a href="${encodeURI(p)}" target="_blank" rel="noopener">open in new tab ⧉</a></div>
-       <iframe class="iframe-doc" sandbox="allow-same-origin allow-scripts" src="${encodeURI(p)}" title="${esc(d.t || p)}"></iframe>`;
-    return;
-  }
   let text = cache.get(p);
   if (text === undefined) {
     try {
@@ -472,7 +539,7 @@ function showOverview() {
     `<div class="hero">
        <span class="badge">deliverable drop · 2026-11-11</span>
        <h1>BCF × Gemma 4 Developer Agent Competition</h1>
-       <p class="lede">Four deliverables from the Batonic Coding Framework (BCF) competition work: the submission-ready Brain agent packages, hardening research, the local test-harness setup guide, and executed-backbone replay comparisons. ${DOCS.length} documents (${md} markdown + ${DOCS.length - md} HTML) across 61 hosted files — every document opens in-page from the sidebar tree.</p>
+       <p class="lede">Four deliverables from the Batonic Coding Framework (BCF) competition work: the submission-ready Brain agent packages, hardening research, the local test-harness setup guide, and executed-backbone replay comparisons. ${DOCS.length} documents (${md} markdown + ${DOCS.length - md} HTML) across 61 hosted files — markdown opens in-page from the sidebar tree, HTML decks open full-screen in their own tab.</p>
      </div>
      <div class="cards">${cards}</div>`;
   $("article").querySelectorAll("[data-focus]").forEach(b => b.onclick = e => {
@@ -484,12 +551,27 @@ function showOverview() {
   window.scrollTo({ top: 0 });
 }
 
-/* ---------------- mobile drawers ---------------- */
-$("menuBtn").onclick = () => document.body.classList.toggle("side-open");
+/* ---------------- pane toggles & font size ---------------- */
+$("menuBtn").onclick = () => {
+  if (matchMedia("(max-width: 900px)").matches) document.body.classList.toggle("side-open");
+  else document.body.classList.toggle("side-closed");
+};
 document.querySelectorAll("#tree").forEach(t => t.addEventListener("click", e => {
   if (e.target.closest("a.file")) document.body.classList.remove("side-open");
 }));
-$("tocBtn").onclick = () => { $("toc").hidden = false; $("toc").scrollIntoView(); };
+$("tocBtn").onclick = () => document.body.classList.toggle("toc-closed");
+
+const FS = [13, 14, 15, 16, 18];
+(function () {
+  let i = parseInt(localStorage.getItem("rr-kaggle3-fs") || "1", 10);
+  if (!(i >= 0 && i < FS.length)) i = 1;
+  const apply = () => {
+    document.documentElement.style.setProperty("--fs", FS[i] + "px");
+    $("fontBtn").title = `Font size: ${FS[i]}px — click to cycle`;
+  };
+  apply();
+  $("fontBtn").onclick = () => { i = (i + 1) % FS.length; localStorage.setItem("rr-kaggle3-fs", String(i)); apply(); };
+})();
 
 /* ---------------- init ---------------- */
 renderTree(false);

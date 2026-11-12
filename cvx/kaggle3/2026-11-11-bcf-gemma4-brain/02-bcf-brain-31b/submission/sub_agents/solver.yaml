@@ -1,0 +1,16 @@
+agent_class: LlmAgent
+name: bcf_solver
+description: Applies the minimal verified fix from the BCF spec, tests it, and submits the patch.
+model: gemma-4-31b-it-qat-w4a16-ct
+instruction: !include ../prompts/solver.md
+include_contents: default
+disallow_transfer_to_parent: true
+disallow_transfer_to_peers: true
+tools:
+  - run_command
+  - read_file
+  - edit_file
+  - write_file
+  - get_status
+  - submit_patch
+generate_content_config: !include ../configs/sampling.yaml

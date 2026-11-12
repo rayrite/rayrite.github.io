@@ -1,0 +1,1827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BCF Local Harness Setup Guide — PowerSpec G914 (RTX 5090)</title>
+<style>
+:root { --fg:#1a2332; --muted:#5a6a7e; --accent:#0b6bcb; --bg:#ffffff; --soft:#f4f7fb;
+        --border:#d8e0ea; --code-bg:#0f172a; --code-fg:#e2e8f0; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin:0; color:var(--fg); background:var(--bg);
+       font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif; }
+.page { max-width: 1000px; margin: 0 auto; padding: 24px 28px 80px; }
+header.banner { border-bottom: 3px solid var(--accent); margin-bottom: 24px; padding-bottom: 14px; }
+header.banner h1 { margin: 0 0 6px; font-size: 1.9em; line-height:1.25; }
+header.banner .meta { color: var(--muted); font-size: .92em; }
+details.toc { background: var(--soft); border:1px solid var(--border); border-radius:10px;
+              padding: 12px 18px; margin: 0 0 28px; }
+details.toc summary { cursor:pointer; font-weight:700; color:var(--accent); font-size:1.05em; }
+details.toc ul { margin: 8px 0 4px; padding-left: 22px; }
+details.toc li { margin: 3px 0; }
+details.toc a { color: var(--fg); text-decoration:none; }
+details.toc a:hover { color: var(--accent); text-decoration:underline; }
+h1 { font-size: 1.65em; margin: 1.6em 0 .6em; padding-bottom:.25em; border-bottom:2px solid var(--border); }
+h2 { font-size: 1.3em; margin: 1.4em 0 .5em; color:#10315c; }
+h3 { font-size: 1.1em; margin: 1.2em 0 .4em; }
+h4 { font-size: 1em; margin: 1em 0 .3em; }
+p { margin: .6em 0; }
+a { color: var(--accent); }
+blockquote { margin: .8em 0; padding: .5em 1em; border-left: 4px solid var(--accent);
+             background: var(--soft); color:#33475f; border-radius: 0 8px 8px 0; }
+code { font-family: ui-monospace,SFMono-Regular,"Cascadia Code",Consolas,"Liberation Mono",monospace;
+       font-size: .88em; background:#eef2f7; padding: .15em .4em; border-radius: 5px; }
+pre { background: var(--code-bg); color: var(--code-fg); padding: 14px 16px; border-radius: 10px;
+      overflow-x: auto; line-height: 1.5; }
+pre code { background: none; padding: 0; color: inherit; font-size: .85em; }
+.tablewrap { overflow-x: auto; margin: .9em 0; border:1px solid var(--border); border-radius:10px; }
+table { border-collapse: collapse; width: 100%; font-size: .92em; }
+th, td { border: 1px solid var(--border); padding: 7px 11px; text-align: left; vertical-align: top; }
+th { background: #e8eef6; font-weight: 700; }
+tr:nth-child(even) td { background: #fafcfe; }
+hr { border: none; border-top: 2px solid var(--border); margin: 2em 0; }
+ul, ol { padding-left: 26px; }
+li { margin: .25em 0; }
+img { max-width: 100%; }
+.toplink { display:inline-block; margin-top: .8em; font-size:.85em; color:var(--muted); }
+footer { margin-top: 48px; padding-top: 14px; border-top: 1px solid var(--border);
+         color: var(--muted); font-size: .85em; }
+@media print {
+  details.toc { display: none; }
+  pre { white-space: pre-wrap; word-break: break-word; }
+  body { font-size: 11pt; }
+  .page { max-width: none; padding: 0; }
+}
+</style>
+</head>
+<body>
+<a id="top"></a>
+<div class="page">
+<header class="banner">
+<h1>BCF Local Harness Setup Guide — PowerSpec G914 (RTX 5090)</h1>
+<div class="meta">BCF — Batonic Coding Framework · Kaggle Gemma 4 Developer Agent Competition · Generated 2026-11-11 · Portable static document (no external dependencies)</div>
+</header>
+<details class="toc" open>
+<summary>Table of contents</summary>
+<div class="toc">
+<ul>
+<li><a href="#01-the-two-pipelines">0.1 The two pipelines</a></li>
+<li><a href="#02-hardware-assumptions-verify-do-not-assume">0.2 Hardware assumptions — verify, do not assume</a></li>
+<li><a href="#03-time-estimates-estimate-from-03-93-assumes-100-mbps-and-the-219-gb-zip-already-local">0.3 Time estimates (ESTIMATE, from 03 §9.3; assumes &gt;= 100 Mbps and the 21.9 GB zip already local)</a></li>
+<li><a href="#04-disk-budget-plan-for-250-gb-free">0.4 Disk budget — plan for ~250 GB+ free</a></li>
+<li><a href="#05-the-two-track-decision">0.5 The two-track decision</a></li>
+<li><a href="#06-rules-ethics-read-before-downloading-anything">0.6 Rules &amp; ethics (read before downloading anything)</a></li>
+<li><a href="#11-kaggle-account-rules-acceptance-phone-verification">1.1 Kaggle account, rules acceptance, phone verification</a></li>
+<li><a href="#12-kaggle-api-token-kagglejson">1.2 Kaggle API token (kaggle.json)</a></li>
+<li><a href="#13-kaggle-cli-install-sanity-check">1.3 Kaggle CLI install + sanity check</a></li>
+<li><a href="#14-git-curl-unzip-prerequisites">1.4 git / curl / unzip prerequisites</a></li>
+<li><a href="#15-biosuefi-windows-prep-for-dual-boot-track-a-only-track-b-can-skip">1.5 BIOS/UEFI + Windows prep for dual-boot (Track A only; Track B can skip)</a></li>
+<li><a href="#21-download-the-official-iso">2.1 Download the official ISO</a></li>
+<li><a href="#22-create-the-bootable-usb">2.2 Create the bootable USB</a></li>
+<li><a href="#23-back-up-windows-and-shrink-the-partition">2.3 Back up Windows and shrink the partition</a></li>
+<li><a href="#24-boot-the-usb-and-install-zorin-alongside-windows">2.4 Boot the USB and install Zorin alongside Windows</a></li>
+<li><a href="#25-first-boot-updates">2.5 First boot + updates</a></li>
+<li><a href="#26-nvidia-driver-nvidia-driver-580-open-the-single-most-important-step">2.6 NVIDIA driver: nvidia-driver-580-open (the single most important step)</a></li>
+<li><a href="#27-driver-verification">2.7 Driver verification</a></li>
+<li><a href="#28-docker-engine-official-apt-repo-not-docker-desktop">2.8 Docker Engine — official apt repo (NOT Docker Desktop)</a></li>
+<li><a href="#29-nvidia-container-toolkit-nct-validation">2.9 NVIDIA Container Toolkit (NCT) + validation</a></li>
+<li><a href="#210-wayland-notes-diskfirewall-pitfalls">2.10 Wayland notes, disk/firewall pitfalls</a></li>
+<li><a href="#31-windows-update-nvidia-windows-driver-windows-only">3.1 Windows Update + NVIDIA Windows driver (Windows ONLY)</a></li>
+<li><a href="#32-install-wsl2-ubuntu-2404-update-to-270">3.2 Install WSL2 + Ubuntu 24.04, update to &gt;= 2.7.0</a></li>
+<li><a href="#33-wslconfig-memoryswap-sizing">3.3 .wslconfig memory/swap sizing</a></li>
+<li><a href="#34-ubuntu-first-run-gpu-visibility-checks">3.4 Ubuntu first run + GPU visibility checks</a></li>
+<li><a href="#35-cuda-toolkit-inside-wsl-optional-nvcc-only">3.5 CUDA toolkit inside WSL (optional — nvcc only)</a></li>
+<li><a href="#36-docker-two-options-pick-one">3.6 Docker: two options (pick ONE)</a></li>
+<li><a href="#37-the-ext4-data-placement-rule-never-mntd-for-hot-data">3.7 The ext4 data-placement rule (NEVER /mnt/d for hot data)</a></li>
+<li><a href="#38-the-wsl40401-vram-overhead-probe-do-this-first-before-vllm">3.8 The WSL#40401 VRAM-overhead PROBE (do this FIRST, before vLLM)</a></li>
+<li><a href="#39-cuda-graph-capture-check-enforce-eager-fallback">3.9 CUDA-graph capture check + enforce-eager fallback</a></li>
+<li><a href="#310-sysmem-fallback-note-windows-setting-wsl-does-not-honor-it">3.10 Sysmem-fallback note (Windows setting; WSL does not honor it)</a></li>
+<li><a href="#311-oom-vm-panic-mitigations-track-b">3.11 OOM / VM-panic mitigations (Track B)</a></li>
+<li><a href="#41-directory-layout-the-ext4-rule">4.1 Directory layout + the ext4 rule</a></li>
+<li><a href="#42-kaggle-data-downloads">4.2 Kaggle data downloads</a></li>
+<li><a href="#43-extract-the-competition-data-snapshots">4.3 Extract the competition data + snapshots</a></li>
+<li><a href="#44-sandbox-image-build-exact-commands">4.4 Sandbox image build (exact commands)</a></li>
+<li><a href="#45-python-31213-host-environment">4.5 Python 3.12.13 host environment</a></li>
+<li><a href="#46-wheelhouse-install-notebook-faithful-exact-order-env-vars">4.6 Wheelhouse install (notebook-faithful, exact order) + env vars</a></li>
+<li><a href="#47-version-verification-battery-the-parity-gate">4.7 Version verification battery (the parity gate)</a></li>
+<li><a href="#48-vllm-serving-exact-serve-commands">4.8 vLLM serving — exact serve commands</a></li>
+<li><a href="#49-kv-fit-probe-and-max-model-len-decision-tree-the-load-bearing-procedure">4.9 KV-fit PROBE and max-model-len decision tree (the load-bearing procedure)</a></li>
+<li><a href="#410-harness-wiring">4.10 Harness wiring</a></li>
+<li><a href="#51-pre-flight-before-any-eval">5.1 Pre-flight (before any eval)</a></li>
+<li><a href="#52-swegemma-eval-cli-examples-hr-91-03-64-04-1314">5.2 swegemma eval CLI examples (HR §9.1; 03 §6.4; 04 §1.3–1.4)</a></li>
+<li><a href="#53-docker-vs-subprocess-sandbox-decision-table-04-15-hr-41-03-67">5.3 Docker vs subprocess sandbox — decision table (04 §1.5; HR §4.1; 03 §6.7)</a></li>
+<li><a href="#54-the-python-driver-alternative">5.4 The Python-driver alternative</a></li>
+<li><a href="#55-results-artifacts-tour-hr-92-deep-interpretation-in-04-2">5.5 Results artifacts tour (HR §9.2; deep interpretation in 04 §2)</a></li>
+<li><a href="#56-expected-first-run-outcomes-parity-checks-not-pass-gates">5.6 Expected first-run outcomes (parity checks, NOT pass gates)</a></li>
+<li><a href="#57-warm-server-iteration-practice-04-12-03-39">5.7 Warm-server iteration practice (04 §1.2; 03 §3.9)</a></li>
+<li><a href="#58-troubleshooting-table-condensed-from-03-10-full-table-there">5.8 Troubleshooting table (condensed from 03 §10; full table there)</a></li>
+<li><a href="#61-the-submission-model-read-this-before-spending-a-slot">6.1 The submission model (read this before spending a slot)</a></li>
+<li><a href="#62-pre-slot-gates-do-not-spend-a-slot-until-these-pass">6.2 Pre-slot gates (do NOT spend a slot until these pass)</a></li>
+<li><a href="#63-packaging-agentyaml-at-the-root-of-the-zip">6.3 Packaging (agent.yaml at the ROOT of the zip)</a></li>
+<li><a href="#64-main-submission-31b-step-by-step">6.4 MAIN submission (31B) — step by step</a></li>
+<li><a href="#65-bonus-submission-e4b-step-by-step">6.5 BONUS submission (E4B) — step by step</a></li>
+<li><a href="#66-final-selection-before-dec-2">6.6 FINAL SELECTION (before Dec 2)</a></li>
+<li><a href="#67-deadlines-table-all-2359-utc-ov-timeline-intel-2b-brain-04-71">6.7 Deadlines table (all 23:59 UTC; OV Timeline; INTEL §2b; BRAIN 04 §7.1)</a></li>
+<li><a href="#68-submission-ops-queue-defense">6.8 Submission ops (queue defense)</a></li>
+<li><a href="#69-reading-your-scored-results">6.9 Reading your scored results</a></li>
+<li><a href="#71-version-pin-table-the-frozen-stack-intel-implication-22-03-1">7.1 Version-pin table (the frozen stack; INTEL implication 22; 03 §1)</a></li>
+<li><a href="#72-command-cheat-sheet-one-page">7.2 Command cheat sheet (one page)</a></li>
+<li><a href="#73-track-decision-tree-03-91-letters-swapped-to-this-guide">7.3 Track decision tree (03 §9.1, letters swapped to this guide)</a></li>
+<li><a href="#74-glossary">7.4 Glossary</a></li>
+<li><a href="#75-companion-deliverables-cross-referenced-not-duplicated">7.5 Companion deliverables (cross-referenced, not duplicated)</a></li>
+</ul>
+</div>
+
+</details>
+<h1 id="bcf-local-test-harness-setup-guide-greenfield-powerspec-g914-rtx-5090-to-first-kaggle-submission">BCF Local Test-Harness Setup Guide — Greenfield PowerSpec G914 (RTX 5090) to First Kaggle Submission</h1><a class="toplink" href="#top">↑ Back to top</a>
+<p><strong>Date:</strong> 2026-11-11 · <strong>Role:</strong> senior infrastructure writer (BCF project) · <strong>Method:</strong> LOCAL ONLY — every command, pin, and fact below is grounded in the local sources listed in the source key. No web research was performed for this guide.
+<strong>Audience:</strong> a technical reader with a bare PowerSpec G914 workstation (RTX 5090 32 GB, Windows 11 Pro preinstalled) who wants copy-pasteable, ordered steps from bare metal to a scored Kaggle submission — for BOTH the main 31B competition and the E4B small-model bonus.</p>
+<p><strong>How to read this guide</strong></p>
+<ul>
+<li><code>&lt;PLACEHOLDER&gt;</code> = replace with your value before pasting. <code>~</code> = your Linux home (Zorin or WSL2 Ubuntu). All hot Linux paths are <strong>ext4</strong> — never <code>/mnt/c</code> or <code>/mnt/d</code> (Part 4 §4.1).</li>
+<li><strong>UNVERIFIED</strong> = not confirmed by the local sources; a concrete probe step is attached. Do not treat UNVERIFIED items as facts. <strong>ESTIMATE</strong> = arithmetic/inference from cited facts, not a measurement on this machine.</li>
+<li>Commands assume bash unless the block is tagged <code>powershell</code> (Windows PowerShell, Admin where noted).</li>
+<li><strong>Track-label note (important):</strong> this guide calls <strong>Track A = Zorin OS 18 native</strong> (recommended primary) and <strong>Track B = Windows 11 + WSL2</strong> (probe-gated). The companion parity plan <code>03-local-env-parity-plan.md</code> uses the OPPOSITE letters (its Track A = WSL2, its Track B = Zorin). Section citations like "03 §3.6" keep 03's original numbering; the mapping is: 03 §3 = this guide's Track B, 03 §4 = this guide's Track A. Nothing else is changed.</li>
+<li>Safety: nothing under <code>input/</code> or the BCF deliverable trees is modified by any step here — all commands copy artifacts into fresh working directories. Downloaded archives are untrusted: each is extracted into its own new empty directory, and scripts you write live in <code>~/bcf/bin</code>, never inside extracted data trees (03 §0, safety rules).</li>
+</ul>
+<p><strong>Source key (all local; paths relative to the project root <code>d:/stuff/ai-misc/_bsh2026/vscode_project01/46-wide_research_test_alibaba</code>)</strong></p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Key</th>
+<th>File</th>
+<th>Used for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>03</code></td>
+<td><code>deliverables/2026-11-11-bcf-hardening-research/03-local-env-parity-plan.md</code></td>
+<td>PRIMARY: stack pins, both OS tracks, probes, wheelhouse install, verification, divergences, troubleshooting</td>
+</tr>
+<tr>
+<td><code>RTX</code></td>
+<td><code>scratch/bcf-hardening-2026-11-11/research/rtx5090-stack.md</code></td>
+<td>RTX 5090 / sm_120 facts, driver floors, WSL2 caveats, KV math</td>
+</tr>
+<tr>
+<td><code>ZOR</code></td>
+<td><code>scratch/bcf-hardening-2026-11-11/research/zorin-docker.md</code></td>
+<td>Zorin 18 = Ubuntu 24.04, open kernel modules, Docker Engine + NCT</td>
+</tr>
+<tr>
+<td><code>SRV</code></td>
+<td><code>scratch/bcf-hardening-2026-11-11/research/vllm-serving.md</code></td>
+<td>serving flags, parsers, KV fit, TP numerics</td>
+</tr>
+<tr>
+<td><code>HR</code></td>
+<td><code>input/kagglecomp/kagglecomp_data_package/HARNESS_README.md</code></td>
+<td>harness contract: §3 serving, §4 sandbox, §7 budgets, §9 CLI, §10 gotchas</td>
+</tr>
+<tr>
+<td><code>GS</code></td>
+<td><code>input/kagglecomp/docs/markdown/Kaggle-03-GettingStarted.md</code></td>
+<td>organizer notebook: env vars, wheelhouse install, VllmConfig, EvalConfig, packaging</td>
+</tr>
+<tr>
+<td><code>OV</code> / <code>DATA</code></td>
+<td><code>input/kagglecomp/docs/markdown/Kaggle-01-Overview.md</code>, <code>Kaggle-02-Data.md</code></td>
+<td>submission contract, 12 h budget, deadlines, dataset contents, model rules</td>
+</tr>
+<tr>
+<td><code>INTEL</code></td>
+<td><code>input/kagglecomp/intel_20261111/00-intel-brief-2026-11-11.md</code></td>
+<td>deadlines, queue stalls, bonus terms, runtime pins, open questions</td>
+</tr>
+<tr>
+<td><code>BRAIN</code></td>
+<td><code>deliverables/2026-11-11-bcf-gemma4-brain/README.md</code> + <code>04-task2-bcf-design-justification.md</code></td>
+<td>BCF submission trees, validator, packaging, canary gates, ops plan</td>
+</tr>
+<tr>
+<td><code>04</code></td>
+<td><code>deliverables/2026-11-11-bcf-hardening-research/04-local-scoring-and-feedback-guide.md</code></td>
+<td>local eval commands, artifact interpretation, correlation caveats</td>
+</tr>
+<tr>
+<td><code>05</code></td>
+<td><code>deliverables/2026-11-11-bcf-hardening-research/05-robustness-audit-vs-field-issues.md</code></td>
+<td>canary concept + C0–C7 table (§6)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Global caveat (03 §0.2): RTX/ZOR/SRV were produced while WebFetch was broken; their quotes are search-snippet-mediated. Load-bearing values (torch pin, WSL#40401, KV behavior, repo command text) are re-verified <strong>on the box</strong> by the probes in this guide, not taken on faith.</p>
+<hr />
+<h1 id="part-0-overview-what-you-will-build">Part 0 — Overview: what you will build</h1><a class="toplink" href="#top">↑ Back to top</a>
+<h2 id="01-the-two-pipelines">0.1 The two pipelines</h2>
+<p>You are building a <strong>local replica of the Kaggle scoring environment</strong> on one RTX 5090, plus the packaging/upload path to the real scorer. Same pinned software stack on both tracks; only the OS/driver/container plumbing differs (03 §1).</p>
+<pre><code class="language-text">LOCAL (your workstation, Track A Zorin native OR Track B WSL2 Ubuntu 24.04)
+
+  ~/bcf/submissions/bcf-31b (agent.yaml tree)
+        |
+        v
+  swegemma harness (Python 3.12.13 venv: swegemma 0.2.11 + adk-submission 0.2.13 + google-adk 1.36.1)
+        |  OpenAI /v1 API, key EMPTY, num_retries=5
+        v
+  vLLM 0.19.1 server @ 127.0.0.1:8000  ---- RTX 5090 32 GB, TP1, bf16, gemma4 parsers, thinking ON
+        |
+        |  docker exec (air-gapped)
+        v
+  Docker sandbox  swebench-sandbox:latest  (python:3.13-slim, network=none, 4 GiB, 2 vCPU)
+     Container A: agent works in /workspace  -&gt;  git diff patch
+     Container B: fresh snapshot + patch + test_patch  -&gt;  hermetic pytest + JUnit XML
+        |
+        v
+  ~/bcf/results/&lt;run&gt;/  (summary.json, task_results.jsonl, patches/, test_outputs/, traces/, logs/)
+
+SUBMISSION (same machine, any OS)
+
+  submission tree  -&gt;  zip (agent.yaml at ROOT, &lt; 3 GiB)  -&gt;  kaggle competitions submit / UI upload
+        |
+        v
+  Kaggle managed scorer: 4x L4 24 GB, TP4, vLLM 0.19.1, max_model_len 32768, 12 h budget
+     ~120 hidden private-repo tasks  -&gt;  public LB (58 tasks) + private LB (finals)
+</code></pre>
+<p>(HR §1 architecture, §3.1, §4; GS §4–5; OV Evaluation; 03 §1.)</p>
+<h2 id="02-hardware-assumptions-verify-do-not-assume">0.2 Hardware assumptions — verify, do not assume</h2>
+<ul>
+<li><strong>GPU (assumed):</strong> NVIDIA RTX 5090 32 GB GDDR7, Blackwell GB202, compute capability <strong>12.0 (sm_120)</strong>, 1,792 GB/s (RTX RQ1). This is the one component the whole plan is sized around.</li>
+<li><strong>CPU / RAM / disk: NOT asserted.</strong> The research notes do not record the G914's CPU model or system RAM (03 §3.3 marks RAM UNVERIFIED). Check them yourself before sizing WSL or partitions:</li>
+<li>Windows: press <code>Win+R</code>, run <code>dxdiag</code> (System tab: CPU, memory) and <code>msinfo32</code> (System Summary: installed physical RAM, disks). Or in PowerShell:</li>
+</ul>
+<pre><code class="language-powershell">systeminfo | findstr /C:&quot;Total Physical Memory&quot;
+Get-PSDrive C | Select-Object Used,Free
+</code></pre>
+<ul>
+<li>Linux (after install): <code>lscpu</code>, <code>free -h</code>, <code>df -h ~</code>.</li>
+<li><strong>OS (assumed):</strong> Windows 11 Pro preinstalled (the research notes were produced on build 26200; verify yours with <code>winver</code>). Track A keeps Windows intact as a dual-boot fallback; Track B stays inside Windows.</li>
+</ul>
+<h2 id="03-time-estimates-estimate-from-03-93-assumes-100-mbps-and-the-219-gb-zip-already-local">0.3 Time estimates (ESTIMATE, from 03 §9.3; assumes &gt;= 100 Mbps and the 21.9 GB zip already local)</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Track A (Zorin native)</th>
+<th>Track B (WSL2)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OS/driver/container plumbing</td>
+<td>1.5–3 h (USB, dual-boot, driver, MOK, Docker+NCT)</td>
+<td>0.5–1.5 h (WSL update, Ubuntu, Docker)</td>
+</tr>
+<tr>
+<td>Downloads (wheelhouse ~3–5 GB + models ~21 GB)</td>
+<td>0.5–1.5 h</td>
+<td>0.5–1.5 h</td>
+</tr>
+<tr>
+<td>Env + wheelhouse + sandbox build</td>
+<td>0.5 h</td>
+<td>0.5 h</td>
+</tr>
+<tr>
+<td>Probes + verification checklist</td>
+<td>0.5 h</td>
+<td>0.5–1 h (incl. WSL#40401 probe)</td>
+</tr>
+<tr>
+<td>First 3-task eval</td>
+<td>0.5 h</td>
+<td>0.5 h</td>
+</tr>
+<tr>
+<td><strong>Total to first eval</strong></td>
+<td><strong>~3–6 h</strong></td>
+<td><strong>~2–4 h</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p>If you must freshly download the 21.9 GB competition zip, add time for it. If the Track B VRAM probe FAILs after you invested in WSL2, add Track A's plumbing time — that is the bet the decision tree sizes (03 §9.3). A full 129-task local run is ESTIMATE 3.5–5.5 h at concurrency 1; iterate on subsets instead (04 §1.4).</p>
+<h2 id="04-disk-budget-plan-for-250-gb-free">0.4 Disk budget — plan for ~250 GB+ free</h2>
+<p>Measured/estimated sizes (03 §2.1; ZIP listing measured in <code>scratch/bcf-2026-11-11/zip_listing.txt</code>):</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Size</th>
+<th>Note</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Competition zip (kept as downloaded)</td>
+<td>21.9 GB</td>
+<td>21,929,289,087 bytes measured</td>
+</tr>
+<tr>
+<td>Extracted snapshots (129 tgz)</td>
+<td>21.5 GB</td>
+<td>median 214 MB, max 334.9 MB</td>
+</tr>
+<tr>
+<td>Graphs + embeddings + wheels + docker/sandbox</td>
+<td>~2–3 GB</td>
+<td>127 graphs + 127 embeddings (~1.2 GB), 124 wheels</td>
+</tr>
+<tr>
+<td>Models: 31B ~17 GB + E4B ~4–5 GB</td>
+<td>~21 GB</td>
+<td>keep originals for re-extraction</td>
+</tr>
+<tr>
+<td>Wheelhouse dataset (41 wheels incl. torch/vLLM)</td>
+<td>3–5 GB</td>
+<td>ESTIMATE</td>
+</tr>
+<tr>
+<td>Installed venv (torch + vLLM + libs)</td>
+<td>5–10 GB</td>
+<td>ESTIMATE</td>
+</tr>
+<tr>
+<td>Docker images: sandbox ~0.6–1 GB; optional vLLM CUDA image 10–20 GB; build cache</td>
+<td>1–21 GB</td>
+<td>ZOR RQ5</td>
+</tr>
+<tr>
+<td>Working copies + results/traces (two runs)</td>
+<td>5–10 GB</td>
+<td>ESTIMATE</td>
+</tr>
+<tr>
+<td>Backups (sandbox image tar, wheelhouse zip, WSL export / Timeshift)</td>
+<td>10–30 GB</td>
+<td>ESTIMATE, 03 §9.4</td>
+</tr>
+</tbody>
+</table></div>
+<p>Core working set is ~100–130 GB; 03 §2.1 sets the floor at <strong>&gt;= 100 GB free, recommends 150 GB</strong> on the Linux filesystem. This guide's comfort target is <strong>~250 GB+ free</strong> (headroom for both model variants, docker build cache, backups, and a second results run). For dual-boot, leave <strong>&gt;= 250 GB unallocated</strong> when shrinking Windows (Part 2 §2.3).</p>
+<h2 id="05-the-two-track-decision">0.5 The two-track decision</h2>
+<ul>
+<li><strong>Track A — Zorin OS 18.1 native (recommended primary).</strong> Eliminates the three WSL2 tail risks outright — WSL#40401 (potentially fatal ~16 GiB invisible VRAM overhead), WSL#40732 (GPU-OOM VM panic), WSL#11050 (uncontrollable sysmem fallback) — plus ~1 GiB of Windows host VRAM share and the Docker Desktop quirks. The G914 is a desktop; dual-boot is cheap and Windows stays untouched (03 §9.2; ZOR RQ6).</li>
+<li><strong>Track B — Windows 11 Pro + WSL2 (fast start, probe-gated).</strong> Viable <strong>only if</strong> the VRAM-overhead probe (Part 3 §3.8) PASSes and CUDA-graph capture works. If the probe FAILs, Track B is disqualified for this workload and you switch to Track A (03 §3 gate, §9.1).</li>
+<li><strong>Final-run policy (both tracks):</strong> every pre-submission validation run happens on the track that passed ALL verification items (Part 4 §4.7, Part 5). If Track B was MARGINAL anywhere, final validation = Track A (03 §9.1).</li>
+</ul>
+<h2 id="06-rules-ethics-read-before-downloading-anything">0.6 Rules &amp; ethics (read before downloading anything)</h2>
+<ul>
+<li><strong>Accept the competition rules</strong> on the competition page before competing; rules acceptance is required for data access and submissions, and the Entry Deadline is <strong>Nov 25</strong> (OV Timeline; DATA rules gate; 03 §2.2).</li>
+<li><strong>Offline data handling:</strong> until the external-compute (757783) and third-party-LLM-annotation (757223) rules questions are answered, do NOT send competition task material to DeepInfra/RunPod/third-party chat LLMs; keep trajectory annotation offline/local or inside Kaggle (INTEL implication 3).</li>
+<li><strong>Do not attempt public/private split probing</strong> — infeasible under the submission cap, ban risk, no staff ruling (INTEL implication 21, C15).</li>
+<li><strong>Do not "fix" the sandbox by patch-installing missing packages</strong> — legality was asked (744370) and never answered; the dependency gaps are parity, not your bug (INTEL implication 15; 03 §2.3).</li>
+<li>This project's own policy: local-only research from the provided dataset; nothing under <code>input/</code> is modified.</li>
+</ul>
+<hr />
+<h1 id="part-1-accounts-prerequisites-both-tracks">Part 1 — Accounts &amp; prerequisites (both tracks)</h1><a class="toplink" href="#top">↑ Back to top</a>
+<p>Do these on Windows first (they are needed for downloads on either track). The Linux-side Kaggle CLI setup is repeated in Part 4 §4.2 where the downloads actually happen.</p>
+<h2 id="11-kaggle-account-rules-acceptance-phone-verification">1.1 Kaggle account, rules acceptance, phone verification</h2>
+<ol>
+<li>Create/sign in to your account at <code>https://www.kaggle.com</code>.</li>
+<li>Open the competition: <code>https://www.kaggle.com/competitions/gemma-4-developer-agent</code>.</li>
+<li><strong>Accept the competition rules</strong> (Rules tab / the data-page prompt "To see this data you need to agree to the competition rules"). Without this, API downloads of competition data fail and submissions are blocked (DATA rules gate; OV Entry Deadline; 03 §2.2 marks the API-failure behavior as standard Kaggle, UNVERIFIED for this specific competition — the probe is the download command itself).</li>
+<li><strong>Phone-verify your account</strong> (Kaggle Settings → Phone verification). This is standard Kaggle behavior for competition participation/submissions, not spelled out in the local competition docs — treat as UNVERIFIED-for-this-competition; the probe is whether the Submit button is enabled. Do it now so it never blocks a scarce submission slot.</li>
+<li>If you plan the optional paper track, also sign up at <code>https://www.kaggle.com/competitions/gemma-4-developer-agent-paper</code> (separate competition; deadline Nov 12 — Part 6 §6.7).</li>
+</ol>
+<h2 id="12-kaggle-api-token-kagglejson">1.2 Kaggle API token (kaggle.json)</h2>
+<ol>
+<li>On kaggle.com → your profile → <strong>Settings → API → Create New Token</strong>. This downloads <code>kaggle.json</code> (contains your username + key; treat it as a secret).</li>
+<li>Place it where the Kaggle CLI looks:</li>
+</ol>
+<p><strong>Windows (for any Windows-side CLI use):</strong></p>
+<pre><code class="language-powershell">mkdir $env:USERPROFILE\.kaggle -Force
+copy &lt;PATH_TO&gt;\kaggle.json $env:USERPROFILE\.kaggle\kaggle.json
+</code></pre>
+<p><strong>Linux (Track A Zorin, or Track B inside WSL Ubuntu) — the canonical location:</strong></p>
+<pre><code class="language-bash">mkdir -p ~/.kaggle
+cp &lt;PATH_TO&gt;/kaggle.json ~/.kaggle/kaggle.json
+chmod 600 ~/.kaggle/kaggle.json
+</code></pre>
+<p>(03 §2.2. On Track B you can copy from Windows in one step: <code>cp /mnt/c/Users/&lt;YOU&gt;/Downloads/kaggle.json ~/.kaggle/</code> — a one-time copy off <code>/mnt/c</code> is fine; working there is not, Part 4 §4.1.)</p>
+<h2 id="13-kaggle-cli-install-sanity-check">1.3 Kaggle CLI install + sanity check</h2>
+<pre><code class="language-bash"># Linux env (or any python on Windows for a quick auth test):
+python3 -m pip install --user kaggle
+kaggle --version                      # probe: confirm the CLI is on PATH and note the version
+kaggle competitions list -s gemma     # sanity: API auth works (03 §2.2)
+</code></pre>
+<p>If <code>kaggle</code> is not found, add the user-site bin dir to PATH (<code>~/.local/bin</code> on Linux). The CLI version matters for one open question: whether dataset-version pinning is supported (Part 4 §4.2, UNVERIFIED probe).</p>
+<h2 id="14-git-curl-unzip-prerequisites">1.4 git / curl / unzip prerequisites</h2>
+<ul>
+<li><strong>Windows:</strong> install Git for Windows (git-scm.com) if you want git on the Windows side; <code>curl</code> ships with Windows 11. You will do the real work in Linux, so Windows tooling is only for ISO/USB prep and the optional Windows-side validator run.</li>
+<li><strong>Linux (both tracks, run once after OS setup):</strong></li>
+</ul>
+<pre><code class="language-bash">sudo apt update
+sudo apt install -y git curl unzip ca-certificates
+</code></pre>
+<p>(These are the standard tools the later steps invoke; <code>ca-certificates curl</code> are also the Docker repo prerequisites, 03 §4.4.)</p>
+<h2 id="15-biosuefi-windows-prep-for-dual-boot-track-a-only-track-b-can-skip">1.5 BIOS/UEFI + Windows prep for dual-boot (Track A only; Track B can skip)</h2>
+<p><strong>Safety first — partitioning can destroy data. Back up Windows before touching partitions.</strong></p>
+<ol>
+<li><strong>Back up</strong> your Windows data (external drive / cloud). The Zorin install shrinks the Windows partition; a backup is your only undo (03 §4.1 step 1).</li>
+<li><strong>BitLocker:</strong> if the Windows drive is BitLocker-encrypted, <strong>suspend BitLocker protection before repartitioning</strong> (Windows Security → Device encryption / BitLocker → Suspend), and keep the recovery key saved. Shrinking an encrypted volume without suspending can trigger recovery prompts or fail. (Standard Windows dual-boot practice — not covered by the local research notes; marked as such.)</li>
+<li><strong>Fast Startup off:</strong> Control Panel → Power Options → "Choose what the power buttons do" → uncheck "Turn on fast startup". Fast Startup leaves NTFS volumes in a hibernated state that Linux must not write to; disabling it avoids cross-OS filesystem corruption. (Standard dual-boot practice — not in the local notes.)</li>
+<li><strong>Secure Boot decision (pick ONE before installing Zorin):</strong>
+   - <strong>Simplest for a competition dev box: disable Secure Boot in UEFI</strong> — sidesteps MOK entirely; acceptable on a personal machine (ZOR RQ2; 03 §4.1 step 3).
+   - Or keep Secure Boot ON and be ready to <strong>enroll MOK</strong> during the NVIDIA driver install (Part 2 §2.6). Both open and proprietary modules need signing when Secure Boot is on (ZOR RQ2).</li>
+<li><strong>Boot-menu key:</strong> PowerSpec machines typically use <strong>F11 (boot menu) / Del (UEFI setup)</strong> — <strong>UNVERIFIED for the G914; check your manual / the POST screen</strong> (the local notes do not record it). You will need it to boot the USB.</li>
+</ol>
+<hr />
+<h1 id="part-2-track-a-zorin-os-181-native-greenfield-recommended-primary">Part 2 — TRACK A: Zorin OS 18.1 native (greenfield, recommended primary)</h1><a class="toplink" href="#top">↑ Back to top</a>
+<p>Zorin OS 18.1 (released 2026-04-15) = <strong>Ubuntu 24.04.4 LTS "noble"</strong>, kernel <strong>6.17 HWE</strong>, GNOME 46 base, <strong>Wayland default</strong> (Xorg session available), supported until 2029-06-01. All Ubuntu 24.04 NVIDIA/Docker guidance applies verbatim (ZOR RQ1). Finish line: this part + Part 4 + the verification battery green.</p>
+<h2 id="21-download-the-official-iso">2.1 Download the official ISO</h2>
+<ol>
+<li>Go to <strong><code>https://zorin.com/os/download</code></strong> and download <strong>Zorin OS 18.x Core</strong> (Core is the free edition; Pro is paid, Lite is XFCE — ZOR RQ1 editions). Use the current 18.x point release: 18.1 is what the notes verified; <strong>UNVERIFIED whether an 18.2 exists by Nov 2026</strong> (ZOR open items) — any 18.x is still the Ubuntu 24.04 base.</li>
+<li><strong>Verify the checksum if one is published</strong> on the download page (SHA-256). UNVERIFIED whether Zorin publishes per-ISO checksums; the probe is the download page itself. On Windows: <code>Get-FileHash &lt;PATH_TO&gt;\zorin.iso -Algorithm SHA256</code> and compare. If no checksum is published, note that and proceed (official site over HTTPS).</li>
+</ol>
+<h2 id="22-create-the-bootable-usb">2.2 Create the bootable USB</h2>
+<p>From Windows, write the ISO to a USB stick (&gt;= 8 GB recommended; the ISO overwrites the stick):</p>
+<ul>
+<li><strong>Rufus</strong> (rufus.ie) — select the ISO, GPT/UEFI target, Start; or</li>
+<li><strong>balenaEtcher</strong> (etcher.balena.io) — select ISO → select USB → Flash.</li>
+</ul>
+<p>(03 §4.1 step 2 names balenaEtcher/Rufus; tool settings above are standard usage, not from the local notes.)</p>
+<h2 id="23-back-up-windows-and-shrink-the-partition">2.3 Back up Windows and shrink the partition</h2>
+<ol>
+<li>Confirm your backup (Part 1 §1.5) and BitLocker suspension are done.</li>
+<li>Windows: <code>Win+X</code> → <strong>Disk Management</strong> (<code>diskmgmt.msc</code>). Right-click the Windows <code>C:</code> volume → <strong>Shrink Volume</strong>. Shrink so that <strong>&gt;= 250 GB is left unallocated</strong> (Part 0 §0.4; 03 §4.1 uses &gt;= 150 GB as the comfortable Linux minimum — this guide's disk budget asks for 250 GB). Do not touch the EFI System Partition or Windows recovery partitions.</li>
+<li>Leave the freed space <strong>unallocated</strong> — the Zorin installer will use it.</li>
+</ol>
+<h2 id="24-boot-the-usb-and-install-zorin-alongside-windows">2.4 Boot the USB and install Zorin alongside Windows</h2>
+<ol>
+<li>Reboot and open the boot menu (PowerSpec typically <strong>F11</strong>; Del for UEFI — <strong>check your manual</strong>, Part 1 §1.5). Boot the USB in UEFI mode.</li>
+<li>The boot menu offers <strong>"Try or install Zorin OS (modern NVIDIA drivers)"</strong> — prefer it; also tick <strong>"Install third-party software for graphics and Wi-Fi"</strong> (ZOR RQ2; 03 §4.1 step 4).</li>
+<li>Choose <strong>"Install alongside Windows Boot Manager"</strong> (dual-boot), or manual partitioning. For manual partitioning, in the freed space:
+   - <strong>ext4 root <code>/</code> — &gt;= 150 GB</strong> (250 GB if you left that much; this holds <code>~/bcf</code> and <code>/var/lib/docker</code>).
+   - <strong>swap — optional</strong> (a swapfile can be added later; if you want a partition, size it to your RAM for hibernate, otherwise a few GB or none).
+   - <strong>EFI: reuse the existing EFI System Partition</strong> — mount it at <code>/boot/efi</code>, <strong>do NOT format it</strong> (formatting destroys the Windows bootloader).
+   - Install the bootloader to the disk's existing EFI entry; the installer's alongside option handles this automatically.</li>
+<li>Complete the install (user, password, timezone), remove the USB, reboot. You should get a boot menu with Zorin and Windows Boot Manager. Windows remains intact for gaming/other work and as the Track B fallback (03 §4.1).</li>
+</ol>
+<p><strong>Safety:</strong> the only destructive steps are the shrink (Windows-side, reversible with a backup) and writing partitions in the freed space. Never let the installer format the whole disk or the EFI partition.</p>
+<h2 id="25-first-boot-updates">2.5 First boot + updates</h2>
+<pre><code class="language-bash">sudo apt update &amp;&amp; sudo apt upgrade -y
+sudo reboot
+# after reboot:
+lsb_release -a     # expect Ubuntu 24.04.x LTS (noble) — Zorin 18 base
+uname -r           # expect 6.17.x (18.1 HWE); 6.14.x on 18.0
+</code></pre>
+<p>(03 §4.1 step 5; ZOR RQ1.)</p>
+<h2 id="26-nvidia-driver-nvidia-driver-580-open-the-single-most-important-step">2.6 NVIDIA driver: <code>nvidia-driver-580-open</code> (the single most important step)</h2>
+<p><strong>Blackwell is supported ONLY by the open kernel modules.</strong> Verbatim (NVIDIA driver README 580.82.09, ZOR RQ2): "Blackwell and later are only supported by the open kernel modules." The proprietary <code>nvidia-driver-580</code> will fail to bring up a 5090. Minimum branch 570 (first stable 570.124.04, 2025-02-27); recommended today <strong>580+</strong> from noble <code>restricted</code> (ZOR RQ2).</p>
+<pre><code class="language-bash"># 1. See what's recommended:
+ubuntu-drivers devices
+# 2. Install the OPEN flavor (apt package name is the safe form; the `nvidia:580-open`
+#    ubuntu-drivers selector syntax is UNVERIFIED per ZOR open items):
+sudo apt install -y nvidia-driver-580-open
+#    (or: sudo ubuntu-drivers install  — auto-selects recommended; confirm it picks an -open package)
+# 3. Reboot:
+sudo reboot
+</code></pre>
+<p>(03 §4.2.) GUI alternative: Zorin Menu → System Tools → Software Updater → Settings → "Additional Drivers" tab → recommended NVIDIA driver → Apply → reboot (ZOR RQ2, help.zorin.com).</p>
+<p><strong>MOK enrollment (only if Secure Boot stayed ON):</strong> the install prompts for a MOK password. On reboot, the blue <strong>MokManager</strong> screen appears: "Enroll MOK" → Continue → Yes → enter the password. <strong>If you skip/miss this screen, the modules stay unsigned and blocked</strong> → symptom: <code>nvidia-smi</code> fails, desktop falls back to llvmpipe software rendering. Recovery if missed: <code>sudo apt-get install mokutil openssl</code>, generate/import a signing key (<code>mokutil --import</code>), reboot to enroll, sign modules (re-sign on every kernel/driver build) — or just disable Secure Boot and reinstall the driver (ZOR RQ2; 03 §4.2).</p>
+<p><strong>Do NOT:</strong> use the graphics-drivers PPA for the 5090 (documented 580 boot failure on 5090, fixed by <code>ppa-purge</code> + noble restricted driver); use NVIDIA's <code>.run</code> installer (bypasses apt/DKMS, breaks on kernel updates, complicates Secure Boot) (ZOR RQ2 items 2–3).</p>
+<h2 id="27-driver-verification">2.7 Driver verification</h2>
+<pre><code class="language-bash">nvidia-smi
+# Expect: Driver Version 580.x, CUDA Version 12.8+/13.x, &quot;NVIDIA GeForce RTX 5090&quot;, ~32510 MiB total
+# (exact total UNVERIFIED — record it for the KV-fit probe, Part 4 §4.9), near-zero used on a quiet desktop.
+lsmod | grep nvidia          # nvidia + nvidia_modeset + nvidia_drm loaded (open flavor)
+dpkg -l | grep nvidia-driver # confirm the installed package is the -open variant
+# If nvidia-smi fails:
+mokutil --sb-state           # Secure Boot state
+dmesg | grep -i nvidia       # module signature rejection?
+</code></pre>
+<p>(03 §4.3.) The torch-level probe (<code>(12, 0)</code> capability) comes after the wheelhouse install (Part 4 §4.7). On native Linux there is <strong>no WSL#40401 overhead probe to pass</strong> — but still run a 12 GiB contiguous allocation once (same python snippet as Part 3 §3.8, using plain <code>nvidia-smi</code>) to confirm healthy large-alloc behavior before vLLM (03 §4.3).</p>
+<h2 id="28-docker-engine-official-apt-repo-not-docker-desktop">2.8 Docker Engine — official apt repo (NOT Docker Desktop)</h2>
+<p><strong>Docker Desktop for Linux does NOT support NVIDIA GPU containers</strong> (runs containers in a VM without passthrough; verbatim docker/roadmap#497: "currently due to the virtualization in Linux, docker desktop does not support GPU accelerated containers but it is supported in WSL2"). Use <strong>rootful Docker Engine</strong> — Apache-2.0, free. <strong>Rootless is broken on Ubuntu 24.04</strong> (AppArmor restricts unprivileged user namespaces) and GPU+rootless is problematic — do not use it here (ZOR RQ3; 03 §4.4).</p>
+<pre><code class="language-bash"># Official docs.docker.com/engine/install/ubuntu/ procedure (ZOR RQ3; verify flags live if a step errors):
+sudo apt-get update
+sudo apt-get install -y ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+echo &quot;deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release &amp;&amp; echo &quot;$VERSION_CODENAME&quot;) stable&quot; | sudo tee /etc/apt/sources.list.d/docker.list &gt; /dev/null
+sudo apt-get update
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+sudo docker run --rm hello-world
+# Post-install (docs.docker.com/engine/install/linux-postinstall/):
+sudo groupadd docker 2&gt;/dev/null || true
+sudo usermod -aG docker $USER
+newgrp docker    # or log out/in
+sudo systemctl enable docker.service containerd.service
+docker run --rm hello-world    # now without sudo
+</code></pre>
+<p>(03 §4.4.) <code>VERSION_CODENAME</code> resolves to <code>noble</code> on Zorin 18. If you see <code>NO_PUBKEY ... noble InRelease is not signed</code>, the keyring placement/permissions are wrong — redo the key steps (ZOR RQ3). Security note: the <code>docker</code> group is root-equivalent; acceptable on a dedicated eval box (ZOR RQ3).</p>
+<h2 id="29-nvidia-container-toolkit-nct-validation">2.9 NVIDIA Container Toolkit (NCT) + validation</h2>
+<p>Prereq: host <code>nvidia-smi</code> works (§2.7). Official install-guide procedure (ZOR RQ4; snippet-reconstructed — validate live if a step errors):</p>
+<pre><code class="language-bash">curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
+curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \
+  sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \
+  sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
+sudo apt-get update
+sudo apt-get install -y nvidia-container-toolkit
+sudo nvidia-ctk runtime configure --runtime=docker     # writes /etc/docker/daemon.json
+sudo systemctl restart docker
+# Validation (official sample-workload pattern):
+docker run --rm --runtime=nvidia --gpus all ubuntu nvidia-smi
+# Classic CUDA-image form (any valid full tag):
+docker run --rm --gpus all nvidia/cuda:12.4.1-base-ubuntu22.04 nvidia-smi
+# Expect: the standard nvidia-smi table INSIDE the container (driver 580.x, RTX 5090).
+</code></pre>
+<p>(03 §4.5.) Use <strong>legacy <code>--gpus all</code></strong> (what the harness/vLLM examples use). CDI (<code>nvidia-ctk cdi generate --output=/etc/cdi/nvidia.yaml</code>, <code>--device nvidia.com/gpu=all</code>) works on native Linux but is optional — skip it for simplicity. No <code>no-cgroups</code> workaround needed here (that is WSL-only) (ZOR RQ4).</p>
+<h2 id="210-wayland-notes-diskfirewall-pitfalls">2.10 Wayland notes, disk/firewall pitfalls</h2>
+<ul>
+<li><strong>Wayland</strong> is the Zorin 18 default and is fine on the 5090: driver 570/580 is far past the 555 explicit-sync baseline, and the eval stack is headless anyway. If the desktop glitches: log out → gear icon → "Zorin on Xorg" session (ZOR RQ1/RQ2; 03 §4.6).</li>
+<li><strong>Disk:</strong> <code>/var/lib/docker</code> (overlay2) holds images/build cache. The optional vLLM CUDA image is 10–20+ GB; keep models on the big partition. If root is small, set <code>data-root</code> in <code>/etc/docker/daemon.json</code> — <strong>merge with the NCT-written config, do not clobber the <code>runtimes</code> block</strong> — e.g. <code>{"data-root": "/home/&lt;YOU&gt;/bcf/docker-data"}</code>, then <code>sudo systemctl restart docker</code>. Prune between runs: <code>docker system prune</code>, <code>docker builder prune</code> (ZOR RQ5; 03 §4.6).</li>
+<li><strong>Firewall:</strong> Docker's published ports <strong>bypass UFW</strong> (Docker inserts iptables rules ahead of UFW; 24.04 uses iptables-nft). Mitigation: bind vLLM to <code>127.0.0.1</code> only (all Part 4 serve commands do), never publish sandbox ports (the sandbox is <code>network_mode=none</code> anyway) (ZOR RQ5).</li>
+<li>cgroup v2 is default on 24.04; modern Docker handles it; the eval sandbox runs no systemd inside, so no cgroupns issues (ZOR RQ5).</li>
+</ul>
+<p><strong>Track A finish line:</strong> §2.7 + §2.8 + §2.9 green → Part 4 (shared build) → Part 4 §4.7 verification → Part 5.</p>
+<hr />
+<h1 id="part-3-track-b-windows-11-pro-wsl2-greenfield-probe-gated">Part 3 — TRACK B: Windows 11 Pro + WSL2 (greenfield, probe-gated)</h1><a class="toplink" href="#top">↑ Back to top</a>
+<p><strong>Gate:</strong> this track is viable <strong>only if</strong> the VRAM-overhead probe (§3.8) PASSes and CUDA-graph capture works (§3.9). microsoft/WSL#40401 reports ~16 GiB of invisible CUDA driver overhead on Blackwell under WSL2; if it reproduces on the 5090, <strong>nothing fits in 32 GB and Track B is disqualified</strong> (RTX RQ4 item 1, RQ5; 03 §3 gate). Run the probe before investing in the rest.</p>
+<h2 id="31-windows-update-nvidia-windows-driver-windows-only">3.1 Windows Update + NVIDIA Windows driver (Windows ONLY)</h2>
+<ol>
+<li>Run <strong>Windows Update</strong> to current (Settings → Windows Update), reboot.</li>
+<li>Install the latest GeForce Game Ready or Studio driver, <strong>R580+ generation</strong> (minimum ever for the 5090: 572.16 WHQL 2025-01-30; R570+ required for Blackwell CUDA; R580+ satisfies cu128/cu129/cu130 wheels). Get it from NVIDIA's official driver page (nvidia.com). (RTX RQ1 driver note, RQ4 rule 1; 03 §3.1.)</li>
+<li>Reboot. Verify in Windows PowerShell: <code>nvidia-smi</code> → driver 580.x, RTX 5090, ~32 GB.</li>
+<li><strong>HARD RULE: do NOT install any Linux display driver inside WSL.</strong> Quote (NVIDIA CUDA on WSL guide, Step 2): "Do not install any Linux display driver in WSL". The Windows driver provides the Linux user-mode stubs (<code>libcuda</code>, <code>nvidia-smi</code>) at <code>/usr/lib/wsl/lib/</code> via <code>/dev/dxg</code> GPU paravirtualization. Installing a Linux driver overwrites the stubs and breaks passthrough (RTX RQ4 rules 1–2; 03 §3.1).</li>
+</ol>
+<h2 id="32-install-wsl2-ubuntu-2404-update-to-270">3.2 Install WSL2 + Ubuntu 24.04, update to &gt;= 2.7.0</h2>
+<p>Windows PowerShell (Admin):</p>
+<pre><code class="language-powershell">wsl --install -d Ubuntu-24.04    # greenfield: installs WSL + the distro; set UNIX user/password on first launch
+wsl --update
+wsl --version                    # MUST show WSL version &gt;= 2.7.0
+wsl --set-default-version 2
+wsl -l -v                        # Ubuntu-24.04 must be VERSION 2
+</code></pre>
+<p>(03 §3.2; order adapted for a greenfield box — install first, then update/verify.) <strong>Why 2.7.0:</strong> before it, CUDA-graph capture on the 5090 failed with <code>cudaErrorUnknown</code> (dxgkrnl); the <code>--enforce-eager</code> workaround cost ~8x throughput; WSL 2.7.0 fixed capture (vllm#37242 "RTX 5090 + WSL2 2.7.0: vLLM CUDA Graphs Work", microsoft/WSL#14452; one report: 102/102 graphs, startup ~90 s → ~25 s). It also fixed a WSL VM crash when loading ~20 GB models (dbirks/home-k8s#48) (RTX RQ3, RQ4 item 3).</p>
+<h2 id="33-wslconfig-memoryswap-sizing">3.3 <code>.wslconfig</code> memory/swap sizing</h2>
+<p>The G914's system RAM is not recorded in the notes — <strong>UNVERIFIED</strong>; check with <code>systeminfo | findstr /C:"Total Physical Memory"</code> (Part 0 §0.2). Sizing rationale: vLLM host-side needs weight-load buffers + spawn workers + page cache; each sandbox container is capped at 4 GiB (HR §4.1); leave Windows &gt;= 6–8 GB. A hard WSL memory cap also contains the GPU-OOM → Hyper-V VM panic failure mode (microsoft/WSL#40732) by preventing host-wide memory exhaustion. ESTIMATE values — validate with <code>free -h</code> during the first vLLM startup (03 §3.3).</p>
+<p>Create <code>C:\Users\&lt;YOU&gt;\.wslconfig</code>:</p>
+<pre><code class="language-ini">[wsl2]
+# If host RAM = 32 GB:
+memory=24GB
+swap=8GB
+# If host RAM = 64 GB, use instead: memory=48GB / swap=16GB
+localhostForwarding=true
+</code></pre>
+<p>Then <code>wsl --shutdown</code> (PowerShell) and relaunch Ubuntu. Verify: <code>free -h</code> inside WSL shows the capped total. Keep the swap file on NVMe (default location is fine). Do not set memory so low that vLLM's CPU-side load OOMs — if the kernel OOM-killer fires during model load, raise memory by 4–8 GB and retry (03 §3.3).</p>
+<h2 id="34-ubuntu-first-run-gpu-visibility-checks">3.4 Ubuntu first run + GPU visibility checks</h2>
+<p>Launch Ubuntu-24.04 (first run creates your UNIX user/password), then:</p>
+<pre><code class="language-bash">sudo apt update &amp;&amp; sudo apt upgrade -y
+sudo apt install -y git curl unzip ca-certificates
+lsb_release -a                 # Ubuntu 24.04.x LTS (noble) — matches Kaggle-era userspace and Zorin 18 base
+ls -l /dev/dxg                 # must exist (GPU paravirtualization device)
+/usr/lib/wsl/lib/nvidia-smi    # must show the 5090; note memory.total and memory.used (Windows host share)
+</code></pre>
+<p>(03 §3.2.) <strong>NVML caveat</strong> (official guide quote, RTX RQ4 rule 3): "NVML (nvidia-smi) does not support all the queries yet. GPU utilization, active compute process are some queries that are not supported." Expect ~0.5–1.5 GiB of the VRAM consumed by the Windows desktop/DWM side (ESTIMATE, RTX RQ4 item 5) — budget for it in the KV-fit probe.</p>
+<h2 id="35-cuda-toolkit-inside-wsl-optional-nvcc-only">3.5 CUDA toolkit inside WSL (optional — nvcc only)</h2>
+<p>vLLM/torch wheels bundle their own CUDA runtime — the toolkit is needed only if you compile anything (e.g., a source-build fallback). Use the <strong><code>wsl-ubuntu</code> meta-package repo</strong>, which excludes the driver; a standard runfile/desktop installer would overwrite the host stubs (RTX RQ4 rule 4; 03 §3.4).</p>
+<pre><code class="language-bash"># documented wsl-ubuntu pattern (RTX RQ4 rule 4); exact keyring filename UNVERIFIED — probe the repo index if 404:
+wget https://developer.download.nvidia.com/compute/cuda/repos/wsl-ubuntu/x86_64/cuda-keyring_1.1-1_all.deb
+sudo dpkg -i cuda-keyring_1.1-1_all.deb
+sudo apt-get update
+sudo apt-get install -y cuda-toolkit-12-8     # CUDA 12.8 = first toolkit with sm_120 (RTX RQ1)
+nvcc --version                                 # 12.8; PATH may need /usr/local/cuda-12.8/bin
+</code></pre>
+<h2 id="36-docker-two-options-pick-one">3.6 Docker: two options (pick ONE)</h2>
+<p><strong>Option B1 — Docker Desktop, WSL2 backend (simplest):</strong></p>
+<ol>
+<li>Install Docker Desktop for Windows <strong>&gt;= 4.31.1</strong> (older versions fail GPU entirely — NVIDIA forum PSA 299421, RTX RQ4 rule 5). Free for personal use (ZOR RQ3 licensing). Official docs: docs.docker.com/desktop/features/gpu/.</li>
+<li>Settings → General: "Use the WSL 2 based engine". Settings → Resources → WSL Integration: enable for <code>Ubuntu-24.04</code>.</li>
+<li>Docker Desktop <strong>bundles its own Container Toolkit — do NOT install NCT manually inside WSL</strong> in this option. It ships <strong>no CDI spec</strong>, so <code>--device nvidia.com/gpu=all</code> fails; use <code>--gpus all</code> (legacy hook) (ZOR RQ4 "WSL2 vs native").</li>
+<li>Verify from Ubuntu: <code>docker run --rm --gpus all nvidia/cuda:12.4.1-base-ubuntu22.04 nvidia-smi</code> → standard nvidia-smi table inside the container (ZOR RQ4 validation pattern).</li>
+</ol>
+<p><strong>Option B2 — Docker Engine inside WSL + NCT with no-cgroups (no Desktop):</strong></p>
+<ol>
+<li>Install Docker Engine exactly as in Part 2 §2.8 (the same Ubuntu 24.04 apt path works inside WSL).</li>
+<li>Install NCT exactly as in Part 2 §2.9, then additionally set the WSL2 cgroup workaround (WSL2 lacks the cgroup device controller path):</li>
+</ol>
+<pre><code class="language-bash">sudo nvidia-ctk config --set nvidia-container-cli.no-cgroups=true --in-place
+sudo systemctl restart docker    # or: sudo service docker restart (WSL without systemd)
+</code></pre>
+<p>(UNVERIFIED: exact flag text — the research snippet was truncated before <code>=true</code> (RTX RQ4 rule 6). Probe: <code>nvidia-ctk config --help</code> and <code>sudo nvidia-ctk config get nvidia-container-cli.no-cgroups</code> if supported; the validation run below is the real test.)</p>
+<ol start="3">
+<li>Verify: <code>docker run --rm --gpus all nvidia/cuda:12.4.1-base-ubuntu22.04 nvidia-smi</code>.</li>
+</ol>
+<p><strong>Trade-off:</strong> B1 adds a VM hop per <code>docker exec</code> (ESTIMATE 0.1–0.5 s vs 0.05–0.2 s native → +2–12 s/task at ~25 calls, 03 §3.5) and Desktop licensing considerations; B2 is leaner but the no-cgroups flag is snippet-level UNVERIFIED. Both are functional parity, not exact.</p>
+<h2 id="37-the-ext4-data-placement-rule-never-mntd-for-hot-data">3.7 The ext4 data-placement rule (NEVER /mnt/d for hot data)</h2>
+<p>Model weights, HF cache, snapshots, docker data-root, and workspaces must live on the WSL2 <strong>ext4-in-VHDX</strong> filesystem (<code>~/...</code>). <strong>Never</strong> bind-mount hot data from <code>/mnt/c</code> or <code>/mnt/d</code>: the 9p/drvfs cross costs ~1–5 ms per file op → snapshot extraction degrades from ESTIMATE 2–5 s to 10–30 s per container (<strong>3–10x</strong>), and <code>git add -A</code> over ~3k files degrades similarly. One-time <em>copy</em> from <code>/mnt/d</code> is fine; working there is not (RTX RQ4 item 9; 03 §2.1). Optional quantification: time <code>tar -xzf</code> of one 214 MB snapshot into <code>~/bcf/data</code> vs a <code>/mnt/d</code> directory; expect a 3–10x gap — the number that justifies Track A if you are on the fence (03 §2.1, BOT M4).</p>
+<h2 id="38-the-wsl40401-vram-overhead-probe-do-this-first-before-vllm">3.8 The WSL#40401 VRAM-overhead PROBE (do this FIRST, before vLLM)</h2>
+<p>The bug: ~16 GiB "invisible" driver-context overhead (DXGI shim + Hyper-V GPU-PV) on Blackwell under WSL2, reported on RTX PRO 6000; 3–18 GiB contiguous allocations fail despite 50+ GiB free (pytorch#182286, sglang#24364, vllm#41619). Whether it hits the 5090 + current WSL + R580 is <strong>UNVERIFIED — LOW confidence either way</strong> (RTX RQ4 item 1). This probe decides Track B's fate (03 §3.6).</p>
+<p><strong>Prerequisite:</strong> the probe needs torch 2.10.0 from the wheelhouse — complete Part 4 §4.1–§4.7 (layout, downloads, venv, wheelhouse install, verification) first, then return here <strong>before starting vLLM</strong>. This ordering matches 03 (§3.6 sources the §2.5 venv).</p>
+<p><strong>Safety:</strong> never deliberately oversubscribe VRAM under WSL — GPU OOM can panic the whole VM (WSL#40732). The allocations below stay well under physical VRAM. Close GPU-heavy Windows apps (games, browsers with hardware acceleration) first.</p>
+<pre><code class="language-bash">source ~/bcf/venv/bin/activate    # torch 2.10.0 from the wheelhouse (Part 4 §4.6)
+# Step 1 — baseline (Windows host usage):
+/usr/lib/wsl/lib/nvidia-smi --query-gpu=memory.total,memory.used --format=csv,noheader
+# record USED_BASELINE (MiB). Expect ~500-1500 MiB with a quiet desktop (ESTIMATE, RTX RQ4 item 5).
+
+# Step 2 — init CUDA context + allocate 4 GiB, then compare:
+python - &lt;&lt;'EOF'
+import torch, subprocess
+torch.cuda.init()
+a = torch.empty(4 * 1024**3 // 2, dtype=torch.float16, device='cuda')  # 4 GiB
+torch.cuda.synchronize()
+out = subprocess.check_output(['/usr/lib/wsl/lib/nvidia-smi',
+      '--query-gpu=memory.used', '--format=csv,noheader,nounits']).decode().strip()
+used = int(out.split('\n')[0])
+reserved = torch.cuda.memory_reserved() / 2**20
+print(f&quot;nvidia-smi used: {used} MiB | torch reserved: {reserved:.0f} MiB&quot;)
+print(f&quot;overhead_vs_baseline = used - USED_BASELINE - reserved  (compute with your baseline)&quot;)
+# Step 3 — contiguous 12 GiB allocation (the #40401/#182286 failure class):
+b = torch.empty(12 * 1024**3 // 2, dtype=torch.float16, device='cuda')
+torch.cuda.synchronize()
+print(&quot;12 GiB contiguous alloc: OK&quot;)
+del a, b; torch.cuda.empty_cache()
+EOF
+</code></pre>
+<p><strong>Decision thresholds (03 §3.6 policy, derived from RTX RQ4/RQ5):</strong></p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Result</th>
+<th>Verdict</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Invisible overhead &lt;= 2 GiB AND 12 GiB contiguous alloc OK</td>
+<td><strong>PASS</strong></td>
+<td>Continue Track B; use util &lt;= 0.90 in Part 4 §4.8</td>
+</tr>
+<tr>
+<td>Overhead 2–6 GiB, allocs OK</td>
+<td><strong>MARGINAL</strong></td>
+<td>Track B usable only with reduced KV budget; re-run the KV-fit probe; prefer Track A for final validation runs</td>
+</tr>
+<tr>
+<td>Overhead &gt; 6 GiB, OR any multi-GiB contiguous alloc fails, OR <code>used</code> jumps ~16 GiB at context init</td>
+<td><strong>FAIL</strong></td>
+<td><strong>Stop. Track B is disqualified for this workload → go to Track A (Part 2).</strong> Log the numbers in PINS.txt</td>
+</tr>
+</tbody>
+</table></div>
+<p>Also record <code>memory.total</code> — the KV-fit math uses the actual reported total, not "32 GB" (03 §3.6).</p>
+<h2 id="39-cuda-graph-capture-check-enforce-eager-fallback">3.9 CUDA-graph capture check + enforce-eager fallback</h2>
+<p>After the first vLLM startup (Part 4 §4.8), inspect the log for graph-capture lines (e.g., "Capturing CUDA graphs", PIECEWISE/FULL counts). If capture fails with <code>cudaErrorUnknown</code> (03 §3.7):</p>
+<ol>
+<li>Re-verify <code>wsl --version</code> &gt;= 2.7.0 (the fix, §3.2) and the Windows driver is current.</li>
+<li>Fallback: add <code>--enforce-eager</code> to the serve command. Cost: slower decode (pre-2.7.0 reports ~8x throughput loss; with graphs otherwise working expect a smaller but real penalty), faster startup, less graph VRAM. Register the deviation (03 §8 D4).</li>
+<li>Separate failure class: vLLM V1 engine hangs at startup on WSL2+5090 (EngineCore spawns, ZMQ never connects) — vllm#44732, reported on v0.21–0.22; <strong>0.19.1 status UNVERIFIED</strong>. If it happens: confirm <code>VLLM_WORKER_MULTIPROC_METHOD=spawn</code> is set (GS §1); as a diagnostic only, try <code>VLLM_ENABLE_V1_MULTIPROCESSING=0</code> (changes scheduling determinism; do not keep it for parity runs without registering it). If still hung → Track A.</li>
+</ol>
+<h2 id="310-sysmem-fallback-note-windows-setting-wsl-does-not-honor-it">3.10 Sysmem-fallback note (Windows setting; WSL does not honor it)</h2>
+<p>Windows NVIDIA Control Panel → Manage 3D Settings → <strong>"CUDA - Sysmem Fallback Policy" → "Prefer No Sysmem Fallback"</strong> (setting exists since driver 536.40). Intent: stop VRAM oversubscription from silently paging to system RAM at 10–30x slowdown. <strong>Caveat (microsoft/WSL#11050):</strong> this policy is reportedly <strong>NOT honored inside WSL2</strong> — treat the Control Panel change as best-effort for Windows-side processes only. <strong>Registry equivalent: UNVERIFIED</strong> — the notes capture no registry value name/path; do not apply undocumented registry edits. Probe instead: during vLLM startup and the first eval, watch <code>/usr/lib/wsl/lib/nvidia-smi</code> — if <code>memory.used</code> exceeds physical VRAM or decode throughput collapses without a config change, sysmem fallback is active. <strong>The real mitigation is sizing the workload to physical VRAM</strong> (Part 4 §4.9) and never raising <code>gpu-memory-utilization</code> past the probe-verified ceiling. Track A has no such ambiguity (03 §3.8).</p>
+<h2 id="311-oom-vm-panic-mitigations-track-b">3.11 OOM / VM-panic mitigations (Track B)</h2>
+<ul>
+<li>Keep the <code>.wslconfig</code> memory cap (§3.3) so a runaway process cannot exhaust Windows RAM.</li>
+<li>Never probe by deliberately allocating past VRAM (WSL#40732 panic risk). Use the startup-log KV numbers (Part 4 §4.9), not trial-and-error OOM.</li>
+<li>If the VM panics/hangs: <code>wsl --shutdown</code> from PowerShell, relaunch; if GPU behaves degraded after multi-day uptime (dxgkrnl degradation, forum 384279: ~1.7x slowdown + <code>dxgvmb_send_sync_msg_wait_for_completion failed</code> in dmesg), reboot Windows (RTX RQ4 item 6).</li>
+<li>Run evals at <code>--concurrency 1</code> for 31B (KV-limited) — this also halves sandbox RAM pressure.</li>
+<li>Keep the vLLM server warm across iterations: cold startup is ESTIMATE 4–9 min each time (03 §3.9; 04 §1.2).</li>
+</ul>
+<p><strong>Track B finish line:</strong> §3.8 PASS + Part 4 done + verification battery green → Part 5. If MARGINAL anywhere, final validation runs go to Track A (03 §9.1).</p>
+<hr />
+<h1 id="part-4-shared-environment-build-inside-the-linux-env-both-tracks">Part 4 — Shared environment build (inside the Linux env, both tracks)</h1><a class="toplink" href="#top">↑ Back to top</a>
+<p>Everything below runs inside your Linux environment (Track A Zorin or Track B WSL Ubuntu) and lands under <code>~/bcf</code> on ext4. The two tracks are identical from here on (03 §2).</p>
+<h2 id="41-directory-layout-the-ext4-rule">4.1 Directory layout + the ext4 rule</h2>
+<pre><code class="language-bash">mkdir -p ~/bcf/{downloads,data,models,wheelhouse,sandbox-build,submissions,bin,results,logs}
+df -h ~        # confirm &gt;= 100 GB free on the ext4 filesystem (recommend 150 GB; guide target 250 GB)
+</code></pre>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Path</th>
+<th>Contents</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>~/bcf/downloads/</code></td>
+<td>competition zip, wheelhouse zip, model tarballs (as downloaded)</td>
+<td>keep originals for re-extraction</td>
+</tr>
+<tr>
+<td><code>~/bcf/data/</code></td>
+<td>extracted competition data: <code>tasks.jsonl</code>, <code>snapshots/</code>, <code>wheels/</code>, <code>graphs/</code>, <code>embeddings/</code>, <code>docker/</code>, <code>sandbox/</code>, <code>sample_submission/</code>, <code>HARNESS_README.md</code></td>
+<td>fresh empty dir before extraction (untrusted-archive rule)</td>
+</tr>
+<tr>
+<td><code>~/bcf/models/gemma-4-31b-it-qat-w4a16-ct/</code>, <code>~/bcf/models/gemma-4-e4b-it-qat-w4a16-ct/</code></td>
+<td>checkpoint dirs (config.json, safetensors, tokenizer, chat template)</td>
+<td>read-only after download; never on <code>/mnt/*</code></td>
+</tr>
+<tr>
+<td><code>~/bcf/wheelhouse/</code></td>
+<td>extracted 41-wheel dataset (v31)</td>
+<td></td>
+</tr>
+<tr>
+<td><code>~/bcf/venv/</code></td>
+<td>Python 3.12.13 host env</td>
+<td></td>
+</tr>
+<tr>
+<td><code>~/bcf/sandbox-build/</code></td>
+<td>Docker build context (Dockerfiles + shims + wheels)</td>
+<td>separate from data dir</td>
+</tr>
+<tr>
+<td><code>~/bcf/submissions/bcf-31b/</code>, <code>~/bcf/submissions/bcf-e4b/</code></td>
+<td><strong>copies</strong> of the BCF submission trees</td>
+<td>originals under <code>deliverables/</code> stay untouched</td>
+</tr>
+<tr>
+<td><code>~/bcf/bin/</code></td>
+<td>scripts we write (env.sh, probes, run_eval.py)</td>
+<td>never put scripts inside extracted data dirs</td>
+</tr>
+<tr>
+<td><code>~/bcf/results/&lt;run&gt;/</code>, <code>~/bcf/logs/</code></td>
+<td>eval artifacts, server logs, pin manifests</td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<p>(03 §2.1.) <strong>The ext4 rule applies to both tracks</strong> (Part 3 §3.7): hot data on the Linux filesystem only; one-time copies from <code>/mnt/d</code> are fine.</p>
+<h2 id="42-kaggle-data-downloads">4.2 Kaggle data downloads</h2>
+<p>Prereq: Part 1 (account, rules acceptance, token). Set up the CLI in the Linux env if you have not:</p>
+<pre><code class="language-bash">python3 -m pip install --user kaggle
+mkdir -p ~/.kaggle
+cp &lt;PATH_TO&gt;/kaggle.json ~/.kaggle/kaggle.json
+chmod 600 ~/.kaggle/kaggle.json
+kaggle competitions list -s gemma   # sanity: API auth works
+</code></pre>
+<p><strong>(1) Competition data (21.9 GB).</strong> If you already have the repo copy, skip the download and copy it (one-time copy off the Windows drive is allowed):</p>
+<pre><code class="language-bash"># Track B (WSL): copy from the project's Windows location —
+cp &quot;/mnt/d/stuff/ai-misc/_bsh2026/vscode_project01/46-wide_research_test_alibaba/input/kagglecomp/kagglecomp_data_package/gemma-4-developer-agent.zip&quot; ~/bcf/downloads/
+# Track A (Zorin): copy from wherever the repo lives on your network/USB; same file, 21,929,289,087 bytes.
+
+# Fresh download alternative (whole competition; 03 §2.2):
+kaggle competitions download -c gemma-4-developer-agent -p ~/bcf/downloads
+# Single-file form (UNVERIFIED that the competition exposes this exact filename via -f;
+# probe: kaggle competitions files -c gemma-4-developer-agent):
+kaggle competitions download -c gemma-4-developer-agent -f gemma-4-developer-agent.zip -p ~/bcf/downloads
+# Or download from the competition Data tab in the browser (rules acceptance required) and
+# place the zip in ~/bcf/downloads/.
+</code></pre>
+<p><strong>(2) Wheelhouse dataset — PIN version 19987205 (v31).</strong></p>
+<pre><code class="language-bash">kaggle datasets download -d metric/gemma-4-developer-agent-wheelhouse -p ~/bcf/downloads --unzip
+# UNVERIFIED: whether your kaggle CLI supports pinning a dataset version (e.g. --dataset-version 19987205).
+# Probe: kaggle datasets download --help | grep -i version
+# If no pin flag: download current, then VERIFY it is v31 via the parser SHA + package versions (§4.7).
+# If the SHA mismatches, do NOT use it — fetch version 19987205 manually from the dataset's Version
+# history on kaggle.com and re-verify. (INTEL §3 757782: no official manifest exists; the SHA is the anchor.)
+</code></pre>
+<p>(03 §2.2; GS §1; INTEL implication 22.)</p>
+<p><strong>(3) Models.</strong> Kaggle Models CLI form (<strong>UNVERIFIED exact syntax — probe: <code>kaggle models --help</code></strong>):</p>
+<pre><code class="language-bash">kaggle models instances versions download google/gemma-4/other/gemma-4-31b-it-qat-w4a16-ct/2 -p ~/bcf/models
+kaggle models instances versions download google/gemma-4/other/gemma-4-e4b-it-qat-w4a16-ct/&lt;VERSION&gt; -p ~/bcf/models
+# &lt;VERSION&gt;: list with `kaggle models instances versions list google/gemma-4/other/gemma-4-e4b-it-qat-w4a16-ct`
+# (E4B variation slug UNVERIFIED — the sanctioned alias is gemma-4-e4b-it-qat-w4a16-ct per INTEL §2a/748287.)
+# Hugging Face fallback (gated: accept the license on the model page first):
+#   pip install -U &quot;huggingface_hub[cli]&quot;
+#   hf download google/gemma-4-31B-it-qat-w4a16-ct --local-dir ~/bcf/models/gemma-4-31b-it-qat-w4a16-ct
+#   hf download google/gemma-4-E4B-it-qat-w4a16-ct --local-dir ~/bcf/models/gemma-4-e4b-it-qat-w4a16-ct
+# (HF repo names per SRV scope + RTX RQ5; Kaggle path per GS §4.)
+</code></pre>
+<p>(03 §2.2.) Verify the model config on the box (resolves the kv_heads 16-vs-8 conflict, SRV open gap 1):</p>
+<pre><code class="language-bash">python3 -I -c &quot;
+import json
+c = json.load(open('$HOME/bcf/models/gemma-4-31b-it-qat-w4a16-ct/config.json'))
+tc = c.get('text_config', c)
+for k in ('num_hidden_layers','num_key_value_heads','head_dim','sliding_window','layer_types','quantization_config'):
+    v = tc.get(k, c.get(k))
+    print(k, ':', (str(v)[:120] if v is not None else None))
+&quot;
+# Expect per SRV Q6 / RTX RQ5: 60 layers (50 sliding + 10 global), sliding_window 1024,
+# kv heads 16 (sliding) / 4 global, head_dim 256 / global 512, compressed-tensors W4A16.
+# If values differ, redo the §4.9 KV math with the real numbers before trusting the fit verdict.
+</code></pre>
+<h2 id="43-extract-the-competition-data-snapshots">4.3 Extract the competition data + snapshots</h2>
+<p>Extract into a <strong>fresh empty directory</strong> (untrusted-archive rule):</p>
+<pre><code class="language-bash">test -z &quot;$(ls -A ~/bcf/data)&quot; || { echo &quot;data dir not empty — use a fresh dir&quot;; exit 1; }
+unzip -q ~/bcf/downloads/gemma-4-developer-agent.zip -d ~/bcf/data
+ls ~/bcf/data   # expect: HARNESS_README.md docker embeddings graphs sample_submission sandbox snapshots tasks.jsonl wheels
+# wheelhouse (if downloaded as zip without --unzip):
+mkdir -p ~/bcf/wheelhouse &amp;&amp; unzip -q ~/bcf/downloads/gemma-4-developer-agent-wheelhouse.zip -d ~/bcf/wheelhouse
+ls ~/bcf/wheelhouse/*.whl | wc -l   # expect 41 (GS §1 output). If nested, adjust to the dir containing the .whl files.
+</code></pre>
+<p>(03 §2.2.) <strong>Full extraction is what the harness needs</strong>: <code>--snapshots-dir</code> points at the 129 <code>.tgz</code> archives themselves (HR §4.2 extracts them per task inside the sandbox). Keep <code>graphs/</code> + <code>embeddings/</code> extracted too — <code>build_agent_prompt</code> appends the Code Intelligence section ONLY when graph <code>.json</code> + embedding <code>.npz</code> exist; the scorer has them, so removing them locally changes the prompt and breaks parity even though BCF doesn't use the tools (HR §5.2 section 6; 03 §6.1).</p>
+<p><strong>Selective alternative for fast iteration</strong> (subset of snapshots; names are <code>&lt;instance_id&gt;.tgz</code>, verified in zip_listing.txt):</p>
+<pre><code class="language-bash">unzip -j ~/bcf/downloads/gemma-4-developer-agent.zip \
+  &quot;snapshots/rich_3454.tgz&quot; &quot;snapshots/fastapi_14361.tgz&quot; &quot;snapshots/requests_7502.tgz&quot; \
+  -d ~/bcf/data/snapshots/
+</code></pre>
+<p>(03 §6.1.) For <strong>CPU-only source analysis</strong> (not harness runs), the project's <code>scratch/bcf-2026-11-11/extract_task_sources.py</code> streams each snapshot tgz and extracts only patch/test-patch-touched files + packaging metadata (<code>python -I extract_task_sources.py &lt;zip&gt; &lt;index_json&gt; &lt;out_dir&gt; [iid ...]</code>), and <code>analyze_tasks.py</code> splits <code>tasks.jsonl</code> into per-task records + a compact index. Those produce analysis trees, NOT the full <code>.tgz</code> snapshots the harness consumes — use the full extraction above for <code>--snapshots-dir</code>.</p>
+<h2 id="44-sandbox-image-build-exact-commands">4.4 Sandbox image build (exact commands)</h2>
+<p>The harness's docker backend expects image <strong><code>swebench-sandbox:latest</code></strong> (HR §4.1). Build it from the competition's own Dockerfiles — do not improvise. The zip contains <code>docker/Dockerfile.sandbox</code>, <code>docker/Dockerfile.public</code>, <code>docker/imp.py</code>, <code>docker/telnetlib.py</code>. The public variant additionally needs the <code>wheels/</code> cache (124 wheels) in the build context (03 §2.3).</p>
+<pre><code class="language-bash"># Fresh, empty build context (untrusted-archive rule):
+test -z &quot;$(ls -A ~/bcf/sandbox-build)&quot; || { echo &quot;not empty&quot;; exit 1; }
+unzip -j -q ~/bcf/downloads/gemma-4-developer-agent.zip \
+  &quot;docker/Dockerfile.sandbox&quot; &quot;docker/Dockerfile.public&quot; &quot;docker/imp.py&quot; &quot;docker/telnetlib.py&quot; \
+  -d ~/bcf/sandbox-build/
+# wheels for the public variant (and for the harness wheels_dir):
+unzip -q ~/bcf/downloads/gemma-4-developer-agent.zip &quot;wheels/*&quot; -d ~/bcf/sandbox-build/
+
+cd ~/bcf/sandbox-build
+docker build -f Dockerfile.sandbox -t swebench-sandbox:latest .
+# Optional offline-public variant (harness stages /wheels itself per HR §4.2 step 1, so this is a convenience):
+docker build -f Dockerfile.public -t swebench-sandbox-public:latest .
+</code></pre>
+<p>What the image contains (verbatim contract, 03 §2.3 / DK): <code>python:3.13-slim</code>; apt <code>git patch protobuf-compiler pigz</code>; pip <code>pytest pytest-timeout==2.1.0 typer pdm-backend setuptools wheel poetry-core hatchling flit-core editables</code>; <code>imp.py</code> + <code>telnetlib.py</code> copied into <code>/usr/local/lib/python3.13/site-packages/</code> (Python 3.13 removed both modules; eval deps such as flasgger still import them); git identity <code>Agent &lt;agent@eval&gt;</code>, default branch <code>main</code>; <code>ENV TEST_TMPDIR=/tmp</code>; <code>WORKDIR /workspace</code>.</p>
+<p><strong>Where wheels come from:</strong> the sandbox is <code>network_mode=none</code> (HR §4.1) — everything installable at eval time must already be in the image or in <code>/wheels</code>. The harness stages <code>/wheels</code> from the competition <code>wheels/</code> dir (HR §4.2 step 1; <code>EvalConfig.wheels_dir</code>) and runs <code>sandbox/setup.py --fast-path &lt;repo&gt;</code>. <strong>Known gap you must NOT fix by hand:</strong> <code>inline_snapshot</code>/<code>dirty_equals</code> are absent from the wheelhouse → 27+ fastapi tasks fail collection locally exactly as on the public scorer (INTEL C7/§4a). That is parity, not a bug in your build (03 §2.3, §7 item 12).</p>
+<p>Smoke-test the image:</p>
+<pre><code class="language-bash">docker run --rm swebench-sandbox:latest bash -lc \
+  'python3 -V; python3 -c &quot;import imp, telnetlib, pytest; print(\&quot;shims+pytest ok\&quot;)&quot;; git --version; protoc --version; pigz --version; echo $TEST_TMPDIR; pwd'
+# Expect: Python 3.13.x, &quot;shims+pytest ok&quot;, git/protoc/pigz versions, /tmp, /workspace
+</code></pre>
+<h2 id="45-python-31213-host-environment">4.5 Python 3.12.13 host environment</h2>
+<p>The host harness env must be Python <strong>3.12.13</strong> (INTEL implication 22). The sandbox is 3.13 by design — do not "align" them (03 §2.4).</p>
+<pre><code class="language-bash"># Option 1: uv (fast, exact patch installs via python-build-standalone)
+curl -LsSf https://astral.sh/uv/install.sh | sh     # or: pip install --user uv
+uv python install 3.12.13
+# UNVERIFIED: that 3.12.13 is in uv's available list on this date. Probe: uv python list | grep 3.12.13
+uv venv ~/bcf/venv --python 3.12.13
+source ~/bcf/venv/bin/activate
+python -V    # expect: Python 3.12.13
+
+# Option 2: conda-forge (fallback if uv lacks the exact patch)
+# conda create -y -n bcf -c conda-forge python=3.12.13
+# conda activate bcf
+</code></pre>
+<p>(03 §2.4.)</p>
+<h2 id="46-wheelhouse-install-notebook-faithful-exact-order-env-vars">4.6 Wheelhouse install (notebook-faithful, exact order) + env vars</h2>
+<p>Replicate GS §1 precisely: skip cutlass wheels, rename <code>cu128</code>→<code>+cu128</code> in filenames, install all 41 wheels in one <code>pip install --no-deps --force-reinstall</code> (no dependency resolution — this is how the scorer installs them too, INTEL §4d/744370). The wheelhouse is Linux x86_64 — it installs into the WSL/Zorin venv, <strong>never into Windows Python</strong> (03 §2.5).</p>
+<pre><code class="language-bash">source ~/bcf/venv/bin/activate
+
+# --- env vars: add to ~/bcf/bin/env.sh and source it in EVERY shell that runs vllm/swegemma ---
+cat &gt; ~/bcf/bin/env.sh &lt;&lt;'EOF'
+export LITELLM_LOCAL_MODEL_COST_MAP=True
+export TRANSFORMERS_NO_TF=1
+export VLLM_WORKER_MULTIPROC_METHOD=spawn
+export VLLM_MEMORY_PROFILER_ESTIMATE_CUDAGRAPHS=1
+export VLLM_ENGINE_READY_TIMEOUT_S=1200
+export VLLM_NO_USAGE_STATS=1
+export OTEL_SDK_DISABLED=true
+export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+EOF
+source ~/bcf/bin/env.sh
+# (all eight verbatim from GS §1; VLLM_MEMORY_PROFILER_ESTIMATE_CUDAGRAPHS=1 is the staff-confirmed
+#  fix for the LoRA CUDA-graph OOM edge, 749191 — keep it even without LoRA.)
+
+# --- remove cutlass .pth hooks (GS §1 does this before install) ---
+find ~/bcf/venv/lib -name &quot;*cutlass*.pth&quot; -print -delete
+
+# --- stage symlinks with the cu128 rename, skipping cutlass wheels (GS §1) ---
+WHEELHOUSE_DIR=~/bcf/wheelhouse        # adjust if the .whl files sit one level deeper
+mkdir -p /tmp/wheelhouse
+for w in &quot;$WHEELHOUSE_DIR&quot;/*.whl; do
+  b=$(basename &quot;$w&quot;)
+  case &quot;$b&quot; in *[Cc][Uu][Tt][Ll][Aa][Ss][Ss]*) continue;; esac
+  case &quot;$b&quot; in *cu128*) [ &quot;${b/+cu128/}&quot; = &quot;$b&quot; ] &amp;&amp; b=&quot;${b/cu128/+cu128}&quot;;; esac
+  ln -sf &quot;$w&quot; &quot;/tmp/wheelhouse/$b&quot;
+done
+ls /tmp/wheelhouse/*.whl | wc -l    # expect 41 minus any cutlass wheels (GS prints &quot;Installing 41 wheels&quot;)
+
+# --- single force-reinstall, no deps (GS §1) ---
+python -m pip install -q --no-deps --force-reinstall /tmp/wheelhouse/*.whl
+</code></pre>
+<p>(03 §2.5.) <strong>Never <code>pip install -U vllm</code></strong> — current PyPI vLLM is 0.33.0 / torch 2.14 / cu130-only (RTX RQ3), a different serving stack. Never upgrade any pinned package mid-competition (03 §9.4).</p>
+<h2 id="47-version-verification-battery-the-parity-gate">4.7 Version verification battery (the parity gate)</h2>
+<p>Record all output into <code>~/bcf/results/PINS.txt</code> (03 §2.5, §7):</p>
+<pre><code class="language-bash">python -c &quot;import vllm, torch, transformers; print('vllm', vllm.__version__, '| torch', torch.__version__, '| transformers', transformers.__version__)&quot;
+# expect: vllm 0.19.1 | torch 2.10.0+cu128 (or +cu129) | transformers 5.5.x   (RTX RQ2/RQ3; INTEL impl 22)
+python -m pip show swegemma adk-submission google-adk | grep -E '^(Name|Version)'
+# expect: swegemma 0.2.11, adk-submission 0.2.13, google-adk 1.36.1            (INTEL impl 22)
+sha256sum ~/bcf/venv/lib/python3.12/site-packages/vllm/tool_parsers/gemma4_tool_parser.py
+# expect: 682b2152b76c031df9c58c3ffbb5b243945be5d8957ebdce00faef1b9de6b889     (INTEL §3 757782)
+python -c &quot;import torch; print(torch.cuda.get_device_capability(), torch.cuda.get_device_name(0))&quot;
+# expect: (12, 0) NVIDIA GeForce RTX 5090                                      (RTX RQ2)
+nvidia-smi    # Track B: /usr/lib/wsl/lib/nvidia-smi — record driver 580.x + exact total MiB
+</code></pre>
+<ul>
+<li><strong>If the SHA or any version mismatches:</strong> the wheelhouse drifted (v31 was "last updated October 12"; INTEL S4). Stop and re-pin before any A/B — a different parser changes tool-call behavior and invalidates comparisons (0.24 rewrote the gemma4 parser per 753521). Fetch dataset-version 19987205 manually and re-verify (03 §2.5).</li>
+<li><strong>If <code>get_device_capability()</code> errors with "no kernel image" / sm_120 incompatibility:</strong> the wheelhouse torch wheel lacks sm_120 (UNVERIFIED risk). Fallback ladder: (1) confirm driver R580+ and (Track B) WSL &gt;= 2.7.0; (2) install the vLLM 0.19.1 cu128 variant wheel from wheels.vllm.ai + torch 2.10.0 cu128 from <code>https://download.pytorch.org/whl/cu128</code> — document as a wheel-provenance divergence; (3) last resort source build with <code>TORCH_CUDA_ARCH_LIST="12.0"</code> — hours of work, only if (2) fails (03 §2.5; RTX RQ2/RQ3).</li>
+</ul>
+<p><strong>Track B gate:</strong> if you are on WSL2, run the <strong>WSL#40401 VRAM-overhead probe now (Part 3 §3.8)</strong> — before any vLLM work. FAIL → switch to Track A. Track A: optionally run the 12 GiB contiguous-alloc sanity check (Part 2 §2.7).</p>
+<h2 id="48-vllm-serving-exact-serve-commands">4.8 vLLM serving — exact serve commands</h2>
+<p>Flag doctrine (SRV Q3; 03 §5.1): numerics-affecting flags (<code>dtype</code>, quantization auto, <code>kv-cache-dtype</code>, TP size, <code>enable_thinking</code>) must match the scorer; speed/memory-only flags (<code>gpu-memory-utilization</code>, <code>enforce-eager</code>, <code>max_loras</code> count) are safe local levers. Keep the known 0.19.1 gemma4 parser bugs — do NOT "fix" them by upgrading; they are identical on Kaggle (fidelity preserved). Expect the <strong>TRITON_ATTN</strong> backend in the log (heterogeneous head dims 256/512 force it; not an error) and <strong>Marlin</strong> W4A16 kernels (CC 12.0 qualifies). Avoid NVFP4 checkpoints (CUTLASS FP4 broken on consumer Blackwell) — the official <code>-ct</code> W4A16 is the parity-correct path (03 §5.1; SRV Q2).</p>
+<p><strong>31B (main track):</strong></p>
+<pre><code class="language-bash">source ~/bcf/bin/env.sh &amp;&amp; source ~/bcf/venv/bin/activate
+vllm serve ~/bcf/models/gemma-4-31b-it-qat-w4a16-ct \
+  --served-model-name gemma-4-31b-it-qat-w4a16-ct \
+  --host 127.0.0.1 --port 8000 \
+  --tensor-parallel-size 1 \
+  --dtype bfloat16 \
+  --max-model-len 32768 \
+  --gpu-memory-utilization 0.90 \
+  --enable-auto-tool-choice \
+  --tool-call-parser gemma4 \
+  --reasoning-parser gemma4 \
+  --default-chat-template-kwargs '{&quot;enable_thinking&quot;: true}' \
+  --enable-lora --max-loras 8 --max-lora-rank 128 \
+  2&gt;&amp;1 | tee ~/bcf/logs/vllm-31b-$(date +%Y%m%d-%H%M%S).log
+# OMIT --quantization: compressed-tensors auto-detect (SRV Q2).
+# --kv-cache-dtype: omitted = auto (bf16) = scorer parity; add fp8 ONLY per §4.9.
+# --enforce-eager: omitted = CUDA graphs on = scorer parity; add ONLY per Part 3 §3.9 / §4.9.
+</code></pre>
+<p>(03 §5.2; provenance HR §3.1/§3.3 + GS §4 VllmConfig literal + SRV recommended config.) <code>--served-model-name</code> makes <code>/v1/models</code> report the alias the harness expects (HR §3.3 binds <code>openai/&lt;served_model&gt;</code>). TP1 is forced by hardware (one GPU). <strong>Memory note:</strong> LoRA buffers are preallocated for <code>max_loras x max_lora_rank</code> even with no adapter loaded; if the KV probe is tight and you run without adapters, reduce <code>--max-loras 1</code> (memory-only) and register it; keep <code>--max-lora-rank 128</code>. BCF ships no adapters today (03 §5.2; SRV Q7).</p>
+<p><strong>E4B (bonus track):</strong></p>
+<pre><code class="language-bash">vllm serve ~/bcf/models/gemma-4-e4b-it-qat-w4a16-ct \
+  --served-model-name gemma-4-e4b-it-qat-w4a16-ct \
+  --host 127.0.0.1 --port 8000 \
+  --tensor-parallel-size 1 \
+  --dtype bfloat16 \
+  --max-model-len 32768 \
+  --gpu-memory-utilization 0.90 \
+  --enable-auto-tool-choice \
+  --tool-call-parser gemma4 \
+  --reasoning-parser gemma4 \
+  --default-chat-template-kwargs '{&quot;enable_thinking&quot;: true}' \
+  --enable-lora --max-loras 8 --max-lora-rank 128 \
+  2&gt;&amp;1 | tee ~/bcf/logs/vllm-e4b-$(date +%Y%m%d-%H%M%S).log
+</code></pre>
+<p>(03 §5.3.) E4B (~4–5 GB weights) fits 32k context with large headroom — run the KV probe anyway to record the number. E4B's sliding window is 512 (vs 1024 for 31B); its exact layer/head config is <strong>UNVERIFIED</strong> — read the startup KV log rather than extrapolating 31B math. The E4B recipe additionally mentions <code>--chat-template examples/tool_chat_template_gemma4.jinja</code> (RTX RQ3, MEDIUM confidence): <strong>UNVERIFIED whether the <code>-ct</code> checkpoint needs it</strong> — probe = the tool-call smoke (§4.10) without it first; add only if tool calls fail to parse, and register the template provenance. E4B is the variant where the array-parser freeze was first hit (753973) — keep array-typed tool parameters out of all schemas and run the freeze canary (C3) before any bonus run (03 §5.3; INTEL implication 8).</p>
+<h2 id="49-kv-fit-probe-and-max-model-len-decision-tree-the-load-bearing-procedure">4.9 KV-fit PROBE and max-model-len decision tree (the load-bearing procedure)</h2>
+<p><strong>Why uncertain:</strong> Gemma-4-31B has 50 sliding-window layers (window 1024, 16 KV heads, head_dim 256) + 10 global layers (4 KV heads, head_dim 512). Per-token KV (SRV Q6; RTX RQ5):</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Allocation scheme</th>
+<th>bf16 bytes/token</th>
+<th>One 32,768-token sequence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Uniform</strong> (sliding layers pay full length — vllm#39133 behavior)</td>
+<td>901,120 B ≈ 880 KiB</td>
+<td>≈ <strong>27.5 GiB</strong> (fp8: 13.75 GiB)</td>
+</tr>
+<tr>
+<td><strong>Sliding-aware hybrid</strong> (SWA capped at 1024)</td>
+<td>81,920 B/token global + fixed 800 MiB/seq SWA</td>
+<td>≈ <strong>3.28 GiB</strong> (fp8: 1.64 GiB)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Evidence leans <strong>uniform</strong> for the 0.19 era (vllm#39133 log "Available KV cache memory: 4.32 GiB, GPU KV cache size: 9,424 tokens"; tt-xla#5727). Counter-evidence: bf16 page sizes ARE divisible, so the hybrid manager <em>could</em> work on CUDA. <strong>Unresolved — decide empirically.</strong> Budget arithmetic (ESTIMATE, RTX RQ5): 5090 reports ~31.8 GiB total (record actual); Track B subtracts Windows host ~0.5–1.5 GiB; weights ~17 GB ≈ 15.8 GiB; non-KV overhead ~1.5–3 GiB. At util 0.90 → ~28.6 GiB vLLM budget → <strong>~9–11 GiB for KV</strong>. Kaggle's 4xL4 TP4 fits 32k under EITHER scheme — the single-5090 port is the risky case because TP1 concentrates all KV heads on one card (03 §5.4).</p>
+<p><strong>Procedure:</strong></p>
+<ol>
+<li>Start the §4.8 command as written (bf16 KV, util 0.90, max-model-len 32768). Read the startup log:
+   - <code>GPU KV cache size: N tokens</code> ← <strong>the number that decides everything</strong>
+   - <code>Available KV cache memory: X GiB</code>
+   - any <code>Hybrid KV cache layout</code> / <code>num_kv_cache_groups</code> line (&gt;1 group = sliding-aware).</li>
+<li><strong>Branch:</strong></li>
+</ol>
+<pre><code class="language-text">Startup succeeds AND N &gt;= 32768?
+├─ YES (hybrid world): KEEP max-model-len 32768, bf16 KV. Full parity.
+│    Concurrency ceiling = floor(N / 32768) full-context sequences; still run --concurrency 1.
+└─ NO — ValueError &quot;The model's max seq len (32768) is larger than the maximum ... KV cache&quot;
+   or N &lt; 32768 (uniform world):
+   ├─ Step 1: add --kv-cache-dtype fp8  (per-tensor fp8_e4m3; halves KV).
+   │    Restart, re-read N_fp8.
+   │    ├─ N_fp8 &gt;= 32768: KEEP 32768 + fp8 KV. REGISTER numerics divergence (03 §8 D3):
+   │    │    small quant error; vLLM Apr-2026 blog reports &lt;=0.7pt impact / ~99% recovery.
+   │    │    Do NOT use int8_per_token_head — it corrupts Gemma-4 output (vllm#49716, #40388 family).
+   │    │    If fp8 startup hits a #40388-family page-size error → revert to bf16, go to Step 2.
+   │    └─ N_fp8 &lt; 32768: go to Step 2 with fp8 kept.
+   ├─ Step 2: reduce --max-model-len to the largest power-of-two &lt;= N (round down):
+   │    bf16 uniform → expect ~8192–10240; fp8 uniform → expect ~16384–20480.
+   │    REGISTER functional divergence (03 §8 D2): context cap &lt; 32768. BCF's steady-state context
+   │    is &lt; 12k by design, so 16384 is tolerable; ~10k is marginal — any A/B relying on
+   │    long-context behavior is non-predictive.
+   ├─ Step 3 (optional, before accepting a reduced len): --enforce-eager frees CUDA-graph VRAM
+   │    (~2.19 GiB on the remote rig per 749191; forum caveat: may NOT yield more KV blocks).
+   │    Re-read N. Keep only if it buys a meaningfully larger len; register speed divergence.
+   └─ Step 4 (optional): raise --gpu-memory-utilization to 0.95 (memory-only lever; recipe range
+        0.90–0.95). Track B: re-check Part 3 §3.10 sysmem-fallback behavior first; never exceed
+        the probe-verified physical ceiling. Re-read N.
+</code></pre>
+<ol start="3">
+<li>Record in <code>~/bcf/results/PINS.txt</code>: actual VRAM total, util, KV dtype, N tokens, max_model_len, eager/graphs, and the branch taken. This record travels with every eval run (03 §5.4, §6.6).</li>
+</ol>
+<p><strong>Expected verdict (ESTIMATE, pre-registered):</strong> uniform-world → <strong>fp8 KV + max_model_len 16384</strong> is the most likely landing zone that preserves BCF's &lt;12k design context; bf16-only fallback lands ~10k. If the hybrid world materializes, full 32768 bf16 parity is achieved. Either way the probe takes &lt;15 min (03 §5.4). <strong>fp8 tradeoff:</strong> halves KV bytes; scales default 1.0 ("may cause accuracy issues" unless calibrated); measured &lt;=0.7pt impact / ~99% recovery (SRV Q3). It is the pragmatic 5090 lever, <strong>not</strong> scorer parity (scorer = auto/bf16). Whether 0.19.1+CUDA+gemma4-31B accepts per-tensor fp8 is an open question — Step 1 answers it. Never use per-token-head/int8 paths (03 §5.5).</p>
+<h2 id="410-harness-wiring">4.10 Harness wiring</h2>
+<p><strong>(a) Stage the submission copies</strong> (never move/edit the deliverable trees):</p>
+<pre><code class="language-bash"># &lt;PROJ&gt; = d:/stuff/ai-misc/_bsh2026/vscode_project01/46-wide_research_test_alibaba
+# Track B: prefix with /mnt/d/... for this ONE-TIME copy only (ext4 rule). Track A: from your repo copy.
+cp -r &quot;&lt;PROJ&gt;/deliverables/2026-11-11-bcf-gemma4-brain/02-bcf-brain-31b/submission&quot; ~/bcf/submissions/bcf-31b
+cp -r &quot;&lt;PROJ&gt;/deliverables/2026-11-11-bcf-gemma4-brain/03-bcf-brain-e4b/submission&quot; ~/bcf/submissions/bcf-e4b
+</code></pre>
+<p>(03 §6.1; BRAIN deliverables map.)</p>
+<p><strong>(b) Server health + alias check</strong> (with the §4.8 server running):</p>
+<pre><code class="language-bash">curl -s http://127.0.0.1:8000/v1/models
+# expect JSON data[0].id == &quot;gemma-4-31b-it-qat-w4a16-ct&quot; (or e4b); log shows TRITON_ATTN + Marlin load
+</code></pre>
+<p>(03 §7 item 7.) Tool-call and reasoning smokes are in Part 5 §5.1 / 03 §7 items 9–10.</p>
+<p><strong>(c) Path 1 — <code>swegemma eval</code> CLI with <code>--models-yaml</code> (schema UNVERIFIED).</strong> HR §9.1 documents <code>--models-yaml &lt;path&gt;</code> ("Custom models.yaml file mapping model aliases and token pricing") but the file format is not shown in any local doc. Probe: <code>swegemma eval --help</code>, then inspect the installed source (<code>python -c "import swegemma, pathlib; print(pathlib.Path(swegemma.__file__).parent)"</code>, grep for <code>models_yaml</code>). Template to try (UNVERIFIED — validate against swegemma source before trusting):</p>
+<pre><code class="language-yaml"># ~/bcf/bin/models.yaml — UNVERIFIED format; validate against swegemma source before trusting
+models:
+  gemma-4-31b-it-qat-w4a16-ct:
+    model: openai/gemma-4-31b-it-qat-w4a16-ct
+    api_base: http://127.0.0.1:8000/v1
+    api_key: EMPTY
+    input_cost_per_token: 0.0
+    output_cost_per_token: 0.0
+</code></pre>
+<p>(03 §6.4.) If the CLI insists on starting its own server, point it at the same checkpoint with the §4.8 flags; if it can attach to an existing <code>127.0.0.1:8000</code>, prefer that (warm server). When in doubt, Path 2 has zero format uncertainty.</p>
+<p><strong>(d) Path 2 — organizer Python driver (recommended for full parity).</strong> Adapts GS §4–5 to local paths; every budget and compaction knob is visible and echo-able. Save as <code>~/bcf/bin/run_eval.py</code> (our script dir; data elsewhere). This variant lets <code>VllmServer</code> manage the server (the fully grounded registry construction per 03 §6.3) — <strong>stop any external <code>vllm serve</code> first</strong> (port 8000 conflict), or keep the external server and build the registry via the probe noted inline.</p>
+<pre><code class="language-python">#!/usr/bin/env python3
+&quot;&quot;&quot;Local parity eval driver — adapts GettingStarted §4-5 (GS) to local paths.
+Run: python ~/bcf/bin/run_eval.py &lt;submission_dir&gt; &lt;results_dir&gt; [task_id ...]
+&quot;&quot;&quot;
+import sys, asyncio, pathlib, yaml
+import litellm
+import torch
+from adk_submission import VllmConfig, VllmServer, discover_adapters
+from swegemma.config import ALLOWED_ADAPTER_EXTENSIONS
+from swegemma.models.discovery import validate_single_declared_model
+from google.adk.agents.context_cache_config import ContextCacheConfig
+from google.adk.apps._configs import EventsCompactionConfig
+from swegemma.config import EvalConfig, build_submission_limits
+from swegemma.evaluate import Evaluator
+from swegemma.models import load_tasks
+
+litellm.drop_params = True                      # GS §4
+DATA = pathlib.Path.home() / &quot;bcf/data&quot;
+submission_dir = pathlib.Path(sys.argv[1])
+results_dir = pathlib.Path(sys.argv[2])
+task_ids = sys.argv[3:]
+
+# --- budgets: read the submission's eval_config.yaml exactly like scripts/inference.py (HR §7.1) ---
+raw = yaml.safe_load((submission_dir / &quot;eval_config.yaml&quot;).read_text())
+ev = raw.get(&quot;evaluation&quot;, raw)
+timeout_seconds = int(ev.get(&quot;timeout_seconds&quot;, 300))
+max_tool_calls = int(ev.get(&quot;max_tool_calls&quot;, 100))
+max_time_minutes = float(ev.get(&quot;max_time_minutes&quot;, 60.0))
+turns_raw = ev.get(&quot;max_turns&quot;, ev.get(&quot;max_llm_calls&quot;))
+max_turns = int(turns_raw) if turns_raw is not None else None
+
+tasks = load_tasks(DATA / &quot;tasks.jsonl&quot;)
+if task_ids:
+    tasks = [t for t in tasks if t.instance_id in task_ids]
+limits, gen_constraints = build_submission_limits()
+
+# --- server + model registry: GS §4 literal, local model path, TP1 forced by hardware ---
+declared_model = validate_single_declared_model(str(submission_dir))
+adapters = discover_adapters(str(submission_dir), adapter_extensions=ALLOWED_ADAPTER_EXTENSIONS)
+MODEL_PATH = pathlib.Path.home() / &quot;bcf/models&quot; / declared_model
+vllm_cfg = VllmConfig(
+    model=str(MODEL_PATH),
+    port=8000,
+    host='127.0.0.1',
+    tool_call_parser='gemma4',
+    reasoning_parser='gemma4',
+    max_model_len=32768,                     # adjust per your §4.9 KV-probe verdict; register it
+    dtype='bfloat16' if (torch.cuda.is_available() and torch.cuda.is_bf16_supported()) else 'auto',
+    gpu_memory_utilization=0.90,
+    enable_auto_tool_choice=True,
+    enable_lora=True,
+    max_loras=8,
+    max_lora_rank=128,
+    tensor_parallel_size=1,                  # single 5090 (GS auto would pick 4 on the Kaggle rig)
+    startup_timeout=60 * 20,                 # 1200 s, matches VLLM_ENGINE_READY_TIMEOUT_S
+)
+server_instance = VllmServer(vllm_cfg, adapter_manifest=adapters)
+server_instance.start()
+models = server_instance.create_model_registry(
+    aliases=[declared_model],
+    model_prefix='openai/',
+    api_key='EMPTY',
+)
+# If you instead run an EXTERNAL `vllm serve` (§4.8), skip VllmServer and construct the registry
+# the same way VllmServer does — UNVERIFIED import location; probe:
+#   python -c &quot;import adk_submission, inspect; print([n for n in dir(adk_submission) if 'registr' in n.lower()])&quot;
+# and inspect VllmServer.create_model_registry. (03 §6.3.)
+
+eval_config = EvalConfig(
+    tasks_path=DATA / &quot;tasks.jsonl&quot;,
+    snapshots_dir=DATA / &quot;snapshots&quot;,
+    results_dir=results_dir,
+    submission_dir=submission_dir,
+    models=models,
+    sandbox=&quot;docker&quot;,                      # LOCAL: docker (HR §4.1 default; notebook used subprocess)
+    timeout_seconds=timeout_seconds,
+    max_time_minutes=max_time_minutes,
+    max_tool_calls=max_tool_calls,
+    max_turns=max_turns,
+    limits=limits,
+    generation_constraints=gen_constraints,
+    context_cache_config=ContextCacheConfig(min_tokens=2048, ttl_seconds=1800, cache_intervals=10),
+    events_compaction_config=EventsCompactionConfig(
+        compaction_interval=5,             # HR §7.2 (scripts/inference.py). GS §5 notebook uses 15.
+        overlap_size=2,                    # Resolve via the source probe below; echo whichever you use.
+        token_threshold=14336,
+        event_retention_size=5,
+    ),
+    graph_dir=str(DATA / &quot;graphs&quot;),
+    embeddings_dir=str(DATA / &quot;embeddings&quot;),
+    wheels_dir=DATA / &quot;wheels&quot;,
+    verbose=False,
+)
+# --- PARITY ECHO (mandatory, 03 §7 item 14) ---
+print(&quot;EVAL_CONFIG:&quot;, eval_config)
+print(&quot;COMPACTION:&quot;, eval_config.events_compaction_config)
+print(&quot;CONTEXT_CACHE:&quot;, eval_config.context_cache_config)
+
+evaluator = Evaluator(eval_config)
+async def main():
+    for i, t in enumerate(tasks, 1):
+        r = await evaluator.evaluate_task(task=t, task_index=i, total_tasks=len(tasks))
+        print(t.instance_id, &quot;resolved=&quot;, r.resolved, &quot;exit=&quot;, r.test_exit_code,
+              &quot;patch_chars=&quot;, len(r.agent_patch or &quot;&quot;), &quot;calls=&quot;, r.tool_calls,
+              &quot;dur=&quot;, round(r.duration_seconds, 1))
+asyncio.run(main())
+</code></pre>
+<p>(03 §6.3; structure — EvalConfig fields, Evaluator.evaluate_task, load_tasks, build_submission_limits, compaction/cache configs — verbatim from GS §5 and HR §7.)</p>
+<p><strong>(e) Compaction discrepancy — resolve once, then freeze.</strong> HR §7.2 says <code>scripts/inference.py</code> uses <code>compaction_interval=5</code>; the GS §5 notebook passes <code>15</code>. Which the <strong>managed scorer</strong> runs is <strong>UNVERIFIED</strong>. Probe the installed wheelhouse source:</p>
+<pre><code class="language-bash">grep -rn &quot;compaction_interval&quot; ~/bcf/venv/lib/python3.12/site-packages/swegemma/ | head
+# and, if scripts/inference.py ships in the wheel or data package, grep it too.
+</code></pre>
+<p>Use what <code>scripts/inference.py</code>/swegemma defaults say (scorer path), echo it in every run, and register the choice. Threshold (14,336), overlap (2), retention (5) agree across all sources — those are exact (03 §6.5; INTEL C12).</p>
+<p><strong>(f) Keep the server warm.</strong> Cold vLLM startup is ESTIMATE 4–9 min locally. Batch reruns into one invocation with multiple task ids; keep the eval process/server alive while you edit prompts in scratch copies; never use task #1 of a cold run for timing comparisons (04 §1.2; 03 §6.2). Write <code>~/bcf/results/&lt;run&gt;/PINS.txt</code> before each run: wheelhouse version + parser SHA, all package versions, Python version, serve command line, KV-probe verdict, track, driver version, WSL version (Track B), compaction interval (03 §6.6).</p>
+<hr />
+<h1 id="part-5-triggering-local-test-runs">Part 5 — Triggering local test runs</h1><a class="toplink" href="#top">↑ Back to top</a>
+<h2 id="51-pre-flight-before-any-eval">5.1 Pre-flight (before any eval)</h2>
+<p><strong>Validator on both BCF trees</strong> (BRAIN packaging; run from the project root on Windows, or copy <code>validate_submission.py</code> to <code>~/bcf/bin</code> and run it against the staged Linux copies — it is stdlib + optional PyYAML):</p>
+<pre><code class="language-bash">python -I scratch/bcf-2026-11-11/validate_submission.py deliverables/2026-11-11-bcf-gemma4-brain/02-bcf-brain-31b/submission
+python -I scratch/bcf-2026-11-11/validate_submission.py deliverables/2026-11-11-bcf-gemma4-brain/03-bcf-brain-e4b/submission
+# expect: PASS, 0 errors / 0 warnings (BRAIN verified metrics; re-run after every change)
+</code></pre>
+<p><strong>Serving smokes</strong> (03 §7 items 9–10, with the §4.8 server up):</p>
+<pre><code class="language-bash"># Tool-call smoke (gemma4 parser, thinking on):
+curl -s http://127.0.0.1:8000/v1/chat/completions -H 'Content-Type: application/json' -d '{&quot;model&quot;:&quot;gemma-4-31b-it-qat-w4a16-ct&quot;,&quot;messages&quot;:[{&quot;role&quot;:&quot;user&quot;,&quot;content&quot;:&quot;What is the weather in Boston? Use the get_weather tool.&quot;}],&quot;tools&quot;:[{&quot;type&quot;:&quot;function&quot;,&quot;function&quot;:{&quot;name&quot;:&quot;get_weather&quot;,&quot;description&quot;:&quot;Get current weather&quot;,&quot;parameters&quot;:{&quot;type&quot;:&quot;object&quot;,&quot;properties&quot;:{&quot;city&quot;:{&quot;type&quot;:&quot;string&quot;}},&quot;required&quot;:[&quot;city&quot;]}}}],&quot;tool_choice&quot;:&quot;auto&quot;,&quot;temperature&quot;:0,&quot;max_tokens&quot;:1024}'
+# expect: tool_calls[0].function.name == &quot;get_weather&quot;, arguments parse as JSON with city
+# (possible literal-quote quirk #51284 = parity, not failure); reasoning_content non-empty.
+# Reasoning smoke: same curl without tools, prompt &quot;Solve 17*23 step by step.&quot; → reasoning_content populated.
+</code></pre>
+<p><strong>Canary gates C0–C7 (summary).</strong> A <em>canary</em> is a small, cheap probe that validates one load-bearing assumption before you spend a scarce submission slot or GPU hours — cheapest first, never spend a slot on an unvalidated assumption. Full concept + table: <code>05-robustness-audit-vs-field-issues.md</code> §6.0–6.1 (linked in Part 7).</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Canary</th>
+<th>What it proves</th>
+<th>Cost</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C0</td>
+<td>Official <code>compile_submission</code> accepts both trees; skill tools inject; <code>skills:</code> path resolves</td>
+<td>CPU, minutes</td>
+</tr>
+<tr>
+<td>C1</td>
+<td>bcf.py engine battery on all 129 tasks (DONE per BRAIN; re-run after changes)</td>
+<td>CPU, ~1 h</td>
+</tr>
+<tr>
+<td>C2</td>
+<td>Harness smoke: nudge-restart byte-identical spec &lt;=15 s; include_contents boundary; real setup time</td>
+<td>8–10 local tasks</td>
+</tr>
+<tr>
+<td>C3</td>
+<td>gemma4 parser fuzz on your exact schemas — zero hangs (array-arg freeze class)</td>
+<td>CPU, subprocess+timeout</td>
+</tr>
+<tr>
+<td>C4</td>
+<td>Reasoning-drop parity on pinned v31 (delta &lt;=1 task)</td>
+<td>local</td>
+</tr>
+<tr>
+<td>C5</td>
+<td>E4B serving end-to-end under the sanctioned alias; clean format — BEFORE a bonus slot</td>
+<td>local + Kaggle notebook</td>
+</tr>
+<tr>
+<td>C6</td>
+<td>Replicated eval on the masked-68 valid set; win-both selection; wall-clock extrapolation</td>
+<td>GPU, overnight</td>
+</tr>
+<tr>
+<td>C7</td>
+<td>Submission ops: validated ZIP, early submit, PENDING monitor, escalation</td>
+<td>each slot</td>
+</tr>
+</tbody>
+</table></div>
+<p>C0 official-compiler probe (signature UNVERIFIED — inspect first): <code>python -c "import adk_submission, inspect; print(inspect.signature(adk_submission.compile_submission))"</code>, then compile each staged tree and confirm the skill tools appear (05 §6.1; BRAIN canary 1). The 744354 reasoning-drop repro (03 §7 item 11) must REPRODUCE the drop on public v31 — if local retains thoughts, the wheelhouse drifted; stop and re-pin.</p>
+<h2 id="52-swegemma-eval-cli-examples-hr-91-03-64-04-1314">5.2 <code>swegemma eval</code> CLI examples (HR §9.1; 03 §6.4; 04 §1.3–1.4)</h2>
+<pre><code class="language-bash">source ~/bcf/bin/env.sh &amp;&amp; source ~/bcf/venv/bin/activate
+
+# (a) Single task — mechanism smoke (minutes):
+swegemma eval \
+  --tasks ~/bcf/data/tasks.jsonl \
+  --snapshots-dir ~/bcf/data/snapshots \
+  --submission-dir ~/bcf/submissions/bcf-31b \
+  --results-dir ~/bcf/results/smoke_01 \
+  --sandbox docker \
+  --task-id rich_3454 \
+  --max-tool-calls 50 --max-time-minutes 4.5 \
+  --concurrency 1 --display auto
+
+# (b) Subset — the iteration workhorse (3-task quick set from 03 §6.4; the frozen stratified
+#     30-task set and its construction recipe are in 04 §1.4 — freeze only after your own gold/empty audit):
+swegemma eval \
+  --tasks ~/bcf/data/tasks.jsonl \
+  --snapshots-dir ~/bcf/data/snapshots \
+  --submission-dir ~/bcf/submissions/bcf-31b \
+  --results-dir ~/bcf/results/run_01 \
+  --sandbox docker \
+  --max-tool-calls 50 --max-time-minutes 4.5 \
+  --concurrency 1 --display auto \
+  --task-ids rich_3454 fastapi_14361 requests_7502
+
+# (c) Full 129 — gate runs only (ESTIMATE 3.5–5.5 h at concurrency 1, warm server):
+swegemma eval \
+  --tasks ~/bcf/data/tasks.jsonl \
+  --snapshots-dir ~/bcf/data/snapshots \
+  --submission-dir ~/bcf/submissions/bcf-31b \
+  --results-dir ~/bcf/results/full_01 \
+  --sandbox docker \
+  --max-tool-calls 50 --max-time-minutes 4.5 \
+  --concurrency 1 --display auto
+
+# (d) Deterministic shards (checkpointing / resume after a server freeze): task_idx % M == k
+swegemma eval ... --shard-index 0 --num-shards 2 --results-dir ~/bcf/results/shard0
+swegemma eval ... --shard-index 1 --num-shards 2 --results-dir ~/bcf/results/shard1
+
+# (e) Empty-patch baseline (Phase-2 baseline-failure behavior; the &quot;empty&quot; side of the gold/empty audit):
+swegemma eval \
+  --tasks ~/bcf/data/tasks.jsonl --snapshots-dir ~/bcf/data/snapshots \
+  --submission-dir ~/bcf/submissions/bcf-31b --results-dir ~/bcf/results/empty_audit \
+  --sandbox docker --skip-agent-patch
+</code></pre>
+<p>Key flags (HR §9.1; 04 §1.3): <code>--task-id</code>/<code>--task-ids</code> (rapid debugging); <code>--sandbox {docker,subprocess}</code>; <code>--concurrency N</code> (<strong>keep 1 for 31B</strong> — KV ceiling; E4B may tolerate 2–4, re-check the KV probe); <code>--shard-index k --num-shards M</code>; <code>--max-tool-calls</code> / <code>--max-time-minutes</code> overrides (match the tree: 50 / 4.5 for 31B; 40 / 4.0 for E4B); <code>--models-yaml</code> (UNVERIFIED schema, Part 4 §4.10c); <code>--skip-agent-patch</code>; <code>--display auto</code> (dashboard appears with concurrency &gt; 1).</p>
+<p><strong>Budget-parity check (every new build).</strong> Whether the local CLI honors the submission's <code>eval_config.yaml</code> or only its own flags is <strong>UNVERIFIED</strong> (HR §7.1 documents the load for <code>scripts/inference.py</code>; probe <code>swegemma eval --help</code> for <code>timeout_seconds</code>/<code>max_turns</code> flags). Safeguards: pass CLI flags equal to the tree's four values (and set <code>SWE_TIMEOUT_SECONDS</code>/<code>SWE_MAX_TIME_MINUTES</code>/<code>SWE_MAX_TOOL_CALLS</code>/<code>SWE_MAX_TURNS</code> if your build reads them), then <strong>verify the effective budgets in the artifact</strong>: open <code>logs/&lt;id&gt;.log</code> and read the "Task Budget" block + a <code>get_status</code> tool result in the trace. If it says 60.0 minutes / unlimited calls, your eval_config was ignored — use the Python driver (04 §1.3; 03 §6.4, §7 item 14). BCF budgets: <strong>31B = 180 s command timeout / 50 calls / 4.5 min / 50 turns; E4B = 150 s / 40 / 4.0 min / 40 turns</strong> (both <code>eval_config.yaml</code>, read-only verified).</p>
+<h2 id="53-docker-vs-subprocess-sandbox-decision-table-04-15-hr-41-03-67">5.3 Docker vs subprocess sandbox — decision table (04 §1.5; HR §4.1; 03 §6.7)</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th><code>--sandbox docker</code> (default)</th>
+<th><code>--sandbox subprocess</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Isolation</td>
+<td><code>swebench-sandbox:latest</code>, <code>network_mode="none"</code>, 4 GiB (OOM kill = exit 137), 2 vCPU, <code>/workspace</code>, <code>TEST_TMPDIR=/tmp</code></td>
+<td>Temp dir <code>swegemma_sandbox_&lt;id&gt;_</code> with workspace/tmp/wheels/venv; path rewriting; process-group SIGKILL on timeout</td>
+</tr>
+<tr>
+<td>Network</td>
+<td>Air-gapped (no PyPI, no vLLM from inside; LLM calls flow harness→127.0.0.1:8000 outside)</td>
+<td>Inherits host network behavior — NOT documented as air-gapped (UNVERIFIED; assume NOT isolated)</td>
+</tr>
+<tr>
+<td>Python</td>
+<td>3.13 (image)</td>
+<td>Host venv Python (3.12.13)</td>
+</tr>
+<tr>
+<td>Resource parity</td>
+<td>Matches scorer quotas exactly</td>
+<td>No quota; desktop speed leaks into timings</td>
+</tr>
+<tr>
+<td>Use for</td>
+<td><strong>Every run feeding a tuning decision or submission gate</strong></td>
+<td>Quick CPU-side mechanism drills; machines without Docker; never for parity A/B</td>
+</tr>
+</tbody>
+</table></div>
+<p>Verify isolation during a run: <code>docker ps</code> → grab the sandbox container id, then <code>docker inspect &lt;id&gt; --format '{{.HostConfig.NetworkMode}} {{.HostConfig.Memory}} {{.HostConfig.CpuQuota}}/{{.HostConfig.CpuPeriod}}'</code> → expect <code>none 4294967296 200000/100000</code> (HR §4.1; 03 §6.7, §7 item 13). Keep the 2-vCPU/4 GiB quota even though the desktop is faster — without it, bootstrap/pytest times under-predict the scorer and your 12 h extrapolation becomes optimistic. Never mix backends within an A/B pair. The subprocess <code>ensurepip unavailable ... creating venv without pip</code> warning is benign (visible in GS §5 output).</p>
+<h2 id="54-the-python-driver-alternative">5.4 The Python-driver alternative</h2>
+<p>Run the Part 4 §4.10d driver (manages its own server, echoes all configs):</p>
+<pre><code class="language-bash">source ~/bcf/bin/env.sh &amp;&amp; source ~/bcf/venv/bin/activate
+python ~/bcf/bin/run_eval.py ~/bcf/submissions/bcf-31b ~/bcf/results/driver_01 rich_3454
+# E4B: python ~/bcf/bin/run_eval.py ~/bcf/submissions/bcf-e4b ~/bcf/results/driver_e4b_01 rich_3454
+</code></pre>
+<p>Use it when the CLI cannot set all four budgets, when you need the compaction/cache config echoed, or when you want the harness to manage the server lifecycle (GS-faithful). For gold-patch audits, the same <code>Evaluator</code>/<code>verify_task</code> Phase-2 path can be driven with <code>prediction = task["patch"]</code> — exact invocation UNVERIFIED, probe <code>swegemma --help</code> / <code>swegemma.evaluate</code> source (03 §7 item 12; 04 §1.7).</p>
+<h2 id="55-results-artifacts-tour-hr-92-deep-interpretation-in-04-2">5.5 Results artifacts tour (HR §9.2; deep interpretation in 04 §2)</h2>
+<pre><code class="language-text">~/bcf/results/&lt;run&gt;/
+├── summary.json                     # aggregate resolution_rate, resolved count, per-repo breakdown, errors
+├── task_results.jsonl               # append-only, one line per finished task (metrics &amp; exit codes)
+├── patches/&lt;instance_id&gt;.patch      # exact unified diff extracted from Container A
+├── test_outputs/&lt;instance_id&gt;.log   # full Phase-2 pytest STDOUT/STDERR from Container B
+├── traces/trace_&lt;instance_id&gt;.json  # SessionTrace: ATIF-compatible steps, thoughts, tool calls, tokens
+└── logs/&lt;instance_id&gt;.log           # Rich-formatted Phase-1 agent transcript (incl. the Task Budget block)
+</code></pre>
+<p>Add your own <code>PINS.txt</code> / <code>RUN_META.json</code> per run (track, tree sha256, config hashes, runtime pins, backend, concurrency, flags, mask version, cold/warm, wall time) — without it, runs are incomparable a week later (03 §6.6; 04 §1.8). <strong>Read <code>04-local-scoring-and-feedback-guide.md</code> §2–§4 for artifact-by-artifact interpretation, the <code>resolved=False</code> decision tree, and failure clustering</strong> — not duplicated here.</p>
+<h2 id="56-expected-first-run-outcomes-parity-checks-not-pass-gates">5.6 Expected first-run outcomes (parity checks, NOT pass gates)</h2>
+<p>Run the three staged tasks with their gold patches (03 §7 item 12) and expect the PUBLIC-wheelhouse failure signatures — a local PASS on the blocked tasks means your sandbox drifted:</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Expected local outcome</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>rich_3454</td>
+<td>gold resolves</td>
+<td>rich: 39/48 gold-pass; 3454 not in the blocked list (INTEL audits)</td>
+</tr>
+<tr>
+<td>fastapi_14361</td>
+<td>pytest <strong>collection error</strong></td>
+<td>inline_snapshot/dirty_equals absent — it is in the 27-list (INTEL §4a)</td>
+</tr>
+<tr>
+<td>requests_7502</td>
+<td><strong>httpbin fixture errors</strong></td>
+<td>12/13 requests tasks fail this way (INTEL C10)</td>
+</tr>
+</tbody>
+</table></div>
+<p>More generally: gold tasks may fail locally due to dependency gaps; ~68/129 public tasks are discrimination-valid (gold passes AND empty fails); local "resolved" is an upper bound; raw-129 local rates are incomparable to the LB. <strong>Link: 04 §5 (local↔Kaggle correlation caveats — what transfers, what lies, calibration protocol) and 03 §8 divergence register (D1–D18).</strong> Never A/B on the raw 129; freeze a masked valid set first (INTEL implication 15; 04 §1.4).</p>
+<h2 id="57-warm-server-iteration-practice-04-12-03-39">5.7 Warm-server iteration practice (04 §1.2; 03 §3.9)</h2>
+<ol>
+<li>Batch reruns into <strong>one</strong> invocation with <code>--task-ids</code> rather than many single-task invocations.</li>
+<li>Keep the eval process (and its server) alive while you edit prompts/configs in scratch copies; re-invoke only when the submission tree changes.</li>
+<li>If your build can point the registry at an already-running server (check <code>--models-yaml</code> / <code>api_base</code> wiring — UNVERIFIED external-server flag), run vLLM as a persistent service; otherwise treat startup as a fixed per-invocation cost and log it.</li>
+<li>The first task after a cold start pays cold-kernel latency (ESTIMATE +5–20 s). Never use task #1 of a cold run for timing comparisons.</li>
+<li>One subset run is one observation; a decision needs paired repeats (win-both; ignore single-run deltas &lt;4 tasks; ~10–13% per-task flip rate is normal) (04 §1.4; INTEL C11/C14).</li>
+</ol>
+<h2 id="58-troubleshooting-table-condensed-from-03-10-full-table-there">5.8 Troubleshooting table (condensed from 03 §10; full table there)</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sm_120 is not compatible</code> / <code>no kernel image is available</code></td>
+<td>torch/vLLM wheel without sm_120 (cu126 or older), or CUDA &lt; 12.8</td>
+<td>torch 2.10.0 cu128/cu129 + vLLM 0.19.1 cu128+ wheel (§4.7 fallback ladder); driver R570+/R580+; source build last resort with <code>TORCH_CUDA_ARCH_LIST="12.0"</code></td>
+</tr>
+<tr>
+<td>Track A: llvmpipe desktop, <code>nvidia-smi</code> fails after driver install</td>
+<td>Secure Boot blocked unsigned module (MOK missed) OR proprietary module on Blackwell</td>
+<td>Complete MokManager enrollment (or disable Secure Boot); ensure <code>nvidia-driver-580-open</code>; check <code>dpkg -l \| grep nvidia-driver</code>, <code>mokutil --sb-state</code>, <code>dmesg \| grep -i nvidia</code></td>
+</tr>
+<tr>
+<td>Track A: boot hang after adding graphics-drivers PPA</td>
+<td>PPA 580 boot failure on 5090</td>
+<td><code>sudo ppa-purge ppa:graphics-drivers/ppa</code>, install noble restricted <code>nvidia-driver-580-open</code></td>
+</tr>
+<tr>
+<td>Track B: <code>cudaErrorUnknown</code> during CUDA-graph capture; ~8x slow with <code>--enforce-eager</code></td>
+<td>WSL &lt; 2.7.0 dxgkrnl bug</td>
+<td><code>wsl --update</code>, verify &gt;= 2.7.0, <code>wsl --shutdown</code>, retry without enforce-eager</td>
+</tr>
+<tr>
+<td>Track B: EngineCore spawns, ZMQ never connects</td>
+<td>vllm#44732-class V1 WSL2 hang (0.19.1 UNVERIFIED)</td>
+<td>Confirm <code>VLLM_WORKER_MULTIPROC_METHOD=spawn</code>; diagnostic <code>VLLM_ENABLE_V1_MULTIPROCESSING=0</code> (register if kept); persistent → Track A</td>
+</tr>
+<tr>
+<td>Track B: multi-GiB allocs fail despite "free" VRAM; used ≫ torch reserved</td>
+<td>microsoft/WSL#40401 invisible overhead</td>
+<td>Part 3 §3.8 probe; FAIL → Track A. No WSL-side workaround known</td>
+</tr>
+<tr>
+<td>Track B: whole WSL VM crashes during GPU OOM</td>
+<td>microsoft/WSL#40732 Hyper-V panic</td>
+<td>Never oversubscribe VRAM; size via KV log; <code>.wslconfig</code> cap; <code>wsl --shutdown</code> + relaunch; reboot Windows if dxgkrnl degraded</td>
+</tr>
+<tr>
+<td><code>ValueError: The model's max seq len (32768) is larger than ... KV cache</code></td>
+<td>Uniform KV world: ~27.5 GiB needed, ~9–11 GiB available</td>
+<td>§4.9 decision tree: fp8 KV → reduce max_model_len → enforce-eager → util 0.95; register D2/D3</td>
+</tr>
+<tr>
+<td>Decode collapses 10–30x with no config change; used &gt; physical VRAM</td>
+<td>Sysmem fallback paging to RAM (Track B: policy not honored, WSL#11050)</td>
+<td>Lower util/max_model_len to fit physical VRAM; Control Panel "Prefer No Sysmem Fallback" (best-effort on WSL); Track A honors it</td>
+</tr>
+<tr>
+<td>Snapshot extraction / git commit / docker exec 3–10x slower than expected</td>
+<td>Hot data on <code>/mnt/c</code> or <code>/mnt/d</code> (9p/drvfs per-file latency)</td>
+<td>Move everything to ext4 (§4.1); one-time copies only from Windows drives</td>
+</tr>
+<tr>
+<td><code>docker run</code> asks for sudo / permission denied</td>
+<td>User not in docker group (or group not applied)</td>
+<td><code>sudo usermod -aG docker $USER</code> then <code>newgrp docker</code> / log out-in (§2.8)</td>
+</tr>
+<tr>
+<td><code>docker run --gpus all</code> fails: could not select device driver</td>
+<td>Track B: Desktop &lt; 4.31.1 or manual NCT over bundled; Track A: NCT not configured</td>
+<td>B1: update Desktop &gt;= 4.31.1, remove manual NCT; B2: no-cgroups flag (UNVERIFIED — probe); A: <code>sudo nvidia-ctk runtime configure --runtime=docker &amp;&amp; sudo systemctl restart docker</code></td>
+</tr>
+<tr>
+<td><code>--device nvidia.com/gpu=all</code> fails under Docker Desktop WSL</td>
+<td>Desktop ships no CDI spec</td>
+<td>Use <code>--gpus all</code> (legacy hook)</td>
+</tr>
+<tr>
+<td>apt: <code>NO_PUBKEY ... noble InRelease is not signed</code></td>
+<td>Docker keyring placement/permissions wrong</td>
+<td>Redo §2.8 key steps exactly (<code>/etc/apt/keyrings/docker.asc</code>, <code>chmod a+r</code>)</td>
+</tr>
+<tr>
+<td>Tool args contain literal quotes; raw-token leaks; <code>&lt;pad&gt;</code> under concurrency</td>
+<td>Known gemma4 parser bugs on 0.19.1 (#51284, #44522, #39392) — SAME on Kaggle</td>
+<td>Do not upgrade (parity!). Robust arg unescaping, scalar-only schemas, concurrency 1</td>
+</tr>
+<tr>
+<td>Server freezes mid-run; every later task scores 0; SIGTERM ignored</td>
+<td>gemma4 array-argument parser infinite loop (753973)</td>
+<td><code>kill -9</code> the vLLM process, restart, re-run remaining tasks; PREVENT: zero array-typed tool/skill parameters; run the C3 fuzz canary before any submission</td>
+</tr>
+<tr>
+<td>Structured output ignored when a request sets <code>enable_thinking=false</code></td>
+<td>vllm#39130: reasoning parser disables xgrammar in that mode</td>
+<td>Keep thinking=True everywhere; never send enable_thinking=false for graded work</td>
+</tr>
+<tr>
+<td><code>reasoning_content</code> missing between tool calls</td>
+<td>744354 / vllm#38488 family — public v31 behavior (UNFIXED)</td>
+<td>Parity, not a local bug (§5.1 must REPRODUCE it); agent restates critical state in visible text</td>
+</tr>
+<tr>
+<td><code>NotImplementedError: The page size of the layer is not divisible ...</code> at kv_cache_utils.py</td>
+<td>Gemma-4 heterogeneous KV page-size bug family (#39914/#40388), often with KV quant</td>
+<td>Revert to bf16 KV (<code>--kv-cache-dtype auto</code>); avoid int8_per_token_head; if persistent, register and try enforce-eager; keep 0.19.1</td>
+</tr>
+<tr>
+<td>fastapi collection <code>ModuleNotFoundError: inline_snapshot / dirty_equals</code>; requests httpbin errors</td>
+<td>Missing sandbox deps in the public wheelhouse — SAME on Kaggle public env</td>
+<td>Do NOT patch-install into the sandbox (legality unanswered); exclude from A/B denominators; frozen valid set</td>
+</tr>
+<tr>
+<td><code>/var/lib/docker</code> fills root partition (Track A)</td>
+<td>vLLM image 10–20 GB + build cache</td>
+<td><code>data-root</code> on big partition (§2.10); <code>docker system prune</code> / <code>builder prune</code> between runs</td>
+</tr>
+<tr>
+<td>vLLM reachable from LAN despite UFW (Track A)</td>
+<td>Docker published ports bypass UFW</td>
+<td>Bind <code>--host 127.0.0.1</code> (all serve commands do); never publish sandbox ports</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h1 id="part-6-first-official-kaggle-submissions-main-31b-bonus-e4b">Part 6 — First official Kaggle submissions (MAIN 31B + BONUS E4B)</h1><a class="toplink" href="#top">↑ Back to top</a>
+<h2 id="61-the-submission-model-read-this-before-spending-a-slot">6.1 The submission model (read this before spending a slot)</h2>
+<ul>
+<li><strong>ONE competition:</strong> <code>gemma-4-developer-agent</code>. There is <strong>no separate upload portal for the bonus</strong> — a bonus entry is a normal submission to the same competition whose base model is E2B or E4B (INTEL §2a, host OP 751104). The promised daily small-model leaderboard is a separate <em>notebook</em>, not a separate submission flow (its freshness is questioned; no staff reply).</li>
+<li><strong>Bonus terms (751104, host, verbatim):</strong> "$10,000 to the highest-ranking submission utilizing Gemma E2B or Gemma E4B. Final scores are based on the private test set performance." Eligibility: "Submissions must explicitly use either Gemma E2B or Gemma E4B as the base model. For a submission to be eligible it must be one of the team's two selected final submissions." Cross-track: "Submissions eligible for the Small Model Prize remain fully eligible for general leaderboard awards and the Paper Track."</li>
+<li><strong>Slot math:</strong> a bonus-eligible run consumes <strong>one of your TWO final-selection slots</strong>, but stays eligible for main prizes and the Paper Track — a strong small-model run can double-count. Winner is decided on the <strong>PRIVATE set</strong> with main-track tie-breaks: optimize private-set robustness, not public LB (INTEL §2a, implication 1).</li>
+<li><strong>Private final = better of your two selected submissions</strong> (standard Kaggle final-selection mechanics; working assumption). The <strong>error-fallback semantics are unanswered</strong> (05 RR14: private multi-run / error-fallback / bonus deadline all open) — so treat each final as if it must stand alone: <strong>both selected submissions must independently finish &lt;12 h</strong> (BRAIN 04 §7.4).</li>
+<li><strong>Same-variant rule (748287, STAFF):</strong> "Every agent and subagent in your submission must use the same variant (though they can attach different LoRA adapters.)" No mixing 31B and E4B inside one submission. Small models are scored under <strong>identical conditions</strong> ("1. Yes, everything is the same." — same 4xL4, 12 h total, same per-task budgets).</li>
+<li><strong>Sanctioned QAT aliases (INTEL §2a / 748287):</strong> <code>gemma-4-31b-it-qat-w4a16-ct</code> (main), <code>gemma-4-e4b-it-qat-w4a16-ct</code>, <code>gemma-4-e2b-it-qat-w4a16-ct</code> (bonus), plus <code>gemma-4-12b-it-qat-w4a16-ct</code> (registered; not bonus-eligible). Provenance note: the <em>packaged</em> Sept-29 HARNESS_README (§3.2) still shows <code>ALLOWED_MODEL_NAMES</code> as 31B-only — that snapshot is <strong>stale</strong>; the live Overview (verified 2026-11-11 by the hardening research) lists all four QAT variants as supported for the main competition, with the single-variant-per-submission rule unchanged. The bonus aliases are additionally sanctioned verbatim by the pinned staff thread 748287. If a scorer-side validator ever rejects a non-31B alias, that is the 752128-class "incorrect format" risk — run the C5 canary before betting the bonus slot.</li>
+</ul>
+<h2 id="62-pre-slot-gates-do-not-spend-a-slot-until-these-pass">6.2 Pre-slot gates (do NOT spend a slot until these pass)</h2>
+<p>Summarized from 05 §6.1 and BRAIN 04 §7.3 (full detail there):</p>
+<ol>
+<li><strong>Validator</strong> on both trees → PASS 0 errors / 0 warnings (Part 5 §5.1; re-run after every change).</li>
+<li><strong>C0 official compiler canary</strong> — <code>compile_submission</code> accepts both trees; skill tools inject; <code>skills:</code> path base resolves (one-line fallback <code>skills/bcf-spec</code> ready if root-relative); scalar/zero-arg schemas.</li>
+<li><strong>C2-3 nudge-restart</strong> — byte-identical cached spec, tax &lt;=15 s, zero duplicated edits; <strong>C2-4 include_contents boundary</strong> (hard gate).</li>
+<li><strong>C3 parser-freeze fuzz</strong> — &gt;=5,000 bracket-heavy scalar payloads against the exact injected schemas, subprocess + hard timeout, <strong>zero hangs</strong> — mandatory before any bonus run.</li>
+<li><strong>C5 E4B serving canary</strong> — E4B loads under the sanctioned alias, tool calls parse, clean format, one full task end-to-end — <strong>BEFORE committing the bonus slot</strong>.</li>
+<li><strong>C2/C6 wall-clock telemetry</strong> — real per-task setup time feeds the budget decision rule; 120-task extrapolation &lt;=11.0 h (31B) / &lt;=10.5 h (E4B).</li>
+<li><strong>C6 replicated resolve rate</strong> — win-both on the masked-68 valid set gates promotion to a slot; <strong>E4B additionally requires a non-zero replicated resolve rate</strong> (hold the slot at 0).</li>
+</ol>
+<p><strong>Hard pre-slot gate order:</strong> C0 (compiler) → C2-3 (restart) → C2-4 (include_contents) → C3 (fuzz) → C5 (E4B) → C2/C6 (wall clock). Keep a validated <strong>fallback bundle</strong> ready at all times (tighter caps, e.g. 31B 4.0 min) plus the pre-validated monolithic variant B as the hierarchy fallback (BRAIN 04 §7.4).</p>
+<h2 id="63-packaging-agentyaml-at-the-root-of-the-zip">6.3 Packaging (agent.yaml at the ROOT of the zip)</h2>
+<p>Package from the <strong>staged copy</strong>, never the deliverable tree (BRAIN packaging; GS §6; OV Evaluation):</p>
+<pre><code class="language-bash"># MAIN (31B):
+cd ~/bcf/submissions/bcf-31b &amp;&amp; zip -r ../bcf-31b-v1.zip .
+# BONUS (E4B):
+cd ~/bcf/submissions/bcf-e4b &amp;&amp; zip -r ../bcf-e4b-v1.zip .
+# agent.yaml MUST be at the zip root (not nested under submission/). Verify:
+unzip -l ~/bcf/submissions/bcf-31b-v1.zip | head    # first entries: agent.yaml, eval_config.yaml, ...
+</code></pre>
+<p>Name conventions: <code>bcf-31b-v1.zip</code>, <code>bcf-e4b-v1.zip</code> (bump v2/v3 per iteration; keep a ledger). Constraints (HR §2.4; GS §6): <strong>total unpacked &lt; 3 GiB</strong> (<code>MAX_SUBMISSION_SIZE_BYTES = 3,221,225,472</code>, including adapters); allowed extensions only: <code>.yaml .yml .md .txt .py .json .safetensors</code> (pickle weights <code>.bin/.pt/.pth</code> rejected). Verify with the organizer's own packaging check (adapted from GS §6 to local paths):</p>
+<pre><code class="language-python">import zipfile
+from pathlib import Path
+from swegemma.config import ALLOWED_SUBMISSION_EXTENSIONS, MAX_SUBMISSION_SIZE_BYTES
+
+zip_path = Path.home() / &quot;bcf/submissions/bcf-31b-v1.zip&quot;   # or bcf-e4b-v1.zip
+with zipfile.ZipFile(zip_path, 'r') as zf:
+    infos = zf.infolist()
+    total_size = sum(i.file_size for i in infos)
+    assert total_size &lt;= MAX_SUBMISSION_SIZE_BYTES, f'Archive exceeds 3 GiB limit: {total_size}'
+    for info in infos:
+        if not info.is_dir():
+            ext = Path(info.filename).suffix.lower()
+            assert ext in ALLOWED_SUBMISSION_EXTENSIONS, f'Disallowed file extension: {info.filename}'
+print(f'OK: {zip_path} ({zip_path.stat().st_size / (1024 * 1024):.2f} MiB)')
+</code></pre>
+<p>(GS §6 uses <code>shutil.make_archive(..., root_dir=AGENT_DIR)</code> — equivalent to <code>cd tree &amp;&amp; zip -r ../out.zip .</code>; both put agent.yaml at the root.) BCF ships no adapters, so both zips are tiny (the sample submission zipped to 0.17 MiB in GS §6).</p>
+<h2 id="64-main-submission-31b-step-by-step">6.4 MAIN submission (31B) — step by step</h2>
+<p><strong>UI path:</strong></p>
+<ol>
+<li>Open <code>https://www.kaggle.com/competitions/gemma-4-developer-agent</code> (signed in, rules accepted, phone verified).</li>
+<li>Click <strong>Submit Prediction</strong> (the submission button on the competition page).</li>
+<li>Upload <code>bcf-31b-v1.zip</code>, add a submission message (e.g. "BCF 31B v1 — plan→solver, masked-set validated"), submit.</li>
+</ol>
+<p><strong>CLI path (equivalent):</strong></p>
+<pre><code class="language-bash">kaggle competitions submit -c gemma-4-developer-agent \
+  -f ~/bcf/submissions/bcf-31b-v1.zip \
+  -m &quot;BCF 31B v1&quot;
+</code></pre>
+<p>(Standard Kaggle CLI submit form; the competition slug is from OV/GS. The 1/day + one-pending limits below are INTEL-verified.)</p>
+<p><strong>Cadence and limits (INTEL S2, C13, C18; BRAIN 04 §7.2):</strong></p>
+<ul>
+<li><strong>1 submission/day</strong> and <strong>one pending submission at a time</strong> — a second submit while one is scoring returns <code>400 FAILED_PRECONDITION: Your team already has 1 pending submissions; please wait for one to finish scoring.</code> There is no cancel.</li>
+<li><strong>Submit early in the day.</strong> Queue/scoring stalls of <strong>36–52 h</strong> are reported (vs the Oct 13 staff baseline ~14 h); scoring can exceed 24 h and still finish. <strong>Monitor the PENDING state</strong>; escalate same-day with submission IDs in threads <strong>747519 / 743683</strong> (staff precedent Oct 8: timeout extension + reprocessing, latency days).</li>
+<li><strong>What scoring does:</strong> your zip is compiled and run on Kaggle's <strong>4x L4</strong> rig (vLLM 0.19.1, TP4, max_model_len 32768) against <strong>~120 hidden private-repo tasks</strong> under a <strong>12 h total budget</strong> (inclusive of sandbox setup, exclusive of patch validation). Competitor-reported (staff question 756963 unanswered): exceeding 12 h scores <strong>zero</strong> — design worst-case total runtime bounded (OV Issue Scoring; INTEL C13).</li>
+<li><strong>Public LB math:</strong> the public split is <strong>58 tasks</strong>; every captured LB score equals floor(k/58) — <strong>1 task = 0.017</strong>. Run-to-run noise is <strong>±1.5–3 tasks</strong> (sd), ~10–13% per-task flip rate; published scores are likely best-of-several-tries. "One run is not a verdict." (INTEL §5, C11, C14.)</li>
+<li><strong>Rescore is paused</strong> (staff, Sep 28); do not budget on automatic reruns (INTEL S3).</li>
+</ul>
+<h2 id="65-bonus-submission-e4b-step-by-step">6.5 BONUS submission (E4B) — step by step</h2>
+<p>Same competition, same flow, with the E4B zip:</p>
+<pre><code class="language-bash">kaggle competitions submit -c gemma-4-developer-agent \
+  -f ~/bcf/submissions/bcf-e4b-v1.zip \
+  -m &quot;BCF E4B v1 — bonus candidate&quot;
+</code></pre>
+<p><strong>Bonus-specific gates (do these BEFORE spending the slot):</strong></p>
+<ol>
+<li><strong>C5 serving canary first</strong> — E4B loads under <code>gemma-4-e4b-it-qat-w4a16-ct</code>, tool calls parse, zero-arg skill install runs, one full task completes with clean format (Part 4 §4.8 E4B serve + Part 5 smokes; the contested thinking template and intermittent "incorrect format" reports make this non-negotiable — 05 §6.1 C5, BRAIN R4/R5).</li>
+<li><strong>C3 parser fuzz</strong> — the array-argument server freeze was first hit on E4B (753973); zero array-typed parameters anywhere, zero fuzz hangs.</li>
+<li><strong>Hold the slot until a non-zero replicated resolve rate is demonstrated</strong> (C6 win-both on the masked set). No E4B empirical score exists for this design yet — do not bet the $10k slot on an unproven serving path (BRAIN R6; 05 C6).</li>
+<li>Remember the E4B budgets are tighter (150 s / 40 calls / 4.0 min / 40 turns) and the same-variant rule applies to every agent/subagent.</li>
+</ol>
+<p>The bonus entry occupies one of your two final slots (§6.6) and remains fully eligible for main prizes and the Paper Track (§6.1).</p>
+<h2 id="66-final-selection-before-dec-2">6.6 FINAL SELECTION (before Dec 2)</h2>
+<ol>
+<li>Before the <strong>Final Submission Deadline (Dec 2, 23:59 UTC)</strong>, go to the competition → your <strong>Team settings → Submissions</strong> and <strong>select up to 2 final submissions</strong> (standard Kaggle final-selection UI; the two-slot rule is INTEL-verified via 751104).</li>
+<li><strong>Recommended BCF allocation:</strong> <strong>slot 1 = your best 31B</strong> (main-prize contender), <strong>slot 2 = the E4B bonus</strong> (eligible for the $10k AND main prizes — double-count). If the E4B never clears C6, fall back to two 31B variants (BRAIN 04 §7.1).</li>
+<li><strong>Private final = better of the two</strong> on the private test set (working assumption, §6.1). Because error-fallback semantics are unanswered, <strong>both finals must independently finish &lt;12 h</strong> — verify each with wall-clock extrapolation (C2/C6), not just the champion.</li>
+<li>Select on <strong>replicated local eval</strong> (2 runs on a fixed ~30-task set + ~106-task held-out, win-both rule) and cross-task-mix robustness, not single-run peak (INTEL implication 16; BRAIN 04 §7.1). Expect a large final shakeup (public LB is best-of-N noise).</li>
+<li><strong>Re-check all open rules/staff threads before locking</strong> (§6.8).</li>
+</ol>
+<h2 id="67-deadlines-table-all-2359-utc-ov-timeline-intel-2b-brain-04-71">6.7 Deadlines table (all 23:59 UTC; OV Timeline; INTEL §2b; BRAIN 04 §7.1)</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Event</th>
+<th>Notes / BCF action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>2026-11-12</strong></td>
+<td><strong>Paper Track deadline</strong> (optional, $35k)</td>
+<td>SEPARATE competition <code>gemma-4-developer-agent-paper</code>; submit design + CPU empirical + taxonomy. Also the <strong>safe internal bonus milestone</strong> until the ambiguity resolves</td>
+</tr>
+<tr>
+<td><strong>2026-11-25</strong></td>
+<td><strong>Entry Deadline</strong> (rules acceptance required) + <strong>Team Merger Deadline</strong></td>
+<td>Lock entry; mergers are irreversible with unknown score-carry — pause submissions, compute combined count, get staff answers in 756693 first</td>
+</tr>
+<tr>
+<td><strong>2026-12-02</strong></td>
+<td><strong>Final Submission Deadline</strong></td>
+<td>Lock two finals (one 31B + one E4B); both independently &lt;12 h; re-check open threads before locking</td>
+</tr>
+<tr>
+<td>Bonus deadline</td>
+<td><strong>Ambiguous: Nov 12 vs Dec 2</strong></td>
+<td>Prizes page says Nov 12 23:59 UTC; bonus announcement says main-track deadlines (Dec 2). Only substantive answer is a competitor EXPERT: Dec 2 (the Nov 12 line is misplaced Paper-Track text). <strong>No staff confirmation.</strong> Working assumption <strong>Dec 2</strong>; safe internal deadline <strong>Nov 12</strong> (INTEL S7, §2b; thread 757244)</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="68-submission-ops-queue-defense">6.8 Submission ops (queue defense)</h2>
+<p>From INTEL implication 7 and BRAIN 04 §7.2 (all [P] = process facts from the capture):</p>
+<ul>
+<li><strong>Submit early in the day</strong>; validate every ZIP with the official compiler before upload; keep a minimal validated <strong>fallback bundle</strong> ready.</li>
+<li><strong>Monitor PENDING</strong>; escalate same-day with submission IDs in <strong>747519 / 743683</strong> (known stuck IDs from the capture: 58167555, 58168732, 58169454, 58168380).</li>
+<li><strong>Budget for lost days, not reruns</strong> — rescore paused since Sep 28; 36–52 h stalls; one-pending gate burns daily slots. Never batch final-day submissions.</li>
+<li><strong>Never resubmit an unchanged ZIP</strong> hoping for a scorer-side fix (744354 reasoning-drop; no rescores promised).</li>
+<li><strong>Spend the 1/day cadence on repeated runs of YOUR best config</strong>, not on copying public bundles (noise basis: INTEL implication 16).</li>
+<li><strong>Re-check open rules threads before locking finals:</strong> 757244 (bonus deadline), 757783 (external compute), 757223 (third-party annotation), 756963 (timeout semantics), 756693 (merger score carry), 744354 (reasoning-fix parity), 753973 (parser freeze). Zero staff posts since the Nov 5 cutoff — plan for the environment <strong>as-is</strong> (INTEL headline, §7).</li>
+</ul>
+<h2 id="69-reading-your-scored-results">6.9 Reading your scored results</h2>
+<ul>
+<li><strong>Public score = floor(k/58)</strong> — e.g. 0.17 = 10/58 public tasks resolved. It is a <strong>best-retained, noisy sample</strong> of your agent, not a verdict; the private set (~62 tasks, private repos) decides finals and can behave very differently (documented public→hidden transfer failure: a 50%-public agent timed out on hidden at 15 min/task — INTEL C9).</li>
+<li><strong>Triage a scored run</strong> with the same signatures as local: compile rejection vs timeout vs parser freeze vs empty patches. <strong>Link: 04 §2–§4 (artifact interpretation + failure clustering) and 05 §2–§3 (field-issue coverage + graceful handling).</strong> A "complete, no score" pattern suggests timeout; 0.00 with adapters suggests loading/packaging (INTEL §3 LoRA row).</li>
+<li>Record every scored run (submission ID, message, zip sha256, public score, queue latency) in your ledger — it is your only ground truth for the local↔remote calibration (04 §5.4–5.5).</li>
+</ul>
+<hr />
+<h1 id="part-7-quick-reference">Part 7 — Quick reference</h1><a class="toplink" href="#top">↑ Back to top</a>
+<h2 id="71-version-pin-table-the-frozen-stack-intel-implication-22-03-1">7.1 Version-pin table (the frozen stack; INTEL implication 22; 03 §1)</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Pin</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Inference engine</td>
+<td>vLLM <strong>0.19.1</strong> (pins torch==2.10.0; Ray removed)</td>
+<td>INTEL impl 22; RTX RQ2–RQ3</td>
+</tr>
+<tr>
+<td>PyTorch</td>
+<td><strong>2.10.0+cu128</strong> (or +cu129 if that is what the wheelhouse carries), sm_120 kernels</td>
+<td>RTX RQ2; GS §1</td>
+</tr>
+<tr>
+<td>transformers</td>
+<td><strong>5.5.x</strong></td>
+<td>RTX RQ2/RQ3</td>
+</tr>
+<tr>
+<td>Host Python</td>
+<td><strong>3.12.13</strong></td>
+<td>INTEL impl 22</td>
+</tr>
+<tr>
+<td>swegemma</td>
+<td><strong>0.2.11</strong></td>
+<td>INTEL impl 22</td>
+</tr>
+<tr>
+<td>adk-submission</td>
+<td><strong>0.2.13</strong></td>
+<td>INTEL impl 22</td>
+</tr>
+<tr>
+<td>google-adk</td>
+<td><strong>1.36.1</strong></td>
+<td>INTEL impl 22</td>
+</tr>
+<tr>
+<td>Wheelhouse</td>
+<td>dataset <code>metric/gemma-4-developer-agent-wheelhouse</code> <strong>v31</strong>, dataset-version <strong>19987205</strong>, 41 wheels</td>
+<td>GS §1; INTEL §3</td>
+</tr>
+<tr>
+<td>gemma4 tool parser SHA-256</td>
+<td><code>682b2152b76c031df9c58c3ffbb5b243945be5d8957ebdce00faef1b9de6b889</code></td>
+<td>INTEL §3 (757782)</td>
+</tr>
+<tr>
+<td>Sandbox image</td>
+<td><code>swebench-sandbox:latest</code> = python:3.13-slim + git/patch/protobuf-compiler/pigz + pytest/pytest-timeout==2.1.0 + shims</td>
+<td>HR §4.1; 03 §2.3</td>
+</tr>
+<tr>
+<td>Model (main)</td>
+<td><code>gemma-4-31b-it-qat-w4a16-ct</code> (W4A16 compressed-tensors QAT, ~17 GB)</td>
+<td>HR §3.1; GS §4</td>
+</tr>
+<tr>
+<td>Model (bonus)</td>
+<td><code>gemma-4-e4b-it-qat-w4a16-ct</code> (~4–5 GB)</td>
+<td>INTEL §2a; SRV scope</td>
+</tr>
+<tr>
+<td>Serving (scorer)</td>
+<td>TP4, bf16, util 0.80, max_model_len 32768, gemma4 parsers, thinking ON, LoRA 8/128</td>
+<td>HR §3.1</td>
+</tr>
+<tr>
+<td>Serving (local)</td>
+<td>TP1, bf16, util 0.90, max_model_len 32768 target (KV-probe branches), same parsers/thinking/LoRA</td>
+<td>03 §5.2</td>
+</tr>
+<tr>
+<td>Track A OS/driver</td>
+<td>Zorin 18.1 = Ubuntu 24.04.4 noble, kernel 6.17 HWE; <code>nvidia-driver-580-open</code></td>
+<td>ZOR RQ1/RQ2</td>
+</tr>
+<tr>
+<td>Track B OS/driver</td>
+<td>Ubuntu 24.04 on WSL <strong>&gt;= 2.7.0</strong>; Windows GeForce <strong>R580+</strong> only</td>
+<td>RTX RQ3/RQ4</td>
+</tr>
+<tr>
+<td>Docker</td>
+<td>Track A: Engine + NCT (rootful); Track B: Desktop <strong>&gt;= 4.31.1</strong> or Engine + NCT no-cgroups</td>
+<td>ZOR RQ3/RQ4; RTX RQ4</td>
+</tr>
+<tr>
+<td>Budgets</td>
+<td>31B: 180 s / 50 calls / 4.5 min / 50 turns · E4B: 150 s / 40 / 4.0 min / 40 turns</td>
+<td>BCF eval_config.yaml; HR §7.1</td>
+</tr>
+<tr>
+<td>Compaction</td>
+<td>interval 5 (HR) vs 15 (GS notebook) — scorer value UNVERIFIED; threshold 14,336 / overlap 2 / retention 5</td>
+<td>HR §7.2; GS §5; 03 §6.5</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Never upgrade any of these mid-competition</strong> (03 §9.4). Re-verify the parser SHA after ANY pip operation that touches the venv; always <code>--no-deps</code> for anything added post-freeze.</p>
+<h2 id="72-command-cheat-sheet-one-page">7.2 Command cheat sheet (one page)</h2>
+<pre><code class="language-bash"># --- env (every shell that runs vllm/swegemma) ---
+source ~/bcf/bin/env.sh &amp;&amp; source ~/bcf/venv/bin/activate
+
+# --- pins (record into ~/bcf/results/PINS.txt) ---
+python -c &quot;import vllm, torch, transformers; print(vllm.__version__, torch.__version__, transformers.__version__, torch.cuda.get_device_capability())&quot;
+sha256sum ~/bcf/venv/lib/python3.12/site-packages/vllm/tool_parsers/gemma4_tool_parser.py
+
+# --- serve (31B; E4B swaps the model path/name) ---
+vllm serve ~/bcf/models/gemma-4-31b-it-qat-w4a16-ct --served-model-name gemma-4-31b-it-qat-w4a16-ct \
+  --host 127.0.0.1 --port 8000 --tensor-parallel-size 1 --dtype bfloat16 --max-model-len 32768 \
+  --gpu-memory-utilization 0.90 --enable-auto-tool-choice --tool-call-parser gemma4 --reasoning-parser gemma4 \
+  --default-chat-template-kwargs '{&quot;enable_thinking&quot;: true}' --enable-lora --max-loras 8 --max-lora-rank 128
+curl -s http://127.0.0.1:8000/v1/models        # alias check; read &quot;GPU KV cache size: N tokens&quot; in the log
+
+# --- sandbox image (one-time) ---
+cd ~/bcf/sandbox-build &amp;&amp; docker build -f Dockerfile.sandbox -t swebench-sandbox:latest .
+docker run --rm swebench-sandbox:latest bash -lc 'python3 -V; python3 -c &quot;import imp,telnetlib,pytest&quot;; pwd'
+
+# --- evals ---
+swegemma eval --tasks ~/bcf/data/tasks.jsonl --snapshots-dir ~/bcf/data/snapshots \
+  --submission-dir ~/bcf/submissions/bcf-31b --results-dir ~/bcf/results/smoke_01 \
+  --sandbox docker --task-id rich_3454 --max-tool-calls 50 --max-time-minutes 4.5 --concurrency 1
+swegemma eval ... --task-ids rich_3454 fastapi_14361 requests_7502      # subset
+swegemma eval ... --shard-index 0 --num-shards 2                       # shard
+swegemma eval ... --skip-agent-patch                                   # empty baseline
+python ~/bcf/bin/run_eval.py ~/bcf/submissions/bcf-31b ~/bcf/results/driver_01 rich_3454   # Python driver
+
+# --- validate + package + submit ---
+python -I scratch/bcf-2026-11-11/validate_submission.py &lt;submission_dir&gt;
+cd ~/bcf/submissions/bcf-31b &amp;&amp; zip -r ../bcf-31b-v1.zip .
+kaggle competitions submit -c gemma-4-developer-agent -f ~/bcf/submissions/bcf-31b-v1.zip -m &quot;BCF 31B v1&quot;
+
+# --- Track B extras (PowerShell Admin) ---
+# wsl --update ; wsl --version (&gt;= 2.7.0) ; wsl --shutdown
+# /usr/lib/wsl/lib/nvidia-smi  (inside WSL)
+</code></pre>
+<h2 id="73-track-decision-tree-03-91-letters-swapped-to-this-guide">7.3 Track decision tree (03 §9.1, letters swapped to this guide)</h2>
+<pre><code class="language-text">START (greenfield G914)
+│
+├─ Want the fastest start and already comfortable with WSL2? ──yes──► TRACK B (Part 3, ~0.5–1.5 h plumbing)
+│        │                                                              │
+│        no                                                             ▼
+│        │                                              Part 4 §4.1–4.7, then §3.8 VRAM probe
+│        │                                                │
+│        │                                    ┌───────────┼──────────────────────┐
+│        │                                  PASS        MARGINAL               FAIL (&gt;6 GiB / alloc fails)
+│        │                                    │           │                      │
+│        │                                    ▼           ▼                      ▼
+│        │                         §3.9 graph-capture   Track B for iteration   TRACK A (Part 2)
+│        │                           check              only; Track A for       — no probe gate,
+│        │                           │                  final validation        full 32 GB budget
+│        │                     ┌─────┴─────┐
+│        │                   graphs OK   cudaErrorUnknown / ZMQ hang
+│        │                     │           │
+│        │                     │      wsl --update &gt;=2.7.0 → retry → still bad? ──► TRACK A
+│        │                     ▼           (enforce-eager = temporary degraded mode, D4)
+│        │                  TRACK B viable
+│        │
+└────────┴──► TRACK A (Part 2, recommended primary): Zorin 18.1 + 580-open + Engine + NCT
+              Either track: Part 4 shared build → §4.9 KV probe → verification → Part 5 evals → Part 6 submit
+
+FINAL-RUN POLICY: every pre-submission validation run happens on the track that passed ALL
+verification items. If Track B was MARGINAL anywhere, final validation = Track A.
+</code></pre>
+<h2 id="74-glossary">7.4 Glossary</h2>
+<ul>
+<li><strong>Canary</strong> — a small, cheap probe that validates one load-bearing assumption before you spend a scarce submission slot or GPU hours (05 §6.0). C0–C7 ladder in Part 5 §5.1.</li>
+<li><strong>QAT</strong> — Quantization-Aware Training; the official <code>-qat-w4a16-ct</code> checkpoints are trained to tolerate 4-bit weights, serialized in compressed-tensors format (SRV Q2).</li>
+<li><strong>W4A16</strong> — 4-bit weights, 16-bit activations; served via Marlin weight-only kernels on CC &gt; 8.0 (both L4 sm_89 and 5090 sm_120 qualify) (SRV Q2).</li>
+<li><strong>TP (tensor parallel)</strong> — splitting weights/KV across GPUs. Scorer TP4 (4x L4); local TP1 (one 5090). TP size changes all-reduce reduction order → token-level outputs differ even at temp 0; compare task metrics, not tokens (SRV Q8; 03 §5.6).</li>
+<li><strong>KV (cache)</strong> — per-token key/value memory. Gemma-4's heterogeneous sliding/global layers make 32k context fit uncertain on one 32 GB card; the startup log's <code>GPU KV cache size: N tokens</code> decides (Part 4 §4.9).</li>
+<li><strong>F2P / P2P</strong> — FAIL_TO_PASS / PASS_TO_PASS test lists: tests that must flip from failing to passing, and tests that must keep passing, for a task to count as resolved (HR §8.2; DATA pipeline).</li>
+<li><strong>masked-68</strong> — the discrimination-valid public subset: gold patch passes AND empty patch fails; best local estimate 68/129 (756400). Never A/B on the raw 129; freeze your own audited mask (INTEL implication 15; 04 §1.4).</li>
+<li><strong>sm_120</strong> — RTX 5090 compute capability 12.0 (consumer Blackwell); needs CUDA &gt;= 12.8 / cu128+ wheels and R570+/R580+ drivers; distinct from datacenter sm_100 (RTX RQ1).</li>
+<li><strong>Marlin</strong> — weight-only INT4 GEMM kernels used for W4A16 on sm_120 (SRV Q2).</li>
+<li><strong>MOK</strong> — Machine Owner Key; Secure Boot enrollment for signed kernel modules (ZOR RQ2).</li>
+<li><strong>NCT</strong> — NVIDIA Container Toolkit; wires the NVIDIA runtime into Docker (<code>nvidia-ctk runtime configure</code>) (ZOR RQ4).</li>
+<li><strong>9p / drvfs</strong> — the WSL2 cross-OS file protocol behind <code>/mnt/c</code>; ~1–5 ms per file op → 3–10x slowdown on hot data (RTX RQ4 item 9).</li>
+<li><strong>Compaction / nudge</strong> — ADK context compaction at 14,336 tokens (keeps last 5 events, summarizes the rest, drops tool results); continuation nudges (max 3) when a turn ends without submit_patch (HR §5.3, §7.2; INTEL C12).</li>
+<li><strong>One-pending gate</strong> — Kaggle blocks a new submission while one is still scoring (<code>400 FAILED_PRECONDITION</code>); combined with 1/day and 36–52 h queues, slots are painfully scarce (INTEL S2).</li>
+</ul>
+<h2 id="75-companion-deliverables-cross-referenced-not-duplicated">7.5 Companion deliverables (cross-referenced, not duplicated)</h2>
+<ul>
+<li><a href="../2026-11-11-bcf-hardening-research/03-local-env-parity-plan.md">03 — Local Environment Parity Plan</a> — THE primary source: full pin table, both tracks, probes, divergence register D1–D18, full troubleshooting table, maintenance rules.</li>
+<li><a href="../2026-11-11-bcf-hardening-research/04-local-scoring-and-feedback-guide.md">04 — Local Scoring &amp; Feedback Guide</a> — run modes, artifact-by-artifact interpretation, resolved=False decision tree, failure clustering, local↔Kaggle correlation + calibration, results→action plans.</li>
+<li><a href="../2026-11-11-bcf-hardening-research/05-robustness-audit-vs-field-issues.md">05 — Robustness Audit vs Field Issues</a> — coverage matrix, fixes applied, canary concept + C0–C7 detailed checklist (§6), residual-risk register.</li>
+<li><a href="../2026-11-11-bcf-hardening-research/02-time-bottlenecks-and-tuning.md">02 — Time Bottlenecks and Tuning</a> — runtime context: 9p penalty, warm server, KV ceiling estimates, measurement plan M1–M15.</li>
+<li><a href="../2026-11-11-bcf-gemma4-brain/README.md">BCF brain README</a> — deliverables map, verified metrics, canary gates, packaging.</li>
+<li><a href="../2026-11-11-bcf-gemma4-brain/04-task2-bcf-design-justification.md">BCF design justification</a> — §6 risk register, §7 submission ops plan, evidence appendices.</li>
+<li><a href="../../input/kagglecomp/intel_20261111/00-intel-brief-2026-11-11.md">Intel brief 2026-11-11</a> — deadlines, queue state, bonus terms, harness bug-fix table, open questions.</li>
+<li><a href="../../input/kagglecomp/kagglecomp_data_package/HARNESS_README.md">HARNESS_README</a> — the harness contract (§3 serving, §4 sandbox, §7 budgets, §9 CLI, §10 gotchas).</li>
+<li><a href="../../input/kagglecomp/docs/markdown/Kaggle-03-GettingStarted.md">Getting Started notebook</a> — the organizer flow this guide's Part 4 replicates.</li>
+</ul>
+<hr />
+<p><em>End of guide. Every command and pin above is cited to the local sources in the source key; UNVERIFIED items carry probe steps; nothing in <code>input/</code> or the BCF submission trees was modified. Companion deep content lives in 03/04/05 — this guide is the ordered, copy-pasteable path from bare metal to a scored submission.</em></p>
+<footer>Source markdown: 00-local-harness-setup-guide.md · Companion deliverables: 2026-11-11-bcf-gemma4-brain (shipped brain) and 2026-11-11-bcf-hardening-research (parity plan, scoring guide, robustness audit).</footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,15 @@
+agent_class: LlmAgent
+name: bcf_plan
+description: Mechanical spec producer. Installs the BCF helper and emits its cached spec verbatim. Never analyzes code.
+model: gemma-4-31b-it-qat-w4a16-ct
+instruction: !include ../prompts/bcf_plan.md
+output_key: bcf_spec
+include_contents: none
+disallow_transfer_to_parent: true
+disallow_transfer_to_peers: true
+tools:
+  - run_command
+  - write_file
+skills:
+  - ../skills/bcf-spec
+generate_content_config: !include ../configs/sampling.yaml

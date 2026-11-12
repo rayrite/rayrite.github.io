@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BCF Gemma-4 Deliverables — Brain · Hardening · Harness · Replay</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" integrity="sha384-wFjoQjtV1y5jVHbt0p35Ui8aV8GVpEZkyF99OXWqP/eNJDU93D3Ugxkoyh6Y2I4A" crossorigin="anonymous">
+<link rel="stylesheet" href="../../site-assets/shell.css">
+<style>
+  .shell { display: grid; grid-template-columns: var(--side-w, 250px) minmax(0,1fr) var(--toc-w, 190px); min-height: calc(100vh - 53px); }
+  .side { border-right: 1px solid var(--bd); background: var(--bg2); padding: var(--pad) 8px; overflow-y: auto; max-height: calc(100vh - 53px); position: sticky; top: 53px; }
+  .side h4, .toc h4 { font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--tx2); margin: 6px 6px 8px; }
+  .side .searchpill { width: 100%; margin: 0 0 8px; padding: 6px 10px; }
+  .main { padding: var(--pad) 16px 60px; min-width: 0; }
+  .toc { border-left: 1px solid var(--bd); background: var(--bg2); padding: var(--pad) 8px; overflow-y: auto; max-height: calc(100vh - 53px); position: sticky; top: 53px; }
+  .toc a { display: block; font-size: 0.74rem; color: var(--tx2); padding: 4px 8px; border-radius: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .toc a:hover { background: var(--bg3); color: var(--tx); }
+  .toc a.l3 { padding-left: 20px; }
+
+  .crumb { font-family: var(--font-mono); font-size: 0.7rem; color: var(--tx2); margin-bottom: 10px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .crumb b { color: var(--accent); font-weight: 600; }
+  .crumb a { color: var(--tx2); }
+  .crumb a:hover { color: var(--accent); }
+
+  /* sidebar tree */
+  .grp { margin: 0 0 4px; }
+  .grp > summary { list-style: none; display: flex; align-items: center; gap: 7px; padding: 8px 9px; cursor: pointer; border-radius: calc(var(--radius) * 0.6); font-size: 0.8rem; font-weight: 600; color: var(--tx); min-height: 36px; }
+  .grp > summary::-webkit-details-marker { display: none; }
+  .grp > summary:hover { background: var(--bg3); }
+  .grp > summary .tw, details.dir > summary .tw { flex: none; width: 10px; color: var(--tx2); font-size: 0.62rem; transition: transform .12s; }
+  .grp[open] > summary .tw, details.dir[open] > summary .tw { transform: rotate(90deg); }
+  .grp > summary .cnt { margin-left: auto; flex: none; font: 500 0.64rem var(--font-mono); color: var(--tx2); background: var(--bg3); border-radius: 999px; padding: 1px 8px; }
+  .grp > summary .gdot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex: none; }
+  details.dir { margin-left: 10px; }
+  details.dir > summary { list-style: none; display: flex; align-items: center; gap: 6px; padding: 5px 8px; cursor: pointer; border-radius: calc(var(--radius) * 0.6); font: 500 0.72rem var(--font-mono); color: var(--tx2); }
+  details.dir > summary::-webkit-details-marker { display: none; }
+  details.dir > summary:hover { background: var(--bg3); color: var(--tx); }
+  .tree { margin-left: 10px; border-left: 1px solid var(--bd); padding-left: 4px; }
+  .grp > .tree { margin-left: 14px; }
+  a.file { display: flex; align-items: center; gap: 7px; text-align: left; background: none; border: 0; color: var(--tx2); font: inherit; font-size: 0.76rem; padding: 6px 9px; border-radius: calc(var(--radius) * 0.6); cursor: pointer; min-height: 32px; text-decoration: none; }
+  a.file .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--bd); flex: none; }
+  a.file .nm { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--font-mono); font-size: 0.72rem; }
+  a.file .ht { margin-left: auto; flex: none; font-size: 0.6rem; color: var(--tx2); border: 1px solid var(--bd); border-radius: 4px; padding: 0 4px; }
+  a.file:hover { background: var(--bg3); color: var(--tx); }
+  a.file.on { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+  a.file.on .dot { background: var(--accent); }
+  [hidden] { display: none !important; }
+
+  /* article (markdown) */
+  .article { max-width: none; }
+  .article h1 { font-size: 1.5rem; letter-spacing: -0.01em; margin: 0 0 4px; }
+  .byline { color: var(--tx2); font-size: 0.74rem; font-family: var(--font-mono); margin-bottom: 16px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .article pre { background: var(--bg3); border: 1px solid var(--bd); border-radius: var(--radius); padding: 10px 12px; overflow-x: auto; font-size: 0.8rem; margin: 12px 0; }
+  .article code { font-family: var(--font-mono); font-size: 0.85em; background: var(--bg3); border-radius: 4px; padding: 1px 5px; }
+  .article pre code { background: none; padding: 0; }
+  .article blockquote { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 var(--radius) var(--radius) 0; padding: 8px 12px; margin: 12px 0; }
+  .article table { border-collapse: collapse; width: 100%; font-size: 0.8rem; display: block; overflow-x: auto; margin: 12px 0; }
+  .article th, .article td { border: 1px solid var(--bd); padding: 5px 9px; text-align: left; vertical-align: top; max-width: 80ch; }
+  .article th { background: var(--bg3); }
+  .article img { max-width: 100%; border-radius: var(--radius); }
+  .article h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-bottom: 4px; border-bottom: 1px solid var(--bd); }
+  .article h3 { font-size: 0.98rem; margin: 20px 0 6px; }
+  .iframe-doc { width: 100%; min-height: calc(100vh - 190px); border: 1px solid var(--bd); border-radius: var(--radius); background: #fff; }
+  .state-msg { color: var(--tx2); text-align: center; padding: 60px 20px; font-size: 0.9rem; }
+
+  /* overview */
+  .hero { margin: 6px 0 18px; }
+  .hero h1 { font-size: 1.65rem; letter-spacing: -0.015em; margin: 8px 0 6px; }
+  .hero .lede { color: var(--tx2); font-size: 0.88rem; max-width: 85ch; margin: 0; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 12px; margin-top: 16px; }
+  .gcard { display: flex; flex-direction: column; gap: 8px; background: var(--bg2); border: 1px solid var(--bd); border-radius: var(--radius); padding: var(--cardpad); }
+  .gcard h2 { font-size: 1rem; margin: 0; letter-spacing: -0.01em; }
+  .gcard .folder { font: 500 0.68rem var(--font-mono); color: var(--tx2); }
+  .gcard p { font-size: 0.8rem; color: var(--tx2); margin: 0; line-height: 1.55; }
+  .gcard .meta { font: 500 0.68rem var(--font-mono); color: var(--tx); background: var(--bg3); border-radius: 4px; padding: 3px 8px; align-self: flex-start; }
+  .gcard .row { display: flex; gap: 8px; margin-top: auto; padding-top: 4px; flex-wrap: wrap; }
+  .navbar { display: flex; gap: 8px; align-items: center; justify-content: space-between; margin-top: 28px; border-top: 1px solid var(--bd); padding-top: 12px; }
+  .navbar .pos { font-family: var(--font-mono); font-size: 0.72rem; color: var(--tx2); }
+  .bottombar { display: none; }
+
+  @media (max-width: 1080px) { .toc { display: none; } #tocBtn { display: none; } .shell { grid-template-columns: var(--side-w, 230px) minmax(0,1fr); } }
+  @media (max-width: 900px) {
+    .shell { grid-template-columns: minmax(0,1fr); }
+    .side { display: none; }
+    body.side-open .side { display: block; position: fixed; left: 0; right: auto; top: 53px; bottom: 0; width: min(300px, 84vw); z-index: 70; max-height: none; border-right: 1px solid var(--bd); box-shadow: 0 0 40px rgba(0,0,0,.4); }
+    .bottombar { display: flex; gap: 8px; position: fixed; left: 0; right: 0; bottom: 0; z-index: 60; padding: 8px 10px; background: color-mix(in srgb, var(--bg2) 92%, transparent); backdrop-filter: blur(8px); border-top: 1px solid var(--bd); }
+    .bottombar .btn { flex: 1; }
+    .main { padding-bottom: 90px; }
+  }
+  @media (min-width: 901px) { #menuBtn { display: none; } }
+</style>
+</head>
+<body>
+<header class="hdr">
+  <button class="icon-btn" id="menuBtn" title="Files" aria-label="Toggle file list">☰</button>
+  <a class="mark" href="../../index.html" title="Back to portal">r</a>
+  <a class="wordmark" href="../../index.html" style="color:inherit">kaggle3<small>BCF Gemma-4 deliverables · 2026-11-11</small></a>
+  <button class="icon-btn" id="tocBtn" title="Contents" aria-label="Toggle table of contents" hidden>≡</button>
+  <button class="icon-btn" id="themeBtn" title="Toggle theme" aria-label="Toggle theme">◐</button>
+</header>
+
+<div class="shell">
+  <aside class="side" id="side">
+    <label class="searchpill">
+      <span aria-hidden="true">⌕</span>
+      <input id="fq" type="search" placeholder="Filter documents…" aria-label="Filter documents">
+    </label>
+    <h4 id="fileCount"></h4>
+    <div id="tree"></div>
+  </aside>
+  <main class="main" id="main">
+    <div class="crumb" id="crumb"></div>
+    <div class="article" id="article"><div class="state-msg">Loading…</div></div>
+    <div class="navbar" id="navbar" hidden>
+      <button class="btn" id="prevBtn">← Prev</button>
+      <span class="pos" id="pos"></span>
+      <button class="btn" id="nextBtn">Next →</button>
+    </div>
+  </main>
+  <nav class="toc" id="toc" aria-label="On this page" hidden><h4>On this page</h4><div id="tocList"></div></nav>
+</div>
+
+<nav class="bottombar" id="bottombar" hidden>
+  <button class="btn" id="mPrev">←</button>
+  <button class="btn" id="mNext">→</button>
+</nav>
+
+<script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js" integrity="sha384-zbcZAIxlvJtNE3Dp5nxLXdXtXyxwOdnILY1TDPVmKFhl4r4nSUG1r8bcFXGVa4Te" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js" integrity="sha384-cwS6YdhLI7XS60eoDiC+egV0qHp8zI+Cms46R0nbn8JrmoAzV9uFL60etMZhAnSu" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha384-06z5D//U/xpvxZHuUz92xBvq3DqBBFi7Up53HRrbV7Jlv7Yvh/MZ7oenfUe9iCEt" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js" integrity="sha384-Uq05+JLko69eOiPr39ta9bh7kld5PKZoU+fF7g0EXTAriEollhZ+DrN8Q/Oi8J2Q" crossorigin="anonymous"></script>
+<script>
+"use strict";
+/* ---------------- embedded manifest (generated 2026-11-11; paths relative to this folder) ---------------- */
+const DOCS = [
+ {
+  "p": "2026-11-11-bcf-gemma4-brain/01-task1-dataset-classification-rootcause.md",
+  "t": "BCF Task 1 — Gemma 4 Developer Agent Competition: Dataset Classification & Root-Cause Analysis"
+ },
+ {
+  "p": "2026-11-11-bcf-gemma4-brain/02-bcf-brain-31b/submission/prompts/bcf_plan.md",
+  "t": "BCF planning stage"
+ },
+ {
+  "p": "2026-11-11-bcf-gemma4-brain/02-bcf-brain-31b/submission/prompts/solver.md",
+  "t": "BCF solver"
+ },
+ {
+  "p": "2026-11-11-bcf-gemma4-brain/02-bcf-brain-31b/submission/skills/bcf-spec/SKILL.md",
+  "t": "BCF spec helper"
+ },
+ {
+  "p": "2026-11-11-bcf-gemma4-brain/02-bcf-brain-31b-v2/submission/prompts/bcf_plan.md",
+  "t": "BCF planning stage"
+ },
+ {
+  "p": "2026-11-11-bcf-gemma4-brain/02-bcf-brain-31b-v2/submission/prompts/solver.md",
+  "t": "BCF solver"
+ },
+ {
+  "p": "2026-11-11-bcf-gemma4-brain/02-bcf-brain-31b-v2/submission/skills/bcf-spec/SKILL.md",
+  "t": "BCF spec helper"
+ },
+ {
+  "p": "2026-11-11-bcf-gemma4-brain/03-bcf-brain-e4b/submission/prompts/bcf_plan.md",
+  "t": "BCF planning stage"
+ },
+ {
+  "p": "2026-11-11-bcf-gemma4-brain/03-bcf-brain-e4b/submission/prompts/solver.md",
+  "t": "BCF solver"
+ },
+ {
+  "p": "2026-11-11-bcf-gemma4-brain/03-bcf-brain-e4b/submission/skills/bcf-spec/SKILL.md",
+  "t": "BCF spec helper"
+ },
+ {
+  "p": "2026-11-11-bcf-gemma4-brain/03-bcf-brain-e4b-v2/submission/prompts/bcf_plan.md",
+  "t": "BCF planning stage"
+ },
+ {
+  "p": "2026-11-11-bcf-gemma4-brain/03-bcf-brain-e4b-v2/submission/prompts/solver.md",
+  "t": "BCF solver"
+ },
+ {
+  "p": "2026-11-11-bcf-gemma4-brain/03-bcf-brain-e4b-v2/submission/skills/bcf-spec/SKILL.md",
+  "t": "BCF spec helper"
+ },
+ {
+  "p": "2026-11-11-bcf-gemma4-brain/04-task2-bcf-design-justification.md",
+  "t": "BCF Brain — Design Justification: Why This Design Can Top Both the Main Competition and the $10k E4B Bonus"
+ },
+ {
+  "p": "2026-11-11-bcf-gemma4-brain/README.md",
+  "t": "BCF — Batonic Coding Framework · Gemma 4 Developer Agent Competition"
+ },
+ {
+  "p": "2026-11-11-bcf-gemma4-brain/STATUS.md",
+  "t": "BCF Gemma 4 Brain — Live Status Board"
+ },
+ {
+  "p": "2026-11-11-bcf-hardening-research/00-index.md",
+  "t": "BCF Hardening Research — Index & Executive Summary"
+ },
+ {
+  "p": "2026-11-11-bcf-hardening-research/01-python-traps-by-error-family.md",
+  "t": "Python Traps & Gotchas by Root-Cause Family — BCF Definitive Guide"
+ },
+ {
+  "p": "2026-11-11-bcf-hardening-research/02-time-bottlenecks-and-tuning.md",
+  "t": "BCF Hardening — Task 2: Wall-Clock Bottlenecks, Tuning Levers & Fast Iteration"
+ },
+ {
+  "p": "2026-11-11-bcf-hardening-research/03-local-env-parity-plan.md",
+  "t": "03 — Local Environment Parity Plan: PowerSpec G914 (RTX 5090) vs Kaggle 4x L4 Scorer"
+ },
+ {
+  "p": "2026-11-11-bcf-hardening-research/04-local-scoring-and-feedback-guide.md",
+  "t": "04 — Local Scoring & Feedback Guide: Evaluating BCF Runs on the RTX 5090, Reading the Artifacts, and Turning Results into Tuning Plans"
+ },
+ {
+  "p": "2026-11-11-bcf-hardening-research/05-robustness-audit-vs-field-issues.md",
+  "t": "BCF Robustness Audit vs Field-Reported Issues"
+ },
+ {
+  "p": "2026-11-11-bcf-hardening-research/STATUS.md",
+  "t": "BCF Hardening Research — Status Board"
+ },
+ {
+  "p": "2026-11-11-bcf-local-harness-setup-guide/00-local-harness-setup-guide.md",
+  "t": "BCF Local Test-Harness Setup Guide — Greenfield PowerSpec G914 (RTX 5090) to First Kaggle Submission"
+ },
+ {
+  "p": "2026-11-11-bcf-local-harness-setup-guide/index.html",
+  "t": "BCF Local Harness Setup Guide — PowerSpec G914 (RTX 5090)"
+ },
+ {
+  "p": "2026-11-11-bcf-local-harness-setup-guide/STATUS.md",
+  "t": "BCF Local Harness Setup Guide — Status"
+ },
+ {
+  "p": "2026-11-11-bcf-replay-comparison/00-index.md",
+  "t": "BCF Replay Comparison — Index"
+ },
+ {
+  "p": "2026-11-11-bcf-replay-comparison/01-review-of-v6-research.md",
+  "t": "Review of the v6 Research Package (BCF v5 Critique → BCF v3 Design + 3 Replay Decks)"
+ },
+ {
+  "p": "2026-11-11-bcf-replay-comparison/02-replay-httpx-3672.slides.html",
+  "t": "httpx_3672: naive vs v6 BCF-v3 vs CURRENT shipped brain, replayed · 2026-11-11"
+ },
+ {
+  "p": "2026-11-11-bcf-replay-comparison/03-replay-fastapi-14463.slides.html",
+  "t": "fastapi_14463: naive vs BCF v3 (v6-2) vs CURRENT brain — executed-backbone replay"
+ },
+ {
+  "p": "2026-11-11-bcf-replay-comparison/04-replay-fastapi-14482.slides.html",
+  "t": "fastapi_14482: error masking, three tracks — naive vs v6 BCF v3 vs current shipped BCF"
+ },
+ {
+  "p": "2026-11-11-bcf-replay-comparison/05-gap-analysis.md",
+  "t": "BCF Gap Analysis — v6 \"BCF v3\" vs the Current Shipped Brain"
+ },
+ {
+  "p": "2026-11-11-bcf-replay-comparison/STATUS.md",
+  "t": "BCF Replay Comparison — Status Board"
+ }
+];
+
+const GROUPS = [
+  { f: "2026-11-11-bcf-gemma4-brain", name: "BCF Brain — Gemma 4 Competition Submission",
+    blurb: "Competition deliverable for the Gemma 4 Developer Agent Competition: Task 1 dataset-classification root-cause analysis, Task 2 design justification, and four ready-to-submit BCF Brain agent packages (31B &amp; E4B × v1/v2) with prompts, sampling configs, sub-agents, and the bcf-spec skill.",
+    counts: "16 md · 4 agent packages (20 yaml + 8 py)", home: "README.md", homeLabel: "README" },
+  { f: "2026-11-11-bcf-hardening-research", name: "BCF Hardening Research",
+    blurb: "Hardening research in five parts plus an executive-summary index: Python traps by error family, wall-clock bottlenecks and tuning levers, local environment parity plan (PowerSpec G914 / RTX 5090 vs Kaggle 4×L4), local scoring and feedback guide, and a robustness audit against field-reported issues.",
+    counts: "7 md", home: "00-index.md", homeLabel: "00-index" },
+  { f: "2026-11-11-bcf-local-harness-setup-guide", name: "Local Harness Setup Guide",
+    blurb: "Greenfield setup guide from a PowerSpec G914 (RTX 5090) to a working local BCF test harness — step-by-step markdown guide plus a formatted HTML edition of the same guide.",
+    counts: "2 md · 1 html edition", home: "00-local-harness-setup-guide.md", homeLabel: "Setup guide" },
+  { f: "2026-11-11-bcf-replay-comparison", name: "Replay Comparison — naive vs v6 vs shipped brain",
+    blurb: "Executed-backbone replays of three failed SWE tasks (httpx_3672, fastapi_14463, fastapi_14482) comparing the naive agent, the v6 “BCF v3” design, and the current shipped brain — with a review of the v6 research package, three HTML slide decks, and a gap analysis.",
+    counts: "4 md · 3 html slide decks", home: "00-index.md", homeLabel: "00-index" }
+];
+
+/* ---------------- helpers ---------------- */
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const ncmp = (a, b) => a.localeCompare(b, undefined, { numeric: true });
+const BY_PATH = new Map(DOCS.map(d => [d.p, d]));
+DOCS.sort((a, b) => ncmp(a.p, b.p));
+const cache = new Map();
+
+/* ---------------- theme ---------------- */
+(function () {
+  const saved = localStorage.getItem("rr-kaggle3-theme");
+  if (saved) document.documentElement.dataset.theme = saved;
+  $("themeBtn").onclick = () => {
+    const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+    document.documentElement.dataset.theme = next;
+    localStorage.setItem("rr-kaggle3-theme", next);
+  };
+})();
+
+/* ---------------- sidebar tree ---------------- */
+function dirNode() { return { dirs: new Map(), files: [] }; }
+function buildTree(entries) {
+  const root = dirNode();
+  for (const d of entries) {
+    const segs = d.rel.split("/");
+    let node = root;
+    for (let i = 0; i < segs.length - 1; i++) {
+      if (!node.dirs.has(segs[i])) node.dirs.set(segs[i], dirNode());
+      node = node.dirs.get(segs[i]);
+    }
+    node.files.push({ name: segs[segs.length - 1], p: d.p, t: d.t });
+  }
+  return root;
+}
+function renderDir(node, forceOpen) {
+  /* compact single-child folder chains: a/b/c → "a/b/c" */
+  let h = "";
+  const dirs = [...node.dirs.entries()].sort((a, b) => ncmp(a[0], b[0]));
+  for (let [name, child] of dirs) {
+    while (child.files.length === 0 && child.dirs.size === 1) {
+      const [k, v] = [...child.dirs.entries()][0];
+      name = name + "/" + k; child = v;
+    }
+    h += `<details class="dir"${forceOpen ? " open" : ""}><summary><span class="tw">▶</span><span class="nm">${esc(name)}</span></summary><div class="tree">${renderDir(child, forceOpen)}</div></details>`;
+  }
+  const files = [...node.files].sort((a, b) => ncmp(a.name, b.name));
+  for (const f of files) {
+    const isHtml = /\.html?$/i.test(f.name);
+    h += `<a class="file" href="#/${encodeURI(f.p)}" data-p="${esc(f.p)}" title="${esc(f.t || f.name)}"><span class="dot"></span><span class="nm">${esc(f.name.replace(/\.(md|html?)$/i, ""))}</span>${isHtml ? '<span class="ht">html</span>' : ""}</a>`;
+  }
+  return h;
+}
+function renderTree(forceOpen) {
+  let h = "";
+  for (const g of GROUPS) {
+    const entries = DOCS.filter(d => d.p.startsWith(g.f + "/")).map(d => ({ ...d, rel: d.p.slice(g.f.length + 1) }));
+    const nMd = entries.filter(d => /\.md$/i.test(d.p)).length;
+    const nHtml = entries.length - nMd;
+    h += `<details class="grp" open data-grp="${esc(g.f)}"><summary><span class="tw">▶</span><span class="gdot"></span><span>${esc(g.name.split(" — ")[0])}</span><span class="cnt">${nMd + nHtml}</span></summary><div class="tree">${renderDir(buildTree(entries), forceOpen)}</div></details>`;
+  }
+  $("tree").innerHTML = h;
+  const md = DOCS.filter(d => /\.md$/i.test(d.p)).length;
+  $("fileCount").textContent = `${DOCS.length} documents · ${md} md · ${DOCS.length - md} html`;
+  markCurrent();
+}
+function markCurrent() {
+  document.querySelectorAll("#tree a.file").forEach(a => a.classList.toggle("on", a.dataset.p === current));
+}
+
+/* ---------------- filter ---------------- */
+$("fq").addEventListener("input", () => {
+  const q = $("fq").value.trim().toLowerCase();
+  document.querySelectorAll("#tree a.file").forEach(a => {
+    const hit = !q || a.dataset.p.toLowerCase().includes(q) || (a.title || "").toLowerCase().includes(q);
+    a.hidden = !hit;
+  });
+  [...document.querySelectorAll("#tree details")].reverse().forEach(dt => {
+    if (q) {
+      dt.dataset.wasOpen = dt.open ? "1" : "0";
+      const hasHit = [...dt.querySelectorAll("a.file")].some(a => !a.hidden);
+      dt.hidden = dt.classList.contains("dir") ? !hasHit && !dt.querySelector("details:not([hidden])") : !hasHit;
+      if (hasHit) dt.open = true;
+    } else {
+      dt.hidden = false;
+      if (dt.dataset.wasOpen !== undefined) dt.open = dt.dataset.wasOpen === "1";
+    }
+  });
+});
+
+/* ---------------- routing & rendering ---------------- */
+let current = null;
+function route() {
+  const h = decodeURI(location.hash.replace(/^#\/?/, ""));
+  if (h && BY_PATH.has(h)) loadDoc(h); else showOverview();
+}
+window.addEventListener("hashchange", route);
+
+function setNav() {
+  const idx = DOCS.findIndex(d => d.p === current);
+  const has = idx >= 0;
+  $("navbar").hidden = !has; $("bottombar").hidden = !has; $("tocBtn").hidden = !has;
+  if (!has) return;
+  $("pos").textContent = `${idx + 1} / ${DOCS.length}`;
+  $("prevBtn").disabled = $("mPrev").disabled = idx <= 0;
+  $("nextBtn").disabled = $("mNext").disabled = idx >= DOCS.length - 1;
+  $("prevBtn").onclick = $("mPrev").onclick = () => { if (idx > 0) go(DOCS[idx - 1].p); };
+  $("nextBtn").onclick = $("mNext").onclick = () => { if (idx < DOCS.length - 1) go(DOCS[idx + 1].p); };
+}
+function go(p) { location.hash = "#/" + encodeURI(p); }
+
+function crumbFor(p) {
+  const g = GROUPS.find(g => p.startsWith(g.f + "/"));
+  return `<a href="#/">kaggle3</a> <span>/</span> <span>${esc(g ? g.f : "cvx")}</span> <span>/</span> <b>${esc(p.slice((g ? g.f + "/" : "").length))}</b> <a class="btn" style="margin-left:8px;padding:2px 8px;font-size:.68rem" href="${encodeURI(p)}" target="_blank" rel="noopener">open raw ⧉</a>`;
+}
+
+async function loadDoc(p) {
+  current = p; markCurrent(); setNav();
+  const d = BY_PATH.get(p);
+  $("crumb").innerHTML = crumbFor(p);
+  document.title = `${d.t || p} — kaggle3`;
+  const isHtml = /\.html?$/i.test(p);
+  window.scrollTo({ top: 0 });
+  if (isHtml) {
+    $("toc").hidden = true;
+    $("article").innerHTML =
+      `<h1>${esc(d.t || p)}</h1>
+       <div class="byline"><span class="badge">HTML document</span><a href="${encodeURI(p)}" target="_blank" rel="noopener">open in new tab ⧉</a></div>
+       <iframe class="iframe-doc" sandbox="allow-same-origin allow-scripts" src="${encodeURI(p)}" title="${esc(d.t || p)}"></iframe>`;
+    return;
+  }
+  let text = cache.get(p);
+  if (text === undefined) {
+    try {
+      const r = await fetch(encodeURI(p), { cache: "no-store" });
+      if (!r.ok) throw new Error(r.status);
+      text = await r.text();
+      cache.set(p, text);
+    } catch (e) {
+      $("article").innerHTML = `<div class="state-msg"><p>Failed to load <code class="mono">${esc(p)}</code> (${esc(e.message)}).</p><p style="margin-top:10px"><button class="btn primary" onclick="location.reload()">Retry</button></p></div>`;
+      return;
+    }
+  }
+  const words = (text.match(/\S+/g) || []).length;
+  marked.setOptions({ breaks: true, gfm: true });
+  const body = DOMPurify.sanitize(marked.parse(text), { ADD_TAGS: ["details", "summary"], ADD_ATTR: ["id", "class", "align", "target"] });
+  $("article").innerHTML =
+    `<h1>${esc(d.t || p.replace(/\.md$/i, ""))}</h1>
+     <div class="byline"><span>${words.toLocaleString()} words · ~${Math.max(1, Math.round(words / 220))} min read</span><span class="mono">${esc(p)}</span></div>
+     ${body}`;
+  buildToc();
+  if (window.Prism) Prism.highlightAllUnder($("article"));
+}
+
+function buildToc() {
+  const heads = [...$("article").querySelectorAll("h2, h3")];
+  $("toc").hidden = heads.length === 0;
+  $("tocList").innerHTML = heads.map((h, i) => {
+    if (!h.id) h.id = "h-" + i;
+    return `<a class="${h.tagName === "H3" ? "l3" : ""}" href="#/${encodeURI(current)}" data-scroll="${h.id}" title="${esc(h.textContent)}">${esc(h.textContent)}</a>`;
+  }).join("");
+  $("tocList").querySelectorAll("a").forEach(a => a.onclick = e => {
+    e.preventDefault();
+    document.getElementById(a.dataset.scroll)?.scrollIntoView({ behavior: "smooth" });
+  });
+}
+
+/* ---------------- overview ---------------- */
+function showOverview() {
+  current = null; markCurrent(); setNav();
+  $("toc").hidden = true;
+  $("crumb").innerHTML = `<b>kaggle3</b> <span>/</span> <span>cvx</span>`;
+  document.title = "BCF Gemma-4 Deliverables — Brain · Hardening · Harness · Replay";
+  const md = DOCS.filter(d => /\.md$/i.test(d.p)).length;
+  const cards = GROUPS.map(g => {
+    const n = DOCS.filter(d => d.p.startsWith(g.f + "/")).length;
+    const home = g.f + "/" + g.home;
+    return `<div class="gcard">
+      <h2>${esc(g.name)}</h2>
+      <div class="folder">cvx/kaggle3/${esc(g.f)}/ · ${n} docs</div>
+      <p>${g.blurb}</p>
+      <span class="meta">${esc(g.counts)}</span>
+      <div class="row"><a class="btn primary" href="#/${encodeURI(home)}">Open ${esc(g.homeLabel)} →</a><a class="btn" href="#/" data-focus="${esc(g.f)}">Browse folder</a></div>
+    </div>`;
+  }).join("");
+  $("article").innerHTML =
+    `<div class="hero">
+       <span class="badge">deliverable drop · 2026-11-11</span>
+       <h1>BCF × Gemma 4 Developer Agent Competition</h1>
+       <p class="lede">Four deliverables from the Batonic Coding Framework (BCF) competition work: the submission-ready Brain agent packages, hardening research, the local test-harness setup guide, and executed-backbone replay comparisons. ${DOCS.length} documents (${md} markdown + ${DOCS.length - md} HTML) across 61 hosted files — every document opens in-page from the sidebar tree.</p>
+     </div>
+     <div class="cards">${cards}</div>`;
+  $("article").querySelectorAll("[data-focus]").forEach(b => b.onclick = e => {
+    e.preventDefault();
+    const dt = document.querySelector(`#tree details[data-grp="${CSS.escape(b.dataset.focus)}"]`);
+    if (dt) { dt.open = true; dt.scrollIntoView({ block: "center" }); }
+    document.body.classList.remove("side-open");
+  });
+  window.scrollTo({ top: 0 });
+}
+
+/* ---------------- mobile drawers ---------------- */
+$("menuBtn").onclick = () => document.body.classList.toggle("side-open");
+document.querySelectorAll("#tree").forEach(t => t.addEventListener("click", e => {
+  if (e.target.closest("a.file")) document.body.classList.remove("side-open");
+}));
+$("tocBtn").onclick = () => { $("toc").hidden = false; $("toc").scrollIntoView(); };
+
+/* ---------------- init ---------------- */
+renderTree(false);
+route();
+</script>
+</body>
+</html>

@@ -1,0 +1,625 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>fastapi_14463: naive vs BCF v3 (v6-2) vs CURRENT brain — executed-backbone replay</title><style>:root{
+  --page:#0e1116; --surface:#151a21; --raised:#1b222c; --sunken:#11151c;
+  --hair:rgba(255,255,255,.08); --hair-2:rgba(255,255,255,.14);
+  --ink:#eef1f5; --ink-2:#aab4c0; --ink-3:#7a8694; --deem:#566070;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181;
+  --good:#0ca30c; --warn:#fab219; --crit:#d03b3b;
+  --good-wash:rgba(12,163,12,.12); --warn-wash:rgba(250,178,25,.10); --crit-wash:rgba(208,59,59,.13);
+  --diff-del:rgba(214,79,67,.14); --diff-add:rgba(25,158,112,.15);
+  --sans:system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"Cascadia Code","JetBrains Mono",ui-monospace,"Consolas",monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--page);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.6}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+a{color:#7fb2f0}
+.rail{position:fixed;left:12px;top:50%;transform:translateY(-50%);z-index:40;display:flex;flex-direction:column;gap:6px}
+.rail button{width:11px;height:11px;border-radius:3px;border:1px solid var(--hair-2);background:transparent;padding:0;cursor:pointer;position:relative}
+.rail button[aria-current="true"]{background:var(--s1);border-color:var(--s1)}
+.rail button span{position:absolute;left:20px;top:50%;transform:translateY(-50%);font:500 12px/1 var(--sans);color:var(--ink-2);white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s;background:var(--raised);padding:4px 7px;border-radius:5px;border:1px solid var(--hair)}
+.rail button:hover span,.rail button:focus-visible span{opacity:1}
+@media (max-width:1100px){.rail{display:none}}
+.slide{position:relative;padding:56px clamp(20px,5vw,64px) 64px;border-bottom:1px solid var(--hair)}
+.slide.hero{min-height:100svh;display:flex}
+.slide-inner{max-width:1240px;margin:auto;width:100%;display:flex;flex-direction:column;gap:14px}
+.receipt{position:absolute;left:clamp(20px,5vw,64px);bottom:20px;right:clamp(20px,5vw,64px);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font:400 12px/1.5 var(--mono);color:var(--ink-3)}
+.receipt b{color:var(--ink-2);font-weight:600}
+.kicker{font:600 13.5px/1.4 var(--sans);color:var(--ink-3)}
+.kicker b{color:var(--ink-2)}
+h2{font:650 28px/1.22 var(--sans);letter-spacing:-.01em;margin:0;max-width:44ch}
+h3.gh{font:650 18px/1.3 var(--sans);margin:18px 0 4px;color:var(--ink-2)}
+.sub{color:var(--ink-2);max-width:96ch;margin:0;font-size:15px}
+.sub.big{font-size:17.5px}
+.sub b{color:var(--ink);font-weight:600}
+code{font:500 .88em var(--mono);background:var(--raised);padding:1px 5px;border-radius:4px;color:var(--ink)}
+pre code{background:none;padding:0}
+.hero-id{font:700 clamp(44px,7.5vw,84px)/1.05 var(--mono);letter-spacing:-.02em;margin:6px 0 2px}
+.hero-id .u{color:var(--ink-3)}
+.okc{color:#5ec95e} .noc{color:#ef8a85}
+.chip{display:inline-flex;align-items:center;gap:6px;font:600 12px/1 var(--mono);padding:5px 9px;border-radius:5px;border:1px solid var(--hair-2)}
+.chip.sm{font-size:10.5px;padding:3px 6px}
+.chip .g{font-family:var(--sans)}
+.chips{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.chip.v{background:var(--good-wash);border-color:rgba(12,163,12,.4)} .chip.v .g{color:var(--good)}
+.chip.sim{background:var(--warn-wash);border-color:rgba(250,178,25,.35)} .chip.sim .g{color:var(--warn)}
+.chip.est{background:rgba(255,255,255,.04);border-style:dashed} .chip.est .g{color:var(--ink-2)}
+.chip.r{background:rgba(201,133,0,.10);border-color:rgba(201,133,0,.45)} .chip.r .g{color:#e3a92a}
+.chip.rp{background:rgba(57,135,229,.12);border-color:rgba(57,135,229,.5)} .chip.rp .g{color:#7fb2f0}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1px;background:var(--hair);border:1px solid var(--hair);border-radius:10px;overflow:hidden}
+.stat{background:var(--surface);padding:11px 15px}
+.stat b{display:block;font:650 21px/1.2 var(--sans)}
+.stat span{font:400 12.5px/1.4 var(--sans);color:var(--ink-3)}
+.panel{background:var(--surface);border:1px solid var(--hair);border-radius:10px;padding:13px 16px}
+.panel h4{margin:0 0 8px;font:650 14px/1.4 var(--sans);color:var(--ink-2)}
+.panel h4 .tag,.tag{font:600 11px/1 var(--mono);color:var(--ink-3);border:1px solid var(--hair-2);border-radius:4px;padding:3px 6px;margin-right:7px;vertical-align:1px}
+.panel p{margin:0;color:var(--ink-2);font-size:14px}
+.panel.dec{border-left:3px solid var(--s1)} .panel.gain{border-left:3px solid var(--s3)}
+.panel.diffp{border-left:3px solid var(--s4);background:linear-gradient(90deg,rgba(201,133,0,.07),var(--surface) 40%)}
+.panel.t2p{border-left:3px solid var(--s3)}
+.panel.critp{border-left:3px solid var(--crit);background:linear-gradient(90deg,rgba(208,59,59,.07),var(--surface) 40%)}
+.twocol{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media (max-width:980px){.twocol,.three{grid-template-columns:1fr}}
+.ba-col{display:flex;flex-direction:column;gap:12px}
+ul.plain,ol.plain{margin:0;padding-left:19px;color:var(--ink-2)}
+ul.plain li,ol.plain li{margin:5px 0;font-size:13.5px;line-height:1.55}
+ul.plain b,ol.plain b{color:var(--ink);font-weight:600}
+.tm{border:1px solid rgba(217,81,129,.38);background:rgba(217,81,129,.07);border-radius:10px;padding:12px 16px;font:400 14px/1.65 var(--sans);color:var(--ink-2)}
+.tm .tmh{display:block;font:700 12.5px/1.3 var(--sans);color:#e37ba6;margin-bottom:5px}
+.tm b{color:var(--ink);font-weight:600}
+.warnbox{border:1px solid rgba(250,178,25,.35);background:var(--warn-wash);border-radius:10px;padding:11px 15px;font:500 13.5px/1.55 var(--sans);color:var(--ink-2)}
+.empty{border:1px dashed var(--hair-2);border-radius:10px;padding:16px;color:var(--ink-3);font-size:14px;background:repeating-linear-gradient(45deg,transparent 0 10px,rgba(255,255,255,.015) 10px 20px)}
+.empty b{color:var(--ink-2)}
+pre.cmd{margin:0;background:var(--sunken);border:1px solid var(--hair);border-radius:7px;padding:8px 11px;font:400 12px/1.55 var(--mono);color:var(--ink);white-space:pre-wrap;word-break:break-word}
+pre.cmd .p{color:var(--s1)} pre.cmd .s{color:#e3a92a}
+pre.diff{margin:0;font:400 11.5px/1.55 var(--mono);background:var(--sunken);border:1px solid var(--hair);border-radius:7px;padding:7px 10px;white-space:pre-wrap;word-break:break-word;color:var(--ink-3)}
+pre.diff .del{background:var(--diff-del);color:#e8a09d;display:inline-block;width:100%} pre.diff .add{background:var(--diff-add);color:#8fd8b8;display:inline-block;width:100%}
+pre.diff .ctx{color:var(--ink-3)} pre.diff .meta{color:var(--s1)}
+table.data{border-collapse:collapse;width:100%;font:400 12.5px/1.5 var(--sans)}
+table.data th,table.data td{text-align:left;padding:6px 10px;border-bottom:1px solid var(--hair);color:var(--ink-2);font-weight:400;vertical-align:top}
+table.data th{color:var(--ink-3);font-weight:600;white-space:nowrap;font-family:var(--mono);font-size:11.5px}
+table.data td.k{color:var(--ink);font-weight:600;white-space:nowrap}
+table.data td.note{color:var(--ink-3);font-size:12px}
+table.score td{font-family:var(--mono);font-size:12.5px}
+.traps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:980px){.traps{grid-template-columns:1fr}}
+.trap{background:var(--surface);border:1px solid var(--hair);border-radius:10px;padding:12px 15px;position:relative}
+.trap .tn{font:700 12px/1 var(--mono);color:var(--s2);margin-bottom:5px}
+.trap .tt{font:650 14px/1.35 var(--sans);margin-bottom:5px}
+.trap .td{font-size:13px;color:var(--ink-2);line-height:1.55}
+.trap .chip{position:absolute;top:10px;right:10px}
+.sbs-head{display:grid;grid-template-columns:1fr 1fr;gap:16px;position:sticky;top:0;z-index:5;background:linear-gradient(var(--page) 75%,transparent);padding:8px 0 6px}
+.sbs-head .lane{font:700 13px var(--mono);padding:4px 9px;border-radius:5px}
+.lane.naive{background:rgba(217,89,38,.16);color:#f0a07c;border:1px solid rgba(217,89,38,.45)}
+.lane.bcf{background:rgba(57,135,229,.16);color:#8fbcf2;border:1px solid rgba(57,135,229,.45)}
+.lane.cur{background:rgba(25,158,112,.16);color:#7fd6b0;border:1px solid rgba(25,158,112,.45)}
+.sbs-head .cnt{font:500 12px var(--mono);color:var(--ink-3);margin-left:6px}
+.sbs{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+@media (max-width:980px){.sbs,.sbs-head{grid-template-columns:1fr}}
+.sbs .col{display:flex;flex-direction:column;gap:10px;min-width:0}
+.call{background:var(--surface);border:1px solid var(--hair);border-left:3px solid var(--ink-3);border-radius:9px;padding:10px 12px;display:flex;flex-direction:column;gap:7px;min-width:0;scroll-margin-top:60px}
+.call.ig-high{border-left-color:var(--s3)} .call.ig-some{border-left-color:#4f7a68} .call.ig-none{border-left-color:var(--deem);opacity:.92} .call.ig-neg{border-left-color:var(--crit);background:linear-gradient(90deg,rgba(208,59,59,.08),var(--surface) 35%)}
+.call header{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.call .cid{font:700 13px var(--mono);color:var(--ink)}
+.call .tool{font:600 12px var(--mono);color:var(--ink-2)}
+.pills{display:flex;gap:5px;flex-wrap:wrap;margin-left:auto}
+.pill{font:600 10.5px/1 var(--mono);padding:3px 6px;border-radius:4px;border:1px solid var(--hair-2);color:var(--ink-2);white-space:nowrap}
+.pill.pass{background:var(--good-wash);border-color:rgba(12,163,12,.45);color:#5ec95e}
+.pill.fail{background:var(--crit-wash);border-color:rgba(208,59,59,.4);color:#ef8a85}
+.pill.exec{background:rgba(25,158,112,.14);border-color:rgba(25,158,112,.5);color:#7fd6b0}
+.pill.ig-high{color:#7fd6b0} .pill.ig-none{color:var(--ink-3);border-style:dashed} .pill.ig-neg{color:#ef8a85;border-color:rgba(208,59,59,.5)}
+details.out summary{cursor:pointer;font:500 11.5px var(--mono);color:#7fb2f0}
+details.out pre{margin:6px 0 0;max-height:360px;overflow:auto;background:var(--sunken);border:1px solid var(--hair);border-radius:6px;padding:8px 10px;font:400 11px/1.5 var(--mono);color:var(--ink-2);white-space:pre-wrap;word-break:break-word}
+dl.ann{margin:0;display:grid;grid-template-columns:118px 1fr;gap:4px 10px;font-size:13px;line-height:1.55}
+dl.ann dt{font:650 11.5px/1.5 var(--sans);color:var(--ink-3);text-transform:uppercase;letter-spacing:.03em;padding-top:1px}
+dl.ann dd{margin:0;color:var(--ink-2)} dl.ann dd b{color:var(--ink)}
+@media (max-width:600px){dl.ann{grid-template-columns:1fr}}
+.flow{display:flex;gap:8px;flex-wrap:wrap}
+.flow-step{background:var(--surface);border:1px solid var(--hair);border-radius:8px;padding:8px 12px;display:flex;flex-direction:column;gap:2px;position:relative}
+.flow-step b{font:650 12.5px var(--sans)} .flow-step span{font:500 12px var(--mono);color:var(--ink-3)}
+.flow-step:not(:last-child)::after{content:"→";position:absolute;right:-12px;top:50%;transform:translateY(-50%);color:var(--ink-3)}
+.defs{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:980px){.defs{grid-template-columns:1fr}}
+.def{background:var(--surface);border:1px solid var(--hair);border-radius:10px;padding:11px 14px;margin:0;scroll-margin-top:20px}
+.def dt{font:700 14px/1.4 var(--mono);color:var(--ink)}
+.def dd{margin:5px 0 0;font-size:13px;line-height:1.55;color:var(--ink-2)}
+.def dd .formal{display:block;font-family:var(--mono);font-size:12.2px;color:var(--ink)}
+.def dd .huh{display:block;margin-top:4px;color:var(--ink-3);font-size:12.5px} .def dd .huh b{color:var(--ink-2)}
+ol.srcs{columns:2;column-gap:28px;margin:0;padding-left:0;list-style:none;font-size:12px;color:var(--ink-2)}
+ol.srcs li{break-inside:avoid;margin:0 0 6px}
+@media (max-width:980px){ol.srcs{columns:1}}
+:focus-visible{outline:2px solid var(--s1);outline-offset:2px}
+.sbs,.sbs-head{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+@media (max-width:980px){.sbs,.sbs-head{grid-template-columns:minmax(0,1fr)}}
+dl.ann{grid-template-columns:118px minmax(0,1fr)}
+dl.ann dd,.def dd,table.data td,.panel p,.tm{overflow-wrap:anywhere}
+.fam{display:flex;flex-direction:column;gap:5px;margin:4px 0 0}
+.fam .fr{display:grid;grid-template-columns:210px 1fr 44px;gap:8px;align-items:center;font:500 12px var(--mono);color:var(--ink-2)}
+.fam .fb{height:12px;border-radius:3px;background:var(--raised);overflow:hidden}
+.fam .fb i{display:block;height:100%;background:var(--s1)}
+.fam .fr.zero .fb i{background:var(--crit)}
+.fam .fr.zero{color:#ef8a85}
+.alias{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center}
+@media (max-width:980px){.alias{grid-template-columns:1fr}}
+.alias .box{background:var(--sunken);border:1px solid var(--hair-2);border-radius:8px;padding:9px 12px;font:500 12px/1.6 var(--mono);color:var(--ink-2)}
+.alias .box b{color:var(--ink)}
+.alias .arr{font:700 20px var(--mono);color:var(--s4);text-align:center}
+.alias .shared{border-color:rgba(208,59,59,.5);background:rgba(208,59,59,.07)}
+</style></head><body>
+<nav class="rail" aria-label="Sections"><button data-i="0" aria-current="true"><span>1 · title</span></button><button data-i="1"><span>2 · how to read</span></button><button data-i="2"><span>3 · mechanism</span></button><button data-i="3"><span>4 · d1 but subtle</span></button><button data-i="4"><span>5 · track A naive</span></button><button data-i="5"><span>6 · track B v6-v3</span></button><button data-i="6"><span>7 · track B flags</span></button><button data-i="7"><span>8 · C · plan</span></button><button data-i="8"><span>9 · C · localize</span></button><button data-i="9"><span>10 · C · fix</span></button><button data-i="10"><span>11 · C · verify</span></button><button data-i="11"><span>12 · scorecard</span></button><button data-i="12"><span>13 · divergences</span></button><button data-i="13"><span>14 · teachable</span></button><button data-i="14"><span>15 · verdict</span></button><button data-i="15"><span>16 · sources</span></button></nav><main class="deck" id="deck">
+
+<section class="slide hero" id="s0" data-i="0"><div class="slide-inner">
+<div class="kicker">BCF replay comparison · task 2 of 3 · <b>executed backbone + modeled turns</b> · 2026-11-11</div>
+<h1 class="hero-id">fastapi<span class="u">_</span>14463</h1>
+<p class="sub big">OpenAPI duplication of <code>anyOf</code> refs for app-level responses. Three tracks: <b>A</b> a naive agent [MODELED], <b>B</b> the other agent's "BCF v3" as replayed in their v6-2 deck [MODELED-theirs], <b>C</b> the CURRENT shipped BCF brain — whose deterministic machinery was <b>actually executed</b> against the base-commit sources (10/10 steps rc=0), with the LLM turns around it modeled, not sampled.</p>
+<div class="stats">
+ <div class="stat"><b class="okc">10 / 10 rc=0</b><span>executed bcf.py steps · spec 0.307s cold / 0.216s warm · apply + check PASS</span></div>
+ <div class="stat"><b>+2 / −1</b><span>the whole reference fix: import copy + deepcopy · executed diff-equivalence verified</span></div>
+ <div class="stat"><b>d1 · few-lines</b><span>edit shape is tiny; the mechanism (state-lifecycle aliasing) is not</span></div>
+ <div class="stat"><b>no grader run</b><span>verdicts are predictions from reference-patch equivalence, not test results</span></div>
+</div>
+<div class="chips">
+ <span class="chip v"><span class="g">✓</span> [EXECUTED] real bcf.py runs, quoted verbatim</span>
+ <span class="chip sim"><span class="g">≈</span> [MODELED] LLM turns scripted, not sampled</span>
+ <span class="chip est"><span class="g">±</span> [EST] tokens &amp; clock from intel constants</span>
+ <span class="chip r"><span class="g">§</span> [R] task truth / RCA / intel, re-checkable locally</span>
+</div></div><div class="receipt"><span><b>Built</b> 2026-11-11 · LOCAL ONLY · backbone: scratch/bcf-replay-2026-11-11/exec-fastapi-14463.json</span><span>1</span></div></section>
+
+<section class="slide" id="s1" data-i="1"><div class="slide-inner">
+<div class="kicker">Before the walkthrough: what you are looking at</div><h2>How to read this replay</h2>
+<div class="twocol"><div class="panel"><h4><span class="tag">tiers</span>Evidence classes</h4><ul class="plain">
+<li><b>[EXECUTED]</b> — the shipped <code>bcf.py</code> really ran in a temp git repo seeded with the base-commit sources; stdout/rc/elapsed quoted verbatim. Re-runnable via <code>replay_driver.py</code>.</li>
+<li><b>[MODELED]</b> — which LLM turn comes next, and what it says: scripted from the actual prompts + RCA + reference patch. <b>Not sampled from Gemma.</b></li>
+<li><b>[EST]</b> — token and clock arithmetic from intel constants (31B decode 33–35 tok/s, 1.4s + 28.7ms/output-token fit, ~10.3s median call, ~60s setup/task). Thinking counts as decode.</li>
+<li><b>[R]</b> — read from local task truth (tasks/index/RCA/sources) or the other agent's deck; cited, re-checkable.</li></ul></div>
+<div class="ba-col"><div class="panel"><h4><span class="tag">layout</span>Three tracks, one task</h4><ul class="plain">
+<li><b>Track A</b> (orange, A#): naive agent, shape taken from the v6-2 deck's naive column.</li>
+<li><b>Track B</b> (blue, V#): the other agent's BCF v3 transcript, faithfully summarized, then flagged.</li>
+<li><b>Track C</b> (green, P#/S#): CURRENT brain — <b>P</b>lan stage then <b>S</b>olver stage, turn by turn per the shipped prompts.</li>
+<li>Teachable moments come in <b>pink boxes</b>; executed canaries in the verdict slide.</li></ul></div>
+<div class="tm"><span class="tmh">◆ teachable moment: what "executed backbone" buys</span> A pure simulation can claim anything; a full agent run is expensive and unrepeatable. This deck splits the difference honestly: the <b>deterministic machinery is executed</b> (classification, anchors, apply, strike, check, state — all real outputs), and only the <b>policy around it is modeled</b>. When a claim rests on machinery, it is [EXECUTED]; when it rests on what a 31B model would choose, it is [MODELED] and could come out differently.</div></div></div>
+</div><div class="receipt"><span><b>Conventions</b> A# naive · V# v6-v3 · P#/S# current brain · helper timings are real, turn timings are [EST]</span><span>2</span></div></section>
+
+<section class="slide" id="s2" data-i="2"><div class="slide-inner">
+<div class="kicker">Task deep-dive · the aliasing mechanism [R]</div><h2>One shallow copy, three routes, a growing list</h2>
+<div class="twocol"><div class="panel"><h4><span class="tag">issue</span>The report (10,095 chars; root cause included at char ~2163)</h4>
+<pre class="cmd">app = FastAPI(responses={500: {"model": ModelA | ModelB,
+  "content": {"application/json": {"examples": {"Case A": {"value": "a"}}}}}})
+# 3 routes → /openapi.json anyOf holds 6 refs (A,B,A,B,A,B), not 2</pre>
+<p class="sub">App-level <code>responses</code> are <b>one dict shared by every route</b>. The PR body itself names <code>fastapi/openapi/utils.py</code> L376–L416 and <code>deep_dict_update</code> — localization is essentially free <i>if you read the report</i>. [R tasks/fastapi_14463.json]</p></div>
+<div class="panel"><h4><span class="tag">code</span>The real base source (utils.py, verified lines)</h4>
+<pre class="cmd"><span class="s">376</span>  for (
+<span class="s">377</span>      additional_status_code,
+<span class="s">378</span>      additional_response,
+<span class="s">379</span>  ) in route.responses.items():
+<span class="s">380</span>      process_response = additional_response.copy()   <span class="p"># SHALLOW</span>
+<span class="s">381</span>      process_response.pop("model", None)
+ ...
+<span class="s">401</span>      additional_schema = (
+<span class="s">402</span>          process_response.setdefault("content", {})
+<span class="s">403</span>          .setdefault(media_type, {})
+<span class="s">404</span>          .setdefault("schema", {}))
+<span class="s">406</span>      deep_dict_update(additional_schema, additional_field_schema)
+ ...
+<span class="s">416</span>      deep_dict_update(openapi_response, process_response)</pre></div></div>
+<div class="alias">
+ <div class="box"><b>route1 / route2 / route3</b><br>process_response = additional_response.copy()<br>→ top dict is private…</div>
+ <div class="arr">→ but →</div>
+ <div class="box shared"><b>…["content"] is the SAME object</b><br>id(process_response["content"]) == id(additional_response["content"])<br>setdefault descends INTO the shared dict; deep_dict_update writes the generated schema back into route.responses</div>
+</div>
+<div class="twocol"><div class="panel"><h4><span class="tag">growth</span>Why it accumulates [R PR + RCA]</h4>
+<pre class="cmd">route1: anyOf = [A, B]                 # fresh
+route2: anyOf = [A, B, A, B]           # route1's refs still there
+route3: anyOf = [A, B, A, B, A, B]     # grows linearly with routes
+title:  "Response 500 Route3 Route3 Get"  # LAST route's title leaks into ALL</pre>
+<p class="sub"><code>deep_dict_update</code> extends list values, so each route re-appends its refs into the one shared list. Without a user-supplied <code>content</code> key, <code>setdefault("content", {})</code> creates a fresh dict inside the copy and nothing leaks — the bug needs <b>both</b> a Union model <b>and</b> custom content.</p></div>
+<div class="panel"><h4><span class="tag">acceptance</span>The hidden test [R test_patch, +123 lines]</h4>
+<p class="sub"><code>tests/test_additional_responses_union_duplicate_anyof.py::test_openapi_schema</code> — two routes sharing the app-level 500 response; asserts the <b>full openapi.json equals an exact dict</b>: exactly two <code>$ref</code>s per route, per-route titles (<code>Response 500 Route1 Route1 Get</code> / <code>…Route2…</code>), and the examples block preserved. Exact equality means a "dedupe the output" patch still fails on <b>title</b>.</p></div></div>
+</div><div class="receipt"><span><b>Receipts</b> sources/fastapi_14463/fastapi/openapi/utils.py L376–416 · rca/fastapi_14463.md · index.json (+2/−1, 1 file)</span><span>3</span></div></section>
+
+<section class="slide" id="s3" data-i="3"><div class="slide-inner">
+<div class="kicker">Why a 4-line-shaped fix is difficulty 1 — and still a trap [R]</div><h2>d1 = few lines, not few concepts</h2>
+<div class="twocol"><div class="panel"><h4><span class="tag">rca</span>The classification tension</h4>
+<p class="sub">Index/RCA: <b>difficulty 1/5</b>, edit shape <b>few-lines</b>, patch <b>+2/−1 in 1 file</b>, root-cause family <b>state-lifecycle</b>. The edit is two lines; the <i>mechanism</i> is shared mutable state across a loop — the corpus's most common FastAPI bug shape. A solver that pattern-matches "schema bug → tweak the merge function" lands one layer off: the merge (<code>deep_dict_update</code>) is doing exactly what it should; the <b>copy depth</b> is the defect.</p></div>
+<div class="panel"><h4><span class="tag">identity</span>Equality vs identity, in one line</h4>
+<pre class="cmd">a = {"content": {"x": []}}
+b = a.copy()
+b == a            # True  — equal VALUE
+b["content"] is a["content"]   # True  — same OBJECT (alias!)
+b["content"]["x"].append(1)
+a["content"]["x"]              # [1] — the "private" copy leaked</pre>
+<p class="sub"><code>copy.deepcopy</code> makes the second test False. That single <code>is</code> is the whole bug.</p></div></div>
+<div class="traps">
+<div class="trap"><div class="tn">Trap 1</div><div class="tt">The answer is in the report — buried</div><div class="td">10,095 chars of prose; the root-cause walkthrough starts at char ~2163. Reading reliably is the game. [R]</div><span class="chip r sm">[R]</span></div>
+<div class="trap"><div class="tn">Trap 2</div><div class="tt">Aliasing, not logic</div><div class="td">The symptom (growing anyOf) invites a wrong "dedupe the output" fix that leaves the title leak. [R]</div><span class="chip r sm">[R]</span></div>
+<div class="trap"><div class="tn">Trap 3</div><div class="tt">The missing import</div><div class="td">Base utils.py has no <code>import copy</code> (verified: lines 1–30). <code>deepcopy</code> without it is a runtime <code>NameError</code> — and <code>py_compile</code> will NOT catch it. [R]</div><span class="chip r sm">[R]</span></div>
+<div class="trap"><div class="tn">Trap 4</div><div class="tt">Only reproducible with ≥2 routes</div><div class="td">A one-route repro looks clean; the leak is cross-route. [R]</div><span class="chip r sm">[R]</span></div>
+<div class="trap"><div class="tn">Trap 5</div><div class="tt">The test file is hidden</div><div class="td">Absent from the base repo (added by test_patch). The agent must assemble its own repro; the grader asserts exact JSON. [R]</div><span class="chip r sm">[R]</span></div>
+<div class="trap"><div class="tn">Trap 6</div><div class="tt">Legitimate repeated refs</div><div class="td">Deduplicating anyOf globally could corrupt schemas that legitimately repeat a ref — the RCA explicitly warns against it. [R]</div><span class="chip r sm">[R]</span></div>
+</div>
+</div><div class="receipt"><span><b>Receipts</b> rca/fastapi_14463.json (family state-lifecycle, difficulty 1) · index.json patch_added 2 / patch_removed 1</span><span>4</span></div></section>
+
+<section class="slide" id="s4" data-i="4"><div class="slide-inner">
+<div class="kicker">Track A · naive agent [MODELED — shape from the v6-2 deck]</div><h2>Naive: fix the symptom, pass your own test, fail the grade</h2>
+<div class="sbs-head"><div class="lane naive">Naive · reactive, no written plan<span class="cnt">~18 turns / ~17 charged</span></div><div class="lane" style="visibility:hidden">.</div></div>
+<div class="sbs"><div class="col">
+<div class="call ig-none"><header><span class="cid">A2</span><span class="tool">run_command</span><span class="pills"><span class="pill ig-none">≈ zero gain</span></span></header>
+<pre class="cmd">grep -rn 'anyOf\|additional_response' fastapi/ | head -40</pre>
+<dl class="ann"><dt>bought</dt><dd>dozens of hits across schema code; no single culprit. Same shape as v6-2's N2.</dd></dl></div>
+<div class="call ig-none"><header><span class="cid">A3–A5</span><span class="tool">read_file ×3</span><span class="pills"><span class="pill ig-none">~13.5k tok in</span></span></header>
+<pre class="cmd">read_file("fastapi/openapi/utils.py")          # WHOLE file, 567 lines ≈ 4.5k tok
+read_file("fastapi/utils.py")                  # deep_dict_update lives here
+read_file("fastapi/openapi/utils.py")          # re-read "to be sure"</pre>
+<dl class="ann"><dt>cost</dt><dd>three whole/near-whole reads; the third is byte-identical to the first — <b>zero</b> value of information.</dd></dl></div>
+<div class="call ig-neg"><header><span class="cid">A8</span><span class="tool">thinking</span><span class="pills"><span class="pill ig-neg">mislocalize</span></span></header>
+<pre class="cmd"># hypothesis: "deep_dict_update is duplicating refs — maybe a caching issue"</pre>
+<dl class="ann"><dt>chosen</dt><dd>the merge function (one layer off) and a caching detour; never writes down <i>why</i> the list grows.</dd></dl></div>
+</div><div class="col">
+<div class="call ig-neg"><header><span class="cid">A11</span><span class="tool">edit_file</span><span class="pills"><span class="pill fail">symptom patch</span></span></header>
+<pre class="cmd"># adds a "seen this $ref?" dedupe filter in the assembly path
+# (does NOT touch the shallow .copy() at line 380)</pre>
+<dl class="ann"><dt>meant</dt><dd>stop the anyOf from growing</dd><dt>bought</dt><dd>refs stop growing, but the shared dict still leaks the <b>last route's title</b> into every route.</dd></dl></div>
+<div class="call ig-none"><header><span class="cid">A14</span><span class="tool">run_command</span><span class="pills"><span class="pill pass">own repro PASS</span><span class="pill ig-none">forced green</span></span></header>
+<pre class="cmd">python /tmp/repro.py   # asserts only "2 refs per route"</pre>
+<dl class="ann"><dt>bought</dt><dd>a green that could not have come out differently — it never checks title or examples, so it carries no evidence about the hidden exact-equality test.</dd></dl></div>
+<div class="call ig-neg"><header><span class="cid">A17</span><span class="tool">submit_patch</span><span class="pills"><span class="pill fail">predicted FAIL</span></span></header>
+<pre class="cmd"># hidden test: response.json() == { ... "title": "Response 500 Route1 Route1 Get" ... }</pre>
+<dl class="ann"><dt>predicted</dt><dd><b>resolved = False</b>: anyOf count is right, per-route title is wrong → exact-equality fails. [MODELED prediction from test_patch, no grader run]</dd></dl></div>
+</div></div>
+<div class="twocol"><div class="panel"><h4><span class="tag">accounting</span>[EST] calls · tokens · clock</h4>
+<p class="sub">~18 turns / ~17 charged. Thinking ~8,100 tok (no discipline, 2048 budget) + visible ~2,400 = <b>~10,500 output tok</b>. Model ≈ 18×1.4s + 10,500×0.0287s ≈ <b>327s</b>; tools ~35s → agent ≈ <b>6.0 min</b>; +60s setup ≈ <b>7.0 min</b>. Final context ≈ 21k tok (whole-file reads + accumulated thoughts) → <b>past the ~14.3k local compaction trigger</b>: a reactive policy loses its place mid-run.</p></div>
+<div class="tm"><span class="tmh">◆ teachable moment: root cause vs symptom</span> The growing <code>anyOf</code> is a <b>symptom</b>; the shared <code>content</code> dict is the <b>cause</b>. Dedupe patches this one output; it leaves the title leak and risks corrupting legitimate repeated refs. Because the PR <i>contains</i> the root cause, a lucky naive run that happens to deepcopy also passes — the durable claim is not "naive always fails" but "naive turns a coin-flip into a coin-flip, at 2–3× the cost."</div></div>
+</div><div class="receipt"><span><b>Receipt</b> shape mirrors v6-2 N2/N11/N16 · token/clock math on slide 12 · prediction, not a graded run</span><span>5</span></div></section>
+
+<section class="slide" id="s5" data-i="5"><div class="slide-inner">
+<div class="kicker">Track B · the other agent's BCF v3, as replayed in their v6-2 deck [MODELED-theirs]</div><h2>BCF v3 (v6-2): one pre-flight, one read, two edits</h2>
+<div class="sbs-head"><div class="lane bcf">BCF v3 · their transcript<span class="cnt">~8 turns / ~7 charged (claimed)</span></div><div class="lane" style="visibility:hidden">.</div></div>
+<div class="sbs"><div class="col">
+<div class="call ig-high"><header><span class="cid">V2</span><span class="tool">run_command</span><span class="pills"><span class="pill ig-high">high (claimed)</span></span></header>
+<pre class="cmd">python .git/bcf/bcf.py plan "Fix OpenAPI duplication of anyOf refs…"</pre>
+<details class="out"><summary>their pre-flight JSON (quoted from v6-2)</summary>
+<pre>{"repo":"fastapi/fastapi","route":"bugfix","sub_category":"openapi/schema",
+ "candidate_files":["fastapi/openapi/utils.py"],
+ "rule_note":"Schema-generation bug: suspect shallow copy of response dicts …",
+ "search_terms":["OpenAPI","anyOf","$ref","responses","content","model","Union"]}</pre></details>
+<dl class="ann"><dt>claimed</dt><dd>file + mechanism named before any read, via a <code>rule_note</code>.</dd></dl></div>
+<div class="call ig-high"><header><span class="cid">V3</span><span class="tool">read_file</span><span class="pills"><span class="pill ig-high">high (claimed)</span></span></header>
+<pre class="cmd">read_file("fastapi/openapi/utils.py", 370, 390)</pre>
+<dl class="ann"><dt>claimed</dt><dd>"sees <code>additional_response.copy()</code> and the missing import in one window." (Flagged on slide 7 — the import block is at lines 1–30, not in 370–390.)</dd></dl></div>
+</div><div class="col">
+<div class="call ig-high"><header><span class="cid">V4–V5</span><span class="tool">edit_file ×2</span><span class="pills"><span class="pill pass">PASS (claimed)</span></span></header>
+<pre class="cmd"># +import copy ; then .copy() → copy.deepcopy(...)</pre>
+<dl class="ann"><dt>claimed</dt><dd>root cause, minimal, two lines, no NameError.</dd></dl></div>
+<div class="call ig-high"><header><span class="cid">V6</span><span class="tool">run_command</span><span class="pills"><span class="pill pass">PASS (claimed)</span></span></header>
+<pre class="cmd">cat &gt;/tmp/repro.py &lt;&lt;'EOF' … EOF; python /tmp/repro.py
+# asserts exact JSON incl. examples + per-route title</pre>
+<dl class="ann"><dt>credit</dt><dd>a repro that mirrors the hidden test's <b>exact</b> shape — genuinely good practice, and the right VOI.</dd></dl></div>
+<div class="call ig-high"><header><span class="cid">V7</span><span class="tool">run_command</span><span class="pills"><span class="pill pass">PASS (claimed)</span></span></header>
+<pre class="cmd">git diff --stat &amp;&amp; python -m compileall -q fastapi/openapi/   # one folded gate</pre>
+<dl class="ann"><dt>claimed</dt><dd>only the two intended lines; everything compiles. Then submit (V8).</dd></dl></div>
+</div></div>
+<div class="twocol"><div class="panel"><h4><span class="tag">claims</span>Their headline numbers [R v6-2]</h4>
+<p class="sub">resolved = True; ~8 calls / ~7 charged; observation ~3,500 tok; thinking ~1,200 tok; wall 3–8 min; "the whole 12-hour margin at ~120 tasks." Re-scored with our intel constants: ~2,100 output tok → model ≈ 8×1.4 + 2,100×0.0287 ≈ <b>72s</b> + tools ~12s ≈ <b>1.4 min</b> agent, +60s setup ≈ <b>2.4 min</b>. Their 3–8 min range is conservative against the decode math.</p></div>
+<div class="panel gain"><h4><span class="tag">credit</span>What v3 gets right</h4>
+<p class="sub">Root-cause fix, not symptom; an exact-shape /tmp repro; a folded compile+diff gate; scratch in /tmp only; and the honest admission (their §9 caveat) that the trajectory is <b>scripted [SIM]</b>, not sampled. The mechanism design is sound — the flags on the next slide are about <i>framing and feasibility</i>, not the core idea.</p></div></div>
+</div><div class="receipt"><span><b>Receipt</b> input/kagglecomp/2/2026-11-11-bcf-v6/02-…fastapi-14463….slides.v6-2.html slides 5–7</span><span>6</span></div></section>
+
+<section class="slide" id="s6" data-i="6"><div class="slide-inner">
+<div class="kicker">Track B · where the v6-2 replay overstates [R their deck + design doc, checked against local truth]</div><h2>Seven flags on the v3 transcript</h2>
+<table class="data"><thead><tr><th>#</th><th>v6-2 claim</th><th>finding</th><th>evidence</th></tr></thead><tbody>
+<tr><td class="k">1</td><td>Pre-flight <code>rule_note</code>: "suspect shallow copy of response dicts"</td><td><b>Fitted router.</b> Their own design doc says "a rule router is a guess 128/129 times" and routing must be the model's job. The shipped <code>bcf.py</code> has no <code>plan</code> subcommand; the real <code>spec</code> Fix text is generic ("ref resolution, mode selection, merging, config propagation") — it does <b>not</b> name shallow copy.</td><td class="note">[R design §2.1] · [EXECUTED spec]</td></tr>
+<tr><td class="k">2</td><td>V3 "sees the missing import in one window" (370–390)</td><td><b>Impossible.</b> Imports are at lines 1–30; a 370–390 window cannot show them. Knowing <code>import copy</code> is absent requires reading the top (the current brain does exactly that as a separate small read).</td><td class="note">[R source L1–30]</td></tr>
+<tr><td class="k">3</td><td>"8 KB PR"</td><td><b>10,095 chars</b> (ps_chars). Minor, but the root-cause section sits at char ~2163 — deeper than "8 KB" implies.</td><td class="note">[R index.json]</td></tr>
+<tr><td class="k">4</td><td>thinking_budget 256–512, ~1,200 thinking tok</td><td><b>Unmeasured locally.</b> Intel sweet spot is 2048 (50/129 solved) vs thinking-off (23/129). 256–512 is an A/B-0 assumption, not a measured safe cut.</td><td class="note">[R intel budget-sampling]</td></tr>
+<tr><td class="k">5</td><td>50-call budget pills (4/50 …)</td><td>Their own critique calls 50 "an arbitrary deck choice"; harness default is 100. (The CURRENT brain's eval_config does set 50 — so the pill matches our config, not the harness default.)</td><td class="note">[R design §1.2] · [R eval_config.yaml]</td></tr>
+<tr><td class="k">6</td><td>Naive fails hidden "title + examples"</td><td><b>Sharpen:</b> examples survive a dedupe patch unchanged; the discriminating field is <b>title</b> (last route leaks into all). Examples are not what fails.</td><td class="note">[R test_patch]</td></tr>
+<tr><td class="k">7</td><td>Headline "~7 vs ~17 charged" as the result</td><td><b>Scripted, not sampled</b> (they admit [SIM]). The honest claim is the [EST] token/time direction and "root-cause generalises," not the exact trajectory.</td><td class="note">[R v6-2 §9 caveat]</td></tr>
+</tbody></table>
+<div class="warnbox"><b>Net.</b> v3's <i>mechanisms</i> (pre-flight evidence, exact-shape repro, folded gate, root-cause discipline) are sound and largely adopted by the current brain. The <i>framing</i> — a task-fitted rule_note, an impossible one-window import read, and unmeasured thinking cuts — overstates what was demonstrated. The current brain replaces the fitted router with a real, executed, general classifier + anchors, and pays for it with a more generic Fix note (slide 13).</div>
+</div><div class="receipt"><span><b>Receipts</b> 01-critique-and-bcf-v3-design.md §1–2 · exec-fastapi-14463.json spec stdout · sources L1–30</span><span>7</span></div></section>
+
+<section class="slide" id="s7" data-i="7"><div class="slide-inner">
+<div class="kicker">Track C · CURRENT brain · plan stage (bcf_plan) [EXECUTED machinery + MODELED turns]</div><h2>Plan: a mechanical operator, not a problem-solver</h2>
+<div class="flow">
+<div class="flow-step"><b>P1 · probe</b><span>run_command spec → missing</span></div>
+<div class="flow-step"><b>P2 · install</b><span>run_skill_script (0 args)</span></div>
+<div class="flow-step"><b>P3 · save</b><span>write_file problem.md</span></div>
+<div class="flow-step"><b>P4 · spec</b><span>run_command spec → echo verbatim</span></div>
+</div>
+<p class="sub">The shipped <code>bcf_plan.md</code> forbids exploration/analysis: "a mechanical setup operator, NOT a problem-solver." Tools are only <code>run_command</code> + <code>write_file</code> (+ skill). <code>output_key: bcf_spec</code> pins the spec into the solver instruction (survives compaction). [R prompts/bcf_plan.md, sub_agents/bcf_plan.yaml] · P1–P4 are [MODELED]; the spec they produce is [EXECUTED].</p>
+<div class="twocol"><div class="panel dec"><h4><span class="tag">spec</span>The REAL spec stdout [EXECUTED · cold 0.307s / warm 0.216s]</h4>
+<pre class="cmd"># BCF spec
+kind: bugfix | family: schema-generation-logic (alt: type-introspection) | shape: few-lines | confidence: high
+repo: fastapi | sparse: no
+
+## Target
+1. fastapi/openapi/utils.py — get_openapi_path (line 259)
+
+## Fix
+Fix the construction logic: ref resolution, mode selection, merging, config propagation. …
+
+## Verify
+No matching existing test found. Write a /tmp repro via run_command heredoc; run with timeout 10.
+Repro seed: .git/bcf/repro_seed.py — copy to /tmp, run with timeout 10.</pre>
+<details class="out"><summary>full spec stdout (verbatim, incl. Steps/Rules)</summary>
+<pre># BCF spec
+kind: bugfix | family: schema-generation-logic (alt: type-introspection) | shape: few-lines | confidence: high
+repo: fastapi | sparse: no
+
+## Target
+1. fastapi/openapi/utils.py — get_openapi_path (line 259)
+
+## Anchors
+Fetch fresh verified windows before every edit: python3 .git/bcf/bcf.py anchors PATH
+
+## Fix
+Fix the construction logic: ref resolution, mode selection, merging, config propagation. Check both compat paths (v1/v2) if the repo has them.
+
+## Steps
+1. Read the target range (start_line/end_line).
+2. Run anchors; copy the UNIQUE window verbatim (31B) or use apply with the range (E4B).
+3. Make the minimal mechanism change; keep the happy path byte-identical.
+4. Compile: python3 -m py_compile FILE.
+5. Run the Verify test command.
+6. Run check, review git diff, submit_patch last.
+
+## Verify
+No matching existing test found. Write a /tmp repro via run_command heredoc; run with timeout 10.
+Repro seed: .git/bcf/repro_seed.py — copy to /tmp, run with timeout 10.
+Then: python3 .git/bcf/bcf.py check
+
+## Rules
+Minimal edit. Never touch tests, conftest.py, pytest.ini, pyproject.toml. Scratch in /tmp only.
+Existing tests guard regressions; the statement is the contract. submit_patch last.</pre></details>
+<p class="sub">Target line 259 is the <b>function def</b>; the defect is at 380, surfaced by anchors (next slide). Quotes here normalize the raw capture's <code>U+FFFD</code> replacement chars back to the intended <code>—</code> separator: under <code>python -I</code> on this Windows host the helper's stdout is cp1252, so em-dashes were mangled in the driver's UTF-8 capture (slide 16 canary; raw bytes in the exec JSON).</p></div>
+<div class="ba-col"><div class="panel"><h4><span class="tag">classify</span>What it classified [EXECUTED extras A]</h4>
+<div class="fam">
+<div class="fr"><span>schema-generation-logic</span><span class="fb"><i style="width:100%"></i></span><span>77</span></div>
+<div class="fr"><span>type-introspection (alt)</span><span class="fb"><i style="width:10%"></i></span><span>8</span></div>
+<div class="fr"><span>docs-content-error</span><span class="fb"><i style="width:6%"></i></span><span>5</span></div>
+<div class="fr"><span>compatibility-shim</span><span class="fb"><i style="width:3%"></i></span><span>2</span></div>
+<div class="fr"><span>ordering-off-by-one</span><span class="fb"><i style="width:3%"></i></span><span>2</span></div>
+<div class="fr"><span>api-contract-violation</span><span class="fb"><i style="width:1%"></i></span><span>1</span></div>
+<div class="fr zero"><span>state-lifecycle (TRUE family)</span><span class="fb"><i style="width:0%"></i></span><span>0</span></div>
+</div>
+<p class="sub">kind bugfix (score 14); single candidate <code>fastapi/openapi/utils.py</code> (221.6). The regex classifier scores the PR's <i>vocabulary</i> ("schema/openapi/$ref" everywhere) and never fires the true <b>state-lifecycle</b> family — the PR says "copy()/modified/shared", not the pattern's "cache/alias/mutated/state". Localization is carried by <b>cues + anchors</b>, not the family label. [EXECUTED]</p></div>
+<div class="panel gain"><h4><span class="tag">robust</span>1500-char truncation [EXECUTED extras B]</h4>
+<p class="sub">The plan prompt allows copying only the first ~1,500 chars. The root-cause section (char 2163) and the explicit path mention (char 2298) are then <b>lost</b> — yet the spec is <b>identical</b>: same target, family, confidence; candidate score drops 221.6→78.2 but stays #1. Early symptom cues (anyOf/$ref/Union/content) suffice here. The solver still receives the <b>full</b> statement via <code>{problem_description}</code>.</p></div></div></div>
+<div class="tm"><span class="tmh">◆ teachable moment: deterministic classify ≠ understanding</span> The classifier is a <b>cheap, general, executed</b> guess from surface words — and here it guesses the wrong family (state-lifecycle scores 0) yet still lands the right file, because file ranking uses symptom-term coverage, not the family. That is the design working as intended: the family is a <i>hint</i> ("guidance, not orders"), and the anchors + the solver's code reading are authoritative. A fitted rule_note would "look smarter" on this one task and generalize worse.</div>
+</div><div class="receipt"><span><b>Receipts</b> exec-fastapi-14463.json steps 2–3 · verify-14463-extras.json A/B · prompts/bcf_plan.md</span><span>8</span></div></section>
+
+<section class="slide" id="s8" data-i="8"><div class="slide-inner">
+<div class="kicker">Track C · solver · localization [EXECUTED anchors + MODELED read]</div><h2>Solver: one narrow read beats three whole-file reads</h2>
+<div class="sbs-head"><div class="lane cur">CURRENT solver · S1–S3<span class="cnt">commit gate: "after ONE targeted read … EDIT NOW"</span></div><div class="lane" style="visibility:hidden">.</div></div>
+<div class="sbs"><div class="col">
+<div class="call ig-some"><header><span class="cid">S1</span><span class="tool">get_status</span><span class="pills"><span class="pill">free</span></span></header>
+<pre class="cmd">get_status()   # budget check at start, per solver.md</pre>
+<dl class="ann"><dt>bought</dt><dd>allowance 4.5 min; [MODELED] turn.</dd></dl></div>
+<div class="call ig-high"><header><span class="cid">S2</span><span class="tool">run_command · anchors</span><span class="pills"><span class="pill exec">EXECUTED 0.192s</span><span class="pill ig-high">high</span></span></header>
+<pre class="cmd">python3 .git/bcf/bcf.py anchors fastapi/openapi/utils.py</pre>
+<details class="out"><summary>anchors stdout (verbatim) — 3 unique windows</summary>
+<pre>ANCHORS fastapi/openapi/utils.py (family: schema-generation-logic)
+[1] lines 380-380 status=unique strategy=exact
+old_string (copy verbatim):
+                    process_response = additional_response.copy()
+[2] lines 406-406 status=unique strategy=exact
+old_string (copy verbatim):
+                        deep_dict_update(additional_schema, additional_field_schema)
+[3] lines 416-416 status=unique strategy=exact
+old_string (copy verbatim):
+                    deep_dict_update(openapi_response, process_response)
+End of anchors: re-run anchors before every edit; never reuse a stale window.</pre></details>
+<dl class="ann"><dt>bought</dt><dd>the exact defect line (380) and both mutation sites (406/416), each <b>verified unique</b> — before any edit. [EXECUTED]</dd></dl></div>
+</div><div class="col">
+<div class="call ig-high"><header><span class="cid">S3</span><span class="tool">read_file</span><span class="pills"><span class="pill ig-high">high</span><span class="pill">~450 tok in</span></span></header>
+<pre class="cmd">read_file("fastapi/openapi/utils.py", start_line=370, end_line=420)   # 51 lines ≤ 60 cap</pre>
+<dl class="ann"><dt>bought</dt><dd>the whole mechanism in one window: shallow <code>.copy()</code> (380), the <code>setdefault</code> descent into shared content (401–404), and <code>deep_dict_update</code> (406/416). [MODELED read; contents verified against real source]</dd><dt>mechanism</dt><dd>"Per-route shallow copy shares the app-level content dict, so schema generation mutates shared state and re-appends anyOf refs." → commit gate satisfied: <b>EDIT NOW</b>.</dd></dl></div>
+<div class="call ig-none"><header><span class="cid">S3′</span><span class="tool">run_command · locate (demo)</span><span class="pills"><span class="pill exec">EXECUTED 0.193s</span><span class="pill ig-none">distractor</span></span></header>
+<pre class="cmd">python3 .git/bcf/bcf.py locate anyOf responses copy
+→ fastapi/openapi/utils.py:validation_error_response_definition:56  (score 352)</pre>
+<dl class="ann"><dt>note</dt><dd>the executed <code>locate</code> demo's top hit is <b>not</b> the fix locus. The solver prompt says "candidates are hypotheses; your code reading is authoritative" — S3's read overrules it. Not on the modeled critical path. [EXECUTED]</dd></dl></div>
+</div></div>
+<div class="twocol"><div class="panel"><h4><span class="tag">circuit-breaker</span>strike machinery [EXECUTED demo]</h4>
+<pre class="cmd">python3 .git/bcf/bcf.py strike fastapi/openapi/utils.py:1
+→ STRUCK …:1. Future anchors exclude it. … Never retry the identical failed edit.
+# post-strike anchors: same 3 windows + "Struck loci excluded: 1"</pre>
+<p class="sub">Demonstrated in the backbone (steps 6–7) but <b>not needed</b> on this happy path — no edit fails. It exists for the two-identical-failures case. [EXECUTED]</p></div>
+<div class="tm"><span class="tmh">◆ teachable moment: value of information</span> S3's 51-line read (~450 tok) collapses "where is the bug?" from many files to one line and <i>changes the next action</i> (edit). Naive's third whole-file re-read (~4.5k tok) is byte-identical to its first — a result you can predict cannot surprise you, so its VOI is <b>zero</b>. One narrow, anchor-guided read dominates three broad reads on both cost and information.</div></div>
+</div><div class="receipt"><span><b>Receipts</b> exec steps 4–7 · solver.md edit loop + commit gate · sources L370–420</span><span>9</span></div></section>
+
+<section class="slide" id="s9" data-i="9"><div class="slide-inner">
+<div class="kicker">Track C · solver · the minimal copy-depth fix [EXECUTED apply + MODELED edits]</div><h2>Two edits: deepcopy the config, add the import</h2>
+<div class="sbs"><div class="col">
+<div class="call ig-high"><header><span class="cid">S4</span><span class="tool">edit_file (primary)</span><span class="pills"><span class="pill ig-high">root cause</span></span></header>
+<pre class="cmd">old_string (verbatim anchor [1]):
+                    process_response = additional_response.copy()
+new_string:
+                    process_response = copy.deepcopy(additional_response)</pre>
+<dl class="ann"><dt>why</dt><dd>each route gets a fully private tree; the shared content dict is never mutated. Happy path byte-identical. [MODELED edit; anchor is EXECUTED-unique]</dd></dl></div>
+<div class="call ig-high"><header><span class="cid">S4′</span><span class="tool">apply (fallback path)</span><span class="pills"><span class="pill exec">EXECUTED 0.187s · rc=0</span></span></header>
+<pre class="cmd">python3 .git/bcf/bcf.py apply fastapi/openapi/utils.py 377 383  &lt;&lt;'EOF' … EOF</pre>
+<details class="out"><summary>apply stdout (verbatim) — the real reference hunk</summary>
+<pre>--- a/fastapi/openapi/utils.py
++++ b/fastapi/openapi/utils.py
+@@ -378,5 +378,5 @@
+                     additional_response,
+                 ) in route.responses.items():
+-                    process_response = additional_response.copy()
++                    process_response = copy.deepcopy(additional_response)
+                     process_response.pop("model", None)
+                     status_code_key = str(additional_status_code).upper()
+
+OK lines 377-383 replaced</pre></details>
+<dl class="ann"><dt>note</dt><dd>apply auto-rolls-back on syntax error; refuses protected paths &amp; ranges &gt;120 lines. The backbone demonstrates this path. [EXECUTED]</dd></dl></div>
+</div><div class="col">
+<div class="call ig-high"><header><span class="cid">S5</span><span class="tool">read_file</span><span class="pills"><span class="pill">~100 tok in</span></span></header>
+<pre class="cmd">read_file("fastapi/openapi/utils.py", 1, 12)
+→ import http.client / import inspect / import warnings …  # NO import copy</pre>
+<dl class="ann"><dt>bought</dt><dd>confirms the missing import (Trap 3). The current brain needs this <b>second small read</b> — v6-2's "one window shows the import" was impossible (slide 7, flag 2). [MODELED; real L1–30]</dd></dl></div>
+<div class="call ig-high"><header><span class="cid">S6</span><span class="tool">edit_file</span><span class="pills"><span class="pill ig-high">unique anchor</span></span></header>
+<pre class="cmd">old_string: "import http.client"   # verified: exactly 1 occurrence
+new_string: "import copy\nimport http.client"</pre>
+<dl class="ann"><dt>why</dt><dd>avoids the runtime NameError that py_compile cannot catch. [MODELED]</dd></dl></div>
+<div class="call ig-high"><header><span class="cid">S6′</span><span class="tool">full reference apply</span><span class="pills"><span class="pill exec">EXECUTED · reference-equivalent</span></span></header>
+<pre class="cmd">apply 377 383 (deepcopy) + apply 1 3 (import copy)
+→ git diff: 1 file, +2/−1 · check: PASS</pre>
+<dl class="ann"><dt>verified</dt><dd>extras E: both hunks applied rc=0; added lines == {import copy, copy.deepcopy(...)}, removed == {.copy()}; <b>reference_equivalent = True</b>. [EXECUTED]</dd></dl></div>
+</div></div>
+<div class="panel critp"><h4><span class="tag">canary</span>check PASS ≠ correct patch — the sharpest honesty point</h4>
+<p class="sub">The backbone's apply demo (step 8) applied <b>only hunk 2</b> (the driver keeps the last hunk per file). The resulting file has <code>copy.deepcopy</code> but <b>no</b> <code>import copy</code> — a runtime <code>NameError</code> — yet <code>check</code> still printed <b>PASS</b> (step 9), because its compile gate is <b>syntax-only</b> (<code>compile(...)</code>), not name resolution. So the executed backbone proves the <i>machinery</i> works, not that a one-hunk patch is correct. The modeled solver adds the import (S5–S6); extras E confirms the <b>full</b> two-hunk patch is reference-equivalent and passes check. [EXECUTED]</p></div>
+<div class="tm"><span class="tmh">◆ teachable moment: a gate is only as strong as its check</span> <code>py_compile</code> / <code>compile()</code> catch <b>syntax</b> errors, never a missing import or a wrong value. "CHECK: PASS" means "syntactically valid, no protected paths, non-empty diff" — not "tests pass." Trusting a green gate without a behavior-level repro is exactly the naive failure mode; the current brain pairs the gate with a targeted verify (next slide).</div>
+</div><div class="receipt"><span><b>Receipts</b> exec step 8 (apply) · verify-14463-extras.json E (both hunks, +2/−1, PASS) · bcf.py cmd_check compile gate</span><span>10</span></div></section>
+
+<section class="slide" id="s10" data-i="10"><div class="slide-inner">
+<div class="kicker">Track C · solver · verify, gate, submit [EXECUTED check/state + MODELED verify]</div><h2>A repro that could have come out differently</h2>
+<div class="flow">
+<div class="flow-step"><b>S7 · gate</b><span>py_compile + re-read</span></div>
+<div class="flow-step"><b>S8 · verify</b><span>/tmp repro, timeout 10</span></div>
+<div class="flow-step"><b>S9 · check</b><span>EXECUTED PASS</span></div>
+<div class="flow-step"><b>S10 · diff</b><span>+2/−1 review</span></div>
+<div class="flow-step"><b>S11 · submit</b><span>free · patch_size&gt;0</span></div>
+</div>
+<div class="twocol"><div class="panel"><h4><span class="tag">S8</span>The repro [MODELED assertions on an EXECUTED seed]</h4>
+<pre class="cmd"># spec: "No matching existing test found … Repro seed: .git/bcf/repro_seed.py"
+# seed (EXECUTED extraction) = the PR's app.py: 3 routes, Union model + content,
+#   NO assertions (and a quirk: the 3rd route's func is also named route2).
+# solver copies it to /tmp and ADDS exact-shape assertions:
+client = TestClient(app)
+schema = client.get("/openapi.json").json()
+titles = {"/route1": "Response 500 Route1 Route1 Get",
+          "/route2": "Response 500 Route2 Route2 Get"}
+for path, title in titles.items():
+    c = schema["paths"][path]["get"]["responses"]["500"]["content"]["application/json"]
+    assert c["schema"]["anyOf"] == [{"$ref": "#/components/schemas/ModelA"},
+                                    {"$ref": "#/components/schemas/ModelB"}]  # exactly 2
+    assert c["schema"]["title"] == title        # per-route, not the last route's
+    assert c["examples"] == {"Case A": {"value": "a"}}
+# + a 3-route growth check (6 refs would mean the leak); run with timeout 10</pre>
+<p class="sub">Mirrors the hidden test's <b>exact</b> shape (anyOf + title + examples), so its green is informative. <b>Predicted PASS by reference-patch equivalence — no grader run.</b> [MODELED]</p></div>
+<div class="ba-col"><div class="panel gain"><h4><span class="tag">S9</span>check [EXECUTED 0.358s]</h4>
+<pre class="cmd">CHECK: PASS
+Next: review git diff, then submit_patch last (verify patch_size &gt; 0).</pre>
+<p class="sub">Protected-path scan + scratch scan + syntax compile gate + diff-nonempty. (See slide 10 canary: PASS is syntax-level.) [EXECUTED]</p></div>
+<div class="panel"><h4><span class="tag">state</span>final state [EXECUTED 0.269s]</h4>
+<pre class="cmd">STATE (filesystem is the source of truth)
+kind: bugfix | family: schema-generation-logic … | shape: few-lines
+## Target 1. fastapi/openapi/utils.py — get_openapi_path (line 259)
+git diff --stat: … 1 file changed, 1 insertion(+), 1 deletion(-)
+strikes: fastapi/openapi/utils.py:1 · last check: PASS · edits recorded: 1
+NEXT: review git diff, then submit_patch last (verify patch_size &gt; 0).</pre>
+<p class="sub">The backbone's state shows 1+/−1 (hunk-2-only demo); the modeled full patch is +2/−1 (extras E). state is the restart compass after compaction. [EXECUTED]</p></div></div></div>
+<div class="tm"><span class="tmh">◆ teachable moment: mutation-testing intuition</span> Ask "what mutation would my repro <b>catch</b>?" A count-only repro (naive A14) survives the dedupe mutation — its green is forced. An exact-shape repro (S8) kills it: change the title or drop a ref and it goes red. The hidden grader is the ultimate exact-shape test; mirroring its shape in /tmp is how you get a green that <i>means</i> something before you ever see the grader.</div>
+</div><div class="receipt"><span><b>Receipts</b> exec steps 9–10 · verify-14463-extras.json A (repro seed) · solver.md verify-then-submit</span><span>11</span></div></section>
+
+<section class="slide" id="s11" data-i="11"><div class="slide-inner">
+<div class="kicker">The whole comparison, with the arithmetic [EST]</div><h2>Scorecard</h2>
+<table class="data score"><thead><tr><th></th><th>A · naive</th><th>B · v6-v3 (claimed)</th><th>C · CURRENT brain</th><th>reading</th></tr></thead><tbody>
+<tr><td class="k">LLM turns</td><td>~18</td><td>~8</td><td><b>15</b> (4 plan + 11 solver)</td><td class="note">C cold; warm re-entry plan = 1 turn</td></tr>
+<tr><td class="k">tool calls / charged</td><td>~18 / ~17</td><td>~8 / ~7</td><td><b>15 / 13</b></td><td class="note">C: get_status + submit_patch free; run_skill_script charging unknown (D18)</td></tr>
+<tr><td class="k">thinking tokens</td><td>~8,100</td><td>~1,200</td><td><b>~4,300</b></td><td class="note">C: 2048 budget, avg ~290/turn, max 700</td></tr>
+<tr><td class="k">visible output tokens</td><td>~2,400</td><td>~900</td><td><b>~2,270</b></td><td class="note">C includes verbatim spec echo (~470) + repro heredoc (~560)</td></tr>
+<tr><td class="k">total output tokens</td><td>~10,500</td><td>~2,100</td><td><b>~6,570</b></td><td class="note">thinking counts as decode</td></tr>
+<tr><td class="k">model time (fit)</td><td>~327s</td><td>~72s</td><td><b>~210s</b></td><td class="note">N×1.4s + tokens×0.0287s</td></tr>
+<tr><td class="k">tool time</td><td>~35s</td><td>~12s</td><td><b>~10s</b></td><td class="note">C helper calls measured ≈ 1–2s total; repro run ~4s</td></tr>
+<tr><td class="k">agent wall</td><td>~6.0 min</td><td>~1.4 min</td><td><b>~3.7 min</b></td><td class="note">model + tools</td></tr>
+<tr><td class="k">+ setup (~60s)</td><td>~7.0 min</td><td>~2.4 min</td><td><b>~4.7 min</b></td><td class="note">end-to-end per task</td></tr>
+<tr><td class="k">vs 4.5-min agent cap</td><td class="noc">over (timeout risk)</td><td class="okc">under</td><td class="okc">under (~50s margin)</td><td class="note">C eval_config max_time_minutes 4.5</td></tr>
+<tr><td class="k">vs 6-min gross budget</td><td class="noc">over</td><td class="okc">under</td><td class="okc">under (~80s margin)</td><td class="note">12h / ~120 ≈ 360s/task</td></tr>
+<tr><td class="k">final context</td><td>~21k (compaction risk)</td><td>~7.6k</td><td><b>~11k</b></td><td class="note">local compaction trigger ~14.3k</td></tr>
+<tr><td class="k">predicted outcome</td><td class="noc">FAIL (symptom)</td><td class="okc">PASS (claimed)</td><td class="okc">PASS (reference-equiv)</td><td class="note">predictions, no grader run</td></tr>
+<tr><td class="k">failure modes avoided</td><td>—</td><td>mislocalize, symptom, NameError</td><td><b>+ stale window, 3rd retry, test edits, empty patch, compaction amnesia</b></td><td class="note">C: anchors/strike/check/state executed</td></tr>
+</tbody></table>
+<div class="twocol"><div class="panel"><h4><span class="tag">math</span>The arithmetic [EST · R intel]</h4>
+<p class="sub">Constants: 31B decode 33–35 tok/s (4×L4); fitted per-call <b>1.4s + 28.7ms/output-token</b>; median 10.3s/call; setup ~60s/task; thinking = decode.<br>
+C: 15×1.4 + 6,570×0.0287 = 21 + 188.6 ≈ <b>210s</b>. A: 18×1.4 + 10,500×0.0287 ≈ <b>327s</b>. B: 8×1.4 + 2,100×0.0287 ≈ <b>72s</b>.<br>
+Median sanity: C 15×10.3 = 154s — our bottom-up is higher because C is output-heavier than median (mean 438 tok/call vs median 127: verbatim spec echo + heredoc). The fit already absorbs prefill at typical (≤15k) contexts.</p></div>
+<div class="panel diffp"><h4><span class="tag">thinking</span>2048 vs 256–512 on a d1 task — quantified</h4>
+<p class="sub">Budget is a <b>cap, not a target</b>. C's modeled thinking is ~4,300 over 15 turns (max single turn 700). Capping at <b>512</b> clips only S3 (600) and S8 (700): −276 tok ≈ <b>−8s (~4%)</b>. Capping at <b>256</b> clips six turns: −1,068 tok ≈ <b>−31s (~15%)</b>. So on this d1 task the thinking lever is worth ≤ ~31s — small. But corpus-wide, thinking-off halves solves (23/129 vs 50/129 at 2048); 256–512 is unmeasured. <b>Keep 2048</b>; the big levers here are call count and observation size, not the thinking cap. [R intel]</p></div></div>
+</div><div class="receipt"><span><b>Receipts</b> intel/budget-sampling.md (decode, fit, median, setup, thinking screen) · eval_config.yaml · all token counts [EST]</span><span>12</span></div></section>
+
+<section class="slide" id="s12" data-i="12"><div class="slide-inner">
+<div class="kicker">Divergences &amp; gap notes — for THIS task</div><h2>Where the current brain differs from v3, and what it costs here</h2>
+<table class="data"><thead><tr><th>dimension</th><th>v3 (v6-2 / design)</th><th>CURRENT brain</th><th>cost / benefit on fastapi_14463</th></tr></thead><tbody>
+<tr><td class="k">routing</td><td>"model routes, script measures"; but the replay shows a fitted <code>rule_note</code></td><td>deterministic regex classify; planner is mechanical (no analysis)</td><td class="note">family mislabeled (state-lifecycle=0) but file/anchors correct → <b>cost ~0 here</b>; generalizes better. [EXECUTED]</td></tr>
+<tr><td class="k">spec verbosity</td><td>pinned ≤150-word spec</td><td>~300-word spec (~470 tok), Steps/Rules duplicate solver.md</td><td class="note">+~240 tok echoed once ≈ <b>+7–10s</b> decode + minor context. Trim-worthy, not decisive.</td></tr>
+<tr><td class="k">expected-red / journal</td><td>asymmetry detector + ratchet + journal in .git/bcf/</td><td><b>absent</b>; prompt-level ratchet ("statement is the contract") + state.json/spec.md on disk</td><td class="note"><b>cost 0 here</b>: no visible test flips (hidden test is new; deepcopy breaks no existing assertion). Matters on rename-shaped tasks (e.g. httpx_3672).</td></tr>
+<tr><td class="k">thinking budget</td><td>256–512 (A/B 0)</td><td>2048 (measured sweet spot)</td><td class="note">+~8s vs 512, +~31s vs 256 here; avoids the corpus-wide thinking-off cliff. [R intel]</td></tr>
+<tr><td class="k">plan tool minimalism</td><td>"full tool list on every agent" (avoid fatal unknown-tool call)</td><td>planner has only run_command + write_file (+ skill)</td><td class="note">fewer tools = fewer fatal-call chances, but a hallucinated read_file would be unknown ("unknown tool call is fatal" is the v6 doc's claim [R]). Prompt is a rigid fixed sequence → low risk; trade-off noted.</td></tr>
+<tr><td class="k">anchors / apply / strike / check</td><td>claimed (AST anchors, folded gate)</td><td><b>executed</b>: 3 unique windows, apply rc=0 + rollback, strike excludes, check PASS, state compass</td><td class="note">C demonstrates what B claims; warm cache 0.216s; truncation-robust. [EXECUTED]</td></tr>
+<tr><td class="k">import handling</td><td>"one window shows the missing import" (impossible)</td><td>separate small read of L1–12, then unique-anchor edit</td><td class="note">C is honest and correct; +1 small read (~100 tok) vs B's false claim.</td></tr>
+</tbody></table>
+<div class="twocol"><div class="panel gain"><h4><span class="tag">better</span>Where C is better here</h4>
+<ul class="plain"><li>Executed, <b>general</b> localization (no task-fitted router) that still lands the exact line.</li><li>Verified-unique anchors + apply rollback + strike circuit-breaker + check gate + state resume — all real.</li><li>Truncation-robust spec; repro seed auto-extracted; warm cache.</li><li>Honest about the missing import (reads the top) instead of claiming it away.</li></ul></div>
+<div class="panel diffp"><h4><span class="tag">worse</span>Where C is worse here</h4>
+<ul class="plain"><li>Family label is wrong (state-lifecycle=0) → generic Fix note; a sparse-statement task could suffer.</li><li>Spec ~2× v3's target verbosity (+7–10s).</li><li>No journal/expected-red (free here, but a real gap elsewhere).</li><li>2048 thinking costs ~8–31s more than v3's caps on this d1 task.</li><li>Planner's 1500-char allowance drops the PR's root-cause section (robust here; risky if the path cue appears only late).</li></ul></div></div>
+</div><div class="receipt"><span><b>Receipts</b> verify-14463-extras.json A/B/C/E · prompts + YAMLs · v6 design doc · intel</span><span>13</span></div></section>
+
+<section class="slide" id="s13" data-i="13"><div class="slide-inner">
+<div class="kicker">Teachable moments, defined kindly [R]</div><h2>The concepts this task teaches</h2>
+<div class="defs">
+<div class="def"><dl><dt>Aliasing · identity vs equality</dt><dd><span class="formal">two names referencing the same object; a mutation through one is visible through the other. == compares value, is compares identity.</span>A shallow <code>.copy()</code> duplicates the top dict but keeps nested objects shared, so <code>process_response["content"] is additional_response["content"]</code>.<span class="huh"><b>here:</b> every route appended into one shared anyOf list; deepcopy makes the identity test False.</span></dd></dl></div>
+<div class="def"><dl><dt>Shallow vs deep copy</dt><dd><span class="formal">shallow copies the container, reuses children; deep recursively copies the whole object graph.</span>One word in Python: <code>copy()</code> shares children, <code>deepcopy()</code> does not.<span class="huh"><b>here:</b> the entire fix is <code>.copy()</code> → <code>copy.deepcopy()</code> + <code>import copy</code> (+2/−1).</span></dd></dl></div>
+<div class="def"><dl><dt>Belief state (POMDP)</dt><dd><span class="formal">the agent sees clues (tool outputs), never the truth; acting well = keeping a better belief than your opponent.</span>The current brain moves belief from the fragile context window onto durable <code>.git/bcf/*</code> files (spec, candidates, anchors, state).<span class="huh"><b>here:</b> <code>state</code> is the restart compass; paraphrase-every-result hedges compaction. Naive keeps all belief in context and loses it past ~14.3k.</span></dd></dl></div>
+<div class="def"><dl><dt>Entropy · value of information</dt><dd><span class="formal">entropy = how many ways your belief is still wrong; a call's VOI is the part that changes your next action.</span>One anchor-guided 51-line read (~450 tok) collapses the locus and triggers EDIT NOW; three whole-file reads (~13.5k tok) include a byte-identical re-read with zero VOI.<span class="huh"><b>here:</b> a green repro that couldn't come out differently (count-only) carries no evidence; an exact-shape repro does.</span></dd></dl></div>
+<div class="def"><dl><dt>Localization</dt><dd><span class="formal">narrow the search with cheap deterministic evidence before expensive/uncertain action.</span>spec target → anchors (verified-unique) → one narrow read → edit. Cheap calls before edits.<span class="huh"><b>here:</b> anchors land line 380 before any edit; the locate distractor (line 56) is overruled by code reading.</span></dd></dl></div>
+<div class="def"><dl><dt>Mutation-testing intuition</dt><dd><span class="formal">a test is only as good as the mutations it kills.</span>Output-dedup is a wrong fix that passes a count-only test (the anyOf mutation) but fails the title mutation — and risks corrupting legitimate repeated refs.<span class="huh"><b>here:</b> the hidden exact-equality test kills dedup via per-route title; mirroring that shape in /tmp is the trustworthy repro.</span></dd></dl></div>
+</div>
+</div><div class="receipt"><span><b>Note</b> each term: formal → plain → in-this-task · concepts from v6 design §5, re-grounded in executed evidence</span><span>14</span></div></section>
+
+<section class="slide" id="s14" data-i="14"><div class="slide-inner">
+<div class="kicker">Verdict + falsifiers (canaries)</div><h2>What we predict, and what would change our mind</h2>
+<div class="three">
+<div class="panel critp"><h4><span class="tag">A</span>naive — predicted FAIL</h4><p class="sub">On the modeled symptom-patch path: anyOf count right, per-route title wrong → hidden exact-equality fails. A lucky deepcopy path exists (the PR contains the cause), so this is a coin-flip at 2–3× cost, not a certainty. ~7 min, compaction risk. [MODELED]</p></div>
+<div class="panel dec"><h4><span class="tag">B</span>v6-v3 — claimed PASS</h4><p class="sub">Root-cause fix + exact repro → plausible PASS, ~2.4 min re-scored. But the transcript is scripted and the rule_note is task-fitted; the "one-window import" claim is impossible. Directionally right, overstated in detail. [MODELED-theirs]</p></div>
+<div class="panel t2p"><h4><span class="tag">C</span>CURRENT — predicted PASS (high)</h4><p class="sub">Reference-equivalent patch (+2/−1) <b>executed</b> via apply, check PASS; anchors land the exact line; mechanism is in the statement. ~4.7 min, under cap. Confidence high (~0.85–0.9) given d1 + executed machinery; residual risk is the modeled policy, not the machinery. [EXECUTED + MODELED]</p></div>
+</div>
+<h3 class="gh">Executed canaries — each falsifies a tempting overclaim</h3>
+<table class="data"><thead><tr><th>canary [EXECUTED]</th><th>observation</th><th>falsifies</th></tr></thead><tbody>
+<tr><td class="k">check PASS w/ missing import</td><td>hunk-2-only file has no <code>import copy</code> yet check=PASS</td><td>"check PASS ⇒ correct patch" (gate is syntax-only)</td></tr>
+<tr><td class="k">state-lifecycle = 0</td><td>true family scores 0; schema-generation-logic 77</td><td>"the classifier understands the mechanism"</td></tr>
+<tr><td class="k">locate distractor</td><td>top hit validation_error_response_definition:56 ≠ locus</td><td>"locate always ranks the fix locus first"</td></tr>
+<tr><td class="k">truncation robust</td><td>1500-char problem.md → identical target/family</td><td>"the planner must read the whole PR" (here)</td></tr>
+<tr><td class="k">anchors recompute</td><td>post-edit anchor[1] = the deepcopy line at 380</td><td>"anchors go stale after an edit" (they refresh)</td></tr>
+<tr><td class="k">reference equivalence</td><td>both hunks → +2/−1, added/removed match gold</td><td>"apply can't reproduce the reference patch"</td></tr>
+<tr><td class="k">Windows stdin codec</td><td>driver stdin path → BCF-ERROR (cp1252 surrogate); write_file path fine</td><td>"the stdin shortcut is robust on any host" (driver-only; production path unaffected)</td></tr>
+</tbody></table>
+<div class="warnbox"><b>What would change the verdict.</b> If the modeled solver chose output-dedup instead of deepcopy (policy risk), C would fail like A. If the hidden test tolerated title cross-contamination, A's symptom fix would pass — but the test_patch asserts exact per-route titles, so it does not. If a future task puts the path cue only past char 1500, the planner's truncation could mislocalize — not an issue here (executed). None of these are grader runs; all verdicts are predictions from reference-patch equivalence.</div>
+</div><div class="receipt"><span><b>Receipts</b> exec-fastapi-14463.json · verify-14463-extras.json A–E · test_patch · no grader run</span><span>15</span></div></section>
+
+<section class="slide" id="s15" data-i="15"><div class="slide-inner">
+<div class="kicker">Sources &amp; caveat · LOCAL ONLY</div><h2>Sources</h2>
+<ol class="srcs">
+<li>scratch/bcf-replay-2026-11-11/exec-fastapi-14463.json — executed backbone, 10 steps rc=0 (spec/anchors/locate/strike/apply/check/state).</li>
+<li>scratch/bcf-replay-2026-11-11/verify-14463-extras.json — extras A (family scores, repro seed), B (truncation), C (anchor recompute), D (stdin codec), E (full reference apply + check).</li>
+<li>scratch/bcf-replay-2026-11-11/replay_driver.py + verify_14463_extras.py — re-runnable executors (stdlib, temp repos).</li>
+<li>scratch/bcf-2026-11-11/tasks/fastapi_14463.json — problem_statement (10,095 chars), patch (+2/−1), test_patch (+123, exact-equality).</li>
+<li>scratch/bcf-2026-11-11/rca/fastapi_14463.md + .json — state-lifecycle family, difficulty 1, mechanism, acceptance test.</li>
+<li>scratch/bcf-2026-11-11/index.json — patch_added 2 / patch_removed 1, 1 file; new_test_funcs test_openapi_schema.</li>
+<li>scratch/bcf-2026-11-11/sources/fastapi_14463/fastapi/openapi/utils.py — base source (L1–30 imports, L376–416 mechanism).</li>
+<li>deliverables/2026-11-11-bcf-gemma4-brain/02-bcf-brain-31b/submission/ — prompts (bcf_plan.md, solver.md), YAMLs, SKILL.md, scripts/bcf.py.</li>
+<li>input/kagglecomp/2/2026-11-11-bcf-v6/02-…fastapi-14463….slides.v6-2.html + 01-critique-and-bcf-v3-design.md — Track B transcript + claims.</li>
+<li>scratch/bcf-2026-11-11/intel/budget-sampling.md — decode 33–35 tok/s, 1.4s+28.7ms fit, 10.3s median, ~60s setup, thinking screen.</li>
+</ol>
+<div class="warnbox"><b>Caveat, kept honest.</b> The deterministic machinery is <b>[EXECUTED]</b> and re-runnable; the LLM turns are <b>[MODELED]</b> (scripted from the real prompts + RCA + reference patch, <b>not sampled</b> from Gemma); tokens/clock are <b>[EST]</b>. <b>No grader run</b> — every verdict is a prediction from reference-patch equivalence. The naive failure is one plausible path, not a forecast. Two capture artifacts are noted: the spec's <code>—</code> separators appear as <code>U+FFFD</code> in the raw capture (Windows cp1252 stdout under <code>-I</code>; quotes here normalize them back), and the driver's stdin shortcut fails on the emoji-bearing statement on this host (extras D) while the production write_file→spec path is UTF-8-clean (extras A). The durable claim: the current brain reaches the reference-equivalent root-cause fix with executed localization/gating machinery, under the per-task budget, without a task-fitted router.</div>
+</div><div class="receipt"><span><b>End</b> · BCF replay comparison — fastapi_14463 · executed backbone, modeled policy, honest verdicts</span><span>16</span></div></section>
+</main><script>(function () {
+  "use strict";
+  var secs = Array.prototype.slice.call(document.querySelectorAll("section.slide"));
+  var btns = Array.prototype.slice.call(document.querySelectorAll(".rail button"));
+  btns.forEach(function (b) {
+    b.addEventListener("click", function () {
+      var s = secs[+b.getAttribute("data-i")];
+      if (s) s.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  });
+  function mark(i) { btns.forEach(function (b, k) { b.setAttribute("aria-current", k === i ? "true" : "false"); }); }
+  if ("IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) mark(+e.target.getAttribute("data-i")); });
+    }, { rootMargin: "-45% 0px -50% 0px" });
+    secs.forEach(function (s) { io.observe(s); });
+  }
+})();</script></body></html>

@@ -1,0 +1,740 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>fastapi_14482: error masking, three tracks — naive vs v6 BCF v3 vs current shipped BCF</title><style>:root{
+  --page:#0e1116; --surface:#151a21; --raised:#1b222c; --sunken:#11151c;
+  --hair:rgba(255,255,255,.08); --hair-2:rgba(255,255,255,.14);
+  --ink:#eef1f5; --ink-2:#aab4c0; --ink-3:#7a8694; --deem:#566070;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181;
+  --good:#0ca30c; --warn:#fab219; --crit:#d03b3b;
+  --good-wash:rgba(12,163,12,.12); --warn-wash:rgba(250,178,25,.10); --crit-wash:rgba(208,59,59,.13);
+  --diff-del:rgba(214,79,67,.14); --diff-add:rgba(25,158,112,.15);
+  --sans:system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"Cascadia Code","JetBrains Mono",ui-monospace,"Consolas",monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--page);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.6}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+a{color:#7fb2f0}
+.rail{position:fixed;left:12px;top:50%;transform:translateY(-50%);z-index:40;display:flex;flex-direction:column;gap:6px}
+.rail button{width:11px;height:11px;border-radius:3px;border:1px solid var(--hair-2);background:transparent;padding:0;cursor:pointer;position:relative}
+.rail button[aria-current="true"]{background:var(--s1);border-color:var(--s1)}
+.rail button span{position:absolute;left:20px;top:50%;transform:translateY(-50%);font:500 12px/1 var(--sans);color:var(--ink-2);white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s;background:var(--raised);padding:4px 7px;border-radius:5px;border:1px solid var(--hair)}
+.rail button:hover span,.rail button:focus-visible span{opacity:1}
+@media (max-width:1100px){.rail{display:none}}
+.slide{position:relative;padding:56px clamp(20px,5vw,64px) 64px;border-bottom:1px solid var(--hair)}
+.slide.hero{min-height:100svh;display:flex}
+.slide-inner{max-width:1240px;margin:auto;width:100%;display:flex;flex-direction:column;gap:14px}
+.receipt{position:absolute;left:clamp(20px,5vw,64px);bottom:20px;right:clamp(20px,5vw,64px);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font:400 12px/1.5 var(--mono);color:var(--ink-3)}
+.receipt b{color:var(--ink-2);font-weight:600}
+.kicker{font:600 13.5px/1.4 var(--sans);color:var(--ink-3)}
+.kicker b{color:var(--ink-2)}
+h2{font:650 28px/1.22 var(--sans);letter-spacing:-.01em;margin:0;max-width:44ch}
+h3.gh{font:650 18px/1.3 var(--sans);margin:18px 0 4px;color:var(--ink-2)}
+.sub{color:var(--ink-2);max-width:96ch;margin:0;font-size:15px}
+.sub.big{font-size:17.5px}
+.sub b{color:var(--ink);font-weight:600}
+code{font:500 .88em var(--mono);background:var(--raised);padding:1px 5px;border-radius:4px;color:var(--ink)}
+pre code{background:none;padding:0}
+.hero-id{font:700 clamp(44px,7.5vw,84px)/1.05 var(--mono);letter-spacing:-.02em;margin:6px 0 2px}
+.hero-id .u{color:var(--ink-3)}
+.okc{color:#5ec95e} .noc{color:#ef8a85}
+.chip{display:inline-flex;align-items:center;gap:6px;font:600 12px/1 var(--mono);padding:5px 9px;border-radius:5px;border:1px solid var(--hair-2)}
+.chip.sm{font-size:10.5px;padding:3px 6px}
+.chip .g{font-family:var(--sans)}
+.chips{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.chip.v{background:var(--good-wash);border-color:rgba(12,163,12,.4)} .chip.v .g{color:var(--good)}
+.chip.sim{background:var(--warn-wash);border-color:rgba(250,178,25,.35)} .chip.sim .g{color:var(--warn)}
+.chip.est{background:rgba(255,255,255,.04);border-style:dashed} .chip.est .g{color:var(--ink-2)}
+.chip.r{background:rgba(201,133,0,.10);border-color:rgba(201,133,0,.45)} .chip.r .g{color:#e3a92a}
+.chip.rp{background:rgba(57,135,229,.12);border-color:rgba(57,135,229,.5)} .chip.rp .g{color:#7fb2f0}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1px;background:var(--hair);border:1px solid var(--hair);border-radius:10px;overflow:hidden}
+.stat{background:var(--surface);padding:11px 15px}
+.stat b{display:block;font:650 21px/1.2 var(--sans)}
+.stat span{font:400 12.5px/1.4 var(--sans);color:var(--ink-3)}
+.panel{background:var(--surface);border:1px solid var(--hair);border-radius:10px;padding:13px 16px}
+.panel h4{margin:0 0 8px;font:650 14px/1.4 var(--sans);color:var(--ink-2)}
+.panel h4 .tag,.tag{font:600 11px/1 var(--mono);color:var(--ink-3);border:1px solid var(--hair-2);border-radius:4px;padding:3px 6px;margin-right:7px;vertical-align:1px}
+.panel p{margin:0;color:var(--ink-2);font-size:14px}
+.panel.dec{border-left:3px solid var(--s1)} .panel.gain{border-left:3px solid var(--s3)}
+.panel.diffp{border-left:3px solid var(--s4);background:linear-gradient(90deg,rgba(201,133,0,.07),var(--surface) 40%)}
+.panel.t2p{border-left:3px solid var(--s3)}
+.twocol{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media (max-width:980px){.twocol,.three{grid-template-columns:1fr}}
+.ba-col{display:flex;flex-direction:column;gap:12px}
+ul.plain,ol.plain{margin:0;padding-left:19px;color:var(--ink-2)}
+ul.plain li,ol.plain li{margin:5px 0;font-size:13.5px;line-height:1.55}
+ul.plain b,ol.plain b{color:var(--ink);font-weight:600}
+.tm{border:1px solid rgba(217,81,129,.38);background:rgba(217,81,129,.07);border-radius:10px;padding:12px 16px;font:400 14px/1.65 var(--sans);color:var(--ink-2)}
+.tm .tmh{display:block;font:700 12.5px/1.3 var(--sans);color:#e37ba6;margin-bottom:5px}
+.tm b{color:var(--ink);font-weight:600}
+.warnbox{border:1px solid rgba(250,178,25,.35);background:var(--warn-wash);border-radius:10px;padding:11px 15px;font:500 13.5px/1.55 var(--sans);color:var(--ink-2)}
+.empty{border:1px dashed var(--hair-2);border-radius:10px;padding:16px;color:var(--ink-3);font-size:14px;background:repeating-linear-gradient(45deg,transparent 0 10px,rgba(255,255,255,.015) 10px 20px)}
+.empty b{color:var(--ink-2)}
+pre.cmd{margin:0;background:var(--sunken);border:1px solid var(--hair);border-radius:7px;padding:8px 11px;font:400 12px/1.55 var(--mono);color:var(--ink);white-space:pre-wrap;word-break:break-word}
+pre.cmd .p{color:var(--s1)} pre.cmd .s{color:#e3a92a} pre.cmd .ok{color:#5ec95e} pre.cmd .bad{color:#ef8a85}
+pre.diff{margin:0;font:400 11.5px/1.55 var(--mono);background:var(--sunken);border:1px solid var(--hair);border-radius:7px;padding:7px 10px;white-space:pre-wrap;word-break:break-word;color:var(--ink-3)}
+pre.diff .del{background:var(--diff-del);color:#e8a09d;display:inline-block;width:100%} pre.diff .add{background:var(--diff-add);color:#8fd8b8;display:inline-block;width:100%}
+pre.diff .ctx{color:var(--ink-3)} pre.diff .meta{color:var(--s1)}
+table.data{border-collapse:collapse;width:100%;font:400 12.5px/1.5 var(--sans)}
+table.data th,table.data td{text-align:left;padding:6px 10px;border-bottom:1px solid var(--hair);color:var(--ink-2);font-weight:400;vertical-align:top}
+table.data th{color:var(--ink-3);font-weight:600;white-space:nowrap;font-family:var(--mono);font-size:11.5px}
+table.data td.k{color:var(--ink);font-weight:600;white-space:nowrap}
+table.data td.note{color:var(--ink-3);font-size:12px}
+table.score td{font-family:var(--mono);font-size:12.5px}
+.traps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:980px){.traps{grid-template-columns:1fr}}
+.trap{background:var(--surface);border:1px solid var(--hair);border-radius:10px;padding:12px 15px;position:relative}
+.trap .tn{font:700 12px/1 var(--mono);color:var(--s2);margin-bottom:5px}
+.trap .tt{font:650 14px/1.35 var(--sans);margin-bottom:5px}
+.trap .td{font-size:13px;color:var(--ink-2);line-height:1.55}
+.trap .chip{position:absolute;top:10px;right:10px}
+.sbs-head{display:grid;grid-template-columns:1fr 1fr;gap:16px;position:sticky;top:0;z-index:5;background:linear-gradient(var(--page) 75%,transparent);padding:8px 0 6px}
+.sbs-head .lane{font:700 13px var(--mono);padding:4px 9px;border-radius:5px}
+.lane.naive{background:rgba(217,89,38,.16);color:#f0a07c;border:1px solid rgba(217,89,38,.45)}
+.lane.bcf{background:rgba(57,135,229,.16);color:#8fbcf2;border:1px solid rgba(57,135,229,.45)}
+.lane.cur{background:rgba(25,158,112,.16);color:#7fd6b0;border:1px solid rgba(25,158,112,.45)}
+.sbs-head .cnt{font:500 12px var(--mono);color:var(--ink-3);margin-left:6px}
+.sbs{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+@media (max-width:980px){.sbs,.sbs-head{grid-template-columns:1fr}}
+.sbs .col{display:flex;flex-direction:column;gap:10px;min-width:0}
+.call{background:var(--surface);border:1px solid var(--hair);border-left:3px solid var(--ink-3);border-radius:9px;padding:10px 12px;display:flex;flex-direction:column;gap:7px;min-width:0;scroll-margin-top:60px}
+.call.ig-high{border-left-color:var(--s3)} .call.ig-some{border-left-color:#4f7a68} .call.ig-none{border-left-color:var(--deem);opacity:.92} .call.ig-neg{border-left-color:var(--crit);background:linear-gradient(90deg,rgba(208,59,59,.08),var(--surface) 35%)}
+.call header{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.call .cid{font:700 13px var(--mono);color:var(--ink)}
+.call .tool{font:600 12px var(--mono);color:var(--ink-2)}
+.pills{display:flex;gap:5px;flex-wrap:wrap;margin-left:auto}
+.pill{font:600 10.5px/1 var(--mono);padding:3px 6px;border-radius:4px;border:1px solid var(--hair-2);color:var(--ink-2);white-space:nowrap}
+.pill.pass{background:var(--good-wash);border-color:rgba(12,163,12,.45);color:#5ec95e}
+.pill.fail{background:var(--crit-wash);border-color:rgba(208,59,59,.4);color:#ef8a85}
+.pill.exec{background:var(--good-wash);border-color:rgba(12,163,12,.45);color:#5ec95e}
+.pill.free{border-style:dashed;color:var(--ink-3)}
+.pill.ig-high{color:#7fd6b0} .pill.ig-none{color:var(--ink-3);border-style:dashed} .pill.ig-neg{color:#ef8a85;border-color:rgba(208,59,59,.5)}
+details.out summary{cursor:pointer;font:500 11.5px var(--mono);color:#7fb2f0}
+details.out pre{margin:6px 0 0;max-height:360px;overflow:auto;background:var(--sunken);border:1px solid var(--hair);border-radius:6px;padding:8px 10px;font:400 11px/1.5 var(--mono);color:var(--ink-2);white-space:pre-wrap;word-break:break-word}
+dl.ann{margin:0;display:grid;grid-template-columns:118px 1fr;gap:4px 10px;font-size:13px;line-height:1.55}
+dl.ann dt{font:650 11.5px/1.5 var(--sans);color:var(--ink-3);text-transform:uppercase;letter-spacing:.03em;padding-top:1px}
+dl.ann dd{margin:0;color:var(--ink-2)} dl.ann dd b{color:var(--ink)}
+@media (max-width:600px){dl.ann{grid-template-columns:1fr}}
+.flow{display:flex;gap:8px;flex-wrap:wrap}
+.flow-step{background:var(--surface);border:1px solid var(--hair);border-radius:8px;padding:8px 12px;display:flex;flex-direction:column;gap:2px;position:relative}
+.flow-step b{font:650 12.5px var(--sans)} .flow-step span{font:500 12px var(--mono);color:var(--ink-3)}
+.flow-step:not(:last-child)::after{content:"→";position:absolute;right:-12px;top:50%;transform:translateY(-50%);color:var(--ink-3)}
+.defs{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:980px){.defs{grid-template-columns:1fr}}
+.def{background:var(--surface);border:1px solid var(--hair);border-radius:10px;padding:11px 14px;margin:0;scroll-margin-top:20px}
+.def dt{font:700 14px/1.4 var(--mono);color:var(--ink)}
+.def dd{margin:5px 0 0;font-size:13px;line-height:1.55;color:var(--ink-2)}
+.def dd .formal{display:block;font-family:var(--mono);font-size:12.2px;color:var(--ink)}
+.def dd .huh{display:block;margin-top:4px;color:var(--ink-3);font-size:12.5px} .def dd .huh b{color:var(--ink-2)}
+ol.srcs{columns:2;column-gap:28px;margin:0;padding-left:0;list-style:none;font-size:12px;color:var(--ink-2)}
+ol.srcs li{break-inside:avoid;margin:0 0 6px}
+@media (max-width:980px){ol.srcs{columns:1}}
+:focus-visible{outline:2px solid var(--s1);outline-offset:2px}
+.sbs,.sbs-head{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+@media (max-width:980px){.sbs,.sbs-head{grid-template-columns:minmax(0,1fr)}}
+dl.ann{grid-template-columns:118px minmax(0,1fr)}
+dl.ann dd,.def dd,table.data td,.panel p,.tm{overflow-wrap:anywhere}
+</style></head><body>
+<nav class="rail" aria-label="Sections"><button data-i="0" aria-current="true"><span>1 · title</span></button><button data-i="1"><span>2 · how to read</span></button><button data-i="2"><span>3 · two-layer defect</span></button><button data-i="3"><span>4 · traps &amp; symptom fixes</span></button><button data-i="4"><span>5 · track A naive</span></button><button data-i="5"><span>6 · track B v6 v3</span></button><button data-i="6"><span>7 · C: plan stage</span></button><button data-i="7"><span>8 · C: localize</span></button><button data-i="8"><span>9 · C: edits</span></button><button data-i="9"><span>10 · C: verify &amp; submit</span></button><button data-i="10"><span>11 · masking &amp; risks</span></button><button data-i="11"><span>12 · scorecard</span></button><button data-i="12"><span>13 · divergences</span></button><button data-i="13"><span>14 · teachable</span></button><button data-i="14"><span>15 · verdict</span></button><button data-i="15"><span>16 · sources</span></button></nav><main class="deck" id="deck">
+
+<!-- ============ 1 · TITLE ============ -->
+<section class="slide hero" id="s0" data-i="0"><div class="slide-inner">
+<div class="kicker">BCF replay comparison · 4 of 4 · <b>error-masking stress test</b> · naive vs the other agent's BCF v3 (v6-3 deck) vs the CURRENT shipped brain</div>
+<h1 class="hero-id">fastapi<span class="u">_</span>14482</h1>
+<p class="sub big"><code>arbitrary_types_allowed=True</code> is lost in FastAPI's per-field plumbing: <b>layer 1</b> — <code>ModelField.__post_init__</code> builds a <code>TypeAdapter</code> with no config; <b>layer 2</b> — <code>get_model_fields()</code> never forwards <code>model.model_config</code>. The surface <code>PydanticSchemaGenerationError</code> <b>masks</b> the propagation root cause: fix layer 1 alone and the error does not change at all. Three tracks, one task.</p>
+<div class="stats">
+ <div class="stat"><b class="okc">10 / 10 rc=0</b><span>executed backbone · real bcf.py on base-commit sources [EXECUTED]</span></div>
+ <div class="stat"><b>0.302s / 0.215s</b><span>spec cold / warm cache [EXECUTED]</span></div>
+ <div class="stat"><b>+25 / −7 · 4 hunks</b><span>reference patch, one file: fastapi/_compat/v2.py [R]</span></div>
+ <div class="stat"><b>d3 · few-lines</b><span>schema-generation-logic family · 3 acceptance tests [R]</span></div>
+</div>
+<div class="chips">
+ <span class="chip v"><span class="g">✓</span> [EXECUTED] real helper runs, quoted stdout</span>
+ <span class="chip sim"><span class="g">≈</span> [MODELED] LLM turns — modeled, not sampled</span>
+ <span class="chip est"><span class="g">±</span> [EST] tokens &amp; clock</span>
+ <span class="chip r"><span class="g">§</span> [R] local dataset / docs</span>
+</div>
+<p class="sub"><b>Honesty subtitle.</b> No grader was run. Track verdicts are <b>predictions from reference-patch equivalence</b>, not measurements. The deterministic machinery (spec → anchors → locate → strike → apply → check → state) was really executed; every LLM turn around it is modeled. And this task sits on the <b>27-task local dep-gap list</b>: its acceptance test imports <code>inline_snapshot</code>, absent from the sandbox wheelhouse — local pytest can fail at <i>collection</i> regardless of the patch. Environmental red is not a verdict (the masked-68 doctrine).</p>
+</div><div class="receipt"><span><b>Built</b> 2026-11-11 · backbone: scratch/bcf-replay-2026-11-11/exec-fastapi-14482.json · base 71a17b59</span><span>1</span></div></section>
+
+<!-- ============ 2 · HOW TO READ ============ -->
+<section class="slide" id="s1" data-i="1"><div class="slide-inner">
+<div class="kicker">Conventions, and exactly what was executed</div><h2>How to read this deck</h2>
+<div class="twocol">
+<div class="ba-col">
+<div class="panel"><h4><span class="tag">tags</span>Four evidence classes</h4><ul class="plain">
+<li><b>[EXECUTED]</b> — real <code>bcf.py</code> invocations from the replay driver: temp git repo seeded with the extracted base-commit sources, shipped helper copied to <code>.git/bcf/</code>. Stdout, rc, and elapsed quoted verbatim.</li>
+<li><b>[MODELED]</b> — LLM turns. Nobody sampled Gemma; the turns are a faithful simulation of what the shipped prompts instruct, and of the other agent's scripted v6 transcript. Track A's shape is taken from their v6-3 deck.</li>
+<li><b>[EST]</b> — tokens and wall clock, from local intel constants: 31B decode 33–35 tok/s on 4×L4, ~10.3 s median/model call, fitted latency 1.4 s + 28.7 ms/token, setup ~60 s/task. Thinking tokens decode at the same speed.</li>
+<li><b>[R]</b> — facts read from the local dataset: task JSON, RCA, index, sources, harness README, intel captures.</li>
+</ul></div>
+<div class="panel diffp"><h4><span class="tag">caveat</span>What the apply demo actually applied</h4><p>The driver's <code>apply</code> demo landed the reference patch's <b>last hunk only</b> — <code>get_model_fields</code>, lines 412–421 → 21 new lines (15+/4− in the diff stat). The full reference fix is 4 hunks (+25/−7). The modeled solver applies all four. Consequently the executed <code>CHECK: PASS</code> certifies <b>syntax + protected paths + non-empty diff</b>, not semantics: that partial state would raise <code>TypeError</code> at runtime (<code>ModelField</code> has no <code>config</code> field yet). A green gate masking an incomplete fix — the task's own lesson, reflected in the machinery.</p></div>
+</div>
+<div class="ba-col">
+<div class="panel"><h4><span class="tag">log</span>The executed backbone — 10 steps [EXECUTED]</h4>
+<table class="data"><thead><tr><th>#</th><th>step</th><th>rc</th><th>elapsed</th></tr></thead><tbody>
+<tr><td>1</td><td>install (simulated copy of shipped bcf.py)</td><td>0</td><td class="note">—</td></tr>
+<tr><td>2</td><td>spec COLD (statement on stdin)</td><td>0</td><td>0.302s</td></tr>
+<tr><td>3</td><td>spec WARM (cache hit)</td><td>0</td><td>0.215s</td></tr>
+<tr><td>4</td><td>anchors fastapi/_compat/v2.py</td><td>0</td><td>0.191s</td></tr>
+<tr><td>5</td><td>locate arbitrary_types_allowed config TypeAdapter</td><td>0</td><td>0.193s</td></tr>
+<tr><td>6</td><td>strike fastapi/_compat/v2.py:1</td><td>0</td><td>0.196s</td></tr>
+<tr><td>7</td><td>anchors (post-strike)</td><td>0</td><td>0.222s</td></tr>
+<tr><td>8</td><td>apply v2.py 412 421 (reference hunk, stdin)</td><td>0</td><td>0.217s</td></tr>
+<tr><td>9</td><td>check (post-apply)</td><td>0</td><td>0.376s</td></tr>
+<tr><td>10</td><td>state (final)</td><td>0</td><td>0.297s</td></tr>
+</tbody></table>
+<p class="note" style="margin-top:6px;color:var(--ink-3);font-size:12px">9 timed helper calls total <b>2.209 s</b>. All deterministic, stdlib-only, offline. The LLM never pays decode time for these facts.</p></div>
+<div class="tm"><span class="tmh">◆ teachable moment: a gate is not a grader</span> <code>check</code> compiles every changed file, scans protected paths and scratch, and requires a non-empty diff. It cannot see that <code>config=</code> is being passed to a dataclass that doesn't accept it yet. <b>Green machinery output is evidence about syntax and hygiene, never about behavior.</b> Behavior needs the repro — which is exactly why the spec's Verify section orders one.</div>
+</div>
+</div>
+</div><div class="receipt"><span><b>Conventions</b> A# naive · V# v6 BCF v3 · P#/S# current brain (plan/solver)</span><span>2</span></div></section>
+
+<!-- ============ 3 · TASK DEEP DIVE ============ -->
+<section class="slide" id="s2" data-i="2"><div class="slide-inner">
+<div class="kicker">The real task [R] · statement 266 chars · hints 0 · patch +25/−7 · test +141 (new file)</div><h2>Two layers, one symptom: how the config gets lost</h2>
+<div class="twocol">
+<div class="panel"><h4><span class="tag">issue</span>The whole problem statement</h4>
+<pre class="cmd">🐛 Fix handling arbitrary types when using `arbitrary_types_allowed=True`
+
+Related to https://github.com/fastapi/fastapi/discussions/14184,
+https://github.com/fastapi/fastapi/issues/14483</pre>
+<p style="margin-top:8px">No reproducer, no traceback, no root cause. A response model with <code>model_config = ConfigDict(arbitrary_types_allowed=True)</code> and a field of a plain custom class (a fake numpy array carrying <code>WithJsonSchema</code>/<code>PlainSerializer</code> metadata) fails in FastAPI with <code>PydanticSchemaGenerationError</code> — while <b>pure Pydantic handles the same model fine</b>. The agent must derive both defects from code.</p></div>
+<div class="panel"><h4><span class="tag">code</span>The two loci — base commit, fastapi/_compat/v2.py [R]</h4>
+<pre class="cmd"><span class="s"># layer 1 · ModelField.__post_init__ (lines 85–99)</span>
+self._type_adapter: TypeAdapter[Any] = TypeAdapter(
+    Annotated[self.field_info.annotation, self.field_info]
+)   <span class="bad"># ← no config= argument; metadata not splatted</span>
+
+<span class="s"># layer 2 · get_model_fields (lines 414–418)</span>
+def get_model_fields(model: Type[BaseModel]) -&gt; List[ModelField]:
+    return [
+        ModelField(field_info=field_info, name=name)
+        for name, field_info in model.model_fields.items()
+    ]   <span class="bad"># ← model.model_config never forwarded</span></pre></div>
+</div>
+<div class="panel dec"><h4><span class="tag">mask</span>Why the first error hides the second — the masking mechanism</h4>
+<div class="flow">
+<div class="flow-step"><b>symptom</b><span>PydanticSchemaGenerationError at TypeAdapter construction</span></div>
+<div class="flow-step"><b>fix L1 only</b><span>add config param (default None) + config=self.config</span></div>
+<div class="flow-step"><b>re-run</b><span>error is BYTE-IDENTICAL — config is still None</span></div>
+<div class="flow-step"><b>reveal</b><span>the producer, get_model_fields, drops model_config</span></div>
+<div class="flow-step"><b>fix L2</b><span>propagate config per field → behavior changes</span></div>
+</div>
+<p style="margin-top:9px">The exception fires inside <code>__post_init__</code> when FastAPI clones the response model, <b>before</b> the propagation gap in <code>get_model_fields</code> can be observed as a separate failure. A "correct" local edit to the adapter changes nothing observable — the worst kind of misleading evidence: it looks like the edit was wrong, when it was merely incomplete. The reference patch also <b>splats the metadata</b> (<code>*self.field_info.metadata</code> into the <code>Annotated</code> args — the v6 deck's "layer 2") so <code>WithJsonSchema</code>/<code>PlainSerializer</code> apply explicitly; that is a third component of the same construction defect, co-located with layer 1.</p></div>
+<div class="twocol">
+<div class="panel gain"><h4><span class="tag">rule</span>The propagation rule (the regression-critical nuance)</h4><p>Config applies to every field <b>except</b> when the field type is itself a <code>BaseModel</code>, <code>dict</code>, or dataclass — those carry their <i>own</i> config and must not be overridden. Reference: <code>if lenient_issubclass(type_, (BaseModel, dict)) or is_dataclass(type_): model_config = None else: model_config = model.model_config</code>. Blanket-propagating the parent config to nested models is a regression the broader response-model tests would catch. Keep the Pydantic ≥ 2.12 <code>UnsupportedFieldAttributeWarning</code> suppression.</p></div>
+<div class="panel"><h4><span class="tag">tests</span>Acceptance: 3 tests, one new file [R]</h4><p><code>tests/test_arbitrary_types.py</code> (141 lines, absent from the sandbox): <code>test_get</code> (GET / serializes <code>custom_field</code> → <code>[1.0, 2.0, 3.0]</code>), <code>test_openapi_schema</code> (OpenAPI shows the <code>WithJsonSchema</code> array), <code>test_typeadapter</code> — a <b>Pydantic-only control</b> proving the user's model is already correct. All three must pass; the control passes even with no patch, which is what makes naive's "1 of 3" so hollow.</p></div>
+</div>
+</div><div class="receipt"><span><b>Receipt</b> RCA: schema-generation-logic · loci 85–99 and 414–418 · follow-up hazard fastapi_14512 (metadata double-application)</span><span>3</span></div></section>
+
+<!-- ============ 4 · TRAPS ============ -->
+<section class="slide" id="s3" data-i="3"><div class="slide-inner">
+<div class="kicker">Six traps, and why every symptom-fix fails acceptance</div><h2>The trap field</h2>
+<div class="traps">
+<div class="trap"><div class="tn">Trap 1</div><div class="tt">Masking: the unchanged error</div><div class="td">Fix layer 1 alone and the failure is <i>identical</i> — <code>config</code> defaults to <code>None</code>. No visible progress reads as "wrong fix" and invites thrash or revert.</div><span class="chip v sm">[R]</span></div>
+<div class="trap"><div class="tn">Trap 2</div><div class="tt">The error message lies (politely)</div><div class="td">Pydantic says "set <code>arbitrary_types_allowed=True</code> in the model config" — <b>the user already did</b>. The message points at the wrong layer; the real fix is propagating the existing config.</div><span class="chip v sm">[R]</span></div>
+<div class="trap"><div class="tn">Trap 3</div><div class="tt">266-char statement, zero hints</div><div class="td">Two lines plus links. No prose to lean on; both defects must be derived from code. URL-only content is unreachable (offline).</div><span class="chip v sm">[R]</span></div>
+<div class="trap"><div class="tn">Trap 4</div><div class="tt">Distant loci, one file</div><div class="td"><code>__post_init__</code> (85–99) and <code>get_model_fields</code> (414–418) are ~330 lines apart. The v6 "one read sees both on adjacent lines" claim holds only for the config+metadata decomposition, not for the propagation locus.</div><span class="chip v sm">[R]</span></div>
+<div class="trap"><div class="tn">Trap 5</div><div class="tt">The spec itself misdirects</div><div class="td">Executed spec: family <code>boundary-edge-case</code> (a no-evidence fallback), shape <code>one-line</code>, target <code>type_</code> (line 82) — wrong playbook, wrong shape, adjacent symbol. Right file. The solver must overrule it.</div><span class="chip v sm">[EXECUTED]</span></div>
+<div class="trap"><div class="tn">Trap 6</div><div class="tt">Dep-gap collection red</div><div class="td">Acceptance test imports <code>inline_snapshot</code> — absent from the wheelhouse. On the 27-task list; local pytest fails at collection <i>regardless of patch</i>. Red here is environmental, not a verdict.</div><span class="chip r sm">[R]</span></div>
+</div>
+<h3 class="gh">Why symptom-fixes fail the acceptance set [MODELED analysis over R facts]</h3>
+<table class="data"><thead><tr><th>symptom-fix</th><th>what it does</th><th>acceptance outcome</th></tr></thead><tbody>
+<tr><td class="k">try/except around TypeAdapter</td><td>swallows the schema error; field has no usable adapter</td><td class="noc">serialization + schema paths break → test_get and test_openapi_schema fail; control still passes</td></tr>
+<tr><td class="k">blanket arbitrary_types_allowed=True on every adapter</td><td>hard-codes the whitelist instead of propagating the real config</td><td class="noc">overrides nested BaseModel/dict/dataclass configs → regressions in broader response-model tests; metadata still not explicitly applied</td></tr>
+<tr><td class="k">schema patch at one call site (v6 N20 shape)</td><td>special-cases the visible error where it surfaces</td><td class="noc">test_get may pass; test_openapi_schema still fails — the other call path is untouched</td></tr>
+<tr><td class="k">edit the tests to match behavior</td><td>overfit the oracle</td><td class="noc">scorer discards test edits (anti-tamper); hidden acceptance file is new and absent anyway</td></tr>
+</tbody></table>
+<div class="tm"><span class="tmh">◆ teachable moment: the contract is the statement + mechanism, not the error string</span> Every symptom-fix above optimizes <i>the visible failure</i>. The acceptance tests encode <i>the mechanism</i>: config must flow from the model to each standalone adapter, with the nested-type exclusion, and the metadata must shape both runtime JSON and OpenAPI. When the error message and the contract disagree, the contract wins — the shipped solver prompt says exactly this: "the statement is the contract."</div>
+</div><div class="receipt"><span><b>Receipt</b> trap 5 quoted from the executed spec; trap 6 verified: 14482 in the 27-list with inline_snapshot in test_patch</span><span>4</span></div></section>
+
+<!-- ============ 5 · TRACK A ============ -->
+<section class="slide" id="s4" data-i="4"><div class="slide-inner">
+<div class="kicker">Track A · naive agent [MODELED — shape faithfully from the v6-3 deck; intermediate calls interpolated]</div><h2>Naive: fix the symptom, meet the mask, thrash</h2>
+<div class="sbs-head"><div class="lane naive">Naive · reactive, no map of the layers<span class="cnt">~24 calls / ~22 charged (v6)</span></div><div class="lane bcf">what the mask does to it</div></div>
+<div class="sbs"><div class="col">
+<div class="call ig-none"><header><span class="cid">N1–N2</span><span class="tool">reads / grep</span><span class="pills"><span class="pill">2/50</span><span class="pill ig-none">low</span></span></header>
+<pre class="cmd"># reads the 2-line statement; greps "arbitrary" broadly across the repo</pre>
+<dl class="ann"><dt>chosen</dt><dd>start from the error string, not the mechanism</dd></dl></div>
+<div class="call ig-none"><header><span class="cid">N3–N7</span><span class="tool">repro + reads</span><span class="pills"><span class="pill">7/50</span><span class="pill ig-none">≈ zero</span></span></header>
+<pre class="cmd"># writes a repro; the arbitrary type serializes wrong; greps "arbitrary" broadly</pre>
+<dl class="ann"><dt>chosen</dt><dd>diagnose "type not allowed" (layer 1)</dd><dt>bought</dt><dd>several calls; partly "fixes" the repro's model — <b>the wrong layer</b> (v6 transcript). The model was already correct; the Pydantic-only control would have shown it.</dd></dl></div>
+<div class="call ig-neg"><header><span class="cid">N14</span><span class="tool">edit_file</span><span class="pills"><span class="pill">16/50</span><span class="pill fail">FAIL</span></span></header>
+<pre class="cmd"># threads arbitrary_types_allowed somewhere → re-runs → STILL wrong</pre>
+<dl class="ann"><dt>meant</dt><dd>whitelist the arbitrary type (layer 1)</dd><dt>bought</dt><dd><b>the masked layer surfaces.</b> In v6's framing the serializer is still ignored; in the propagation framing the error is unchanged because get_model_fields still passes no config. Either way: naive must search again, from zero.</dd></dl></div>
+<div class="call ig-neg"><header><span class="cid">N20</span><span class="tool">edit_file</span><span class="pills"><span class="pill">22/50</span><span class="pill fail">FAIL</span></span></header>
+<pre class="cmd"># special-cases metadata in one call site → get passes, schema still fails</pre>
+<dl class="ann"><dt>bought</dt><dd>a partial patch covering one layer / one call path only</dd></dl></div>
+<div class="call ig-none"><header><span class="cid">N21–N24</span><span class="tool">verify / submit</span><span class="pills"><span class="pill">24/50</span></span></header>
+<pre class="cmd"># re-runs repro, sees partial green, submits the partial patch</pre>
+<dl class="ann"><dt>outcome</dt><dd>1 of 3 acceptance tests — and the one that passes is the Pydantic-only control</dd></dl></div>
+</div><div class="col">
+<div class="panel"><h4><span class="tag">policy</span>Why reactive loses here (v6's own analysis, kept)</h4><p>A reactive policy answers whatever error is on screen. It never asks "could a second defect hide behind this one?" — so it <b>pays for the reveal, then pays a second full localization</b> for a layer it could have seen. On a masked bug that is the worst of both worlds. With no circuit breaker, identical failed edits repeat; with no contract discipline, the repro's model (already correct) gets "fixed", and test edits become tempting (the scorer discards them).</p></div>
+<div class="panel diffp"><h4><span class="tag">acct</span>Accounting [EST — v6 figures, recomputed]</h4>
+<table class="data"><tbody>
+<tr><td class="k">calls</td><td>~24 total / ~22 charged (v6)</td></tr>
+<tr><td class="k">observation</td><td>~11,000 tok (v6)</td></tr>
+<tr><td class="k">thinking</td><td>~7,500 tok (v6) → ~221 s decode at 34 tok/s</td></tr>
+<tr><td class="k">visible output</td><td>~3,050 tok (24 × ~127 median)</td></tr>
+<tr><td class="k">wall, v6</td><td>10–26 min (their range, thrash variance)</td></tr>
+<tr><td class="k">wall, recomputed</td><td>60 setup + ~337 model + ~60 tools ≈ <b>7.6 min central</b></td></tr>
+<tr><td class="k">verdict</td><td><b class="noc">predicted False</b> — 1/3, partial patch</td></tr>
+</tbody></table></div>
+<div class="warnbox"><b>Budget-regime note.</b> v6's naive ran without a 4.5-minute cap. Under the shipped <code>eval_config.yaml</code> (4.5 min/session), naive is force-submitted at the 80% mark (~3.6 min ≈ 14–16 calls) — mid-thrash, still False. The mask doesn't just cost calls; it costs the <i>time budget itself</i>.</div>
+<div class="tm"><span class="tmh">◆ teachable moment: the hollow green</span> Naive's only passing test is <code>test_typeadapter</code> — the control that <b>does not exercise FastAPI at all</b>. A partial patch can look "1/3 green" while fixing nothing that is graded. Always ask which layer a passing test actually touches.</div>
+</div></div>
+</div><div class="receipt"><span><b>Receipt</b> N3–N7 / N14 / N20 cards quote the v6-3 deck's transcript; N1–N2, N8–N13, N15–N19, N21–N24 interpolated to its ~24-call accounting</span><span>5</span></div></section>
+
+<!-- ============ 6 · TRACK B ============ -->
+<section class="slide" id="s5" data-i="5"><div class="slide-inner">
+<div class="kicker">Track B · the other agent's BCF v3, as replayed in their v6-3 deck [MODELED summary of their SIM transcript]</div><h2>BCF v3: locate-once — and what the deck overstates</h2>
+<div class="sbs-head"><div class="lane bcf">BCF v3 · deterministic pre-flight, one pointed read<span class="cnt">~10 calls / ~9 charged (claimed)</span></div><div class="lane cur">audit: claims vs the shipped reality</div></div>
+<div class="sbs"><div class="col">
+<div class="call ig-high"><header><span class="cid">V2</span><span class="tool">run_command · pre-flight</span><span class="pills"><span class="pill">2/50</span><span class="pill ig-high">high</span></span></header>
+<pre class="cmd">$ python .git/bcf/bcf.py plan "Fix handling arbitrary types…"
+{"repo":"fastapi/fastapi","route":"bugfix","sub_category":"annotations/pydantic",
+ "candidate_files":["fastapi/_compat/v2.py"],
+ "rule_note":"Annotation/type bug: … Pydantic v2 TypeAdapter config.",
+ "search_terms":["arbitrary_types","TypeAdapter","ConfigDict","Annotated","metadata"]}</pre>
+<dl class="ann"><dt>bought</dt><dd>file + layer named before any read (their claimed output, verbatim)</dd></dl></div>
+<div class="call ig-high"><header><span class="cid">V3–V4</span><span class="tool">read_file</span><span class="pills"><span class="pill">4/50</span><span class="pill ig-high">high</span></span></header>
+<pre class="cmd">read_file("fastapi/_compat/v2.py", 64, 120)   # ModelField + __post_init__</pre>
+<dl class="ann"><dt>bought</dt><dd>"one read sees both defects on adjacent lines" — the reveal is pre-empted (their claim)</dd></dl></div>
+<div class="call ig-high"><header><span class="cid">V5–V8</span><span class="tool">edit_file ×4</span><span class="pills"><span class="pill">8/50</span><span class="pill pass">PASS</span></span></header>
+<pre class="cmd"># 4 edits: imports; +config field; rebuild __post_init__ (+ *metadata, config=);
+#          thread model_config through get_model_fields</pre>
+<dl class="ann"><dt>bought</dt><dd>both layers fixed coherently (their claim)</dd></dl></div>
+<div class="call ig-some"><header><span class="cid">V9–V10</span><span class="tool">verify / submit</span><span class="pills"><span class="pill">10/50</span></span></header>
+<pre class="cmd"># verify all three assertions (get / openapi / typeadapter), then submit</pre>
+<dl class="ann"><dt>outcome</dt><dd><b class="okc">resolved = True</b>, 3/3 (scripted, not grader-run)</dd></dl></div>
+<div class="panel"><h4><span class="tag">claims</span>Their savings [EST, v6]</h4><p>~9 charged vs ~22 · ~4,200 observation vs ~11,000 · <b>~1,500 thinking vs ~7,500</b> · 4–10 min vs 10–26 min · "the whole 12-hour margin" (12 h / ~120 tasks ≈ 6 min/task). Recomputed with shipped constants: ~2.8 min total — their range is conservative <i>if</i> the 1,500-thinking assumption holds.</p></div>
+</div><div class="col">
+<div class="panel diffp"><h4><span class="tag">flags</span>Five overstatements, checked against local facts</h4><ul class="plain">
+<li><b>The <code>plan</code> subcommand does not exist.</b> The shipped helper's subcommands are <code>spec, anchors, apply, locate, strike, check, state</code> [R: SKILL.md, bcf.py]. V2's JSON is aspirational design presented as transcript — their own design doc calls the pre-flight "now real (1 call)", but the real one emits a different artifact (next slide).</li>
+<li><b>"One read sees both" misses the propagation locus.</b> <code>read_file(64,120)</code> cannot see <code>get_model_fields</code> at 414–418, ~330 lines away. The V5–V8 "thread model_config" edit therefore requires a <b>second localization the transcript never shows</b>. True co-location applies only to config+metadata inside <code>__post_init__</code>.</li>
+<li><b>The rule router contradicts their own principle.</b> "pydantic/arbitrary_type → v2.py" is a keyword rule fitted to this task; their design doc §4 says "the router must be the model's job… a rule router is a guess 128/129 times."</li>
+<li><b>1,500 thinking tokens presupposes budget 256–512</b> (design §4 item 8). The shipped brain runs <code>thinking_budget: 2048</code>; on a d3 two-locus task, ~150 thinking/turn is an assumption, not a measurement.</li>
+<li><b>The propagation rule is under-specified.</b> Their gold-fix sketch says "pass model.model_config into each ModelField" — omitting the <code>BaseModel/dict/dataclass</code> exclusion that prevents nested-config regressions.</li>
+</ul></div>
+<div class="panel gain"><h4><span class="tag">credit</span>What v6 got right — and the current brain adopted</h4><ul class="plain">
+<li><b>The control-test insight:</b> <code>test_typeadapter</code> isolates the fault to FastAPI's plumbing. Genuinely the key diagnostic move.</li>
+<li><b>Throughput framing:</b> 12 h / ~120 ≈ 6 min/task including setup; decode tokens are the dominant cost. Correct, and load-bearing.</li>
+<li><b>Deterministic pre-flight, pinned spec, /tmp scratch, never edit tests, thinking discipline</b> — all present in the shipped brain, in executed form.</li>
+<li><b>Honesty tags</b> ([V]/[SIM]/[EST]) — this deck mirrors the practice with [EXECUTED]/[MODELED].</li>
+</ul></div>
+<div class="warnbox"><b>Verdict on Track B:</b> predicted <b class="okc">True</b> <i>if</i> the four scripted edits really are reference-equivalent — but the trajectory is a person's script, the pre-flight is emulated, and the cheap thinking budget is doing unpriced work. Treat "~9 charged" as a design target, not a measurement.</div>
+</div></div>
+</div><div class="receipt"><span><b>Receipt</b> V2 JSON and V3–V8 cards quoted from 02-…slides.v6-3.html; flags cross-checked vs SKILL.md, bcf.py, v2.py source, sampling.yaml</span><span>6</span></div></section>
+
+<!-- ============ 7 · TRACK C PLAN ============ -->
+<section class="slide" id="s6" data-i="6"><div class="slide-inner">
+<div class="kicker">Track C · CURRENT shipped brain (02-bcf-brain-31b) · plan stage [MODELED turns around EXECUTED helper output]</div><h2>Plan: a mechanical operator, not a problem-solver</h2>
+<div class="twocol"><div class="ba-col">
+<div class="call ig-some"><header><span class="cid">P1</span><span class="tool">run_command · Step 0 probe</span><span class="pills"><span class="pill">1 charged</span></span></header>
+<pre class="cmd">python3 .git/bcf/bcf.py spec   <span class="bad"># cold: helper missing → error</span></pre>
+<dl class="ann"><dt>prompt</dt><dd>"Step 0 — re-entry probe… If the output is a spec… your ENTIRE final message is that spec copied verbatim." On a warm re-entry this is the <b>only</b> plan call (0.215 s [EXECUTED]).</dd></dl></div>
+<div class="call ig-some"><header><span class="cid">P2</span><span class="tool">run_skill_script · install</span><span class="pills"><span class="pill">1 charged*</span></span></header>
+<pre class="cmd">run_skill_script(skill_name="bcf-spec", script_path="scripts/install.py")
+<span class="s"># ZERO arguments — "the args array is a documented server-hang trigger"</span></pre>
+<dl class="ann"><dt>note</dt><dd>*skill-script charging is unverified in local intel (v6's D18) — counted conservatively; total ±1.</dd></dl></div>
+<div class="call ig-some"><header><span class="cid">P3</span><span class="tool">write_file</span><span class="pills"><span class="pill">1 charged</span></span></header>
+<pre class="cmd">.git/bcf/problem.md ← statement verbatim (title + body, ~1,500 chars)</pre></div>
+<div class="call ig-high"><header><span class="cid">P4</span><span class="tool">run_command · spec</span><span class="pills"><span class="pill exec">EXECUTED</span><span class="pill">0.302s</span></span></header>
+<pre class="cmd">python3 .git/bcf/bcf.py spec   <span class="ok"># rc=0, cold compute; stdout →</span></pre></div>
+<div class="call ig-none"><header><span class="cid">P5</span><span class="tool">final text · output_key</span><span class="pills"><span class="pill free">no tool</span></span></header>
+<pre class="cmd"># entire final message = spec stdout VERBATIM → pinned as bcf_spec</pre>
+<dl class="ann"><dt>why</dt><dd><code>output_key: bcf_spec</code> + <code>include_contents: none</code>: the spec survives compaction as solver instruction; the planner never analyzes the bug.</dd></dl></div>
+</div><div class="ba-col">
+<div class="panel"><h4><span class="tag">stdout</span>The REAL spec, verbatim [EXECUTED · 0.302s cold / 0.215s warm]</h4>
+<pre class="cmd"># BCF spec
+kind: bugfix | family: boundary-edge-case (alt: api-contract-violation) | shape: one-line | confidence: medium
+repo: fastapi | sparse: no
+Family uncertain: confirm which mechanism (top vs alt) before editing.
+
+## Target
+1. fastapi/_compat/v2.py � type_ (line 82)
+
+## Anchors
+Fetch fresh verified windows before every edit: python3 .git/bcf/bcf.py anchors PATH
+
+## Fix
+Handle the empty/None/trailing/out-of-range input explicitly. Guard before the operation; keep the happy path byte-identical. Check escape parity and inclusive/exclusive bounds.
+
+## Steps
+1. Read the target range (start_line/end_line).
+2. Run anchors; copy the UNIQUE window verbatim (31B) or use apply with the range (E4B).
+3. Make the minimal mechanism change; keep the happy path byte-identical.
+4. Compile: python3 -m py_compile FILE.
+5. Run the Verify test command.
+6. Run check, review git diff, submit_patch last.
+
+## Verify
+No matching existing test found. Write a /tmp repro via run_command heredoc; run with timeout 10.
+Then: python3 .git/bcf/bcf.py check
+
+## Rules
+Minimal edit. Never touch tests, conftest.py, pytest.ini, pyproject.toml. Scratch in /tmp only.
+Existing tests guard regressions; the statement is the contract. submit_patch last.</pre>
+<p class="note" style="margin-top:6px;color:var(--ink-3);font-size:12px">Quoted as captured, including the U+FFFD replacement character (�) where the em-dash was lost to a capture-time encoding replacement. The solver prompt's hedge — "if the interpolated copy looks garbled, trust the disk file (.git/bcf/spec.md)" — is load-bearing, not decorative.</p></div>
+<div class="panel diffp"><h4><span class="tag">audit</span>What the classifier got right / wrong [R: bcf.py]</h4><ul class="plain">
+<li><b>Right:</b> repo fastapi; candidate file <code>_compat/v2.py</code> (symptom-term coverage: "types/type" density); <b>no matching existing test → /tmp repro plan</b> (the acceptance file is new — exactly correct); the rules block.</li>
+<li><b>Wrong:</b> family. No <code>FAMILY_PATTERNS</code> regex matches this statement ("arbitrary_types_allowed" is a config literal; there is no schema/config vocabulary in the table), so <code>classify()</code> hit its <b>no-evidence fallback</b>: bugfix → boundary-edge-case, alt api-contract-violation. The true family, schema-generation-logic, exists in the table with a "config propagation" playbook — it just never fired. Shape "one-line" vs actual few-lines/4-hunks; target symbol <code>type_</code> (line 82, a property) vs the defect at 85–99.</li>
+<li><b>Why survivable:</b> the spec prints "Family uncertain: confirm which mechanism…", and the solver prompt demotes the whole artifact: "a computed hypothesis bundle — <b>guidance, not orders</b>… your code reading is authoritative… Overrule any candidate with a one-sentence reason."</li>
+</ul></div>
+</div></div>
+</div><div class="receipt"><span><b>Receipt</b> plan prompt: prompts/bcf_plan.md · spec stdout: exec log step 2–3 · fallback path: bcf.py classify() lines ~440–452</span><span>7</span></div></section>
+
+<!-- ============ 8 · TRACK C LOCALIZE ============ -->
+<section class="slide" id="s7" data-i="7"><div class="slide-inner">
+<div class="kicker">Track C · solver turns S1–S6 [MODELED turns; S3/S6 EXECUTED] · the commit gate fires early</div><h2>Localize: one read, one mechanism sentence, then the producer question</h2>
+<div class="twocol"><div class="ba-col">
+<div class="call ig-none"><header><span class="cid">S1</span><span class="tool">get_status</span><span class="pills"><span class="pill free">free</span></span></header>
+<pre class="cmd">get_status()   # budget check at start, per prompt</pre></div>
+<div class="call ig-high"><header><span class="cid">S2</span><span class="tool">read_file</span><span class="pills"><span class="pill">1 charged</span><span class="pill ig-high">high</span></span></header>
+<pre class="cmd">read_file("fastapi/_compat/v2.py", start_line=62, end_line=120)
+<span class="s"># 59 lines ≤ 60 cap: ModelField dataclass, type_ property, __post_init__</span></pre>
+<dl class="ann"><dt>sees</dt><dd>the spec's target <code>type_</code> is a harmless property; three lines below it, <code>TypeAdapter(Annotated[annotation, field_info])</code> with <b>no config</b>.</dd>
+<dt>mechanism</dt><dd><b>"FastAPI builds a standalone per-field TypeAdapter without the parent model's config, so arbitrary_types_allowed is lost for response fields."</b> One sentence, lines named → the commit gate says EDIT NOW… but the mechanism has a producer question first.</dd>
+<dt>overrule</dt><dd>"Spec target type_ (82) is a property, not the constructor; the defect is __post_init__ (85–99)." One-sentence reason, per prompt.</dd></dl></div>
+<div class="call ig-high"><header><span class="cid">S3</span><span class="tool">run_command · locate</span><span class="pills"><span class="pill exec">EXECUTED</span><span class="pill">0.193s</span></span></header>
+<pre class="cmd">python3 .git/bcf/bcf.py locate arbitrary_types_allowed config TypeAdapter</pre>
+<details class="out" open><summary>actual stdout [EXECUTED]</summary><pre>LOCATE (top hits; file:symbol:line)
+fastapi/_compat/v2.py:_get_model_config:170  (score 181)</pre></details>
+<dl class="ann"><dt>why</dt><dd>prompt: "Evidence contradicts the spec? locate WORDS with refined symptom words; follow the new ranking." The hit — a config accessor in the same file — confirms the config vocabulary lives here.</dd></dl></div>
+<div class="call ig-high"><header><span class="cid">S4</span><span class="tool">run_command · grep producers</span><span class="pills"><span class="pill">1 charged</span><span class="pill ig-high">high</span></span></header>
+<pre class="cmd">grep -n "ModelField(" fastapi/_compat/v2.py fastapi/routing.py | head -20</pre>
+<dl class="ann"><dt>the DAG question</dt><dd><b>"Who constructs ModelField for response models, and do they pass config?"</b> → <code>get_model_fields</code> at 414. This is the step the mask demands: the consumer fix alone cannot work unless the producer forwards config.</dd></dl></div>
+<div class="call ig-high"><header><span class="cid">S5</span><span class="tool">read_file</span><span class="pills"><span class="pill">1 charged</span></span></header>
+<pre class="cmd">read_file("fastapi/_compat/v2.py", start_line=406, end_line=421)</pre>
+<dl class="ann"><dt>sees</dt><dd><code>ModelField(field_info=field_info, name=name)</code> — <b>layer 2 confirmed</b>: <code>model.model_config</code> is dropped. Both loci now in belief state, <i>before any edit</i> — the reveal is pre-empted, as v6 promised, but via an explicit producer search rather than a lucky window.</dd></dl></div>
+<div class="call ig-high"><header><span class="cid">S6</span><span class="tool">run_command · anchors</span><span class="pills"><span class="pill exec">EXECUTED</span><span class="pill">0.191s</span></span></header>
+<pre class="cmd">python3 .git/bcf/bcf.py anchors fastapi/_compat/v2.py</pre>
+<details class="out" open><summary>actual stdout [EXECUTED]</summary><pre>ANCHORS fastapi/_compat/v2.py (family: boundary-edge-case)
+[1] lines 20-20 status=unique strategy=exact
+old_string (copy verbatim):
+from fastapi.types import IncEx, ModelNameMap, UnionType
+[2] lines 104-104 status=unique strategy=exact
+old_string (copy verbatim):
+        return self.field_info.get_default(call_default_factory=True)
+[3] lines 115-115 status=unique strategy=exact
+old_string (copy verbatim):
+                self._type_adapter.validate_python(value, from_attributes=True),
+End of anchors: re-run anchors before every edit; never reuse a stale window.</pre></details>
+<dl class="ann"><dt>note</dt><dd>verified-unique windows near the edit sites; the solver copies old_string VERBATIM, never from memory. Re-run before every edit (folded into the compile calls below).</dd></dl></div>
+</div><div class="ba-col">
+<div class="panel dec"><h4><span class="tag">doctrine</span>The prompt clauses doing the work</h4><ul class="plain">
+<li><b>Commit gate:</b> "After ONE targeted read, if you can state the mechanism in one sentence and name the lines, EDIT NOW — the edit is the hypothesis test. No extra reads 'to be sure'; max 3 candidate reads before committing." S2 is read #1; S5 is read #2 — inside the cap.</li>
+<li><b>Narrow reads:</b> "~20 lines around the anchor, max 60 per read. Over 400 lines: grep first." v2.py is 499 lines → grep-before-read is mandatory, and it is exactly what surfaces the distant producer.</li>
+<li><b>Spec demotion:</b> "guidance, not orders… your code reading is authoritative." The wrong family playbook never gets followed.</li>
+<li><b>Paraphrase discipline:</b> every important tool result becomes one visible assistant sentence (paths, lines, decisions) — the belief state survives compaction.</li>
+</ul></div>
+<div class="panel"><h4><span class="tag">dag</span>The fix DAG (topological order matters)</h4>
+<div class="flow">
+<div class="flow-step"><b>imports</b><span>+is_dataclass, +ConfigDict</span></div>
+<div class="flow-step"><b>dataclass field</b><span>config: Union[ConfigDict, None] = None</span></div>
+<div class="flow-step"><b>consumer</b><span>__post_init__: config=self.config + *metadata</span></div>
+<div class="flow-step"><b>producer</b><span>get_model_fields forwards model_config</span></div>
+</div>
+<p style="margin-top:8px">Field before consumer before producer: passing <code>config=</code> to a dataclass that lacks the field is a <code>TypeError</code>. The executed apply demo (next slide) landed the <b>producer alone</b> — a live DAG violation that <code>check</code> waved through, because syntax gates cannot see order.</p></div>
+<div class="tm"><span class="tmh">◆ teachable moment: localization is a question, not a place</span> v6 frames localization as "land on the right function." The shipped brain frames it as <b>state the mechanism, then ask who feeds it</b>. On a two-locus bug the second question is the whole game: the consumer (TypeAdapter) and the producer (get_model_fields) are 330 lines apart, and only the producer question bridges them. Cheap deterministic calls (locate, grep) before expensive uncertain ones (edits).</div>
+</div></div>
+</div><div class="receipt"><span><b>Receipt</b> S3/S6 stdout verbatim from exec log steps 5/4 · prompt clauses: prompts/solver.md · v2.py = 499 lines [R]</span><span>8</span></div></section>
+
+<!-- ============ 9 · TRACK C EDITS ============ -->
+<section class="slide" id="s8" data-i="8"><div class="slide-inner">
+<div class="kicker">Track C · solver turns S7–S16 [MODELED edits; apply/strike machinery EXECUTED] · four hunks, reference-equivalent</div><h2>Edit: verbatim anchors, compile gates, and the executed apply demo</h2>
+<div class="twocol"><div class="ba-col">
+<div class="panel"><h4><span class="tag">loop</span>The edit loop as modeled (prompt-faithful)</h4>
+<table class="data"><thead><tr><th>turn</th><th>action</th><th>hunk</th></tr></thead><tbody>
+<tr><td class="k">S7</td><td>edit_file · verbatim old_string</td><td>imports: <code>from dataclasses import dataclass, is_dataclass</code></td></tr>
+<tr><td class="k">S8</td><td>run_command: py_compile + sed re-read + fresh anchors (one call)</td><td>gate</td></tr>
+<tr><td class="k">S9</td><td>edit_file</td><td>imports: <code>+ ConfigDict</code> on the pydantic line</td></tr>
+<tr><td class="k">S10</td><td>run_command: compile + re-read + anchors</td><td>gate</td></tr>
+<tr><td class="k">S11</td><td>edit_file</td><td>dataclass: <code>config: Union[ConfigDict, None] = None</code></td></tr>
+<tr><td class="k">S12</td><td>run_command: compile + re-read + anchors</td><td>gate</td></tr>
+<tr><td class="k">S13</td><td>edit_file</td><td>__post_init__: <code>annotated_args = (annotation, *metadata, field_info)</code>; <code>TypeAdapter(Annotated[annotated_args], config=self.config)</code></td></tr>
+<tr><td class="k">S14</td><td>run_command: compile + re-read + anchors</td><td>gate</td></tr>
+<tr><td class="k">S15</td><td>edit_file (4-line old_string → 15-line loop)</td><td>get_model_fields: per-field config with the BaseModel/dict/dataclass exclusion</td></tr>
+<tr><td class="k">S16</td><td>run_command: py_compile + sed 414–436 re-read</td><td>gate</td></tr>
+</tbody></table>
+<p class="note" style="margin-top:6px;color:var(--ink-3);font-size:12px">edit_file is primary per prompt; <code>apply PATH START END</code> is the documented fallback after two failed edits — and the fallback is the path the replay driver actually executed (right). Folding compile+re-read+anchors into one run_command keeps the discipline at ~2 calls per hunk instead of 4.</p></div>
+<div class="call ig-high"><header><span class="cid">strike demo</span><span class="tool">bcf.py strike + anchors</span><span class="pills"><span class="pill exec">EXECUTED</span><span class="pill">0.196s / 0.222s</span></span></header>
+<pre class="cmd">python3 .git/bcf/bcf.py strike fastapi/_compat/v2.py:1</pre>
+<details class="out" open><summary>actual stdout [EXECUTED]</summary><pre>STRUCK fastapi/_compat/v2.py:1. Future anchors exclude it. Get a different anchor: python3 .git/bcf/bcf.py anchors fastapi/_compat/v2.py � or switch to apply line-range. Never retry the identical failed edit.</pre></details>
+<pre class="cmd"># then: anchors again → same 3 unique windows, plus:</pre>
+<details class="out"><summary>post-strike anchors tail [EXECUTED]</summary><pre>Struck loci excluded: 1
+End of anchors: re-run anchors before every edit; never reuse a stale window.</pre></details>
+<dl class="ann"><dt>role</dt><dd>the two-strike circuit breaker, executed: two identical failed edits → strike → change strategy. NEVER a third identical call. This is the anti-thrash machinery naive lacks.</dd></dl></div>
+</div><div class="ba-col">
+<div class="call ig-high"><header><span class="cid">apply demo</span><span class="tool">bcf.py apply 412 421</span><span class="pills"><span class="pill exec">EXECUTED</span><span class="pill">rc=0 · 0.217s</span></span></header>
+<pre class="cmd">python3 .git/bcf/bcf.py apply fastapi/_compat/v2.py 412 421
+&lt;&lt;'EOF'   <span class="s"># replacement lines on single-quoted heredoc stdin</span></pre>
+<details class="out" open><summary>actual stdout — the real reference hunk, landed [EXECUTED]</summary><pre>--- a/fastapi/_compat/v2.py
++++ b/fastapi/_compat/v2.py
+@@ -413,8 +413,19 @@
+
+ def get_model_fields(model: Type[BaseModel]) -&gt; List[ModelField]:
+-    return [
+-        ModelField(field_info=field_info, name=name)
+-        for name, field_info in model.model_fields.items()
+-    ]
++    model_fields: List[ModelField] = []
++    for name, field_info in model.model_fields.items():
++        type_ = field_info.annotation
++        if lenient_issubclass(type_, (BaseModel, dict)) or is_dataclass(type_):
++            model_config = None
++        else:
++            model_config = model.model_config
++        model_fields.append(
++            ModelField(
++                field_info=field_info,
++                name=name,
++                config=model_config,
++            )
++        )
++    return model_fields
+
+
+
+OK lines 412-421 replaced</pre></details>
+<dl class="ann"><dt>machinery</dt><dd>refuses protected paths and ranges &gt;120 lines; backs up; writes atomically; <b>auto-rollback on syntax error</b>. 10 old lines → 21 new lines; diff stat 15+/4− [EXECUTED].</dd>
+<dt>scope</dt><dd>this demo applied the <b>producer hunk only</b> (the driver picks the patch's last hunk). The modeled solver applies all four; the demo proves the largest, riskiest hunk lands cleanly.</dd></dl></div>
+<div class="warnbox"><b>The DAG violation, executed.</b> After this producer-only apply, <code>ModelField</code> still has no <code>config</code> field and <code>is_dataclass</code> is not imported. Runtime would raise <code>TypeError</code>/<code>NameError</code> — yet <code>check</code> printed <b>CHECK: PASS</b> (next slide). Syntax gates cannot see dependency order. The repro, not the gate, is the behavioral oracle.</div>
+<div class="tm"><span class="tmh">◆ teachable moment: verbatim or nothing</span> Every old_string is copied from a fresh verified-unique window or a just-read range — never composed from memory or from <i>intended</i> code. Small models hallucinate whitespace and stale context; the anchors/apply pair converts "edit correctness" from a model skill into a filesystem check. That is why the executed apply matters more than any scripted edit_file in the v6 deck.</div>
+</div></div>
+</div><div class="receipt"><span><b>Receipt</b> apply/strike stdout verbatim: exec log steps 6–8 · edit loop: prompts/solver.md §Edit loop · hunk content: reference patch [R]</span><span>9</span></div></section>
+
+<!-- ============ 10 · TRACK C VERIFY ============ -->
+<section class="slide" id="s9" data-i="9"><div class="slide-inner">
+<div class="kicker">Track C · solver turns S17–S20 [MODELED verify; check/state EXECUTED] · the dep-gap doctrine</div><h2>Verify by mechanism, gate by check, submit last</h2>
+<div class="twocol"><div class="ba-col">
+<div class="call ig-high"><header><span class="cid">S17</span><span class="tool">run_command · /tmp repro</span><span class="pills"><span class="pill">1 charged</span><span class="pill ig-high">high</span></span></header>
+<pre class="cmd"><span class="s"># spec Verify: "No matching existing test found. Write a /tmp repro via
+# run_command heredoc; run with timeout 10."  [EXECUTED spec text]</span>
+cat &gt; /tmp/repro_14482.py &lt;&lt;'EOF'
+from typing import List
+from fastapi import FastAPI
+from fastapi.testclient import TestClient
+from pydantic import (BaseModel, ConfigDict, PlainSerializer,
+                      TypeAdapter, WithJsonSchema)
+from typing_extensions import Annotated
+
+class FakeNumpyArray:
+    def __init__(self): self.data = [1.0, 2.0, 3.0]
+
+Fake = Annotated[FakeNumpyArray,
+    WithJsonSchema(TypeAdapter(List[float]).json_schema()),
+    PlainSerializer(lambda v: v.data)]
+
+class MyModel(BaseModel):
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+    custom_field: Fake
+
+app = FastAPI()
+@app.get("/")
+def ep() -&gt; MyModel: return MyModel(custom_field=FakeNumpyArray())
+
+c = TestClient(app)
+assert c.get("/").json() == {"custom_field": [1.0, 2.0, 3.0]}
+s = c.get("/openapi.json").json()["components"]["schemas"]["MyModel"]
+assert s["properties"]["custom_field"]["type"] == "array"
+print("REPRO OK: serialize + schema")
+EOF
+timeout 10 python3 /tmp/repro_14482.py</pre>
+<dl class="ann"><dt>modeled</dt><dd>script content [MODELED], mirroring the acceptance tests <b>minus inline_snapshot</b> — plain asserts, no snapshot library, no pytest collection. Before the fix this raises PydanticSchemaGenerationError at route setup; after the full 4-hunk fix it prints REPRO OK.</dd>
+<dt>fallback</dt><dd>if TestClient/httpx is unavailable: <code>app.openapi()</code> alone still exercises the schema path; serialization argued from mechanism + the Pydantic-only control.</dd></dl></div>
+<div class="call ig-high"><header><span class="cid">S18</span><span class="tool">run_command · check</span><span class="pills"><span class="pill exec">EXECUTED</span><span class="pill">0.376s</span></span></header>
+<pre class="cmd">python3 .git/bcf/bcf.py check</pre>
+<details class="out" open><summary>actual stdout [EXECUTED]</summary><pre>CHECK: PASS
+Next: review git diff, then submit_patch last (verify patch_size &gt; 0).</pre></details></div>
+<div class="call ig-some"><header><span class="cid">S19</span><span class="tool">run_command · git diff review</span><span class="pills"><span class="pill">1 charged</span></span></header>
+<pre class="cmd">git diff --stat &amp;&amp; git diff
+<span class="s"># modeled full-fix stat: 1 file changed, 25 insertions(+), 7 deletions(-)
+# executed demo stat:    1 file changed, 15 insertions(+), 4 deletions(-)</span></pre></div>
+<div class="call ig-high"><header><span class="cid">S20</span><span class="tool">submit_patch</span><span class="pills"><span class="pill free">free · LAST</span><span class="pill pass">patch_size &gt; 0</span></span></header>
+<pre class="cmd">submit_patch()   # then one-sentence completion text only AFTER submit</pre>
+<dl class="ann"><dt>state</dt><dd>the executed final compass [EXECUTED 0.297s]: spec summary + diff stat + strikes + "last check: PASS" + "edits recorded: 1" + NEXT hint — filesystem as source of truth.</dd></dl></div>
+</div><div class="ba-col">
+<div class="panel diffp"><h4><span class="tag">dep-gap</span>If verification hits collection red — the doctrine</h4>
+<p>The acceptance file <code>tests/test_arbitrary_types.py</code> is <b>new</b> (absent from the sandbox), and it imports <code>inline_snapshot</code> — verified present in this task's test_patch, and this task is on the competitor-reported <b>27-task dep-gap list</b> (absent from the wheelhouse; local collection fails regardless of patch; caps measured local resolve at ~79%).</p>
+<p style="margin-top:8px">The shipped prompt already routes around it:</p>
+<ul class="plain" style="margin-top:6px">
+<li>"On failure: interpret and fix, max 2 repair cycles; <b>ignore pre-existing unrelated failures</b>."</li>
+<li>"Base tests may encode OLD behavior the statement flips — <b>statement plus mechanism is the contract</b>; hidden acceptance tests are absent here."</li>
+<li>spec Verify: no matching test → <b>/tmp repro with inline assertions</b> — which imports no snapshot library at all.</li>
+</ul>
+<p style="margin-top:8px">So if a targeted existing-test run dies at collection on <code>inline_snapshot</code>/<code>dirty_equals</code>, the correct move is: classify it as pre-existing/environmental, do <b>not</b> spend a repair cycle on it, and rely on mechanism + the /tmp asserts. This is the <b>masked-68 doctrine</b>: 73 gold-passing tasks − 5 that pass with no patch = 68 valid discriminators; tune on those, treat collection red elsewhere as noise.</p></div>
+<div class="panel"><h4><span class="tag">state</span>The executed final state [EXECUTED]</h4>
+<details class="out" open><summary>actual stdout (abridged to key lines)</summary><pre>STATE (filesystem is the source of truth)
+# BCF spec
+kind: bugfix | family: boundary-edge-case (alt: api-contract-violation) | shape: one-line | confidence: medium
+repo: fastapi | sparse: no
+## Target
+1. fastapi/_compat/v2.py � type_ (line 82)
+
+git diff --stat: fastapi/_compat/v2.py | 19 +++++++++++++++---- |  1 file changed, 15 insertions(+), 4 deletions(-)
+strikes: fastapi/_compat/v2.py:1
+last check: PASS
+edits recorded: 1
+NEXT: review git diff, then submit_patch last (verify patch_size &gt; 0).</pre></details>
+<p class="note" style="margin-top:6px;color:var(--ink-3);font-size:12px">Note the state still carries the wrong family/target — the machinery never "learns" the solver's overrule. The belief state that matters lives in the solver's visible paraphrases and the diff itself.</p></div>
+<div class="tm"><span class="tmh">◆ teachable moment: verification is a contract check, not a vibe</span> The repro asserts the <i>mechanism's consequences</i> (serialized list + array schema) with plain asserts — the same consequences the hidden tests check, minus the unavailable snapshot library. When the environment cannot run the real oracle, reconstruct its <b>intent</b> in /tmp; never edit the oracle, and never mistake environmental red for patch failure.</div>
+</div></div>
+</div><div class="receipt"><span><b>Receipt</b> check/state stdout: exec log steps 9–10 · dep-gap: intel/live-solvability-data.md §1–2 (14482 verified "is") · doctrine: prompts/solver.md</span><span>10</span></div></section>
+
+<!-- ============ 11 · MASKING & RISKS ============ -->
+<section class="slide" id="s10" data-i="10"><div class="slide-inner">
+<div class="kicker">Track C · explicit masking analysis [MODELED]</div><h2>How the current doctrine navigates two layers — and where it can still thrash</h2>
+<div class="twocol">
+<div class="panel gain"><h4><span class="tag">map</span>Doctrine → masking failure mode</h4>
+<table class="data"><thead><tr><th>clause (solver.md)</th><th>failure it prevents</th></tr></thead><tbody>
+<tr><td class="k">"state the mechanism in one sentence… EDIT NOW"</td><td>analysis paralysis; the mechanism sentence ("config lost between model and adapter") already implies the producer question</td></tr>
+<tr><td class="k">"Overrule any candidate with a one-sentence reason"</td><td>compliance with the spec's wrong boundary-edge-case playbook (try/except guards)</td></tr>
+<tr><td class="k">"max 2 repair cycles"</td><td>unbounded thrash after the unchanged-error reveal; forces re-localization instead of re-editing</td></tr>
+<tr><td class="k">"Two identical failed edits → strike… NEVER a third"</td><td>the N14-style loop; executed strike machinery excludes the dead locus</td></tr>
+<tr><td class="k">"statement plus mechanism is the contract"</td><td>overfitting the visible error string ("set arbitrary_types_allowed=True" — already set)</td></tr>
+<tr><td class="k">"ignore pre-existing unrelated failures"</td><td>burning repair cycles on dep-gap collection red</td></tr>
+<tr><td class="k">"Never redo a completed edit… re-read the narrow range"</td><td>compaction amnesia re-editing layer 1 after layer 2 is found</td></tr>
+</tbody></table></div>
+<div class="ba-col">
+<div class="panel diffp"><h4><span class="tag">risk</span>Honest thrash branches (where C could still fail)</h4><ul class="plain">
+<li><b>R1 · consumer-only first edit.</b> If the solver fixes <code>__post_init__</code> before asking the producer question, the repro fails <b>identically</b>. Repair cycle 1 must re-localize to <code>get_model_fields</code>; if the unchanged error is misread as "my edit didn't take", cycle 2 goes to re-anchors/re-edit — and the cap submits a partial patch. <b>Predicted False on this branch.</b> The producer grep (S4) is the cheap insurance; the prompt implies it via "mechanism" but never says "grep the callers" explicitly.</li>
+<li><b>R2 · playbook compliance.</b> A weak model may follow the spec's "guard empty/None inputs" literally → try/except symptom fix. The demotion clause mitigates; it does not eliminate.</li>
+<li><b>R3 · metadata subtlety.</b> Config-only propagation might serialize correctly while OpenAPI differs from the reference (the splat is explicit in the patch). Predicted True assumes <b>full 4-hunk equivalence</b>; a 3-hunk patch is an equivalence risk, not a guaranteed pass.</li>
+<li><b>R4 · thinking overflow.</b> <code>thinking_budget: 2048</code> is advisory (local intel: enforcement unverified; the harness ships a MAX_TOKENS nudge). A d3 reasoning turn that burns the budget mid-edit truncates the tool call → nudge → split edits. Each overflow costs ~30–60 s.</li>
+<li><b>R5 · wall-clock breach.</b> Modeled session ≈ 3.8 min of a 4.5 min cap. One repair cycle ≈ +45–60 s fits; <b>two</b> breach the 80% rule → forced submit of the best verified improvement, possibly partial.</li>
+</ul></div>
+<div class="warnbox"><b>Net.</b> The current brain handles masking <i>by construction</i> (mechanism-first + producer search + capped repairs + strike), not by a lucky read window. Its residual risk is concentrated in R1: the doctrine makes the producer question <b>implicit</b>. One prompt line — "if the fix adds a parameter, grep who constructs the object" — would make it explicit. That is the single highest-value gap this replay found.</div>
+</div>
+</div>
+</div><div class="receipt"><span><b>Receipt</b> clauses quoted from prompts/solver.md · risk branches are modeled judgments [MODELED], not sampled outcomes</span><span>11</span></div></section>
+
+<!-- ============ 12 · SCORECARD ============ -->
+<section class="slide" id="s11" data-i="11"><div class="slide-inner">
+<div class="kicker">The synthesis [EST unless marked] · constants: 34 tok/s decode (33–35), 1.4 s + 28.7 ms/tok fitted latency, ~10.3 s median call, setup ~60 s</div><h2>Scorecard: three tracks, one task, with the math</h2>
+<table class="data score"><thead><tr><th></th><th>A · naive [MODELED]</th><th>B · v6 BCF v3 [MODELED]</th><th>C · current BCF [MODELED+EXECUTED]</th></tr></thead><tbody>
+<tr><td class="k">charged calls</td><td>~22 (of ~24)</td><td>~9 (of ~10)</td><td><b>22 ±1</b> (plan 4 + solver 18; get_status/submit free; install charging ±1)</td></tr>
+<tr><td class="k">turns</td><td>~26</td><td>~11</td><td>~25 (plan 5 + solver 20)</td></tr>
+<tr><td class="k">observation tokens</td><td>~11,000 (v6)</td><td>~4,200 (v6)</td><td>~7,100 (prompts ~1,700 + spec 430×2 + reads ~600 + anchors ~280×6 + gates ~1,200 + diff ~500 + misc)</td></tr>
+<tr><td class="k">thinking tokens</td><td>~7,500 (v6)</td><td>~1,500 (v6; assumes budget 256–512)</td><td>~3,900 (budget 2048 advisory; mechanism turns ~600–700, edit turns ~200)</td></tr>
+<tr><td class="k">visible output tokens</td><td>~3,050 (24×127)</td><td>~1,300</td><td>~2,500 (edits ~600, commands ~550, paraphrases ~650, spec echo 430, misc)</td></tr>
+<tr><td class="k">decode time</td><td>10,550/34 ≈ 310 s</td><td>2,800/34 ≈ 82 s</td><td>6,400/34 ≈ <b>188 s</b></td></tr>
+<tr><td class="k">model latency (fitted)</td><td>24×1.4 + 10,550×.0287 ≈ 337 s</td><td>10×1.4 + 2,800×.0287 ≈ 94 s</td><td>24×1.4 + 6,400×.0287 ≈ <b>218 s</b></td></tr>
+<tr><td class="k">tool execution</td><td>~60 s (pytest runs, re-reads)</td><td>~15 s</td><td>~10 s (helper 2.209 s [EXECUTED] + compiles + repro + grep/git)</td></tr>
+<tr><td class="k">session wall</td><td>≈ 6.6 min</td><td>≈ 1.8 min</td><td>≈ <b>3.8 min</b> (fits 4.5 cap; margin ≈ 1 repair cycle)</td></tr>
+<tr><td class="k">task wall incl. setup</td><td>≈ 7.6 min (v6 range 10–26)</td><td>≈ 2.8 min (v6 range 4–10)</td><td>≈ <b>4.8 min</b> (inside the ~6 min/task throughput envelope)</td></tr>
+<tr><td class="k">predicted outcome</td><td><b class="noc">False</b> · 1/3 (control only)</td><td><b class="okc">True*</b> · 3/3 scripted</td><td><b class="okc">True</b> on primary branch · 4-hunk reference equivalence; False on R1/R5 branches</td></tr>
+<tr><td class="k">failure modes avoided</td><td>none — wrong-layer edit, thrash, partial patch</td><td>wrong-layer, re-localization (claimed); no test edits</td><td>wrong-layer (control reasoning), infinite retry (strike), syntax corruption (rollback+compile), protected-path edits (check), scratch pollution (/tmp), compaction amnesia (state+paraphrase), dep-gap misattribution (doctrine)</td></tr>
+</tbody></table>
+<div class="twocol">
+<div class="panel dec"><h4><span class="tag">math</span>How to read the numbers</h4><p>Wall = setup 60 s + Σ<sub>calls</sub>(1.4 s + 0.0287 s × output-tokens/call) + tool time; thinking decodes at the same 33–35 tok/s as visible output (it <i>is</i> decode). The fitted-latency row and the decode row are two views of the same cost, not additive. C's helper time is measured (2.209 s across 9 calls [EXECUTED]); everything else is [EST]. B's figures are v6's claims recomputed under the same constants — their 4–10 min range is conservative against the ~2.8 min central <i>if</i> 1,500 thinking holds.</p></div>
+<div class="panel diffp"><h4><span class="tag">insight</span>The uncomfortable finding</h4><p><b>C spends about as many charged calls as naive (~22).</b> The discipline is not call-cheap: anchors-before-every-edit, compile gates, re-reads, and the producer search cost real calls. What C buys with them is <i>reliability per call</i> — and it halves naive's thinking/decode (3,900 vs 7,500) because the mechanism is found once, not re-derived after each reveal. B's ~9 is only reachable by skipping per-edit verification. The honest ranking on this task: <b>B is cheapest-if-scripted, C is cheapest-that-actually-runs, A is expensive and wrong.</b></p></div>
+</div>
+</div><div class="receipt"><span><b>Receipt</b> constants: intel/budget-sampling.md + prior-art.md (750974/748287 captures) · verdicts are equivalence predictions, no grader run</span><span>12</span></div></section>
+
+<!-- ============ 13 · DIVERGENCES ============ -->
+<section class="slide" id="s12" data-i="12"><div class="slide-inner">
+<div class="kicker">v6 mechanisms vs the shipped doctrine, on THIS task</div><h2>Divergences &amp; gap notes</h2>
+<table class="data"><thead><tr><th>v6 mechanism</th><th>current shipped equivalent</th><th>which handles 14482's masking better</th></tr></thead><tbody>
+<tr><td class="k">Expected-red predictor + ratchet (H1): "red test names a renamed symbol → EXPECTED, don't revert"</td><td>"statement plus mechanism is the contract" + max 2 repair cycles + strike + "never redo a completed edit"</td><td><b>Current.</b> H1's trigger (renamed symbol in a red test) never fires here — the mask is an <i>unchanged</i> error, not a renamed-symbol red. H1 is a 1–3% corpus mechanism; the repair cap + mechanism contract is general. Gap: current keeps no written pre-fix prediction (v6's journal does) — see below.</td></tr>
+<tr><td class="k">Journal on disk (.git/bcf/) — externalized beliefs + predictions</td><td>state.json (spec, strikes, edits, last check) + one-sentence paraphrase discipline</td><td><b>Split.</b> Current state is executed and compaction-proof [EXECUTED state output], but it records <i>actions</i>, not <i>predictions</i>. A one-line "before verify: I expect X; if unchanged, suspect producer" journal entry would make R1 recoverable after compaction. Cheap adoptable.</td></tr>
+<tr><td class="k">Proxy tests (H2): copy visible tests to /tmp, s/old/new/, run</td><td>spec Verify: /tmp repro with inline asserts; targeted tests only, timeout-wrapped</td><td><b>Tie / inapplicable.</b> There are no visible tests to transform (acceptance file is new). H2 cannot fire; the /tmp repro is the right instrument. Both avoid test edits.</td></tr>
+<tr><td class="k">thinking_budget 256–512, "≤2 sentences thought"</td><td>thinking_budget 2048, include_thoughts true, max_output_tokens 6144; "Thinking is for the mechanism hypothesis"</td><td><b>Quantified trade below.</b> On d3 two-locus reasoning, 256–512 risks truncating the producer insight; 2048 risks wall-clock. Neither is free.</td></tr>
+<tr><td class="k">"Model routes, script measures" (design §4)</td><td>spec = hypothesis bundle; solver overrules; locate re-ranks on demand [EXECUTED]</td><td><b>Agreement in principle.</b> But the executed classifier emitted a no-evidence fallback family + wrong shape + adjacent symbol. Gap: FAMILY_PATTERNS lacks config/TypeAdapter/arbitrary_types vocabulary — schema-generation-logic ("config propagation" playbook) exists but never fired. Add the vocabulary, or suppress the playbook when the fallback fires.</td></tr>
+<tr><td class="k">One pre-flight call (bcf.py plan → route JSON)</td><td>spec via install + problem.md + spec (3–4 calls cold, 1 warm at 0.215 s [EXECUTED])</td><td><b>v6 cheaper on paper; current real.</b> The plan subcommand doesn't exist; the shipped spec is a different, executed artifact. Warm re-entry parity: both 1 call.</td></tr>
+<tr><td class="k">anchors / apply / strike / check (described)</td><td>same, EXECUTED: unique windows, atomic apply + syntax rollback, strike exclusion, pre-submit gate — all rc=0, sub-second</td><td><b>Current, decisively.</b> This is the gap between a design doc and a machine. The apply demo landed the riskiest hunk verbatim; the strike demo excluded a dead locus; check gated the patch.</td></tr>
+<tr><td class="k">Evidence shaping: pytest -q --tb=line -rf | tail</td><td>targeted-only + timeout discipline; no explicit shaping flags in prompt</td><td><b>v6, slightly.</b> Free tokens-saving adoptable: add the flags to the Verify guidance.</td></tr>
+<tr><td class="k">max_time_minutes 4 (design)</td><td>4.5 min + timeout_seconds 180 + max_tool_calls 50 + max_turns 50 (eval_config.yaml)</td><td><b>Comparable.</b> C's modeled 3.8-min session fits with ~0.7 min margin; A's 6.6-min session would be cut at 80%. Budget regime changes naive's trajectory, not just its score.</td></tr>
+</tbody></table>
+<div class="twocol">
+<div class="panel dec"><h4><span class="tag">trade</span>Thinking 2048 vs 256–512 on a d3 task, quantified [EST]</h4>
+<p>At 34 tok/s, a full-budget turn costs <b>2048/34 ≈ 60 s</b> of decode; 512 → ~15 s; 256 → ~7.5 s. Worst case over ~20 solver turns: 2048 → ~41k tokens ≈ 20 min (catastrophic); 512 → ~10k ≈ 5 min; 256 → ~5k ≈ 2.5 min. Expected case (this trajectory): ~3,900 thinking at 2048 vs ~1,500–2,000 at 256–512 → <b>~55–70 s saved per task</b>.</p>
+<p style="margin-top:8px">But the two-locus insight (S2–S4: mechanism + producer question) plausibly needs 600–900 tokens in one turn. At budget 256 it gets truncated → the producer is missed → R1 fires → each repair cycle costs ~45–60 s <i>plus</i> a shot at 2-cycle exhaustion (False). Break-even: if the low budget raises P(miss) by more than ~15–20%, the expected cost exceeds the savings — and a False wastes the whole ~6-min slot. <b>Recommendation: A/B 1024 as the middle</b> (worst case ~30 s/turn, insight headroom preserved). Cannot be settled locally: no grader run, and this task's dep gap caps local signal anyway.</p></div>
+<div class="panel diffp"><h4><span class="tag">gaps</span>Adoptables &amp; cautions for the next brain revision</h4><ul class="plain">
+<li><b>Adopt (cheap):</b> explicit producer-grep clause ("if the fix adds a parameter, find who constructs the object"); one-line written prediction before verify; pytest shaping flags; config/TypeAdapter vocabulary in FAMILY_PATTERNS (or playbook suppression on fallback).</li>
+<li><b>Keep (executed edge):</b> anchors/apply/strike/check/state; warm spec cache; output_key pinning; /tmp-only scratch; repair cap.</li>
+<li><b>Caution:</b> the reference metadata splat later double-applies with the trailing FieldInfo (follow-up fastapi_14512) [R: RCA]. The statement is the contract — do not "fix ahead" here; note the interaction for the corpus-level view.</li>
+<li><b>Do not adopt:</b> the fitted rule router (v6's own critique condemns it); the emulated plan JSON as if executed.</li>
+</ul></div>
+</div>
+</div><div class="receipt"><span><b>Receipt</b> v6 mechanisms: 01-critique-and-bcf-v3-design.md §2–4 · shipped: prompts/, configs/, eval_config.yaml, SKILL.md · exec log</span><span>13</span></div></section>
+
+<!-- ============ 14 · TEACHABLE ============ -->
+<section class="slide" id="s13" data-i="13"><div class="slide-inner">
+<div class="kicker">The concepts, explained kindly [R]</div><h2>Teachable moments</h2>
+<div class="defs">
+<div class="def"><dl><dt>Error masking</dt><dd><span class="formal">one defect's failure conceals a second, independent defect; fixing the first reveals — or fails to change — the observable failure</span>Here the strong form: fixing layer 1 leaves the error <b>byte-identical</b>, because the new config parameter defaults to None until the producer forwards it. A fix that stops at layer one is still wrong.<span class="huh"><b>in this deck:</b> TypeAdapter-without-config (85–99) masks get_model_fields-drops-config (414–418). The v6 deck's config-vs-metadata framing is a second, co-located masking pair inside __post_init__.</span></dd></dl></div>
+<div class="def"><dl><dt>Symptom vs root cause · the 5 whys</dt><dd><span class="formal">a symptom is an observable failure; the root cause is the exact decision that produces it — ask "why" until the answer is a line of code</span>Why schema error? → the adapter can't schema-generate FakeNumpyArray. Why? → arbitrary_types_allowed isn't in the adapter's config. Why? → TypeAdapter is built with no config argument. Why? → ModelField never receives one. Why? → <b>get_model_fields drops model.model_config</b>. Root: a propagation gap, not a missing whitelist.<span class="huh"><b>in this deck:</b> the error message stops at why-2 and tells you to set a flag the user already set. The 5-whys chain walks past the message to the producer.</span></dd></dl></div>
+<div class="def"><dl><dt>Belief state under misleading evidence</dt><dd><span class="formal">the agent sees clues, never truth; acting well = updating a probability distribution over hypotheses, not reacting to the latest string</span>After a correct layer-1 edit, the unchanged error is evidence FOR "a second locus exists", not FOR "my edit was wrong". The naive update (revert, re-edit the same lines) is exactly backwards.<span class="huh"><b>in this deck:</b> R1 is the failure branch where the current brain makes the naive update; the producer grep and the mechanism sentence are the correct update made cheap.</span></dd></dl></div>
+<div class="def"><dl><dt>Entropy &amp; the value of a "failed" fix</dt><dd><span class="formal">entropy = how many ways your belief can still be wrong; a result's value is the part that changes your next action</span>A repair cycle whose fix fails but <b>reveals layer 2</b> is INFORMATION, not waste: it collapses "where is config lost?" from ~5 plausible loci to 1. The waste is only in repeating an identical call whose outcome you can already predict.<span class="huh"><b>in this deck:</b> the executed strike machinery formalizes this — a struck locus is entropy permanently removed from future anchor searches ("Struck loci excluded: 1").</span></dd></dl></div>
+<div class="def"><dl><dt>DAG of fixes · topological order</dt><dd><span class="formal">a dependency graph with no cycles; a topological order respects every arrow — you cannot apply a consumer before its producer exists</span>imports → dataclass field → __post_init__ (consumer) → get_model_fields (producer). Passing config= to a dataclass without the field is a TypeError.<span class="huh"><b>in this deck:</b> the executed apply demo landed the producer hunk ALONE and check still said PASS — a DAG violation masked by a green syntax gate. The repro is the only oracle that sees order.</span></dd></dl></div>
+<div class="def"><dl><dt>Test overfitting</dt><dd><span class="formal">code that satisfies the visible signal but not the contract</span>Blanket arbitrary_types_allowed "fixes" the repro while overriding nested models' own configs; a one-call-site schema patch passes get but fails openapi; editing tests is discarded by the scorer outright.<span class="huh"><b>in this deck:</b> all three symptom-fixes in slide 4's table are overfits. The acceptance set encodes the mechanism: propagation + exclusion + metadata, on both call paths.</span></dd></dl></div>
+<div class="def"><dl><dt>Control experiment · blame the right layer</dt><dd><span class="formal">before fixing, run the thing that works outside the suspected layer</span>test_typeadapter builds the same model in pure Pydantic and passes — proving the user's model is correct and the leak is FastAPI's plumbing. The agent can run this control itself in /tmp in one call.<span class="huh"><b>in this deck:</b> naive "fixed" the already-correct repro model (v6 N3–N7); the control would have saved it the wrong-layer edits. Credit: v6's best insight.</span></dd></dl></div>
+<div class="def"><dl><dt>Gate vs grader</dt><dd><span class="formal">a gate checks necessary conditions (syntax, hygiene, non-empty); a grader checks sufficient ones (behavior against the contract)</span>CHECK: PASS means "nothing structurally wrong with submitting", never "the bug is fixed".<span class="huh"><b>in this deck:</b> the executed producer-only apply passed the gate and would fail at runtime. Every green in this deck is labeled with what it actually certifies.</span></dd></dl></div>
+</div>
+</div><div class="receipt"><span><b>Note</b> each term: formal → plain → in-this-deck · the kindness is deliberate; the masking is not</span><span>14</span></div></section>
+
+<!-- ============ 15 · VERDICT ============ -->
+<section class="slide" id="s14" data-i="14"><div class="slide-inner">
+<div class="kicker">Predictions, not measurements · falsifiers you can check in a real run</div><h2>Verdict &amp; what would falsify it</h2>
+<div class="three">
+<div class="panel"><h4><span class="tag">A</span>Naive</h4><p><b class="noc">Predicted False (1/3).</b> Wrong-layer edit + reveal + partial one-call-site patch; the only green is the Pydantic-only control. Under the shipped 4.5-min cap it is force-submitted mid-thrash. Confidence: high that the shape fails; the exact call count is a script.</p></div>
+<div class="panel t2p"><h4><span class="tag">B</span>v6 BCF v3</h4><p><b class="okc">Predicted True*</b> — conditional on the four scripted edits being reference-equivalent and the unshown second localization happening. The pre-flight is emulated, the thinking budget is doing unpriced work, and "~9 charged" is a design target. Confidence: medium; it is a person's script, not a sampled policy.</p></div>
+<div class="panel gain"><h4><span class="tag">C</span>Current shipped BCF</h4><p><b class="okc">Predicted True on the primary branch</b>: 4-hunk reference-equivalent patch, executed machinery backbone (10/10 rc=0), mechanism-first localization, /tmp verification around the dep gap, ~3.8-min session. False on R1 (consumer-only thrash) / R5 (two repair cycles breach the clock). Rough judgment: ~65–80% primary-branch probability [EST], not a measurement.</p></div>
+</div>
+<div class="twocol">
+<div class="panel dec"><h4><span class="tag">canaries</span>Falsifiers — observable in one real run</h4><ol class="plain">
+<li><b>First edit is try/except or blanket config</b> → spec-playbook compliance (R2) → predicted False. Canary: diff content at first check.</li>
+<li><b>Repro fails identically after the __post_init__ edit AND the next edit touches the same lines</b> → masking thrash (R1); the producer grep never happened. Canary: absence of a "ModelField(" grep before edit #4.</li>
+<li><b>Repair cycles &gt; 2, or a third identical edit_file</b> → circuit-breaker doctrine violated. Canary: strike count in state vs edit retries.</li>
+<li><b>Thinking &gt; ~1,200 tok/turn on edit turns, or MAX_TOKENS nudges</b> → wall breach (R4/R5); expect forced partial submit at 80%. Canary: per-turn token counts + get_status timestamps.</li>
+<li><b>Collection error on inline_snapshot treated as patch failure</b> (a repair cycle spent on it) → dep-gap misattribution; doctrine violated. Canary: repro-only verification vs pytest attempts in the transcript.</li>
+<li><b>check FAIL (protected path) or patch_size = 0 at submit</b> → hygiene failure; the gate exists precisely to catch these pre-submit. Canary: executed check/state outputs.</li>
+<li><b>Final diff has 3 hunks, not 4</b> (metadata splat missing) → equivalence risk R3; verdict downgraded to uncertain. Canary: git diff hunk count.</li>
+</ol></div>
+<div class="ba-col">
+<div class="warnbox"><b>Dep-gap masking note (kept honest).</b> fastapi_14482 is on the 27-task list whose tests import <code>inline_snapshot</code>/<code>dirty_equals</code>, absent from the sandbox wheelhouse — local pytest fails at <b>collection</b> regardless of the patch (17/27 verified directly in test_patch; 14482 among them). No local grader verdict is possible for this task; every verdict in this deck is a <b>reference-patch-equivalence prediction</b>. The masked-68 doctrine: 73 gold-pass − 5 no-patch-pass = 68 valid discriminators; environmental red elsewhere is noise, not signal. The /tmp-repro verification path is the current brain's structural answer to exactly this situation.</div>
+<div class="panel"><h4><span class="tag">bottom</span>The one-paragraph bottom line</h4><p>On this error-masking task, the current shipped brain's edge is not fewer calls — it spends about as many as naive — but <b>every call is cheap, deterministic, and reliability-buying</b>, and its thinking bill is half of naive's because the mechanism is found once instead of re-derived after each reveal. v6's locate-once story is the right intuition with an emulated machine and an unshown second localization; the shipped brain makes the same intuition real (spec/locate/anchors/apply/strike/check, all executed sub-second) and adds the two things masking actually demands: a mechanism-first commit gate and a capped repair budget. The residual gap is one prompt line — make the producer question explicit — and a middle thinking budget worth A/B-ing.</p></div>
+</div>
+</div>
+</div><div class="receipt"><span><b>End of verdicts</b> · predictions from equivalence · no grader was run · dep-gap caps local signal</span><span>15</span></div></section>
+
+<!-- ============ 16 · SOURCES ============ -->
+<section class="slide" id="s15" data-i="15"><div class="slide-inner">
+<div class="kicker">Everything below is local; no web research was used</div><h2>Sources &amp; caveat</h2>
+<ol class="srcs">
+<li><b>Executed backbone:</b> scratch/bcf-replay-2026-11-11/exec-fastapi-14482.json (10 steps, rc/elapsed/stdout) + replay_driver.py (temp git repo, base-commit sources, shipped helper; apply demo = last reference hunk).</li>
+<li><b>Task truth:</b> scratch/bcf-2026-11-11/tasks/fastapi_14482.json (statement, reference patch +25/−7, test_patch +141, base 71a17b59); index.json entry (d3, few-lines, 3 new test funcs).</li>
+<li><b>RCA:</b> scratch/bcf-2026-11-11/rca/fastapi_14482.md + .json (two loci, propagation rule, 14512 follow-up hazard, acceptance plan).</li>
+<li><b>Source snapshot:</b> scratch/bcf-2026-11-11/sources/fastapi_14482/fastapi/_compat/v2.py (499 lines; loci 85–99, 414–418; imports at 4/21; _get_model_config at 170).</li>
+<li><b>Other agent's deck:</b> input/kagglecomp/2/2026-11-11-bcf-v6/02-bcf-simulation-fastapi-14482-arbitrary-types-masking.slides.v6-3.html (naive N# / v3 V# transcripts, claims, CSS/format mirrored here).</li>
+<li><b>Their design doc:</b> input/kagglecomp/2/2026-11-11-bcf-v6/01-critique-and-bcf-v3-design.md (H1/H2/H3 mechanisms, thinking 256–512, 4-min budget, "model routes, script measures").</li>
+<li><b>Current brain:</b> deliverables/2026-11-11-bcf-gemma4-brain/02-bcf-brain-31b/submission/ — prompts/bcf_plan.md, prompts/solver.md, agent.yaml, sub_agents/*.yaml, configs/sampling.yaml (2048/6144/temp 0.2/seed 7), eval_config.yaml (50 calls / 4.5 min / 180 s / 50 turns), skills/bcf-spec/SKILL.md, scripts/bcf.py (classify fallback, FAMILY_PATTERNS, cmd_check gate).</li>
+<li><b>Cost constants [EST]:</b> scratch/bcf-2026-11-11/intel/budget-sampling.md + prior-art.md (31B decode 33–35 tok/s 4×L4; median 10.3 s/call; fitted 1.4 s + 28.7 ms/tok; median 127 output tok/call; 750974/748287 captures); setup ~60 s/task per task brief.</li>
+<li><b>Dep gap:</b> scratch/bcf-2026-11-11/intel/live-solvability-data.md §1–2 (27-task list, 14482 verified inline_snapshot; 73−5=68 valid; competitor-reported, mechanism HIGH / exact list MEDIUM).</li>
+<li><b>Harness:</b> input/kagglecomp/kagglecomp_data_package/HARNESS_README.md (budget config semantics, free get_status/submit_patch, anti-tamper, command timeout).</li>
+<li><b>Thinking semantics:</b> scratch/bcf-2026-11-11/research/deep-thinking-vllm.md (budget advisory; MAX_TOKENS nudge; 32,768 shared ceiling).</li>
+</ol>
+<div class="warnbox"><b>Caveat, kept honest.</b> The helper machinery is <b>[EXECUTED]</b> — real runs, quoted stdout, sub-second timings. The LLM trajectories are <b>[MODELED]</b>: Track A's shape is the other agent's script, Track B is their script summarized and audited, Track C is a faithful simulation of the shipped prompts, not a sampled Gemma run. Tokens and clock are <b>[EST]</b> from local intel constants. No grader was run; all verdicts are predictions from reference-patch equivalence, and this task's dep gap means local collection red can never confirm or refute them. The durable claim: on a two-layer masked bug, mechanism-first localization plus executed edit machinery plus capped repairs beats reactive symptom-fixing — and the cheapest scripted trajectory is not the cheapest real one.</div>
+</div><div class="receipt"><span><b>End</b> · BCF replay comparison 04 — fastapi_14482 · built 2026-11-11 · LOCAL ONLY</span><span>16</span></div></section>
+</main><script>(function () {
+  "use strict";
+  var secs = Array.prototype.slice.call(document.querySelectorAll("section.slide"));
+  var btns = Array.prototype.slice.call(document.querySelectorAll(".rail button"));
+  btns.forEach(function (b) {
+    b.addEventListener("click", function () {
+      var s = secs[+b.getAttribute("data-i")];
+      if (s) s.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  });
+  function mark(i) { btns.forEach(function (b, k) { b.setAttribute("aria-current", k === i ? "true" : "false"); }); }
+  if ("IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) mark(+e.target.getAttribute("data-i")); });
+    }, { rootMargin: "-45% 0px -50% 0px" });
+    secs.forEach(function (s) { io.observe(s); });
+  }
+})();</script></body></html>

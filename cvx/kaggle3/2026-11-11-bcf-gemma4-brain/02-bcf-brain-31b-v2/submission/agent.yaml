@@ -1,0 +1,6 @@
+agent_class: SequentialAgent
+name: bcf_root
+description: BCF plan-then-solve brain. Plan computes a cached deterministic fix spec; solver applies the minimal verified edit.
+sub_agents:
+  - config_path: sub_agents/bcf_plan.yaml
+  - config_path: sub_agents/solver.yaml

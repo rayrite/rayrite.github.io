@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>httpx_3672: Tracks A &amp; C side by side &mdash; parallel step view</title>
+<style>:root{
+  --page:#0e1116; --surface:#151a21; --raised:#1b222c; --sunken:#11151c;
+  --hair:rgba(255,255,255,.08); --hair-2:rgba(255,255,255,.14);
+  --ink:#eef1f5; --ink-2:#aab4c0; --ink-3:#7a8694; --deem:#566070;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181;
+  --good:#0ca30c; --warn:#fab219; --crit:#d03b3b;
+  --good-wash:rgba(12,163,12,.12); --warn-wash:rgba(250,178,25,.10); --crit-wash:rgba(208,59,59,.13);
+  --diff-del:rgba(214,79,67,.14); --diff-add:rgba(25,158,112,.15);
+  --sans:system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"Cascadia Code","JetBrains Mono",ui-monospace,"Consolas",monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--page);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.6}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+a{color:#7fb2f0}
+.rail{position:fixed;left:12px;top:50%;transform:translateY(-50%);z-index:40;display:flex;flex-direction:column;gap:6px}
+.rail button{width:11px;height:11px;border-radius:3px;border:1px solid var(--hair-2);background:transparent;padding:0;cursor:pointer;position:relative}
+.rail button[aria-current="true"]{background:var(--s1);border-color:var(--s1)}
+.rail button span{position:absolute;left:20px;top:50%;transform:translateY(-50%);font:500 12px/1 var(--sans);color:var(--ink-2);white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s;background:var(--raised);padding:4px 7px;border-radius:5px;border:1px solid var(--hair)}
+.rail button:hover span,.rail button:focus-visible span{opacity:1}
+@media (max-width:1100px){.rail{display:none}}
+.slide{position:relative;padding:56px clamp(20px,5vw,64px) 64px;border-bottom:1px solid var(--hair)}
+.slide.hero{min-height:100svh;display:flex}
+.slide-inner{max-width:1240px;margin:auto;width:100%;display:flex;flex-direction:column;gap:14px}
+.receipt{position:absolute;left:clamp(20px,5vw,64px);bottom:20px;right:clamp(20px,5vw,64px);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font:400 12px/1.5 var(--mono);color:var(--ink-3)}
+.receipt b{color:var(--ink-2);font-weight:600}
+.kicker{font:600 13.5px/1.4 var(--sans);color:var(--ink-3)}
+.kicker b{color:var(--ink-2)}
+h2{font:650 28px/1.22 var(--sans);letter-spacing:-.01em;margin:0;max-width:46ch}
+h3.gh{font:650 18px/1.3 var(--sans);margin:18px 0 4px;color:var(--ink-2)}
+.sub{color:var(--ink-2);max-width:96ch;margin:0;font-size:15px}
+.sub.big{font-size:17.5px}
+.sub b{color:var(--ink);font-weight:600}
+code{font:500 .88em var(--mono);background:var(--raised);padding:1px 5px;border-radius:4px;color:var(--ink)}
+pre code{background:none;padding:0}
+.hero-id{font:700 clamp(44px,7.5vw,84px)/1.05 var(--mono);letter-spacing:-.02em;margin:6px 0 2px}
+.hero-id .u{color:var(--ink-3)}
+.okc{color:#5ec95e} .noc{color:#ef8a85} .midc{color:#e3a92a}
+.chip{display:inline-flex;align-items:center;gap:6px;font:600 12px/1 var(--mono);padding:5px 9px;border-radius:5px;border:1px solid var(--hair-2)}
+.chip.sm{font-size:10.5px;padding:3px 6px}
+.chip .g{font-family:var(--sans)}
+.chips{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.chip.exec{background:rgba(25,158,112,.14);border-color:rgba(25,158,112,.5)} .chip.exec .g{color:#7fd6b0}
+.chip.sim{background:var(--warn-wash);border-color:rgba(250,178,25,.35)} .chip.sim .g{color:var(--warn)}
+.chip.est{background:rgba(255,255,255,.04);border-style:dashed} .chip.est .g{color:var(--ink-2)}
+.chip.r{background:rgba(201,133,0,.10);border-color:rgba(201,133,0,.45)} .chip.r .g{color:#e3a92a}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1px;background:var(--hair);border:1px solid var(--hair);border-radius:10px;overflow:hidden}
+.stat{background:var(--surface);padding:11px 15px}
+.stat b{display:block;font:650 21px/1.2 var(--sans)}
+.stat span{font:400 12.5px/1.4 var(--sans);color:var(--ink-3)}
+.panel{background:var(--surface);border:1px solid var(--hair);border-radius:10px;padding:13px 16px}
+.panel h4{margin:0 0 8px;font:650 14px/1.4 var(--sans);color:var(--ink-2)}
+.panel h4 .tag,.tag{font:600 11px/1 var(--mono);color:var(--ink-3);border:1px solid var(--hair-2);border-radius:4px;padding:3px 6px;margin-right:7px;vertical-align:1px}
+.panel p{margin:0;color:var(--ink-2);font-size:14px}
+.panel.dec{border-left:3px solid var(--s1)} .panel.gain{border-left:3px solid var(--s3)}
+.panel.diffp{border-left:3px solid var(--s4);background:linear-gradient(90deg,rgba(201,133,0,.07),var(--surface) 40%)}
+.panel.t2p{border-left:3px solid var(--s3)}
+.panel.curp{border-left:3px solid var(--s1)}
+.twocol{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media (max-width:980px){.twocol,.three{grid-template-columns:1fr}}
+.ba-col{display:flex;flex-direction:column;gap:12px}
+ul.plain,ol.plain{margin:0;padding-left:19px;color:var(--ink-2)}
+ul.plain li,ol.plain li{margin:5px 0;font-size:13.5px;line-height:1.55}
+ul.plain b,ol.plain b{color:var(--ink);font-weight:600}
+.tm{border:1px solid rgba(217,81,129,.38);background:rgba(217,81,129,.07);border-radius:10px;padding:12px 16px;font:400 14px/1.65 var(--sans);color:var(--ink-2)}
+.tm .tmh{display:block;font:700 12.5px/1.3 var(--sans);color:#e37ba6;margin-bottom:5px}
+.tm b{color:var(--ink);font-weight:600}
+.warnbox{border:1px solid rgba(250,178,25,.35);background:var(--warn-wash);border-radius:10px;padding:11px 15px;font:500 13.5px/1.55 var(--sans);color:var(--ink-2)}
+.warnbox b{color:var(--ink)}
+pre.cmd{margin:0;background:var(--sunken);border:1px solid var(--hair);border-radius:7px;padding:8px 11px;font:400 12px/1.55 var(--mono);color:var(--ink);white-space:pre-wrap;word-break:break-word}
+pre.cmd .p{color:var(--s1)} pre.cmd .s{color:#e3a92a} pre.cmd .c{color:var(--ink-3)}
+pre.diff{margin:0;font:400 11.5px/1.55 var(--mono);background:var(--sunken);border:1px solid var(--hair);border-radius:7px;padding:7px 10px;white-space:pre-wrap;word-break:break-word;color:var(--ink-3)}
+pre.diff .del{background:var(--diff-del);color:#e8a09d;display:inline-block;width:100%} pre.diff .add{background:var(--diff-add);color:#8fd8b8;display:inline-block;width:100%}
+pre.diff .ctx{color:var(--ink-3)} pre.diff .meta{color:var(--s1)}
+table.data{border-collapse:collapse;width:100%;font:400 12.5px/1.5 var(--sans)}
+table.data th,table.data td{text-align:left;padding:6px 10px;border-bottom:1px solid var(--hair);color:var(--ink-2);font-weight:400;vertical-align:top}
+table.data th{color:var(--ink-3);font-weight:600;white-space:nowrap;font-family:var(--mono);font-size:11.5px}
+table.data td.k{color:var(--ink);font-weight:600;white-space:nowrap}
+table.data td.note{color:var(--ink-3);font-size:12px}
+table.score td{font-family:var(--mono);font-size:12.5px}
+.traps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:980px){.traps{grid-template-columns:1fr}}
+.trap{background:var(--surface);border:1px solid var(--hair);border-radius:10px;padding:12px 15px;position:relative}
+.trap .tn{font:700 12px/1 var(--mono);color:var(--s2);margin-bottom:5px}
+.trap .tt{font:650 14px/1.35 var(--sans);margin-bottom:5px}
+.trap .td{font-size:13px;color:var(--ink-2);line-height:1.55}
+.trap .chip{position:absolute;top:10px;right:10px}
+.sbs-head{display:grid;grid-template-columns:1fr 1fr;gap:16px;position:sticky;top:0;z-index:5;background:linear-gradient(var(--page) 75%,transparent);padding:8px 0 6px}
+.sbs-head .lane{font:700 13px var(--mono);padding:4px 9px;border-radius:5px}
+.lane.naive{background:rgba(217,89,38,.16);color:#f0a07c;border:1px solid rgba(217,89,38,.45)}
+.lane.bcf{background:rgba(57,135,229,.16);color:#8fbcf2;border:1px solid rgba(57,135,229,.45)}
+.lane.cur{background:rgba(25,158,112,.16);color:#7fd6b0;border:1px solid rgba(25,158,112,.45)}
+.sbs{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+@media (max-width:980px){.sbs,.sbs-head{grid-template-columns:1fr}}
+.sbs .col{display:flex;flex-direction:column;gap:10px;min-width:0}
+.call{background:var(--surface);border:1px solid var(--hair);border-left:3px solid var(--ink-3);border-radius:9px;padding:10px 12px;display:flex;flex-direction:column;gap:7px;min-width:0;scroll-margin-top:60px}
+.call.ig-high{border-left-color:var(--s3)} .call.ig-none{border-left-color:var(--deem);opacity:.92} .call.ig-neg{border-left-color:var(--crit);background:linear-gradient(90deg,rgba(208,59,59,.08),var(--surface) 35%)}
+.call.exec{border-left-color:var(--s3);background:linear-gradient(90deg,rgba(25,158,112,.06),var(--surface) 40%)}
+.call header{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.call .cid{font:700 13px var(--mono);color:var(--ink)}
+.call .tool{font:600 12px var(--mono);color:var(--ink-2)}
+.pills{display:flex;gap:5px;flex-wrap:wrap;margin-left:auto}
+.pill{font:600 10.5px/1 var(--mono);padding:3px 6px;border-radius:4px;border:1px solid var(--hair-2);color:var(--ink-2);white-space:nowrap}
+.pill.pass{background:var(--good-wash);border-color:rgba(12,163,12,.45);color:#5ec95e}
+.pill.fail{background:var(--crit-wash);border-color:rgba(208,59,59,.4);color:#ef8a85}
+.pill.exec{background:rgba(25,158,112,.14);border-color:rgba(25,158,112,.5);color:#7fd6b0}
+.pill.ig-high{color:#7fd6b0} .pill.ig-none{color:var(--ink-3);border-style:dashed} .pill.ig-neg{color:#ef8a85;border-color:rgba(208,59,59,.5)}
+.pill.flag{background:rgba(201,133,0,.12);border-color:rgba(201,133,0,.45);color:#e3a92a}
+details.out summary{cursor:pointer;font:500 11.5px var(--mono);color:#7fb2f0}
+details.out pre{margin:6px 0 0;max-height:360px;overflow:auto;background:var(--sunken);border:1px solid var(--hair);border-radius:6px;padding:8px 10px;font:400 11px/1.5 var(--mono);color:var(--ink-2);white-space:pre-wrap;word-break:break-word}
+dl.ann{margin:0;display:grid;grid-template-columns:118px 1fr;gap:4px 10px;font-size:13px;line-height:1.55}
+dl.ann dt{font:650 11.5px/1.5 var(--sans);color:var(--ink-3);text-transform:uppercase;letter-spacing:.03em;padding-top:1px}
+dl.ann dd{margin:0;color:var(--ink-2)} dl.ann dd b{color:var(--ink)}
+@media (max-width:600px){dl.ann{grid-template-columns:1fr}}
+.flow{display:flex;gap:8px;flex-wrap:wrap}
+.flow-step{background:var(--surface);border:1px solid var(--hair);border-radius:8px;padding:8px 12px;display:flex;flex-direction:column;gap:2px;position:relative}
+.flow-step b{font:650 12.5px var(--sans)} .flow-step span{font:500 12px var(--mono);color:var(--ink-3)}
+.flow-step:not(:last-child)::after{content:"\2192";position:absolute;right:-12px;top:50%;transform:translateY(-50%);color:var(--ink-3)}
+.defs{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:980px){.defs{grid-template-columns:1fr}}
+.def{background:var(--surface);border:1px solid var(--hair);border-radius:10px;padding:11px 14px;margin:0;scroll-margin-top:20px}
+.def dt{font:700 14px/1.4 var(--mono);color:var(--ink)}
+.def dd{margin:5px 0 0;font-size:13px;line-height:1.55;color:var(--ink-2)}
+.def dd .formal{display:block;font-family:var(--mono);font-size:12.2px;color:var(--ink)}
+.def dd .huh{display:block;margin-top:4px;color:var(--ink-3);font-size:12.5px} .def dd .huh b{color:var(--ink-2)}
+ol.srcs{columns:2;column-gap:28px;margin:0;padding-left:0;list-style:none;font-size:12px;color:var(--ink-2)}
+ol.srcs li{break-inside:avoid;margin:0 0 6px}
+@media (max-width:980px){ol.srcs{columns:1}}
+:focus-visible{outline:2px solid var(--s1);outline-offset:2px}
+.sbs,.sbs-head{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+@media (max-width:980px){.sbs,.sbs-head{grid-template-columns:minmax(0,1fr)}}
+dl.ann{grid-template-columns:118px minmax(0,1fr)}
+dl.ann dd,.def dd,table.data td,.panel p,.tm{overflow-wrap:anywhere}
+.navhint{position:fixed;right:14px;bottom:12px;z-index:40;font:500 11px var(--mono);color:var(--ink-3);background:var(--raised);border:1px solid var(--hair);border-radius:6px;padding:4px 8px}
+</style>
+
+<style>
+  body.ac { margin: 0; background: var(--page, #0e1116); color: var(--ink, #eef1f5);
+            font: 15px/1.5 var(--sans, system-ui, sans-serif); padding: 0 0 60px; }
+  .ac-top { position: sticky; top: 0; z-index: 60; background: color-mix(in srgb, var(--page, #0e1116) 90%, transparent);
+            backdrop-filter: blur(8px); border-bottom: 1px solid var(--hair, rgba(255,255,255,.08));
+            padding: 10px 16px; display: flex; gap: 14px; align-items: baseline; flex-wrap: wrap; }
+  .ac-top a { color: var(--s1, #3987e5); text-decoration: none; font-weight: 600; font-size: .85rem; }
+  .ac-top h1 { font-size: 1.05rem; margin: 0; letter-spacing: -.01em; }
+  .ac-top .ac-sub { width: 100%; margin: 0; color: var(--ink-3, #7a8694); font-size: .78rem; }
+  .ac-row { max-width: 1500px; margin: 22px auto 0; padding: 0 16px; }
+  .ac-row > header { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap;
+                     border-bottom: 2px solid var(--hair-2, rgba(255,255,255,.14)); padding-bottom: 6px; }
+  .ac-row > header h2 { margin: 0; font-size: 1.05rem; }
+  .ac-row > header .ac-ms { color: var(--ink-3, #7a8694); font-size: .76rem; }
+  .ac-row .sbs { margin-top: 10px; }
+  .ac-col h2 { font-size: .95rem; margin: 4px 0 8px; }
+  .ac-col .call, .ac-col .panel { margin: 0 0 10px; }
+  .ac-foot { max-width: 1500px; margin: 30px auto 0; padding: 12px 16px 0; color: var(--ink-3, #7a8694);
+             font-size: .75rem; border-top: 1px solid var(--hair, rgba(255,255,255,.08)); }
+  .ac-foot a { color: var(--s1, #3987e5); }
+  @media (max-width: 900px) {
+    .ac-row .sbs { grid-template-columns: 1fr; }
+    .ac-row .sbs-head { grid-template-columns: 1fr; }
+  }
+</style>
+
+</head>
+<body class="ac">
+<header class="ac-top">
+  <a href="02-replay-httpx-3672.slides.html">&larr; slide deck</a>
+  <h1>httpx_3672 &mdash; Track A &verbar; Track C, side by side per stage</h1>
+  <p class="ac-sub">Every step and milestone of the naive agent (left) against the current shipped brain (right), extracted verbatim from the deck. Track B omitted. [R]/[MODELED]/[EXECUTED] provenance tags as in the source.</p>
+</header>
+
+<section class="ac-row">
+  <header><h2>Plan & doctrine</h2><span class="ac-ms">milestone: spec/plan extracted before any edit</span></header>
+  <div class="sbs-head"><div class="lane naive">A &middot; naive</div><div class="lane cur">C &middot; current shipped brain</div></div>
+  <div class="sbs"><div class="col ac-col"><div class="panel"><h4><span class="tag">note</span>Track A has no step here</h4><p>Kicker of the Track&nbsp;A slide: &ldquo;Track A &middot; naive agent [MODELED, shape from v6 slides 6&ndash;7] &middot; reactive policy&rdquo; &mdash; the naive track has no plan stage; it reacts turn by turn.</p></div></div><div class="col ac-col"><div class="ac-col-body"><div class="slide-inner">
+<h2>Plan: a mechanical operator, not a problem-solver</h2>
+<div class="flow"><span class="flow-step"><b>P1 · probe</b><span>bcf.py spec</span></span><span class="flow-step"><b>P2 · install</b><span>run_skill_script</span></span><span class="flow-step"><b>P3 · save</b><span>write problem.md</span></span><span class="flow-step"><b>P4 · spec</b><span>bcf.py spec</span></span><span class="flow-step"><b>P5 · echo</b><span>output_key bcf_spec</span></span></div>
+<div class="twocol"><div class="panel curp"><h4><span class="tag">prompt</span>What bcf_plan.md actually says [R]</h4><ul class="plain">
+<li>"a mechanical setup operator, <b>NOT a problem-solver</b>… No exploration, no code reads, no edits, no analysis."</li>
+<li><b>Step 0 re-entry probe:</b> <code>bcf.py spec</code>; if it prints a spec, echo verbatim and stop (warm path, 1 call).</li>
+<li>Only if probe fails: <b>install</b> (zero args; retry once; <code>load_skill</code> fallback) → <b>write_file</b> <code>.git/bcf/problem.md</code> verbatim → <b>spec</b>.</li>
+<li>Final message = spec stdout <b>VERBATIM</b> → <code>output_key: bcf_spec</code>, pinned into the solver. Tools: <b>run_command + write_file only</b>.</li></ul>
+<p class="sub" style="margin-top:8px">[MODELED] P1 probe fails (helper not yet installed) → P2 install ok → P3 write statement → P4 cold spec → P5 echo. 4 charged calls + 1 text turn.</p></div>
+<div class="panel"><h4><span class="tag">exec</span>P4 spec stdout — cold 0.343 s, warm 0.217 s [EXECUTED]</h4>
+<pre class="cmd"># BCF spec
+kind: feature | family: state-lifecycle (alt: missing-capability) | shape: multi-file | confidence: high
+repo: httpx | sparse: no
+
+## Target
+1. src/ahttpx/_parsers.py · HTTPParser (line 72)
+2. alt: src/httpx/_parsers.py · HTTPParser (line 72)
+
+## Fix
+Find the shared mutable state. Copy per-use, invalidate caches on mutation,
+order teardown after consumption. Ask: who else holds a reference to this object?
+
+## Verify
+timeout 60 python3 -m pytest tests/test_parsers.py -k test_parser_server -x -q
+Then: python3 .git/bcf/bcf.py check
+
+## Rules
+Minimal edit. Never touch tests, conftest.py, pytest.ini, pyproject.toml.
+Existing tests guard regressions; the statement is the contract. submit_patch last.</pre>
+<p class="sub" style="margin-top:6px">171 words (cap 300). Log encoding artifact (<code></code>) normalized to <code>·</code>. <b>Flag:</b> classifier says <code>kind: feature</code> (the "Add…" bullet); our RCA says <b>bugfix</b>. Family + targets are right; the spec is "guidance, not orders." [EXECUTED + R RCA]</p></div></div>
+<div class="tm"><span class="tmh">◆ teachable moment: externalized belief + the warm path</span> The spec is written to <code>.git/bcf/spec.md</code> and pinned via <code>output_key</code> — it survives context compaction (the harness drops old tool results). On any re-entry the probe returns the cached spec in <b>one call</b> (warm 0.217 s [EXECUTED]) instead of re-deriving it. The plan stage's minimal tool list is safe <i>by design</i>: it is instructed never to edit, so it never needs <code>edit_file</code>.</div>
+</div><div class="receipt"><span><b>Executed</b> exec-httpx-3672.json steps "spec COLD"/"spec WARM" rc=0 · prompt bcf_plan.md</span><span>8</span></div></div></div></div>
+</section>
+<section class="ac-row">
+  <header><h2>Localize & read</h2><span class="ac-ms">milestone: find the mechanism before touching it</span></header>
+  <div class="sbs-head"><div class="lane naive">A &middot; naive</div><div class="lane cur">C &middot; current shipped brain</div></div>
+  <div class="sbs"><div class="col ac-col"><div class="call ig-none"><header><span class="cid">N2–N3</span><span class="tool">run_command</span><span class="pills"><span class="pill">broad grep</span><span class="pill ig-none">≈ zero</span></span></header>
+<pre class="cmd">grep -rn 'complete' src/ tests/   <span class="c"># 53 lines: 19 real sites, decoys, prose</span></pre>
+<dl class="ann"><dt>chosen</dt><dd>reactive: search the title word</dd><dt>bought</dt><dd>decoys are half the hits; twin tree visible but <b>unrecorded</b>; no place to store "fix lands twice" [MODELED]</dd></dl></div>
+<div class="call ig-none"><header><span class="cid">N5,N7</span><span class="tool">read_file</span><span class="pills"><span class="pill">whole-file</span><span class="pill ig-none">zero gain</span></span></header>
+<pre class="cmd">read_file("src/httpx/_parsers.py")  <span class="c"># re-read byte-identical window</span></pre>
+<dl class="ann"><dt>bought</dt><dd>nothing — a result you can predict can't change your next action [MODELED]</dd></dl></div></div><div class="col ac-col"><div class="call"><header><span class="cid">S1</span><span class="tool">run_command</span><span class="pills"><span class="pill">state</span><span class="pill">free get_status</span></span></header>
+<pre class="cmd">python3 .git/bcf/bcf.py state</pre>
+<dl class="ann"><dt>why</dt><dd>orientation / resume compass ("your memory is the filesystem"). Command executed in backbone; fresh-state output differs from the logged final state. [MODELED turn]</dd></dl></div>
+<div class="call"><header><span class="cid">S2</span><span class="tool">read_file</span><span class="pills"><span class="pill">375–412</span></span></header>
+<pre class="cmd">read_file("src/ahttpx/_parsers.py", start_line=375, end_line=412)</pre>
+<dl class="ann"><dt>mechanism</dt><dd>"<code>complete()</code> recycles parser state but is never called (bare method ref in <code>_server</code>) and returns None; the statement wants <code>reset()->bool</code> + <code>is_keepalive()</code>." <b>Commit gate:</b> one read → EDIT NOW. [MODELED]</dd></dl></div>
+<div class="call exec"><header><span class="cid">S3</span><span class="tool">run_command</span><span class="pills"><span class="pill exec">EXECUTED 0.213s</span></span></header>
+<pre class="cmd">python3 .git/bcf/bcf.py locate keep_alive reset complete is_keepalive</pre>
+<details class="out"><summary>LOCATE stdout [EXECUTED]</summary><pre>LOCATE (top hits; file:symbol:line)
+src/ahttpx/_parsers.py:HTTPParser:72  (score 249)
+src/httpx/_parsers.py:HTTPParser:72  (score 249)
+src/httpx/_network.py:connect_tls:210  (score 154)
+src/ahttpx/_server.py:HTTPConnection:23  (score 138)
+src/httpx/_server.py:HTTPConnection:23  (score 138)</pre></details>
+<dl class="ann"><dt>bought</dt><dd>confirms the <b>twin</b>: both parsers tie at 249. The rename must land twice. [EXECUTED]</dd></dl></div>
+<div class="call exec"><header><span class="cid">S4</span><span class="tool">run_command</span><span class="pills"><span class="pill exec">EXECUTED 0.196s</span><span class="pill flag">gap</span></span></header>
+<pre class="cmd">python3 .git/bcf/bcf.py anchors src/ahttpx/_parsers.py</pre>
+<details class="out"><summary>ANCHORS stdout [EXECUTED]</summary><pre>ANCHORS src/ahttpx/_parsers.py (family: state-lifecycle)
+[1] lines 89-89 status=unique strategy=exact
+        self.mode = {'CLIENT': Mode.CLIENT, 'SERVER': Mode.SERVER}[mode]
+[2] lines 105-105 status=unique strategy=exact
+        # Track connection keep alive...
+[3] lines 105-107 status=unique strategy=exact
+        # Track connection keep alive...
+        self.send_keep_alive = True
+        self.recv_keep_alive = True
+End of anchors: re-run anchors before every edit; never reuse a stale window.</pre></details>
+<dl class="ann"><dt>gap</dt><dd>family-heuristic windows land on the <b>init</b> region (89/105), <b>not</b> the <code>def complete</code> at 378. The solver uses its read-verbatim text + <code>apply</code> line-range instead. [EXECUTED + flag]</dd></dl></div></div></div>
+</section>
+<section class="ac-row">
+  <header><h2>Edit</h2><span class="ac-ms">milestone: first on-disk patch; twin tree + callers closed</span></header>
+  <div class="sbs-head"><div class="lane naive">A &middot; naive</div><div class="lane cur">C &middot; current shipped brain</div></div>
+  <div class="sbs"><div class="col ac-col"><div class="call ig-high"><header><span class="cid">N8</span><span class="tool">edit_file</span><span class="pills"><span class="pill pass">shadow PASS</span></span></header>
+<pre class="cmd">edit_file("src/httpx/_parsers.py","def complete(self):","def reset(self):")</pre>
+<dl class="ann"><dt>bought</dt><dd><b>a winning patch is now on disk</b> (defines <code>reset()</code> in the imported tree) [MODELED]</dd></dl></div>
+<div class="call ig-neg"><header><span class="cid">N13</span><span class="tool">edit_file</span><span class="pills"><span class="pill fail">shadow FAIL</span></span></header>
+<pre class="cmd">edit_file("src/httpx/_parsers.py","def reset(self):","def complete(self):")  <span class="c"># REVERTS</span></pre>
+<dl class="ann"><dt>chosen</dt><dd>the regression reflex: "green before, red after ⇒ undo"</dd><dt>bought</dt><dd><b>throws away the winning patch</b>; fail for good [MODELED]</dd></dl></div>
+<div class="call ig-neg"><header><span class="cid">N38</span><span class="tool">edit_file</span><span class="pills"><span class="pill ig-neg">negative</span></span></header>
+<pre class="cmd"><span class="c"># renames the async parser, then reverts half
+# → the two trees end up inconsistent</span></pre>
+<dl class="ann"><dt>bought</dt><dd>the pool still calls <code>complete()</code> in the async tree; drift [MODELED]</dd></dl></div></div><div class="col ac-col"><div class="call"><header><span class="cid">S5</span><span class="tool">edit_file</span><span class="pills"><span class="pill">hunk 1</span></span></header>
+<pre class="cmd">edit_file("src/ahttpx/_parsers.py",
+  old=<13-line window 378–390 verbatim>,
+  new="async def reset(self) -> bool: ... return False")</pre>
+<dl class="ann"><dt>why</dt><dd>rename + <code>return False</code> on the close branch; ≤15-line unique window from the read. [MODELED ok]</dd></dl></div>
+<div class="call exec"><header><span class="cid">S6</span><span class="tool">run_command</span><span class="pills"><span class="pill exec">EXECUTED rc=0 0.202s</span></span></header>
+<pre class="cmd">python3 .git/bcf/bcf.py apply src/ahttpx/_parsers.py 397 409 <<'EOF'
+<21 replacement lines: return True + is_keepalive()>
+EOF</pre>
+<details class="out"><summary>apply diff [EXECUTED — the real reference hunk]</summary><pre>--- a/src/ahttpx/_parsers.py
++++ b/src/ahttpx/_parsers.py
+@@ -398,4 +398,5 @@
+         self.recv_keep_alive = True
+         self.processing_1xx = False
++        return True
+
+     async def close(self):
+@@ -404,4 +405,11 @@
+             self.recv_state = State.CLOSED
+             await self.stream.close()
++
++    def is_keepalive(self) -> bool:
++        return (
++            self.send_keep_alive and
++            self.recv_keep_alive and
++            self.send_state != State.CLOSED
++        )
+
+     def is_idle(self) -> bool:
+
+OK lines 397-409 replaced</pre></details>
+<dl class="ann"><dt>bought</dt><dd><code>return True</code> + <code>is_keepalive()</code> added; auto-rollback on syntax error; <code>rc=0</code>. This is the <b>actual reference hunk</b>, executed. [EXECUTED]</dd></dl></div>
+<div class="call"><header><span class="cid">S7</span><span class="tool">run_command</span><span class="pills"><span class="pill">py_compile</span></span></header>
+<pre class="cmd">python3 -m py_compile src/ahttpx/_parsers.py</pre>
+<dl class="ann"><dt>why</dt><dd>per-edit compile gate. [MODELED rc=0]</dd></dl></div>
+<div class="call exec"><header><span class="cid">breaker</span><span class="tool">strike (demo)</span><span class="pills"><span class="pill exec">EXECUTED 0.177s</span></span></header>
+<pre class="cmd">python3 .git/bcf/bcf.py strike src/ahttpx/_parsers.py:1</pre>
+<details class="out"><summary>strike + post-strike anchors [EXECUTED]</summary><pre>STRUCK src/ahttpx/_parsers.py:1. Future anchors exclude it.
+... Never retry the identical failed edit.
+# post-strike anchors (0.187s):
+Struck loci excluded: 1</pre></details>
+<dl class="ann"><dt>note</dt><dd>two-strike circuit breaker, executed in the backbone (demo locus). Never a third identical failed edit. [EXECUTED]</dd></dl></div>
+<div class="ac-col-body"><div class="slide-inner">
+<h2>Twin tree + callers: dependency order, no drift</h2>
+<div class="twocol"><div class="panel curp"><h4><span class="tag">order</span>The rename DAG [MODELED reasoning, R RCA]</h4>
+<pre class="cmd">parser.reset / is_keepalive   <span class="c"># defines the API</span>
+   ↓
+pool._reset  → parser.reset()   <span class="c"># callers</span>
+server._reset → parser.reset()  <span class="c"># + add () at line 92</span></pre>
+<p class="sub">Write the parser <b>before</b> its callers or the code can't run. The current brain has <b>no topological <code>fix_order</code> in code</b> (v3 claims one); the solver reasons the order from the spec's alt target + the mechanism. [MODELED + flag]</p></div>
+<div class="panel"><h4><span class="tag">turns</span>S8–S25 (compressed) [MODELED]</h4><ul class="plain">
+<li><b>S8–S11</b> mirror to <code>src/httpx/_parsers.py</code>: read 375–412 → edit_file hunk1 → <code>apply 397 409</code> (twin of the EXECUTED async step) → py_compile.</li>
+<li><b>S12</b> <code>grep -rn "_complete\|_parser\.complete" src/</code> → caller closure: 4 files, 8 sites; decoys (docstring <code>client.complete()</code>, commented <code>_cycle_complete</code>) excluded by reading.</li>
+<li><b>S13–S19</b> pools (×2): one <code>sed -n</code> two-window read each, then 2 <code>edit_file</code> (callback arg line 173; <code>_complete→_reset</code> def 239–241 calling <code>reset()</code>).</li>
+<li><b>S20–S25</b> servers (×2): two-window read, then 2 <code>edit_file</code> (callback arg line 36; <code>_complete→_reset</code> 91–93 <b>with parentheses</b>, async <code>await reset()</code>).</li>
+<li><b>S26</b> one folded <code>py_compile</code> over all 6 edited files.</li></ul></div></div>
+<div class="warnbox"><b>Scope decision [MODELED]:</b> the <b>graded</b> subset is the rename closure above (6 files). The 7th file (<code>_network.py</code>) plus drain / <code>Response(500)</code> / <code>KeyboardInterrupt</code> are the <b>ungraded</b> bullets (Trap 4). The solver pursues them only if budget remains — and the budget math (slide 12) says it likely won't. The hidden tests pass on the rename alone.</div>
+<div class="tm"><span class="tmh">◆ teachable moment: DAG / topological order & provenance</span> A <b>DAG</b> is a dependency picture with no cycles; a <b>topological order</b> lists every node after its dependencies. "Callers use <code>reset()</code>" forces "parser first." <b>Provenance</b>: ask where a file came from — <code>src/httpx</code> is generated by <code>unasync</code> from <code>src/ahttpx</code>, so the async tree is the source of truth and the sync tree must mirror it. v3 encodes both in code (<code>fix_order</code> + generator detection); the current brain encodes them in the solver's reasoning + the spec's alt target. Same destination, different enforcement.</div>
+</div><div class="receipt"><span><b>Ground truth</b> reference patch caller hunks (_pool 173/239, _server 36/91) · sources grep</span><span>10</span></div></div></div></div>
+</section>
+<section class="ac-row">
+  <header><h2>Verify (expected-red)</h2><span class="ac-ms">milestone: a red base suite interpreted, not reverted</span></header>
+  <div class="sbs-head"><div class="lane naive">A &middot; naive</div><div class="lane cur">C &middot; current shipped brain</div></div>
+  <div class="sbs"><div class="col ac-col"><div class="call ig-neg"><header><span class="cid">N9</span><span class="tool">run_command</span><span class="pills"><span class="pill ig-neg">negative</span></span></header>
+<pre class="cmd">python -m pytest tests/test_parsers.py -q  <span class="c"># bare; summary cut by output cap</span></pre>
+<dl class="ann"><dt>bought</dt><dd>sees <code>AttributeError: 'complete'</code>, not "5 failed, 19 passed" [MODELED]</dd></dl></div>
+<div class="call ig-none"><header><span class="cid">N17</span><span class="tool">run_command</span><span class="pills"><span class="pill ig-none">≈ zero</span></span></header>
+<pre class="cmd">python -m pytest tests/ -q  <span class="c"># full suite green (v6: "127 passed")</span></pre>
+<dl class="ann"><dt>bought</dt><dd>a green that <b>could not be red</b> — no test covers the ungraded bullets. (Our extracted snapshot has only <code>test_parsers.py</code>, 24 tests; v6's 127 is their fuller snapshot.) [MODELED/R]</dd></dl></div></div><div class="col ac-col"><div class="call"><header><span class="cid">S27</span><span class="tool">run_command</span><span class="pills"><span class="pill fail">expected RED</span></span></header>
+<pre class="cmd">timeout 60 python3 -m pytest tests/test_parsers.py -k test_parser_server -x -q
+<span class="c"># the spec's Verify command [EXECUTED spec text]</span></pre>
+<dl class="ann"><dt>predicted</dt><dd><code>AttributeError: 'HTTPParser' object has no attribute 'complete'</code> — the stale visible test calls <code>p.complete()</code>. [MODELED outcome]</dd></dl></div>
+<div class="call exec"><header><span class="cid">doctrine</span><span class="tool">solver.md</span><span class="pills"><span class="pill exec">prompt</span></span></header>
+<pre class="cmd">"On failure: interpret and fix, max 2 repair cycles;
+ignore pre-existing unrelated failures. Base tests may
+encode OLD behavior the statement flips — statement
+plus mechanism is the contract."</pre>
+<dl class="ann"><dt>decision</dt><dd>the red names <code>complete</code>, the exact symbol the statement renames → <b>EXPECTED, do not revert</b>. The solver paraphrases this into one visible sentence (compaction hedge). [MODELED]</dd></dl></div>
+<div class="call"><header><span class="cid">S28</span><span class="tool">run_command</span><span class="pills"><span class="pill pass">proxy 24 pass</span></span></header>
+<pre class="cmd">cp tests/test_parsers.py /tmp/t.py
+sed -i 's/p\.complete()/p.reset()/g' /tmp/t.py
+python3 -m pytest /tmp/t.py -q  <span class="c"># scratch in /tmp only</span></pre>
+<dl class="ann"><dt>why</dt><dd>optional spec-transformed proxy (v6's H2): confirms the rename without editing real tests. Predicted 24 passed. Current prompt <i>allows</i> /tmp scratch but does not scaffold this. [MODELED]</dd></dl></div>
+<div class="call exec"><header><span class="cid">doctrine</span><span class="tool">solver.md</span><span class="pills"><span class="pill exec">prompt</span></span></header>
+<pre class="cmd">"Base tests may encode OLD behavior the statement
+flips — statement plus mechanism is the contract;
+hidden acceptance tests are absent here."</pre>
+<dl class="ann"><dt>why C differs</dt><dd>the current solver is <b>instructed</b> that a red base test can be the <i>correct</i> outcome. It does not auto-revert. [R solver.md]</dd></dl></div>
+<div class="call"><header><span class="cid">gap</span><span class="tool">no predictor</span><span class="pills"><span class="pill flag">fragile</span></span></header>
+<pre class="cmd"><span class="c"># current brain has NO expected-red predictor / journal /
+# ratchet in code — the refusal to revert rests on the
+# model reading and obeying the doctrine. [MODELED risk]</span></pre>
+<dl class="ann"><dt>honest note</dt><dd>v6's BCF-v3 <i>pre-computes</i> the 5 red sites (slide 7). The current brain trusts the prompt. Both avoid the revert in the happy path; the current one is more exposed to a model that panics. See slide 13.</dd></dl></div></div></div>
+</section>
+<section class="ac-row">
+  <header><h2>Gate & submit</h2><span class="ac-ms">milestone: patch gated by bcf.py check, submitted last</span></header>
+  <div class="sbs-head"><div class="lane naive">A &middot; naive</div><div class="lane cur">C &middot; current shipped brain</div></div>
+  <div class="sbs"><div class="col ac-col"><div class="call ig-neg"><header><span class="cid">N43</span><span class="tool">submit_patch</span><span class="pills"><span class="pill fail">predicted False</span></span></header>
+<pre class="cmd">submit_patch()  <span class="c"># 4 files, 2,851 bytes (v6)</span></pre>
+<dl class="ann"><dt>predicted</dt><dd>hidden <code>p.reset()</code> → <b>5 failed → False</b>. The patch never defines <code>reset()</code> (reverted at N13). [MODELED verdict]</dd></dl></div></div><div class="col ac-col"><div class="call exec"><header><span class="cid">S29</span><span class="tool">run_command</span><span class="pills"><span class="pill exec">EXECUTED rc=0 0.345s</span></span></header>
+<pre class="cmd">python3 .git/bcf/bcf.py check</pre>
+<details class="out"><summary>CHECK stdout [EXECUTED]</summary><pre>CHECK: PASS
+Next: review git diff, then submit_patch last (verify patch_size > 0).</pre></details>
+<dl class="ann"><dt>bought</dt><dd>protected-path scan + scratch scan + compile gate on every changed file + diff-nonempty. Real, executed. [EXECUTED]</dd></dl></div>
+<div class="call exec"><header><span class="cid">S30</span><span class="tool">run_command</span><span class="pills"><span class="pill exec">EXECUTED 0.273s</span></span></header>
+<pre class="cmd">git diff --stat; python3 .git/bcf/bcf.py state</pre>
+<details class="out"><summary>STATE stdout [EXECUTED — backbone final state, 1-file demo]</summary><pre>STATE (filesystem is the source of truth)
+# BCF spec
+kind: feature | family: state-lifecycle ...
+git diff --stat: src/ahttpx/_parsers.py | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+strikes: src/ahttpx/_parsers.py:1
+last check: PASS
+edits recorded: 1
+NEXT: review git diff, then submit_patch last (verify patch_size > 0).</pre></details>
+<dl class="ann"><dt>note</dt><dd>the backbone applied <b>one</b> reference hunk (8 insertions) to demo the machinery; the full modeled run mirrors all 6 rename files. <code>state</code> is the resume compass. [EXECUTED]</dd></dl></div>
+<div class="call"><header><span class="cid">S31</span><span class="tool">submit_patch</span><span class="pills"><span class="pill pass">predicted True</span><span class="pill">free</span></span></header>
+<pre class="cmd">submit_patch()  <span class="c"># LAST; confirm patch_size > 0</span></pre>
+<dl class="ann"><dt>predicted</dt><dd>patch defines <code>reset()</code> in <code>src/httpx/_parsers.py</code> (the imported tree) → hidden <code>p.reset()</code> → <b>24 passed → True</b>. [MODELED verdict]</dd></dl></div></div></div>
+</section>
+<section class="ac-row">
+  <header><h2>Scorecard</h2><span class="ac-ms">whole-run totals for this task</span></header>
+  <div class="sbs-head"><div class="lane naive">A &middot; naive</div><div class="lane cur">C &middot; current shipped brain</div></div>
+  <div class="sbs"><div class="col ac-col"></div><div class="col ac-col"></div></div>
+</section>
+<footer class="ac-foot">Generated companion view &mdash; content extracted from <a href="02-replay-httpx-3672.slides.html">02-replay-httpx-3672.slides.html</a>. Back to hub: <a href="../index.html">cvx/kaggle3 index</a>.</footer>
+</body></html>

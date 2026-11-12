@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>fastapi_14482: Tracks A &amp; C side by side &mdash; parallel step view</title>
+<style>:root{
+  --page:#0e1116; --surface:#151a21; --raised:#1b222c; --sunken:#11151c;
+  --hair:rgba(255,255,255,.08); --hair-2:rgba(255,255,255,.14);
+  --ink:#eef1f5; --ink-2:#aab4c0; --ink-3:#7a8694; --deem:#566070;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181;
+  --good:#0ca30c; --warn:#fab219; --crit:#d03b3b;
+  --good-wash:rgba(12,163,12,.12); --warn-wash:rgba(250,178,25,.10); --crit-wash:rgba(208,59,59,.13);
+  --diff-del:rgba(214,79,67,.14); --diff-add:rgba(25,158,112,.15);
+  --sans:system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"Cascadia Code","JetBrains Mono",ui-monospace,"Consolas",monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--page);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.6}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+a{color:#7fb2f0}
+.rail{position:fixed;left:12px;top:50%;transform:translateY(-50%);z-index:40;display:flex;flex-direction:column;gap:6px}
+.rail button{width:11px;height:11px;border-radius:3px;border:1px solid var(--hair-2);background:transparent;padding:0;cursor:pointer;position:relative}
+.rail button[aria-current="true"]{background:var(--s1);border-color:var(--s1)}
+.rail button span{position:absolute;left:20px;top:50%;transform:translateY(-50%);font:500 12px/1 var(--sans);color:var(--ink-2);white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s;background:var(--raised);padding:4px 7px;border-radius:5px;border:1px solid var(--hair)}
+.rail button:hover span,.rail button:focus-visible span{opacity:1}
+@media (max-width:1100px){.rail{display:none}}
+.slide{position:relative;padding:56px clamp(20px,5vw,64px) 64px;border-bottom:1px solid var(--hair)}
+.slide.hero{min-height:100svh;display:flex}
+.slide-inner{max-width:1240px;margin:auto;width:100%;display:flex;flex-direction:column;gap:14px}
+.receipt{position:absolute;left:clamp(20px,5vw,64px);bottom:20px;right:clamp(20px,5vw,64px);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font:400 12px/1.5 var(--mono);color:var(--ink-3)}
+.receipt b{color:var(--ink-2);font-weight:600}
+.kicker{font:600 13.5px/1.4 var(--sans);color:var(--ink-3)}
+.kicker b{color:var(--ink-2)}
+h2{font:650 28px/1.22 var(--sans);letter-spacing:-.01em;margin:0;max-width:44ch}
+h3.gh{font:650 18px/1.3 var(--sans);margin:18px 0 4px;color:var(--ink-2)}
+.sub{color:var(--ink-2);max-width:96ch;margin:0;font-size:15px}
+.sub.big{font-size:17.5px}
+.sub b{color:var(--ink);font-weight:600}
+code{font:500 .88em var(--mono);background:var(--raised);padding:1px 5px;border-radius:4px;color:var(--ink)}
+pre code{background:none;padding:0}
+.hero-id{font:700 clamp(44px,7.5vw,84px)/1.05 var(--mono);letter-spacing:-.02em;margin:6px 0 2px}
+.hero-id .u{color:var(--ink-3)}
+.okc{color:#5ec95e} .noc{color:#ef8a85}
+.chip{display:inline-flex;align-items:center;gap:6px;font:600 12px/1 var(--mono);padding:5px 9px;border-radius:5px;border:1px solid var(--hair-2)}
+.chip.sm{font-size:10.5px;padding:3px 6px}
+.chip .g{font-family:var(--sans)}
+.chips{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.chip.v{background:var(--good-wash);border-color:rgba(12,163,12,.4)} .chip.v .g{color:var(--good)}
+.chip.sim{background:var(--warn-wash);border-color:rgba(250,178,25,.35)} .chip.sim .g{color:var(--warn)}
+.chip.est{background:rgba(255,255,255,.04);border-style:dashed} .chip.est .g{color:var(--ink-2)}
+.chip.r{background:rgba(201,133,0,.10);border-color:rgba(201,133,0,.45)} .chip.r .g{color:#e3a92a}
+.chip.rp{background:rgba(57,135,229,.12);border-color:rgba(57,135,229,.5)} .chip.rp .g{color:#7fb2f0}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1px;background:var(--hair);border:1px solid var(--hair);border-radius:10px;overflow:hidden}
+.stat{background:var(--surface);padding:11px 15px}
+.stat b{display:block;font:650 21px/1.2 var(--sans)}
+.stat span{font:400 12.5px/1.4 var(--sans);color:var(--ink-3)}
+.panel{background:var(--surface);border:1px solid var(--hair);border-radius:10px;padding:13px 16px}
+.panel h4{margin:0 0 8px;font:650 14px/1.4 var(--sans);color:var(--ink-2)}
+.panel h4 .tag,.tag{font:600 11px/1 var(--mono);color:var(--ink-3);border:1px solid var(--hair-2);border-radius:4px;padding:3px 6px;margin-right:7px;vertical-align:1px}
+.panel p{margin:0;color:var(--ink-2);font-size:14px}
+.panel.dec{border-left:3px solid var(--s1)} .panel.gain{border-left:3px solid var(--s3)}
+.panel.diffp{border-left:3px solid var(--s4);background:linear-gradient(90deg,rgba(201,133,0,.07),var(--surface) 40%)}
+.panel.t2p{border-left:3px solid var(--s3)}
+.twocol{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media (max-width:980px){.twocol,.three{grid-template-columns:1fr}}
+.ba-col{display:flex;flex-direction:column;gap:12px}
+ul.plain,ol.plain{margin:0;padding-left:19px;color:var(--ink-2)}
+ul.plain li,ol.plain li{margin:5px 0;font-size:13.5px;line-height:1.55}
+ul.plain b,ol.plain b{color:var(--ink);font-weight:600}
+.tm{border:1px solid rgba(217,81,129,.38);background:rgba(217,81,129,.07);border-radius:10px;padding:12px 16px;font:400 14px/1.65 var(--sans);color:var(--ink-2)}
+.tm .tmh{display:block;font:700 12.5px/1.3 var(--sans);color:#e37ba6;margin-bottom:5px}
+.tm b{color:var(--ink);font-weight:600}
+.warnbox{border:1px solid rgba(250,178,25,.35);background:var(--warn-wash);border-radius:10px;padding:11px 15px;font:500 13.5px/1.55 var(--sans);color:var(--ink-2)}
+.empty{border:1px dashed var(--hair-2);border-radius:10px;padding:16px;color:var(--ink-3);font-size:14px;background:repeating-linear-gradient(45deg,transparent 0 10px,rgba(255,255,255,.015) 10px 20px)}
+.empty b{color:var(--ink-2)}
+pre.cmd{margin:0;background:var(--sunken);border:1px solid var(--hair);border-radius:7px;padding:8px 11px;font:400 12px/1.55 var(--mono);color:var(--ink);white-space:pre-wrap;word-break:break-word}
+pre.cmd .p{color:var(--s1)} pre.cmd .s{color:#e3a92a} pre.cmd .ok{color:#5ec95e} pre.cmd .bad{color:#ef8a85}
+pre.diff{margin:0;font:400 11.5px/1.55 var(--mono);background:var(--sunken);border:1px solid var(--hair);border-radius:7px;padding:7px 10px;white-space:pre-wrap;word-break:break-word;color:var(--ink-3)}
+pre.diff .del{background:var(--diff-del);color:#e8a09d;display:inline-block;width:100%} pre.diff .add{background:var(--diff-add);color:#8fd8b8;display:inline-block;width:100%}
+pre.diff .ctx{color:var(--ink-3)} pre.diff .meta{color:var(--s1)}
+table.data{border-collapse:collapse;width:100%;font:400 12.5px/1.5 var(--sans)}
+table.data th,table.data td{text-align:left;padding:6px 10px;border-bottom:1px solid var(--hair);color:var(--ink-2);font-weight:400;vertical-align:top}
+table.data th{color:var(--ink-3);font-weight:600;white-space:nowrap;font-family:var(--mono);font-size:11.5px}
+table.data td.k{color:var(--ink);font-weight:600;white-space:nowrap}
+table.data td.note{color:var(--ink-3);font-size:12px}
+table.score td{font-family:var(--mono);font-size:12.5px}
+.traps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:980px){.traps{grid-template-columns:1fr}}
+.trap{background:var(--surface);border:1px solid var(--hair);border-radius:10px;padding:12px 15px;position:relative}
+.trap .tn{font:700 12px/1 var(--mono);color:var(--s2);margin-bottom:5px}
+.trap .tt{font:650 14px/1.35 var(--sans);margin-bottom:5px}
+.trap .td{font-size:13px;color:var(--ink-2);line-height:1.55}
+.trap .chip{position:absolute;top:10px;right:10px}
+.sbs-head{display:grid;grid-template-columns:1fr 1fr;gap:16px;position:sticky;top:0;z-index:5;background:linear-gradient(var(--page) 75%,transparent);padding:8px 0 6px}
+.sbs-head .lane{font:700 13px var(--mono);padding:4px 9px;border-radius:5px}
+.lane.naive{background:rgba(217,89,38,.16);color:#f0a07c;border:1px solid rgba(217,89,38,.45)}
+.lane.bcf{background:rgba(57,135,229,.16);color:#8fbcf2;border:1px solid rgba(57,135,229,.45)}
+.lane.cur{background:rgba(25,158,112,.16);color:#7fd6b0;border:1px solid rgba(25,158,112,.45)}
+.sbs-head .cnt{font:500 12px var(--mono);color:var(--ink-3);margin-left:6px}
+.sbs{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+@media (max-width:980px){.sbs,.sbs-head{grid-template-columns:1fr}}
+.sbs .col{display:flex;flex-direction:column;gap:10px;min-width:0}
+.call{background:var(--surface);border:1px solid var(--hair);border-left:3px solid var(--ink-3);border-radius:9px;padding:10px 12px;display:flex;flex-direction:column;gap:7px;min-width:0;scroll-margin-top:60px}
+.call.ig-high{border-left-color:var(--s3)} .call.ig-some{border-left-color:#4f7a68} .call.ig-none{border-left-color:var(--deem);opacity:.92} .call.ig-neg{border-left-color:var(--crit);background:linear-gradient(90deg,rgba(208,59,59,.08),var(--surface) 35%)}
+.call header{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.call .cid{font:700 13px var(--mono);color:var(--ink)}
+.call .tool{font:600 12px var(--mono);color:var(--ink-2)}
+.pills{display:flex;gap:5px;flex-wrap:wrap;margin-left:auto}
+.pill{font:600 10.5px/1 var(--mono);padding:3px 6px;border-radius:4px;border:1px solid var(--hair-2);color:var(--ink-2);white-space:nowrap}
+.pill.pass{background:var(--good-wash);border-color:rgba(12,163,12,.45);color:#5ec95e}
+.pill.fail{background:var(--crit-wash);border-color:rgba(208,59,59,.4);color:#ef8a85}
+.pill.exec{background:var(--good-wash);border-color:rgba(12,163,12,.45);color:#5ec95e}
+.pill.free{border-style:dashed;color:var(--ink-3)}
+.pill.ig-high{color:#7fd6b0} .pill.ig-none{color:var(--ink-3);border-style:dashed} .pill.ig-neg{color:#ef8a85;border-color:rgba(208,59,59,.5)}
+details.out summary{cursor:pointer;font:500 11.5px var(--mono);color:#7fb2f0}
+details.out pre{margin:6px 0 0;max-height:360px;overflow:auto;background:var(--sunken);border:1px solid var(--hair);border-radius:6px;padding:8px 10px;font:400 11px/1.5 var(--mono);color:var(--ink-2);white-space:pre-wrap;word-break:break-word}
+dl.ann{margin:0;display:grid;grid-template-columns:118px 1fr;gap:4px 10px;font-size:13px;line-height:1.55}
+dl.ann dt{font:650 11.5px/1.5 var(--sans);color:var(--ink-3);text-transform:uppercase;letter-spacing:.03em;padding-top:1px}
+dl.ann dd{margin:0;color:var(--ink-2)} dl.ann dd b{color:var(--ink)}
+@media (max-width:600px){dl.ann{grid-template-columns:1fr}}
+.flow{display:flex;gap:8px;flex-wrap:wrap}
+.flow-step{background:var(--surface);border:1px solid var(--hair);border-radius:8px;padding:8px 12px;display:flex;flex-direction:column;gap:2px;position:relative}
+.flow-step b{font:650 12.5px var(--sans)} .flow-step span{font:500 12px var(--mono);color:var(--ink-3)}
+.flow-step:not(:last-child)::after{content:"→";position:absolute;right:-12px;top:50%;transform:translateY(-50%);color:var(--ink-3)}
+.defs{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:980px){.defs{grid-template-columns:1fr}}
+.def{background:var(--surface);border:1px solid var(--hair);border-radius:10px;padding:11px 14px;margin:0;scroll-margin-top:20px}
+.def dt{font:700 14px/1.4 var(--mono);color:var(--ink)}
+.def dd{margin:5px 0 0;font-size:13px;line-height:1.55;color:var(--ink-2)}
+.def dd .formal{display:block;font-family:var(--mono);font-size:12.2px;color:var(--ink)}
+.def dd .huh{display:block;margin-top:4px;color:var(--ink-3);font-size:12.5px} .def dd .huh b{color:var(--ink-2)}
+ol.srcs{columns:2;column-gap:28px;margin:0;padding-left:0;list-style:none;font-size:12px;color:var(--ink-2)}
+ol.srcs li{break-inside:avoid;margin:0 0 6px}
+@media (max-width:980px){ol.srcs{columns:1}}
+:focus-visible{outline:2px solid var(--s1);outline-offset:2px}
+.sbs,.sbs-head{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+@media (max-width:980px){.sbs,.sbs-head{grid-template-columns:minmax(0,1fr)}}
+dl.ann{grid-template-columns:118px minmax(0,1fr)}
+dl.ann dd,.def dd,table.data td,.panel p,.tm{overflow-wrap:anywhere}
+</style>
+
+<style>
+  body.ac { margin: 0; background: var(--page, #0e1116); color: var(--ink, #eef1f5);
+            font: 15px/1.5 var(--sans, system-ui, sans-serif); padding: 0 0 60px; }
+  .ac-top { position: sticky; top: 0; z-index: 60; background: color-mix(in srgb, var(--page, #0e1116) 90%, transparent);
+            backdrop-filter: blur(8px); border-bottom: 1px solid var(--hair, rgba(255,255,255,.08));
+            padding: 10px 16px; display: flex; gap: 14px; align-items: baseline; flex-wrap: wrap; }
+  .ac-top a { color: var(--s1, #3987e5); text-decoration: none; font-weight: 600; font-size: .85rem; }
+  .ac-top h1 { font-size: 1.05rem; margin: 0; letter-spacing: -.01em; }
+  .ac-top .ac-sub { width: 100%; margin: 0; color: var(--ink-3, #7a8694); font-size: .78rem; }
+  .ac-row { max-width: 1500px; margin: 22px auto 0; padding: 0 16px; }
+  .ac-row > header { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap;
+                     border-bottom: 2px solid var(--hair-2, rgba(255,255,255,.14)); padding-bottom: 6px; }
+  .ac-row > header h2 { margin: 0; font-size: 1.05rem; }
+  .ac-row > header .ac-ms { color: var(--ink-3, #7a8694); font-size: .76rem; }
+  .ac-row .sbs { margin-top: 10px; }
+  .ac-col h2 { font-size: .95rem; margin: 4px 0 8px; }
+  .ac-col .call, .ac-col .panel { margin: 0 0 10px; }
+  .ac-foot { max-width: 1500px; margin: 30px auto 0; padding: 12px 16px 0; color: var(--ink-3, #7a8694);
+             font-size: .75rem; border-top: 1px solid var(--hair, rgba(255,255,255,.08)); }
+  .ac-foot a { color: var(--s1, #3987e5); }
+  @media (max-width: 900px) {
+    .ac-row .sbs { grid-template-columns: 1fr; }
+    .ac-row .sbs-head { grid-template-columns: 1fr; }
+  }
+</style>
+
+</head>
+<body class="ac">
+<header class="ac-top">
+  <a href="04-replay-fastapi-14482.slides.html">&larr; slide deck</a>
+  <h1>fastapi_14482 &mdash; Track A &verbar; Track C, side by side per stage</h1>
+  <p class="ac-sub">Every step and milestone of the naive agent (left) against the current shipped brain (right), extracted verbatim from the deck. Track B omitted. [R]/[MODELED]/[EXECUTED] provenance tags as in the source.</p>
+</header>
+
+<section class="ac-row">
+  <header><h2>Plan & doctrine</h2><span class="ac-ms">milestone: cold-start spec install + pinned problem.md</span></header>
+  <div class="sbs-head"><div class="lane naive">A &middot; naive</div><div class="lane cur">C &middot; current shipped brain</div></div>
+  <div class="sbs"><div class="col ac-col"><div class="panel"><h4><span class="tag">note</span>Track A has no step here</h4><p>Kicker of the Track&nbsp;A slide: &ldquo;Track A &middot; naive agent [MODELED &mdash; shape faithfully from the v6-3 deck; intermediate calls interpolated]&rdquo; &mdash; the naive track has no plan stage; it reacts turn by turn.</p></div></div><div class="col ac-col"><div class="call ig-some"><header><span class="cid">P1</span><span class="tool">run_command · Step 0 probe</span><span class="pills"><span class="pill">1 charged</span></span></header>
+<pre class="cmd">python3 .git/bcf/bcf.py spec   <span class="bad"># cold: helper missing → error</span></pre>
+<dl class="ann"><dt>prompt</dt><dd>"Step 0 — re-entry probe… If the output is a spec… your ENTIRE final message is that spec copied verbatim." On a warm re-entry this is the <b>only</b> plan call (0.215 s [EXECUTED]).</dd></dl></div>
+<div class="call ig-some"><header><span class="cid">P2</span><span class="tool">run_skill_script · install</span><span class="pills"><span class="pill">1 charged*</span></span></header>
+<pre class="cmd">run_skill_script(skill_name="bcf-spec", script_path="scripts/install.py")
+<span class="s"># ZERO arguments — "the args array is a documented server-hang trigger"</span></pre>
+<dl class="ann"><dt>note</dt><dd>*skill-script charging is unverified in local intel (v6's D18) — counted conservatively; total ±1.</dd></dl></div>
+<div class="call ig-some"><header><span class="cid">P3</span><span class="tool">write_file</span><span class="pills"><span class="pill">1 charged</span></span></header>
+<pre class="cmd">.git/bcf/problem.md ← statement verbatim (title + body, ~1,500 chars)</pre></div>
+<div class="call ig-high"><header><span class="cid">P4</span><span class="tool">run_command · spec</span><span class="pills"><span class="pill exec">EXECUTED</span><span class="pill">0.302s</span></span></header>
+<pre class="cmd">python3 .git/bcf/bcf.py spec   <span class="ok"># rc=0, cold compute; stdout →</span></pre></div>
+<div class="call ig-none"><header><span class="cid">P5</span><span class="tool">final text · output_key</span><span class="pills"><span class="pill free">no tool</span></span></header>
+<pre class="cmd"># entire final message = spec stdout VERBATIM → pinned as bcf_spec</pre>
+<dl class="ann"><dt>why</dt><dd><code>output_key: bcf_spec</code> + <code>include_contents: none</code>: the spec survives compaction as solver instruction; the planner never analyzes the bug.</dd></dl></div></div></div>
+</section>
+<section class="ac-row">
+  <header><h2>Localize & read</h2><span class="ac-ms">milestone: producer question + anchors before editing</span></header>
+  <div class="sbs-head"><div class="lane naive">A &middot; naive</div><div class="lane cur">C &middot; current shipped brain</div></div>
+  <div class="sbs"><div class="col ac-col"><div class="call ig-none"><header><span class="cid">N1–N2</span><span class="tool">reads / grep</span><span class="pills"><span class="pill">2/50</span><span class="pill ig-none">low</span></span></header>
+<pre class="cmd"># reads the 2-line statement; greps "arbitrary" broadly across the repo</pre>
+<dl class="ann"><dt>chosen</dt><dd>start from the error string, not the mechanism</dd></dl></div>
+<div class="call ig-none"><header><span class="cid">N3–N7</span><span class="tool">repro + reads</span><span class="pills"><span class="pill">7/50</span><span class="pill ig-none">≈ zero</span></span></header>
+<pre class="cmd"># writes a repro; the arbitrary type serializes wrong; greps "arbitrary" broadly</pre>
+<dl class="ann"><dt>chosen</dt><dd>diagnose "type not allowed" (layer 1)</dd><dt>bought</dt><dd>several calls; partly "fixes" the repro's model — <b>the wrong layer</b> (v6 transcript). The model was already correct; the Pydantic-only control would have shown it.</dd></dl></div></div><div class="col ac-col"><div class="call ig-none"><header><span class="cid">S1</span><span class="tool">get_status</span><span class="pills"><span class="pill free">free</span></span></header>
+<pre class="cmd">get_status()   # budget check at start, per prompt</pre></div>
+<div class="call ig-high"><header><span class="cid">S2</span><span class="tool">read_file</span><span class="pills"><span class="pill">1 charged</span><span class="pill ig-high">high</span></span></header>
+<pre class="cmd">read_file("fastapi/_compat/v2.py", start_line=62, end_line=120)
+<span class="s"># 59 lines ≤ 60 cap: ModelField dataclass, type_ property, __post_init__</span></pre>
+<dl class="ann"><dt>sees</dt><dd>the spec's target <code>type_</code> is a harmless property; three lines below it, <code>TypeAdapter(Annotated[annotation, field_info])</code> with <b>no config</b>.</dd>
+<dt>mechanism</dt><dd><b>"FastAPI builds a standalone per-field TypeAdapter without the parent model's config, so arbitrary_types_allowed is lost for response fields."</b> One sentence, lines named → the commit gate says EDIT NOW… but the mechanism has a producer question first.</dd>
+<dt>overrule</dt><dd>"Spec target type_ (82) is a property, not the constructor; the defect is __post_init__ (85–99)." One-sentence reason, per prompt.</dd></dl></div>
+<div class="call ig-high"><header><span class="cid">S3</span><span class="tool">run_command · locate</span><span class="pills"><span class="pill exec">EXECUTED</span><span class="pill">0.193s</span></span></header>
+<pre class="cmd">python3 .git/bcf/bcf.py locate arbitrary_types_allowed config TypeAdapter</pre>
+<details class="out" open><summary>actual stdout [EXECUTED]</summary><pre>LOCATE (top hits; file:symbol:line)
+fastapi/_compat/v2.py:_get_model_config:170  (score 181)</pre></details>
+<dl class="ann"><dt>why</dt><dd>prompt: "Evidence contradicts the spec? locate WORDS with refined symptom words; follow the new ranking." The hit — a config accessor in the same file — confirms the config vocabulary lives here.</dd></dl></div>
+<div class="call ig-high"><header><span class="cid">S4</span><span class="tool">run_command · grep producers</span><span class="pills"><span class="pill">1 charged</span><span class="pill ig-high">high</span></span></header>
+<pre class="cmd">grep -n "ModelField(" fastapi/_compat/v2.py fastapi/routing.py | head -20</pre>
+<dl class="ann"><dt>the DAG question</dt><dd><b>"Who constructs ModelField for response models, and do they pass config?"</b> → <code>get_model_fields</code> at 414. This is the step the mask demands: the consumer fix alone cannot work unless the producer forwards config.</dd></dl></div>
+<div class="call ig-high"><header><span class="cid">S5</span><span class="tool">read_file</span><span class="pills"><span class="pill">1 charged</span></span></header>
+<pre class="cmd">read_file("fastapi/_compat/v2.py", start_line=406, end_line=421)</pre>
+<dl class="ann"><dt>sees</dt><dd><code>ModelField(field_info=field_info, name=name)</code> — <b>layer 2 confirmed</b>: <code>model.model_config</code> is dropped. Both loci now in belief state, <i>before any edit</i> — the reveal is pre-empted, as v6 promised, but via an explicit producer search rather than a lucky window.</dd></dl></div>
+<div class="call ig-high"><header><span class="cid">S6</span><span class="tool">run_command · anchors</span><span class="pills"><span class="pill exec">EXECUTED</span><span class="pill">0.191s</span></span></header>
+<pre class="cmd">python3 .git/bcf/bcf.py anchors fastapi/_compat/v2.py</pre>
+<details class="out" open><summary>actual stdout [EXECUTED]</summary><pre>ANCHORS fastapi/_compat/v2.py (family: boundary-edge-case)
+[1] lines 20-20 status=unique strategy=exact
+old_string (copy verbatim):
+from fastapi.types import IncEx, ModelNameMap, UnionType
+[2] lines 104-104 status=unique strategy=exact
+old_string (copy verbatim):
+        return self.field_info.get_default(call_default_factory=True)
+[3] lines 115-115 status=unique strategy=exact
+old_string (copy verbatim):
+                self._type_adapter.validate_python(value, from_attributes=True),
+End of anchors: re-run anchors before every edit; never reuse a stale window.</pre></details>
+<dl class="ann"><dt>note</dt><dd>verified-unique windows near the edit sites; the solver copies old_string VERBATIM, never from memory. Re-run before every edit (folded into the compile calls below).</dd></dl></div></div></div>
+</section>
+<section class="ac-row">
+  <header><h2>Edit (thrash vs anchored hunks)</h2><span class="ac-ms">milestone: symptom patches vs verbatim-anchor hunks</span></header>
+  <div class="sbs-head"><div class="lane naive">A &middot; naive</div><div class="lane cur">C &middot; current shipped brain</div></div>
+  <div class="sbs"><div class="col ac-col"><div class="call ig-neg"><header><span class="cid">N14</span><span class="tool">edit_file</span><span class="pills"><span class="pill">16/50</span><span class="pill fail">FAIL</span></span></header>
+<pre class="cmd"># threads arbitrary_types_allowed somewhere → re-runs → STILL wrong</pre>
+<dl class="ann"><dt>meant</dt><dd>whitelist the arbitrary type (layer 1)</dd><dt>bought</dt><dd><b>the masked layer surfaces.</b> In v6's framing the serializer is still ignored; in the propagation framing the error is unchanged because get_model_fields still passes no config. Either way: naive must search again, from zero.</dd></dl></div>
+<div class="call ig-neg"><header><span class="cid">N20</span><span class="tool">edit_file</span><span class="pills"><span class="pill">22/50</span><span class="pill fail">FAIL</span></span></header>
+<pre class="cmd"># special-cases metadata in one call site → get passes, schema still fails</pre>
+<dl class="ann"><dt>bought</dt><dd>a partial patch covering one layer / one call path only</dd></dl></div></div><div class="col ac-col"><div class="ac-col-body"><div class="slide-inner">
+<h2>Edit: verbatim anchors, compile gates, and the executed apply demo</h2>
+<div class="twocol"><div class="ba-col">
+<div class="panel"><h4><span class="tag">loop</span>The edit loop as modeled (prompt-faithful)</h4>
+<table class="data"><thead><tr><th>turn</th><th>action</th><th>hunk</th></tr></thead><tbody>
+<tr><td class="k">S7</td><td>edit_file · verbatim old_string</td><td>imports: <code>from dataclasses import dataclass, is_dataclass</code></td></tr>
+<tr><td class="k">S8</td><td>run_command: py_compile + sed re-read + fresh anchors (one call)</td><td>gate</td></tr>
+<tr><td class="k">S9</td><td>edit_file</td><td>imports: <code>+ ConfigDict</code> on the pydantic line</td></tr>
+<tr><td class="k">S10</td><td>run_command: compile + re-read + anchors</td><td>gate</td></tr>
+<tr><td class="k">S11</td><td>edit_file</td><td>dataclass: <code>config: Union[ConfigDict, None] = None</code></td></tr>
+<tr><td class="k">S12</td><td>run_command: compile + re-read + anchors</td><td>gate</td></tr>
+<tr><td class="k">S13</td><td>edit_file</td><td>__post_init__: <code>annotated_args = (annotation, *metadata, field_info)</code>; <code>TypeAdapter(Annotated[annotated_args], config=self.config)</code></td></tr>
+<tr><td class="k">S14</td><td>run_command: compile + re-read + anchors</td><td>gate</td></tr>
+<tr><td class="k">S15</td><td>edit_file (4-line old_string → 15-line loop)</td><td>get_model_fields: per-field config with the BaseModel/dict/dataclass exclusion</td></tr>
+<tr><td class="k">S16</td><td>run_command: py_compile + sed 414–436 re-read</td><td>gate</td></tr>
+</tbody></table>
+<p class="note" style="margin-top:6px;color:var(--ink-3);font-size:12px">edit_file is primary per prompt; <code>apply PATH START END</code> is the documented fallback after two failed edits — and the fallback is the path the replay driver actually executed (right). Folding compile+re-read+anchors into one run_command keeps the discipline at ~2 calls per hunk instead of 4.</p></div>
+<div class="call ig-high"><header><span class="cid">strike demo</span><span class="tool">bcf.py strike + anchors</span><span class="pills"><span class="pill exec">EXECUTED</span><span class="pill">0.196s / 0.222s</span></span></header>
+<pre class="cmd">python3 .git/bcf/bcf.py strike fastapi/_compat/v2.py:1</pre>
+<details class="out" open><summary>actual stdout [EXECUTED]</summary><pre>STRUCK fastapi/_compat/v2.py:1. Future anchors exclude it. Get a different anchor: python3 .git/bcf/bcf.py anchors fastapi/_compat/v2.py � or switch to apply line-range. Never retry the identical failed edit.</pre></details>
+<pre class="cmd"># then: anchors again → same 3 unique windows, plus:</pre>
+<details class="out"><summary>post-strike anchors tail [EXECUTED]</summary><pre>Struck loci excluded: 1
+End of anchors: re-run anchors before every edit; never reuse a stale window.</pre></details>
+<dl class="ann"><dt>role</dt><dd>the two-strike circuit breaker, executed: two identical failed edits → strike → change strategy. NEVER a third identical call. This is the anti-thrash machinery naive lacks.</dd></dl></div>
+</div><div class="ba-col">
+<div class="call ig-high"><header><span class="cid">apply demo</span><span class="tool">bcf.py apply 412 421</span><span class="pills"><span class="pill exec">EXECUTED</span><span class="pill">rc=0 · 0.217s</span></span></header>
+<pre class="cmd">python3 .git/bcf/bcf.py apply fastapi/_compat/v2.py 412 421
+<<'EOF'   <span class="s"># replacement lines on single-quoted heredoc stdin</span></pre>
+<details class="out" open><summary>actual stdout — the real reference hunk, landed [EXECUTED]</summary><pre>--- a/fastapi/_compat/v2.py
++++ b/fastapi/_compat/v2.py
+@@ -413,8 +413,19 @@
+
+ def get_model_fields(model: Type[BaseModel]) -> List[ModelField]:
+-    return [
+-        ModelField(field_info=field_info, name=name)
+-        for name, field_info in model.model_fields.items()
+-    ]
++    model_fields: List[ModelField] = []
++    for name, field_info in model.model_fields.items():
++        type_ = field_info.annotation
++        if lenient_issubclass(type_, (BaseModel, dict)) or is_dataclass(type_):
++            model_config = None
++        else:
++            model_config = model.model_config
++        model_fields.append(
++            ModelField(
++                field_info=field_info,
++                name=name,
++                config=model_config,
++            )
++        )
++    return model_fields
+
+
+
+OK lines 412-421 replaced</pre></details>
+<dl class="ann"><dt>machinery</dt><dd>refuses protected paths and ranges >120 lines; backs up; writes atomically; <b>auto-rollback on syntax error</b>. 10 old lines → 21 new lines; diff stat 15+/4− [EXECUTED].</dd>
+<dt>scope</dt><dd>this demo applied the <b>producer hunk only</b> (the driver picks the patch's last hunk). The modeled solver applies all four; the demo proves the largest, riskiest hunk lands cleanly.</dd></dl></div>
+<div class="warnbox"><b>The DAG violation, executed.</b> After this producer-only apply, <code>ModelField</code> still has no <code>config</code> field and <code>is_dataclass</code> is not imported. Runtime would raise <code>TypeError</code>/<code>NameError</code> — yet <code>check</code> printed <b>CHECK: PASS</b> (next slide). Syntax gates cannot see dependency order. The repro, not the gate, is the behavioral oracle.</div>
+<div class="tm"><span class="tmh">◆ teachable moment: verbatim or nothing</span> Every old_string is copied from a fresh verified-unique window or a just-read range — never composed from memory or from <i>intended</i> code. Small models hallucinate whitespace and stale context; the anchors/apply pair converts "edit correctness" from a model skill into a filesystem check. That is why the executed apply matters more than any scripted edit_file in the v6 deck.</div>
+</div></div>
+</div><div class="receipt"><span><b>Receipt</b> apply/strike stdout verbatim: exec log steps 6–8 · edit loop: prompts/solver.md §Edit loop · hunk content: reference patch [R]</span><span>9</span></div></div></div></div>
+</section>
+<section class="ac-row">
+  <header><h2>Verify & submit (+ masking analysis)</h2><span class="ac-ms">milestone: partial green submitted vs dep-gap doctrine</span></header>
+  <div class="sbs-head"><div class="lane naive">A &middot; naive</div><div class="lane cur">C &middot; current shipped brain</div></div>
+  <div class="sbs"><div class="col ac-col"><div class="call ig-none"><header><span class="cid">N21–N24</span><span class="tool">verify / submit</span><span class="pills"><span class="pill">24/50</span></span></header>
+<pre class="cmd"># re-runs repro, sees partial green, submits the partial patch</pre>
+<dl class="ann"><dt>outcome</dt><dd>1 of 3 acceptance tests — and the one that passes is the Pydantic-only control</dd></dl></div></div><div class="col ac-col"><div class="call ig-high"><header><span class="cid">S17</span><span class="tool">run_command · /tmp repro</span><span class="pills"><span class="pill">1 charged</span><span class="pill ig-high">high</span></span></header>
+<pre class="cmd"><span class="s"># spec Verify: "No matching existing test found. Write a /tmp repro via
+# run_command heredoc; run with timeout 10."  [EXECUTED spec text]</span>
+cat > /tmp/repro_14482.py <<'EOF'
+from typing import List
+from fastapi import FastAPI
+from fastapi.testclient import TestClient
+from pydantic import (BaseModel, ConfigDict, PlainSerializer,
+                      TypeAdapter, WithJsonSchema)
+from typing_extensions import Annotated
+
+class FakeNumpyArray:
+    def __init__(self): self.data = [1.0, 2.0, 3.0]
+
+Fake = Annotated[FakeNumpyArray,
+    WithJsonSchema(TypeAdapter(List[float]).json_schema()),
+    PlainSerializer(lambda v: v.data)]
+
+class MyModel(BaseModel):
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+    custom_field: Fake
+
+app = FastAPI()
+@app.get("/")
+def ep() -> MyModel: return MyModel(custom_field=FakeNumpyArray())
+
+c = TestClient(app)
+assert c.get("/").json() == {"custom_field": [1.0, 2.0, 3.0]}
+s = c.get("/openapi.json").json()["components"]["schemas"]["MyModel"]
+assert s["properties"]["custom_field"]["type"] == "array"
+print("REPRO OK: serialize + schema")
+EOF
+timeout 10 python3 /tmp/repro_14482.py</pre>
+<dl class="ann"><dt>modeled</dt><dd>script content [MODELED], mirroring the acceptance tests <b>minus inline_snapshot</b> — plain asserts, no snapshot library, no pytest collection. Before the fix this raises PydanticSchemaGenerationError at route setup; after the full 4-hunk fix it prints REPRO OK.</dd>
+<dt>fallback</dt><dd>if TestClient/httpx is unavailable: <code>app.openapi()</code> alone still exercises the schema path; serialization argued from mechanism + the Pydantic-only control.</dd></dl></div>
+<div class="call ig-high"><header><span class="cid">S18</span><span class="tool">run_command · check</span><span class="pills"><span class="pill exec">EXECUTED</span><span class="pill">0.376s</span></span></header>
+<pre class="cmd">python3 .git/bcf/bcf.py check</pre>
+<details class="out" open><summary>actual stdout [EXECUTED]</summary><pre>CHECK: PASS
+Next: review git diff, then submit_patch last (verify patch_size > 0).</pre></details></div>
+<div class="call ig-some"><header><span class="cid">S19</span><span class="tool">run_command · git diff review</span><span class="pills"><span class="pill">1 charged</span></span></header>
+<pre class="cmd">git diff --stat && git diff
+<span class="s"># modeled full-fix stat: 1 file changed, 25 insertions(+), 7 deletions(-)
+# executed demo stat:    1 file changed, 15 insertions(+), 4 deletions(-)</span></pre></div>
+<div class="call ig-high"><header><span class="cid">S20</span><span class="tool">submit_patch</span><span class="pills"><span class="pill free">free · LAST</span><span class="pill pass">patch_size > 0</span></span></header>
+<pre class="cmd">submit_patch()   # then one-sentence completion text only AFTER submit</pre>
+<dl class="ann"><dt>state</dt><dd>the executed final compass [EXECUTED 0.297s]: spec summary + diff stat + strikes + "last check: PASS" + "edits recorded: 1" + NEXT hint — filesystem as source of truth.</dd></dl></div>
+<div class="ac-col-body"><div class="slide-inner">
+<h2>How the current doctrine navigates two layers — and where it can still thrash</h2>
+<div class="twocol">
+<div class="panel gain"><h4><span class="tag">map</span>Doctrine → masking failure mode</h4>
+<table class="data"><thead><tr><th>clause (solver.md)</th><th>failure it prevents</th></tr></thead><tbody>
+<tr><td class="k">"state the mechanism in one sentence… EDIT NOW"</td><td>analysis paralysis; the mechanism sentence ("config lost between model and adapter") already implies the producer question</td></tr>
+<tr><td class="k">"Overrule any candidate with a one-sentence reason"</td><td>compliance with the spec's wrong boundary-edge-case playbook (try/except guards)</td></tr>
+<tr><td class="k">"max 2 repair cycles"</td><td>unbounded thrash after the unchanged-error reveal; forces re-localization instead of re-editing</td></tr>
+<tr><td class="k">"Two identical failed edits → strike… NEVER a third"</td><td>the N14-style loop; executed strike machinery excludes the dead locus</td></tr>
+<tr><td class="k">"statement plus mechanism is the contract"</td><td>overfitting the visible error string ("set arbitrary_types_allowed=True" — already set)</td></tr>
+<tr><td class="k">"ignore pre-existing unrelated failures"</td><td>burning repair cycles on dep-gap collection red</td></tr>
+<tr><td class="k">"Never redo a completed edit… re-read the narrow range"</td><td>compaction amnesia re-editing layer 1 after layer 2 is found</td></tr>
+</tbody></table></div>
+<div class="ba-col">
+<div class="panel diffp"><h4><span class="tag">risk</span>Honest thrash branches (where C could still fail)</h4><ul class="plain">
+<li><b>R1 · consumer-only first edit.</b> If the solver fixes <code>__post_init__</code> before asking the producer question, the repro fails <b>identically</b>. Repair cycle 1 must re-localize to <code>get_model_fields</code>; if the unchanged error is misread as "my edit didn't take", cycle 2 goes to re-anchors/re-edit — and the cap submits a partial patch. <b>Predicted False on this branch.</b> The producer grep (S4) is the cheap insurance; the prompt implies it via "mechanism" but never says "grep the callers" explicitly.</li>
+<li><b>R2 · playbook compliance.</b> A weak model may follow the spec's "guard empty/None inputs" literally → try/except symptom fix. The demotion clause mitigates; it does not eliminate.</li>
+<li><b>R3 · metadata subtlety.</b> Config-only propagation might serialize correctly while OpenAPI differs from the reference (the splat is explicit in the patch). Predicted True assumes <b>full 4-hunk equivalence</b>; a 3-hunk patch is an equivalence risk, not a guaranteed pass.</li>
+<li><b>R4 · thinking overflow.</b> <code>thinking_budget: 2048</code> is advisory (local intel: enforcement unverified; the harness ships a MAX_TOKENS nudge). A d3 reasoning turn that burns the budget mid-edit truncates the tool call → nudge → split edits. Each overflow costs ~30–60 s.</li>
+<li><b>R5 · wall-clock breach.</b> Modeled session ≈ 3.8 min of a 4.5 min cap. One repair cycle ≈ +45–60 s fits; <b>two</b> breach the 80% rule → forced submit of the best verified improvement, possibly partial.</li>
+</ul></div>
+<div class="warnbox"><b>Net.</b> The current brain handles masking <i>by construction</i> (mechanism-first + producer search + capped repairs + strike), not by a lucky read window. Its residual risk is concentrated in R1: the doctrine makes the producer question <b>implicit</b>. One prompt line — "if the fix adds a parameter, grep who constructs the object" — would make it explicit. That is the single highest-value gap this replay found.</div>
+</div>
+</div>
+</div><div class="receipt"><span><b>Receipt</b> clauses quoted from prompts/solver.md · risk branches are modeled judgments [MODELED], not sampled outcomes</span><span>11</span></div></div></div></div>
+</section>
+<section class="ac-row">
+  <header><h2>Scorecard</h2><span class="ac-ms">whole-run totals for this task</span></header>
+  <div class="sbs-head"><div class="lane naive">A &middot; naive</div><div class="lane cur">C &middot; current shipped brain</div></div>
+  <div class="sbs"><div class="col ac-col"><div class="panel diffp"><h4><span class="tag">insight</span>The uncomfortable finding</h4><p><b>C spends about as many charged calls as naive (~22).</b> The discipline is not call-cheap: anchors-before-every-edit, compile gates, re-reads, and the producer search cost real calls. What C buys with them is <i>reliability per call</i> — and it halves naive's thinking/decode (3,900 vs 7,500) because the mechanism is found once, not re-derived after each reveal. B's ~9 is only reachable by skipping per-edit verification. The honest ranking on this task: <b>B is cheapest-if-scripted, C is cheapest-that-actually-runs, A is expensive and wrong.</b></p></div></div><div class="col ac-col"></div></div>
+</section>
+<footer class="ac-foot">Generated companion view &mdash; content extracted from <a href="04-replay-fastapi-14482.slides.html">04-replay-fastapi-14482.slides.html</a>. Back to hub: <a href="../index.html">cvx/kaggle3 index</a>.</footer>
+</body></html>

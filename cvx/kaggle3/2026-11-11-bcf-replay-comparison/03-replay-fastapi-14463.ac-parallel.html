@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>fastapi_14463: Tracks A &amp; C side by side &mdash; parallel step view</title>
+<style>:root{
+  --page:#0e1116; --surface:#151a21; --raised:#1b222c; --sunken:#11151c;
+  --hair:rgba(255,255,255,.08); --hair-2:rgba(255,255,255,.14);
+  --ink:#eef1f5; --ink-2:#aab4c0; --ink-3:#7a8694; --deem:#566070;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181;
+  --good:#0ca30c; --warn:#fab219; --crit:#d03b3b;
+  --good-wash:rgba(12,163,12,.12); --warn-wash:rgba(250,178,25,.10); --crit-wash:rgba(208,59,59,.13);
+  --diff-del:rgba(214,79,67,.14); --diff-add:rgba(25,158,112,.15);
+  --sans:system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"Cascadia Code","JetBrains Mono",ui-monospace,"Consolas",monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--page);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.6}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+a{color:#7fb2f0}
+.rail{position:fixed;left:12px;top:50%;transform:translateY(-50%);z-index:40;display:flex;flex-direction:column;gap:6px}
+.rail button{width:11px;height:11px;border-radius:3px;border:1px solid var(--hair-2);background:transparent;padding:0;cursor:pointer;position:relative}
+.rail button[aria-current="true"]{background:var(--s1);border-color:var(--s1)}
+.rail button span{position:absolute;left:20px;top:50%;transform:translateY(-50%);font:500 12px/1 var(--sans);color:var(--ink-2);white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s;background:var(--raised);padding:4px 7px;border-radius:5px;border:1px solid var(--hair)}
+.rail button:hover span,.rail button:focus-visible span{opacity:1}
+@media (max-width:1100px){.rail{display:none}}
+.slide{position:relative;padding:56px clamp(20px,5vw,64px) 64px;border-bottom:1px solid var(--hair)}
+.slide.hero{min-height:100svh;display:flex}
+.slide-inner{max-width:1240px;margin:auto;width:100%;display:flex;flex-direction:column;gap:14px}
+.receipt{position:absolute;left:clamp(20px,5vw,64px);bottom:20px;right:clamp(20px,5vw,64px);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font:400 12px/1.5 var(--mono);color:var(--ink-3)}
+.receipt b{color:var(--ink-2);font-weight:600}
+.kicker{font:600 13.5px/1.4 var(--sans);color:var(--ink-3)}
+.kicker b{color:var(--ink-2)}
+h2{font:650 28px/1.22 var(--sans);letter-spacing:-.01em;margin:0;max-width:44ch}
+h3.gh{font:650 18px/1.3 var(--sans);margin:18px 0 4px;color:var(--ink-2)}
+.sub{color:var(--ink-2);max-width:96ch;margin:0;font-size:15px}
+.sub.big{font-size:17.5px}
+.sub b{color:var(--ink);font-weight:600}
+code{font:500 .88em var(--mono);background:var(--raised);padding:1px 5px;border-radius:4px;color:var(--ink)}
+pre code{background:none;padding:0}
+.hero-id{font:700 clamp(44px,7.5vw,84px)/1.05 var(--mono);letter-spacing:-.02em;margin:6px 0 2px}
+.hero-id .u{color:var(--ink-3)}
+.okc{color:#5ec95e} .noc{color:#ef8a85}
+.chip{display:inline-flex;align-items:center;gap:6px;font:600 12px/1 var(--mono);padding:5px 9px;border-radius:5px;border:1px solid var(--hair-2)}
+.chip.sm{font-size:10.5px;padding:3px 6px}
+.chip .g{font-family:var(--sans)}
+.chips{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.chip.v{background:var(--good-wash);border-color:rgba(12,163,12,.4)} .chip.v .g{color:var(--good)}
+.chip.sim{background:var(--warn-wash);border-color:rgba(250,178,25,.35)} .chip.sim .g{color:var(--warn)}
+.chip.est{background:rgba(255,255,255,.04);border-style:dashed} .chip.est .g{color:var(--ink-2)}
+.chip.r{background:rgba(201,133,0,.10);border-color:rgba(201,133,0,.45)} .chip.r .g{color:#e3a92a}
+.chip.rp{background:rgba(57,135,229,.12);border-color:rgba(57,135,229,.5)} .chip.rp .g{color:#7fb2f0}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1px;background:var(--hair);border:1px solid var(--hair);border-radius:10px;overflow:hidden}
+.stat{background:var(--surface);padding:11px 15px}
+.stat b{display:block;font:650 21px/1.2 var(--sans)}
+.stat span{font:400 12.5px/1.4 var(--sans);color:var(--ink-3)}
+.panel{background:var(--surface);border:1px solid var(--hair);border-radius:10px;padding:13px 16px}
+.panel h4{margin:0 0 8px;font:650 14px/1.4 var(--sans);color:var(--ink-2)}
+.panel h4 .tag,.tag{font:600 11px/1 var(--mono);color:var(--ink-3);border:1px solid var(--hair-2);border-radius:4px;padding:3px 6px;margin-right:7px;vertical-align:1px}
+.panel p{margin:0;color:var(--ink-2);font-size:14px}
+.panel.dec{border-left:3px solid var(--s1)} .panel.gain{border-left:3px solid var(--s3)}
+.panel.diffp{border-left:3px solid var(--s4);background:linear-gradient(90deg,rgba(201,133,0,.07),var(--surface) 40%)}
+.panel.t2p{border-left:3px solid var(--s3)}
+.panel.critp{border-left:3px solid var(--crit);background:linear-gradient(90deg,rgba(208,59,59,.07),var(--surface) 40%)}
+.twocol{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media (max-width:980px){.twocol,.three{grid-template-columns:1fr}}
+.ba-col{display:flex;flex-direction:column;gap:12px}
+ul.plain,ol.plain{margin:0;padding-left:19px;color:var(--ink-2)}
+ul.plain li,ol.plain li{margin:5px 0;font-size:13.5px;line-height:1.55}
+ul.plain b,ol.plain b{color:var(--ink);font-weight:600}
+.tm{border:1px solid rgba(217,81,129,.38);background:rgba(217,81,129,.07);border-radius:10px;padding:12px 16px;font:400 14px/1.65 var(--sans);color:var(--ink-2)}
+.tm .tmh{display:block;font:700 12.5px/1.3 var(--sans);color:#e37ba6;margin-bottom:5px}
+.tm b{color:var(--ink);font-weight:600}
+.warnbox{border:1px solid rgba(250,178,25,.35);background:var(--warn-wash);border-radius:10px;padding:11px 15px;font:500 13.5px/1.55 var(--sans);color:var(--ink-2)}
+.empty{border:1px dashed var(--hair-2);border-radius:10px;padding:16px;color:var(--ink-3);font-size:14px;background:repeating-linear-gradient(45deg,transparent 0 10px,rgba(255,255,255,.015) 10px 20px)}
+.empty b{color:var(--ink-2)}
+pre.cmd{margin:0;background:var(--sunken);border:1px solid var(--hair);border-radius:7px;padding:8px 11px;font:400 12px/1.55 var(--mono);color:var(--ink);white-space:pre-wrap;word-break:break-word}
+pre.cmd .p{color:var(--s1)} pre.cmd .s{color:#e3a92a}
+pre.diff{margin:0;font:400 11.5px/1.55 var(--mono);background:var(--sunken);border:1px solid var(--hair);border-radius:7px;padding:7px 10px;white-space:pre-wrap;word-break:break-word;color:var(--ink-3)}
+pre.diff .del{background:var(--diff-del);color:#e8a09d;display:inline-block;width:100%} pre.diff .add{background:var(--diff-add);color:#8fd8b8;display:inline-block;width:100%}
+pre.diff .ctx{color:var(--ink-3)} pre.diff .meta{color:var(--s1)}
+table.data{border-collapse:collapse;width:100%;font:400 12.5px/1.5 var(--sans)}
+table.data th,table.data td{text-align:left;padding:6px 10px;border-bottom:1px solid var(--hair);color:var(--ink-2);font-weight:400;vertical-align:top}
+table.data th{color:var(--ink-3);font-weight:600;white-space:nowrap;font-family:var(--mono);font-size:11.5px}
+table.data td.k{color:var(--ink);font-weight:600;white-space:nowrap}
+table.data td.note{color:var(--ink-3);font-size:12px}
+table.score td{font-family:var(--mono);font-size:12.5px}
+.traps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:980px){.traps{grid-template-columns:1fr}}
+.trap{background:var(--surface);border:1px solid var(--hair);border-radius:10px;padding:12px 15px;position:relative}
+.trap .tn{font:700 12px/1 var(--mono);color:var(--s2);margin-bottom:5px}
+.trap .tt{font:650 14px/1.35 var(--sans);margin-bottom:5px}
+.trap .td{font-size:13px;color:var(--ink-2);line-height:1.55}
+.trap .chip{position:absolute;top:10px;right:10px}
+.sbs-head{display:grid;grid-template-columns:1fr 1fr;gap:16px;position:sticky;top:0;z-index:5;background:linear-gradient(var(--page) 75%,transparent);padding:8px 0 6px}
+.sbs-head .lane{font:700 13px var(--mono);padding:4px 9px;border-radius:5px}
+.lane.naive{background:rgba(217,89,38,.16);color:#f0a07c;border:1px solid rgba(217,89,38,.45)}
+.lane.bcf{background:rgba(57,135,229,.16);color:#8fbcf2;border:1px solid rgba(57,135,229,.45)}
+.lane.cur{background:rgba(25,158,112,.16);color:#7fd6b0;border:1px solid rgba(25,158,112,.45)}
+.sbs-head .cnt{font:500 12px var(--mono);color:var(--ink-3);margin-left:6px}
+.sbs{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+@media (max-width:980px){.sbs,.sbs-head{grid-template-columns:1fr}}
+.sbs .col{display:flex;flex-direction:column;gap:10px;min-width:0}
+.call{background:var(--surface);border:1px solid var(--hair);border-left:3px solid var(--ink-3);border-radius:9px;padding:10px 12px;display:flex;flex-direction:column;gap:7px;min-width:0;scroll-margin-top:60px}
+.call.ig-high{border-left-color:var(--s3)} .call.ig-some{border-left-color:#4f7a68} .call.ig-none{border-left-color:var(--deem);opacity:.92} .call.ig-neg{border-left-color:var(--crit);background:linear-gradient(90deg,rgba(208,59,59,.08),var(--surface) 35%)}
+.call header{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.call .cid{font:700 13px var(--mono);color:var(--ink)}
+.call .tool{font:600 12px var(--mono);color:var(--ink-2)}
+.pills{display:flex;gap:5px;flex-wrap:wrap;margin-left:auto}
+.pill{font:600 10.5px/1 var(--mono);padding:3px 6px;border-radius:4px;border:1px solid var(--hair-2);color:var(--ink-2);white-space:nowrap}
+.pill.pass{background:var(--good-wash);border-color:rgba(12,163,12,.45);color:#5ec95e}
+.pill.fail{background:var(--crit-wash);border-color:rgba(208,59,59,.4);color:#ef8a85}
+.pill.exec{background:rgba(25,158,112,.14);border-color:rgba(25,158,112,.5);color:#7fd6b0}
+.pill.ig-high{color:#7fd6b0} .pill.ig-none{color:var(--ink-3);border-style:dashed} .pill.ig-neg{color:#ef8a85;border-color:rgba(208,59,59,.5)}
+details.out summary{cursor:pointer;font:500 11.5px var(--mono);color:#7fb2f0}
+details.out pre{margin:6px 0 0;max-height:360px;overflow:auto;background:var(--sunken);border:1px solid var(--hair);border-radius:6px;padding:8px 10px;font:400 11px/1.5 var(--mono);color:var(--ink-2);white-space:pre-wrap;word-break:break-word}
+dl.ann{margin:0;display:grid;grid-template-columns:118px 1fr;gap:4px 10px;font-size:13px;line-height:1.55}
+dl.ann dt{font:650 11.5px/1.5 var(--sans);color:var(--ink-3);text-transform:uppercase;letter-spacing:.03em;padding-top:1px}
+dl.ann dd{margin:0;color:var(--ink-2)} dl.ann dd b{color:var(--ink)}
+@media (max-width:600px){dl.ann{grid-template-columns:1fr}}
+.flow{display:flex;gap:8px;flex-wrap:wrap}
+.flow-step{background:var(--surface);border:1px solid var(--hair);border-radius:8px;padding:8px 12px;display:flex;flex-direction:column;gap:2px;position:relative}
+.flow-step b{font:650 12.5px var(--sans)} .flow-step span{font:500 12px var(--mono);color:var(--ink-3)}
+.flow-step:not(:last-child)::after{content:"→";position:absolute;right:-12px;top:50%;transform:translateY(-50%);color:var(--ink-3)}
+.defs{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:980px){.defs{grid-template-columns:1fr}}
+.def{background:var(--surface);border:1px solid var(--hair);border-radius:10px;padding:11px 14px;margin:0;scroll-margin-top:20px}
+.def dt{font:700 14px/1.4 var(--mono);color:var(--ink)}
+.def dd{margin:5px 0 0;font-size:13px;line-height:1.55;color:var(--ink-2)}
+.def dd .formal{display:block;font-family:var(--mono);font-size:12.2px;color:var(--ink)}
+.def dd .huh{display:block;margin-top:4px;color:var(--ink-3);font-size:12.5px} .def dd .huh b{color:var(--ink-2)}
+ol.srcs{columns:2;column-gap:28px;margin:0;padding-left:0;list-style:none;font-size:12px;color:var(--ink-2)}
+ol.srcs li{break-inside:avoid;margin:0 0 6px}
+@media (max-width:980px){ol.srcs{columns:1}}
+:focus-visible{outline:2px solid var(--s1);outline-offset:2px}
+.sbs,.sbs-head{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+@media (max-width:980px){.sbs,.sbs-head{grid-template-columns:minmax(0,1fr)}}
+dl.ann{grid-template-columns:118px minmax(0,1fr)}
+dl.ann dd,.def dd,table.data td,.panel p,.tm{overflow-wrap:anywhere}
+.fam{display:flex;flex-direction:column;gap:5px;margin:4px 0 0}
+.fam .fr{display:grid;grid-template-columns:210px 1fr 44px;gap:8px;align-items:center;font:500 12px var(--mono);color:var(--ink-2)}
+.fam .fb{height:12px;border-radius:3px;background:var(--raised);overflow:hidden}
+.fam .fb i{display:block;height:100%;background:var(--s1)}
+.fam .fr.zero .fb i{background:var(--crit)}
+.fam .fr.zero{color:#ef8a85}
+.alias{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center}
+@media (max-width:980px){.alias{grid-template-columns:1fr}}
+.alias .box{background:var(--sunken);border:1px solid var(--hair-2);border-radius:8px;padding:9px 12px;font:500 12px/1.6 var(--mono);color:var(--ink-2)}
+.alias .box b{color:var(--ink)}
+.alias .arr{font:700 20px var(--mono);color:var(--s4);text-align:center}
+.alias .shared{border-color:rgba(208,59,59,.5);background:rgba(208,59,59,.07)}
+</style>
+
+<style>
+  body.ac { margin: 0; background: var(--page, #0e1116); color: var(--ink, #eef1f5);
+            font: 15px/1.5 var(--sans, system-ui, sans-serif); padding: 0 0 60px; }
+  .ac-top { position: sticky; top: 0; z-index: 60; background: color-mix(in srgb, var(--page, #0e1116) 90%, transparent);
+            backdrop-filter: blur(8px); border-bottom: 1px solid var(--hair, rgba(255,255,255,.08));
+            padding: 10px 16px; display: flex; gap: 14px; align-items: baseline; flex-wrap: wrap; }
+  .ac-top a { color: var(--s1, #3987e5); text-decoration: none; font-weight: 600; font-size: .85rem; }
+  .ac-top h1 { font-size: 1.05rem; margin: 0; letter-spacing: -.01em; }
+  .ac-top .ac-sub { width: 100%; margin: 0; color: var(--ink-3, #7a8694); font-size: .78rem; }
+  .ac-row { max-width: 1500px; margin: 22px auto 0; padding: 0 16px; }
+  .ac-row > header { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap;
+                     border-bottom: 2px solid var(--hair-2, rgba(255,255,255,.14)); padding-bottom: 6px; }
+  .ac-row > header h2 { margin: 0; font-size: 1.05rem; }
+  .ac-row > header .ac-ms { color: var(--ink-3, #7a8694); font-size: .76rem; }
+  .ac-row .sbs { margin-top: 10px; }
+  .ac-col h2 { font-size: .95rem; margin: 4px 0 8px; }
+  .ac-col .call, .ac-col .panel { margin: 0 0 10px; }
+  .ac-foot { max-width: 1500px; margin: 30px auto 0; padding: 12px 16px 0; color: var(--ink-3, #7a8694);
+             font-size: .75rem; border-top: 1px solid var(--hair, rgba(255,255,255,.08)); }
+  .ac-foot a { color: var(--s1, #3987e5); }
+  @media (max-width: 900px) {
+    .ac-row .sbs { grid-template-columns: 1fr; }
+    .ac-row .sbs-head { grid-template-columns: 1fr; }
+  }
+</style>
+
+</head>
+<body class="ac">
+<header class="ac-top">
+  <a href="03-replay-fastapi-14463.slides.html">&larr; slide deck</a>
+  <h1>fastapi_14463 &mdash; Track A &verbar; Track C, side by side per stage</h1>
+  <p class="ac-sub">Every step and milestone of the naive agent (left) against the current shipped brain (right), extracted verbatim from the deck. Track B omitted. [R]/[MODELED]/[EXECUTED] provenance tags as in the source.</p>
+</header>
+
+<section class="ac-row">
+  <header><h2>Plan & doctrine</h2><span class="ac-ms">milestone: spec/plan extracted before any edit</span></header>
+  <div class="sbs-head"><div class="lane naive">A &middot; naive</div><div class="lane cur">C &middot; current shipped brain</div></div>
+  <div class="sbs"><div class="col ac-col"><div class="panel"><h4><span class="tag">note</span>Track A has no step here</h4><p>Kicker of the Track&nbsp;A slide: &ldquo;Track A &middot; naive agent [MODELED &mdash; shape from the v6-2 deck]&rdquo; &mdash; the naive track has no plan stage; it reacts turn by turn.</p></div></div><div class="col ac-col"><div class="ac-col-body"><div class="slide-inner">
+<h2>Plan: a mechanical operator, not a problem-solver</h2>
+<div class="flow">
+<div class="flow-step"><b>P1 · probe</b><span>run_command spec → missing</span></div>
+<div class="flow-step"><b>P2 · install</b><span>run_skill_script (0 args)</span></div>
+<div class="flow-step"><b>P3 · save</b><span>write_file problem.md</span></div>
+<div class="flow-step"><b>P4 · spec</b><span>run_command spec → echo verbatim</span></div>
+</div>
+<p class="sub">The shipped <code>bcf_plan.md</code> forbids exploration/analysis: "a mechanical setup operator, NOT a problem-solver." Tools are only <code>run_command</code> + <code>write_file</code> (+ skill). <code>output_key: bcf_spec</code> pins the spec into the solver instruction (survives compaction). [R prompts/bcf_plan.md, sub_agents/bcf_plan.yaml] · P1–P4 are [MODELED]; the spec they produce is [EXECUTED].</p>
+<div class="twocol"><div class="panel dec"><h4><span class="tag">spec</span>The REAL spec stdout [EXECUTED · cold 0.307s / warm 0.216s]</h4>
+<pre class="cmd"># BCF spec
+kind: bugfix | family: schema-generation-logic (alt: type-introspection) | shape: few-lines | confidence: high
+repo: fastapi | sparse: no
+
+## Target
+1. fastapi/openapi/utils.py — get_openapi_path (line 259)
+
+## Fix
+Fix the construction logic: ref resolution, mode selection, merging, config propagation. …
+
+## Verify
+No matching existing test found. Write a /tmp repro via run_command heredoc; run with timeout 10.
+Repro seed: .git/bcf/repro_seed.py — copy to /tmp, run with timeout 10.</pre>
+<details class="out"><summary>full spec stdout (verbatim, incl. Steps/Rules)</summary>
+<pre># BCF spec
+kind: bugfix | family: schema-generation-logic (alt: type-introspection) | shape: few-lines | confidence: high
+repo: fastapi | sparse: no
+
+## Target
+1. fastapi/openapi/utils.py — get_openapi_path (line 259)
+
+## Anchors
+Fetch fresh verified windows before every edit: python3 .git/bcf/bcf.py anchors PATH
+
+## Fix
+Fix the construction logic: ref resolution, mode selection, merging, config propagation. Check both compat paths (v1/v2) if the repo has them.
+
+## Steps
+1. Read the target range (start_line/end_line).
+2. Run anchors; copy the UNIQUE window verbatim (31B) or use apply with the range (E4B).
+3. Make the minimal mechanism change; keep the happy path byte-identical.
+4. Compile: python3 -m py_compile FILE.
+5. Run the Verify test command.
+6. Run check, review git diff, submit_patch last.
+
+## Verify
+No matching existing test found. Write a /tmp repro via run_command heredoc; run with timeout 10.
+Repro seed: .git/bcf/repro_seed.py — copy to /tmp, run with timeout 10.
+Then: python3 .git/bcf/bcf.py check
+
+## Rules
+Minimal edit. Never touch tests, conftest.py, pytest.ini, pyproject.toml. Scratch in /tmp only.
+Existing tests guard regressions; the statement is the contract. submit_patch last.</pre></details>
+<p class="sub">Target line 259 is the <b>function def</b>; the defect is at 380, surfaced by anchors (next slide). Quotes here normalize the raw capture's <code>U+FFFD</code> replacement chars back to the intended <code>—</code> separator: under <code>python -I</code> on this Windows host the helper's stdout is cp1252, so em-dashes were mangled in the driver's UTF-8 capture (slide 16 canary; raw bytes in the exec JSON).</p></div>
+<div class="ba-col"><div class="panel"><h4><span class="tag">classify</span>What it classified [EXECUTED extras A]</h4>
+<div class="fam">
+<div class="fr"><span>schema-generation-logic</span><span class="fb"><i style="width:100%"></i></span><span>77</span></div>
+<div class="fr"><span>type-introspection (alt)</span><span class="fb"><i style="width:10%"></i></span><span>8</span></div>
+<div class="fr"><span>docs-content-error</span><span class="fb"><i style="width:6%"></i></span><span>5</span></div>
+<div class="fr"><span>compatibility-shim</span><span class="fb"><i style="width:3%"></i></span><span>2</span></div>
+<div class="fr"><span>ordering-off-by-one</span><span class="fb"><i style="width:3%"></i></span><span>2</span></div>
+<div class="fr"><span>api-contract-violation</span><span class="fb"><i style="width:1%"></i></span><span>1</span></div>
+<div class="fr zero"><span>state-lifecycle (TRUE family)</span><span class="fb"><i style="width:0%"></i></span><span>0</span></div>
+</div>
+<p class="sub">kind bugfix (score 14); single candidate <code>fastapi/openapi/utils.py</code> (221.6). The regex classifier scores the PR's <i>vocabulary</i> ("schema/openapi/$ref" everywhere) and never fires the true <b>state-lifecycle</b> family — the PR says "copy()/modified/shared", not the pattern's "cache/alias/mutated/state". Localization is carried by <b>cues + anchors</b>, not the family label. [EXECUTED]</p></div>
+<div class="panel gain"><h4><span class="tag">robust</span>1500-char truncation [EXECUTED extras B]</h4>
+<p class="sub">The plan prompt allows copying only the first ~1,500 chars. The root-cause section (char 2163) and the explicit path mention (char 2298) are then <b>lost</b> — yet the spec is <b>identical</b>: same target, family, confidence; candidate score drops 221.6→78.2 but stays #1. Early symptom cues (anyOf/$ref/Union/content) suffice here. The solver still receives the <b>full</b> statement via <code>{problem_description}</code>.</p></div></div></div>
+<div class="tm"><span class="tmh">◆ teachable moment: deterministic classify ≠ understanding</span> The classifier is a <b>cheap, general, executed</b> guess from surface words — and here it guesses the wrong family (state-lifecycle scores 0) yet still lands the right file, because file ranking uses symptom-term coverage, not the family. That is the design working as intended: the family is a <i>hint</i> ("guidance, not orders"), and the anchors + the solver's code reading are authoritative. A fitted rule_note would "look smarter" on this one task and generalize worse.</div>
+</div><div class="receipt"><span><b>Receipts</b> exec-fastapi-14463.json steps 2–3 · verify-14463-extras.json A/B · prompts/bcf_plan.md</span><span>8</span></div></div></div></div>
+</section>
+<section class="ac-row">
+  <header><h2>Localize & read</h2><span class="ac-ms">milestone: aliasing mechanism localized</span></header>
+  <div class="sbs-head"><div class="lane naive">A &middot; naive</div><div class="lane cur">C &middot; current shipped brain</div></div>
+  <div class="sbs"><div class="col ac-col"><div class="call ig-none"><header><span class="cid">A2</span><span class="tool">run_command</span><span class="pills"><span class="pill ig-none">≈ zero gain</span></span></header>
+<pre class="cmd">grep -rn 'anyOf\|additional_response' fastapi/ | head -40</pre>
+<dl class="ann"><dt>bought</dt><dd>dozens of hits across schema code; no single culprit. Same shape as v6-2's N2.</dd></dl></div>
+<div class="call ig-none"><header><span class="cid">A3–A5</span><span class="tool">read_file ×3</span><span class="pills"><span class="pill ig-none">~13.5k tok in</span></span></header>
+<pre class="cmd">read_file("fastapi/openapi/utils.py")          # WHOLE file, 567 lines ≈ 4.5k tok
+read_file("fastapi/utils.py")                  # deep_dict_update lives here
+read_file("fastapi/openapi/utils.py")          # re-read "to be sure"</pre>
+<dl class="ann"><dt>cost</dt><dd>three whole/near-whole reads; the third is byte-identical to the first — <b>zero</b> value of information.</dd></dl></div>
+<div class="call ig-neg"><header><span class="cid">A8</span><span class="tool">thinking</span><span class="pills"><span class="pill ig-neg">mislocalize</span></span></header>
+<pre class="cmd"># hypothesis: "deep_dict_update is duplicating refs — maybe a caching issue"</pre>
+<dl class="ann"><dt>chosen</dt><dd>the merge function (one layer off) and a caching detour; never writes down <i>why</i> the list grows.</dd></dl></div></div><div class="col ac-col"><div class="call ig-some"><header><span class="cid">S1</span><span class="tool">get_status</span><span class="pills"><span class="pill">free</span></span></header>
+<pre class="cmd">get_status()   # budget check at start, per solver.md</pre>
+<dl class="ann"><dt>bought</dt><dd>allowance 4.5 min; [MODELED] turn.</dd></dl></div>
+<div class="call ig-high"><header><span class="cid">S2</span><span class="tool">run_command · anchors</span><span class="pills"><span class="pill exec">EXECUTED 0.192s</span><span class="pill ig-high">high</span></span></header>
+<pre class="cmd">python3 .git/bcf/bcf.py anchors fastapi/openapi/utils.py</pre>
+<details class="out"><summary>anchors stdout (verbatim) — 3 unique windows</summary>
+<pre>ANCHORS fastapi/openapi/utils.py (family: schema-generation-logic)
+[1] lines 380-380 status=unique strategy=exact
+old_string (copy verbatim):
+                    process_response = additional_response.copy()
+[2] lines 406-406 status=unique strategy=exact
+old_string (copy verbatim):
+                        deep_dict_update(additional_schema, additional_field_schema)
+[3] lines 416-416 status=unique strategy=exact
+old_string (copy verbatim):
+                    deep_dict_update(openapi_response, process_response)
+End of anchors: re-run anchors before every edit; never reuse a stale window.</pre></details>
+<dl class="ann"><dt>bought</dt><dd>the exact defect line (380) and both mutation sites (406/416), each <b>verified unique</b> — before any edit. [EXECUTED]</dd></dl></div>
+<div class="call ig-high"><header><span class="cid">S3</span><span class="tool">read_file</span><span class="pills"><span class="pill ig-high">high</span><span class="pill">~450 tok in</span></span></header>
+<pre class="cmd">read_file("fastapi/openapi/utils.py", start_line=370, end_line=420)   # 51 lines ≤ 60 cap</pre>
+<dl class="ann"><dt>bought</dt><dd>the whole mechanism in one window: shallow <code>.copy()</code> (380), the <code>setdefault</code> descent into shared content (401–404), and <code>deep_dict_update</code> (406/416). [MODELED read; contents verified against real source]</dd><dt>mechanism</dt><dd>"Per-route shallow copy shares the app-level content dict, so schema generation mutates shared state and re-appends anyOf refs." → commit gate satisfied: <b>EDIT NOW</b>.</dd></dl></div>
+<div class="call ig-none"><header><span class="cid">S3′</span><span class="tool">run_command · locate (demo)</span><span class="pills"><span class="pill exec">EXECUTED 0.193s</span><span class="pill ig-none">distractor</span></span></header>
+<pre class="cmd">python3 .git/bcf/bcf.py locate anyOf responses copy
+→ fastapi/openapi/utils.py:validation_error_response_definition:56  (score 352)</pre>
+<dl class="ann"><dt>note</dt><dd>the executed <code>locate</code> demo's top hit is <b>not</b> the fix locus. The solver prompt says "candidates are hypotheses; your code reading is authoritative" — S3's read overrules it. Not on the modeled critical path. [EXECUTED]</dd></dl></div></div></div>
+</section>
+<section class="ac-row">
+  <header><h2>Edit</h2><span class="ac-ms">milestone: root-cause patch (copy depth + import)</span></header>
+  <div class="sbs-head"><div class="lane naive">A &middot; naive</div><div class="lane cur">C &middot; current shipped brain</div></div>
+  <div class="sbs"><div class="col ac-col"><div class="call ig-neg"><header><span class="cid">A11</span><span class="tool">edit_file</span><span class="pills"><span class="pill fail">symptom patch</span></span></header>
+<pre class="cmd"># adds a "seen this $ref?" dedupe filter in the assembly path
+# (does NOT touch the shallow .copy() at line 380)</pre>
+<dl class="ann"><dt>meant</dt><dd>stop the anyOf from growing</dd><dt>bought</dt><dd>refs stop growing, but the shared dict still leaks the <b>last route's title</b> into every route.</dd></dl></div></div><div class="col ac-col"><div class="call ig-high"><header><span class="cid">S4</span><span class="tool">edit_file (primary)</span><span class="pills"><span class="pill ig-high">root cause</span></span></header>
+<pre class="cmd">old_string (verbatim anchor [1]):
+                    process_response = additional_response.copy()
+new_string:
+                    process_response = copy.deepcopy(additional_response)</pre>
+<dl class="ann"><dt>why</dt><dd>each route gets a fully private tree; the shared content dict is never mutated. Happy path byte-identical. [MODELED edit; anchor is EXECUTED-unique]</dd></dl></div>
+<div class="call ig-high"><header><span class="cid">S4′</span><span class="tool">apply (fallback path)</span><span class="pills"><span class="pill exec">EXECUTED 0.187s · rc=0</span></span></header>
+<pre class="cmd">python3 .git/bcf/bcf.py apply fastapi/openapi/utils.py 377 383  <<'EOF' … EOF</pre>
+<details class="out"><summary>apply stdout (verbatim) — the real reference hunk</summary>
+<pre>--- a/fastapi/openapi/utils.py
++++ b/fastapi/openapi/utils.py
+@@ -378,5 +378,5 @@
+                     additional_response,
+                 ) in route.responses.items():
+-                    process_response = additional_response.copy()
++                    process_response = copy.deepcopy(additional_response)
+                     process_response.pop("model", None)
+                     status_code_key = str(additional_status_code).upper()
+
+OK lines 377-383 replaced</pre></details>
+<dl class="ann"><dt>note</dt><dd>apply auto-rolls-back on syntax error; refuses protected paths & ranges >120 lines. The backbone demonstrates this path. [EXECUTED]</dd></dl></div>
+<div class="call ig-high"><header><span class="cid">S5</span><span class="tool">read_file</span><span class="pills"><span class="pill">~100 tok in</span></span></header>
+<pre class="cmd">read_file("fastapi/openapi/utils.py", 1, 12)
+→ import http.client / import inspect / import warnings …  # NO import copy</pre>
+<dl class="ann"><dt>bought</dt><dd>confirms the missing import (Trap 3). The current brain needs this <b>second small read</b> — v6-2's "one window shows the import" was impossible (slide 7, flag 2). [MODELED; real L1–30]</dd></dl></div>
+<div class="call ig-high"><header><span class="cid">S6</span><span class="tool">edit_file</span><span class="pills"><span class="pill ig-high">unique anchor</span></span></header>
+<pre class="cmd">old_string: "import http.client"   # verified: exactly 1 occurrence
+new_string: "import copy\nimport http.client"</pre>
+<dl class="ann"><dt>why</dt><dd>avoids the runtime NameError that py_compile cannot catch. [MODELED]</dd></dl></div>
+<div class="call ig-high"><header><span class="cid">S6′</span><span class="tool">full reference apply</span><span class="pills"><span class="pill exec">EXECUTED · reference-equivalent</span></span></header>
+<pre class="cmd">apply 377 383 (deepcopy) + apply 1 3 (import copy)
+→ git diff: 1 file, +2/−1 · check: PASS</pre>
+<dl class="ann"><dt>verified</dt><dd>extras E: both hunks applied rc=0; added lines == {import copy, copy.deepcopy(...)}, removed == {.copy()}; <b>reference_equivalent = True</b>. [EXECUTED]</dd></dl></div></div></div>
+</section>
+<section class="ac-row">
+  <header><h2>Verify, gate & submit</h2><span class="ac-ms">milestone: own-repro green vs hidden-test grade</span></header>
+  <div class="sbs-head"><div class="lane naive">A &middot; naive</div><div class="lane cur">C &middot; current shipped brain</div></div>
+  <div class="sbs"><div class="col ac-col"><div class="call ig-none"><header><span class="cid">A14</span><span class="tool">run_command</span><span class="pills"><span class="pill pass">own repro PASS</span><span class="pill ig-none">forced green</span></span></header>
+<pre class="cmd">python /tmp/repro.py   # asserts only "2 refs per route"</pre>
+<dl class="ann"><dt>bought</dt><dd>a green that could not have come out differently — it never checks title or examples, so it carries no evidence about the hidden exact-equality test.</dd></dl></div>
+<div class="call ig-neg"><header><span class="cid">A17</span><span class="tool">submit_patch</span><span class="pills"><span class="pill fail">predicted FAIL</span></span></header>
+<pre class="cmd"># hidden test: response.json() == { ... "title": "Response 500 Route1 Route1 Get" ... }</pre>
+<dl class="ann"><dt>predicted</dt><dd><b>resolved = False</b>: anyOf count is right, per-route title is wrong → exact-equality fails. [MODELED prediction from test_patch, no grader run]</dd></dl></div></div><div class="col ac-col"><div class="ac-col-body"><div class="slide-inner">
+<h2>A repro that could have come out differently</h2>
+<div class="flow">
+<div class="flow-step"><b>S7 · gate</b><span>py_compile + re-read</span></div>
+<div class="flow-step"><b>S8 · verify</b><span>/tmp repro, timeout 10</span></div>
+<div class="flow-step"><b>S9 · check</b><span>EXECUTED PASS</span></div>
+<div class="flow-step"><b>S10 · diff</b><span>+2/−1 review</span></div>
+<div class="flow-step"><b>S11 · submit</b><span>free · patch_size>0</span></div>
+</div>
+<div class="twocol"><div class="panel"><h4><span class="tag">S8</span>The repro [MODELED assertions on an EXECUTED seed]</h4>
+<pre class="cmd"># spec: "No matching existing test found … Repro seed: .git/bcf/repro_seed.py"
+# seed (EXECUTED extraction) = the PR's app.py: 3 routes, Union model + content,
+#   NO assertions (and a quirk: the 3rd route's func is also named route2).
+# solver copies it to /tmp and ADDS exact-shape assertions:
+client = TestClient(app)
+schema = client.get("/openapi.json").json()
+titles = {"/route1": "Response 500 Route1 Route1 Get",
+          "/route2": "Response 500 Route2 Route2 Get"}
+for path, title in titles.items():
+    c = schema["paths"][path]["get"]["responses"]["500"]["content"]["application/json"]
+    assert c["schema"]["anyOf"] == [{"$ref": "#/components/schemas/ModelA"},
+                                    {"$ref": "#/components/schemas/ModelB"}]  # exactly 2
+    assert c["schema"]["title"] == title        # per-route, not the last route's
+    assert c["examples"] == {"Case A": {"value": "a"}}
+# + a 3-route growth check (6 refs would mean the leak); run with timeout 10</pre>
+<p class="sub">Mirrors the hidden test's <b>exact</b> shape (anyOf + title + examples), so its green is informative. <b>Predicted PASS by reference-patch equivalence — no grader run.</b> [MODELED]</p></div>
+<div class="ba-col"><div class="panel gain"><h4><span class="tag">S9</span>check [EXECUTED 0.358s]</h4>
+<pre class="cmd">CHECK: PASS
+Next: review git diff, then submit_patch last (verify patch_size > 0).</pre>
+<p class="sub">Protected-path scan + scratch scan + syntax compile gate + diff-nonempty. (See slide 10 canary: PASS is syntax-level.) [EXECUTED]</p></div>
+<div class="panel"><h4><span class="tag">state</span>final state [EXECUTED 0.269s]</h4>
+<pre class="cmd">STATE (filesystem is the source of truth)
+kind: bugfix | family: schema-generation-logic … | shape: few-lines
+## Target 1. fastapi/openapi/utils.py — get_openapi_path (line 259)
+git diff --stat: … 1 file changed, 1 insertion(+), 1 deletion(-)
+strikes: fastapi/openapi/utils.py:1 · last check: PASS · edits recorded: 1
+NEXT: review git diff, then submit_patch last (verify patch_size > 0).</pre>
+<p class="sub">The backbone's state shows 1+/−1 (hunk-2-only demo); the modeled full patch is +2/−1 (extras E). state is the restart compass after compaction. [EXECUTED]</p></div></div></div>
+<div class="tm"><span class="tmh">◆ teachable moment: mutation-testing intuition</span> Ask "what mutation would my repro <b>catch</b>?" A count-only repro (naive A14) survives the dedupe mutation — its green is forced. An exact-shape repro (S8) kills it: change the title or drop a ref and it goes red. The hidden grader is the ultimate exact-shape test; mirroring its shape in /tmp is how you get a green that <i>means</i> something before you ever see the grader.</div>
+</div><div class="receipt"><span><b>Receipts</b> exec steps 9–10 · verify-14463-extras.json A (repro seed) · solver.md verify-then-submit</span><span>11</span></div></div></div></div>
+</section>
+<section class="ac-row">
+  <header><h2>Scorecard</h2><span class="ac-ms">whole-run totals for this task</span></header>
+  <div class="sbs-head"><div class="lane naive">A &middot; naive</div><div class="lane cur">C &middot; current shipped brain</div></div>
+  <div class="sbs"><div class="col ac-col"></div><div class="col ac-col"></div></div>
+</section>
+<footer class="ac-foot">Generated companion view &mdash; content extracted from <a href="03-replay-fastapi-14463.slides.html">03-replay-fastapi-14463.slides.html</a>. Back to hub: <a href="../index.html">cvx/kaggle3 index</a>.</footer>
+</body></html>

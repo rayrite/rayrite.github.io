@@ -298,12 +298,24 @@ const DOCS = [
   "t": "Review of the v6 Research Package (BCF v5 Critique → BCF v3 Design + 3 Replay Decks)"
  },
  {
+  "p": "2026-11-11-bcf-replay-comparison/02-replay-httpx-3672.ac-parallel.html",
+  "t": "httpx_3672: Tracks A &amp; C side by side &mdash; parallel step view"
+ },
+ {
   "p": "2026-11-11-bcf-replay-comparison/02-replay-httpx-3672.slides.html",
   "t": "httpx_3672: naive vs v6 BCF-v3 vs CURRENT shipped brain, replayed · 2026-11-11"
  },
  {
+  "p": "2026-11-11-bcf-replay-comparison/03-replay-fastapi-14463.ac-parallel.html",
+  "t": "fastapi_14463: Tracks A &amp; C side by side &mdash; parallel step view"
+ },
+ {
   "p": "2026-11-11-bcf-replay-comparison/03-replay-fastapi-14463.slides.html",
   "t": "fastapi_14463: naive vs BCF v3 (v6-2) vs CURRENT brain — executed-backbone replay"
+ },
+ {
+  "p": "2026-11-11-bcf-replay-comparison/04-replay-fastapi-14482.ac-parallel.html",
+  "t": "fastapi_14482: Tracks A &amp; C side by side &mdash; parallel step view"
  },
  {
   "p": "2026-11-11-bcf-replay-comparison/04-replay-fastapi-14482.slides.html",
@@ -330,8 +342,8 @@ const GROUPS = [
     blurb: "Greenfield setup guide from a PowerSpec G914 (RTX 5090) to a working local BCF test harness — step-by-step markdown guide plus a formatted HTML edition of the same guide.",
     counts: "2 md · 1 html edition", home: "00-local-harness-setup-guide.md", homeLabel: "Setup guide" },
   { f: "2026-11-11-bcf-replay-comparison", name: "Replay Comparison — naive vs v6 vs shipped brain",
-    blurb: "Executed-backbone replays of three failed SWE tasks (httpx_3672, fastapi_14463, fastapi_14482) comparing the naive agent, the v6 “BCF v3” design, and the current shipped brain — with a review of the v6 research package, three HTML slide decks, and a gap analysis.",
-    counts: "4 md · 3 html slide decks", home: "00-index.md", homeLabel: "00-index" }
+    blurb: "Executed-backbone replays of three failed SWE tasks (httpx_3672, fastapi_14463, fastapi_14482) comparing the naive agent, the v6 “BCF v3” design, and the current shipped brain — with a review of the v6 research package, three HTML slide decks with A∥C parallel companion views, and a gap analysis.",
+    counts: "4 md · 6 html (3 decks + 3 A∥C views)", home: "00-index.md", homeLabel: "00-index" }
 ];
 
 /* ---------------- helpers ---------------- */
@@ -539,7 +551,7 @@ function showOverview() {
     `<div class="hero">
        <span class="badge">deliverable drop · 2026-11-11</span>
        <h1>BCF × Gemma 4 Developer Agent Competition</h1>
-       <p class="lede">Four deliverables from the Batonic Coding Framework (BCF) competition work: the submission-ready Brain agent packages, hardening research, the local test-harness setup guide, and executed-backbone replay comparisons. ${DOCS.length} documents (${md} markdown + ${DOCS.length - md} HTML) across 61 hosted files — markdown opens in-page from the sidebar tree, HTML decks open full-screen in their own tab.</p>
+       <p class="lede">Four deliverables from the Batonic Coding Framework (BCF) competition work: the submission-ready Brain agent packages, hardening research, the local test-harness setup guide, and executed-backbone replay comparisons. ${DOCS.length} documents (${md} markdown + ${DOCS.length - md} HTML) across 64 hosted files — markdown opens in-page from the sidebar tree, HTML decks open full-screen in their own tab.</p>
      </div>
      <div class="cards">${cards}</div>`;
   $("article").querySelectorAll("[data-focus]").forEach(b => b.onclick = e => {

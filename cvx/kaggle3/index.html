@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BCF Gemma-4 Deliverables — Brain · Hardening · Harness · Replay</title>
+<title>BCF Gemma-4 Deliverables — Brain · Hardening · Harness · Replay · Parity · RCA</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" integrity="sha384-wFjoQjtV1y5jVHbt0p35Ui8aV8GVpEZkyF99OXWqP/eNJDU93D3Ugxkoyh6Y2I4A" crossorigin="anonymous">
@@ -145,7 +145,7 @@
 <header class="hdr">
   <button class="icon-btn" id="menuBtn" title="Files" aria-label="Toggle file list">☰</button>
   <a class="mark" href="../../index.html" title="Back to portal">r</a>
-  <a class="wordmark" href="../../index.html" style="color:inherit">kaggle3<small>BCF Gemma-4 deliverables · 2026-11-11</small></a>
+  <a class="wordmark" href="../../index.html" style="color:inherit">kaggle3<small>BCF Gemma-4 deliverables · 2026-11-11 – 2026-11-14</small></a>
   <button class="icon-btn" id="tocBtn" title="Contents" aria-label="Toggle table of contents" hidden>≡</button>
   <button class="icon-btn" id="fontBtn" title="Font size" aria-label="Cycle font size">A±</button>
   <button class="icon-btn" id="themeBtn" title="Toggle theme" aria-label="Toggle theme">◐</button>
@@ -183,7 +183,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js" integrity="sha384-Uq05+JLko69eOiPr39ta9bh7kld5PKZoU+fF7g0EXTAriEollhZ+DrN8Q/Oi8J2Q" crossorigin="anonymous"></script>
 <script>
 "use strict";
-/* ---------------- embedded manifest (generated 2026-11-11; paths relative to this folder) ---------------- */
+/* ---------------- embedded manifest (updated 2026-11-14; paths relative to this folder) ---------------- */
 const DOCS = [
  {
   "p": "2026-11-11-bcf-gemma4-brain/01-task1-dataset-classification-rootcause.md",
@@ -328,6 +328,18 @@ const DOCS = [
  {
   "p": "2026-11-11-bcf-replay-comparison/STATUS.md",
   "t": "BCF Replay Comparison — Status Board"
+ },
+ {
+  "p": "2026-11-13-bcf-scoring-parity-explainer/00-bcf-scoring-parity-explainer.md",
+  "t": "BCF Scoring Parity Explainer — Local Test Harness vs. the Official Kaggle Leaderboard"
+ },
+ {
+  "p": "2026-11-14_BCF_Dataset_RCA_and_DualTrack_Brain-G4Hy/01_Dataset_Classification_and_Root_Cause_Analysis.md",
+  "t": "Kaggle Google Gemma 4 Developer Agent Competition — Complete Dataset Classification & Root Cause Analysis"
+ },
+ {
+  "p": "2026-11-14_BCF_Dataset_RCA_and_DualTrack_Brain-G4Hy/02_BCF_Brain_Architecture_and_Leaderboard_Strategy.md",
+  "t": "Batonic Coding Framework (BCF): Dual-Track Submission Architecture & Leaderboard Strategy"
  }
 ];
 
@@ -343,7 +355,13 @@ const GROUPS = [
     counts: "2 md · 1 html edition", home: "00-local-harness-setup-guide.md", homeLabel: "Setup guide" },
   { f: "2026-11-11-bcf-replay-comparison", name: "Replay Comparison — naive vs v6 vs shipped brain",
     blurb: "Executed-backbone replays of three failed SWE tasks (httpx_3672, fastapi_14463, fastapi_14482) comparing the naive agent, the v6 “BCF v3” design, and the current shipped brain — with a review of the v6 research package, three HTML slide decks with A∥C parallel companion views, and a gap analysis.",
-    counts: "4 md · 6 html (3 decks + 3 A∥C views)", home: "00-index.md", homeLabel: "00-index" }
+    counts: "4 md · 6 html (3 decks + 3 A∥C views)", home: "00-index.md", homeLabel: "00-index" },
+  { f: "2026-11-13-bcf-scoring-parity-explainer", name: "Scoring Parity Explainer — Local Harness vs Kaggle Leaderboard",
+    blurb: "Definitive calibration and parity explainer connecting the local RTX 5090 test harness to the official Kaggle leaderboard: 5 root reasons scores diverge, public/private split math (floor(k/58)), small-model bonus leaderboard tracking, live-verified audit, and a canary-gated roadmap to the final submission.",
+    counts: "1 comprehensive md (72 KB · 10 sections)", home: "00-bcf-scoring-parity-explainer.md", homeLabel: "Explainer" },
+  { f: "2026-11-14_BCF_Dataset_RCA_and_DualTrack_Brain-G4Hy", name: "Dataset RCA & Dual-Track Brain — G4Hy Strategy & Architecture",
+    blurb: "100% census classification & root-cause analysis across all 129 competition tasks (FastAPI, Rich, Requests, HTTPX), paired with the dual-track BCF Brain submission architecture targeting both the 31B main competition and the $10k E4B small-model bonus via deterministic stdlib tooling.",
+    counts: "2 comprehensive md (124 KB)", home: "01_Dataset_Classification_and_Root_Cause_Analysis.md", homeLabel: "Dataset RCA" }
 ];
 
 /* ---------------- helpers ---------------- */
@@ -514,6 +532,26 @@ async function loadDoc(p) {
      ${body}`;
   buildToc();
   if (window.Prism) Prism.highlightAllUnder($("article"));
+  interceptArticleLinks();
+}
+
+function interceptArticleLinks() {
+  $("article").querySelectorAll("a[href]").forEach(a => {
+    const raw = a.getAttribute("href");
+    if (!raw || raw.startsWith("#") || /^(https?:|mailto:|javascript:)/i.test(raw)) return;
+    try {
+      const curDir = current && current.includes("/") ? current.slice(0, current.lastIndexOf("/") + 1) : "";
+      let target = (raw.startsWith("/") ? raw.slice(1) : curDir + raw).replace(/^\.\//, "");
+      target = target.replace(/([^/]+)\/\.\.\//g, "");
+      if (BY_PATH.has(target)) {
+        a.onclick = e => {
+          e.preventDefault();
+          if (/\.html?$/i.test(target)) window.open(encodeURI(target), "_blank", "noopener");
+          else go(target);
+        };
+      }
+    } catch {}
+  });
 }
 
 function buildToc() {
@@ -534,7 +572,7 @@ function showOverview() {
   current = null; markCurrent(); setNav();
   $("toc").hidden = true;
   $("crumb").innerHTML = `<b>kaggle3</b> <span>/</span> <span>cvx</span>`;
-  document.title = "BCF Gemma-4 Deliverables — Brain · Hardening · Harness · Replay";
+  document.title = "BCF Gemma-4 Deliverables — Brain · Hardening · Harness · Replay · Parity · RCA";
   const md = DOCS.filter(d => /\.md$/i.test(d.p)).length;
   const cards = GROUPS.map(g => {
     const n = DOCS.filter(d => d.p.startsWith(g.f + "/")).length;
@@ -549,9 +587,9 @@ function showOverview() {
   }).join("");
   $("article").innerHTML =
     `<div class="hero">
-       <span class="badge">deliverable drop · 2026-11-11</span>
+       <span class="badge">deliverable drop · 2026-11-11 – 2026-11-14</span>
        <h1>BCF × Gemma 4 Developer Agent Competition</h1>
-       <p class="lede">Four deliverables from the Batonic Coding Framework (BCF) competition work: the submission-ready Brain agent packages, hardening research, the local test-harness setup guide, and executed-backbone replay comparisons. ${DOCS.length} documents (${md} markdown + ${DOCS.length - md} HTML) across 64 hosted files — markdown opens in-page from the sidebar tree, HTML decks open full-screen in their own tab.</p>
+       <p class="lede">Six deliverables from the Batonic Coding Framework (BCF) competition work: the submission-ready Brain agent packages, hardening research, the local test-harness setup guide, executed-backbone replay comparisons, scoring parity explainer, and the 129-task dataset RCA &amp; dual-track brain architecture. ${DOCS.length} documents (${md} markdown + ${DOCS.length - md} HTML) across 67 hosted files — markdown opens in-page from the sidebar tree, HTML decks open full-screen in their own tab.</p>
      </div>
      <div class="cards">${cards}</div>`;
   $("article").querySelectorAll("[data-focus]").forEach(b => b.onclick = e => {

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BCF Gemma-4 Deliverables — Brain · Hardening · Harness · Replay · Parity · RCA</title>
+<title>BCF Gemma-4 Deliverables — Brain · Hardening · Harness · Replay · Parity · RCA · v2 Tuning</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" integrity="sha384-wFjoQjtV1y5jVHbt0p35Ui8aV8GVpEZkyF99OXWqP/eNJDU93D3Ugxkoyh6Y2I4A" crossorigin="anonymous">
@@ -334,6 +334,22 @@ const DOCS = [
   "t": "BCF Scoring Parity Explainer — Local Test Harness vs. the Official Kaggle Leaderboard"
  },
  {
+  "p": "2026-11-14-bcf-v2-bottlenecks-tuning-iteration/01-wall-clock-bottlenecks-local-vs-kaggle.md",
+  "t": "Task 1: Wall-Clock Time Bottlenecks — Local Test Harness (RTX 5090) vs. Remote Kaggle (4x L4)"
+ },
+ {
+  "p": "2026-11-14-bcf-v2-bottlenecks-tuning-iteration/02-bcf-v2-tuning-levers-and-impact-effort.md",
+  "t": "Task 2: BCF Brain v2 Tuning Levers, Code Audit & Impact-Effort Ranking"
+ },
+ {
+  "p": "2026-11-14-bcf-v2-bottlenecks-tuning-iteration/03-fast-iteration-and-feedback-strategy.md",
+  "t": "Task 3: Fast Iteration, Feedback Loops & Hypothesis-Testing Strategy"
+ },
+ {
+  "p": "2026-11-14-bcf-v2-bottlenecks-tuning-iteration/README.md",
+  "t": "BCF Brain v2: Wall-Clock Bottlenecks, Tuning Levers & Fast Iteration Playbook"
+ },
+ {
   "p": "2026-11-14_BCF_Dataset_RCA_and_DualTrack_Brain-G4Hy/01_Dataset_Classification_and_Root_Cause_Analysis.md",
   "t": "Kaggle Google Gemma 4 Developer Agent Competition — Complete Dataset Classification & Root Cause Analysis"
  },
@@ -361,7 +377,10 @@ const GROUPS = [
     counts: "1 comprehensive md (72 KB · 10 sections)", home: "00-bcf-scoring-parity-explainer.md", homeLabel: "Explainer" },
   { f: "2026-11-14_BCF_Dataset_RCA_and_DualTrack_Brain-G4Hy", name: "Dataset RCA & Dual-Track Brain — G4Hy Strategy & Architecture",
     blurb: "100% census classification & root-cause analysis across all 129 competition tasks (FastAPI, Rich, Requests, HTTPX), paired with the dual-track BCF Brain submission architecture targeting both the 31B main competition and the $10k E4B small-model bonus via deterministic stdlib tooling.",
-    counts: "2 comprehensive md (124 KB)", home: "01_Dataset_Classification_and_Root_Cause_Analysis.md", homeLabel: "Dataset RCA" }
+    counts: "2 comprehensive md (124 KB)", home: "01_Dataset_Classification_and_Root_Cause_Analysis.md", homeLabel: "Dataset RCA" },
+  { f: "2026-11-14-bcf-v2-bottlenecks-tuning-iteration", name: "BCF v2 Bottlenecks & Tuning — Wall-Clock · 32 Levers · Fast Iteration",
+    blurb: "Playbook targeting shipped BCF Brain v2 (31B &amp; E4B, bcf.py v2.0.0): end-to-end wall-clock bottleneck map (RTX 5090 vs. Kaggle 4×L4, SWA KV &amp; WSL2 traps, 12 h cliff), code audit &amp; 32-lever Impact/Effort ranking (cmd_rename rollback fix, Do-NOT-Tune guardrails), and a 5-rung L0–L4 fast-iteration ladder.",
+    counts: "4 md (62 KB · README + 3 tasks)", home: "README.md", homeLabel: "Playbook" }
 ];
 
 /* ---------------- helpers ---------------- */
@@ -572,7 +591,7 @@ function showOverview() {
   current = null; markCurrent(); setNav();
   $("toc").hidden = true;
   $("crumb").innerHTML = `<b>kaggle3</b> <span>/</span> <span>cvx</span>`;
-  document.title = "BCF Gemma-4 Deliverables — Brain · Hardening · Harness · Replay · Parity · RCA";
+  document.title = "BCF Gemma-4 Deliverables — Brain · Hardening · Harness · Replay · Parity · RCA · v2 Tuning";
   const md = DOCS.filter(d => /\.md$/i.test(d.p)).length;
   const cards = GROUPS.map(g => {
     const n = DOCS.filter(d => d.p.startsWith(g.f + "/")).length;
@@ -589,7 +608,7 @@ function showOverview() {
     `<div class="hero">
        <span class="badge">deliverable drop · 2026-11-11 – 2026-11-14</span>
        <h1>BCF × Gemma 4 Developer Agent Competition</h1>
-       <p class="lede">Six deliverables from the Batonic Coding Framework (BCF) competition work: the submission-ready Brain agent packages, hardening research, the local test-harness setup guide, executed-backbone replay comparisons, scoring parity explainer, and the 129-task dataset RCA &amp; dual-track brain architecture. ${DOCS.length} documents (${md} markdown + ${DOCS.length - md} HTML) across 67 hosted files — markdown opens in-page from the sidebar tree, HTML decks open full-screen in their own tab.</p>
+       <p class="lede">Seven deliverables from the Batonic Coding Framework (BCF) competition work: the submission-ready Brain agent packages, hardening research, the local test-harness setup guide, executed-backbone replay comparisons, scoring parity explainer, the 129-task dataset RCA &amp; dual-track brain architecture, and the BCF v2 bottlenecks, 32-lever tuning &amp; fast-iteration playbook. ${DOCS.length} documents (${md} markdown + ${DOCS.length - md} HTML) across 71 hosted files — markdown opens in-page from the sidebar tree, HTML decks open full-screen in their own tab.</p>
      </div>
      <div class="cards">${cards}</div>`;
   $("article").querySelectorAll("[data-focus]").forEach(b => b.onclick = e => {

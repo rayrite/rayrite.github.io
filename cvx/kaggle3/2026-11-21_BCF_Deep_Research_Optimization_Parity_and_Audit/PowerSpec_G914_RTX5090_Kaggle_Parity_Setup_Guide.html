@@ -1,0 +1,2613 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PowerSpec G914 (RTX 5090) — Brand-New PC to Kaggle Parity Setup Guide</title>
+<style>
+  :root {
+    --bg: #f8fafc;
+    --bg-elevated: #ffffff;
+    --bg-subtle: #f1f5f9;
+    --border: #e2e8f0;
+    --border-strong: #cbd5e1;
+    --text: #0f172a;
+    --text-muted: #475569;
+    --text-soft: #64748b;
+    --accent: #2563eb;
+    --accent-hover: #1d4ed8;
+    --accent-soft: #eff6ff;
+    --accent-border: #bfdbfe;
+    --success: #059669;
+    --success-bg: #ecfdf5;
+    --success-border: #a7f3d0;
+    --warn: #d97706;
+    --warn-bg: #fffbeb;
+    --warn-border: #fde68a;
+    --danger: #dc2626;
+    --danger-bg: #fef2f2;
+    --danger-border: #fecaca;
+    --purple: #7c3aed;
+    --purple-bg: #f5f3ff;
+    --purple-border: #ddd6fe;
+    --code-bg: #0f172a;
+    --code-header: #1e293b;
+    --code-text: #e2e8f0;
+    --inline-code-bg: #e2e8f0;
+    --inline-code-text: #0f172a;
+    --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
+    --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.07);
+    --radius: 10px;
+    --sidebar-w: 280px;
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  }
+
+  [data-theme="dark"] {
+    --bg: #0b1120;
+    --bg-elevated: #111827;
+    --bg-subtle: #1e293b;
+    --border: #1f2937;
+    --border-strong: #334155;
+    --text: #f1f5f9;
+    --text-muted: #cbd5e1;
+    --text-soft: #94a3b8;
+    --accent: #3b82f6;
+    --accent-hover: #60a5fa;
+    --accent-soft: rgba(59, 130, 246, 0.14);
+    --accent-border: rgba(59, 130, 246, 0.35);
+    --success: #34d399;
+    --success-bg: rgba(16, 185, 129, 0.12);
+    --success-border: rgba(16, 185, 129, 0.35);
+    --warn: #fbbf24;
+    --warn-bg: rgba(245, 158, 11, 0.12);
+    --warn-border: rgba(245, 158, 11, 0.35);
+    --danger: #f87171;
+    --danger-bg: rgba(239, 68, 68, 0.13);
+    --danger-border: rgba(239, 68, 68, 0.38);
+    --purple: #a78bfa;
+    --purple-bg: rgba(139, 92, 246, 0.13);
+    --purple-border: rgba(139, 92, 246, 0.35);
+    --code-bg: #020617;
+    --code-header: #0f172a;
+    --code-text: #e2e8f0;
+    --inline-code-bg: #1e293b;
+    --inline-code-text: #93c5fd;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.45);
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: var(--font-sans);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    font-size: 15px;
+  }
+
+  /* Layout */
+  .app-shell {
+    display: flex;
+    min-height: 100vh;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    width: var(--sidebar-w);
+    flex-shrink: 0;
+    background: var(--bg-elevated);
+    border-right: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    padding: 18px 16px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    z-index: 20;
+  }
+
+  .brand {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .brand-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border: 1px solid var(--accent-border);
+    padding: 3px 8px;
+    border-radius: 999px;
+    width: fit-content;
+  }
+  .brand h1 {
+    font-size: 16px;
+    line-height: 1.3;
+    margin: 4px 0 0;
+    font-weight: 800;
+  }
+  .brand p {
+    font-size: 12px;
+    color: var(--text-soft);
+    margin: 0;
+  }
+
+  /* Progress Box */
+  .progress-card {
+    background: var(--bg-subtle);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px 12px;
+  }
+  .progress-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .progress-bar-bg {
+    height: 8px;
+    background: var(--border-strong);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--accent), var(--success));
+    border-radius: 999px;
+    transition: width 0.25s ease;
+  }
+  .progress-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 7px;
+    font-size: 11px;
+    color: var(--text-soft);
+  }
+  .btn-link {
+    background: none;
+    border: none;
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: underline;
+  }
+  .btn-link:hover { color: var(--accent-hover); }
+
+  /* Track Pill Switcher in Sidebar */
+  .sidebar-track {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .sidebar-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-soft);
+  }
+  .seg-control {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: var(--bg-subtle);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 3px;
+    gap: 3px;
+  }
+  .seg-btn {
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 6px 6px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    text-align: center;
+  }
+  .seg-btn.active {
+    background: var(--accent);
+    color: #ffffff;
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* Nav Links */
+  .nav-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .nav-list a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 500;
+    padding: 6px 9px;
+    border-radius: 7px;
+    transition: background 0.15s, color 0.15s;
+  }
+  .nav-list a:hover {
+    background: var(--bg-subtle);
+    color: var(--text);
+  }
+  .nav-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 5px;
+    background: var(--bg-subtle);
+    border: 1px solid var(--border);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-soft);
+    flex-shrink: 0;
+  }
+
+  .sidebar-footer {
+    margin-top: auto;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 8px;
+  }
+  .btn-util {
+    flex: 1;
+    padding: 7px 10px;
+    border-radius: 7px;
+    border: 1px solid var(--border-strong);
+    background: var(--bg-subtle);
+    color: var(--text);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .btn-util:hover { background: var(--border); }
+
+  /* Main Content */
+  .main {
+    flex: 1;
+    min-width: 0;
+    padding: 28px 40px 80px;
+    max-width: 1060px;
+    margin: 0 auto;
+  }
+
+  /* Mobile Topbar */
+  .mobile-bar {
+    display: none;
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    background: var(--bg-elevated);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 16px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .mobile-bar strong { font-size: 14px; }
+
+  /* Hero */
+  .hero {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 26px 28px;
+    box-shadow: var(--shadow-md);
+    margin-bottom: 26px;
+  }
+  .hero-kicker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--bg-subtle);
+    color: var(--text-muted);
+  }
+  .pill.blue { background: var(--accent-soft); border-color: var(--accent-border); color: var(--accent); }
+  .pill.green { background: var(--success-bg); border-color: var(--success-border); color: var(--success); }
+  .pill.amber { background: var(--warn-bg); border-color: var(--warn-border); color: var(--warn); }
+  .pill.red { background: var(--danger-bg); border-color: var(--danger-border); color: var(--danger); }
+  .pill.purple { background: var(--purple-bg); border-color: var(--purple-border); color: var(--purple); }
+
+  .hero h1 {
+    margin: 0 0 10px;
+    font-size: 27px;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+  }
+  .hero p.lead {
+    margin: 0 0 18px;
+    color: var(--text-muted);
+    font-size: 15.5px;
+  }
+
+  /* Spec Grid */
+  .spec-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .spec-item {
+    background: var(--bg-subtle);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 10px 12px;
+  }
+  .spec-item .k {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-soft);
+  }
+  .spec-item .v {
+    font-size: 13.5px;
+    font-weight: 700;
+    margin-top: 2px;
+    color: var(--text);
+  }
+  .spec-item .s {
+    font-size: 11.5px;
+    color: var(--text-soft);
+  }
+
+  /* Sections */
+  section {
+    margin-bottom: 34px;
+    scroll-margin-top: 20px;
+  }
+  .section-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--border);
+  }
+  .section-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 34px;
+    height: 34px;
+    padding: 0 10px;
+    border-radius: 9px;
+    background: var(--accent);
+    color: #fff;
+    font-weight: 800;
+    font-size: 14px;
+  }
+  .section-head h2 {
+    margin: 0;
+    font-size: 21px;
+    letter-spacing: -0.015em;
+  }
+  .section-head .eta {
+    margin-left: auto;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-soft);
+    background: var(--bg-subtle);
+    border: 1px solid var(--border);
+    padding: 3px 10px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  h3 { font-size: 16.5px; margin: 18px 0 8px; }
+  h4 { font-size: 14.5px; margin: 14px 0 6px; }
+  p { margin: 0 0 12px; }
+  ul, ol { margin: 0 0 12px; padding-left: 22px; }
+  li { margin-bottom: 5px; }
+
+  code {
+    font-family: var(--font-mono);
+    font-size: 0.87em;
+    background: var(--inline-code-bg);
+    color: var(--inline-code-text);
+    padding: 1.5px 5px;
+    border-radius: 5px;
+  }
+
+  /* Callouts */
+  .callout {
+    border-radius: var(--radius);
+    padding: 13px 16px;
+    margin: 14px 0;
+    border: 1px solid var(--border);
+    border-left-width: 4px;
+    font-size: 14px;
+  }
+  .callout-title {
+    font-weight: 800;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  .callout.info { background: var(--accent-soft); border-color: var(--accent-border); border-left-color: var(--accent); }
+  .callout.info .callout-title { color: var(--accent); }
+  .callout.warn { background: var(--warn-bg); border-color: var(--warn-border); border-left-color: var(--warn); }
+  .callout.warn .callout-title { color: var(--warn); }
+  .callout.danger { background: var(--danger-bg); border-color: var(--danger-border); border-left-color: var(--danger); }
+  .callout.danger .callout-title { color: var(--danger); }
+  .callout.success { background: var(--success-bg); border-color: var(--success-border); border-left-color: var(--success); }
+  .callout.success .callout-title { color: var(--success); }
+  .callout p:last-child, .callout ul:last-child { margin-bottom: 0; }
+
+  /* Step Cards with Persistent Checkbox */
+  .step-card {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .step-card.done {
+    border-color: var(--success-border);
+  }
+  .step-card.done .step-header {
+    background: var(--success-bg);
+  }
+  .step-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 18px;
+    background: var(--bg-subtle);
+    border-bottom: 1px solid var(--border);
+  }
+  .step-check {
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
+    accent-color: var(--success);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .step-title-wrap { flex: 1; }
+  .step-id {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .step-card.done .step-id { color: var(--success); }
+  .step-title {
+    margin: 1px 0 0;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+  .step-card.done .step-title {
+    text-decoration: line-through;
+    opacity: 0.78;
+  }
+  .step-time {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--text-soft);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    padding: 2px 8px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .step-body {
+    padding: 16px 18px;
+  }
+
+  /* Code Blocks with Copy */
+  .code-block {
+    background: var(--code-bg);
+    border: 1px solid #1e293b;
+    border-radius: 9px;
+    margin: 12px 0;
+    overflow: hidden;
+  }
+  .code-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--code-header);
+    padding: 6px 12px;
+    border-bottom: 1px solid #334155;
+    font-size: 11.5px;
+    color: #94a3b8;
+    font-family: var(--font-mono);
+  }
+  .copy-btn {
+    background: #334155;
+    color: #f8fafc;
+    border: 1px solid #475569;
+    border-radius: 5px;
+    padding: 3px 10px;
+    font-size: 11.5px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: var(--font-sans);
+    transition: background 0.15s;
+  }
+  .copy-btn:hover { background: #475569; }
+  .copy-btn.copied {
+    background: #059669;
+    border-color: #10b981;
+    color: #ffffff;
+  }
+  pre {
+    margin: 0;
+    padding: 13px 15px;
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: 12.8px;
+    line-height: 1.55;
+    color: var(--code-text);
+  }
+  pre code {
+    background: transparent;
+    color: inherit;
+    padding: 0;
+    font-size: inherit;
+  }
+
+  /* Track Switcher Panel */
+  .track-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+  .track-tab {
+    text-align: left;
+    background: var(--bg-elevated);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 15px 18px;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    color: var(--text);
+  }
+  .track-tab:hover { border-color: var(--accent-border); }
+  .track-tab.active {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    box-shadow: var(--shadow-md);
+  }
+  .track-tab .t-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    font-weight: 800;
+    font-size: 15.5px;
+    margin-bottom: 4px;
+  }
+  .track-tab .t-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  .track-panel { display: none; }
+  .track-panel.active { display: block; }
+
+  /* Tables */
+  .table-wrap {
+    overflow-x: auto;
+    margin: 14px 0;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--bg-elevated);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+  }
+  th, td {
+    padding: 10px 13px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    vertical-align: top;
+  }
+  th {
+    background: var(--bg-subtle);
+    font-weight: 700;
+    font-size: 12.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--text-muted);
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--bg-subtle); }
+
+  /* Calculator Widget */
+  .calc-box {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin: 16px 0;
+    box-shadow: var(--shadow-sm);
+  }
+  .calc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 14px;
+    margin: 12px 0 16px;
+  }
+  .field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin-bottom: 5px;
+  }
+  .field input, .field select {
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 7px;
+    border: 1px solid var(--border-strong);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    font-family: var(--font-sans);
+  }
+  .calc-out {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(185px, 1fr));
+    gap: 10px;
+  }
+  .metric-card {
+    background: var(--bg-subtle);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 11px 13px;
+  }
+  .metric-card .ml {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--text-soft);
+  }
+  .metric-card .mv {
+    font-size: 20px;
+    font-weight: 800;
+    margin-top: 2px;
+  }
+  .metric-card .ms {
+    font-size: 11.5px;
+    color: var(--text-soft);
+    margin-top: 2px;
+  }
+  .mv.ok { color: var(--success); }
+  .mv.warn { color: var(--warn); }
+  .mv.bad { color: var(--danger); }
+
+  /* Filter Input for Troubleshooting */
+  .search-input {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 9px;
+    border: 1px solid var(--border-strong);
+    background: var(--bg-elevated);
+    color: var(--text);
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+
+  /* Details Accordion */
+  details {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin: 10px 0;
+    overflow: hidden;
+  }
+  summary {
+    padding: 12px 16px;
+    font-weight: 700;
+    cursor: pointer;
+    background: var(--bg-subtle);
+    user-select: none;
+  }
+  details[open] summary { border-bottom: 1px solid var(--border); }
+  .details-body { padding: 14px 16px; }
+
+  /* Visual GPT Partition Layout Diagram */
+  .disk-diagram {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin: 14px 0 18px;
+    box-shadow: var(--shadow-sm);
+  }
+  .disk-row { margin-bottom: 14px; }
+  .disk-row:last-child { margin-bottom: 0; }
+  .disk-row-label {
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+  .part-bar {
+    display: flex;
+    width: 100%;
+    min-height: 54px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border-strong);
+    font-size: 11.5px;
+    line-height: 1.25;
+  }
+  .part-seg {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 6px 8px;
+    border-right: 1px solid rgba(255, 255, 255, 0.25);
+    min-width: 0;
+    overflow: hidden;
+  }
+  .part-seg:last-child { border-right: none; }
+  .part-seg strong { font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .part-seg span { font-size: 10.5px; opacity: 0.9; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .p-efi { background: #0284c7; color: #fff; flex: 0 0 11%; }
+  .p-msr { background: #64748b; color: #fff; flex: 0 0 6%; }
+  .p-win-full { background: #2563eb; color: #fff; flex: 1 1 73%; }
+  .p-win-shrunk { background: #2563eb; color: #fff; flex: 1 1 48%; }
+  .p-unalloc { background: repeating-linear-gradient(45deg, #334155, #334155 8px, #1e293b 8px, #1e293b 16px); color: #f8fafc; flex: 1 1 25%; }
+  .p-zorin { background: #059669; color: #fff; flex: 1 1 25%; }
+  .p-winre { background: #7c3aed; color: #fff; flex: 0 0 10%; }
+  @media (max-width: 720px) {
+    .part-bar { flex-direction: column; }
+    .part-seg { border-right: none; border-bottom: 1px solid rgba(255, 255, 255, 0.25); flex: none !important; }
+  }
+
+  /* Responsive */
+  @media (max-width: 960px) {
+    .app-shell { flex-direction: column; }
+    .sidebar {
+      position: static;
+      width: 100%;
+      height: auto;
+      border-right: none;
+      border-bottom: 1px solid var(--border);
+    }
+    .mobile-bar { display: flex; }
+    .main { padding: 20px 18px 60px; }
+    .track-tabs { grid-template-columns: 1fr; }
+  }
+
+  /* Print */
+  @media print {
+    .sidebar, .mobile-bar, .copy-btn, .btn-util, .track-tabs, .search-input { display: none !important; }
+    .track-panel { display: block !important; page-break-before: auto; }
+    body { background: #fff; color: #000; font-size: 11pt; }
+    .main { max-width: 100%; padding: 0; }
+    .step-card, .hero, .callout, .table-wrap { box-shadow: none; break-inside: avoid; }
+    pre { white-space: pre-wrap; word-break: break-word; background: #f1f5f9 !important; color: #0f172a !important; border: 1px solid #cbd5e1; }
+    .code-bar { background: #e2e8f0 !important; color: #0f172a !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="mobile-bar">
+  <strong>G914 RTX 5090 Parity Setup</strong>
+  <div style="display:flex;gap:8px;align-items:center;">
+    <span id="mob-pct" class="pill green">0% Done</span>
+    <button class="btn-util" onclick="toggleTheme()" style="flex:0;padding:5px 10px;">Theme</button>
+  </div>
+</div>
+
+<div class="app-shell">
+  <!-- Sticky Sidebar -->
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="brand-badge">Offline Portable Guide • v2026.11.21</span>
+      <h1>PowerSpec G914 Setup &amp; Quick-Start</h1>
+      <p>Kaggle Gemma 4 Developer Agent Local Parity (RTX 5090 &harr; 4&times; L4)</p>
+    </div>
+
+    <div class="progress-card">
+      <div class="progress-top">
+        <span>Setup Progress</span>
+        <span id="prog-text">0 / 0 (0%)</span>
+      </div>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="prog-fill"></div>
+      </div>
+      <div class="progress-meta">
+        <span id="prog-track-label">Track A Active</span>
+        <button class="btn-link" onclick="resetProgress()">Reset checkboxes</button>
+      </div>
+    </div>
+
+    <div class="sidebar-track">
+      <span class="sidebar-label">Active OS Track</span>
+      <div class="seg-control">
+        <button class="seg-btn active" id="sb-track-a" onclick="selectTrack('a')">Track A: WSL2</button>
+        <button class="seg-btn" id="sb-track-b" onclick="selectTrack('b')">Track B: Zorin 18</button>
+      </div>
+    </div>
+
+    <nav aria-label="Guide sections">
+      <span class="sidebar-label" style="display:block;margin-bottom:6px;">Step-by-Step Roadmap</span>
+      <ul class="nav-list">
+        <li><a href="#sec-preflight"><span class="nav-num">0</span> Unboxing, BIOS &amp; Pre-Flight</a></li>
+        <li><a href="#sec-track"><span class="nav-num">1</span> OS Setup (WSL2 or Zorin 18)</a></li>
+        <li><a href="#sec-dualboot"><span class="nav-num">1B</span> Dual-Boot Win11 + Zorin 18</a></li>
+        <li><a href="#sec-stack"><span class="nav-num">2</span> Shared Kaggle-Parity Stack</a></li>
+        <li><a href="#sec-gates"><span class="nav-num">3</span> Mandatory 5-Gate Verification</a></li>
+        <li><a href="#sec-eval"><span class="nav-num">4</span> First Benchmark &amp; Scoring</a></li>
+        <li><a href="#sec-calc"><span class="nav-num">5</span> Scorer-Time &amp; LB Estimator</a></li>
+        <li><a href="#sec-trouble"><span class="nav-num">6</span> Emergency Troubleshooting</a></li>
+        <li><a href="#sec-launch"><span class="nav-num">7</span> Nov 21 &rarr; Dec 2 Launch Plan</a></li>
+      </ul>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="btn-util" onclick="toggleTheme()" id="theme-btn">Dark Mode</button>
+      <button class="btn-util" onclick="window.print()">Print / PDF</button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main">
+    <!-- Hero Banner -->
+    <div class="hero">
+      <div class="hero-kicker">
+        <span class="pill blue">100% Standalone &amp; Offline-Portable</span>
+        <span class="pill green">Wheelhouse V31 • vLLM 0.19.1</span>
+        <span class="pill purple">Host Py 3.12.13 + Sandbox Py 3.13</span>
+        <span class="pill red">Freeze: Nov 25, 2026 • Final: Dec 2, 2026</span>
+      </div>
+      <h1>Brand-New PC to Kaggle Gemma 4 Parity — Step-by-Step User Guide</h1>
+      <p class="lead">
+        Everything required to take a brand-new <strong>PowerSpec G914 (RTX 5090 32 GB)</strong> out of the box and bring up a
+        high-fidelity local twin of the remote Kaggle <strong>4&times; NVIDIA L4</strong> evaluation scorer—with one-click copyable commands,
+        reboot-safe progress checkboxes, dual OS tracks (<strong>Windows 11 + WSL2</strong> or <strong>Zorin OS 18.1</strong>), calibrated Docker sandboxes,
+        and your first local benchmark + Kaggle submission.
+      </p>
+
+      <div class="spec-grid">
+        <div class="spec-item">
+          <div class="k">Target CPU</div>
+          <div class="v">Ryzen 9 9950X3D</div>
+          <div class="s">16C / 32T + RDNA2 iGPU</div>
+        </div>
+        <div class="spec-item">
+          <div class="k">Target GPU</div>
+          <div class="v">RTX 5090 32 GB</div>
+          <div class="s">Blackwell sm_120 • 1,792 GB/s</div>
+        </div>
+        <div class="spec-item">
+          <div class="k">RAM &amp; Storage</div>
+          <div class="v">64 GB DDR5 / 2 TB</div>
+          <div class="s">Gen 5 NVMe • 4&times; M.2 slots</div>
+        </div>
+        <div class="spec-item">
+          <div class="k">Motherboard</div>
+          <div class="v">MSI MAG X870E</div>
+          <div class="s">Tomahawk Wi-Fi 7 • 5GbE</div>
+        </div>
+        <div class="spec-item">
+          <div class="k">31B Decode Speed</div>
+          <div class="v">55–61 tok/s</div>
+          <div class="s">~1.8&times;–2.4&times; faster than 4&times; L4</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout warn">
+      <div class="callout-title">Strategic Recommendation Before You Start</div>
+      <p>
+        Kaggle's notebook publishing freeze is <strong>2026-11-25 23:59 UTC</strong> and final submission + 2-slot selection closes
+        <strong>2026-12-02 23:59 UTC</strong>. Start with <strong>Track A (Windows 11 + WSL2)</strong> today (~60 minutes, zero disk repartitioning risk)
+        so you can bank safe 31B and E4B Monolith submissions immediately. Install <strong>Track B (Zorin OS 18.1)</strong> onto a dedicated second M.2 NVMe SSD
+        when you want maximum bare-metal VRAM (~31.8 GB free) and overnight training/sweep throughput.
+      </p>
+    </div>
+
+    <!-- SECTION 0: PRE-FLIGHT -->
+    <section id="sec-preflight">
+      <div class="section-head">
+        <span class="section-badge">0</span>
+        <h2>Unboxing, BIOS Setup &amp; Pre-Flight Checklist</h2>
+        <span class="eta">~15 min</span>
+      </div>
+
+      <div class="step-card" data-step="p0-bios" data-scope="both">
+        <div class="step-header">
+          <input type="checkbox" class="step-check" id="chk-p0-bios">
+          <div class="step-title-wrap">
+            <div class="step-id">Step 0.1 • Hardware &amp; Firmware</div>
+            <label for="chk-p0-bios" class="step-title">First Boot, MSI X870E BIOS Check &amp; Power Verification</label>
+          </div>
+          <span class="step-time">5–10 min</span>
+        </div>
+        <div class="step-body">
+          <ol>
+            <li>Verify your monitor cable is plugged into the <strong>RTX 5090</strong> DisplayPort/HDMI port (or, on Track B headless/VRAM-max mode later, the motherboard HDMI/USB-C port for the Ryzen 9 9950X3D iGPU).</li>
+            <li>Power on and tap <code>Del</code> to enter <strong>MSI Click BIOS</strong> (MSI MAG X870E TOMAHAWK WIFI):
+              <ul>
+                <li>Enable <strong>AMD SVM Mode</strong> (required for WSL2 and Linux virtualization; under <em>Overclocking &rarr; CPU Features</em>).</li>
+                <li>Confirm <strong>EXPO / DDR5-6000</strong> is stable and BIOS is on the latest stable MSI release (improves PCIe 5.0 RTX 5090 &amp; DDR5 stability).</li>
+                <li><strong>Secure Boot:</strong> Leave <em>Enabled</em> for Track A (Windows 11). For Track B (Zorin OS 18), either <em>Disable</em> during bring-up or prepare to enroll an NVIDIA MOK password on first reboot.</li>
+              </ul>
+            </li>
+            <li>Save &amp; Exit (<code>F10</code>). Complete Windows 11 OOBE (even if installing Zorin later, verifying hardware + Wi-Fi/5GbE + GPU thermals in Windows first confirms no DOA parts).</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="step-card" data-step="p0-assets" data-scope="both">
+        <div class="step-header">
+          <input type="checkbox" class="step-check" id="chk-p0-assets">
+          <div class="step-title-wrap">
+            <div class="step-id">Step 0.2 • Credentials &amp; Source Files</div>
+            <label for="chk-p0-assets" class="step-title">Gather Accounts, Tokens &amp; Competition Artifacts</label>
+          </div>
+          <span class="step-time">5 min</span>
+        </div>
+        <div class="step-body">
+          <p>Have these items ready (or copied onto an external USB SSD for instant offline transfer):</p>
+          <ul>
+            <li><strong>Kaggle API Token (<code>kaggle.json</code>):</strong> From <em>Kaggle &rarr; Settings &rarr; API &rarr; Create New Token</em> (needed to pull <code>metric/gemma-4-developer-agent-wheelhouse</code> V31 and <code>gemma-4-developer-agent.zip</code>).</li>
+            <li><strong>Hugging Face Access Token:</strong> Accept the Gemma 4 license agreement on Hugging Face for <code>google/gemma-4-31B-it-qat-w4a16-ct</code> and <code>google/gemma-4-E4B-it-qat-w4a16-ct</code>, then create a Read token.</li>
+            <li><strong>Your Project Repository / USB Copy:</strong> Copy <code>tools/gemma4-swe-kit/</code>, <code>deliverables/2026-11-20_BCF_Gemma4_Winning_Design/v2/</code>, and (if already downloaded) <code>gemma-4-developer-agent.zip</code> (~21 GB) + <code>wheelhouse_v31/</code>.</li>
+            <li><strong>Track B Only (Optional):</strong> An 8 GB+ USB drive for the Zorin OS 18.1 Core ISO, an optional dedicated 2nd M.2 NVMe SSD, and a phone USB cable (instant USB-tethering fallback if X870E Wi-Fi 7 needs post-install firmware).</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Track A vs. Track B Decision Matrix</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Dimension</th>
+              <th>Track A: Windows 11 + WSL2 (Ubuntu 24.04)</th>
+              <th>Track B: Zorin OS 18.1 Native Linux</th>
+              <th>Recommended When</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Time to Live Parity</strong></td>
+              <td><strong>~60 minutes</strong> (zero repartitioning risk)</td>
+              <td>~2–3 hours (ISO flash, MOK/driver, X870E firmware)</td>
+              <td><span class="pill green">Track A Today</span></td>
+            </tr>
+            <tr>
+              <td><strong>Usable RTX 5090 VRAM</strong></td>
+              <td>~28.5–30.0 GB (Windows DWM uses 1.5–3.0 GB)</td>
+              <td><strong>~31.0–31.8 GB</strong> (31.8 GB with iGPU display!)</td>
+              <td>Track B for max KV/LoRA</td>
+            </tr>
+            <tr>
+              <td><strong>Disk &amp; Docker I/O</strong></td>
+              <td>~90–95% bare metal on WSL2 ext4 (<em>never</em> <code>/mnt/</code>!)</td>
+              <td><strong>100% native NVMe Gen 5 + <code>overlay2</code></strong></td>
+              <td>Track B for heavy sweeps</td>
+            </tr>
+            <tr>
+              <td><strong>Blackwell Driver Rule</strong></td>
+              <td>Windows NVIDIA Driver ONLY (<em>never</em> Linux driver inside WSL!)</td>
+              <td><strong>Mandatory <code>nvidia-driver-580-open</code></strong></td>
+              <td>Follow exact track rule!</td>
+            </tr>
+            <tr>
+              <td><strong>Kaggle Scorer Parity</strong></td>
+              <td>~95% (WSL2 Linux 6.6 + cgroup v2 + Py 3.13 Docker)</td>
+              <td><strong>~99%</strong> (native Kernel 6.17 + systemd cgroup v2)</td>
+              <td>Both pass all 5 parity gates</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECTION 1: OS SETUP (DUAL TRACK) -->
+    <section id="sec-track">
+      <div class="section-head">
+        <span class="section-badge">1</span>
+        <h2>OS &amp; GPU Docker Bring-Up (Choose Your Track)</h2>
+        <span class="eta" id="track-eta">Track A: ~30 min</span>
+      </div>
+
+      <div class="track-tabs">
+        <button class="track-tab active" id="tab-track-a" onclick="selectTrack('a')">
+          <div class="t-head">
+            <span>Track A: Windows 11 + WSL2 (Ubuntu 24.04)</span>
+            <span class="pill green">Recommended First</span>
+          </div>
+          <div class="t-desc">Fastest path (~60 min total). Zero dual-boot risk; native ext4 + Docker CE + CUDA Blackwell pass-through inside WSL2.</div>
+        </button>
+        <button class="track-tab" id="tab-track-b" onclick="selectTrack('b')">
+          <div class="t-head">
+            <span>Track B: Zorin OS 18.1 Native Linux</span>
+            <span class="pill purple">Max VRAM &amp; Parity</span>
+          </div>
+          <div class="t-desc">Ubuntu 24.04 LTS base, Kernel 6.17, mandatory <code>nvidia-driver-580-open</code>, native NVMe <code>overlay2</code>, up to 31.8 GB free VRAM.</div>
+        </button>
+      </div>
+
+      <!-- TRACK A PANEL -->
+      <div class="track-panel active" id="panel-a">
+        <div class="callout danger">
+          <div class="callout-title">Critical WSL2 Rule — Do NOT Install a Linux NVIDIA Driver Inside Ubuntu WSL2!</div>
+          <p>
+            Install the latest <strong>NVIDIA Windows Game Ready or Studio Driver (572+ / 580+ series)</strong> on Windows 11 <em>only</em>.
+            WSL2 automatically bridges CUDA into Ubuntu via <code>/usr/lib/wsl/lib</code>. Installing <code>nvidia-driver-*</code> inside WSL2 overwrites <code>libcuda.so</code> and breaks GPU access.
+          </p>
+        </div>
+
+        <div class="step-card" data-step="a1-win-driver" data-scope="a">
+          <div class="step-header">
+            <input type="checkbox" class="step-check" id="chk-a1">
+            <div class="step-title-wrap">
+              <div class="step-id">Track A • Step 1.1 (Windows 11)</div>
+              <label for="chk-a1" class="step-title">Install Windows NVIDIA Driver &amp; Install WSL2 Ubuntu 24.04 LTS</label>
+            </div>
+            <span class="step-time">10 min</span>
+          </div>
+          <div class="step-body">
+            <ol>
+              <li>Install/update the <strong>NVIDIA Windows RTX 5090 Driver (572+ / 580+, CUDA 12.8+)</strong> on Windows 11 and reboot if prompted.</li>
+              <li>Open <strong>PowerShell as Administrator</strong> and install WSL2 + Ubuntu 24.04:</li>
+            </ol>
+            <div class="code-block">
+              <div class="code-bar"><span>Windows PowerShell (Administrator)</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+              <pre><code>wsl --install -d Ubuntu-24.04
+wsl --update
+wsl --set-default-version 2
+# Verify Windows host sees RTX 5090:
+nvidia-smi</code></pre>
+            </div>
+            <p>Reboot if Windows enabled Virtual Machine Platform for the first time, then launch <strong>Ubuntu 24.04</strong> from the Start Menu and set your Linux username &amp; password.</p>
+          </div>
+        </div>
+
+        <div class="step-card" data-step="a2-wslconfig" data-scope="a">
+          <div class="step-header">
+            <input type="checkbox" class="step-check" id="chk-a2">
+            <div class="step-title-wrap">
+              <div class="step-id">Track A • Step 1.2 (Windows 11)</div>
+              <label for="chk-a2" class="step-title">Tune <code>.wslconfig</code> for PowerSpec G914 (64 GB RAM / 32 Threads)</label>
+            </div>
+            <span class="step-time">3 min</span>
+          </div>
+          <div class="step-body">
+            <p>Allocates 48 GB RAM and 24 CPU threads to WSL2 (leaving 16 GB RAM + 8 threads for Windows 11), enables mirrored networking, and enables automatic sparse VHDX reclamation:</p>
+            <div class="code-block">
+              <div class="code-bar"><span>Windows PowerShell (Run to create C:\Users\$env:USERNAME\.wslconfig)</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+              <pre><code>@'
+[wsl2]
+memory=48GB
+processors=24
+swap=16GB
+localhostForwarding=true
+networkingMode=mirrored
+dnsTunneling=true
+
+[experimental]
+autoMemoryReclaim=gradual
+sparseVhd=true
+'@ | Set-Content -Encoding ascii "$env:USERPROFILE\.wslconfig"
+
+wsl --shutdown</code></pre>
+            </div>
+            <p>Relaunch <strong>Ubuntu 24.04</strong> from Windows Terminal.</p>
+          </div>
+        </div>
+
+        <div class="step-card" data-step="a3-ext4" data-scope="a">
+          <div class="step-header">
+            <input type="checkbox" class="step-check" id="chk-a3">
+            <div class="step-title-wrap">
+              <div class="step-id">Track A • Step 1.3 (Inside Ubuntu WSL2)</div>
+              <label for="chk-a3" class="step-title">Enable <code>systemd</code> &amp; Create Native ext4 Workspace (Anti-9P Rule)</label>
+            </div>
+            <span class="step-time">5 min</span>
+          </div>
+          <div class="step-body">
+            <div class="callout warn">
+              <div class="callout-title">Zero-9P Performance Mandate</div>
+              <p><strong>NEVER</strong> run <code>tar</code>, <code>git</code>, <code>pip</code>, Docker builds, or <code>g4kit-harness</code> directly inside <code>/mnt/c/</code> or <code>/mnt/d/</code>! Crossing the 9P filesystem bridge is <strong>5&times;–15&times; slower</strong>. Keep all active data inside native Linux ext4 (<code>~/g4/</code>).</p>
+            </div>
+            <div class="code-block">
+              <div class="code-bar"><span>Ubuntu 24.04 (WSL2)</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+              <pre><code># 1. Enable systemd (required for native dockerd)
+printf "[boot]\nsystemd=true\n" | sudo tee /etc/wsl.conf
+
+# 2. Create native ext4 project workspace &amp; set Unix LF git hygiene
+mkdir -p ~/g4/{data,runs,submissions,venv312,assets,wheels_extra,wheels_pygments,wheelhouse_v31,tools}
+git config --global core.autocrlf input
+
+# 3. Verify RTX 5090 pass-through directly inside WSL2
+nvidia-smi</code></pre>
+            </div>
+            <p>From Windows PowerShell, run <code>wsl --shutdown</code> once and reopen Ubuntu 24.04 so <code>systemd</code> starts cleanly (verify with <code>ps -p 1 -o comm=</code> printing <code>systemd</code>).</p>
+          </div>
+        </div>
+
+        <div class="step-card" data-step="a4-docker" data-scope="a">
+          <div class="step-header">
+            <input type="checkbox" class="step-check" id="chk-a4">
+            <div class="step-title-wrap">
+              <div class="step-id">Track A • Step 1.4 (Inside Ubuntu WSL2)</div>
+              <label for="chk-a4" class="step-title">Install Native Linux Docker CE + NVIDIA Container Toolkit</label>
+            </div>
+            <span class="step-time">10 min</span>
+          </div>
+          <div class="step-body">
+            <p>Using native Linux <code>dockerd</code> inside WSL2 gives clean cgroup v2 memory/CPU enforcement without Docker Desktop overhead:</p>
+            <div class="code-block">
+              <div class="code-bar"><span>Ubuntu 24.04 (WSL2)</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+              <pre><code>sudo apt-get update &amp;&amp; sudo apt-get install -y ca-certificates curl gnupg git build-essential jq tmux unzip
+curl -fsSL https://get.docker.com | sudo sh
+sudo usermod -aG docker "$USER"
+
+# Install NVIDIA Container Toolkit
+curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | \
+  sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
+curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \
+  sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \
+  sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
+sudo apt-get update &amp;&amp; sudo apt-get install -y nvidia-container-toolkit
+sudo nvidia-ctk runtime configure --runtime=docker
+sudo systemctl enable --now docker
+newgrp docker
+
+# Verify GPU pass-through &amp; cgroup v2 Python 3.13 sandbox isolation
+docker info --format '{{.StorageDriver}} | {{.CgroupDriver}} v{{.CgroupVersion}}'
+docker run --rm --gpus all nvidia/cuda:12.8.0-base-ubuntu24.04 nvidia-smi
+docker run --rm --memory=4g --cpus=2 --network=none python:3.13-slim python3 -c "import sys; print(sys.version)"</code></pre>
+            </div>
+            <div class="callout info">
+              <div class="callout-title">Windows 11 VRAM Tip</div>
+              <p>Close hardware-accelerated browser tabs / disable GPU acceleration in VS Code during 31B sweeps, and run vLLM at <code>--gpu-memory-utilization 0.85</code> (~27.2 GB allocated, leaving ~4.8 GB safely for Windows DWM). Running vLLM in your WSL2 Python 3.12 venv (Step 2) avoids Blackwell Docker <code>/usr/lib/wsl</code> double-containerization issues completely.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TRACK B PANEL -->
+      <div class="track-panel" id="panel-b">
+        <div class="callout danger">
+          <div class="callout-title">Mandatory Blackwell (RTX 5090) Linux Driver Rule</div>
+          <p>
+            The legacy closed-source proprietary NVIDIA kernel module <strong>DOES NOT SUPPORT RTX 5090 (Blackwell <code>sm_120</code>)</strong>—<code>nvidia-smi</code> will fail with <code>No devices were found</code>. You <strong>MUST</strong> install the <strong><code>-open</code></strong> kernel module package (<code>nvidia-driver-580-open</code> or newer).
+          </p>
+        </div>
+
+        <div class="step-card" data-step="b1-prep" data-scope="b">
+          <div class="step-header">
+            <input type="checkbox" class="step-check" id="chk-b1">
+            <div class="step-title-wrap">
+              <div class="step-id">Track B • Step 1.1 (Pre-Install)</div>
+              <label for="chk-b1" class="step-title">Prepare Storage (2nd M.2 SSD Recommended) &amp; Flash Zorin OS 18.1 ISO</label>
+            </div>
+            <span class="step-time">15 min</span>
+          </div>
+          <div class="step-body">
+            <ol>
+              <li><strong>Best Storage Option:</strong> Install a dedicated 1–2 TB NVMe SSD into one of the MSI MAG X870E TOMAHAWK WIFI's <strong>four M.2 slots</strong>. This leaves Windows 11 and BitLocker 100% untouched (switch OS anytime via <code>F11</code> UEFI boot menu or GRUB).</li>
+              <li><strong>If Sharing the Stock 2 TB NVMe (Dual Boot on Windows 11 Pro):</strong> Follow the complete step-by-step walkthrough in <a href="#sec-dualboot" style="color:var(--accent);font-weight:700;">Section 1B: Repartitioning &amp; Dual-Booting Zorin OS 18 on Top of Windows 11 Pro</a> right below (BitLocker decryption, Fast Startup/hibernation removal, fixing unmovable files, EFI &amp; GRUB <code>os-prober</code>, and UTC clock sync).</li>
+              <li>Download <strong>Zorin OS 18.1 Core ISO</strong> (Ubuntu 24.04 LTS <code>noble</code> base, Linux Kernel 6.17) and flash onto an 8 GB+ USB stick using Rufus (GPT/UEFI) or BalenaEtcher.</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="step-card" data-step="b2-install" data-scope="b">
+          <div class="step-header">
+            <input type="checkbox" class="step-check" id="chk-b2">
+            <div class="step-title-wrap">
+              <div class="step-id">Track B • Step 1.2 (OS Install &amp; Networking)</div>
+              <label for="chk-b2" class="step-title">Install Zorin OS 18.1 &amp; Update MSI X870E Firmware</label>
+            </div>
+            <span class="step-time">25 min</span>
+          </div>
+          <div class="step-body">
+            <ol>
+              <li>Press <code>F11</code> at power-on, boot from USB, and select <strong>"Try or Install Zorin OS (modern NVIDIA drivers)"</strong> from GRUB.</li>
+              <li>Complete installation onto your target M.2 SSD / unallocated partition and reboot.</li>
+              <li><strong>MSI X870E Networking Fallback:</strong> If Qualcomm Wi-Fi 7 (<code>ath12k</code>) or Realtek 5GbE (<code>r8126</code>) needs newer firmware blobs on first boot, plug in a smartphone via <strong>USB Tethering</strong> and run:</li>
+            </ol>
+            <div class="code-block">
+              <div class="code-bar"><span>Zorin OS 18.1 Terminal</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+              <pre><code>sudo apt-get update &amp;&amp; sudo apt-get full-upgrade -y
+sudo apt-get install -y linux-firmware ca-certificates curl gnupg git build-essential jq tmux unzip
+uname -r   # Expect 6.14.x or 6.17.x</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-card" data-step="b3-nvidia" data-scope="b">
+          <div class="step-header">
+            <input type="checkbox" class="step-check" id="chk-b3">
+            <div class="step-title-wrap">
+              <div class="step-id">Track B • Step 1.3 (RTX 5090 Driver)</div>
+              <label for="chk-b3" class="step-title">Install Mandatory <code>nvidia-driver-580-open</code> &amp; Verify 32 GB VRAM</label>
+            </div>
+            <span class="step-time">10 min</span>
+          </div>
+          <div class="step-body">
+            <div class="code-block">
+              <div class="code-bar"><span>Zorin OS 18.1 Terminal</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+              <pre><code>sudo add-apt-repository -y ppa:graphics-drivers/ppa
+sudo apt-get update
+sudo apt-get install -y nvidia-driver-580-open nvidia-utils-580
+sudo reboot</code></pre>
+            </div>
+            <p>If Secure Boot is enabled, enroll the <strong>MOK password</strong> once on the blue MOK Manager screen during reboot. After login, verify:</p>
+            <div class="code-block">
+              <div class="code-bar"><span>Zorin OS 18.1 Terminal (Post-Reboot)</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+              <pre><code>nvidia-smi
+# Must show: NVIDIA GeForce RTX 5090 | 32607MiB | Driver &gt;= 580.xx | CUDA &gt;= 12.8</code></pre>
+            </div>
+            <div class="callout success">
+              <div class="callout-title">Pro Tip — Unlock ~31.8 GB Free VRAM on the RTX 5090</div>
+              <p>
+                Plug your monitor into the <strong>MSI X870E motherboard HDMI/USB-C port</strong> (driven by the Ryzen 9 9950X3D's integrated Radeon RDNA2 iGPU), or for overnight sweeps switch to text console via <code>sudo systemctl isolate multi-user.target</code> (return with <code>graphical.target</code>). If you see Wayland desktop flicker on the 5090, select <strong>"Zorin OS on Xorg"</strong> from the login gear menu.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-card" data-step="b4-docker" data-scope="b">
+          <div class="step-header">
+            <input type="checkbox" class="step-check" id="chk-b4">
+            <div class="step-title-wrap">
+              <div class="step-id">Track B • Step 1.4 (Docker + GPU Runtime)</div>
+              <label for="chk-b4" class="step-title">Install Native Docker CE (Ubuntu <code>noble</code> Repo) &amp; Create Workspace</label>
+            </div>
+            <span class="step-time">10 min</span>
+          </div>
+          <div class="step-body">
+            <p><strong>Zorin Repo Trap Avoided:</strong> The command below explicitly uses <code>UBUNTU_CODENAME</code> (<code>noble</code>) instead of Zorin's <code>VERSION_CODENAME</code> so Docker APT never 404s:</p>
+            <div class="code-block">
+              <div class="code-bar"><span>Zorin OS 18.1 Terminal</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+              <pre><code>sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release &amp;&amp; echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list &gt; /dev/null
+
+sudo apt-get update
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+sudo usermod -aG docker "$USER"
+
+# Install NVIDIA Container Toolkit
+curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | \
+  sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
+curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \
+  sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \
+  sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
+sudo apt-get update &amp;&amp; sudo apt-get install -y nvidia-container-toolkit
+sudo nvidia-ctk runtime configure --runtime=docker
+sudo systemctl enable --now docker
+newgrp docker
+
+# Create workspace &amp; verify native overlay2 + systemd cgroup v2 + GPU Docker
+mkdir -p ~/g4/{data,runs,submissions,venv312,assets,wheels_extra,wheels_pygments,wheelhouse_v31,tools}
+git config --global core.autocrlf input
+docker info --format '{{.StorageDriver}} | {{.CgroupDriver}} v{{.CgroupVersion}}'
+docker run --rm --gpus all nvidia/cuda:12.8.0-base-ubuntu24.04 nvidia-smi</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 1B: DUAL-BOOT REPARTITIONING & ZORIN OS 18 ON WINDOWS 11 PRO -->
+    <section id="sec-dualboot">
+      <div class="section-head">
+        <span class="section-badge" style="background:var(--purple);">1B</span>
+        <h2>Deep-Dive: Repartitioning Your Drive &amp; Dual-Booting Zorin OS 18 on Top of Windows 11 Pro</h2>
+        <span class="eta">~45–75 min</span>
+      </div>
+
+      <p>
+        This self-contained walkthrough explains how to safely carve out <strong>400–600 GB</strong> from your existing <strong>Windows 11 Pro</strong> NVMe SSD
+        (zero data loss) and install <strong>Zorin OS 18.1 Core</strong> alongside Windows 11 Pro with a clean <strong>GRUB dual-boot menu</strong>—handling every
+        Windows 11 Pro gotcha (BitLocker, Fast Startup, unmovable NTFS files, GPT EFI System Partitions, Ubiquity Bug #1396379, GRUB <code>os-prober</code>, and Windows/Linux clock drift).
+      </p>
+
+      <!-- Visual GPT NVMe Diagram -->
+      <div class="disk-diagram">
+        <div class="disk-row">
+          <div class="disk-row-label">1. Stock PowerSpec G914 2 TB NVMe (GPT / UEFI Before Shrinking)</div>
+          <div class="part-bar">
+            <div class="part-seg p-efi"><strong>p1: EFI</strong><span>100–260 MB FAT32</span></div>
+            <div class="part-seg p-msr"><strong>p2: MSR</strong><span>16 MB</span></div>
+            <div class="part-seg p-win-full"><strong>p3: Windows 11 Pro (C:\ NTFS)</strong><span>~1,860 GB — Shrink from inside Windows!</span></div>
+            <div class="part-seg p-winre"><strong>p4: WinRE</strong><span>~700 MB</span></div>
+          </div>
+        </div>
+        <div class="disk-row">
+          <div class="disk-row-label">2. After Shrinking C:\ in Windows Disk Management (Unallocated Gap Ready)</div>
+          <div class="part-bar">
+            <div class="part-seg p-efi"><strong>p1: EFI</strong><span>DO NOT FORMAT</span></div>
+            <div class="part-seg p-msr"><strong>p2: MSR</strong><span>Untouched</span></div>
+            <div class="part-seg p-win-shrunk"><strong>p3: Windows 11 Pro (C:\ NTFS)</strong><span>~1,360 GB</span></div>
+            <div class="part-seg p-unalloc"><strong>Unallocated Free Space</strong><span>400–500 GB (Leave unformatted!)</span></div>
+            <div class="part-seg p-winre"><strong>p4: WinRE</strong><span>Untouched</span></div>
+          </div>
+        </div>
+        <div class="disk-row">
+          <div class="disk-row-label">3. After Installing Zorin OS 18.1 (Single-Drive Dual Boot Complete)</div>
+          <div class="part-bar">
+            <div class="part-seg p-efi"><strong>p1: Shared EFI</strong><span>Win + GRUB (~5 MB)</span></div>
+            <div class="part-seg p-msr"><strong>p2: MSR</strong><span>16 MB</span></div>
+            <div class="part-seg p-win-shrunk"><strong>p3: Windows 11 Pro (C:\)</strong><span>~1,360 GB NTFS</span></div>
+            <div class="part-seg p-zorin"><strong>p5: Zorin OS 18 (/)</strong><span>400–500 GB ext4 + /swapfile</span></div>
+            <div class="part-seg p-winre"><strong>p4: WinRE</strong><span>Untouched</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout info">
+        <div class="callout-title">Recommended Partition Sizing for Kaggle Gemma 4 (on 2 TB NVMe)</div>
+        <ul>
+          <li><strong>Minimum Zorin OS 18 allocation:</strong> <code>300 GB</code>; <strong>Sweet Spot: <code>400–600 GB</code></strong> (21 GB competition ZIP + ~35 GB extracted snapshots + ~45 GB Docker images/layers + ~45 GB Hugging Face 31B &amp; E4B weights + ~50 GB local eval runs + OS &amp; growth room).</li>
+          <li><strong>No separate Swap partition required:</strong> Zorin OS 18 (Ubuntu 24.04) creates a dynamic <code>/swapfile</code> automatically, and your PowerSpec G914 already has 64 GB DDR5 RAM.</li>
+          <li><strong>GPT supports up to 128 primary partitions:</strong> Notice how <code>p4: WinRE Recovery</code> sits at the far right end of the SSD. On GPT/UEFI, Windows shrinks <code>C:\</code> cleanly in the middle and Zorin creates <code>p5</code> in that gap—zero MBR 4-partition limit!</li>
+        </ul>
+      </div>
+
+      <!-- STEP D1 -->
+      <div class="step-card" data-step="d1-win11-prep" data-scope="b">
+        <div class="step-header">
+          <input type="checkbox" class="step-check" id="chk-d1">
+          <div class="step-title-wrap">
+            <div class="step-id">Dual-Boot Step D1 • Inside Windows 11 Pro (Mandatory Safety Prep)</div>
+            <label for="chk-d1" class="step-title">Verify UEFI/GPT Mode, Back Up &amp; Decrypt BitLocker, and Disable Fast Startup</label>
+          </div>
+          <span class="step-time">5–10 min</span>
+        </div>
+        <div class="step-body">
+          <p>
+            <strong>Why Decrypt (Turn Off) BitLocker Instead of Merely Suspending?</strong> Windows 11 Pro frequently enables BitLocker Device Encryption automatically. Suspending BitLocker (<code>-rc 1</code>) only pauses it for 1 reboot—subsequent GRUB/UEFI boot-order changes frequently trigger the blue <strong>BitLocker Recovery Key</strong> screen on every switch into Windows. On a brand-new NVMe Gen 5 PC, decrypting <code>C:</code> takes only <strong>2–5 minutes</strong> and eliminates cross-OS lockouts permanently (you can always re-enable BitLocker later once dual-boot is stable).
+          </p>
+          <div class="code-block">
+            <div class="code-bar"><span>Windows PowerShell (Run as Administrator)</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><code># 1. Confirm UEFI firmware &amp; GPT partition table (both MUST be true!)
+Get-Disk | Select-Object Number, FriendlyName, PartitionStyle, @{N="SizeGB";E={[math]::Round($_.Size/1GB,1)}}
+(Get-ComputerInfo).BiosFirmwareType   # Expect: Uefi
+
+# 2. Check BitLocker status &amp; SAVE your 48-digit recovery key BEFORE touching anything!
+manage-bde -status C:
+manage-bde -protectors -get C: | Out-File "$env:USERPROFILE\Desktop\BitLocker_Recovery_Key_BACKUP.txt"
+# (Copy BitLocker_Recovery_Key_BACKUP.txt to a USB drive or verify it in account.microsoft.com/devices/recoverykey!)
+
+# 3. Turn OFF BitLocker (cleanest for dual boot). Skip if already "Protection Off / 0.0% Encrypted".
+manage-bde -off C:
+# Poll until Percentage Encrypted reaches 0.0% and Conversion Status is "Fully Decrypted":
+manage-bde -status C:
+
+# 4. Disable Hibernation &amp; Windows Fast Startup (removes hiberfil.sys &amp; unlocks NTFS cleanly!)
+powercfg.exe /hibernate off</code></pre>
+          </div>
+          <p style="font-size:13.5px;">
+            Double-check Fast Startup in GUI: open <em>Control Panel &rarr; Hardware and Sound &rarr; Power Options &rarr; Choose what the power buttons do</em> &rarr; click <em>Change settings that are currently unavailable</em> &rarr; verify <strong>Turn on fast startup</strong> is unchecked (or gone because hibernation is off) &rarr; <strong>Save changes</strong>.
+          </p>
+        </div>
+      </div>
+
+      <!-- STEP D2 -->
+      <div class="step-card" data-step="d2-shrink" data-scope="b">
+        <div class="step-header">
+          <input type="checkbox" class="step-check" id="chk-d2">
+          <div class="step-title-wrap">
+            <div class="step-id">Dual-Boot Step D2 • Inside Windows 11 Pro</div>
+            <label for="chk-d2" class="step-title">Shrink <code>C:\</code> via Windows Disk Management (Plus the "Unmovable Files" Fix)</label>
+          </div>
+          <span class="step-time">5–10 min</span>
+        </div>
+        <div class="step-body">
+          <div class="callout warn">
+            <div class="callout-title">Golden Rule: Always Shrink NTFS Inside Windows 11 — Never Inside Linux!</div>
+            <p>Letting Windows shrink its own <code>C:\</code> volume guarantees NTFS metadata, shadow copies, and volume bitmaps stay 100% healthy.</p>
+          </div>
+          <ol>
+            <li>Press <code>Win + X</code> &rarr; select <strong>Disk Management</strong> (or run <code>diskmgmt.msc</code>).</li>
+            <li>Locate your main <strong><code>Windows (C:)</code></strong> NTFS partition on Disk 0.</li>
+            <li>Right-click <strong><code>C:</code></strong> &rarr; click <strong>Shrink Volume...</strong> (wait 10–30 seconds while Windows queries shrinkable space).</li>
+            <li>In <em>Enter the amount of space to shrink in MB</em>, type your target Linux size in megabytes:
+              <ul>
+                <li><code>409600</code> = <strong>400 GB</strong> (recommended baseline)</li>
+                <li><code>512000</code> = <strong>500 GB</strong> (comfortable for 31B + E4B + multiple local sweeps)</li>
+                <li><code>614400</code> = <strong>600 GB</strong> (heavy overnight LoRA / dataset experiments)</li>
+              </ul>
+            </li>
+            <li>Click <strong>Shrink</strong>. Confirm a black-bordered <strong>Unallocated</strong> block appears immediately to the right of <code>C:</code>. <strong>Do NOT format it or create a new Windows drive letter</strong>—leave it completely Unallocated!</li>
+          </ol>
+
+          <details>
+            <summary>Troubleshooting: Windows Disk Management Only Lets Me Shrink by a Few GB! ("Unmovable Files" Fix)</summary>
+            <div class="details-body">
+              <p>NTFS cannot shrink past fixed system files sitting near the end of the volume (<code>pagefile.sys</code>, <code>hiberfil.sys</code>, System Restore shadow copies, or <code>$UsnJrnl</code>). Clear them temporarily in 4 steps:</p>
+              <ol>
+                <li>Ensure hibernation is off: Admin PowerShell &rarr; <code>powercfg.exe /hibernate off</code>.</li>
+                <li><strong>Disable System Protection:</strong> Press <code>Win</code> &rarr; search <em>Create a restore point</em> &rarr; select <code>C:</code> &rarr; <strong>Configure</strong> &rarr; select <strong>Disable system protection</strong> &rarr; click <strong>Delete</strong> existing restore points &rarr; OK.</li>
+                <li><strong>Temporarily Disable Paging File:</strong> Search <em>View advanced system settings</em> &rarr; Performance <strong>Settings</strong> &rarr; <strong>Advanced</strong> tab &rarr; Virtual Memory <strong>Change...</strong> &rarr; uncheck <em>Automatically manage...</em> &rarr; select <strong>No paging file</strong> &rarr; click <strong>Set</strong> &rarr; OK.</li>
+                <li><strong>Reboot Windows 11</strong> (mandatory so Windows unlocks and removes <code>pagefile.sys</code>), open <code>diskmgmt.msc</code>, and run <strong>Shrink Volume</strong> again! If a stubborn file still blocks shrinking, open <em>Event Viewer &rarr; Windows Logs &rarr; Application</em> and check Source <strong>Defrag (Event ID 259)</strong>—it names the exact file path blocking the shrink boundary.</li>
+                <li><strong>IMPORTANT — Immediately Re-Enable Virtual Memory After Shrinking!</strong> Go back to Virtual Memory &rarr; re-check <em>Automatically manage paging file size for all drives</em> &rarr; OK &rarr; Reboot! (Keep Hibernation/Fast Startup <strong>OFF</strong> for dual-boot safety.)</li>
+              </ol>
+            </div>
+          </details>
+        </div>
+      </div>
+
+      <!-- STEP D3 -->
+      <div class="step-card" data-step="d3-usb-bios" data-scope="b">
+        <div class="step-header">
+          <input type="checkbox" class="step-check" id="chk-d3">
+          <div class="step-title-wrap">
+            <div class="step-id">Dual-Boot Step D3 • Bootable USB &amp; MSI MAG X870E UEFI Settings</div>
+            <label for="chk-d3" class="step-title">Flash Zorin OS 18.1 Core ISO (UEFI/GPT) &amp; Verify MSI BIOS Settings</label>
+          </div>
+          <span class="step-time">10 min</span>
+        </div>
+        <div class="step-body">
+          <ol>
+            <li>Download <strong>Zorin OS 18.1 Core (64-bit)</strong> ISO from <code>zorin.com/os/download/</code> and verify its SHA-256 hash in PowerShell:</li>
+          </ol>
+          <div class="code-block">
+            <div class="code-bar"><span>Windows PowerShell — Verify ISO Checksum</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><code>Get-FileHash "$env:USERPROFILE\Downloads\Zorin-OS-18.1-Core-64-bit*.iso" -Algorithm SHA256</code></pre>
+          </div>
+          <ol start="2">
+            <li>Flash the ISO to an 8 GB+ USB stick using <strong>Rufus</strong> (recommended on Windows 11) or <strong>BalenaEtcher</strong>:
+              <ul>
+                <li><strong>Rufus Settings:</strong> Partition scheme = <strong><code>GPT</code></strong>, Target system = <strong><code>UEFI (non CSM)</code></strong>, File system = <code>FAT32 (Default)</code>, click <strong>START</strong> (ISO Image mode recommended; DD mode works too).</li>
+              </ul>
+            </li>
+            <li>Perform a <strong>Full Restart</strong> from Windows (<em>Start &rarr; Power &rarr; Restart</em>—do NOT use Shutdown), tap <code>Del</code> to open <strong>MSI Click BIOS</strong>, and confirm these 4 exact settings:
+              <div class="table-wrap" style="margin-top:8px;">
+                <table>
+                  <thead>
+                    <tr><th>MSI MAG X870E BIOS Setting</th><th>Required Value</th><th>Why It Matters</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td><code>Boot &rarr; Boot Mode Select</code> / <code>CSM</code></td><td><strong>UEFI Only (CSM Disabled)</strong></td><td>Windows 11 is UEFI/GPT; installing Linux in Legacy/CSM breaks GRUB detection of Windows!</td></tr>
+                    <tr><td><code>Boot &rarr; Fast Boot</code></td><td><strong>Disabled</strong></td><td>Ensures USB keyboard &amp; <code>F11</code> boot menu always initialize reliably at POST.</td></tr>
+                    <tr><td><code>Advanced &rarr; SATA Mode</code></td><td><strong>AHCI</strong> (not RAID)</td><td>Prevents Linux installer from failing to enumerate storage controllers.</td></tr>
+                    <tr><td><code>Security &rarr; Secure Boot</code></td><td><strong>Disabled</strong> <em>(recommended)</em></td><td>Cleanest path for RTX 5090 <code>nvidia-driver-580-open</code> DKMS + GRUB. <em>(If keeping Enabled, enroll MOK password at reboot.)</em></td></tr>
+                  </tbody>
+                </table>
+              </div>
+              Click the top-right <strong>Save &amp; Exit (<code>F10</code>)</strong> so MSI BIOS commits the toggle cleanly.
+            </li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- STEP D4 -->
+      <div class="step-card" data-step="d4-install" data-scope="b">
+        <div class="step-header">
+          <input type="checkbox" class="step-check" id="chk-d4">
+          <div class="step-title-wrap">
+            <div class="step-id">Dual-Boot Step D4 • Zorin OS 18.1 Live Installer &amp; Partition Assignment</div>
+            <label for="chk-d4" class="step-title">Boot UEFI USB with Modern NVIDIA Drivers &amp; Install Alongside Windows 11 Pro</label>
+          </div>
+          <span class="step-time">15–20 min</span>
+        </div>
+        <div class="step-body">
+          <ol>
+            <li>At the MSI splash screen, repeatedly tap <strong><code>F11</code></strong> to open the <strong>One-Time Boot Menu</strong>.</li>
+            <li>Select your USB stick prefixed with <strong><code>UEFI:</code></strong> (e.g., <code>UEFI: SanDisk ... Partition 1</code>).</li>
+            <li>On the Zorin GRUB menu, select <strong>"Try or Install Zorin OS (modern NVIDIA drivers)"</strong> and press <code>Enter</code>.</li>
+            <li>Click <strong>Try Zorin OS</strong> first to confirm display + keyboard + network work (plug in Android/iOS USB tethering if MSI X870E Wi-Fi 7 needs firmware), then double-click <strong>Install Zorin OS 18</strong> on the desktop.</li>
+            <li>Select language, keyboard, and check <strong>"Install third-party software for graphics and Wi-Fi hardware"</strong>.</li>
+            <li>At the critical <strong>Installation Type</strong> screen, choose <strong>ONE</strong> of the two verified paths below:</li>
+          </ol>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th style="width:26%;">Installer Option</th><th>Exact Steps &amp; Safety Rules</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Option 1: "Install Zorin OS alongside Windows Boot Manager"</strong><br><span class="pill green" style="margin-top:4px;">Easiest Single-Drive</span></td>
+                  <td>
+                    <ol style="margin-bottom:0;">
+                      <li>Select <strong>Install Zorin OS alongside Windows Boot Manager</strong> &rarr; Continue.</li>
+                      <li>The installer automatically detects your pre-shrunk <code>400–500 GB</code> Unallocated space, creates ext4 <code>/</code> inside it, and safely shares Windows' existing <code>p1</code> EFI partition (<strong>without formatting it</strong>).</li>
+                      <li>Verify on the confirmation popup that <strong>ONLY</strong> a new ext4 partition (<code>nvme0n1p5</code>) is being created/formatted and Windows <code>p3</code> is untouched &rarr; click <strong>Continue</strong>.</li>
+                    </ol>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Option 2: "Something else" (Manual Partitioning)</strong><br><span class="pill purple" style="margin-top:4px;">Full Control / 2nd SSD</span></td>
+                  <td>
+                    <ol style="margin-bottom:0;">
+                      <li><strong>DO NOT format or delete</strong> <code>nvme0n1p1</code> (EFI), <code>p2</code> (MSR), <code>p3</code> (Windows NTFS), or <code>p4</code> (WinRE)!</li>
+                      <li>Click the <strong><code>free space</code></strong> (400,000+ MB) &rarr; click <strong><code>+</code></strong>:
+                        <ul>
+                          <li>Size: full free space (or reserve 512 MB first <em>only</em> if installing to a brand-new 2nd SSD!)</li>
+                          <li>Type: <strong>Primary</strong> • Location: <strong>Beginning of this space</strong></li>
+                          <li>Use as: <strong>Ext4 journaling file system</strong> • Mount point: <strong><code>/</code></strong> &rarr; OK.</li>
+                        </ul>
+                      </li>
+                      <li><strong>Device for boot loader installation (bottom dropdown):</strong> Select the whole NVMe drive hosting the EFI partition (e.g., <strong><code>/dev/nvme0n1</code></strong>). <em>(GRUB+shim only consumes ~5–8 MB inside Windows' 100–260 MB ESP because Linux kernels live inside ext4 <code>/boot</code>, not <code>/boot/efi</code>!)</em></li>
+                      <li>Click <strong>Install Now</strong> &rarr; double-check the summary lists <em>only</em> your new Linux ext4 partition as being formatted &rarr; <strong>Continue</strong>.</li>
+                    </ol>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="callout warn">
+            <div class="callout-title">2nd M.2 SSD Isolation Note — Ubuntu/Ubiquity Bug #1396379</div>
+            <p>
+              If you install Zorin OS onto a <strong>dedicated 2nd M.2 NVMe SSD</strong> with its own new <code>512 MB FAT32 (boot, esp)</code> partition, be aware of long-standing Ubiquity Bug <code>#1396379</code>: the installer may still write GRUB into Drive 1's Windows ESP even when you select Drive 2 in the dropdown. For 100% physical drive isolation, either temporarily disable/unplug the Windows NVMe during Zorin install, OR verify <code>lsblk -f</code> + <code>cat /etc/fstab</code> after install and run <code>sudo grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=zorin --recheck</code> if needed.
+            </p>
+          </div>
+          <p>Finish timezone, user account creation, wait for completion, click <strong>Restart Now</strong>, and unplug the USB drive when prompted.</p>
+        </div>
+      </div>
+
+      <!-- STEP D5 -->
+      <div class="step-card" data-step="d5-post" data-scope="b">
+        <div class="step-header">
+          <input type="checkbox" class="step-check" id="chk-d5">
+          <div class="step-title-wrap">
+            <div class="step-id">Dual-Boot Step D5 • Post-Install Polish (GRUB Menu, Clock Sync &amp; EFI Check)</div>
+            <label for="chk-d5" class="step-title">Verify Windows 11 in GRUB (<code>os-prober</code>), Remember Last OS &amp; Fix Dual-Boot Clock Drift</label>
+          </div>
+          <span class="step-time">5 min</span>
+        </div>
+        <div class="step-body">
+          <p>Boot into <strong>Zorin OS 18.1</strong>, open a Terminal (<code>Ctrl + Alt + T</code>), and run this dual-boot hardening snippet (ensures Windows 11 Pro always appears in GRUB, sets a 10-second menu that remembers your last-used OS, and verifies EFI partition health):</p>
+          <div class="code-block">
+            <div class="code-bar"><span>Zorin OS 18.1 Terminal — Enable os-prober + Remember Last Booted OS + Check ESP</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><code># 1. Ensure os-prober is installed and enabled (Ubuntu 24.04 disables it by default!)
+sudo apt-get update &amp;&amp; sudo apt-get install -y os-prober efibootmgr
+
+# 2. Backup /etc/default/grub &amp; configure clean dual-boot menu (10s timeout + remember last OS)
+sudo cp /etc/default/grub /etc/default/grub.bak
+sudo sed -i 's/^#*GRUB_DISABLE_OS_PROBER=.*/GRUB_DISABLE_OS_PROBER=false/' /etc/default/grub
+grep -q '^GRUB_DISABLE_OS_PROBER=' /etc/default/grub || echo 'GRUB_DISABLE_OS_PROBER=false' | sudo tee -a /etc/default/grub
+sudo sed -i 's/^GRUB_DEFAULT=.*/GRUB_DEFAULT=saved/' /etc/default/grub
+grep -q '^GRUB_SAVEDEFAULT=' /etc/default/grub || echo 'GRUB_SAVEDEFAULT=true' | sudo tee -a /etc/default/grub
+sudo sed -i 's/^GRUB_TIMEOUT_STYLE=.*/GRUB_TIMEOUT_STYLE=menu/' /etc/default/grub
+sudo sed -i 's/^GRUB_TIMEOUT=.*/GRUB_TIMEOUT=10/' /etc/default/grub
+
+# 3. Regenerate GRUB — look for: "Found Windows Boot Manager on /dev/nvme0n1p1@/EFI/Microsoft/Boot/bootmgfw.efi"
+sudo update-grub
+
+# 4. Inspect EFI System Partition free space &amp; UEFI boot order
+df -h /boot/efi
+efibootmgr -v</code></pre>
+          </div>
+
+          <p><strong>Fix the Dual-Boot Clock Drift Permanently:</strong> Windows assumes your motherboard RTC clock is Local Time while Linux assumes UTC—causing the clock to jump by your timezone offset every time you switch OS. Pick <strong>Method 1 (Recommended)</strong> next time you boot Windows 11 Pro:</p>
+          <div class="code-block">
+            <div class="code-bar"><span>Method 1 (Recommended — Run Once in Windows 11 Admin CMD to Make Windows Use UTC)</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><code>reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\TimeZoneInformation" /v RealTimeIsUniversal /t REG_DWORD /d 1 /f</code></pre>
+          </div>
+          <p style="font-size:13px;color:var(--text-soft);"><em>Alternative (Method 2 — inside Zorin OS if you prefer leaving Windows registry untouched):</em> <code>timedatectl set-local-rtc 1 --adjust-system-clock</code>.</p>
+          <p><strong>Next Step:</strong> Jump straight back up to <a href="#sec-track" onclick="selectTrack('b')" style="color:var(--accent);font-weight:700;">Track B Step 1.3</a> to install mandatory <code>nvidia-driver-580-open</code>, Docker CE (<code>noble</code>), and then Section 2 (Shared Kaggle-Parity Stack)!</p>
+        </div>
+      </div>
+
+      <!-- STEP D6 -->
+      <div class="step-card" data-step="d6-recovery" data-scope="b">
+        <div class="step-header">
+          <input type="checkbox" class="step-check" id="chk-d6">
+          <div class="step-title-wrap">
+            <div class="step-id">Dual-Boot Step D6 • Safety Net &amp; Rollback Reference</div>
+            <label for="chk-d6" class="step-title">Recovering GRUB After a Windows Update &amp; Cleanly Removing Zorin OS Later</label>
+          </div>
+          <span class="step-time">Reference</span>
+        </div>
+        <div class="step-body">
+          <details>
+            <summary>Scenario A: A Windows 11 Update Made the PC Boot Straight Into Windows (GRUB Menu Disappeared!)</summary>
+            <div class="details-body">
+              <p>Windows Updates occasionally push <code>Windows Boot Manager</code> back to #1 in UEFI NVRAM. Your Zorin installation is completely safe—restore GRUB in 30 seconds via either method:</p>
+              <ul>
+                <li><strong>Fastest (MSI BIOS):</strong> Tap <code>Del</code> &rarr; <em>Settings &rarr; Boot &rarr; UEFI Hard Disk Drive BBS Priorities</em> &rarr; move <code>ubuntu</code> / <code>zorin</code> back to <strong>Boot Option #1</strong> &rarr; Save &amp; Exit (<code>F10</code>).</li>
+                <li><strong>From Inside Windows 11 Admin CMD:</strong> Run <code>bcdedit /set {bootmgr} path \EFI\ubuntu\shimx64.efi</code> (or use <code>\EFI\ubuntu\grubx64.efi</code> if Secure Boot is disabled) and reboot.</li>
+              </ul>
+            </div>
+          </details>
+          <details>
+            <summary>Scenario B: How to Cleanly Uninstall Zorin OS 18 &amp; Reclaim All 400–500 GB for Windows 11 Pro</summary>
+            <div class="details-body">
+              <ol>
+                <li>Enter MSI BIOS (<code>Del</code>) &rarr; set <strong>Windows Boot Manager</strong> back to Boot Option #1 &rarr; boot into Windows 11 Pro.</li>
+                <li>Open <strong>Disk Management</strong> (<code>diskmgmt.msc</code>), locate the healthy unnamed Linux ext4 partition (400–500 GB—verify size carefully so you never delete <code>EFI</code> or <code>WinRE</code>!), right-click &rarr; <strong>Delete Volume</strong> &rarr; it turns back into black <strong>Unallocated</strong> space right beside <code>C:\</code>.</li>
+                <li>Right-click <strong><code>Windows (C:)</code></strong> &rarr; click <strong>Extend Volume...</strong> to absorb all reclaimed space seamlessly back into <code>C:\</code>!</li>
+                <li><em>(Optional ESP cleanup)</em> From Windows Admin CMD, run <code>mountvol S: /S</code>, delete <code>S:\EFI\ubuntu</code> (and <code>S:\EFI\zorin</code> if present), then run <code>mountvol S: /D</code> so your EFI partition is 100% stock Windows 11 again.</li>
+              </ol>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: SHARED KAGGLE PARITY STACK -->
+    <section id="sec-stack">
+      <div class="section-head">
+        <span class="section-badge">2</span>
+        <h2>Shared Kaggle-Parity Stack Setup (Identical on Track A &amp; Track B)</h2>
+        <span class="eta">~30 min (+ downloads)</span>
+      </div>
+
+      <div class="callout info">
+        <div class="callout-title">Two-Interpreter Architecture — Don't Mix Them Up!</div>
+        <p>
+          <strong>Host Orchestrator Venv = Python <code>3.12.13</code></strong> (Wheelhouse V31 ships 9 <code>cp312</code> binary wheels that fail on Python 3.13!).<br>
+          <strong>Docker Sandbox Container = Python <code>3.13-slim</code></strong> (runs the target repos &amp; <code>pytest</code> identically to Kaggle's Container A/B).
+        </p>
+      </div>
+
+      <div class="step-card" data-step="s1-py312" data-scope="both">
+        <div class="step-header">
+          <input type="checkbox" class="step-check" id="chk-s1">
+          <div class="step-title-wrap">
+            <div class="step-id">Step 2.1 • Host Environment</div>
+            <label for="chk-s1" class="step-title">Install <code>uv</code>, Pin Python <code>3.12.13</code>, Pull Wheelhouse V31 &amp; Install <code>gemma4-swe-kit</code></label>
+          </div>
+          <span class="step-time">10 min</span>
+        </div>
+        <div class="step-body">
+          <p>First copy your project repo (or clone <code>gemma4-swe-kit</code>) and Kaggle <code>kaggle.json</code> into Linux, then create the pinned <code>3.12.13</code> environment:</p>
+          <div class="code-block">
+            <div class="code-bar"><span>Linux Terminal (WSL2 or Zorin OS 18)</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><code># 1. Install uv &amp; create exact Python 3.12.13 venv
+curl -LsSf https://astral.sh/uv/install.sh | sh
+source ~/.local/bin/env
+uv python install 3.12.13
+uv venv --python 3.12.13 ~/g4/venv312
+source ~/g4/venv312/bin/activate
+python --version   # Must print: Python 3.12.13
+
+# 2. Install Kaggle + Hugging Face CLIs
+pip install -U pip kaggle huggingface_hub pyyaml
+
+# 3. Configure Kaggle API key (place your kaggle.json into ~/.kaggle/)
+mkdir -p ~/.kaggle &amp;&amp; chmod 700 ~/.kaggle
+# cp /path/to/kaggle.json ~/.kaggle/kaggle.json &amp;&amp; chmod 600 ~/.kaggle/kaggle.json
+
+# 4. Download Competition Wheelhouse V31 &amp; Public Data Package (skip if copied from USB/Windows)
+kaggle datasets download -d metric/gemma-4-developer-agent-wheelhouse -p ~/g4/wheelhouse_v31 --unzip
+kaggle competitions download -c gemma-4-developer-agent -p ~/g4/data
+
+# 5. Install exact pinned Kaggle scorer packages from Wheelhouse V31
+pip install --no-index --find-links ~/g4/wheelhouse_v31 \
+  vllm==0.19.1 swegemma==0.2.11 adk-submission==0.2.13 google-adk==1.36.1 transformers==5.13.1
+
+# 6. Install gemma4-swe-kit (copy from your repo or clone fresh)
+# If copying from Windows workspace on Track A:
+# cp -r /mnt/d/stuff/ai-misc/_bsh2026/vscode_project01/101e-Kaggle-antigrav/tools/gemma4-swe-kit ~/g4/tools/
+# cp -r /mnt/d/stuff/ai-misc/_bsh2026/vscode_project01/101e-Kaggle-antigrav/deliverables/2026-11-20_BCF_Gemma4_Winning_Design/v2 ~/g4/submissions/bcf_v2
+# Or clone directly:
+# git clone https://github.com/damsolanke/gemma4-swe-kit.git ~/g4/tools/gemma4-swe-kit
+pip install -e ~/g4/tools/gemma4-swe-kit --no-deps</code></pre>
+          </div>
+          <p>Persist the RTX 5090 Blackwell (<code>sm_120</code>) environment guards so every new shell has them ready:</p>
+          <div class="code-block">
+            <div class="code-bar"><span>Add Blackwell sm_120 Guards to ~/.bashrc</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><code>cat &lt;&lt;'EOF' &gt;&gt; ~/.bashrc
+
+# PowerSpec G914 RTX 5090 (Blackwell sm_120) + Kaggle Parity Defaults
+export TORCH_CUDA_ARCH_LIST="12.0"
+export FLASHINFER_CUDA_ARCH_LIST="12.0f"
+export VLLM_ATTENTION_BACKEND="FLASHINFER"
+alias g4env="source ~/g4/venv312/bin/activate &amp;&amp; cd ~/g4"
+EOF
+source ~/.bashrc</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-card" data-step="s2-assets" data-scope="both">
+        <div class="step-header">
+          <input type="checkbox" class="step-check" id="chk-s2">
+          <div class="step-title-wrap">
+            <div class="step-id">Step 2.2 • Chat Template &amp; Parser Fingerprint</div>
+            <label for="chk-s2" class="step-title">Authenticate Hugging Face &amp; Pin Official Gemma 4 Template + vLLM Parser</label>
+          </div>
+          <span class="step-time">5 min</span>
+        </div>
+        <div class="step-body">
+          <p><strong>Critical Pin:</strong> Always pin the <em>original</em> Gemma 4 template revision (<code>e3dacad5f03b852209f5ce18e44094fc80120037</code>)—<strong>NOT</strong> the July 2026 refresh, which breaks mixed text + tool-call turn boundaries (<code>#744844</code>):</p>
+          <div class="code-block">
+            <div class="code-bar"><span>Linux Terminal (inside venv312)</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><code>source ~/g4/venv312/bin/activate
+hf auth login
+
+# Fetch official pinned template revision
+hf download google/gemma-4-31B-it-qat-w4a16-ct chat_template.jinja \
+  --revision e3dacad5f03b852209f5ce18e44094fc80120037 --local-dir ~/g4/assets
+
+g4kit-assets install-template ~/g4/assets/chat_template.jinja
+g4kit-assets extract-parser ~/g4/wheelhouse_v31/vllm-0.19.1-*.whl
+g4kit-assets check
+# Verify gemma4_tool_parser.py SHA-256 == 682b2152b76c031df9c58c3ffbb5b243945be5d8957ebdce00faef1b9de6b889</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-card" data-step="s3-vllm" data-scope="both">
+        <div class="step-header">
+          <input type="checkbox" class="step-check" id="chk-s3">
+          <div class="step-title-wrap">
+            <div class="step-id">Step 2.3 • Persistent Inference Daemon</div>
+            <label for="chk-s3" class="step-title">Launch Persistent <code>vllm serve</code> (31B Main or E4B Bonus) in <code>tmux</code></label>
+          </div>
+          <span class="step-time">5 min (+ model download)</span>
+        </div>
+        <div class="step-body">
+          <p>First extract the exact <code>--reasoning-config</code> argument emitted by Wheelhouse V31's <code>VllmServer</code> (without it, every task with <code>thinking_budget &gt; 0</code> crashes with HTTP 400!):</p>
+          <div class="code-block">
+            <div class="code-bar"><span>Dump Exact Scorer --reasoning-config (Run Once)</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><code>source ~/g4/venv312/bin/activate
+python -c "from adk_submission.server import VllmServer, VllmConfig; print(' '.join(VllmServer(VllmConfig(model='google/gemma-4-31B-it-qat-w4a16-ct', tensor_parallel_size=1, max_model_len=32768, reasoning_parser='gemma4', tool_call_parser='gemma4')).build_cmd()))" &gt; ~/g4/vllm_cmd.txt
+grep -o -- '--reasoning-config [^ ]*' ~/g4/vllm_cmd.txt</code></pre>
+          </div>
+
+          <p>Start a persistent <code>tmux</code> session so vLLM stays warm across dozens of prompt/config experiments (saves 30–60s cold boot every run!). Use <code>--gpu-memory-utilization 0.85</code> on Track A (WSL2) or <code>0.90</code> on Track B (Zorin OS 18):</p>
+          <div class="code-block">
+            <div class="code-bar"><span>31B Main Track Server (Run inside: tmux new -s vllm)</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><code>source ~/g4/venv312/bin/activate
+REASONING_ARG="$(grep -o -- '--reasoning-config [^ ]*' ~/g4/vllm_cmd.txt)"
+
+vllm serve google/gemma-4-31B-it-qat-w4a16-ct \
+  --served-model-name gemma-4-31b-it-qat-w4a16-ct \
+  --host 127.0.0.1 --port 8000 \
+  --tensor-parallel-size 1 \
+  --dtype bfloat16 \
+  --quantization compressed-tensors \
+  --attention-backend flashinfer \
+  --max-model-len 32768 \
+  --gpu-memory-utilization 0.85 \
+  --enable-prefix-caching \
+  --enable-auto-tool-choice \
+  --tool-call-parser gemma4 \
+  --reasoning-parser gemma4 \
+  --default-chat-template-kwargs '{"enable_thinking": true}' \
+  --no-scheduler-reserve-full-isl \
+  $REASONING_ARG</code></pre>
+          </div>
+
+          <details>
+            <summary>Show E4B Small-Model Bonus Server Command (Optional — $10,000 Track)</summary>
+            <div class="details-body">
+              <div class="code-block">
+                <div class="code-bar"><span>E4B Bonus Track Server (tmux new -s vllm-e4b)</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+                <pre><code>source ~/g4/venv312/bin/activate
+REASONING_ARG="$(grep -o -- '--reasoning-config [^ ]*' ~/g4/vllm_cmd.txt)"
+
+vllm serve google/gemma-4-E4B-it-qat-w4a16-ct \
+  --served-model-name gemma-4-e4b-it-qat-w4a16-ct \
+  --host 127.0.0.1 --port 8000 \
+  --tensor-parallel-size 1 \
+  --dtype bfloat16 \
+  --quantization compressed-tensors \
+  --attention-backend flashinfer \
+  --max-model-len 32768 \
+  --gpu-memory-utilization 0.60 \
+  --enable-prefix-caching \
+  --enable-auto-tool-choice \
+  --tool-call-parser gemma4 \
+  --reasoning-parser gemma4 \
+  --default-chat-template-kwargs '{"enable_thinking": true}' \
+  --no-scheduler-reserve-full-isl \
+  $REASONING_ARG</code></pre>
+              </div>
+            </div>
+          </details>
+          <p style="font-size:13px;color:var(--text-soft);">Detach from <code>tmux</code> without stopping vLLM by pressing <code>Ctrl+B</code> then <code>D</code>. Re-attach anytime with <code>tmux attach -t vllm</code>.</p>
+        </div>
+      </div>
+
+      <div class="step-card" data-step="s4-sandbox" data-scope="both">
+        <div class="step-header">
+          <input type="checkbox" class="step-check" id="chk-s4">
+          <div class="step-title-wrap">
+            <div class="step-id">Step 2.4 • Docker Python 3.13 Sandbox + C2/C3/C4 Local Calibration</div>
+            <label for="chk-s4" class="step-title">Extract Competition Data, Add Missing Test Wheels (with Shadow Guard) &amp; Build <code>swebench-sandbox:latest</code></label>
+          </div>
+          <span class="step-time">10–15 min</span>
+        </div>
+        <div class="step-body">
+          <p>Out of the box, public <code>wheels/</code> omits <code>h11</code>, <code>annotated-doc</code>, <code>inline-snapshot</code>, and <code>dirty-equals</code>, causing 34–56 public tasks to fail even on the gold patch. Run this one-shot C2 + C4 calibration script before building Docker (local-only—never goes into your Kaggle submission ZIP):</p>
+          <div class="code-block">
+            <div class="code-bar"><span>Extract Data + Download Tier A/B Wheels + Shadow Guard + Docker Build</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><code>cd ~/g4/data
+unzip -q -o gemma-4-developer-agent.zip
+
+# 1. Create Tier A (import-critical) + Tier B (test-collection closure) wheel list (C2)
+cat &lt;&lt;'EOF' &gt; ~/g4/wheels_extra.txt
+h11
+annotated-doc
+typing-inspection
+inline-snapshot
+dirty-equals
+python-multipart
+email-validator
+pyyaml
+pydantic-settings
+pydantic-extra-types
+ujson
+orjson
+PyJWT
+pwdlib
+uvicorn[standard]
+fastapi-cli
+greenlet
+blinker
+trio
+attrs
+pytest-httpbin
+trustme
+PySocks
+chardet
+passlib
+pytest-mock
+strawberry-graphql
+pytest==8.3.5
+EOF
+
+# 2. Download Python 3.13 manylinux wheels (needs internet once; offline forever after)
+source ~/g4/venv312/bin/activate
+pip download --only-binary=:all: --python-version 3.13 --platform manylinux2014_x86_64 \
+  -d ~/g4/wheels_extra -r ~/g4/wheels_extra.txt
+
+# 3. C4: Download Pygments 2.17.2 into a SEPARATE side folder for rich_3296 ANSI calibration
+pip download --only-binary=:all: --python-version 3.13 --platform manylinux2014_x86_64 \
+  --no-deps -d ~/g4/wheels_pygments Pygments==2.17.2
+
+# 4. MANDATORY SHADOW GUARD: Remove any extra wheel whose normalized package name
+#    already exists in competition wheels/ so official pydantic/starlette stay authoritative!
+python3 - &lt;&lt;'PY_EOF'
+import pathlib, re
+def norm(whl):
+    return re.sub(r"[-_.]+", "-", whl.name.split("-")[0]).lower()
+comp_dir = pathlib.Path.home() / "g4/data/wheels"
+extra_dir = pathlib.Path.home() / "g4/wheels_extra"
+comp_pkgs = {norm(p) for p in comp_dir.glob("*.whl")}
+removed = 0
+for w in list(extra_dir.glob("*.whl")):
+    if norm(w) in comp_pkgs:
+        w.unlink()
+        removed += 1
+print(f"Shadow guard removed {removed} overlapping wheels; kept {len(list(extra_dir.glob('*.whl')))} safe extra wheels.")
+PY_EOF
+
+# 5. Copy safe supplemental wheels into Docker build context &amp; build Python 3.13 sandbox image
+cp -n ~/g4/wheels_extra/*.whl ~/g4/data/wheels/
+cd ~/g4/data
+docker build -f docker/Dockerfile.public -t swebench-sandbox:latest .</code></pre>
+          </div>
+          <div class="callout warn">
+            <div class="callout-title">C3 Note — Starlette &amp; Pytest Constraint Pins (57 FastAPI Tasks)</div>
+            <p>
+              The stock <code>sandbox/setup.py</code> strips version specifiers and installs the newest wheel (Starlette 1.6.0 / pytest 9.1.1), breaking 57 FastAPI snapshots that declare <code>starlette&lt;0.51</code>. For maximum local gold-oracle yield (~112–117 valid tasks vs ~68–74 raw), apply the C3 constraint-aware <code>setup_local.py</code> patch documented in <code>input/kagglecomp/intel_20261006/03_Local_Eval_Change_Sheet_Finding6.md</code> (using <code>pip._vendor.packaging</code> against <code>/wheels</code>).
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: 5-GATE PARITY VERIFICATION -->
+    <section id="sec-gates">
+      <div class="section-head">
+        <span class="section-badge">3</span>
+        <h2>Mandatory 5-Gate Parity Verification Suite</h2>
+        <span class="eta">~5 min</span>
+      </div>
+      <p>Run all five gates <strong>before</strong> executing any benchmark. Passing G1–G5 guarantees your local RTX 5090 behaves like Kaggle's 4&times; L4 scorer on thinking caps, reasoning retention, context overflow wipes, Python 3.13 isolation, and ADK plumbing.</p>
+
+      <div class="step-card" data-step="g1-g4" data-scope="both">
+        <div class="step-header">
+          <input type="checkbox" class="step-check" id="chk-g14">
+          <div class="step-title-wrap">
+            <div class="step-id">Gates G1 – G4 • Automated One-Shot Parity Check</div>
+            <label for="chk-g14" class="step-title">Verify Thinking Budget (G1), Parser/Template (G2), 32K HTTP 400 Overflow (G3) &amp; Py 3.13 Air-Gap Sandbox (G4)</label>
+          </div>
+          <span class="step-time">2 min</span>
+        </div>
+        <div class="step-body">
+          <div class="code-block">
+            <div class="code-bar"><span>Run Gates G1–G4 (with vLLM running on 127.0.0.1:8000)</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><code>source ~/g4/venv312/bin/activate
+
+echo "=== GATE G1: Thinking Budget Preflight (Expect HTTP 200 + reasoning &lt;= 64 tok) ==="
+curl -s -w "\nHTTP_STATUS:%{http_code}\n" http://127.0.0.1:8000/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{"model":"gemma-4-31b-it-qat-w4a16-ct","messages":[{"role":"user","content":"Count 1 to 5."}],"max_tokens":128,"extra_body":{"thinking_token_budget":64}}' | head -c 600
+echo ""
+
+echo "=== GATE G2: Pinned Template, Parser SHA-256 &amp; adk_submission Version ==="
+g4kit-assets check
+python -c "import adk_submission, swegemma, google.adk, vllm; print('adk_submission:', adk_submission.__version__, 'vllm:', vllm.__version__)"
+
+echo "=== GATE G3: Context Overflow HTTP 400 Check (29K prompt + 4096 max_tokens &gt; 32768) ==="
+python - &lt;&lt;'PY_EOF'
+import json, urllib.request, urllib.error
+payload = {
+    "model": "gemma-4-31b-it-qat-w4a16-ct",
+    "messages": [{"role": "user", "content": "hello " * 29500}],
+    "max_tokens": 4096,
+}
+req = urllib.request.Request(
+    "http://127.0.0.1:8000/v1/chat/completions",
+    data=json.dumps(payload).encode(),
+    headers={"Content-Type": "application/json"},
+)
+try:
+    urllib.request.urlopen(req, timeout=30)
+    print("FAIL: Expected HTTP 400, got 200!")
+except urllib.error.HTTPError as e:
+    print(f"PASS (if 400): HTTP {e.code} -> {e.read().decode()[:160]}")
+PY_EOF
+
+echo "=== GATE G4: Docker Python 3.13 + VERIFY_X509_STRICT + C2 Wheels + Air-Gap ==="
+docker run --rm --memory=4g --cpus=2 --network=none swebench-sandbox:latest python3 -c \
+  "import sys, ssl, h11, annotated_doc, inline_snapshot, dirty_equals; \
+   print('PASS Py:', sys.version.split()[0], 'X509_STRICT:', bool(ssl.create_default_context().verify_flags &amp; ssl.VERIFY_X509_STRICT))"</code></pre>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>Gate</th><th>Required Pass Output</th><th>If It Fails</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><strong>G1</strong></td><td><code>HTTP_STATUS:200</code> with non-empty <code>reasoning</code> field</td><td>Restart vLLM with exact <code>--reasoning-config</code> from <code>~/g4/vllm_cmd.txt</code></td></tr>
+                <tr><td><strong>G2</strong></td><td>Original rev template + parser SHA <code>682b2152...</code> + <code>adk_submission 0.2.13</code></td><td>Re-run Step 2.2; never use July 2026 template refresh</td></tr>
+                <tr><td><strong>G3</strong></td><td><code>PASS (if 400): HTTP 400</code> before generation</td><td>Verify vLLM started with <code>--max-model-len 32768</code></td></tr>
+                <tr><td><strong>G4</strong></td><td><code>PASS Py: 3.13.x X509_STRICT: True</code>, zero <code>ImportError</code></td><td>Re-run Step 2.4 wheel download + <code>docker build</code></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-card" data-step="g5-smoke" data-scope="both">
+        <div class="step-header">
+          <input type="checkbox" class="step-check" id="chk-g5">
+          <div class="step-title-wrap">
+            <div class="step-id">Gate G5 • Zero-GPU End-to-End Harness Smoke</div>
+            <label for="chk-g5" class="step-title">Run <code>g4kit-fake-llm</code> Through Real ADK Harness &amp; Docker Sandbox</label>
+          </div>
+          <span class="step-time">45 sec</span>
+        </div>
+        <div class="step-body">
+          <p>Validates your submission YAML compilation, <code>eval_config.yaml</code> budgets, ADK compaction wiring (<code>14336</code> tokens), single-level tool JSON encoding, and clean diff extraction in &lt;45 seconds with zero GPU cost:</p>
+          <div class="code-block">
+            <div class="code-bar"><span>Zero-GPU Harness Plumbing Test</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><code>source ~/g4/venv312/bin/activate
+g4kit-fake-llm --port 11450 &amp;
+FAKE_PID=$!
+sleep 2
+
+g4kit-harness run \
+  --arm bcf_v2m=~/g4/submissions/bcf_v2/submission_31b_monolith \
+  --tasks ~/g4/data/tasks.jsonl \
+  --snapshots ~/g4/data/snapshots \
+  --n 1 \
+  --sandbox docker \
+  --image swebench-sandbox:latest \
+  --compaction-interval 5 \
+  --compaction-threshold 14336 \
+  --api-base http://127.0.0.1:11450/v1 \
+  --out ~/g4/runs/smoke_gate5
+
+kill -INT $FAKE_PID   # Prints per-agent sampling params &amp; tool-encoding verification!</code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: FIRST BENCHMARK & SCORING -->
+    <section id="sec-eval">
+      <div class="section-head">
+        <span class="section-badge">4</span>
+        <h2>Up &amp; Running: First Calibrated Local Benchmark &amp; Fast Iteration</h2>
+        <span class="eta">15–45 min</span>
+      </div>
+
+      <div class="callout danger">
+        <div class="callout-title">Submission Safety Gate — Never Submit BCF v1!</div>
+        <p>
+          <strong>DO NOT submit <code>v1/submission_*.zip</code></strong> (contains 4 verified P0/P1 blockers: <code>script_path</code> vs <code>file_path</code>, <code>max_output_tokens: 8192</code> HTTP 400 risk, fenced shell blocks, and exposed <code>write_file</code>).
+          Start with <strong><code>v2/submission_31b_monolith</code></strong> and <strong><code>v2/submission_e4b_monolith</code></strong> (19/22 PASS, 0 FAIL—zero skill risk, zero array-arg parser OOM risk, &lt;11.12h worst-case cap), and apply the 6 small <code>v2.1</code> hardening fixes (G1–G6 in <code>05_Task5_...md</code>) before banking your final slots.
+        </p>
+      </div>
+
+      <div class="step-card" data-step="e1-val" data-scope="both">
+        <div class="step-header">
+          <input type="checkbox" class="step-check" id="chk-e1">
+          <div class="step-title-wrap">
+            <div class="step-id">Step 4.1 • Tier 0 Static Preflight (&lt;3 sec)</div>
+            <label for="chk-e1" class="step-title">Run BCF Validator &amp; Packaging Script Before Every Run or Upload</label>
+          </div>
+          <span class="step-time">&lt;10 sec</span>
+        </div>
+        <div class="step-body">
+          <div class="code-block">
+            <div class="code-bar"><span>Validate All 4 BCF v2 Bundles (ZIP hygiene, finite eval_config, zero fenced bash)</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><code>source ~/g4/venv312/bin/activate
+python ~/g4/submissions/bcf_v2/tools/validate_and_package_bcf_v2.py</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-card" data-step="e2-run" data-scope="both">
+        <div class="step-header">
+          <input type="checkbox" class="step-check" id="chk-e2">
+          <div class="step-title-wrap">
+            <div class="step-id">Step 4.2 • Tier 3 Paired Dev Evaluation (RTX 5090 Speed-Scaled!)</div>
+            <label for="chk-e2" class="step-title">Run Parity-Faithful Local A/B via <code>g4kit-harness run</code> (Never Raw <code>swegemma eval</code>!)</label>
+          </div>
+          <span class="step-time">15–40 min</span>
+        </div>
+        <div class="step-body">
+          <p>
+            <strong>Why <code>--time-scale 0.55</code>?</strong> Your RTX 5090 decodes 31B at <strong>55–61 tok/s</strong> vs. Kaggle 4&times; L4's <strong>25.5–35 tok/s</strong> (~2&times; faster). Scaling local <code>max_time_minutes</code> by <code>0.55</code> prevents fast local hardware from masking real Kaggle timeouts!
+          </p>
+          <div class="code-block">
+            <div class="code-bar"><span>Paired A/B Run: Monolith vs Skill on First 12 Tasks (Smoke Sweep)</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><code>source ~/g4/venv312/bin/activate
+g4kit-harness run \
+  --arm mono=~/g4/submissions/bcf_v2/submission_31b_monolith \
+  --arm skill=~/g4/submissions/bcf_v2/submission_31b \
+  --tasks ~/g4/data/tasks.jsonl \
+  --snapshots ~/g4/data/snapshots \
+  --n 12 \
+  --sandbox docker \
+  --image swebench-sandbox:latest \
+  --compaction-interval 5 \
+  --compaction-threshold 14336 \
+  --time-scale 0.55 \
+  --api-base http://127.0.0.1:8000/v1 \
+  --out ~/g4/runs/ab_smoke12</code></pre>
+          </div>
+          <div class="callout info">
+            <div class="callout-title">2&times;–3&times; Faster Local Sweeps — Use Multi-Process Sharding!</div>
+            <p>
+              Do <strong>not</strong> crank high <code>--concurrency</code> inside one <code>swegemma</code> process (synchronous <code>run_command</code> blocks the asyncio event loop). Instead, split your task ID file into 2–3 lists (<code>shard0.txt</code>, <code>shard1.txt</code>) and launch 2 separate <code>g4kit-harness run --ids $(cat shard0.txt)</code> processes in parallel against your single persistent vLLM server—leveraging your Ryzen 9 9950X3D's 16C/32T + 64 GB RAM while vLLM continuous-batches cleanly!
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-card" data-step="e3-score" data-scope="both">
+        <div class="step-header">
+          <input type="checkbox" class="step-check" id="chk-e3">
+          <div class="step-title-wrap">
+            <div class="step-id">Step 4.3 • Telemetry &amp; 4&times; L4 Scorer Runtime Projection</div>
+            <label for="chk-e3" class="step-title">Run <code>g4kit-scorer-time</code> &amp; <code>g4kit-log-stats</code> After Every Run</label>
+          </div>
+          <span class="step-time">1 min</span>
+        </div>
+        <div class="step-body">
+          <div class="code-block">
+            <div class="code-bar"><span>Project 120-Task 4x L4 Runtime &amp; Inspect Failure Funnel</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><code>source ~/g4/venv312/bin/activate
+
+# 1. Project Kaggle 4x L4 120-task hours (must stay &lt;= 10.8h safe / &lt;= 11.2h hard ceiling!)
+g4kit-scorer-time \
+  --results ~/g4/runs/ab_smoke12/results_mono.jsonl ~/g4/runs/ab_smoke12/results_skill.jsonl \
+  --cap-minutes 4.75 --tasks 120 --setup-minutes 0.75 --by-arm
+
+# 2. Quick local pass summary by arm
+python3 - &lt;&lt;'PY_EOF'
+import json, pathlib
+for p in sorted(pathlib.Path.home().glob("g4/runs/ab_smoke12/results_*.jsonl")):
+    rows = [json.loads(l) for l in p.read_text().splitlines() if l.strip()]
+    ok = sum(r["resolved"] for r in rows)
+    empty = sum(r.get("patch_chars", 0) == 0 for r in rows)
+    print(f"{p.name:28s} | resolved={ok:2d}/{len(rows):2d} ({100*ok/max(1,len(rows)):5.1f}%) | empty_patches={empty}")
+PY_EOF</code></pre>
+          </div>
+
+          <h3>Healthy KPI Targets &amp; Red-Flag Thresholds</h3>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>Metric</th><th>Healthy 31B Target</th><th>Healthy E4B Target</th><th>Red-Flag Action</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><strong>Projected 120-Task Hours (<code>H_120</code>)</strong></td><td><code>&lt;= 10.5h</code></td><td><code>&lt;= 9.5h</code></td><td><code>&gt; 11.2h</code> = <strong>DO NOT SUBMIT!</strong> Lower <code>thinking_budget</code> or <code>max_time_minutes</code></td></tr>
+                <tr><td><strong>HTTP 400 Context Overflows</strong></td><td><code>0</code></td><td><code>0</code></td><td>Even 1 overflow wipes a submitted patch! Keep <code>max_output_tokens: 4096</code></td></tr>
+                <tr><td><strong>Clean Winnable Solve (<code>R_win</code>)</strong></td><td><code>&gt;= 42%</code></td><td><code>&gt;= 18%</code></td><td>Inspect 12-bucket failure funnel (<code>04_Task4</code> §2.2)</td></tr>
+                <tr><td><strong>Locked Unseen Holdout (<code>Textualize/rich</code>)</strong></td><td><code>&gt;= 36%</code></td><td><code>&gt;= 15%</code></td><td>If dev rises while <code>rich</code> drops &rarr; overfitting! Reject arm</td></tr>
+                <tr><td><strong>Empty-Patch Rate</strong></td><td><code>&lt; 8%</code></td><td><code>&lt; 12%</code></td><td>Check early-quit rule (E4B) or read-only paralysis</td></tr>
+                <tr><td><strong>Broken-Code Edits (Phase 2 Exit 2)</strong></td><td><code>&lt; 3%</code></td><td><code>&lt; 6%</code></td><td>Enforce <code>py_compile</code> + submodule import + 1-strike <code>edit_file</code> circuit breaker</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <h3>5-Tier Fast-Iteration Loop (Test 10–15 Hypotheses/Day Locally)</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Tier</th><th>Tool / Split</th><th>RTX 5090 Time</th><th>Gate to Advance</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Tier 0</strong></td><td><code>validate_and_package_bcf_v2.py</code> + <code>g4kit-assets check</code></td><td><strong>&lt; 3 sec</strong></td><td>100% PASS (0 errors)</td></tr>
+            <tr><td><strong>Tier 1</strong></td><td><code>g4kit-fake-llm</code> + <code>g4kit-harness run --n 1</code></td><td><strong>15–45 sec</strong></td><td>Exact sampling params, compaction &amp; tool JSON</td></tr>
+            <tr><td><strong>Tier 2</strong></td><td><code>g4kit-replay</code> on logged failure states (<code>N=6</code>/context)</td><td><strong>3–8 min</strong></td><td>Paired sign test <code>p &lt; 0.05</code> on target failure mode</td></tr>
+            <tr><td><strong>Tier 3</strong></td><td>2&times; sharded <code>dev_30</code> (clean FastAPI/Requests)</td><td><strong>25–45 min</strong></td><td>0 overflows, <code>H_120 &lt;= 11.0h</code>, net <code>b - c &gt;= +2</code></td></tr>
+            <tr><td><strong>Tier 4</strong></td><td>2&times; paired repeats on locked <code>holdout_rich</code> (~38 tasks)</td><td><strong>1.5–2.5 hr</strong></td><td>Beats champion on BOTH dev &amp; holdout, <code>H_120 &lt;= 10.8h</code></td></tr>
+            <tr><td><strong>Tier 5</strong></td><td>Kaggle 4&times; L4 Live Submission (1 slot / ~24h)</td><td><strong>20–24 hr</strong></td><td>Bank verified winner before Nov 25 / Dec 2!</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECTION 5: INTERACTIVE CALCULATOR -->
+    <section id="sec-calc">
+      <div class="section-head">
+        <span class="section-badge">5</span>
+        <h2>Interactive Kaggle 4&times; L4 Time-Budget &amp; LB Estimator</h2>
+        <span class="eta">Live Offline Tool</span>
+      </div>
+      <div class="calc-box">
+        <p style="font-size:13.5px;color:var(--text-muted);margin-bottom:10px;">
+          Plug in your <code>eval_config.yaml</code> time cap and local RTX 5090 clean solve rate (<code>R_cap,sync</code>) to instantly check your worst-case 120-task Kaggle safety margin against the hard <strong>12.0-hour kill switch</strong> and project your expected 58-task Public LB lattice score.
+        </p>
+        <div class="calc-grid">
+          <div class="field">
+            <label for="c-cap">eval_config max_time_minutes</label>
+            <input type="number" id="c-cap" value="4.75" step="0.25" min="1" max="10" oninput="updateCalc()">
+          </div>
+          <div class="field">
+            <label for="c-tasks">Total Scorer Tasks (Pub + Priv)</label>
+            <input type="number" id="c-tasks" value="120" step="1" min="50" max="160" oninput="updateCalc()">
+          </div>
+          <div class="field">
+            <label for="c-setup">Setup Overhead / Task (min)</label>
+            <input type="number" id="c-setup" value="0.75" step="0.05" min="0.25" max="1.5" oninput="updateCalc()">
+          </div>
+          <div class="field">
+            <label for="c-local">Local Clean Time-Capped Solve (%)</label>
+            <input type="number" id="c-local" value="42" step="1" min="0" max="100" oninput="updateCalc()">
+          </div>
+        </div>
+        <div class="calc-out">
+          <div class="metric-card">
+            <div class="ml">Worst-Case 100%-Timeout Hours</div>
+            <div class="mv" id="out-worst">—</div>
+            <div class="ms" id="out-worst-note">Includes 7m vLLM load + setup</div>
+          </div>
+          <div class="metric-card">
+            <div class="ml">Recommended Local --time-scale</div>
+            <div class="mv ok" id="out-scale">0.50 – 0.55</div>
+            <div class="ms" id="out-local-cap">Equivalent local RTX 5090 cap</div>
+          </div>
+          <div class="metric-card">
+            <div class="ml">Expected Kaggle Public LB (58 tasks)</div>
+            <div class="mv" id="out-lb">—</div>
+            <div class="ms" id="out-lb-tasks">OOD shrinkage 0.55&times;–0.70&times;</div>
+          </div>
+          <div class="metric-card">
+            <div class="ml">95% Run-to-Run Noise Band</div>
+            <div class="mv" id="out-noise">&plusmn;0.05 – 0.07</div>
+            <div class="ms">&sigma; &approx; 1.5–2.0 tasks even at temp=0</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 6: TROUBLESHOOTING -->
+    <section id="sec-trouble">
+      <div class="section-head">
+        <span class="section-badge">6</span>
+        <h2>Emergency Troubleshooting Cheat Sheet</h2>
+        <span class="eta">Instant Fixes</span>
+      </div>
+      <input type="text" class="search-input" id="trouble-filter" placeholder="Filter by error text (e.g., reasoning_config, annotated_doc, No devices, 400, zorin, sm_120, on_startup)..." oninput="filterTrouble()">
+      <div class="table-wrap">
+        <table id="trouble-table">
+          <thead>
+            <tr><th style="width:28%;">Error / Symptom</th><th style="width:26%;">Exact Root Cause</th><th>Verified Fix</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>nvidia-smi: No devices were found</code> (Zorin OS 18)</td>
+              <td>Closed proprietary NVIDIA kernel module installed; Blackwell RTX 5090 requires open kernel modules</td>
+              <td>Run <code>sudo apt purge 'nvidia-*' &amp;&amp; sudo apt install -y nvidia-driver-580-open nvidia-utils-580 &amp;&amp; sudo reboot</code>. Enroll MOK if Secure Boot is on.</td>
+            </tr>
+            <tr>
+              <td><code>libcuda.so</code> error or <code>torch.cuda.is_available() == False</code> in WSL2</td>
+              <td>Linux NVIDIA driver accidentally installed inside WSL2, OR Blackwell Docker missing <code>/usr/lib/wsl</code> libs</td>
+              <td>Remove any Linux <code>nvidia-driver-*</code> inside WSL2; update Windows host driver (572+/580+). Run vLLM directly in WSL2 <code>venv312</code> (Docker only for sandboxes), or bind-mount <code>-v /usr/lib/wsl:/usr/lib/wsl:ro</code>.</td>
+            </tr>
+            <tr>
+              <td><code>cudaErrorNoKernelImageForDevice</code> or FlashAttn symbol error on RTX 5090</td>
+              <td>PyTorch/FlashAttention kernel missing Blackwell <code>sm_120</code> target</td>
+              <td>Set <code>export TORCH_CUDA_ARCH_LIST="12.0"</code>, <code>export FLASHINFER_CUDA_ARCH_LIST="12.0f"</code>, and pass <code>--attention-backend flashinfer</code> to <code>vllm serve</code>.</td>
+            </tr>
+            <tr>
+              <td><code>BadRequestError: thinking_token_budget is set but reasoning_config is not configured</code></td>
+              <td><code>vllm serve</code> started without Wheelhouse V31's <code>--reasoning-config</code> JSON flag</td>
+              <td>Dump exact flag from <code>VllmServer.build_cmd()</code> into <code>~/g4/vllm_cmd.txt</code> (Step 2.3) and pass both <code>--reasoning-config</code> and <code>--no-scheduler-reserve-full-isl</code>.</td>
+            </tr>
+            <tr>
+              <td>9 <code>cp312</code> wheel install failures when installing Wheelhouse V31</td>
+              <td>Host virtualenv created with Python 3.13 instead of pinned Python <code>3.12.13</code></td>
+              <td>Recreate host venv with <code>uv python install 3.12.13 &amp;&amp; uv venv --python 3.12.13 ~/g4/venv312</code>. Keep Python 3.13 strictly inside Docker!</td>
+            </tr>
+            <tr>
+              <td>Docker APT returns <code>404 Not Found</code> for <code>zorin</code> repo (Track B)</td>
+              <td>Docker's Ubuntu repo used <code>VERSION_CODENAME</code> instead of Ubuntu 24.04's <code>noble</code></td>
+              <td>Re-run Step 1.4 (Track B) using <code>${UBUNTU_CODENAME:-$VERSION_CODENAME}</code> so <code>/etc/apt/sources.list.d/docker.list</code> resolves to <code>noble</code>.</td>
+            </tr>
+            <tr>
+              <td>No Wi-Fi / Ethernet on first boot of Zorin OS 18 (MSI X870E)</td>
+              <td>Stock ISO missing latest Qualcomm Wi-Fi 7 (<code>ath12k</code>) / Realtek 5GbE firmware blobs</td>
+              <td>Plug in Android/iOS phone via USB Tethering, then run <code>sudo apt update &amp;&amp; sudo apt full-upgrade -y &amp;&amp; sudo apt install -y linux-firmware</code> and reboot.</td>
+            </tr>
+            <tr>
+              <td>Container setup takes 45–60s/task on WSL2</td>
+              <td>Snapshots, data, or run directories stored under <code>/mnt/c/</code> or <code>/mnt/d/</code> (9P bridge!)</td>
+              <td>Move <code>gemma-4-developer-agent.zip</code>, <code>snapshots/</code>, and <code>runs/</code> into native WSL2 ext4 (<code>~/g4/</code>). Speeds up I/O by 5&times;–15&times;!</td>
+            </tr>
+            <tr>
+              <td><code>ModuleNotFoundError: annotated_doc</code> or <code>h11</code> / <code>inline_snapshot</code></td>
+              <td>Public <code>wheels/</code> lacks Tier A/B test dependencies</td>
+              <td>Run Step 2.4 C2 supplemental wheel download + Shadow Guard + rebuild <code>swebench-sandbox:latest</code>.</td>
+            </tr>
+            <tr>
+              <td><code>TypeError: Router.__init__() got unexpected keyword 'on_startup'</code> (FastAPI)</td>
+              <td>Stock <code>sandbox/setup.py</code> stripped <code>starlette&lt;0.51</code> pin and installed Starlette 1.6.0</td>
+              <td>Apply C3 constraint-aware <code>setup_local.py</code> (see <code>03_Local_Eval_Change_Sheet_Finding6.md</code>) so compliant pre-baked Starlette wheels are chosen.</td>
+            </tr>
+            <tr>
+              <td><code>HTTP 400: maximum context length is 32768</code> (empty patch!)</td>
+              <td><code>prompt_tokens + max_output_tokens &gt; 32768</code> (e.g., <code>max_output_tokens: 8192</code> in v1!)</td>
+              <td>Keep <code>max_output_tokens: 4096</code> across all agents (gives 28,672 prompt headroom), cap <code>read_file</code> slices to &le;120 lines, and ban un-truncated <code>grep</code> outputs.</td>
+            </tr>
+            <tr>
+              <td><code>rich_3296</code> fails ANSI color assertion even on gold patch</td>
+              <td>Competition <code>wheels/</code> installs Pygments 2.21.0 instead of 2.17.2</td>
+              <td>Apply C4 side-folder pin (<code>~/g4/wheels_pygments/Pygments-2.17.2-*.whl</code>) in local evaluation oracle.</td>
+            </tr>
+            <tr>
+              <td>Windows 11 missing from Zorin GRUB boot menu after dual-boot install</td>
+              <td>Ubuntu 24.04 / Zorin OS 18 disables <code>os-prober</code> by default</td>
+              <td>In Zorin terminal: <code>sudo apt install -y os-prober</code>, set <code>GRUB_DISABLE_OS_PROBER=false</code> in <code>/etc/default/grub</code>, then run <code>sudo update-grub</code> (Section 1B Step D5).</td>
+            </tr>
+            <tr>
+              <td>BitLocker Recovery Key screen pops up when switching back to Windows 11 Pro</td>
+              <td>BitLocker was still active or only suspended for 1 reboot while GRUB changed UEFI boot chain</td>
+              <td>Enter your saved 48-digit recovery key to boot Windows, then disable BitLocker cleanly via Admin PowerShell <code>manage-bde -off C:</code> until dual-boot is stable (Section 1B Step D1).</td>
+            </tr>
+            <tr>
+              <td>Windows Disk Management only allows shrinking <code>C:\</code> by a few GB</td>
+              <td>Unmovable NTFS system files (<code>pagefile.sys</code>, <code>hiberfil.sys</code>, restore points) sit at the end of the drive</td>
+              <td>Run <code>powercfg.exe /hibernate off</code>, disable System Protection + set No Paging File temporarily, reboot, shrink <code>C:\</code>, then immediately re-enable System-Managed Paging File (Section 1B Step D2).</td>
+            </tr>
+            <tr>
+              <td>Clock jumps by timezone offset (e.g., 5 hours) when switching between Windows 11 &amp; Zorin OS 18</td>
+              <td>Windows reads hardware RTC clock as Local Time while Linux uses UTC</td>
+              <td>In Windows Admin CMD run: <code>reg add "HKLM\SYSTEM\CurrentControlSet\Control\TimeZoneInformation" /v RealTimeIsUniversal /t REG_DWORD /d 1 /f</code> (Section 1B Step D5).</td>
+            </tr>
+            <tr>
+              <td>PC boots straight into Windows 11 after a Windows Update (GRUB menu gone)</td>
+              <td>Windows Update re-promoted <code>Windows Boot Manager</code> to UEFI Boot Option #1</td>
+              <td>Press <code>Del</code> &rarr; MSI BIOS &rarr; <em>UEFI Hard Disk Drive BBS Priorities</em> &rarr; move <code>ubuntu</code>/<code>zorin</code> back to #1 (or press <code>F11</code> for one-time boot).</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECTION 7: PRE-DEADLINE LAUNCH SCHEDULE -->
+    <section id="sec-launch">
+      <div class="section-head">
+        <span class="section-badge">7</span>
+        <h2>Pre-Deadline Kaggle Execution Checklist (Nov 21 &rarr; Dec 2, 2026)</h2>
+        <span class="eta">1 Slot / ~24h</span>
+      </div>
+
+      <div class="step-card" data-step="l1-sched" data-scope="both">
+        <div class="step-header">
+          <input type="checkbox" class="step-check" id="chk-l1">
+          <div class="step-title-wrap">
+            <div class="step-id">Launch Plan • Protect Both Prize Tracks ($65K Main + $10K E4B Bonus)</div>
+            <label for="chk-l1" class="step-title">Bank Safe Monoliths Early, Canary Skill Locally First, Lock BOTH Final Slots Before Dec 2</label>
+          </div>
+          <span class="step-time">Critical Deadlines</span>
+        </div>
+        <div class="step-body">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>Date Window</th><th>Exact Action</th><th>Target Bundle</th><th>Risk Guard</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Nov 21 (Today)</strong></td>
+                  <td>Apply G1–G6 <code>v2.1</code> patches (~1–2h), pass Tier 0 + Gate G5 smoke, and <strong>submit 31B Monolith FIRST</strong> for early tie-breaker timestamp!</td>
+                  <td><code>submission_31b_monolith_v2.1.zip</code></td>
+                  <td>Zero skill/array-arg risk; 11.12h worst-case &lt; 12h</td>
+                </tr>
+                <tr>
+                  <td><strong>Nov 22</strong></td>
+                  <td>Once Day-1 31B scores (~20–24h), <strong>submit E4B Monolith SECOND</strong> to bank the $10,000 Small-Model Bonus track!</td>
+                  <td><code>submission_e4b_monolith_v2.1.zip</code></td>
+                  <td>10.10h worst-case &lt; 12h; verifies E4B alias end-to-end</td>
+                </tr>
+                <tr>
+                  <td><strong>Nov 23</strong></td>
+                  <td>Run paired local Tier 3/4 A/B on RTX 5090 (<code>dev_30</code> + locked <code>holdout_rich</code>): <code>v2.1_monolith</code> vs <code>v2.1_skill</code>. Canary <code>v2.1_skill</code> on Kaggle <em>only</em> if it clears &ge;+2 clean tasks on <code>holdout_rich</code>.</td>
+                  <td><code>submission_31b_v2.1.zip</code> <em>(conditional)</em></td>
+                  <td>If canary scores 0.00 or diverges, stay 100% Monolith</td>
+                </tr>
+                <tr>
+                  <td><strong>Before Nov 25 23:59 UTC</strong></td>
+                  <td>Verify <strong>both</strong> Track 1 (31B) and Track 2 (E4B) Kaggle submission notebooks exist with clean scored runs before <code>kernelsPublishingDisabledDeadline</code>!</td>
+                  <td>Both 31B &amp; E4B notebooks</td>
+                  <td>Protects against post-Nov 25 notebook freeze</td>
+                </tr>
+                <tr>
+                  <td><strong>Nov 26 – Dec 1</strong></td>
+                  <td>Iterate locally on RTX 5090 via Tier 2 (<code>g4kit-replay</code>) + Tier 4 (2&times; paired <code>dev_30</code> + <code>holdout_rich</code>) tuning <code>thinking_budget</code>, <code>temp</code>, and <code>max_tool_calls</code>. Submit only clear Tier 4 winners.</td>
+                  <td>Validated <code>v2.2</code> / <code>v2.3</code></td>
+                  <td>Never submit if projected <code>H_120 &gt; 11.2h</code> or overflows &gt; 0</td>
+                </tr>
+                <tr>
+                  <td><strong>Before Dec 2 23:59 UTC</strong></td>
+                  <td>Explicitly check <strong>BOTH Final Submission Selection boxes</strong>: <strong>Slot 1 = Best 31B</strong> ($65,000 Main Track) AND <strong>Slot 2 = Best E4B</strong> ($10,000 Small-Model Bonus — mandatory!).</td>
+                  <td>Top 31B + Top E4B</td>
+                  <td>Private LB uses the better of your 2 slots; Slot 2 unlocks $10K Bonus</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer style="margin-top:40px;padding-top:16px;border-top:1px solid var(--border);font-size:12.5px;color:var(--text-soft);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+      <span>Portable Offline User Guide • Generated 2026-11-21 from BCF Research Deliverables (Tasks 1–5)</span>
+      <span>Zero external CDN dependencies • Progress auto-saved locally in browser storage</span>
+    </footer>
+  </main>
+</div>
+
+<script>
+(function() {
+  const STORE_KEY = "g914_parity_guide_v1";
+  let state = { theme: "light", track: "a", checks: {} };
+
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORE_KEY) || "null");
+    if (saved && typeof saved === "object") {
+      state = Object.assign(state, saved);
+      if (!state.checks || typeof state.checks !== "object") state.checks = {};
+    }
+  } catch (e) { /* file:// storage may be restricted in some strict browsers */ }
+
+  function saveState() {
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {}
+  }
+
+  function applyTheme(theme) {
+    state.theme = theme === "dark" ? "dark" : "light";
+    document.documentElement.setAttribute("data-theme", state.theme);
+    const btn = document.getElementById("theme-btn");
+    if (btn) btn.textContent = state.theme === "dark" ? "Light Mode" : "Dark Mode";
+    saveState();
+  }
+
+  window.toggleTheme = function() {
+    applyTheme(state.theme === "dark" ? "light" : "dark");
+  };
+
+  window.selectTrack = function(track) {
+    state.track = track === "b" ? "b" : "a";
+    document.getElementById("panel-a").classList.toggle("active", state.track === "a");
+    document.getElementById("panel-b").classList.toggle("active", state.track === "b");
+    document.getElementById("tab-track-a").classList.toggle("active", state.track === "a");
+    document.getElementById("tab-track-b").classList.toggle("active", state.track === "b");
+    document.getElementById("sb-track-a").classList.toggle("active", state.track === "a");
+    document.getElementById("sb-track-b").classList.toggle("active", state.track === "b");
+    const eta = document.getElementById("track-eta");
+    if (eta) eta.textContent = state.track === "a" ? "Track A: ~30 min" : "Track B: ~60 min";
+    const lbl = document.getElementById("prog-track-label");
+    if (lbl) lbl.textContent = state.track === "a" ? "Track A (WSL2) Active" : "Track B (Zorin 18) Active";
+    saveState();
+    updateProgress();
+  };
+
+  function updateProgress() {
+    const cards = Array.from(document.querySelectorAll(".step-card[data-step]"));
+    let total = 0, done = 0;
+    cards.forEach(function(card) {
+      const scope = card.getAttribute("data-scope") || "both";
+      const id = card.getAttribute("data-step");
+      const cb = card.querySelector(".step-check");
+      const isChecked = !!state.checks[id];
+      if (cb) cb.checked = isChecked;
+      card.classList.toggle("done", isChecked);
+      if (scope === "both" || scope === state.track) {
+        total++;
+        if (isChecked) done++;
+      }
+    });
+    const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+    const pt = document.getElementById("prog-text");
+    const pf = document.getElementById("prog-fill");
+    const mp = document.getElementById("mob-pct");
+    if (pt) pt.textContent = done + " / " + total + " (" + pct + "%)";
+    if (pf) pf.style.width = pct + "%";
+    if (mp) mp.textContent = pct + "% Done";
+  }
+
+  window.resetProgress = function() {
+    if (!confirm("Reset all completed setup checkboxes?")) return;
+    state.checks = {};
+    saveState();
+    updateProgress();
+  };
+
+  window.copyCode = function(btn) {
+    const block = btn.closest(".code-block");
+    if (!block) return;
+    const code = block.querySelector("pre code");
+    if (!code) return;
+    const text = code.innerText || code.textContent || "";
+
+    function markCopied() {
+      const orig = btn.textContent;
+      btn.textContent = "Copied!";
+      btn.classList.add("copied");
+      setTimeout(function() {
+        btn.textContent = orig;
+        btn.classList.remove("copied");
+      }, 1500);
+    }
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(markCopied).catch(function() {
+        fallbackCopy(text, markCopied);
+      });
+    } else {
+      fallbackCopy(text, markCopied);
+    }
+  };
+
+  function fallbackCopy(text, cb) {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.position = "fixed";
+    ta.style.left = "-9999px";
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand("copy"); cb(); } catch (e) {}
+    document.body.removeChild(ta);
+  }
+
+  window.filterTrouble = function() {
+    const q = (document.getElementById("trouble-filter").value || "").toLowerCase().trim();
+    const rows = document.querySelectorAll("#trouble-table tbody tr");
+    rows.forEach(function(tr) {
+      const txt = (tr.innerText || tr.textContent || "").toLowerCase();
+      tr.style.display = !q || txt.indexOf(q) !== -1 ? "" : "none";
+    });
+  };
+
+  window.updateCalc = function() {
+    const cap = parseFloat(document.getElementById("c-cap").value) || 4.75;
+    const tasks = parseFloat(document.getElementById("c-tasks").value) || 120;
+    const setup = parseFloat(document.getElementById("c-setup").value) || 0.75;
+    const localPct = Math.max(0, Math.min(100, parseFloat(document.getElementById("c-local").value) || 0));
+
+    // Worst-case 100% timeout + 7m cold vLLM load + per-task setup
+    const worstMin = 7.0 + tasks * (cap + setup);
+    const worstHrs = worstMin / 60.0;
+    const outW = document.getElementById("out-worst");
+    const outWN = document.getElementById("out-worst-note");
+    outW.textContent = worstHrs.toFixed(2) + " h";
+    outW.className = "mv " + (worstHrs <= 11.2 ? "ok" : (worstHrs <= 11.8 ? "warn" : "bad"));
+    if (worstHrs <= 11.2) {
+      outWN.textContent = "SAFE: Guaranteed under 12.0h hard kill!";
+    } else if (worstHrs <= 11.8) {
+      outWN.textContent = "TIGHT: Verify P95 via g4kit-scorer-time!";
+    } else {
+      outWN.textContent = "DANGER: >11.8h risks 12.0h Notebook Timeout (0.00)!";
+    }
+
+    const localCapMin = (cap * 0.55).toFixed(2);
+    document.getElementById("out-local-cap").textContent = "RTX 5090 cap = ~" + localCapMin + " min/task (@0.55x)";
+
+    // Expected Kaggle Public LB (58 tasks, floor quantization)
+    const rate = localPct / 100.0;
+    const lowTasks = Math.round(rate * 0.55 * 58);
+    const highTasks = Math.round(rate * 0.70 * 58);
+    const lowLB = (Math.floor((100 * lowTasks) / 58) / 100).toFixed(2);
+    const highLB = (Math.floor((100 * highTasks) / 58) / 100).toFixed(2);
+    document.getElementById("out-lb").textContent = lowLB + " – " + highLB;
+    document.getElementById("out-lb-tasks").textContent = lowTasks + "–" + highTasks + " / 58 tasks (floor quantized)";
+  };
+
+  // Wire checkboxes
+  document.querySelectorAll(".step-card[data-step]").forEach(function(card) {
+    const id = card.getAttribute("data-step");
+    const cb = card.querySelector(".step-check");
+    if (cb) {
+      cb.addEventListener("change", function() {
+        state.checks[id] = cb.checked;
+        saveState();
+        updateProgress();
+      });
+    }
+  });
+
+  // Init
+  applyTheme(state.theme);
+  selectTrack(state.track);
+  updateCalc();
+})();
+</script>
+</body>
+</html>

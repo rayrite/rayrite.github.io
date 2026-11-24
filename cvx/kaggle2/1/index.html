@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>07 - Setup, install and run guide</title>
+<style>
+:root {
+  --bg: #101418; --panel: #171d24; --ink: #dce3ea; --muted: #8b98a5;
+  --accent: #7ab0ff; --accent2: #ffb454; --ok: #7ad0a0; --bad: #ff8a8a;
+  --border: #26303a; --code-bg: #0c1013; --maxw: 110ch;
+}
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #f7f9fb; --panel: #ffffff; --ink: #1a2430; --muted: #5a6a7a;
+    --accent: #0a5fd0; --accent2: #b05a00; --ok: #0d7a40; --bad: #b02020;
+    --border: #d8e0e8; --code-bg: #eef2f6;
+  }
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 16px/1.65 "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+}
+header.top {
+  position: sticky; top: 0; z-index: 9; background: var(--panel);
+  border-bottom: 1px solid var(--border); padding: .55rem 1rem;
+  display: flex; flex-wrap: wrap; gap: .4rem .8rem; align-items: center;
+}
+header.top .brand { font-weight: 700; color: var(--accent); white-space: nowrap; }
+header.top nav { display: flex; flex-wrap: wrap; gap: .15rem; font-size: .82rem; }
+header.top nav a { color: var(--muted); text-decoration: none; padding: .18rem .5rem; border-radius: 6px; }
+header.top nav a:hover { color: var(--ink); background: var(--bg); }
+main { max-width: var(--maxw); margin: 0 auto; padding: 1.2rem 1.2rem 4rem; }
+h1 { font-size: 1.65rem; color: var(--accent); border-bottom: 2px solid var(--border); padding-bottom: .4rem; }
+h2 { font-size: 1.3rem; color: var(--accent); margin-top: 2.2rem; border-bottom: 1px solid var(--border); padding-bottom: .25rem; scroll-margin-top: 3.4rem; }
+h3 { font-size: 1.08rem; color: var(--accent2); margin-top: 1.6rem; scroll-margin-top: 3.4rem; }
+h4 { font-size: 1rem; color: var(--ink); margin-top: 1.3rem; }
+a { color: var(--accent); }
+code { font-family: "Cascadia Code", Consolas, "JetBrains Mono", monospace; font-size: .88em; background: var(--code-bg); border: 1px solid var(--border); border-radius: 4px; padding: .08em .35em; }
+pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px; padding: .8rem 1rem; overflow-x: auto; }
+pre code { background: none; border: none; padding: 0; font-size: .84rem; line-height: 1.5; }
+table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: .9rem; display: block; overflow-x: auto; }
+th, td { border: 1px solid var(--border); padding: .45rem .6rem; text-align: left; vertical-align: top; }
+th { background: var(--panel); color: var(--accent); position: sticky; top: 0; }
+tbody tr:nth-child(even) { background: color-mix(in srgb, var(--panel) 55%, var(--bg)); }
+blockquote { border-left: 3px solid var(--accent2); margin: 1rem 0; padding: .3rem 1rem; color: var(--muted); background: var(--panel); border-radius: 0 8px 8px 0; }
+hr { border: none; border-top: 1px solid var(--border); margin: 2.4rem 0; }
+footer { text-align: center; color: var(--muted); font-size: .8rem; padding: 1.5rem; border-top: 1px solid var(--border); }
+kbd { background: var(--panel); border: 1px solid var(--border); border-bottom-width: 2px; border-radius: 4px; padding: .05em .4em; font-size: .85em; font-family: inherit; }
+nav#TOC { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: .6rem 1rem .7rem; margin: 1rem 0 1.6rem; }
+nav#TOC::before { content: "Contents"; display: block; font-weight: 700; color: var(--accent); margin-bottom: .3rem; }
+nav#TOC ul { margin: 0; padding-left: 1.1rem; columns: 2; column-gap: 2.2rem; }
+nav#TOC ul ul { columns: 1; padding-left: .9rem; }
+nav#TOC li { break-inside: avoid; margin: .1rem 0; }
+nav#TOC a { color: var(--muted); text-decoration: none; }
+nav#TOC a:hover { color: var(--ink); }
+@media (max-width: 760px) {
+  main { padding: 1rem .7rem 3rem; font-size: 15px; }
+  h1 { font-size: 1.35rem; } h2 { font-size: 1.15rem; }
+  header.top nav { font-size: .75rem; }
+  nav#TOC ul { columns: 1; }
+}
+@media print {
+  header.top { position: static; } body { background: #fff; color: #000; }
+  pre, table { overflow: visible; } main { max-width: none; }
+  nav#TOC { break-after: page; }
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <span class="brand">07 - Setup, install and run guide</span>
+  <nav>
+    &lt;a href="00_README.md" title="00 README"&gt;00
+    README&lt;/a&gt;&lt;a
+    href="01_Exception_Handling_Traps_by_Error_Family.md" title="01
+    Exceptions"&gt;01 Exceptions&lt;/a&gt;&lt;a
+    href="02_Time_Bottlenecks_and_Tuning_Levers.md" title="02 Time and
+    levers"&gt;02 Time and levers&lt;/a&gt;&lt;a
+    href="03_Local_Kaggle_Parity_Plan.md" title="03 Parity plan"&gt;03
+    Parity plan&lt;/a&gt;&lt;a
+    href="04_Local_Scoring_and_Interpretation_Guide.md" title="04 Local
+    scoring"&gt;04 Local scoring&lt;/a&gt;&lt;a
+    href="05_Board_Issues_Graceful_Handling_Audit.md" title="05 Board
+    audit"&gt;05 Board audit&lt;/a&gt;&lt;a
+    href="06_Impact_Effort_Roadmap.md" title="06 Roadmap"&gt;06
+    Roadmap&lt;/a&gt;&lt;a href="07_Setup_and_Run_Guide.md" title="07
+    Setup and run"&gt;07 Setup and run&lt;/a&gt;
+  </nav>
+</header>
+<main>
+<ul>
+<li><a
+href="#task-7---setup-install-and-run-guide-the-local-test-harness-for-the-bcf-brain-on-a-powerspec-g914-with-official-submissions-for-the-main-and-the-bonus-track"
+id="toc-task-7---setup-install-and-run-guide-the-local-test-harness-for-the-bcf-brain-on-a-powerspec-g914-with-official-submissions-for-the-main-and-the-bonus-track">Task
+7 - Setup, install and run guide: the local test harness for the BCF
+brain on a PowerSpec G914, with official submissions for the main and
+the bonus track</a>
+<ul>
+<li><a href="#0-read-this-first" id="toc-0-read-this-first">0. Read this
+first</a></li>
+<li><a href="#1-the-pieces" id="toc-1-the-pieces">1. The pieces</a></li>
+<li><a href="#2-folder-layout-the-same-on-both-tracks"
+id="toc-2-folder-layout-the-same-on-both-tracks">2. Folder layout (the
+same on both tracks)</a></li>
+<li><a href="#3-track-b-zorin-os-181" id="toc-3-track-b-zorin-os-181">3.
+Track B: Zorin OS 18.1</a></li>
+<li><a href="#4-track-a-windows-11-pro-with-wsl2"
+id="toc-4-track-a-windows-11-pro-with-wsl2">4. Track A: Windows 11 Pro
+with WSL2</a></li>
+<li><a href="#5-start-the-model-server-both-tracks"
+id="toc-5-start-the-model-server-both-tracks">5. Start the model server
+(both tracks)</a></li>
+<li><a href="#6-first-run-the-smoke-panel"
+id="toc-6-first-run-the-smoke-panel">6. First run: the smoke
+panel</a></li>
+<li><a href="#7-panel-runs-and-comparisons"
+id="toc-7-panel-runs-and-comparisons">7. Panel runs and
+comparisons</a></li>
+<li><a href="#8-the-loop-change-build-validate"
+id="toc-8-the-loop-change-build-validate">8. The loop: change, build,
+validate</a></li>
+<li><a href="#9-prepare-a-submission" id="toc-9-prepare-a-submission">9.
+Prepare a submission</a></li>
+<li><a href="#10-submit-to-the-competition-the-main-track"
+id="toc-10-submit-to-the-competition-the-main-track">10. Submit to the
+competition: the main track</a></li>
+<li><a href="#11-submit-to-the-bonus-track-the-small-model-prize"
+id="toc-11-submit-to-the-bonus-track-the-small-model-prize">11. Submit
+to the bonus track: the small-model prize</a></li>
+<li><a href="#12-the-ledger" id="toc-12-the-ledger">12. The
+ledger</a></li>
+<li><a href="#13-acceptance-table" id="toc-13-acceptance-table">13.
+Acceptance table</a></li>
+<li><a href="#14-troubleshooting" id="toc-14-troubleshooting">14.
+Troubleshooting</a></li>
+<li><a href="#15-sources" id="toc-15-sources">15. Sources</a></li>
+</ul></li>
+</ul>
+<h1
+id="task-7---setup-install-and-run-guide-the-local-test-harness-for-the-bcf-brain-on-a-powerspec-g914-with-official-submissions-for-the-main-and-the-bonus-track">Task
+7 - Setup, install and run guide: the local test harness for the BCF
+brain on a PowerSpec G914, with official submissions for the main and
+the bonus track</h1>
+<p><strong>Prepared:</strong> 2026-11-24. <strong>Machine:</strong>
+PowerSpec G914 (AMD Ryzen 9 9950X3D, 16 cores and 32 threads; NVIDIA
+GeForce RTX 5090 with 32 GB; 64 GB DDR5-6000; 2 TB NVMe; AMD X870E;
+Windows 11 Pro as shipped). <strong>Two tracks:</strong> A, Windows 11
+Pro with WSL2; B, Zorin OS 18.1. <strong>Brain:</strong>
+<code>bcf-brain-patched/</code> in this package.</p>
+<hr />
+<h2 id="0-read-this-first">0. Read this first</h2>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Statement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>What you will have at the end</td>
+<td>One vLLM server of the exact competition build, the official
+harness, the 129 public tasks, a smoke panel and a ranking panel, the
+brain's build-and-validate loop, and a notebook that produces a valid
+<code>submission.zip</code></td>
+</tr>
+<tr>
+<td>What was executed for this document</td>
+<td>The brain's build, tests, official validation, replay and probes
+(Windows, Python 3.12.10); the Kaggle pages, the staff notebook, the
+wheelhouse metadata, and the vendor and documentation pages named in
+section 13</td>
+</tr>
+<tr>
+<td>What was <strong>not</strong> executed</td>
+<td>The install steps on a greenfield G914. They follow the official
+documentation of each tool and the staff Getting Started notebook; every
+command that this document could not run is marked "not run here". Run
+section 12's acceptance table once and you will know</td>
+</tr>
+<tr>
+<td>Time needed</td>
+<td>About half a day per track the first time, most of it downloads
+(21.9 GB of data, 17 to 18 GB of weights per model, 0.9 GB of
+wheels)</td>
+</tr>
+<tr>
+<td>The three things that break parity if skipped</td>
+<td>Python must be exactly 3.12.13 for the harness; the wheelhouse
+wheels must be installed with the notebook's two corrections; the eval
+must be run with the notebook's <code>EvalConfig</code> settings
+(<code>tools/run_panel.py</code>), not with the bare
+<code>swegemma eval</code> command</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="1-the-pieces">1. The pieces</h2>
+<table>
+<thead>
+<tr>
+<th>Piece</th>
+<th>Version</th>
+<th>Size</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Driver</td>
+<td>NVIDIA 580 or newer on Linux, 570.65 or newer on Windows; the same
+Windows driver serves WSL2</td>
+<td>-</td>
+<td>The distribution's package manager on Zorin; Windows Update or
+NVIDIA on Windows</td>
+</tr>
+<tr>
+<td>Python</td>
+<td>3.12.13 for the harness; 3.13 comes from the sandbox image</td>
+<td>-</td>
+<td><code>uv python install 3.12.13</code></td>
+</tr>
+<tr>
+<td>Serving stack</td>
+<td>vLLM 0.19.1, transformers 5.13.1, flashinfer 0.6.6,
+compressed-tensors 0.15.0.1 and 37 more wheels</td>
+<td>0.88 GB</td>
+<td>The public wheelhouse, version 31
+(<code>metric/gemma-4-developer-agent-wheelhouse</code>)</td>
+</tr>
+<tr>
+<td>PyTorch</td>
+<td>2.10.0 built for CUDA 12.8 (not in the wheelhouse; pre-installed in
+the Kaggle image)</td>
+<td>about 3 GB</td>
+<td><code>download.pytorch.org/whl/cu128</code></td>
+</tr>
+<tr>
+<td>Harness</td>
+<td>swegemma 0.2.11, adk-submission 0.2.13, adk-eval-core 0.1.0,
+google-adk 1.36.1</td>
+<td>in the wheelhouse</td>
+<td>same</td>
+</tr>
+<tr>
+<td>Tasks</td>
+<td>129 published tasks with snapshots, graphs, embeddings, test wheels
+and the sandbox Dockerfiles</td>
+<td>21.9 GB compressed</td>
+<td>The competition's Data page (rules must be accepted)</td>
+</tr>
+<tr>
+<td>Model</td>
+<td><code>gemma-4-31b-it-qat-w4a16-ct</code> (17 to 18 GB) and
+<code>gemma-4-e4b-it-qat-w4a16-ct</code> for the bonus track</td>
+<td>-</td>
+<td>Kaggle Models (<code>google/gemma-4</code>) or Hugging Face
+(<code>google</code>)</td>
+</tr>
+<tr>
+<td>Brain</td>
+<td><code>bcf-brain-patched/</code> in this package</td>
+<td>76 KB per bundle</td>
+<td>this package</td>
+</tr>
+<tr>
+<td>Container tools</td>
+<td>Docker Engine and the NVIDIA Container Toolkit (only for the Docker
+sandbox)</td>
+<td>-</td>
+<td><code>download.docker.com</code>, <code>nvidia.github.io</code></td>
+</tr>
+<tr>
+<td>Kaggle command line</td>
+<td>the <code>kaggle</code> package, with your API token</td>
+<td>-</td>
+<td><code>pypi.org/project/kaggle</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="2-folder-layout-the-same-on-both-tracks">2. Folder layout (the
+same on both tracks)</h2>
+<table>
+<thead>
+<tr>
+<th>Path inside Linux</th>
+<th>Holds</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>~/bcf/.venv</code></td>
+<td>the Python 3.12.13 environment with torch, vLLM and the
+wheelhouse</td>
+</tr>
+<tr>
+<td><code>~/bcf/models/&lt;model name&gt;</code></td>
+<td>the weights, one folder per model</td>
+</tr>
+<tr>
+<td><code>~/bcf/data/gemma-4-developer-agent/</code></td>
+<td>the unpacked data package: <code>tasks.jsonl</code>,
+<code>snapshots/</code>, <code>graphs/</code>, <code>embeddings/</code>,
+<code>wheels/</code>, <code>docker/</code>, <code>sandbox/</code>,
+<code>sample_submission/</code></td>
+</tr>
+<tr>
+<td><code>~/bcf/brain/</code></td>
+<td><code>bcf-brain-patched/</code> copied here, with <code>dist/</code>
+(the six bundles) and <code>tools/</code></td>
+</tr>
+<tr>
+<td><code>~/bcf/results/&lt;run name&gt;</code></td>
+<td>one folder per run</td>
+</tr>
+<tr>
+<td><code>~/bcf/submit/</code></td>
+<td>the bundle to submit and <code>submission.zip</code></td>
+</tr>
+</tbody>
+</table>
+<p>On Windows these paths are inside the WSL2 distribution's own file
+system (<code>\\wsl$\Ubuntu-24.04\home\&lt;user&gt;\bcf</code> from
+Windows), never under <code>/mnt/c</code> or <code>/mnt/d</code>:
+Microsoft's guidance is to keep project files in the Linux file system,
+and model weights read through <code>/mnt</code> load slowly. The 2 TB
+NVMe of the G914 holds both systems: about 120 GB for Windows and 80 GB
+for Zorin leaves roughly 800 GB each.</p>
+<hr />
+<h2 id="3-track-b-zorin-os-181">3. Track B: Zorin OS 18.1</h2>
+<p>Zorin OS 18.1 is the current version (released 2026-04-15): Ubuntu
+24.04 LTS underneath, Linux 6.17, supported to 2029. Everything written
+for Ubuntu 24.04 applies.</p>
+<h3 id="b1-install">B.1 Install</h3>
+<ol type="1">
+<li>Download the Zorin OS 18.1 Core 64-bit image and write it to a USB
+stick with balenaEtcher or Rufus (not run here).</li>
+<li>Boot the G914 from the stick. In the installer choose
+<strong>Install alongside Windows</strong> (or "Something else" to size
+the partitions), keep the Windows bootloader, and create your user.</li>
+<li>If the installer does not boot with the NVIDIA card visible, choose
+the "safe graphics" option on the boot menu; the driver is installed
+after the first boot.</li>
+<li>After the first login: open <strong>Software</strong> and install
+updates, then reboot.</li>
+</ol>
+<h3 id="b2-driver">B.2 Driver</h3>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt update</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install <span class="at">-y</span> linux-headers-<span class="va">$(</span><span class="fu">uname</span> <span class="at">-r</span><span class="va">)</span> build-essential dkms pciutils</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">ubuntu-drivers</span> devices                       <span class="co"># lists what can be installed</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> ubuntu-drivers install <span class="at">--gpgpu</span> nvidia:580</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> reboot</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="ex">nvidia-smi</span>                                   <span class="co"># expect: RTX 5090, driver 580 or newer, CUDA 12.8 or later</span></span></code></pre></div>
+<p>Use the package manager, never a <code>.run</code> installer: the
+packages carry signed modules that load with Secure Boot on. After every
+kernel update, check <code>nvidia-smi</code> before you start work; the
+module is rebuilt for the new kernel by DKMS and needs its headers.</p>
+<h3 id="b3-base-tools-uv-python-31213">B.3 Base tools, <code>uv</code>,
+Python 3.12.13</h3>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install <span class="at">-y</span> git curl unzip pigz patch protobuf-compiler</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-LsSf</span> https://astral.sh/uv/install.sh <span class="kw">|</span> <span class="fu">sh</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> <span class="st">&quot;</span><span class="va">$HOME</span><span class="st">/.local/bin/env&quot;</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> python install 3.12.13</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> <span class="at">--version</span> <span class="kw">&amp;&amp;</span> <span class="ex">uv</span> python list <span class="kw">|</span> <span class="fu">grep</span> 3.12.13</span></code></pre></div>
+<h3 id="b4-the-environment">B.4 The environment</h3>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/bcf <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> ~/bcf</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> venv <span class="at">--python</span> 3.12.13 .venv <span class="kw">&amp;&amp;</span> <span class="bu">source</span> .venv/bin/activate</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. PyTorch for Blackwell (sm_120 needs CUDA 12.8 or later)</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> pip install torch==2.10.0+cu128 torchaudio==2.10.0+cu128 torchvision==0.25.0+cu128 <span class="dt">\</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">--index-url</span> https://download.pytorch.org/whl/cu128</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. the dependencies of vLLM 0.19.1 (the pinned wheel comes from the wheelhouse in step 3)</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> pip install vllm==0.19.1</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. the competition wheelhouse, with the two corrections the staff notebook makes</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/bcf/wheelhouse <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> ~/bcf/wheelhouse</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-L</span> <span class="at">-o</span> wheelhouse.zip https://www.kaggle.com/api/v1/datasets/download/metric/gemma-4-developer-agent-wheelhouse</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="fu">unzip</span> <span class="at">-q</span> wheelhouse.zip</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. overlay the wheelhouse with the notebook&#39;s two corrections</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> ~/bcf/tools/install-wheelhouse.sh ~/bcf/ <span class="kw">&amp;&amp;</span> <span class="fu">bash</span> ~/bcf/install-wheelhouse.sh ~/bcf/wheelhouse</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-c</span> <span class="st">&quot;import torch, vllm, swegemma; print(torch.__version__, torch.cuda.get_device_capability(), vllm.__version__)&quot;</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co"># expect: 2.10.0+cu128 (12, 0) 0.19.1</span></span></code></pre></div>
+<p>The fourth step is the script
+<code>tools/install-wheelhouse.sh</code> of this package:</p>
+<p>It skips the cutlass wheels, restores the <code>+cu128</code> label
+in the file names, installs with
+<code>--no-deps --force-reinstall</code> through <code>uv pip</code> (or
+<code>pip</code> when <code>uv</code> is absent), and prints the
+versions it could import, with the expected values.</p>
+<p>Why the corrections: Kaggle's upload strips the <code>+</code> from
+wheel file names, so <code>torch</code>-compatible builds look like a
+different version; the notebook restores it (<code>'cu128'</code> to
+<code>'+cu128'</code>). If a <code>+cu128</code> build of
+<code>torchaudio</code> or <code>torchvision</code> is missing from the
+PyTorch index, install all three without the suffix from PyPI instead
+(that is the CUDA 12.9 build, which also supports Blackwell); do not mix
+indexes.</p>
+<h3 id="b5-the-data-package-and-the-model">B.5 The data package and the
+model</h3>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> tool install kaggle            <span class="co"># or: pip install kaggle</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/.kaggle <span class="kw">&amp;&amp;</span> <span class="fu">chmod</span> 700 ~/.kaggle</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># put your token file (from kaggle.com/settings, &quot;Create New Token&quot;) at ~/.kaggle/kaggle.json</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> 600 ~/.kaggle/kaggle.json</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/bcf/data <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> ~/bcf/data</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="ex">kaggle</span> competitions download <span class="at">-c</span> gemma-4-developer-agent      <span class="co"># 21.9 GB; the rules must be accepted first</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">unzip</span> <span class="at">-q</span> gemma-4-developer-agent.zip <span class="at">-d</span> ~/bcf/data</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> ~/bcf/data                      <span class="co"># tasks.jsonl snapshots graphs embeddings wheels docker sandbox sample_submission</span></span></code></pre></div>
+<p>For the weights, either download from the Kaggle model page
+(<code>google/gemma-4</code>, variant
+<code>gemma-4-31b-it-qat-w4a16-ct</code>, version 2) in the browser, or
+from Hugging Face:</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> pip install <span class="st">&quot;huggingface_hub[cli]&quot;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/bcf/models</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="ex">huggingface-cli</span> download google/gemma-4-31B-it-qat-w4a16-ct <span class="at">--local-dir</span> ~/bcf/models/gemma-4-31b-it-qat-w4a16-ct</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="ex">huggingface-cli</span> download google/gemma-4-E4B-it-qat-w4a16-ct <span class="at">--local-dir</span> ~/bcf/models/gemma-4-e4b-it-qat-w4a16-ct   <span class="co"># bonus track</span></span></code></pre></div>
+<p>The repository names on Hugging Face use capital letters
+(<code>31B</code>, <code>E4B</code>); the competition alias is
+lower-case. The folder name you choose is yours; what matters is the
+<code>--served-model-name</code> in section 5.</p>
+<h3
+id="b6-docker-for-the-scorer-like-sandbox-optional-about-20-minutes">B.6
+Docker for the scorer-like sandbox (optional, about 20 minutes)</h3>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Docker Engine from the Ubuntu 24.04 (&quot;noble&quot;) repository: Zorin&#39;s version id is 18, for which no repository exists</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt-get update <span class="kw">&amp;&amp;</span> <span class="fu">sudo</span> apt-get install <span class="at">-y</span> ca-certificates curl</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> install <span class="at">-m</span> 0755 <span class="at">-d</span> /etc/apt/keyrings</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> curl <span class="at">-fsSL</span> https://download.docker.com/linux/ubuntu/gpg <span class="at">-o</span> /etc/apt/keyrings/docker.asc</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> chmod a+r /etc/apt/keyrings/docker.asc</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">&quot;deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu noble stable&quot;</span> <span class="kw">|</span> <span class="fu">sudo</span> tee /etc/apt/sources.list.d/docker.list <span class="op">&gt;</span> /dev/null</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt-get update <span class="kw">&amp;&amp;</span> <span class="fu">sudo</span> apt-get install <span class="at">-y</span> docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> usermod <span class="at">-aG</span> docker <span class="st">&quot;</span><span class="va">$USER</span><span class="st">&quot;</span>          <span class="co"># log out and in afterwards</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co"># NVIDIA Container Toolkit</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fsSL</span> https://nvidia.github.io/libnvidia-container/gpgkey <span class="kw">|</span> <span class="fu">sudo</span> gpg <span class="at">--dearmor</span> <span class="at">-o</span> /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-s</span> <span class="at">-L</span> https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list <span class="kw">|</span> <span class="dt">\</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sed</span> <span class="st">&#39;s#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g&#39;</span> <span class="kw">|</span> <span class="dt">\</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sudo</span> tee /etc/apt/sources.list.d/nvidia-container-toolkit.list</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt-get update <span class="kw">&amp;&amp;</span> <span class="fu">sudo</span> apt-get install <span class="at">-y</span> nvidia-container-toolkit</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> nvidia-ctk runtime configure <span class="at">--runtime</span><span class="op">=</span>docker <span class="kw">&amp;&amp;</span> <span class="fu">sudo</span> systemctl restart docker</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">--rm</span> <span class="at">--gpus</span> all ubuntu nvidia-smi                   <span class="co"># expect the 5090</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="co"># the sandbox image, from the Dockerfile the competition ships (needs the network for its pip step)</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bcf/data <span class="kw">&amp;&amp;</span> <span class="ex">docker</span> build <span class="at">-f</span> docker/Dockerfile.sandbox <span class="at">-t</span> swebench-sandbox:latest docker</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">--rm</span> swebench-sandbox:latest python3 <span class="at">--version</span>      <span class="co"># 3.13.x: the interpreter the scorer&#39;s sandbox runs</span></span></code></pre></div>
+<p>Docker's documentation notes that derivative distributions such as
+Linux Mint are not officially supported; the <code>noble</code>
+repository works on Zorin 18.1 (not run here).</p>
+<h3 id="b7-the-brain">B.7 The brain</h3>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/bcf/brain <span class="kw">&amp;&amp;</span> <span class="fu">cp</span> <span class="at">-r</span> <span class="op">&lt;</span>this package<span class="op">&gt;</span>/bcf-brain-patched/. ~/bcf/brain/</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> <span class="at">-r</span> <span class="op">&lt;</span>this package<span class="op">&gt;</span>/tools/. ~/bcf/tools/ <span class="kw">&amp;&amp;</span> <span class="fu">mkdir</span> <span class="at">-p</span> ~/bcf/results ~/bcf/submit</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bcf/brain <span class="kw">&amp;&amp;</span> <span class="ex">python</span> build.py <span class="kw">&amp;&amp;</span> <span class="ex">python</span> <span class="at">-m</span> unittest tests.test_bcf      <span class="co"># about 90 seconds</span></span></code></pre></div>
+<hr />
+<h2 id="4-track-a-windows-11-pro-with-wsl2">4. Track A: Windows 11 Pro
+with WSL2</h2>
+<p>vLLM does not support Windows natively ("To run vLLM on Windows, you
+can use the Windows Subsystem for Linux (WSL) with a compatible Linux
+distribution", vLLM 0.19.1 installation page). Everything that touches
+the model runs inside WSL2. Building and validating the brain runs on
+Windows itself (that is how this package was validated).</p>
+<h3 id="a1-windows-side-powershell-as-administrator">A.1 Windows side
+(PowerShell as administrator)</h3>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode powershell"><code class="sourceCode powershell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>wsl <span class="op">--</span>install <span class="op">-</span>d Ubuntu-24<span class="op">.</span><span class="dv">04</span>          <span class="co"># enables the required features and installs Ubuntu 24.04</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># restart the machine, then create your Linux user name and password</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>wsl <span class="op">--</span>update                            <span class="co"># the fix for &quot;nvidia-smi works but CUDA is unavailable&quot; on 50-series cards</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>wsl <span class="op">--</span>version</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>nvidia-smi                              <span class="co"># on Windows: RTX 5090, driver 570.65 or newer</span></span></code></pre></div>
+<p>Create <code>C:\Users\&lt;you&gt;\.wslconfig</code> (not run here;
+values chosen for a 64 GB, 32-thread machine):</p>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode ini"><code class="sourceCode ini"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[wsl2]</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="dt">memory</span><span class="ot">=</span><span class="st">40GB</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="dt">processors</span><span class="ot">=</span><span class="dv">24</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="dt">swap</span><span class="ot">=</span><span class="st">16GB</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="dt">localhostForwarding</span><span class="ot">=</span><span class="kw">true</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="kw">[experimental]</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="dt">autoMemoryReclaim</span><span class="ot">=</span><span class="st">gradual</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="dt">sparseVhd</span><span class="ot">=</span><span class="kw">true</span></span></code></pre></div>
+<p>then <code>wsl --shutdown</code>. The defaults you are overriding:
+50% of the memory for the VM and all logical processors
+(<code>.wslconfig</code> documentation). <code>autoMemoryReclaim</code>
+is an experimental setting with the values <code>disabled</code>,
+<code>gradual</code> and <code>dropCache</code>.</p>
+<h3 id="a2-inside-ubuntu-the-wsl-shell">A.2 Inside Ubuntu (the
+<code>wsl</code> shell)</h3>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">/usr/lib/wsl/lib/nvidia-smi</span>               <span class="co"># WSL&#39;s own nvidia-smi: a limited feature set is normal</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt update <span class="kw">&amp;&amp;</span> <span class="fu">sudo</span> apt install <span class="at">-y</span> git curl unzip pigz patch protobuf-compiler build-essential</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">&#39;[boot]\nsystemd=true\n&#39;</span> <span class="kw">|</span> <span class="fu">sudo</span> tee /etc/wsl.conf      <span class="co"># needed only for Docker Engine inside the distro</span></span></code></pre></div>
+<p>then, from PowerShell, <code>wsl --shutdown</code> and open the shell
+again; verify with
+<code>systemctl list-unit-files --type=service</code>. Continue with
+<strong>B.3 to B.7</strong> exactly as on Zorin, with two
+differences:</p>
+<ul>
+<li><strong>Never install an NVIDIA driver inside the
+distribution.</strong> The Windows driver is "stubbed inside WSL as
+libcuda.so"; "Do not install the cuda-drivers or nvidia-open packages"
+(CUDA on WSL User Guide). A CUDA toolkit is not needed for the pip
+environment; if you compile something, install
+<code>cuda-toolkit-&lt;version&gt;</code> from the standard Ubuntu
+repository (the WSL-Ubuntu repository is deprecated).</li>
+<li><strong>Downloads may land on Windows, work must not.</strong>
+<code>D:\</code> is <code>/mnt/d</code> inside the distribution. Unpack
+the data package and the weights with
+<code>unzip ... -d ~/bcf/...</code> so that they end up on the Linux
+file system.</li>
+</ul>
+<h3 id="a3-docker-on-windows-one-of-two">A.3 Docker on Windows: one of
+two</h3>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>How</th>
+<th>When</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Docker Desktop</td>
+<td><code>winget install Docker.DockerDesktop</code>; Settings, General,
+"Use the WSL 2 based engine" on. The GPU passthrough is built in:
+<code>docker run --rm --gpus all ubuntu nvidia-smi</code></td>
+<td>The simplest</td>
+</tr>
+<tr>
+<td>Docker Engine inside the distribution</td>
+<td>The commands of B.6, unchanged, after <code>systemd</code> is
+enabled</td>
+<td>If you prefer one less layer; mutually exclusive with Docker
+Desktop's integration for that distribution</td>
+</tr>
+</tbody>
+</table>
+<h3 id="a4-windows-itself">A.4 Windows itself</h3>
+<p>The brain's loop runs natively: install Python 3.12 (or
+<code>uv</code>:
+<code>powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"</code>)
+and run <code>python build.py</code>,
+<code>python -m unittest tests.test_bcf</code> and the validator from
+PowerShell in <code>brain\</code>. To reach the folder from WSL:
+<code>/mnt/d/...</code>; to reach WSL from Windows:
+<code>\\wsl$\Ubuntu-24.04\home\&lt;user&gt;\bcf</code>. Turn off Git's
+automatic line-ending conversion for the brain
+(<code>git config --global core.autocrlf false</code>): the build
+refuses carriage returns.</p>
+<hr />
+<h2 id="5-start-the-model-server-both-tracks">5. Start the model server
+(both tracks)</h2>
+<p>Open a terminal, enter the environment, set the notebook's
+environment variables, and start vLLM with the notebook's settings for
+one GPU:</p>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> ~/bcf/.venv/bin/activate</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">HF_HOME</span><span class="op">=</span>~/bcf/hf <span class="va">TRANSFORMERS_OFFLINE</span><span class="op">=</span>1 <span class="va">TRANSFORMERS_NO_TF</span><span class="op">=</span>1 <span class="va">TRANSFORMERS_NO_FLAX</span><span class="op">=</span>1 <span class="dt">\</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>       <span class="va">VLLM_NO_USAGE_STATS</span><span class="op">=</span>1 <span class="va">VLLM_WORKER_MULTIPROC_METHOD</span><span class="op">=</span>spawn <span class="va">VLLM_ENGINE_READY_TIMEOUT_S</span><span class="op">=</span>1200 <span class="dt">\</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>       <span class="va">VLLM_MEMORY_PROFILER_ESTIMATE_CUDAGRAPHS</span><span class="op">=</span>1 <span class="va">PYTORCH_CUDA_ALLOC_CONF</span><span class="op">=</span>expandable_segments:True <span class="dt">\</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>       <span class="va">NCCL_DEBUG</span><span class="op">=</span>WARN <span class="va">LITELLM_LOCAL_MODEL_COST_MAP</span><span class="op">=</span>True <span class="va">LITELLM_TELEMETRY</span><span class="op">=</span>False <span class="va">OTEL_SDK_DISABLED</span><span class="op">=</span>true</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="ex">vllm</span> serve ~/bcf/models/gemma-4-31b-it-qat-w4a16-ct <span class="dt">\</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">--served-model-name</span> gemma-4-31b-it-qat-w4a16-ct <span class="dt">\</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">--host</span> 127.0.0.1 <span class="at">--port</span> 8000 <span class="dt">\</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">--max-model-len</span> 32768 <span class="at">--dtype</span> bfloat16 <span class="at">--gpu-memory-utilization</span> 0.90 <span class="dt">\</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">--enable-auto-tool-choice</span> <span class="at">--tool-call-parser</span> gemma4 <span class="at">--reasoning-parser</span> gemma4 <span class="dt">\</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">--no-scheduler-reserve-full-isl</span> <span class="dt">\</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">--default-chat-template-kwargs</span> <span class="st">&#39;{&quot;enable_thinking&quot;: true}&#39;</span> <span class="dt">\</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  <span class="op">&gt;</span> ~/bcf/vllm-31b.log <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span> <span class="kw">&amp;</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span> <span class="at">-f</span> ~/bcf/vllm-31b.log        <span class="co"># wait for the line that says the server is started; the first start compiles kernels</span></span></code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Value</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--served-model-name</code></td>
+<td>the bundle's <code>model:</code> line, exactly</td>
+<td>The harness maps the declared model to
+<code>openai/&lt;name&gt;</code> on the server</td>
+</tr>
+<tr>
+<td><code>--max-model-len</code></td>
+<td>32768</td>
+<td>Staff notebook, cell 8; the harness caps
+<code>max_output_tokens</code> and <code>thinking_budget</code> at the
+same number</td>
+</tr>
+<tr>
+<td><code>--dtype</code></td>
+<td>bfloat16</td>
+<td>Notebook</td>
+</tr>
+<tr>
+<td><code>--gpu-memory-utilization</code></td>
+<td>0.90</td>
+<td>Notebook (the older README says 0.80)</td>
+</tr>
+<tr>
+<td><code>--enable-auto-tool-choice</code>, both parsers</td>
+<td><code>gemma4</code></td>
+<td>Notebook; vLLM's Gemma 4 guide</td>
+</tr>
+<tr>
+<td><code>--no-scheduler-reserve-full-isl</code></td>
+<td>the notebook sets it to <code>False</code>; vLLM's default is
+<code>True</code></td>
+<td>Notebook; vLLM 0.19.1 engine arguments</td>
+</tr>
+<tr>
+<td><code>--default-chat-template-kwargs</code></td>
+<td>thinking on</td>
+<td>vLLM's Gemma 4 guide: "add the argument
+--default-chat-template-kwargs '{"enable_thinking": true}'" (not run
+here on 0.19.1: check <code>vllm serve --help</code> for the flag's
+exact name on this build)</td>
+</tr>
+<tr>
+<td>No <code>--quantization</code> flag</td>
+<td>the checkpoint's own config is read</td>
+<td>Earlier guide of this project (2026-10-31)</td>
+</tr>
+<tr>
+<td>No <code>--tensor-parallel-size</code></td>
+<td>one GPU; the notebook uses 4 when it sees 4</td>
+<td>Notebook</td>
+</tr>
+</tbody>
+</table>
+<p>For the bonus track, start the E4B server instead, with
+<code>--served-model-name gemma-4-e4b-it-qat-w4a16-ct</code>. For the
+12B checkpoint only, add
+<code>--hf-overrides '{"architectures": ["Gemma4ForCausalLM"], "model_type": "gemma4"}'</code>
+(staff notebook).</p>
+<p>Check it from a second terminal:</p>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-s</span> http://127.0.0.1:8000/v1/models <span class="kw">|</span> <span class="fu">head</span> <span class="at">-c</span> 300        <span class="co"># lists &quot;gemma-4-31b-it-qat-w4a16-ct&quot;</span></span></code></pre></div>
+<p>Keep the server running for the whole working session: it is the
+slowest thing to recreate. Under WSL2, do not use
+<code>nvidia-smi</code> utilization as a health signal (unsupported
+query there); read <code>~/bcf/vllm-31b.log</code> or
+<code>curl -s http://127.0.0.1:8000/metrics</code>.</p>
+<hr />
+<h2 id="6-first-run-the-smoke-panel">6. First run: the smoke panel</h2>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> ~/bcf/.venv/bin/activate <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> ~/bcf</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="va">D</span><span class="op">=</span>~/bcf/data</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> tools/run_panel.py <span class="at">--tasks</span> <span class="va">$D</span>/tasks.jsonl <span class="at">--snapshots</span> <span class="va">$D</span>/snapshots <span class="dt">\</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">--bundle</span> brain/dist/bcf-31b-flat <span class="at">--results</span> results/smoke-01 <span class="dt">\</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">--panel</span> tools/panel_smoke.txt <span class="at">--sandbox</span> subprocess</span></code></pre></div>
+<p><code>run_panel.py</code> does what the staff notebook does in its
+evaluation cell: it reads the four budgets from the bundle's
+<code>eval_config.yaml</code>, switches on compaction at 14,336 tokens,
+points the model registry at your server, and refuses to start if the
+server does not serve the bundle's model under the bundle's name. The
+plain <code>swegemma eval</code> command does neither: it ignores
+<code>eval_config.yaml</code> (it would give every task 60 minutes) and
+runs without compaction.</p>
+<p>What to look at after five tasks (expect 5 to 15 minutes; not run
+here):</p>
+<table>
+<thead>
+<tr>
+<th>Look at</th>
+<th>Expect</th>
+<th>If not</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>The first printed line of <code>run_panel.py</code></td>
+<td><code>model gemma-4-31b-it-qat-w4a16-ct ... eval_config.yaml read: 8 min, 28 calls, 80 turns, command 240 s</code></td>
+<td>A different budget: the wrong bundle folder</td>
+</tr>
+<tr>
+<td><code>results/smoke-01/summary.json</code></td>
+<td><code>total_tasks: 5</code> and a <code>resolved</code> count</td>
+<td><code>errors</code> above zero: open
+<code>task_results.jsonl</code>, column <code>error</code></td>
+</tr>
+<tr>
+<td><code>results/smoke-01/logs/fastapi_14077.log</code></td>
+<td>The agent's calls: the installer, <code>plan</code>,
+<code>find</code>, <code>apply</code>, a test, <code>finalize</code>,
+<code>submit_patch</code></td>
+<td><code>No module named</code> or <code>command not found</code>
+inside a call: the sandbox cannot find <code>python3</code> or
+<code>git</code></td>
+</tr>
+<tr>
+<td><code>results/smoke-01/traces/trace_fastapi_14077.json</code></td>
+<td>Token usage and elapsed seconds per step</td>
+<td>Absent: the trace was not written; read the log instead</td>
+</tr>
+<tr>
+<td><code>~/bcf/vllm-31b.log</code></td>
+<td>Requests arriving, no errors</td>
+<td>Connection errors: the server restarted; read its last 50 lines</td>
+</tr>
+</tbody>
+</table>
+<p>For the Docker sandbox instead (slower per task, closer to the
+scorer): the same command with
+<code>--sandbox docker --image swebench-sandbox:latest</code>.</p>
+<hr />
+<h2 id="7-panel-runs-and-comparisons">7. Panel runs and comparisons</h2>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bcf <span class="kw">&amp;&amp;</span> <span class="bu">source</span> .venv/bin/activate</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> r <span class="kw">in</span> 1 2 3<span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="ex">python</span> tools/run_panel.py <span class="at">--tasks</span> data/tasks.jsonl <span class="at">--snapshots</span> data/snapshots <span class="dt">\</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">--bundle</span> brain/dist/bcf-31b-flat <span class="at">--results</span> results/31b-flat-r<span class="va">$r</span> <span class="at">--panel</span> tools/panel30.txt <span class="at">--sandbox</span> subprocess</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> tools/run_report.py results/31b-flat-r1 results/31b-flat-r2 results/31b-flat-r3 <span class="dt">\</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">--labels</span> <span class="op">&lt;</span>this package<span class="op">&gt;</span>/../2026-11-23_BCF_Brain_and_Dataset_RCA/data/rca_merged.jsonl <span class="at">--out</span> results/31b-flat-report.md</span></code></pre></div>
+<p>Rules that make the comparison worth the time: the same panel in the
+same order for every bundle; three runs per bundle; one change at a
+time; the adopt condition written down before the run (Task 2, section
+C.5); the decision read from the paired table (Task 4, section 3.6).
+<code>--concurrency 3</code> runs three tasks at once on the 5090 and is
+fine for ranking runs once the smoke run is clean; use
+<code>--concurrency 1</code> for any run whose time you want to
+trust.</p>
+<hr />
+<h2 id="8-the-loop-change-build-validate">8. The loop: change, build,
+validate</h2>
+<p>After any change under <code>brain/parts/</code> or
+<code>brain/src/prompts/</code>, or to the values in
+<code>brain/build.py</code>:</p>
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bcf/brain</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> assemble.py                               <span class="co"># helper from its parts; compiles before it writes</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> build.py                                  <span class="co"># six bundles and zips in dist/</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> unittest tests.test_bcf                <span class="co"># about 90 seconds: 36 pass, 1 skipped</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> tools/setup_validate_venv.py              <span class="co"># once: the official harness packages (about 870 MB)</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> tools/run_validator.py                    <span class="co"># official compiler 6 of 6, controls 15 of 15</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="fu">sha256sum</span> dist/bcf-31b-flat.zip                  <span class="co"># goes into the ledger</span></span></code></pre></div>
+<p>The per-task budgets live in two places that must agree:
+<code>EVAL</code> in <code>build.py</code> and <code>BUDGET_S</code> in
+<code>parts/_bcf_head.py</code>; the build stops when they disagree.
+Sampling parameters (thinking budget, temperature, output cap) live in
+<code>SAMPLING</code> in <code>build.py</code>.</p>
+<hr />
+<h2 id="9-prepare-a-submission">9. Prepare a submission</h2>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Action</th>
+<th>Pass condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Build and validate (section 8)</td>
+<td>6 of 6, 15 of 15, 36 tests</td>
+</tr>
+<tr>
+<td>2</td>
+<td>One smoke run with the model on the exact bundle</td>
+<td>Clean: every task has a patch or a clear reason</td>
+</tr>
+<tr>
+<td>3</td>
+<td>One ranking-panel run, read with <code>run_report.py</code></td>
+<td>Projected hours for 120 tasks at or below 10.8</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Use <code>dist/&lt;bundle&gt;.zip</code> as built:
+<code>agent.yaml</code> is at the root of the archive</td>
+<td><code>unzip -l dist/bcf-31b-flat.zip</code> shows
+<code>agent.yaml</code> first</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="10-submit-to-the-competition-the-main-track">10. Submit to the
+competition: the main track</h2>
+<p>This is a code competition. Kaggle's documentation describes the
+flow: "all submissions must be made from inside a Kaggle Notebook. You
+cannot upload predictions directly", and "Initialize a Notebook with the
+competition dataset. Generate a submission file ... in /kaggle/working.
+Click 'Save Version', 'Save &amp; Run All'. From the Notebook Viewer"
+submit to the competition. For this competition the file is
+<code>submission.zip</code> with <code>agent.yaml</code> at its root
+(Overview page); the staff Getting Started notebook writes it to
+<code>/kaggle/working/submission.zip</code>. The competition's scoring
+program then unpacks it, runs the agent on the hidden tasks and verifies
+the patches.</p>
+<h3 id="101-put-the-bundle-where-a-notebook-can-read-it">10.1 Put the
+bundle where a notebook can read it</h3>
+<p>A notebook can only read its inputs, so the bundle travels as a
+private Kaggle Dataset (not run here; the dialog names are
+Kaggle's):</p>
+<ol type="1">
+<li>On kaggle.com: <strong>Create</strong>, <strong>New
+Dataset</strong>.</li>
+<li>Upload the <strong>contents</strong> of
+<code>brain/dist/bcf-31b-flat/</code> (so that <code>agent.yaml</code>
+sits at the top level of the dataset, not inside a folder).</li>
+<li>Title it after the bundle (for example
+<code>bcf-31b-flat-patched</code>), set <strong>Private</strong>,
+create.</li>
+<li>Every time the bundle changes, add a new version of the same dataset
+with the same rule.</li>
+</ol>
+<p>With the command line instead (the metadata file format is in
+<code>kaggle datasets create --help</code>):</p>
+<div class="sourceCode" id="cb16"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/bcf/submit/ds <span class="kw">&amp;&amp;</span> <span class="fu">cp</span> <span class="at">-r</span> brain/dist/bcf-31b-flat/. ~/bcf/submit/ds/</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bcf/submit <span class="kw">&amp;&amp;</span> <span class="ex">kaggle</span> datasets create <span class="at">-p</span> ds        <span class="co"># later: kaggle datasets version -p ds -m &quot;what changed&quot;</span></span></code></pre></div>
+<h3 id="102-create-the-submission-notebook">10.2 Create the submission
+notebook</h3>
+<ol type="1">
+<li><strong>Code</strong>, <strong>New Notebook</strong>. Add
+<strong>Input</strong>: the competition
+<code>Gemma 4 Developer Agent</code> (this attaches the data package; at
+scoring time the hidden test set replaces the training set) and your
+bundle dataset.</li>
+<li><strong>Settings</strong>: Internet <strong>Off</strong> (the L4
+sessions must run without internet). Accelerator: none is enough for a
+notebook that only packages a file; choose <strong>GPU L4 x4</strong>
+only if the Submit option is not offered without an accelerator
+version.</li>
+<li>Replace the content with one cell:</li>
+</ol>
+<div class="sourceCode" id="cb17"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pathlib, shutil, zipfile</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>work <span class="op">=</span> pathlib.Path(<span class="st">&#39;/kaggle/working&#39;</span>)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>roots <span class="op">=</span> [p.parent <span class="cf">for</span> p <span class="kw">in</span> pathlib.Path(<span class="st">&#39;/kaggle/input&#39;</span>).glob(<span class="st">&#39;*/agent.yaml&#39;</span>)]</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">len</span>(roots) <span class="op">==</span> <span class="dv">1</span>, <span class="ss">f&#39;expected one dataset with agent.yaml at its root, found </span><span class="sc">{</span>roots<span class="sc">}</span><span class="ss">&#39;</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>agent <span class="op">=</span> work <span class="op">/</span> <span class="st">&#39;agent&#39;</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> agent.exists():</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    shutil.rmtree(agent)</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>shutil.copytree(roots[<span class="dv">0</span>], agent)</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>archive <span class="op">=</span> shutil.make_archive(<span class="bu">str</span>(work <span class="op">/</span> <span class="st">&#39;submission&#39;</span>), <span class="st">&#39;zip&#39;</span>, root_dir<span class="op">=</span>agent)</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> zipfile.ZipFile(archive) <span class="im">as</span> z:</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>    infos <span class="op">=</span> z.infolist()</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(archive, <span class="bu">len</span>(infos), <span class="st">&#39;files,&#39;</span>, <span class="bu">sum</span>(i.file_size <span class="cf">for</span> i <span class="kw">in</span> infos), <span class="st">&#39;bytes; agent.yaml at root:&#39;</span>,</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>      <span class="st">&#39;agent.yaml&#39;</span> <span class="kw">in</span> z.namelist())</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> infos:</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">&#39; &#39;</span>, i.filename, i.file_size)</span></code></pre></div>
+<ol start="4" type="1">
+<li><strong>Save Version</strong>, mode <strong>Save &amp; Run All
+(Commit)</strong>. When the version has finished, open it from the
+Notebook Viewer and use <strong>Submit to Competition</strong>.</li>
+<li>Keep the notebook and the dataset: a new bundle is a new dataset
+version and a new notebook version.</li>
+</ol>
+<h3 id="103-after-submitting">10.3 After submitting</h3>
+<table>
+<thead>
+<tr>
+<th>When</th>
+<th>Do</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Right after</td>
+<td>My Submissions shows the new entry as pending; one pending
+submission blocks the next</td>
+</tr>
+<tr>
+<td>26 to 29 hours later, typically</td>
+<td>The score appears. Record it in the ledger (section 12) with the
+hours it took and the result size</td>
+</tr>
+<tr>
+<td>The score is 0.00</td>
+<td>Read the result size: about 3,230 bytes means a backend failure
+(three teams, 2026-11-21 to 23; staff investigating). Resubmit the same
+file; do not change the bundle in response</td>
+</tr>
+<tr>
+<td>The score is in the expected band</td>
+<td>Nothing: a single value has a band of about 4 tasks (Task 4, section
+6)</td>
+</tr>
+</tbody>
+</table>
+<p>Rules that apply to every submission: one per day; at most two final
+selections, by 2026-12-02 23:59 UTC; entry and team-merger deadline
+2026-11-25 23:59 UTC.</p>
+<hr />
+<h2 id="11-submit-to-the-bonus-track-the-small-model-prize">11. Submit
+to the bonus track: the small-model prize</h2>
+<p>The bonus prize ($10,000) goes to the highest-ranked submission on
+the private set whose base model is
+<code>gemma-4-e4b-it-qat-w4a16-ct</code> or
+<code>gemma-4-e2b-it-qat-w4a16-ct</code>, and the submission must be one
+of the team's two selected finals (Overview page, "Bonus Prize").
+Nothing in the procedure changes except the bundle:</p>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Main track</th>
+<th>Bonus track</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bundle</td>
+<td><code>dist/bcf-31b-flat</code> (or the relay twin)</td>
+<td><code>dist/bcf-e4b-flat</code></td>
+</tr>
+<tr>
+<td>Local server</td>
+<td>the 31B weights,
+<code>--served-model-name gemma-4-31b-it-qat-w4a16-ct</code></td>
+<td>the E4B weights,
+<code>--served-model-name gemma-4-e4b-it-qat-w4a16-ct</code></td>
+</tr>
+<tr>
+<td>Dataset</td>
+<td>the contents of the bundle folder</td>
+<td>the contents of the E4B bundle folder</td>
+</tr>
+<tr>
+<td>Notebook</td>
+<td>the one-cell packaging notebook</td>
+<td>the same notebook (it finds the dataset with
+<code>agent.yaml</code>)</td>
+</tr>
+<tr>
+<td>Final selection</td>
+<td>at most two, across both tracks</td>
+<td>the E4B submission must be one of the two</td>
+</tr>
+</tbody>
+</table>
+<p>The E4B bundles already carry the settings the public measurements
+support for the small model: a thinking budget of 1,024 for the solver
+and 256 for the planner, planner temperature 0, an output cap of 8,192,
+short prompts, and a first edit by call 6. Do not attach a LoRA adapter
+to a first bonus submission. E4B is the variant to choose over E2B: a
+public report describes a loading failure of the E2B checkpoint on the
+pinned serving stack (thread 748287).</p>
+<hr />
+<h2 id="12-the-ledger">12. The ledger</h2>
+<p>One row per attempt, kept by hand in any spreadsheet:</p>
+<table>
+<thead>
+<tr>
+<th>Date (UTC)</th>
+<th>Bundle</th>
+<th>SHA-256 of the zip</th>
+<th>Local panel: resolved in 3 runs</th>
+<th>Projected mean s per task</th>
+<th>Hours to score</th>
+<th>Public score</th>
+<th>Result size</th>
+<th>Note</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>example: 2026-11-25 08:10</td>
+<td>bcf-31b-flat (patched)</td>
+<td>first 12 characters of <code>sha256sum</code></td>
+<td>11, 10, 11 of 30</td>
+<td>265</td>
+<td>27</td>
+<td>0.21</td>
+<td>91,204 bytes</td>
+<td>first attempt; answers whether skills run on the scorer</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="13-acceptance-table">13. Acceptance table</h2>
+<p>Run these once after the install. Every pass condition can be checked
+without the model.</p>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Command</th>
+<th>Pass condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Driver</td>
+<td><code>nvidia-smi</code> (on Zorin;
+<code>/usr/lib/wsl/lib/nvidia-smi</code> under WSL2)</td>
+<td>RTX 5090, driver 580 or newer on Linux (570.65 or newer on
+Windows)</td>
+</tr>
+<tr>
+<td>Interpreter</td>
+<td><code>python --version</code> in the environment</td>
+<td><code>Python 3.12.13</code></td>
+</tr>
+<tr>
+<td>Torch</td>
+<td><code>python -c "import torch; print(torch.cuda.is_available(), torch.cuda.get_device_capability())"</code></td>
+<td><code>True (12, 0)</code></td>
+</tr>
+<tr>
+<td>Stack</td>
+<td><code>bash tools/install-wheelhouse.sh</code> (it prints them)</td>
+<td>vllm 0.19.1, transformers 5.13.1, swegemma 0.2.11</td>
+</tr>
+<tr>
+<td>Server</td>
+<td><code>curl -s http://127.0.0.1:8000/v1/models</code></td>
+<td>the bundle's model name</td>
+</tr>
+<tr>
+<td>Data</td>
+<td><code>ls ~/bcf/data</code></td>
+<td><code>tasks.jsonl snapshots graphs embeddings wheels docker sandbox sample_submission</code></td>
+</tr>
+<tr>
+<td>Brain</td>
+<td>section 8</td>
+<td>36 pass and 1 skipped; 6 of 6; 15 of 15</td>
+</tr>
+<tr>
+<td>Sandbox interpreter (Docker)</td>
+<td><code>docker run --rm swebench-sandbox:latest python3 --version</code></td>
+<td><code>Python 3.13.x</code></td>
+</tr>
+<tr>
+<td>First smoke run</td>
+<td>section 6</td>
+<td>five tasks, a result per task, no harness error</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="14-troubleshooting">14. Troubleshooting</h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>No module named torch</code> after the wheelhouse install</td>
+<td>The wheels were installed into another interpreter</td>
+<td>Activate <code>~/bcf/.venv</code> first; <code>which python</code>
+must point into it</td>
+</tr>
+<tr>
+<td><code>CUDA error: no kernel image is available</code></td>
+<td>A PyTorch build without Blackwell kernels</td>
+<td>Install torch from the cu128 index before everything else (section
+B.4)</td>
+</tr>
+<tr>
+<td><code>torch.cuda.is_available()</code> is <code>False</code> under
+WSL2 with <code>nvidia-smi</code> working</td>
+<td>Stale WSL kernel</td>
+<td><code>wsl --update</code>, then <code>wsl --shutdown</code></td>
+</tr>
+<tr>
+<td>vLLM fails while starting under WSL2 and starts on Zorin</td>
+<td>The GPU paravirtualisation limits pinned host memory</td>
+<td>Keep <code>PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True</code>;
+lower <code>--gpu-memory-utilization</code>; or serve from Zorin</td>
+</tr>
+<tr>
+<td>The model loads very slowly</td>
+<td>Weights read through <code>/mnt/</code></td>
+<td>Move <code>~/bcf/models</code> and <code>HF_HOME</code> into the
+Linux file system</td>
+</tr>
+<tr>
+<td>The server exits with a "head size not supported" message</td>
+<td>Gemma 4's mixed head dimensions and the selected attention backend
+on vLLM 0.19.x</td>
+<td>Read the backend line in the log; the earlier guide of this project
+set <code>VLLM_ATTENTION_BACKEND=TRITON_ATTN</code> for this case
+(2026-10-31)</td>
+</tr>
+<tr>
+<td><code>run_panel.py</code> exits with code 2</td>
+<td>No server, or the served name differs from the bundle's model</td>
+<td>Start the server with <code>--served-model-name</code> equal to the
+<code>model:</code> line</td>
+</tr>
+<tr>
+<td>Every task gets 60 minutes</td>
+<td>The run went through <code>swegemma eval</code> instead of
+<code>run_panel.py</code></td>
+<td>Use <code>run_panel.py</code></td>
+</tr>
+<tr>
+<td>Tasks end at once with "Path traversal" or "No such file"</td>
+<td>The sandbox cannot see <code>python3</code> or <code>git</code></td>
+<td>In Docker mode, rebuild the image from the shipped Dockerfile</td>
+</tr>
+<tr>
+<td>Docker cannot see the GPU</td>
+<td>Toolkit not configured, or two Dockers installed</td>
+<td><code>sudo nvidia-ctk runtime configure --runtime=docker</code>,
+restart Docker; keep one</td>
+</tr>
+<tr>
+<td><code>docker build</code> cannot find <code>imp.py</code></td>
+<td>Wrong build context</td>
+<td><code>docker build -f docker/Dockerfile.sandbox -t swebench-sandbox:latest docker</code>
+(the context is the <code>docker</code> folder)</td>
+</tr>
+<tr>
+<td>The VM keeps its memory after a run</td>
+<td>Cache not reclaimed</td>
+<td><code>wsl --shutdown</code> between sessions</td>
+</tr>
+<tr>
+<td>The notebook's Save &amp; Run All fails on the one-cell
+notebook</td>
+<td>More than one input has <code>agent.yaml</code> at its root, or the
+dataset was uploaded as a folder</td>
+<td>Upload the contents of the bundle folder; keep only one such dataset
+attached</td>
+</tr>
+<tr>
+<td>The submission scored 0.00</td>
+<td>Backend failure or a compile failure</td>
+<td>Result size about 3,230 bytes: resubmit the same file. Normal size:
+run the validator on the exact zip</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="15-sources">15. Sources</h2>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Publisher</th>
+<th>Date</th>
+<th>Used for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a
+href="https://www.kaggle.com/code/ryanholbrook/getting-started-gemma-4-developer-agent">Getting
+Started - Gemma 4 Developer Agent</a>, version 3</td>
+<td>Ryan Holbrook (staff)</td>
+<td>last run 2026-11-21; fetched 2026-11-24</td>
+<td>Environment variables, the wheelhouse install and its two
+corrections, vLLM settings, the <code>EvalConfig</code> values, the
+packaging cell, Python 3.12.13</td>
+</tr>
+<tr>
+<td>Competition <a
+href="https://www.kaggle.com/competitions/gemma-4-developer-agent/overview">Overview</a>,
+<a
+href="https://www.kaggle.com/competitions/gemma-4-developer-agent/data">Data</a>,
+<a
+href="https://www.kaggle.com/competitions/gemma-4-developer-agent/rules">Rules</a></td>
+<td>Kaggle</td>
+<td>fetched 2026-11-24</td>
+<td><code>submission.zip</code> with <code>agent.yaml</code> at the
+root, the 12-hour rule, the bonus terms, deadlines, one submission per
+day</td>
+</tr>
+<tr>
+<td><a href="https://www.kaggle.com/docs/competitions">Kaggle
+competitions documentation</a> and <a
+href="https://www.kaggle.com/docs/notebooks">notebooks
+documentation</a></td>
+<td>Kaggle</td>
+<td>fetched 2026-11-24</td>
+<td>The code-competition flow, session limits, L4x4 quota</td>
+</tr>
+<tr>
+<td><a href="https://powerspec.com/product/698934">G914 Gaming
+PC</a></td>
+<td>PowerSpec</td>
+<td>fetched 2026-11-24</td>
+<td>The machine</td>
+</tr>
+<tr>
+<td><a
+href="https://docs.vllm.ai/en/v0.19.1/getting_started/installation/gpu.html">vLLM
+0.19.1 installation</a>, <a
+href="https://docs.vllm.ai/en/v0.19.1/configuration/engine_args.html">engine
+arguments</a>, <a
+href="https://docs.vllm.ai/projects/recipes/en/stable/Google/Gemma4.html">Gemma
+4 usage guide</a></td>
+<td>vLLM project</td>
+<td>fetched 2026-11-24</td>
+<td>No native Windows, CUDA builds, the serve flags</td>
+</tr>
+<tr>
+<td><a
+href="https://docs.nvidia.com/cuda/wsl-user-guide/index.html">CUDA on
+WSL User Guide</a></td>
+<td>NVIDIA</td>
+<td>v13.5, fetched 2026-11-24</td>
+<td>The driver rule, limitations</td>
+</tr>
+<tr>
+<td><a
+href="https://learn.microsoft.com/en-us/windows/wsl/wsl-config"><code>.wslconfig</code></a>,
+<a href="https://learn.microsoft.com/en-us/windows/wsl/install">install
+WSL</a>, <a
+href="https://learn.microsoft.com/en-us/windows/wsl/systemd">systemd</a>,
+<a
+href="https://learn.microsoft.com/en-us/windows/wsl/setup/environment">development
+environment guide</a></td>
+<td>Microsoft Learn</td>
+<td>fetched 2026-11-24</td>
+<td>The Windows track</td>
+</tr>
+<tr>
+<td><a href="https://zorin.com/os/details/">Zorin OS technical
+details</a>, <a
+href="https://blog.zorin.com/2026/04/15/zorin-os-18.1-is-released/">Zorin
+OS 18.1 release post</a></td>
+<td>Zorin</td>
+<td>fetched 2026-11-24</td>
+<td>Version, base, kernel</td>
+</tr>
+<tr>
+<td><a href="https://docs.docker.com/engine/install/ubuntu/">Install
+Docker Engine on Ubuntu</a>, <a
+href="https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html">NVIDIA
+Container Toolkit</a>, <a
+href="https://docs.astral.sh/uv/getting-started/installation/">uv</a></td>
+<td>Docker, NVIDIA, Astral</td>
+<td>fetched 2026-11-24</td>
+<td>The commands of sections B.3 and B.6</td>
+</tr>
+<tr>
+<td><code>HARNESS_README.md</code>,
+<code>docker/Dockerfile.sandbox</code>, <code>swegemma</code> 0.2.11
+source</td>
+<td>Kaggle data package and wheelhouse v31</td>
+<td>read 2026-11-24</td>
+<td>The sandbox image, the CLI, the result files</td>
+</tr>
+<tr>
+<td><a
+href="https://www.kaggle.com/competitions/gemma-4-developer-agent/discussion/761004">Byte-identical
+resubmission scored 0.00</a>, <a
+href="https://www.kaggle.com/competitions/gemma-4-developer-agent/discussion/748287">New
+Gemma 4 models</a></td>
+<td>Kaggle staff and competitors</td>
+<td>2026-10-11 to 2026-11-23</td>
+<td>The 3,230-byte signature, the 12B override, the E2B report</td>
+</tr>
+<tr>
+<td>RTX 5090 local-testing guide of 2026-10-31 (files 02, 03, 07,
+08)</td>
+<td>this project</td>
+<td>2026-10-31</td>
+<td>Driver floors, the TRITON attention fallback, Hugging Face
+repository names</td>
+</tr>
+</tbody>
+</table>
+</main>
+<footer>2026-11-24 · self-contained portable document (no external files, fonts or scripts) · generated from the markdown source of truth</footer>
+</body>
+</html>

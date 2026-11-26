@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BCF brain: tuning, bottlenecks and parity (2026-11-24)</title>
+<style>
+:root {
+  --bg: #101418; --panel: #171d24; --ink: #dce3ea; --muted: #8b98a5;
+  --accent: #7ab0ff; --accent2: #ffb454; --ok: #7ad0a0; --bad: #ff8a8a;
+  --border: #26303a; --code-bg: #0c1013; --maxw: 110ch;
+}
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #f7f9fb; --panel: #ffffff; --ink: #1a2430; --muted: #5a6a7a;
+    --accent: #0a5fd0; --accent2: #b05a00; --ok: #0d7a40; --bad: #b02020;
+    --border: #d8e0e8; --code-bg: #eef2f6;
+  }
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 16px/1.65 "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+}
+header.top {
+  position: sticky; top: 0; z-index: 9; background: var(--panel);
+  border-bottom: 1px solid var(--border); padding: .55rem 1rem;
+  display: flex; flex-wrap: wrap; gap: .4rem .8rem; align-items: center;
+}
+header.top .brand { font-weight: 700; color: var(--accent); white-space: nowrap; }
+header.top nav { display: flex; flex-wrap: wrap; gap: .15rem; font-size: .82rem; }
+header.top nav a { color: var(--muted); text-decoration: none; padding: .18rem .5rem; border-radius: 6px; }
+header.top nav a:hover { color: var(--ink); background: var(--bg); }
+main { max-width: var(--maxw); margin: 0 auto; padding: 1.2rem 1.2rem 4rem; }
+h1 { font-size: 1.65rem; color: var(--accent); border-bottom: 2px solid var(--border); padding-bottom: .4rem; }
+h2 { font-size: 1.3rem; color: var(--accent); margin-top: 2.2rem; border-bottom: 1px solid var(--border); padding-bottom: .25rem; scroll-margin-top: 3.4rem; }
+h3 { font-size: 1.08rem; color: var(--accent2); margin-top: 1.6rem; scroll-margin-top: 3.4rem; }
+h4 { font-size: 1rem; color: var(--ink); margin-top: 1.3rem; }
+a { color: var(--accent); }
+code { font-family: "Cascadia Code", Consolas, "JetBrains Mono", monospace; font-size: .88em; background: var(--code-bg); border: 1px solid var(--border); border-radius: 4px; padding: .08em .35em; }
+pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px; padding: .8rem 1rem; overflow-x: auto; }
+pre code { background: none; border: none; padding: 0; font-size: .84rem; line-height: 1.5; }
+table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: .9rem; display: block; overflow-x: auto; }
+th, td { border: 1px solid var(--border); padding: .45rem .6rem; text-align: left; vertical-align: top; }
+th { background: var(--panel); color: var(--accent); position: sticky; top: 0; }
+tbody tr:nth-child(even) { background: color-mix(in srgb, var(--panel) 55%, var(--bg)); }
+blockquote { border-left: 3px solid var(--accent2); margin: 1rem 0; padding: .3rem 1rem; color: var(--muted); background: var(--panel); border-radius: 0 8px 8px 0; }
+hr { border: none; border-top: 1px solid var(--border); margin: 2.4rem 0; }
+footer { text-align: center; color: var(--muted); font-size: .8rem; padding: 1.5rem; border-top: 1px solid var(--border); }
+kbd { background: var(--panel); border: 1px solid var(--border); border-bottom-width: 2px; border-radius: 4px; padding: .05em .4em; font-size: .85em; font-family: inherit; }
+nav#TOC { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: .6rem 1rem .7rem; margin: 1rem 0 1.6rem; }
+nav#TOC::before { content: "Contents"; display: block; font-weight: 700; color: var(--accent); margin-bottom: .3rem; }
+nav#TOC ul { margin: 0; padding-left: 1.1rem; columns: 2; column-gap: 2.2rem; }
+nav#TOC ul ul { columns: 1; padding-left: .9rem; }
+nav#TOC li { break-inside: avoid; margin: .1rem 0; }
+nav#TOC a { color: var(--muted); text-decoration: none; }
+nav#TOC a:hover { color: var(--ink); }
+@media (max-width: 760px) {
+  main { padding: 1rem .7rem 3rem; font-size: 15px; }
+  h1 { font-size: 1.35rem; } h2 { font-size: 1.15rem; }
+  header.top nav { font-size: .75rem; }
+  nav#TOC ul { columns: 1; }
+}
+@media print {
+  header.top { position: static; } body { background: #fff; color: #000; }
+  pre, table { overflow: visible; } main { max-width: none; }
+  nav#TOC { break-after: page; }
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <span class="brand">BCF brain: tuning, bottlenecks and parity
+(2026-11-24)</span>
+  <nav>
+    &lt;a href="00_README.md" title="00 README"&gt;00
+    README&lt;/a&gt;&lt;a
+    href="01_Exception_Handling_Traps_by_Error_Family.md" title="01
+    Exceptions"&gt;01 Exceptions&lt;/a&gt;&lt;a
+    href="02_Time_Bottlenecks_and_Tuning_Levers.md" title="02 Time and
+    levers"&gt;02 Time and levers&lt;/a&gt;&lt;a
+    href="03_Local_Kaggle_Parity_Plan.md" title="03 Parity plan"&gt;03
+    Parity plan&lt;/a&gt;&lt;a
+    href="04_Local_Scoring_and_Interpretation_Guide.md" title="04 Local
+    scoring"&gt;04 Local scoring&lt;/a&gt;&lt;a
+    href="05_Board_Issues_Graceful_Handling_Audit.md" title="05 Board
+    audit"&gt;05 Board audit&lt;/a&gt;&lt;a
+    href="06_Impact_Effort_Roadmap.md" title="06 Roadmap"&gt;06
+    Roadmap&lt;/a&gt;&lt;a href="07_Setup_and_Run_Guide.md" title="07
+    Setup and run"&gt;07 Setup and run&lt;/a&gt;
+  </nav>
+</header>
+<main>
+<ul>
+<li><a
+href="#bcf-brain-exception-traps-time-bottlenecks-tuning-levers-local-versus-kaggle-parity-scoring-guide-board-audit-roadmap-and-setup-guide"
+id="toc-bcf-brain-exception-traps-time-bottlenecks-tuning-levers-local-versus-kaggle-parity-scoring-guide-board-audit-roadmap-and-setup-guide">BCF
+brain: exception traps, time bottlenecks, tuning levers,
+local-versus-Kaggle parity, scoring guide, board audit, roadmap, and
+setup guide</a>
+<ul>
+<li><a href="#1-the-seven-tasks-and-where-each-is-answered"
+id="toc-1-the-seven-tasks-and-where-each-is-answered">1. The seven tasks
+and where each is answered</a></li>
+<li><a href="#2-what-this-package-found"
+id="toc-2-what-this-package-found">2. What this package found</a></li>
+<li><a href="#3-the-patched-brain" id="toc-3-the-patched-brain">3. The
+patched brain</a></li>
+<li><a href="#4-what-to-do-first" id="toc-4-what-to-do-first">4. What to
+do first</a></li>
+<li><a href="#5-what-is-not-verified" id="toc-5-what-is-not-verified">5.
+What is not verified</a></li>
+<li><a href="#6-folder-map" id="toc-6-folder-map">6. Folder map</a></li>
+<li><a href="#7-how-the-research-was-done"
+id="toc-7-how-the-research-was-done">7. How the research was
+done</a></li>
+</ul></li>
+</ul>
+<h1
+id="bcf-brain-exception-traps-time-bottlenecks-tuning-levers-local-versus-kaggle-parity-scoring-guide-board-audit-roadmap-and-setup-guide">BCF
+brain: exception traps, time bottlenecks, tuning levers,
+local-versus-Kaggle parity, scoring guide, board audit, roadmap, and
+setup guide</h1>
+<p><strong>Package of 2026-11-24</strong> for the Kaggle competition
+<em>Google Gemma 4 Developer Agent</em> (149921).
+<strong>Subject:</strong> the BCF brain of
+<code>2026-11-23_BCF_Brain_and_Dataset_RCA/bcf-brain</code>.
+<strong>Deadlines:</strong> entry and team-merger deadline 2026-11-25
+23:59 UTC; final submissions 2026-12-02 23:59 UTC.</p>
+<hr />
+<h2 id="1-the-seven-tasks-and-where-each-is-answered">1. The seven tasks
+and where each is answered</h2>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Document</th>
+<th>One-line answer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>01_Exception_Handling_Traps_by_Error_Family.md</code></td>
+<td>13 error families in the 129 tasks, each with the traps as the
+documentation states them and a post-mortem procedure. The sandbox
+interpreter is Python <strong>3.13</strong> (the image is
+<code>python:3.13-slim</code>), not the 3.12 of the harness and of the
+staff notebook</td>
+</tr>
+<tr>
+<td>2a</td>
+<td><code>02_Time_Bottlenecks_and_Tuning_Levers.md</code>, Part A</td>
+<td>The five numbers that decide the score: 12 hours, 360 seconds per
+task at 120 tasks, 13 to 25 tokens per second on the scorer, 219 to 322
+tokens per model call, about seven attempts left</td>
+</tr>
+<tr>
+<td>2b</td>
+<td>same, Part B</td>
+<td>17 levers ranked by impact over effort; the first three are one-line
+changes (solver thinking 4,096 to 2,048; the governor's gates; the
+per-task cap)</td>
+</tr>
+<tr>
+<td>2c</td>
+<td>same, Part C</td>
+<td>Six tiers of feedback from seconds to a day, and the rule to work at
+the lowest tier that can decide the question</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>03_Local_Kaggle_Parity_Plan.md</code></td>
+<td>What the scoring environment is, dimension by dimension with its
+source; the parity matrix for Windows 11 with WSL2 and Zorin OS 18.1;
+three rungs of local parity; twelve acceptance tests</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>04_Local_Scoring_and_Interpretation_Guide.md</code> and
+<code>tools/run_report.py</code></td>
+<td>How to read a result folder, what the local score can and cannot
+predict (with the power table of a paired design), and how to turn the
+largest failure class into the next lever</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>05_Board_Issues_Graceful_Handling_Audit.md</code></td>
+<td>51 issues: 31 handled, 9 partly, 6 not controllable, 2 not
+applicable, 3 defects. Six fixes, validated, in
+<code>bcf-brain-patched/</code></td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>06_Impact_Effort_Roadmap.md</code></td>
+<td>The ranked list, the exact values to set, the calendar to
+2026-12-02, and the decision gates</td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>07_Setup_and_Run_Guide.md</code> and
+<code>07_Setup_and_Run_Guide.html</code></td>
+<td>Download, install and run on the PowerSpec G914 on Zorin OS 18.1 and
+on Windows 11 Pro with WSL2; the smoke panel, the ranking panel, and the
+official submission for the main and the bonus tracks</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="2-what-this-package-found">2. What this package found</h2>
+<table>
+<thead>
+<tr>
+<th>Finding</th>
+<th>Evidence</th>
+<th>Where</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>The task sandbox is Python 3.13; the harness and the staff notebook
+are 3.12.13</td>
+<td><code>docker/Dockerfile.sandbox</code> in the competition zip; the
+notebook's metadata; three wheelhouse wheels are built for 3.12
+only</td>
+<td>Task 1, section 0</td>
+</tr>
+<tr>
+<td><code>finalize</code> deleted a correct new file: a root-level
+module created with <code>apply</code> was removed and the helper then
+reported "NO SOURCE CHANGES"</td>
+<td>Executed probe of the helper in a temporary repository</td>
+<td>Task 5, defect D2</td>
+</tr>
+<tr>
+<td>The helper allowed edits to nested test helpers that the scorer
+discards</td>
+<td>Executed probe</td>
+<td>Task 5, defect D1</td>
+</tr>
+<tr>
+<td>The helper's keyword routing reproduced the reviewed category for
+43% of the statements and the reviewed domain for 38%</td>
+<td>Measurement on the 129 statements, no model</td>
+<td>Task 5, section 2.1</td>
+</tr>
+<tr>
+<td>A solver thinking budget of 4,096 is 164 to 241 seconds on the
+scorer; the average task can afford 219 to 322 generated tokens per
+call</td>
+<td>Arithmetic on the published decode rate and the 12-hour rule</td>
+<td>Task 2, section 0</td>
+</tr>
+<tr>
+<td>One run of a 30-task panel detects a ten-point gain 7% of the
+time</td>
+<td>Exact power of the paired sign test</td>
+<td>Task 4, section 6.3</td>
+</tr>
+<tr>
+<td>The competition is a code competition: the submission is a notebook
+that writes <code>submission.zip</code>; the plain
+<code>swegemma eval</code> command ignores the bundle's budgets and runs
+without compaction</td>
+<td>Kaggle documentation; <code>swegemma/cli.py</code></td>
+<td>Task 7</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="3-the-patched-brain">3. The patched brain</h2>
+<p><code>bcf-brain-patched/</code> is a copy of the validated brain with
+six fixes and nothing else changed. The original package was not
+modified.</p>
+<table>
+<thead>
+<tr>
+<th>Fix</th>
+<th>Before</th>
+<th>After</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Protected paths follow the harness rule</td>
+<td>3 of 15 probe paths allowed</td>
+<td>0</td>
+</tr>
+<tr>
+<td><code>finalize</code> keeps what the helper wrote and nested modules
+with scratch-like names</td>
+<td>2 files lost</td>
+<td>kept</td>
+</tr>
+<tr>
+<td>The helper's test command uses the scorer's verdict-changing
+flags</td>
+<td>0 of 4</td>
+<td>4 of 4</td>
+</tr>
+<tr>
+<td>Keyword stems that could never match</td>
+<td><code>picklable</code>, <code>hashable</code>,
+<code>__qualname__</code>, <code>forward references</code> missed</td>
+<td>matched</td>
+</tr>
+<tr>
+<td>Routing: most distinct keyword match wins, generic words removed,
+bug fix before behaviour change</td>
+<td>category 55, domain 49, route 42 of 129</td>
+<td>97, 82, 52</td>
+</tr>
+<tr>
+<td>The docstring names both interpreters</td>
+<td>"pinned Python 3.12"</td>
+<td>3.13 and 3.12.13</td>
+</tr>
+</tbody>
+</table>
+<p>Validation of the copy on 2026-11-24: 37 helper tests (36 pass, 1
+optional skipped), official compiler 6 of 6, 15 negative controls
+rejected, the 129 published fixes replayed through the editor 129 of 129
+byte-identical to <code>git apply</code>, behaviour probe 15 pass and 0
+gaps. The diff is <code>patches/bcf-brain-patches.diff</code>. Details:
+<code>bcf-brain-patched/validation/PATCHED-VALIDATION-2026-11-24.md</code>.</p>
+<p><strong>Use the patched bundles for the next submission</strong>,
+after one smoke run with the model.</p>
+<hr />
+<h2 id="4-what-to-do-first">4. What to do first</h2>
+<table>
+<thead>
+<tr>
+<th>Order</th>
+<th>Action</th>
+<th>Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Build and validate the patched brain where you work:
+<code>cd bcf-brain-patched</code>, <code>python build.py</code>,
+<code>python -m unittest tests.test_bcf</code>,
+<code>python tools/run_validator.py</code></td>
+<td>5 minutes once the validation environment exists</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Install the rig (Task 7, sections 3 or 4, then 5) and run the smoke
+panel through <code>tools/run_panel.py</code></td>
+<td>half a day the first time, mostly downloads</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Read the smoke run with <code>tools/run_report.py</code>: seconds
+and tokens per call, the projection to scorer time</td>
+<td>10 minutes</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Submit <code>bcf-31b-flat</code> (patched) early on 2026-11-25: it
+banks a score and answers whether skill scripts run on the scorer</td>
+<td>one of about seven attempts</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Pull the levers in the order of Task 6, deciding each on paired
+panel runs</td>
+<td>the rest of the week</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="5-what-is-not-verified">5. What is not verified</h2>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Why</th>
+<th>How to close it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Any run with the Gemma 4 model</td>
+<td>No model endpoint was available to this work</td>
+<td>The smoke panel (Task 7, section 6)</td>
+</tr>
+<tr>
+<td>The mean seconds per task on the scorer</td>
+<td>Decides the 12-hour risk</td>
+<td>The projection of Task 4, then the first scored run</td>
+</tr>
+<tr>
+<td>The install steps on a greenfield G914</td>
+<td>They follow the official documentation and the staff notebook but
+were not executed on that machine here</td>
+<td>The acceptance table of Task 7, section 13</td>
+</tr>
+<tr>
+<td>Whether skill scripts run on the scorer</td>
+<td>Open board question since 2026-11-12</td>
+<td>The first skill-carrying submission</td>
+</tr>
+<tr>
+<td>Whether the scorer uses the Docker backend</td>
+<td>The Overview page implies it; thread 754586 asks</td>
+<td>The same thread</td>
+</tr>
+<tr>
+<td>The local decode rate of the 5090 for the 31B checkpoint</td>
+<td>Every time projection depends on it</td>
+<td>One smoke task</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="6-folder-map">6. Folder map</h2>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>Content</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>00_README.md</code>, <code>00_README.html</code></td>
+<td>This file, and a portable HTML hub</td>
+</tr>
+<tr>
+<td><code>01_...md</code> to <code>06_...md</code></td>
+<td>Tasks 1 to 6</td>
+</tr>
+<tr>
+<td><code>07_Setup_and_Run_Guide.md</code>, <code>.html</code></td>
+<td>Task 7; the HTML is self-contained (no external file, font or
+script)</td>
+</tr>
+<tr>
+<td><code>bcf-brain-patched/</code></td>
+<td>The brain with the six fixes; six bundles in <code>dist/</code>;
+evidence in <code>validation/</code></td>
+</tr>
+<tr>
+<td><code>patches/bcf-brain-patches.diff</code></td>
+<td>The exact change, 155 diff lines</td>
+</tr>
+<tr>
+<td><code>tools/</code></td>
+<td><code>run_report.py</code>, <code>run_panel.py</code>,
+<code>install-wheelhouse.sh</code>, <code>panel30.txt</code>,
+<code>panel_smoke.txt</code>, <code>apply_brain_patches.py</code>,
+<code>brain_probe.py</code>, <code>route_eval.py</code>,
+<code>exc_scan.py</code>, <code>paired_power.py</code>,
+<code>py_probe.py</code>, <code>docgrep.py</code>,
+<code>make-html.sh</code>, <code>portable-toc.html</code></td>
+</tr>
+<tr>
+<td><code>08_Table_QC_Report.md</code></td>
+<td>Result of the table check on every document</td>
+</tr>
+</tbody>
+</table>
+<p>Intermediate work (fetched pages, notes, probes, the synthetic
+fixture, the replay work folder) is in
+<code>scratch/2026-11-24-bcf-tuning-parity/</code>; the board capture of
+2026-11-24 06:01 UTC is in its <code>board/</code> folder.</p>
+<hr />
+<h2 id="7-how-the-research-was-done">7. How the research was done</h2>
+<p>External research used the project's research toolkit on the main
+thread: the competition's Overview, Rules and Data pages and the Kaggle
+documentation were rendered in a browser; the staff notebook was read
+through Kaggle's public kernel API; the Python 3.13 documentation (30
+pages), the vLLM 0.19.1 documentation, the Microsoft WSL documentation,
+NVIDIA's CUDA on WSL guide, the Docker, uv, pytest and statsmodels
+documentation and the vendor pages were fetched and quoted from; the
+board was captured anonymously at 06:01 UTC (378 topics, 6,605 teams).
+Search used the free engines and the included monthly allowance of the
+search provider; nothing was billed beyond it (see the credit line in
+the chat hand-back). Every source is listed at the end of each document
+with its date.</p>
+</main>
+<footer>2026-11-24 · self-contained portable document (no external files, fonts or scripts) · generated from the markdown source of truth</footer>
+</body>
+</html>

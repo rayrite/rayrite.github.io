@@ -145,7 +145,7 @@
 <header class="hdr">
   <button class="icon-btn" id="menuBtn" title="Files" aria-label="Toggle file list">☰</button>
   <a class="mark" href="../../index.html" title="Back to portal">r</a>
-  <a class="wordmark" href="../../index.html" style="color:inherit">kaggle3<small>BCF Gemma-4 deliverables · 2026-11-11 – 2026-11-20</small></a>
+  <a class="wordmark" href="../../index.html" style="color:inherit">kaggle3<small>BCF Gemma-4 deliverables · 2026-11-11 – 2026-11-25</small></a>
   <button class="icon-btn" id="tocBtn" title="Contents" aria-label="Toggle table of contents" hidden>≡</button>
   <button class="icon-btn" id="fontBtn" title="Font size" aria-label="Cycle font size">A±</button>
   <button class="icon-btn" id="themeBtn" title="Toggle theme" aria-label="Toggle theme">◐</button>
@@ -183,7 +183,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js" integrity="sha384-Uq05+JLko69eOiPr39ta9bh7kld5PKZoU+fF7g0EXTAriEollhZ+DrN8Q/Oi8J2Q" crossorigin="anonymous"></script>
 <script>
 "use strict";
-/* ---------------- embedded manifest (updated 2026-11-20; paths relative to this folder) ---------------- */
+/* ---------------- embedded manifest (updated 2026-11-25; paths relative to this folder) ---------------- */
 const DOCS = [
  {
   "p": "2026-11-11-bcf-gemma4-brain/01-task1-dataset-classification-rootcause.md",
@@ -412,6 +412,10 @@ const DOCS = [
  {
   "p": "2026-11-20_BCF_Gemma4_Winning_Design/04_V2_CHANGELOG_AND_COMPARISON.md",
   "t": "BCF v2 Changelog & Side-by-Side Comparison vs. Preserved v1"
+ },
+ {
+  "p": "2026-11-25_BCF_Dataset_RCA_and_DualTrack_Brain/01_Task1_Public_Dataset_Classification_and_Root_Cause_Analysis.md",
+  "t": "Kaggle Google Gemma 4 Developer Agent Competition — Task 1: Complete Public Dataset Taxonomy & 129-Problem Root Cause Analysis"
  }
 ];
 
@@ -445,7 +449,10 @@ const GROUPS = [
     counts: "4 md (98 KB · README + 3 tasks)", home: "00_README.md", homeLabel: "Playbook" },
   { f: "2026-11-20_BCF_Deep_Research_Parity_Eval_and_Submission_Audit", name: "BCF Deep Research Package — Python 3.13 Traps · Parity · Local Eval · Submission Audit",
     blurb: "Full 5-task deep research suite: Python 3.13 official exception traps across 10 error families, wall-clock bottlenecks &amp; 16-lever tuning matrix, PowerSpec G914 (RTX 5090) WSL2 &amp; Zorin OS 18 parity plan, N=58 local-to-Kaggle LB correlation &amp; calibration guide, and exhaustive 22-issue community submission audit with P0 script_path remediation.",
-    counts: "6 md (188 KB · README + 5 tasks)", home: "00_README.md", homeLabel: "Deep Research" }
+    counts: "6 md (188 KB · README + 5 tasks)", home: "00_README.md", homeLabel: "Deep Research" },
+  { f: "2026-11-25_BCF_Dataset_RCA_and_DualTrack_Brain", name: "Dataset RCA & Dual-Track Brain — 129-Task Taxonomy (2026-11-25)",
+    blurb: "Task 1 deliverable of 2026-11-25: 100% ground-truth-verified taxonomy and root-cause analysis of all 129 public competition tasks from tasks.jsonl, feeding the Batonic Coding Framework (BCF) dual-track submission brain — Gemma 4 31B main track and Gemma 4 E4B bonus track.",
+    counts: "1 comprehensive md", home: "01_Task1_Public_Dataset_Classification_and_Root_Cause_Analysis.md", homeLabel: "Task 1 RCA" }
 ];
 
 /* ---------------- helpers ---------------- */
@@ -671,9 +678,9 @@ function showOverview() {
   }).join("");
   $("article").innerHTML =
     `<div class="hero">
-       <span class="badge">deliverable drop · 2026-11-11 – 2026-11-20</span>
+       <span class="badge">deliverable drop · 2026-11-11 – 2026-11-25</span>
        <h1>BCF × Gemma 4 Developer Agent Competition</h1>
-       <p class="lede">Ten deliverables from the Batonic Coding Framework (BCF) competition work: the submission-ready Brain agent packages, hardening research, the local test-harness setup guide, executed-backbone replay comparisons, scoring parity explainer, the 129-task dataset RCA &amp; dual-track brain architecture, the BCF v2 bottlenecks, 32-lever tuning &amp; fast-iteration playbook, the 11-20 winning design &amp; guaranteed-score harness, the wall-clock bottlenecks &amp; 24 tuning levers playbook, and the deep research parity, local eval &amp; 22-issue submission audit. ${DOCS.length} documents (${md} markdown + ${DOCS.length - md} HTML) across 85 hosted files — markdown opens in-page from the sidebar tree, HTML decks open full-screen in their own tab.</p>
+       <p class="lede">Eleven deliverables from the Batonic Coding Framework (BCF) competition work: the submission-ready Brain agent packages, hardening research, the local test-harness setup guide, executed-backbone replay comparisons, scoring parity explainer, the 129-task dataset RCA &amp; dual-track brain architecture, the BCF v2 bottlenecks, 32-lever tuning &amp; fast-iteration playbook, the 11-20 winning design &amp; guaranteed-score harness, the wall-clock bottlenecks &amp; 24 tuning levers playbook, the deep research parity, local eval &amp; 22-issue submission audit, and the 11-25 dataset taxonomy &amp; 129-problem root-cause analysis. ${DOCS.length} documents (${md} markdown + ${DOCS.length - md} HTML) across 94 hosted files — markdown opens in-page from the sidebar tree, HTML decks open full-screen in their own tab.</p>
      </div>
      <div class="cards">${cards}</div>`;
   $("article").querySelectorAll("[data-focus]").forEach(b => b.onclick = e => {

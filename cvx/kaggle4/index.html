@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BCF Brain Packages — RCA · Tuning &amp; Parity · Naive vs Brain · Private Portfolio · Test Sets · G914 Lift-and-Shift</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" integrity="sha384-wFjoQjtV1y5jVHbt0p35Ui8aV8GVpEZkyF99OXWqP/eNJDU93D3Ugxkoyh6Y2I4A" crossorigin="anonymous">
+<link rel="stylesheet" href="../../site-assets/shell.css">
+<style>
+  .shell { display: grid; grid-template-columns: var(--side-w, 250px) minmax(0,1fr) var(--toc-w, 190px); min-height: calc(100vh - 53px); }
+  .side { border-right: 1px solid var(--bd); background: var(--bg2); padding: var(--pad) 8px; overflow-y: auto; max-height: calc(100vh - 53px); position: sticky; top: 53px; }
+  .side h4, .toc h4 { font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--tx2); margin: 6px 6px 8px; }
+  .side .searchpill { width: 100%; margin: 0 0 8px; padding: 6px 10px; }
+  .main { padding: var(--pad) 16px 60px; min-width: 0; }
+  .toc { border-left: 1px solid var(--bd); background: var(--bg2); padding: var(--pad) 8px; overflow-y: auto; max-height: calc(100vh - 53px); position: sticky; top: 53px; }
+  .toc a { display: block; font-size: 0.74rem; color: var(--tx2); padding: 4px 8px; border-radius: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .toc a:hover { background: var(--bg3); color: var(--tx); }
+  .toc a.l3 { padding-left: 20px; }
+
+  .crumb { font-family: var(--font-mono); font-size: 0.7rem; color: var(--tx2); margin-bottom: 10px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .crumb b { color: var(--accent); font-weight: 600; }
+  .crumb a { color: var(--tx2); }
+  .crumb a:hover { color: var(--accent); }
+
+  /* sidebar tree */
+  .grp { margin: 0 0 4px; }
+  .grp > summary { list-style: none; display: flex; align-items: center; gap: 7px; padding: 8px 9px; cursor: pointer; border-radius: calc(var(--radius) * 0.6); font-size: 0.8rem; font-weight: 600; color: var(--tx); min-height: 36px; }
+  .grp > summary::-webkit-details-marker { display: none; }
+  .grp > summary:hover { background: var(--bg3); }
+  .grp > summary .tw, details.dir > summary .tw { flex: none; width: 10px; color: var(--tx2); font-size: 0.62rem; transition: transform .12s; }
+  .grp[open] > summary .tw, details.dir[open] > summary .tw { transform: rotate(90deg); }
+  .grp > summary .cnt { margin-left: auto; flex: none; font: 500 0.64rem var(--font-mono); color: var(--tx2); background: var(--bg3); border-radius: 999px; padding: 1px 8px; }
+  .grp > summary .gdot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex: none; }
+  details.dir { margin-left: 10px; }
+  details.dir > summary { list-style: none; display: flex; align-items: center; gap: 6px; padding: 5px 8px; cursor: pointer; border-radius: calc(var(--radius) * 0.6); font: 500 0.72rem var(--font-mono); color: var(--tx2); }
+  details.dir > summary::-webkit-details-marker { display: none; }
+  details.dir > summary:hover { background: var(--bg3); color: var(--tx); }
+  .tree { margin-left: 10px; border-left: 1px solid var(--bd); padding-left: 4px; }
+  .grp > .tree { margin-left: 14px; }
+  a.file { display: flex; align-items: center; gap: 7px; text-align: left; background: none; border: 0; color: var(--tx2); font: inherit; font-size: 0.76rem; padding: 6px 9px; border-radius: calc(var(--radius) * 0.6); cursor: pointer; min-height: 32px; text-decoration: none; }
+  a.file .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--bd); flex: none; }
+  a.file .nm { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--font-mono); font-size: 0.72rem; }
+  a.file .ht { margin-left: auto; flex: none; font-size: 0.6rem; color: var(--tx2); border: 1px solid var(--bd); border-radius: 4px; padding: 0 4px; }
+  a.file:hover { background: var(--bg3); color: var(--tx); }
+  a.file.on { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+  a.file.on .dot { background: var(--accent); }
+  [hidden] { display: none !important; }
+
+  /* article (markdown) */
+  .article { max-width: none; }
+  .article h1 { font-size: 1.5rem; letter-spacing: -0.01em; margin: 0 0 4px; }
+  .byline { color: var(--tx2); font-size: 0.74rem; font-family: var(--font-mono); margin-bottom: 16px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .article pre { background: var(--bg3); border: 1px solid var(--bd); border-radius: var(--radius); padding: 10px 12px; overflow-x: auto; font-size: 0.8rem; margin: 12px 0; }
+  .article code { font-family: var(--font-mono); font-size: 0.85em; background: var(--bg3); border-radius: 4px; padding: 1px 5px; }
+  .article pre code { background: none; padding: 0; }
+  .article blockquote { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 var(--radius) var(--radius) 0; padding: 8px 12px; margin: 12px 0; }
+  .article table { border-collapse: collapse; width: 100%; font-size: 0.8rem; display: block; overflow-x: auto; margin: 12px 0; }
+  .article th, .article td { border: 1px solid var(--bd); padding: 5px 9px; text-align: left; vertical-align: top; max-width: 80ch; }
+  .article th { background: var(--bg3); }
+  .article img { max-width: 100%; border-radius: var(--radius); }
+  .article h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-bottom: 4px; border-bottom: 1px solid var(--bd); }
+  .article h3 { font-size: 0.98rem; margin: 20px 0 6px; }
+  .state-msg { color: var(--tx2); text-align: center; padding: 40px 16px; font-size: 0.88rem; }
+
+  /* ---- compact tablet-first spacing ---- */
+  :root { --pad: 6px; --gap: 6px; --cardpad: 8px; --hdr-h: 40px; }
+  .hdr { padding: 4px 6px; gap: 6px; }
+  .side, .toc { top: var(--hdr-h); max-height: calc(100vh - var(--hdr-h)); padding: 6px 4px; }
+  .side .searchpill { margin-bottom: 6px; padding: 4px 8px; }
+  .grp > summary { padding: 6px 7px; min-height: 30px; font-size: 0.76rem; }
+  details.dir > summary { padding: 3px 7px; }
+  a.file { padding: 4px 7px; min-height: 27px; font-size: 0.74rem; }
+  .main { padding: 6px 10px 40px; }
+  .crumb { margin-bottom: 6px; }
+  .article h1 { font-size: 1.3rem; }
+  .article h2 { margin: 18px 0 6px; }
+  .article h3 { margin: 14px 0 4px; }
+  .article pre { padding: 8px 10px; margin: 8px 0; font-size: 0.76rem; }
+  .article table { font-size: 0.76rem; margin: 8px 0; }
+  .article th, .article td { padding: 4px 7px; }
+  .byline { margin-bottom: 10px; }
+  .navbar { margin-top: 16px; padding-top: 8px; }
+  .hero { margin: 2px 0 12px; }
+  .hero h1 { font-size: 1.35rem; }
+  .cards { gap: 8px; margin-top: 10px; }
+  .gcard { padding: 10px; gap: 6px; }
+  .bottombar { padding: 4px 6px; }
+
+  /* ---- pane collapse: both panes start minimized (body classes).
+         Grid tracks are restated per state so auto-placement never
+         drops .main into a collapsed track. ---- */
+  @media (min-width: 901px) { body.side-closed .side { display: none; } }
+  body.toc-closed .toc { display: none; }
+  body.side-closed .shell { grid-template-columns: minmax(0,1fr) var(--toc-w, 190px); }
+  body.toc-closed .shell { grid-template-columns: var(--side-w, 250px) minmax(0,1fr); }
+  body.side-closed.toc-closed .shell { grid-template-columns: minmax(0,1fr); }
+  @media (max-width: 1080px) {
+    body.side-closed .shell,
+    body.side-closed.toc-closed .shell { grid-template-columns: minmax(0,1fr); }
+  }
+  @media (max-width: 900px) {
+    /* drawer mode: the tree is a fixed overlay, so the grid is always single-track */
+    .shell,
+    body.toc-closed .shell,
+    body.side-closed .shell,
+    body.side-closed.toc-closed .shell { grid-template-columns: minmax(0,1fr); }
+  }
+
+  /* ---- themed scrollbars ---- */
+  * { scrollbar-width: thin; scrollbar-color: var(--bd) transparent; }
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--bg3); border-radius: 8px; border: 2px solid var(--bg); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--bd); }
+
+  /* overview */
+  .hero { margin: 6px 0 18px; }
+  .hero h1 { font-size: 1.65rem; letter-spacing: -0.015em; margin: 8px 0 6px; }
+  .hero .lede { color: var(--tx2); font-size: 0.88rem; max-width: 85ch; margin: 0; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 12px; margin-top: 16px; }
+  .gcard { display: flex; flex-direction: column; gap: 8px; background: var(--bg2); border: 1px solid var(--bd); border-radius: var(--radius); padding: var(--cardpad); }
+  .gcard h2 { font-size: 1rem; margin: 0; letter-spacing: -0.01em; }
+  .gcard .folder { font: 500 0.68rem var(--font-mono); color: var(--tx2); }
+  .gcard p { font-size: 0.8rem; color: var(--tx2); margin: 0; line-height: 1.55; }
+  .gcard .meta { font: 500 0.68rem var(--font-mono); color: var(--tx); background: var(--bg3); border-radius: 4px; padding: 3px 8px; align-self: flex-start; }
+  .gcard .row { display: flex; gap: 8px; margin-top: auto; padding-top: 4px; flex-wrap: wrap; }
+  .navbar { display: flex; gap: 8px; align-items: center; justify-content: space-between; margin-top: 28px; border-top: 1px solid var(--bd); padding-top: 12px; }
+  .navbar .pos { font-family: var(--font-mono); font-size: 0.72rem; color: var(--tx2); }
+  .bottombar { display: none; }
+
+  @media (max-width: 1080px) { .toc { display: none; } #tocBtn { display: none; } .shell { grid-template-columns: var(--side-w, 230px) minmax(0,1fr); } }
+  @media (max-width: 900px) {
+    .shell { grid-template-columns: minmax(0,1fr); }
+    .side { display: none; }
+    body.side-open .side { display: block; position: fixed; left: 0; right: auto; top: var(--hdr-h); bottom: 0; width: min(280px, 80vw); z-index: 70; max-height: none; border-right: 1px solid var(--bd); box-shadow: 0 0 40px rgba(0,0,0,.4); }
+    .bottombar { display: flex; gap: 8px; position: fixed; left: 0; right: 0; bottom: 0; z-index: 60; padding: 8px 10px; background: color-mix(in srgb, var(--bg2) 92%, transparent); backdrop-filter: blur(8px); border-top: 1px solid var(--bd); }
+    .bottombar .btn { flex: 1; }
+    .main { padding-bottom: 90px; }
+  }
+</style>
+</head>
+<body class="side-closed toc-closed">
+<header class="hdr">
+  <button class="icon-btn" id="menuBtn" title="Files" aria-label="Toggle file list">☰</button>
+  <a class="mark" href="../../index.html" title="Back to portal">r</a>
+  <a class="wordmark" href="../../index.html" style="color:inherit">kaggle4<small>BCF brain packages · 2026-11-23 – 2026-11-25</small></a>
+  <button class="icon-btn" id="tocBtn" title="Contents" aria-label="Toggle table of contents" hidden>≡</button>
+  <button class="icon-btn" id="fontBtn" title="Font size" aria-label="Cycle font size">A±</button>
+  <button class="icon-btn" id="themeBtn" title="Toggle theme" aria-label="Toggle theme">◐</button>
+</header>
+
+<div class="shell">
+  <aside class="side" id="side">
+    <label class="searchpill">
+      <span aria-hidden="true">⌕</span>
+      <input id="fq" type="search" placeholder="Filter documents…" aria-label="Filter documents">
+    </label>
+    <h4 id="fileCount"></h4>
+    <div id="tree"></div>
+  </aside>
+  <main class="main" id="main">
+    <div class="crumb" id="crumb"></div>
+    <div class="article" id="article"><div class="state-msg">Loading…</div></div>
+    <div class="navbar" id="navbar" hidden>
+      <button class="btn" id="prevBtn">← Prev</button>
+      <span class="pos" id="pos"></span>
+      <button class="btn" id="nextBtn">Next →</button>
+    </div>
+  </main>
+  <nav class="toc" id="toc" aria-label="On this page" hidden><h4>On this page</h4><div id="tocList"></div></nav>
+</div>
+
+<nav class="bottombar" id="bottombar" hidden>
+  <button class="btn" id="mPrev">←</button>
+  <button class="btn" id="mNext">→</button>
+</nav>
+
+<script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js" integrity="sha384-zbcZAIxlvJtNE3Dp5nxLXdXtXyxwOdnILY1TDPVmKFhl4r4nSUG1r8bcFXGVa4Te" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js" integrity="sha384-cwS6YdhLI7XS60eoDiC+egV0qHp8zI+Cms46R0nbn8JrmoAzV9uFL60etMZhAnSu" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha384-06z5D//U/xpvxZHuUz92xBvq3DqBBFi7Up53HRrbV7Jlv7Yvh/MZ7oenfUe9iCEt" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js" integrity="sha384-Uq05+JLko69eOiPr39ta9bh7kld5PKZoU+fF7g0EXTAriEollhZ+DrN8Q/Oi8J2Q" crossorigin="anonymous"></script>
+<script>
+"use strict";
+/* ---------------- embedded manifest (updated 2026-11-25; paths relative to this folder) ---------------- */
+const DOCS = [
+ {
+  "p": "2026-11-23_BCF_Brain_and_Dataset_RCA/00_README.md",
+  "t": "Gemma 4 Developer Agent: dataset analysis and the BCF brain"
+ },
+ {
+  "p": "2026-11-23_BCF_Brain_and_Dataset_RCA/01_Dataset_Taxonomy_and_Root_Cause_Analysis.md",
+  "t": "Gemma 4 Developer Agent: public problem dataset - taxonomy and root-cause analysis of all 129 tasks"
+ },
+ {
+  "p": "2026-11-23_BCF_Brain_and_Dataset_RCA/02_BCF_Brain_Design_and_Justification.md",
+  "t": "BCF Brain - design and justification for the Gemma 4 31B and E4B tracks"
+ },
+ {
+  "p": "2026-11-23_BCF_Brain_and_Dataset_RCA/03_Validation_Results_and_Submission_Playbook.md",
+  "t": "Validation results and submission playbook"
+ },
+ {
+  "p": "2026-11-23_BCF_Brain_and_Dataset_RCA/04_Table_QC_Report.md",
+  "t": "Table quality check"
+ },
+ {
+  "p": "2026-11-23_BCF_Brain_and_Dataset_RCA/analysis/RCA-SCHEMA.md",
+  "t": "RCA coding scheme (BCF taxonomy v1) — read fully before coding any task"
+ },
+ {
+  "p": "2026-11-23_BCF_Brain_and_Dataset_RCA/analysis/README.md",
+  "t": "analysis: how Document 01 was produced"
+ },
+ {
+  "p": "2026-11-23_BCF_Brain_and_Dataset_RCA/analysis/doc03.tpl.md",
+  "t": "Doc 03 template — analysis working file"
+ },
+ {
+  "p": "2026-11-23_BCF_Brain_and_Dataset_RCA/analysis/doc02_parts/part1.md",
+  "t": "Doc 02 part 1 — design and justification (part 1)"
+ },
+ {
+  "p": "2026-11-23_BCF_Brain_and_Dataset_RCA/analysis/doc02_parts/part2.md",
+  "t": "Doc 02 part 2 — the deterministic cortex (bcf.py)"
+ },
+ {
+  "p": "2026-11-23_BCF_Brain_and_Dataset_RCA/analysis/doc02_parts/part3.md",
+  "t": "Doc 02 part 3 — winning, the 0.24 deadlock, pitfalls"
+ },
+ {
+  "p": "2026-11-23_BCF_Brain_and_Dataset_RCA/bcf-brain/README.md",
+  "t": "bcf-brain: the deterministic brain for the Batonic Coding Framework"
+ },
+ {
+  "p": "2026-11-23_BCF_Brain_and_Dataset_RCA/bcf-brain/dist/bcf-31b-flat/prompts/solver.md",
+  "t": "Solver prompt — bcf-31b-flat"
+ },
+ {
+  "p": "2026-11-23_BCF_Brain_and_Dataset_RCA/bcf-brain/dist/bcf-31b-flat/skills/bcf-spec/SKILL.md",
+  "t": "bcf-spec"
+ },
+ {
+  "p": "2026-11-23_BCF_Brain_and_Dataset_RCA/bcf-brain/dist/bcf-31b-noskill/prompts/solver.md",
+  "t": "Solver prompt — bcf-31b-noskill"
+ },
+ {
+  "p": "2026-11-23_BCF_Brain_and_Dataset_RCA/bcf-brain/dist/bcf-31b-sequential/prompts/bcf_plan.md",
+  "t": "Planning prompt — bcf-31b-sequential"
+ },
+ {
+  "p": "2026-11-23_BCF_Brain_and_Dataset_RCA/bcf-brain/dist/bcf-31b-sequential/prompts/solver.md",
+  "t": "Solver prompt — bcf-31b-sequential"
+ },
+ {
+  "p": "2026-11-23_BCF_Brain_and_Dataset_RCA/bcf-brain/dist/bcf-31b-sequential/skills/bcf-spec/SKILL.md",
+  "t": "bcf-spec"
+ },
+ {
+  "p": "2026-11-23_BCF_Brain_and_Dataset_RCA/bcf-brain/dist/bcf-e4b-flat/prompts/solver.md",
+  "t": "Solver prompt — bcf-e4b-flat"
+ },
+ {
+  "p": "2026-11-23_BCF_Brain_and_Dataset_RCA/bcf-brain/dist/bcf-e4b-flat/skills/bcf-spec/SKILL.md",
+  "t": "bcf-spec"
+ },
+ {
+  "p": "2026-11-23_BCF_Brain_and_Dataset_RCA/bcf-brain/dist/bcf-e4b-noskill/prompts/solver.md",
+  "t": "Solver prompt — bcf-e4b-noskill"
+ },
+ {
+  "p": "2026-11-23_BCF_Brain_and_Dataset_RCA/bcf-brain/dist/bcf-e4b-sequential/prompts/bcf_plan.md",
+  "t": "Planning prompt — bcf-e4b-sequential"
+ },
+ {
+  "p": "2026-11-23_BCF_Brain_and_Dataset_RCA/bcf-brain/dist/bcf-e4b-sequential/prompts/solver.md",
+  "t": "Solver prompt — bcf-e4b-sequential"
+ },
+ {
+  "p": "2026-11-23_BCF_Brain_and_Dataset_RCA/bcf-brain/dist/bcf-e4b-sequential/skills/bcf-spec/SKILL.md",
+  "t": "bcf-spec"
+ },
+ {
+  "p": "2026-11-23_BCF_Brain_and_Dataset_RCA/bcf-brain/src/prompts/plan_31b.md",
+  "t": "Brain source prompt — plan_31b"
+ },
+ {
+  "p": "2026-11-23_BCF_Brain_and_Dataset_RCA/bcf-brain/src/prompts/plan_e4b.md",
+  "t": "Brain source prompt — plan_e4b"
+ },
+ {
+  "p": "2026-11-23_BCF_Brain_and_Dataset_RCA/bcf-brain/src/prompts/solver_core_31b.md",
+  "t": "Brain source prompt — solver_core_31b"
+ },
+ {
+  "p": "2026-11-23_BCF_Brain_and_Dataset_RCA/bcf-brain/src/prompts/solver_core_e4b.md",
+  "t": "Brain source prompt — solver_core_e4b"
+ },
+ {
+  "p": "2026-11-23_BCF_Brain_and_Dataset_RCA/bcf-brain/src/prompts/solver_head_flat_31b.md",
+  "t": "Brain source prompt — solver_head_flat_31b"
+ },
+ {
+  "p": "2026-11-23_BCF_Brain_and_Dataset_RCA/bcf-brain/src/prompts/solver_head_flat_e4b.md",
+  "t": "Brain source prompt — solver_head_flat_e4b"
+ },
+ {
+  "p": "2026-11-23_BCF_Brain_and_Dataset_RCA/bcf-brain/src/prompts/solver_head_seq.md",
+  "t": "Brain source prompt — solver_head_seq"
+ },
+ {
+  "p": "2026-11-23_BCF_Brain_and_Dataset_RCA/bcf-brain/src/prompts/solver_noskill_31b.md",
+  "t": "Brain source prompt — solver_noskill_31b"
+ },
+ {
+  "p": "2026-11-23_BCF_Brain_and_Dataset_RCA/bcf-brain/src/prompts/solver_noskill_e4b.md",
+  "t": "Brain source prompt — solver_noskill_e4b"
+ },
+ {
+  "p": "2026-11-23_BCF_Brain_and_Dataset_RCA/bcf-brain/src/prompts/solver_tail_flat.md",
+  "t": "Brain source prompt — solver_tail_flat"
+ },
+ {
+  "p": "2026-11-23_BCF_Brain_and_Dataset_RCA/bcf-brain/src/prompts/solver_tail_seq.md",
+  "t": "Brain source prompt — solver_tail_seq"
+ },
+ {
+  "p": "2026-11-23_BCF_Brain_and_Dataset_RCA/bcf-brain/src/skills/bcf-spec/SKILL.md",
+  "t": "bcf-spec"
+ },
+ {
+  "p": "2026-11-24_BCF_Tuning_Bottlenecks_and_Parity/00_README.html",
+  "t": "BCF brain: tuning, bottlenecks and parity (2026-11-24)"
+ },
+ {
+  "p": "2026-11-24_BCF_Tuning_Bottlenecks_and_Parity/00_README.md",
+  "t": "BCF brain: exception traps, time bottlenecks, tuning levers, local-versus-Kaggle parity, scoring guide, board audit, roadmap, and setup guide"
+ },
+ {
+  "p": "2026-11-24_BCF_Tuning_Bottlenecks_and_Parity/01_Exception_Handling_Traps_by_Error_Family.md",
+  "t": "Task 1 - Python exception-handling traps and post-mortem playbook for every error family in the problem set"
+ },
+ {
+  "p": "2026-11-24_BCF_Tuning_Bottlenecks_and_Parity/02_Time_Bottlenecks_and_Tuning_Levers.md",
+  "t": "Task 2 - Wall-clock bottlenecks, the brain's tuning levers, and a fast feedback loop"
+ },
+ {
+  "p": "2026-11-24_BCF_Tuning_Bottlenecks_and_Parity/03_Local_Kaggle_Parity_Plan.md",
+  "t": "Task 3 - Making the local rig behave like the Kaggle scorer: feature-parity plan for Windows 11 with WSL2 and for Zorin OS 18"
+ },
+ {
+  "p": "2026-11-24_BCF_Tuning_Bottlenecks_and_Parity/04_Local_Scoring_and_Interpretation_Guide.md",
+  "t": "Task 4 - Scoring and evaluating local runs: how to read them, how they relate to the official score, and how to turn them into tuning decisions"
+ },
+ {
+  "p": "2026-11-24_BCF_Tuning_Bottlenecks_and_Parity/05_Board_Issues_Graceful_Handling_Audit.md",
+  "t": "Task 5 - Does the BCF brain handle what other teams are hitting? Audit, defects found, and the validated fix"
+ },
+ {
+  "p": "2026-11-24_BCF_Tuning_Bottlenecks_and_Parity/06_Impact_Effort_Roadmap.md",
+  "t": "Task 6 - Impact-effort analysis and roadmap: which levers to pull, with which values, in which order"
+ },
+ {
+  "p": "2026-11-24_BCF_Tuning_Bottlenecks_and_Parity/07_Setup_and_Run_Guide.html",
+  "t": "07 - Setup, install and run guide"
+ },
+ {
+  "p": "2026-11-24_BCF_Tuning_Bottlenecks_and_Parity/07_Setup_and_Run_Guide.md",
+  "t": "Task 7 - Setup, install and run guide: the local test harness for the BCF brain on a PowerSpec G914, with official submissions for the main and the bonus track"
+ },
+ {
+  "p": "2026-11-24_BCF_Tuning_Bottlenecks_and_Parity/08_Table_QC_Report.md",
+  "t": "Table quality check of the package (2026-11-24)"
+ },
+ {
+  "p": "2026-11-24_BCF_Tuning_Bottlenecks_and_Parity/bcf-brain-patched/README.md",
+  "t": "bcf-brain-patched: the BCF brain with the audited fixes of 2026-11-24"
+ },
+ {
+  "p": "2026-11-24_BCF_Tuning_Bottlenecks_and_Parity/bcf-brain-patched/dist/bcf-31b-flat/prompts/solver.md",
+  "t": "Solver prompt — bcf-31b-flat"
+ },
+ {
+  "p": "2026-11-24_BCF_Tuning_Bottlenecks_and_Parity/bcf-brain-patched/dist/bcf-31b-flat/skills/bcf-spec/SKILL.md",
+  "t": "bcf-spec"
+ },
+ {
+  "p": "2026-11-24_BCF_Tuning_Bottlenecks_and_Parity/bcf-brain-patched/dist/bcf-31b-noskill/prompts/solver.md",
+  "t": "Solver prompt — bcf-31b-noskill"
+ },
+ {
+  "p": "2026-11-24_BCF_Tuning_Bottlenecks_and_Parity/bcf-brain-patched/dist/bcf-31b-sequential/prompts/bcf_plan.md",
+  "t": "Planning prompt — bcf-31b-sequential"
+ },
+ {
+  "p": "2026-11-24_BCF_Tuning_Bottlenecks_and_Parity/bcf-brain-patched/dist/bcf-31b-sequential/prompts/solver.md",
+  "t": "Solver prompt — bcf-31b-sequential"
+ },
+ {
+  "p": "2026-11-24_BCF_Tuning_Bottlenecks_and_Parity/bcf-brain-patched/dist/bcf-31b-sequential/skills/bcf-spec/SKILL.md",
+  "t": "bcf-spec"
+ },
+ {
+  "p": "2026-11-24_BCF_Tuning_Bottlenecks_and_Parity/bcf-brain-patched/dist/bcf-e4b-flat/prompts/solver.md",
+  "t": "Solver prompt — bcf-e4b-flat"
+ },
+ {
+  "p": "2026-11-24_BCF_Tuning_Bottlenecks_and_Parity/bcf-brain-patched/dist/bcf-e4b-flat/skills/bcf-spec/SKILL.md",
+  "t": "bcf-spec"
+ },
+ {
+  "p": "2026-11-24_BCF_Tuning_Bottlenecks_and_Parity/bcf-brain-patched/dist/bcf-e4b-noskill/prompts/solver.md",
+  "t": "Solver prompt — bcf-e4b-noskill"
+ },
+ {
+  "p": "2026-11-24_BCF_Tuning_Bottlenecks_and_Parity/bcf-brain-patched/dist/bcf-e4b-sequential/prompts/bcf_plan.md",
+  "t": "Planning prompt — bcf-e4b-sequential"
+ },
+ {
+  "p": "2026-11-24_BCF_Tuning_Bottlenecks_and_Parity/bcf-brain-patched/dist/bcf-e4b-sequential/prompts/solver.md",
+  "t": "Solver prompt — bcf-e4b-sequential"
+ },
+ {
+  "p": "2026-11-24_BCF_Tuning_Bottlenecks_and_Parity/bcf-brain-patched/dist/bcf-e4b-sequential/skills/bcf-spec/SKILL.md",
+  "t": "bcf-spec"
+ },
+ {
+  "p": "2026-11-24_BCF_Tuning_Bottlenecks_and_Parity/bcf-brain-patched/src/prompts/plan_31b.md",
+  "t": "Brain source prompt — plan_31b"
+ },
+ {
+  "p": "2026-11-24_BCF_Tuning_Bottlenecks_and_Parity/bcf-brain-patched/src/prompts/plan_e4b.md",
+  "t": "Brain source prompt — plan_e4b"
+ },
+ {
+  "p": "2026-11-24_BCF_Tuning_Bottlenecks_and_Parity/bcf-brain-patched/src/prompts/solver_core_31b.md",
+  "t": "Brain source prompt — solver_core_31b"
+ },
+ {
+  "p": "2026-11-24_BCF_Tuning_Bottlenecks_and_Parity/bcf-brain-patched/src/prompts/solver_core_e4b.md",
+  "t": "Brain source prompt — solver_core_e4b"
+ },
+ {
+  "p": "2026-11-24_BCF_Tuning_Bottlenecks_and_Parity/bcf-brain-patched/src/prompts/solver_head_flat_31b.md",
+  "t": "Brain source prompt — solver_head_flat_31b"
+ },
+ {
+  "p": "2026-11-24_BCF_Tuning_Bottlenecks_and_Parity/bcf-brain-patched/src/prompts/solver_head_flat_e4b.md",
+  "t": "Brain source prompt — solver_head_flat_e4b"
+ },
+ {
+  "p": "2026-11-24_BCF_Tuning_Bottlenecks_and_Parity/bcf-brain-patched/src/prompts/solver_head_seq.md",
+  "t": "Brain source prompt — solver_head_seq"
+ },
+ {
+  "p": "2026-11-24_BCF_Tuning_Bottlenecks_and_Parity/bcf-brain-patched/src/prompts/solver_noskill_31b.md",
+  "t": "Brain source prompt — solver_noskill_31b"
+ },
+ {
+  "p": "2026-11-24_BCF_Tuning_Bottlenecks_and_Parity/bcf-brain-patched/src/prompts/solver_noskill_e4b.md",
+  "t": "Brain source prompt — solver_noskill_e4b"
+ },
+ {
+  "p": "2026-11-24_BCF_Tuning_Bottlenecks_and_Parity/bcf-brain-patched/src/prompts/solver_tail_flat.md",
+  "t": "Brain source prompt — solver_tail_flat"
+ },
+ {
+  "p": "2026-11-24_BCF_Tuning_Bottlenecks_and_Parity/bcf-brain-patched/src/prompts/solver_tail_seq.md",
+  "t": "Brain source prompt — solver_tail_seq"
+ },
+ {
+  "p": "2026-11-24_BCF_Tuning_Bottlenecks_and_Parity/bcf-brain-patched/src/skills/bcf-spec/SKILL.md",
+  "t": "bcf-spec"
+ },
+ {
+  "p": "2026-11-24_BCF_Tuning_Bottlenecks_and_Parity/bcf-brain-patched/validation/PATCHED-VALIDATION-2026-11-24.md",
+  "t": "Validation of bcf-brain-patched (2026-11-24)"
+ },
+ {
+  "p": "2026-11-24_BCF_Tuning_Bottlenecks_and_Parity/tools/portable-toc.html",
+  "t": "Portable TOC — pandoc HTML template"
+ },
+ {
+  "p": "2026-11-25_BCF_Naive_vs_Brain_Hypothetical_vs_Actual/00_README.md",
+  "t": "Naive agent against the BCF brain on httpx_3672: hypothetical beside actual"
+ },
+ {
+  "p": "2026-11-25_BCF_Naive_vs_Brain_Hypothetical_vs_Actual/01_Walkthrough_httpx_3672.md",
+  "t": "The walkthrough in markdown: every call, both verdicts, its variance"
+ },
+ {
+  "p": "2026-11-25_BCF_Naive_vs_Brain_Hypothetical_vs_Actual/02_Hypothetical_vs_Actual_Variance.md",
+  "t": "Hypothetical against actual: where v5's emulator and the real harness differ, and why"
+ },
+ {
+  "p": "2026-11-25_BCF_Naive_vs_Brain_Hypothetical_vs_Actual/03-bcf-simulation-httpx-3672.slides.v6.html",
+  "t": "httpx_3672: naive vs BCF, hypothetical beside actual · v6"
+ },
+ {
+  "p": "2026-11-25_BCF_Naive_vs_Brain_Hypothetical_vs_Actual/03_How_the_Brain_Improves_on_Naive.md",
+  "t": "How the current BCF brain improves on the naive agent, with the real call that shows it"
+ },
+ {
+  "p": "2026-11-25_BCF_Naive_vs_Brain_Hypothetical_vs_Actual/04_Live_Run_Playbook.md",
+  "t": "Live-run playbook: watch the BCF brain make its own decisions on the RTX 5090"
+ },
+ {
+  "p": "2026-11-25_BCF_Naive_vs_Brain_Hypothetical_vs_Actual/05_Evidence_Index_and_Sources.md",
+  "t": "Evidence index and sources"
+ },
+ {
+  "p": "2026-11-25_BCF_Naive_vs_Brain_Hypothetical_vs_Actual/06_Table_QC_Report.md",
+  "t": "Table quality check of this package's markdown"
+ },
+ {
+  "p": "2026-11-25_BCF_Naive_vs_Brain_Hypothetical_vs_Actual/evidence/digests/dataset_digest.md",
+  "t": "Data digest — `httpx_3672`, its nearest neighbours, and the 129-task public set"
+ },
+ {
+  "p": "2026-11-25_BCF_Naive_vs_Brain_Hypothetical_vs_Actual/evidence/digests/design_digest.md",
+  "t": "BCF brain: design and evidence digest (naive-agent vs. scaffold)"
+ },
+ {
+  "p": "2026-11-25_BCF_Naive_vs_Brain_Hypothetical_vs_Actual/evidence/digests/harness_digest.md",
+  "t": "Engineering digest: real Kaggle \"Gemma 4 Developer Agent\" harness (swegemma 0.2.11 / adk_eval_core 0.1.0 / adk_submission 0.2.13 / google_adk 1.36.1)"
+ },
+ {
+  "p": "2026-11-25_BCF_Naive_vs_Brain_Hypothetical_vs_Actual/live-run-kit/PLAYBOOK.md",
+  "t": "Live-run playbook: watch the BCF brain make its own decisions on the RTX 5090"
+ },
+ {
+  "p": "2026-11-25_BCF_Naive_vs_Brain_Hypothetical_vs_Actual/live-run-kit/replay/README.md",
+  "t": "Replay toolkit: the real harness with scripted calls"
+ },
+ {
+  "p": "2026-11-25_BCF_Private_Portfolio_20/00_README.md",
+  "t": "BCF brain: a private 20-task portfolio, four sets to rotate, and where more tasks come from"
+ },
+ {
+  "p": "2026-11-25_BCF_Private_Portfolio_20/01_Portfolio_Recommendation.md",
+  "t": "The 20-task portfolio for the BCF brain"
+ },
+ {
+  "p": "2026-11-25_BCF_Private_Portfolio_20/02_Repository_Recommendations.md",
+  "t": "Repository recommendations: where to get tasks, and where to mine new ones"
+ },
+ {
+  "p": "2026-11-25_BCF_Private_Portfolio_20/03_Problem_Source_Repositories.md",
+  "t": "Problem sources across the internet: repositories useful for creating tasks with the competition's rigour"
+ },
+ {
+  "p": "2026-11-25_BCF_Private_Portfolio_20/04_Build_Verify_and_Run.md",
+  "t": "Build, verify and run: how to use the portfolio, and how to create more tasks"
+ },
+ {
+  "p": "2026-11-25_BCF_Private_Portfolio_20/05_Brain_Dry_Run_Findings.md",
+  "t": "What a dry run of the brain's helper found on the candidate tasks"
+ },
+ {
+  "p": "2026-11-25_BCF_Private_Portfolio_20/06_Measurement_Protocol.md",
+  "t": "How to measure with the panel"
+ },
+ {
+  "p": "2026-11-25_BCF_Private_Portfolio_20/07_Table_QC_Report.md",
+  "t": "Table QC report"
+ },
+ {
+  "p": "2026-11-25_BCF_Private_Portfolio_20/08_Sources.md",
+  "t": "Sources"
+ },
+ {
+  "p": "2026-11-25_BCF_Private_Portfolio_20/09_Rotation_Panels.md",
+  "t": "Rotation panels R1 to R4: four more sets of 20"
+ },
+ {
+  "p": "2026-11-25_BCF_Private_Portfolio_20/data/panel_power.md",
+  "t": "Panel power table — detection power by run count"
+ },
+ {
+  "p": "2026-11-25_BCF_Private_Portfolio_20/portfolio/_fragments/alternates.md",
+  "t": "Alternate portfolio candidates"
+ },
+ {
+  "p": "2026-11-25_BCF_Private_Portfolio_20/portfolio/_fragments/anchor_repos.md",
+  "t": "Anchor repositories"
+ },
+ {
+  "p": "2026-11-25_BCF_Private_Portfolio_20/portfolio/_fragments/confirm40.md",
+  "t": "Confirm-40 table"
+ },
+ {
+  "p": "2026-11-25_BCF_Private_Portfolio_20/portfolio/_fragments/fsp_repos.md",
+  "t": "FreshSWE-Py repositories"
+ },
+ {
+  "p": "2026-11-25_BCF_Private_Portfolio_20/portfolio/_fragments/leaderboard_repos.md",
+  "t": "Leaderboard repositories"
+ },
+ {
+  "p": "2026-11-25_BCF_Private_Portfolio_20/portfolio/_fragments/p20_mix.md",
+  "t": "P20 mix rationale"
+ },
+ {
+  "p": "2026-11-25_BCF_Private_Portfolio_20/portfolio/_fragments/p20_table.md",
+  "t": "P20 task table — 20 tasks with RCA columns"
+ },
+ {
+  "p": "2026-11-25_BCF_Private_Portfolio_20/portfolio/_fragments/rotation_summary.md",
+  "t": "Rotation sets summary"
+ },
+ {
+  "p": "2026-11-25_BCF_Private_Portfolio_20/portfolio/_fragments/rotation_tables.md",
+  "t": "Rotation set task tables"
+ },
+ {
+  "p": "2026-11-25_BCF_Private_Portfolio_20/portfolio/_fragments/rotation_validation.md",
+  "t": "Rotation set validation"
+ },
+ {
+  "p": "2026-11-25_BCF_Private_Portfolio_20/tools/README.md",
+  "t": "Tools"
+ },
+ {
+  "p": "2026-11-25_BCF_Test_Sets_Playbook/00_README.md",
+  "t": "BCF test sets: the playbook"
+ },
+ {
+  "p": "2026-11-25_BCF_Test_Sets_Playbook/01_Playbook_Install_Zorin_OS_18.md",
+  "t": "Playbook 1. Install everything on Zorin OS 18"
+ },
+ {
+  "p": "2026-11-25_BCF_Test_Sets_Playbook/02_Playbook_First_Run_and_Gates.md",
+  "t": "Playbook 2. First run: the gate, the model server, the first tasks"
+ },
+ {
+  "p": "2026-11-25_BCF_Test_Sets_Playbook/03_Playbook_The_Test_Sets.md",
+  "t": "Playbook 3. The test sets: what they are and which one to use"
+ },
+ {
+  "p": "2026-11-25_BCF_Test_Sets_Playbook/04_Playbook_Cut_a_Set_Into_Slices.md",
+  "t": "Playbook 4. Cut a set of 20 into smaller sets for fast loops"
+ },
+ {
+  "p": "2026-11-25_BCF_Test_Sets_Playbook/05_Playbook_Compare_Two_Versions.md",
+  "t": "Playbook 5. Compare two versions of the brain"
+ },
+ {
+  "p": "2026-11-25_BCF_Test_Sets_Playbook/06_Playbook_Rotate_and_Confirm.md",
+  "t": "Playbook 6. Rotate through the sets, and confirm a decision"
+ },
+ {
+  "p": "2026-11-25_BCF_Test_Sets_Playbook/07_Playbook_Troubleshooting.md",
+  "t": "Playbook 7. Troubleshooting"
+ },
+ {
+  "p": "2026-11-25_BCF_Test_Sets_Playbook/08_Reference.md",
+  "t": "Reference"
+ },
+ {
+  "p": "2026-11-25_BCF_Test_Sets_Playbook/09_Table_QC_Report.md",
+  "t": "Table QC report"
+ },
+ {
+  "p": "2026-11-25_BCF_Test_Sets_Playbook/BCF_Test_Sets_Guide.html",
+  "t": "BCF test sets: the user guide"
+ },
+ {
+  "p": "2026-11-25_BCF_Test_Sets_Playbook/sets/ALL_SETS.md",
+  "t": "The six sets and their parts"
+ },
+ {
+  "p": "2026-11-25_BCF_Test_Sets_Playbook/sets/CUSTOM.md",
+  "t": "Custom cuts"
+ },
+ {
+  "p": "2026-11-25_BCF_Test_Sets_Playbook/sets/B40/slices.md",
+  "t": "B40: the set and its parts"
+ },
+ {
+  "p": "2026-11-25_BCF_Test_Sets_Playbook/sets/P20/slices.md",
+  "t": "P20: the set and its parts"
+ },
+ {
+  "p": "2026-11-25_BCF_Test_Sets_Playbook/sets/R1/slices.md",
+  "t": "R1: the set and its parts"
+ },
+ {
+  "p": "2026-11-25_BCF_Test_Sets_Playbook/sets/R2/slices.md",
+  "t": "R2: the set and its parts"
+ },
+ {
+  "p": "2026-11-25_BCF_Test_Sets_Playbook/sets/R3/slices.md",
+  "t": "R3: the set and its parts"
+ },
+ {
+  "p": "2026-11-25_BCF_Test_Sets_Playbook/sets/R4/slices.md",
+  "t": "R4: the set and its parts"
+ },
+ {
+  "p": "2026-11-25_BCF_Test_Sets_Playbook/tools/README.md",
+  "t": "Tools"
+ },
+ {
+  "p": "2026-11-25_BCF_Test_Sets_Playbook/tools/guide-template.html",
+  "t": "Guide HTML template (pandoc)"
+ },
+ {
+  "p": "2026-11-25_G914_Zorin18_Lift_and_Shift/00_README.md",
+  "t": "Lift-and-shift: from the Windows workstation to the PowerSpec G914 on Zorin OS 18"
+ },
+ {
+  "p": "2026-11-25_G914_Zorin18_Lift_and_Shift/01_Setup_Guide.md",
+  "t": "From Windows to the PowerSpec G914 on Zorin OS 18: a lift-and-shift guide for the Kaggle Gemma 4 Developer Agent competition"
+ },
+ {
+  "p": "2026-11-25_G914_Zorin18_Lift_and_Shift/02_Kickoff_System_Prompts.md",
+  "t": "Kickoff system prompt: finish the G914 setup and get back to the Kaggle competition"
+ },
+ {
+  "p": "2026-11-25_G914_Zorin18_Lift_and_Shift/03_Package_Manifest_and_QC.md",
+  "t": "Package manifest and quality record: the G914 lift-and-shift"
+ },
+ {
+  "p": "2026-11-25_G914_Zorin18_Lift_and_Shift/04_Table_QC_Report.md",
+  "t": "Table quality report: the G914 lift-and-shift deliverables"
+ },
+ {
+  "p": "2026-11-25_G914_Zorin18_Lift_and_Shift/G914_Zorin18_Setup_Guide.html",
+  "t": "From Windows to the PowerSpec G914 on Zorin OS 18: a lift-and-shift guide for the Kaggle Gemma 4 Developer Agent competition"
+ },
+ {
+  "p": "2026-11-25_G914_Zorin18_Lift_and_Shift/kit/README-FIRST.md",
+  "t": "Start here: what is in this package and what to do with it"
+ },
+ {
+  "p": "2026-11-25_G914_Zorin18_Lift_and_Shift/kit/SYSTEM_PROMPT_KICKOFF.md",
+  "t": "Kickoff system prompt: finish the G914 setup and get back to the Kaggle competition"
+ }
+];
+
+const GROUPS = [
+  { f: "2026-11-23_BCF_Brain_and_Dataset_RCA", name: "Dataset RCA &amp; BCF Brain — 129-Task Taxonomy · Dual-Track Design",
+    blurb: "2026-11-23 package: classification of all 129 published competition tasks into 6 categories and 17 sub-categories with a root-cause card per task (plus the RCA coding schema and analysis working files), the BCF brain design and justification for the Gemma 4 31B and E4B tracks, validation results with a submission playbook, and the brain itself — source plus six dist variants (31B/E4B × flat, sequential, no-skill) with the bcf-spec skill.",
+    home: "00_README.md", homeLabel: "README" },
+  { f: "2026-11-24_BCF_Tuning_Bottlenecks_and_Parity", name: "Tuning, Bottlenecks &amp; Parity — 7 Tasks · Patched Brain",
+    blurb: "2026-11-24 package for the 11-23 brain: Python 3.13 exception traps across 13 error families, wall-clock bottlenecks with 17 ranked tuning levers, local RTX 5090 vs Kaggle 4×L4 parity plan (Windows 11 + WSL2 and Zorin OS 18), local scoring and interpretation guide, board-issues graceful-handling audit with the validated fix, impact-effort roadmap, setup guide (md + html), and bcf-brain-patched with its validation record.",
+    home: "00_README.md", homeLabel: "README" },
+  { f: "2026-11-25_BCF_Naive_vs_Brain_Hypothetical_vs_Actual", name: "Naive vs Brain — Hypothetical beside Actual (httpx_3672)",
+    blurb: "2026-11-25 package: every call of both v5 lanes executed through the real harness (swegemma 0.2.11 / adk_eval_core 0.1.0) on the real httpx_3672 snapshot, then the current brain run the same way in both shipped versions, grader-scored after every call. Walkthrough, hypothetical-vs-actual variance analysis, how the brain improves on naive, a v6 slide deck, live-run playbook, evidence digests and a replay toolkit.",
+    home: "00_README.md", homeLabel: "README" },
+  { f: "2026-11-25_BCF_Private_Portfolio_20", name: "Private Portfolio — P20 · Rotation Sets R1–R4 · Task Sources",
+    blurb: "2026-11-25 package: a recommended 20-task private portfolio (P20) built from real merged pull requests, four further rotation sets (R1–R4), repository recommendations plus an internet-wide census of problem-source repositories, build/verify/run instructions, brain dry-run findings, a measurement protocol with statistical power tables, and the portfolio data fragments (task tables, mixes, validations).",
+    home: "00_README.md", homeLabel: "README" },
+  { f: "2026-11-25_BCF_Test_Sets_Playbook", name: "Test Sets Playbook — Zorin OS 18 · 7 Playbooks · 6 Sets",
+    blurb: "2026-11-25 playbook system for a beginner: from a fresh Zorin OS 18 install to comparing two versions of the patched brain on test sets it has never seen. Install, first run and gates, the six FreshSWE-Py sets (B40, P20, R1–R4) and their slices, cutting sets into smaller ones for fast loops, version comparison, rotation and confirmation, troubleshooting, reference — with a portable single-file HTML guide and tooling.",
+    home: "00_README.md", homeLabel: "README" },
+  { f: "2026-11-25_G914_Zorin18_Lift_and_Shift", name: "G914 → Zorin OS 18 Lift-and-Shift Kit",
+    blurb: "Migration package moving the competition toolchain from the Windows workstation to the PowerSpec G914 on Zorin OS 18: the full setup guide as one portable HTML page (sections A–H with sixteen attached documents) and as markdown, kickoff plus ten phase prompts for Claude Code, a package manifest with QC evidence, the table QC report, and the carry kit README.",
+    home: "00_README.md", homeLabel: "README" }
+];
+
+/* ---------------- helpers ---------------- */
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const ncmp = (a, b) => a.localeCompare(b, undefined, { numeric: true });
+const BY_PATH = new Map(DOCS.map(d => [d.p, d]));
+DOCS.sort((a, b) => ncmp(a.p, b.p));
+const cache = new Map();
+
+/* ---------------- theme ---------------- */
+(function () {
+  const saved = localStorage.getItem("rr-kaggle4-theme");
+  if (saved) document.documentElement.dataset.theme = saved;
+  $("themeBtn").onclick = () => {
+    const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+    document.documentElement.dataset.theme = next;
+    localStorage.setItem("rr-kaggle4-theme", next);
+  };
+})();
+
+/* ---------------- sidebar tree ---------------- */
+function dirNode() { return { dirs: new Map(), files: [] }; }
+function buildTree(entries) {
+  const root = dirNode();
+  for (const d of entries) {
+    const segs = d.rel.split("/");
+    let node = root;
+    for (let i = 0; i < segs.length - 1; i++) {
+      if (!node.dirs.has(segs[i])) node.dirs.set(segs[i], dirNode());
+      node = node.dirs.get(segs[i]);
+    }
+    node.files.push({ name: segs[segs.length - 1], p: d.p, t: d.t });
+  }
+  return root;
+}
+function renderDir(node, forceOpen) {
+  /* compact single-child folder chains: a/b/c → "a/b/c" */
+  let h = "";
+  const dirs = [...node.dirs.entries()].sort((a, b) => ncmp(a[0], b[0]));
+  for (let [name, child] of dirs) {
+    while (child.files.length === 0 && child.dirs.size === 1) {
+      const [k, v] = [...child.dirs.entries()][0];
+      name = name + "/" + k; child = v;
+    }
+    h += `<details class="dir"${forceOpen ? " open" : ""}><summary><span class="tw">▶</span><span class="nm">${esc(name)}</span></summary><div class="tree">${renderDir(child, forceOpen)}</div></details>`;
+  }
+  const files = [...node.files].sort((a, b) => ncmp(a.name, b.name));
+  for (const f of files) {
+    const isHtml = /\.html?$/i.test(f.name);
+    /* HTML documents always open full-screen in their own tab */
+    const href = isHtml ? encodeURI(f.p) : "#/" + encodeURI(f.p);
+    const ext = isHtml ? ' target="_blank" rel="noopener"' : "";
+    h += `<a class="file" href="${href}"${ext} data-p="${esc(f.p)}" title="${esc(f.t || f.name)}"><span class="dot"></span><span class="nm">${esc(f.name.replace(/\.(md|html?)$/i, ""))}</span>${isHtml ? '<span class="ht">html</span>' : ""}</a>`;
+  }
+  return h;
+}
+function renderTree(forceOpen) {
+  let h = "";
+  for (const g of GROUPS) {
+    const entries = DOCS.filter(d => d.p.startsWith(g.f + "/")).map(d => ({ ...d, rel: d.p.slice(g.f.length + 1) }));
+    const nMd = entries.filter(d => /\.md$/i.test(d.p)).length;
+    const nHtml = entries.length - nMd;
+    h += `<details class="grp" open data-grp="${esc(g.f)}"><summary><span class="tw">▶</span><span class="gdot"></span><span>${esc(g.name.split(" — ")[0])}</span><span class="cnt">${nMd + nHtml}</span></summary><div class="tree">${renderDir(buildTree(entries), forceOpen)}</div></details>`;
+  }
+  $("tree").innerHTML = h;
+  const md = DOCS.filter(d => /\.md$/i.test(d.p)).length;
+  $("fileCount").textContent = `${DOCS.length} documents · ${md} md · ${DOCS.length - md} html`;
+  markCurrent();
+}
+function markCurrent() {
+  document.querySelectorAll("#tree a.file").forEach(a => a.classList.toggle("on", a.dataset.p === current));
+}
+
+/* ---------------- filter ---------------- */
+$("fq").addEventListener("input", () => {
+  const q = $("fq").value.trim().toLowerCase();
+  document.querySelectorAll("#tree a.file").forEach(a => {
+    const hit = !q || a.dataset.p.toLowerCase().includes(q) || (a.title || "").toLowerCase().includes(q);
+    a.hidden = !hit;
+  });
+  [...document.querySelectorAll("#tree details")].reverse().forEach(dt => {
+    if (q) {
+      dt.dataset.wasOpen = dt.open ? "1" : "0";
+      const hasHit = [...dt.querySelectorAll("a.file")].some(a => !a.hidden);
+      dt.hidden = dt.classList.contains("dir") ? !hasHit && !dt.querySelector("details:not([hidden])") : !hasHit;
+      if (hasHit) dt.open = true;
+    } else {
+      dt.hidden = false;
+      if (dt.dataset.wasOpen !== undefined) dt.open = dt.dataset.wasOpen === "1";
+    }
+  });
+});
+
+/* ---------------- routing & rendering ---------------- */
+let current = null;
+const MD = DOCS.filter(d => !/\.html?$/i.test(d.p));
+function route() {
+  const h = decodeURI(location.hash.replace(/^#\/?/, ""));
+  const d = h ? BY_PATH.get(h) : null;
+  if (!d) showOverview();
+  else if (/\.html?$/i.test(d.p)) showHtmlLaunch(d);
+  else loadDoc(d.p);
+}
+window.addEventListener("hashchange", route);
+
+function setNav() {
+  const idx = MD.findIndex(d => d.p === current);
+  const has = idx >= 0;
+  $("navbar").hidden = !has; $("bottombar").hidden = !has; $("tocBtn").hidden = !has;
+  if (!has) return;
+  $("pos").textContent = `${idx + 1} / ${MD.length}`;
+  $("prevBtn").disabled = $("mPrev").disabled = idx <= 0;
+  $("nextBtn").disabled = $("mNext").disabled = idx >= MD.length - 1;
+  $("prevBtn").onclick = $("mPrev").onclick = () => { if (idx > 0) go(MD[idx - 1].p); };
+  $("nextBtn").onclick = $("mNext").onclick = () => { if (idx < MD.length - 1) go(MD[idx + 1].p); };
+}
+function go(p) { location.hash = "#/" + encodeURI(p); }
+
+function crumbFor(p) {
+  const g = GROUPS.find(g => p.startsWith(g.f + "/"));
+  return `<a href="#/">kaggle4</a> <span>/</span> <span>${esc(g ? g.f : "cvx")}</span> <span>/</span> <b>${esc(p.slice((g ? g.f + "/" : "").length))}</b> <a class="btn" style="margin-left:8px;padding:2px 8px;font-size:.68rem" href="${encodeURI(p)}" target="_blank" rel="noopener">open raw ⧉</a>`;
+}
+
+/* HTML documents never render inline: launch card → full-screen new tab */
+function showHtmlLaunch(d) {
+  current = null; markCurrent(); setNav();
+  $("toc").hidden = true;
+  $("crumb").innerHTML = crumbFor(d.p);
+  document.title = `${d.t || d.p} — kaggle4`;
+  $("article").innerHTML =
+    `<div class="state-msg">
+       <p><span class="badge">HTML document</span></p>
+       <h1 style="font-size:1.15rem;margin:10px 0 4px">${esc(d.t || d.p)}</h1>
+       <p class="mono" style="font-size:0.7rem;color:var(--tx2)">${esc(d.p)}</p>
+       <p style="margin:12px 0">HTML documents open full-screen in their own tab.</p>
+       <p style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+         <a class="btn primary" href="${encodeURI(d.p)}" target="_blank" rel="noopener">Open full-screen in new tab ⧉</a>
+         <a class="btn" href="#/">Back to overview</a></p>
+     </div>`;
+  window.scrollTo({ top: 0 });
+}
+
+async function loadDoc(p) {
+  current = p; markCurrent(); setNav();
+  const d = BY_PATH.get(p);
+  $("crumb").innerHTML = crumbFor(p);
+  document.title = `${d.t || p} — kaggle4`;
+  window.scrollTo({ top: 0 });
+  let text = cache.get(p);
+  if (text === undefined) {
+    try {
+      const r = await fetch(encodeURI(p), { cache: "no-store" });
+      if (!r.ok) throw new Error(r.status);
+      text = await r.text();
+      cache.set(p, text);
+    } catch (e) {
+      $("article").innerHTML = `<div class="state-msg"><p>Failed to load <code class="mono">${esc(p)}</code> (${esc(e.message)}).</p><p style="margin-top:10px"><button class="btn primary" onclick="location.reload()">Retry</button></p></div>`;
+      return;
+    }
+  }
+  const words = (text.match(/\S+/g) || []).length;
+  marked.setOptions({ breaks: true, gfm: true });
+  const body = DOMPurify.sanitize(marked.parse(text), { ADD_TAGS: ["details", "summary"], ADD_ATTR: ["id", "class", "align", "target"] });
+  $("article").innerHTML =
+    `<h1>${esc(d.t || p.replace(/\.md$/i, ""))}</h1>
+     <div class="byline"><span>${words.toLocaleString()} words · ~${Math.max(1, Math.round(words / 220))} min read</span><span class="mono">${esc(p)}</span></div>
+     ${body}`;
+  buildToc();
+  if (window.Prism) Prism.highlightAllUnder($("article"));
+  interceptArticleLinks();
+}
+
+function interceptArticleLinks() {
+  $("article").querySelectorAll("a[href]").forEach(a => {
+    const raw = a.getAttribute("href");
+    if (!raw || raw.startsWith("#") || /^(https?:|mailto:|javascript:)/i.test(raw)) return;
+    try {
+      const curDir = current && current.includes("/") ? current.slice(0, current.lastIndexOf("/") + 1) : "";
+      let target = (raw.startsWith("/") ? raw.slice(1) : curDir + raw).replace(/^\.\//, "");
+      target = target.replace(/([^/]+)\/\.\.\//g, "");
+      if (BY_PATH.has(target)) {
+        a.onclick = e => {
+          e.preventDefault();
+          if (/\.html?$/i.test(target)) window.open(encodeURI(target), "_blank", "noopener");
+          else go(target);
+        };
+      }
+    } catch {}
+  });
+}
+
+function buildToc() {
+  const heads = [...$("article").querySelectorAll("h2, h3")];
+  $("toc").hidden = heads.length === 0;
+  $("tocList").innerHTML = heads.map((h, i) => {
+    if (!h.id) h.id = "h-" + i;
+    return `<a class="${h.tagName === "H3" ? "l3" : ""}" href="#/${encodeURI(current)}" data-scroll="${h.id}" title="${esc(h.textContent)}">${esc(h.textContent)}</a>`;
+  }).join("");
+  $("tocList").querySelectorAll("a").forEach(a => a.onclick = e => {
+    e.preventDefault();
+    document.getElementById(a.dataset.scroll)?.scrollIntoView({ behavior: "smooth" });
+  });
+}
+
+/* ---------------- overview ---------------- */
+function showOverview() {
+  current = null; markCurrent(); setNav();
+  $("toc").hidden = true;
+  $("crumb").innerHTML = `<b>kaggle4</b> <span>/</span> <span>cvx</span>`;
+  document.title = "BCF Brain Packages — RCA · Tuning &amp; Parity · Naive vs Brain · Private Portfolio · Test Sets · G914 Lift-and-Shift".replace("&amp;", "&");
+  const md = DOCS.filter(d => /\.md$/i.test(d.p)).length;
+  const cards = GROUPS.map(g => {
+    const entries = DOCS.filter(d => d.p.startsWith(g.f + "/"));
+    const nMd = entries.filter(d => /\.md$/i.test(d.p)).length;
+    const nHtml = entries.length - nMd;
+    const home = g.f + "/" + g.home;
+    return `<div class="gcard">
+      <h2>${g.name}</h2>
+      <div class="folder">cvx/kaggle4/${esc(g.f)}/ · ${entries.length} docs</div>
+      <p>${g.blurb}</p>
+      <span class="meta">${nMd} md${nHtml ? ` · ${nHtml} html` : ""}</span>
+      <div class="row"><a class="btn primary" href="#/${encodeURI(home)}">Open ${esc(g.homeLabel)} →</a><a class="btn" href="#/" data-focus="${esc(g.f)}">Browse folder</a></div>
+    </div>`;
+  }).join("");
+  $("article").innerHTML =
+    `<div class="hero">
+       <span class="badge">deliverable drop · 2026-11-23 – 2026-11-25</span>
+       <h1>BCF × Gemma 4 — Brain Packages, Parity &amp; Test Sets</h1>
+       <p class="lede">Six deliverable packs continuing the Batonic Coding Framework (BCF) competition work: the 129-task dataset RCA with the dual-track brain, the seven-task tuning/bottlenecks/parity suite with the patched brain, a grader-verified naive-vs-brain comparison on httpx_3672, the private 20-task portfolio with rotation sets R1–R4, the Zorin OS 18 test-sets playbook, and the G914 lift-and-shift kit. ${DOCS.length} files (${md} markdown + ${DOCS.length - md} HTML) — markdown opens in-page from the sidebar tree, HTML documents open full-screen in their own tab.</p>
+     </div>
+     <div class="cards">${cards}</div>`;
+  $("article").querySelectorAll("[data-focus]").forEach(b => b.onclick = e => {
+    e.preventDefault();
+    const dt = document.querySelector(`#tree details[data-grp="${CSS.escape(b.dataset.focus)}"]`);
+    if (dt) { dt.open = true; dt.scrollIntoView({ block: "center" }); }
+    document.body.classList.remove("side-open");
+  });
+  window.scrollTo({ top: 0 });
+}
+
+/* ---------------- pane toggles & font size ---------------- */
+$("menuBtn").onclick = () => {
+  if (matchMedia("(max-width: 900px)").matches) document.body.classList.toggle("side-open");
+  else document.body.classList.toggle("side-closed");
+};
+document.querySelectorAll("#tree").forEach(t => t.addEventListener("click", e => {
+  if (e.target.closest("a.file")) document.body.classList.remove("side-open");
+}));
+$("tocBtn").onclick = () => document.body.classList.toggle("toc-closed");
+
+const FS = [13, 14, 15, 16, 18];
+(function () {
+  let i = parseInt(localStorage.getItem("rr-kaggle4-fs") || "1", 10);
+  if (!(i >= 0 && i < FS.length)) i = 1;
+  const apply = () => {
+    document.documentElement.style.setProperty("--fs", FS[i] + "px");
+    $("fontBtn").title = `Font size: ${FS[i]}px — click to cycle`;
+  };
+  apply();
+  $("fontBtn").onclick = () => { i = (i + 1) % FS.length; localStorage.setItem("rr-kaggle4-fs", String(i)); apply(); };
+})();
+
+/* ---------------- init ---------------- */
+renderTree(false);
+route();
+</script>
+</body>
+</html>

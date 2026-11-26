@@ -1,0 +1,49 @@
+| Repository | Tasks | Python of the task images | Median statement | Median files per fix | First created | Last created |
+| --- | ---: | --- | ---: | ---: | --- | --- |
+| `tobymao/sqlglot` | 41 | 3.11,3.12,3.13,3.9 | 903 characters | 2 | 2025-01-05 | 2026-04-09 |
+| `sympy/sympy` | 28 | 3.11,3.12,3.9 | 528 characters | 2.0 | 2025-01-08 | 2025-12-18 |
+| `astropy/astropy` | 17 | 3.11,3.12,3.13 | 1815 characters | 1 | 2025-01-16 | 2026-03-16 |
+| `BerriAI/litellm` | 16 | 3.12 | 1797 characters | 2.0 | 2025-08-21 | 2025-11-24 |
+| `pandas-dev/pandas` | 13 | 3.10,3.11,3.12,3.13 | 3515 characters | 2 | 2025-01-10 | 2026-03-24 |
+| `zarr-developers/zarr-python` | 12 | 3.11 | 1996 characters | 1.0 | 2025-01-03 | 2025-04-24 |
+| `schemathesis/schemathesis` | 10 | 3.12,3.13 | 3370 characters | 2.5 | 2025-08-01 | 2026-05-12 |
+| `probabl-ai/skore` | 10 | 3.11,3.9 | 761 characters | 1.0 | 2025-01-08 | 2025-02-15 |
+| `getmoto/moto` | 9 | 3.12,3.13 | 1435 characters | 2 | 2025-08-23 | 2026-03-23 |
+| `deepset-ai/haystack` | 9 | 3.11,3.12,3.9 | 1610 characters | 2 | 2025-02-19 | 2026-02-10 |
+| `lincc-frameworks/nested-pandas` | 8 | 3.11,3.12,3.9 | 1968 characters | 1.0 | 2025-01-27 | 2026-01-05 |
+| `tox-dev/tox` | 7 | 3.11,3.12,3.13 | 1649 characters | 2 | 2026-01-08 | 2026-05-01 |
+| `scipp/plopp` | 7 | 3.10,3.11,3.12 | 696 characters | 1 | 2025-03-10 | 2026-01-22 |
+| `pgmpy/pgmpy` | 7 | 3.11,3.13,3.9 | 1733 characters | 1 | 2025-01-26 | 2026-03-22 |
+| `omni-us/jsonargparse` | 7 | 3.12,3.9 | 1817 characters | 3 | 2025-02-03 | 2026-02-02 |
+| `koxudaxi/datamodel-code-generator` | 7 | 3.11,3.12,3.13,3.9 | 2446 characters | 1 | 2025-04-23 | 2026-04-04 |
+| `conan-io/conan` | 7 | 3.11,3.12,3.13,3.6,3.9 | 1441 characters | 2 | 2025-03-24 | 2026-03-13 |
+| `dask/dask` | 6 | 3.10 | 2273 characters | 1.0 | 2025-01-24 | 2025-10-30 |
+| `beeware/briefcase` | 6 | 3.12,3.9 | 1096 characters | 2.5 | 2025-01-17 | 2026-01-27 |
+| `agronholm/sqlacodegen` | 6 | 3.10,3.12,3.9 | 1745 characters | 2.0 | 2025-02-16 | 2025-08-03 |
+| `stfc/PSyclone` | 5 | 3.12,3.9 | 279 characters | 1 | 2025-05-08 | 2025-08-14 |
+| `pydata/xarray` | 5 | 3.10,3.11,3.12 | 4227 characters | 2 | 2025-01-22 | 2025-10-17 |
+| `ethereum/web3.py` | 5 | 3.12,3.13,3.9 | 1955 characters | 2 | 2025-01-18 | 2026-01-08 |
+| `SpikeInterface/spikeinterface` | 5 | 3.11,3.9 | 1295 characters | 2 | 2025-02-05 | 2025-05-18 |
+| `raullenchai/Rapid-MLX` | 4 | 3.13 | 1287 characters | 0.0 | 2026-05-05 | 2026-05-09 |
+| `python-wheel-build/fromager` | 4 | 3.11,3.13 | 1036 characters | 1.0 | 2025-06-03 | 2026-05-07 |
+| `python-scim/scim2-models` | 4 | 3.12,3.13,3.9 | 788 characters | 3.0 | 2025-03-07 | 2026-04-03 |
+| `pypa/virtualenv` | 4 | 3.12,3.9 | 3317 characters | 2.5 | 2025-01-11 | 2026-01-10 |
+| `openai/openai-agents-python` | 4 | 3.12 | 1296 characters | 2.5 | 2025-09-22 | 2025-12-03 |
+| `marimo-team/marimo` | 4 | 3.12 | 2379 characters | 2.0 | 2025-10-01 | 2026-02-20 |
+| `macbre/sql-metadata` | 4 | 3.12,3.13,3.9 | 605 characters | 1.0 | 2025-05-04 | 2026-05-07 |
+| `keras-team/keras` | 4 | 3.11,3.13 | 2026 characters | 0.0 | 2026-02-09 | 2026-04-06 |
+| `jlowin/fastmcp` | 4 | 3.11,3.12 | 2038 characters | 4.0 | 2025-07-02 | 2026-02-19 |
+| `idaholab/MontePy` | 4 | 3.12,3.13,3.9 | 3017 characters | 3.0 | 2025-03-29 | 2026-03-20 |
+| `google/flax` | 4 | 3.10,3.12 | 905 characters | 1.5 | 2025-02-26 | 2026-01-06 |
+| `basicmachines-co/basic-memory` | 4 | 3.12 | 1620 characters | 2.0 | 2025-09-11 | 2025-12-29 |
+| `astropy/astroquery` | 4 | 3.11 | 580 characters | 2.0 | 2025-01-07 | 2025-03-26 |
+| `agronholm/anyio` | 4 | 3.11,3.12,3.13 | 1673 characters | 1.0 | 2025-06-29 | 2026-05-05 |
+| `Ultraplot/UltraPlot` | 4 | 3.11,3.12,3.13 | 1280 characters | 1.0 | 2025-08-23 | 2026-04-16 |
+| `PyPSA/PyPSA` | 4 | 3.11,3.12,3.13 | 1787 characters | 1.0 | 2025-10-16 | 2026-04-13 |
+| `GenericMappingTools/pygmt` | 4 | 3.12,3.13 | 2038 characters | 1.5 | 2025-09-19 | 2026-03-21 |
+| `Delgan/loguru` | 4 | 3.12,3.13,3.9 | 740 characters | 1.5 | 2025-02-13 | 2026-03-25 |
+| `zwicker-group/py-pde` | 3 | 3.12,3.9 | 412 characters | 3 | 2025-03-21 | 2025-12-01 |
+| `zarr-developers/VirtualiZarr` | 3 | 3.10,3.11,3.13 | 1464 characters | 1 | 2025-01-28 | 2026-04-24 |
+| `yt-project/unyt` | 3 | 3.12,3.9 | 1694 characters | 1 | 2025-02-06 | 2026-01-29 |
+
+39 more repositories with three tasks each are listed in `data/leaderboard_repos_ge3.tsv`.

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<title>$title$</title>
+<style>
+:root {
+  --bg: #101418; --panel: #171d24; --ink: #dce3ea; --muted: #8b98a5;
+  --accent: #7ab0ff; --accent2: #ffb454; --ok: #7ad0a0; --bad: #ff8a8a; --note: #b9a0ff;
+  --border: #26303a; --code-bg: #0c1013; --maxw: 112ch;
+}
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #f7f9fb; --panel: #ffffff; --ink: #1a2430; --muted: #5a6a7a;
+    --accent: #0a5fd0; --accent2: #b05a00; --ok: #0d7a40; --bad: #b02020; --note: #6a3fc0;
+    --border: #d8e0e8; --code-bg: #eef2f6;
+  }
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 16px/1.65 "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+}
+header.top {
+  position: sticky; top: 0; z-index: 9; background: var(--panel);
+  border-bottom: 1px solid var(--border); padding: .55rem 1rem;
+  display: flex; flex-wrap: wrap; gap: .4rem .8rem; align-items: center;
+}
+header.top .brand { font-weight: 700; color: var(--accent); white-space: nowrap; }
+header.top nav { display: flex; flex-wrap: wrap; gap: .15rem; font-size: .82rem; }
+header.top nav a { color: var(--muted); text-decoration: none; padding: .18rem .5rem; border-radius: 6px; }
+header.top nav a:hover { color: var(--ink); background: var(--bg); }
+main { max-width: var(--maxw); margin: 0 auto; padding: 1.2rem 1.2rem 4rem; }
+h1 { font-size: 1.65rem; color: var(--accent); border-bottom: 2px solid var(--border); padding-bottom: .4rem; margin-top: 2.6rem; }
+h1:first-of-type { margin-top: 0; }
+h2 { font-size: 1.3rem; color: var(--accent); margin-top: 2.2rem; border-bottom: 1px solid var(--border); padding-bottom: .25rem; scroll-margin-top: 3.6rem; }
+h3 { font-size: 1.08rem; color: var(--accent2); margin-top: 1.6rem; scroll-margin-top: 3.6rem; }
+h4 { font-size: 1rem; color: var(--ink); margin-top: 1.3rem; }
+h1 code, h2 code, h3 code, h4 code { font-size: .9em; }
+a { color: var(--accent); }
+code { font-family: "Cascadia Code", Consolas, "JetBrains Mono", monospace; font-size: .88em; background: var(--code-bg); border: 1px solid var(--border); border-radius: 4px; padding: .08em .35em; }
+pre { background: var(--code-bg); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 8px; padding: .8rem 1rem; overflow-x: auto; }
+pre code { background: none; border: none; padding: 0; font-size: .86rem; line-height: 1.5; }
+table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: .9rem; display: block; overflow-x: auto; }
+th, td { border: 1px solid var(--border); padding: .45rem .6rem; text-align: left; vertical-align: top; min-width: 5.5ch; }
+th { background: var(--panel); color: var(--accent); position: sticky; top: 0; white-space: nowrap; }
+tbody tr:nth-child(even) { background: color-mix(in srgb, var(--panel) 55%, var(--bg)); }
+blockquote { border-left: 3px solid var(--accent2); margin: 1rem 0; padding: .5rem 1rem; background: var(--panel); border-radius: 0 8px 8px 0; }
+blockquote p { margin: .2rem 0; }
+hr { border: none; border-top: 1px solid var(--border); margin: 2.4rem 0; }
+ul, ol { padding-left: 1.4rem; }
+li { margin: .2rem 0; }
+li input[type=checkbox] { margin-right: .45em; transform: scale(1.15); }
+footer { text-align: center; color: var(--muted); font-size: .8rem; padding: 1.5rem; border-top: 1px solid var(--border); }
+kbd { background: var(--panel); border: 1px solid var(--border); border-bottom-width: 2px; border-radius: 4px; padding: .05em .4em; font-size: .85em; font-family: inherit; }
+nav#TOC { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: .6rem 1rem .7rem; margin: 1rem 0 1.6rem; }
+nav#TOC::before { content: "Contents"; display: block; font-weight: 700; color: var(--accent); margin-bottom: .3rem; }
+nav#TOC ul { margin: 0; padding-left: 1.1rem; columns: 2; column-gap: 2.2rem; }
+nav#TOC ul ul { columns: 1; padding-left: .9rem; }
+nav#TOC li { break-inside: avoid; margin: .1rem 0; }
+nav#TOC a { color: var(--muted); text-decoration: none; }
+nav#TOC a:hover { color: var(--ink); }
+@media (max-width: 760px) {
+  main { padding: 1rem .7rem 3rem; font-size: 15px; }
+  h1 { font-size: 1.35rem; } h2 { font-size: 1.15rem; }
+  header.top nav { font-size: .75rem; }
+  nav#TOC ul { columns: 1; }
+}
+@media print {
+  header.top { position: static; } body { background: #fff; color: #000; }
+  pre, table { overflow: visible; } main { max-width: none; }
+  nav#TOC { break-after: page; }
+  h1 { break-before: page; } h1:first-of-type { break-before: avoid; }
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <span class="brand">BCF test sets</span>
+  <nav>
+$nav$
+  </nav>
+</header>
+<main>
+$body$
+</main>
+<footer>$date$ · self-contained guide: one file, no internet, no external fonts or scripts · generated from the markdown playbooks in the same folder</footer>
+</body>
+</html>

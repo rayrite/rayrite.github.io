@@ -183,7 +183,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js" integrity="sha384-Uq05+JLko69eOiPr39ta9bh7kld5PKZoU+fF7g0EXTAriEollhZ+DrN8Q/Oi8J2Q" crossorigin="anonymous"></script>
 <script>
 "use strict";
-/* ---------------- embedded manifest (updated 2026-11-25; paths relative to this folder) ---------------- */
+/* ---------------- embedded manifest (updated 2026-11-26; paths relative to this folder) ---------------- */
 const DOCS = [
  {
   "p": "2026-11-11-bcf-gemma4-brain/01-task1-dataset-classification-rootcause.md",
@@ -416,6 +416,34 @@ const DOCS = [
  {
   "p": "2026-11-25_BCF_Dataset_RCA_and_DualTrack_Brain/01_Task1_Public_Dataset_Classification_and_Root_Cause_Analysis.md",
   "t": "Kaggle Google Gemma 4 Developer Agent Competition — Task 1: Complete Public Dataset Taxonomy & 129-Problem Root Cause Analysis"
+ },
+ {
+  "p": "2026-11-25_BCF_Brain_v2_Gemini_Gap_Analysis/00_README.md",
+  "t": "BCF brain v2 from the Gemini Task 1 gap analysis (2026-11-25)"
+ },
+ {
+  "p": "2026-11-25_BCF_Brain_v2_Gemini_Gap_Analysis/01_Gap_Analysis_of_Gemini_Task1.md",
+  "t": "01 - Gap analysis of Gemini's Task 1 document"
+ },
+ {
+  "p": "2026-11-25_BCF_Brain_v2_Gemini_Gap_Analysis/02_Claim_Verification_Ledger.md",
+  "t": "02 - Claim verification ledger"
+ },
+ {
+  "p": "2026-11-25_BCF_Brain_v2_Gemini_Gap_Analysis/03_Brain_v2_Changes_and_Justification.md",
+  "t": "03 - Brain v2: changes and justification"
+ },
+ {
+  "p": "2026-11-25_BCF_Brain_v2_Gemini_Gap_Analysis/04_Validation_Results.md",
+  "t": "04 - Validation results for brain v2"
+ },
+ {
+  "p": "2026-11-25_BCF_Brain_v2_Gemini_Gap_Analysis/05_Research_Notes_and_Sources.md",
+  "t": "05 - Research notes and sources"
+ },
+ {
+  "p": "2026-11-25_BCF_Brain_v2_Gemini_Gap_Analysis/06_Table_QC_Report.md",
+  "t": "06 - Table quality check"
  }
 ];
 
@@ -452,7 +480,10 @@ const GROUPS = [
     counts: "6 md (188 KB · README + 5 tasks)", home: "00_README.md", homeLabel: "Deep Research" },
   { f: "2026-11-25_BCF_Dataset_RCA_and_DualTrack_Brain", name: "Dataset RCA & Dual-Track Brain — 129-Task Taxonomy (2026-11-25)",
     blurb: "Task 1 deliverable of 2026-11-25: 100% ground-truth-verified taxonomy and root-cause analysis of all 129 public competition tasks from tasks.jsonl, feeding the Batonic Coding Framework (BCF) dual-track submission brain — Gemma 4 31B main track and Gemma 4 E4B bonus track.",
-    counts: "1 comprehensive md", home: "01_Task1_Public_Dataset_Classification_and_Root_Cause_Analysis.md", homeLabel: "Task 1 RCA" }
+    counts: "1 comprehensive md", home: "01_Task1_Public_Dataset_Classification_and_Root_Cause_Analysis.md", homeLabel: "Task 1 RCA" },
+  { f: "2026-11-25_BCF_Brain_v2_Gemini_Gap_Analysis", name: "Brain v2 — Gemini Task 1 Gap Analysis & Claim Verification",
+    blurb: "2026-11-25 package: gap analysis and claim-by-claim verification of Gemini 4 Carbon's Task 1 classification of the 129 public tasks (checked against the dataset, official harness docs, forum threads and tool documentation), the validated BCF brain v2 (helper 2.0.0) carrying the evidence-supported changes, validation results, research notes and sources.",
+    counts: "7 md", home: "00_README.md", homeLabel: "README" }
 ];
 
 /* ---------------- helpers ---------------- */
@@ -680,7 +711,7 @@ function showOverview() {
     `<div class="hero">
        <span class="badge">deliverable drop · 2026-11-11 – 2026-11-25</span>
        <h1>BCF × Gemma 4 Developer Agent Competition</h1>
-       <p class="lede">Eleven deliverables from the Batonic Coding Framework (BCF) competition work: the submission-ready Brain agent packages, hardening research, the local test-harness setup guide, executed-backbone replay comparisons, scoring parity explainer, the 129-task dataset RCA &amp; dual-track brain architecture, the BCF v2 bottlenecks, 32-lever tuning &amp; fast-iteration playbook, the 11-20 winning design &amp; guaranteed-score harness, the wall-clock bottlenecks &amp; 24 tuning levers playbook, the deep research parity, local eval &amp; 22-issue submission audit, and the 11-25 dataset taxonomy &amp; 129-problem root-cause analysis. ${DOCS.length} documents (${md} markdown + ${DOCS.length - md} HTML) across 94 hosted files — markdown opens in-page from the sidebar tree, HTML decks open full-screen in their own tab.</p>
+       <p class="lede">Twelve deliverables from the Batonic Coding Framework (BCF) competition work: the submission-ready Brain agent packages, hardening research, the local test-harness setup guide, executed-backbone replay comparisons, scoring parity explainer, the 129-task dataset RCA &amp; dual-track brain architecture, the BCF v2 bottlenecks, 32-lever tuning &amp; fast-iteration playbook, the 11-20 winning design &amp; guaranteed-score harness, the wall-clock bottlenecks &amp; 24 tuning levers playbook, the deep research parity, local eval &amp; 22-issue submission audit, the 11-25 dataset taxonomy &amp; 129-problem root-cause analysis, and the Gemini Task 1 gap analysis with the validated brain v2. ${DOCS.length} documents (${md} markdown + ${DOCS.length - md} HTML) across 101 hosted files — markdown opens in-page from the sidebar tree, HTML decks open full-screen in their own tab.</p>
      </div>
      <div class="cards">${cards}</div>`;
   $("article").querySelectorAll("[data-focus]").forEach(b => b.onclick = e => {

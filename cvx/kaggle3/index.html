@@ -444,6 +444,66 @@ const DOCS = [
  {
   "p": "2026-11-25_BCF_Brain_v2_Gemini_Gap_Analysis/06_Table_QC_Report.md",
   "t": "06 - Table quality check"
+ },
+ {
+  "p": "2026-11-26_BCF_Brain_v2_1_Gemini_Gap_Analysis/00_README.md",
+  "t": "BCF brain v2 from the Gemini Task 1 gap analysis (2026-11-25, updated 2026-11-26)"
+ },
+ {
+  "p": "2026-11-26_BCF_Brain_v2_1_Gemini_Gap_Analysis/01_Gap_Analysis_of_Gemini_Task1.md",
+  "t": "01 - Gap analysis of Gemini's Task 1 document"
+ },
+ {
+  "p": "2026-11-26_BCF_Brain_v2_1_Gemini_Gap_Analysis/02_Claim_Verification_Ledger.md",
+  "t": "02 - Claim verification ledger"
+ },
+ {
+  "p": "2026-11-26_BCF_Brain_v2_1_Gemini_Gap_Analysis/03_Brain_v2_Changes_and_Justification.md",
+  "t": "03 - Brain v2: changes and justification"
+ },
+ {
+  "p": "2026-11-26_BCF_Brain_v2_1_Gemini_Gap_Analysis/04_Validation_Results.md",
+  "t": "04 - Validation results for brain v2"
+ },
+ {
+  "p": "2026-11-26_BCF_Brain_v2_1_Gemini_Gap_Analysis/05_Research_Notes_and_Sources.md",
+  "t": "05 - Research notes and sources"
+ },
+ {
+  "p": "2026-11-26_BCF_Brain_v2_1_Gemini_Gap_Analysis/06_Table_QC_Report.md",
+  "t": "06 - Table quality check"
+ },
+ {
+  "p": "2026-11-26_BCF_Brain_v2_1_Gemini_Gap_Analysis/07_Harness_Readme_Audit.md",
+  "t": "07 - Audit of brain v2 against the harness documentation (v2.1)"
+ },
+ {
+  "p": "2026-11-21_BCF_Deep_Research_Optimization_Parity_and_Audit/00_README.md",
+  "t": "BCF Deep Research, Hardware Parity, Local Evaluation & Submission Resilience Suite (2026-11-21)"
+ },
+ {
+  "p": "2026-11-21_BCF_Deep_Research_Optimization_Parity_and_Audit/01_Task1_Python_313_Exception_Traps_and_PostMortem_Guide.md",
+  "t": "Task 1: Official Python 3.13 (and 3.12 Host) Exception Handling, Language Traps, Gotchas & Post-Mortem Guide for the 129-Task Problem Set"
+ },
+ {
+  "p": "2026-11-21_BCF_Deep_Research_Optimization_Parity_and_Audit/02_Task2_Bottlenecks_Tuning_Levers_and_Fast_Iteration.md",
+  "t": "Task 2: Wall-Clock Bottlenecks (RTX 5090 vs. Kaggle 4× L4), BCF Brain Tuning-Lever Impact–Effort Analysis & High-Velocity Iteration Strategy"
+ },
+ {
+  "p": "2026-11-21_BCF_Deep_Research_Optimization_Parity_and_Audit/03_Task3_Local_RTX5090_Kaggle_Parity_Plan_WSL2_and_ZorinOS18.md",
+  "t": "Task 3 [Feature Parity]: Mimicking the Remote Kaggle 4× L4 Scorer on the PowerSpec G914 (RTX 5090) — Dual-Track Implementation Plan (Windows 11 + WSL2 vs. Zorin OS 18)"
+ },
+ {
+  "p": "2026-11-21_BCF_Deep_Research_Optimization_Parity_and_Audit/04_Task4_Local_Evaluation_Scoring_Correlation_and_Brain_Tuning_Guide.md",
+  "t": "Task 4: Complete User Guide to Local Evaluation Scoring, Result Analysis, Local-to-Kaggle Correlation & Actionable BCF Brain Fine-Tuning"
+ },
+ {
+  "p": "2026-11-21_BCF_Deep_Research_Optimization_Parity_and_Audit/05_Task5_Community_Submission_Issues_and_BCF_Graceful_Handling_Audit.md",
+  "t": "Task 5: Exhaustive Audit of Community Submission Failures vs. Current BCF Implementations (v1 & v2)"
+ },
+ {
+  "p": "2026-11-21_BCF_Deep_Research_Optimization_Parity_and_Audit/PowerSpec_G914_RTX5090_Kaggle_Parity_Setup_Guide.html",
+  "t": "PowerSpec G914 (RTX 5090) — Brand-New PC to Kaggle Parity Setup Guide"
  }
 ];
 
@@ -483,7 +543,13 @@ const GROUPS = [
     counts: "1 comprehensive md", home: "01_Task1_Public_Dataset_Classification_and_Root_Cause_Analysis.md", homeLabel: "Task 1 RCA" },
   { f: "2026-11-25_BCF_Brain_v2_Gemini_Gap_Analysis", name: "Brain v2 — Gemini Task 1 Gap Analysis & Claim Verification",
     blurb: "2026-11-25 package: gap analysis and claim-by-claim verification of Gemini 4 Carbon's Task 1 classification of the 129 public tasks (checked against the dataset, official harness docs, forum threads and tool documentation), the validated BCF brain v2 (helper 2.0.0) carrying the evidence-supported changes, validation results, research notes and sources.",
-    counts: "7 md", home: "00_README.md", homeLabel: "README" }
+    counts: "7 md", home: "00_README.md", homeLabel: "README" },
+  { f: "2026-11-26_BCF_Brain_v2_1_Gemini_Gap_Analysis", name: "Brain v2.1 — Gemini Gap Analysis R2 · Harness-Doc Audit (2026-11-26)",
+    blurb: "2026-11-26 revision of the Gemini Task 1 gap-analysis package: claim-by-claim verification of the 129-task classification against the dataset, official harness docs, forum threads and tool documentation; brain v2 changes with justification; validation results; research notes; and a new v2.1 audit of the brain against the harness documentation.",
+    counts: "8 md", home: "00_README.md", homeLabel: "README" },
+  { f: "2026-11-21_BCF_Deep_Research_Optimization_Parity_and_Audit", name: "Deep Research Suite — Parity · Local Eval · Resilience (2026-11-21)",
+    blurb: "Five-task 2026-11-21 suite over the 129-task problem set: Python 3.13/3.12 dual-interpreter exception traps and post-mortem guide, wall-clock bottleneck and tuning-lever analysis, dual-track RTX 5090 parity plan (Windows 11 + WSL2 vs Zorin OS 18) with a portable HTML setup guide, local-evaluation scoring and Kaggle-correlation guide, and the 22-mode community submission audit.",
+    counts: "6 md · 1 html (setup guide)", home: "00_README.md", homeLabel: "Overview" }
 ];
 
 /* ---------------- helpers ---------------- */
@@ -711,7 +777,7 @@ function showOverview() {
     `<div class="hero">
        <span class="badge">deliverable drop · 2026-11-11 – 2026-11-25</span>
        <h1>BCF × Gemma 4 Developer Agent Competition</h1>
-       <p class="lede">Twelve deliverables from the Batonic Coding Framework (BCF) competition work: the submission-ready Brain agent packages, hardening research, the local test-harness setup guide, executed-backbone replay comparisons, scoring parity explainer, the 129-task dataset RCA &amp; dual-track brain architecture, the BCF v2 bottlenecks, 32-lever tuning &amp; fast-iteration playbook, the 11-20 winning design &amp; guaranteed-score harness, the wall-clock bottlenecks &amp; 24 tuning levers playbook, the deep research parity, local eval &amp; 22-issue submission audit, the 11-25 dataset taxonomy &amp; 129-problem root-cause analysis, and the Gemini Task 1 gap analysis with the validated brain v2. ${DOCS.length} documents (${md} markdown + ${DOCS.length - md} HTML) across 101 hosted files — markdown opens in-page from the sidebar tree, HTML decks open full-screen in their own tab.</p>
+       <p class="lede">Thirteen deliverables from the Batonic Coding Framework (BCF) competition work: the submission-ready Brain agent packages, hardening research, the local test-harness setup guide, executed-backbone replay comparisons, scoring parity explainer, the 129-task dataset RCA &amp; dual-track brain architecture, the BCF v2 bottlenecks, 32-lever tuning &amp; fast-iteration playbook, the 11-20 winning design &amp; guaranteed-score harness, the wall-clock bottlenecks &amp; 24 tuning levers playbook, the deep research parity, local eval &amp; 22-issue submission audit (both the 11-20 and 11-21 suites), the 11-25 dataset taxonomy &amp; 129-problem root-cause analysis, and the Gemini Task 1 gap analysis with the validated brain v2 and its v2.1 harness-documentation audit. ${DOCS.length} documents (${md} markdown + ${DOCS.length - md} HTML) across 109 hosted files — markdown opens in-page from the sidebar tree, HTML decks open full-screen in their own tab.</p>
      </div>
      <div class="cards">${cards}</div>`;
   $("article").querySelectorAll("[data-focus]").forEach(b => b.onclick = e => {

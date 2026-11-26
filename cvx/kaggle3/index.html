@@ -504,6 +504,30 @@ const DOCS = [
  {
   "p": "2026-11-21_BCF_Deep_Research_Optimization_Parity_and_Audit/PowerSpec_G914_RTX5090_Kaggle_Parity_Setup_Guide.html",
   "t": "PowerSpec G914 (RTX 5090) — Brand-New PC to Kaggle Parity Setup Guide"
+ },
+ {
+  "p": "2026-11-26_BCF_Bottlenecks_TuningLevers_and_ROI_Roadmap/00_README_and_Deliverables_Index.md",
+  "t": "Batonic Coding Framework (BCF) — Wall-Clock Bottlenecks, Brain Tuning Levers, Scorer Hardening & Priority ROI Roadmap"
+ },
+ {
+  "p": "2026-11-26_BCF_Bottlenecks_TuningLevers_and_ROI_Roadmap/01_Wall_Clock_Bottlenecks_RTX5090_and_Kaggle_Scorer.md",
+  "t": "Task 1: End-to-End Wall-Clock Time Bottlenecks — Local RTX 5090 Workstation vs. Remote Kaggle Scorer"
+ },
+ {
+  "p": "2026-11-26_BCF_Bottlenecks_TuningLevers_and_ROI_Roadmap/02_BCF_Brain_Tuning_Levers_and_Fast_Iteration_Loop.md",
+  "t": "Tasks 2 & 3: Complete BCF Brain Tuning Levers & Fast Hypothesis-Testing Feedback Loop"
+ },
+ {
+  "p": "2026-11-26_BCF_Bottlenecks_TuningLevers_and_ROI_Roadmap/03_Competitor_Submission_Issues_and_BCF_v21_Hardening_Audit.md",
+  "t": "Task 4: Audit of Competitor Submission & Scoring Issues + Live BCF v2.1 Hardening Verification"
+ },
+ {
+  "p": "2026-11-26_BCF_Bottlenecks_TuningLevers_and_ROI_Roadmap/04_Impact_Effort_ROI_Analysis_and_Priority_Roadmap.md",
+  "t": "Task 5: Impact-Effort ROI Analysis & Ranked Priority Roadmap (BCF-31B & BCF-E4B)"
+ },
+ {
+  "p": "2026-11-26_BCF_Bottlenecks_TuningLevers_and_ROI_Roadmap/05_Quality_Assurance_and_Markdown_Table_Audit.md",
+  "t": "Quality Assurance, Hardened BCF v2.1 Regression & Markdown Table Audit Report"
  }
 ];
 
@@ -549,7 +573,10 @@ const GROUPS = [
     counts: "8 md", home: "00_README.md", homeLabel: "README" },
   { f: "2026-11-21_BCF_Deep_Research_Optimization_Parity_and_Audit", name: "Deep Research Suite — Parity · Local Eval · Resilience (2026-11-21)",
     blurb: "Five-task 2026-11-21 suite over the 129-task problem set: Python 3.13/3.12 dual-interpreter exception traps and post-mortem guide, wall-clock bottleneck and tuning-lever analysis, dual-track RTX 5090 parity plan (Windows 11 + WSL2 vs Zorin OS 18) with a portable HTML setup guide, local-evaluation scoring and Kaggle-correlation guide, and the 22-mode community submission audit.",
-    counts: "6 md · 1 html (setup guide)", home: "00_README.md", homeLabel: "Overview" }
+    counts: "6 md · 1 html (setup guide)", home: "00_README.md", homeLabel: "Overview" },
+  { f: "2026-11-26_BCF_Bottlenecks_TuningLevers_and_ROI_Roadmap", name: "Bottlenecks · Tuning Levers · ROI Roadmap (2026-11-26)",
+    blurb: "2026-11-26 five-task suite: end-to-end wall-clock bottlenecks (local RTX 5090 vs remote Kaggle scorer), the complete BCF brain tuning-lever catalogue with the fast hypothesis-testing feedback loop, an audit of competitor submission/scoring issues with live BCF v2.1 hardening verification, and the impact-effort ROI analysis with ranked priority roadmap for BCF-31B and BCF-E4B.",
+    counts: "6 md", home: "00_README_and_Deliverables_Index.md", homeLabel: "Index" }
 ];
 
 /* ---------------- helpers ---------------- */
@@ -777,7 +804,7 @@ function showOverview() {
     `<div class="hero">
        <span class="badge">deliverable drop · 2026-11-11 – 2026-11-25</span>
        <h1>BCF × Gemma 4 Developer Agent Competition</h1>
-       <p class="lede">Thirteen deliverables from the Batonic Coding Framework (BCF) competition work: the submission-ready Brain agent packages, hardening research, the local test-harness setup guide, executed-backbone replay comparisons, scoring parity explainer, the 129-task dataset RCA &amp; dual-track brain architecture, the BCF v2 bottlenecks, 32-lever tuning &amp; fast-iteration playbook, the 11-20 winning design &amp; guaranteed-score harness, the wall-clock bottlenecks &amp; 24 tuning levers playbook, the deep research parity, local eval &amp; 22-issue submission audit (both the 11-20 and 11-21 suites), the 11-25 dataset taxonomy &amp; 129-problem root-cause analysis, and the Gemini Task 1 gap analysis with the validated brain v2 and its v2.1 harness-documentation audit. ${DOCS.length} documents (${md} markdown + ${DOCS.length - md} HTML) across 109 hosted files — markdown opens in-page from the sidebar tree, HTML decks open full-screen in their own tab.</p>
+       <p class="lede">Fourteen deliverables from the Batonic Coding Framework (BCF) competition work: the submission-ready Brain agent packages, hardening research, the local test-harness setup guide, executed-backbone replay comparisons, scoring parity explainer, the 129-task dataset RCA &amp; dual-track brain architecture, the BCF v2 bottlenecks, 32-lever tuning &amp; fast-iteration playbook, the 11-20 winning design &amp; guaranteed-score harness, the wall-clock bottlenecks &amp; 24 tuning levers playbook, the deep research parity, local eval &amp; 22-issue submission audit (both the 11-20 and 11-21 suites), the 11-25 dataset taxonomy &amp; 129-problem root-cause analysis, the Gemini Task 1 gap analysis with the validated brain v2 and its v2.1 harness-documentation audit, and the 11-26 bottlenecks, tuning levers &amp; ROI roadmap. ${DOCS.length} documents (${md} markdown + ${DOCS.length - md} HTML) across 115 hosted files — markdown opens in-page from the sidebar tree, HTML decks open full-screen in their own tab.</p>
      </div>
      <div class="cards">${cards}</div>`;
   $("article").querySelectorAll("[data-focus]").forEach(b => b.onclick = e => {
